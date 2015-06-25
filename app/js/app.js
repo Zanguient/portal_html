@@ -105,7 +105,7 @@ angular.module("AtosCapital", ['ui.router', 'ui.bootstrap', 'servicos', 'nao-aut
             case 'DASHBOARD': $scope.PERMISSAO_DASHBOARD = true; break;
             // Card Services
             case 'CARD SERVICES': $scope.PERMISSAO_CARD_SERVICES = true; break;
-            case 'CONCILIACAO': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO = true; break;
+            case 'CONCILIAÇÃO': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO = true; break;
             case 'CONCILIAÇÃO DE VENDAS': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_VENDAS = true; break;
             // ...
             default : return ;        
