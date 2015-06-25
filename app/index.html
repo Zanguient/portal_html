@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<!-- 
+/*
+ *  Atos Capital - www.atoscapital.com.br
+ *  
+ *  suporte@atoscapital.com.br
+ *
+ */
+-->
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en" class="no-js" ng-app="AtosCapital">
+<!--<![endif]-->
+<!-- BEGIN HEAD -->
+<head>
+<meta charset="utf-8">
+<title>Atos Capital | Index</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<meta content="" name="description">
+<meta content="" name="author">
+<!-- BEGIN GLOBAL MANDATORY STYLES -->
+<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css">
+<link href="../lib/font-awesome/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link href="../lib/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css">
+<link href="../lib/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="../lib/uniform/uniform.default.css" rel="stylesheet" type="text/css">
+<!-- END GLOBAL MANDATORY STYLES -->
+<!-- BEGIN PAGE LEVEL PLUGIN STYLES -->
+<link href="../lib/css/page-error.css" rel="stylesheet" type="text/css"/>
+<!--link href="../lib/select2/select2.css" rel="stylesheet" type="text/css">
+<!--link href="../lib/bootstrap//datatable/dataTables.bootstrap.css" rel="stylesheet" type="text/css"-->
+<link href="../lib/bootstrap/datepicker/bootstrap-datepicker.css" rel="stylesheet" type="text/css">
+<!--link href="../lib/jqvmap/jqvmap.css" rel="stylesheet" type="text/css">
+<link href="../lib/morris/morris.css" rel="stylesheet" type="text/css"-->
+<!-- END PAGE LEVEL PLUGIN STYLES -->
+<!-- BEGIN PAGE STYLES -->
+<link href="../lib/css/tasks.css" rel="stylesheet" type="text/css"/> <!-- DASHBOARD-->
+<!-- END PAGE STYLES -->
+<!-- BEGIN THEME STYLES -->
+<!-- DOC: To use 'rounded corners' style just load 'components-rounded.css' stylesheet instead of 'components.css' in the below style tag -->
+<link href="../lib/css/components-rounded.css" id="style_components" rel="stylesheet" type="text/css">
+<link href="../lib/css/plugins.css" rel="stylesheet" type="text/css">
+<link href="css/layout.css" rel="stylesheet" type="text/css">
+<link href="css/default.css" rel="stylesheet" type="text/css" id="style_color">
+<link href="../css/custom.css" rel="stylesheet" type="text/css">
+<!-- END THEME STYLES -->
+<link rel="shortcut icon" href="../img/favicon.ico">
+</head>
+<!-- END HEAD -->
+    
+<!-- BEGIN BODY -->
+<body ng-controller="appCtrl" ng-init="init()" ng-show="exibeLayout">
+<!-- BEGIN HEADER : Logo, Usuário Conectado, Menu e Barra de Pesquisa -->
+<div class="page-header">
+    
+	<!-- BEGIN HEADER TOP : Logo e Usuário Conectado -->
+	<div class="page-header-top">
+		<div class="container">
+            
+			<!-- BEGIN LOGO -->
+			<div class="page-logo">
+				<a href ng-click="goHome()"><img ng-src="../img/AtosCapital.jpg" title="{{empresa.nome}}" class="logo-default"></a>
+			</div>
+			<!-- END LOGO -->
+            
+			<!-- BEGIN RESPONSIVE MENU TOGGLER -->
+			<a href="javascript:;" class="menu-toggler"></a>
+			<!-- END RESPONSIVE MENU TOGGLER -->
+            
+			<!-- BEGIN TOP NAVIGATION MENU : Menu do usuário -->
+			<div class="top-menu">
+				<ul class="nav navbar-nav pull-right">
+					
+					<!-- BEGIN USER LOGIN DROPDOWN -->
+                    <li class="dropdown dropdown-user dropdown-dark">        
+						<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">                        
+						<img alt="" class="img-circle" ng-src="../img/avatar.jpg">
+                           
+						<span class="username username-hide-mobile">{{nome_usuario || 'Usuário'}}</span>
+						</a>
+						<ul class="dropdown-menu dropdown-menu-default">
+							<li>
+								<a href="">
+								<i class="icon-user"></i> Minha Conta </a>
+							</li>
+							<li class="divider">
+							</li>
+							<li>
+								<a href="">
+								<i class="icon-lock"></i> Bloquear Tela </a>
+							</li>
+							<li>
+								<a ng-click="voltarTelaLogin()">
+								<i class="icon-key"></i> Desconectar </a>
+							</li>
+						</ul>
+					</li>
+					<!-- END USER LOGIN DROPDOWN -->
+				</ul>
+			</div>
+			<!-- END TOP NAVIGATION MENU -->
+		</div>
+	</div>
+	<!-- END HEADER TOP -->
+    
+	<!-- BEGIN HEADER MENU : Menu e Barra de Pesquisa -->
+	<div class="page-header-menu">
+		<div class="container">
+			<!-- BEGIN HEADER SEARCH BOX : Barra de Pesquisa -->
+			<form class="search-form" action="" method="GET">
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="Pesquisar" name="query">
+					<span class="input-group-btn">
+					<a href="javascript:;" class="btn submit"><i class="icon-magnifier"></i></a>
+					</span>
+				</div>
+			</form>
+			<!-- END HEADER SEARCH BOX -->
+            
+			<!-- BEGIN MEGA MENU : Menu -->
+			<div class="hor-menu">
+                <!-- MENU DINÂMICO -->
+				<ul class="nav navbar-nav" ng-repeat="item in menu">
+                    <li ng-class="{'menu-dropdown mega-menu-dropdown' : item.subServicos, 'active' : !item.subServicos}">
+                        <a href="javascript:;" ng-click="item.link()" data-close-others="true" data-hover="megamenu-dropdown" data-toggle="dropdown" ng-class="{'dropdown-toggle' : item.subServicos}">
+						{{item.titulo}} <i ng-show="item.subServicos" class="fa fa-angle-down"></i>
+						</a>
+                        <ul ng-show="item.subServicos" ng-class="{'dropdown-menu' : item.subServicos !== undefined}">
+                            <li>
+								<div class="mega-menu-content">
+									<div class="row">
+										<div class="col-xs-1" style="width: inherit !important" ng-repeat="subservico in item.subServicos">
+											<ul class="mega-menu-submenu">
+												<li>
+													<h3>{{subservico.titulo}}</h3>
+												</li>
+												<li ng-repeat="modulo in subservico.modulos">
+													<a href="javascript:;" ng-click="modulo.link()">
+													<i class="fa fa-angle-right"></i>
+													{{modulo.titulo}} </a>
+												</li>												
+											</ul>
+										</div>
+                                    </div>
+                                </div>
+							</li>
+                        </ul>
+                    </li>
+                    <!-- MENU ESTÁTICO -->
+                    <!-- DASHBOARD -->
+					<!--li class="active">
+						<a href ng-click="goHome()">Dashboard</a>
+					</li>
+                    <!-- CARD SERVICES -- >
+					<li class="menu-dropdown mega-menu-dropdown ">
+						<a data-hover="megamenu-dropdown" data-close-others="true" data-toggle="dropdown" href="javascript:;" class="dropdown-toggle">
+						Card Services <i class="fa fa-angle-down"></i>
+						</a>
+						<ul class="dropdown-menu">
+							<li>
+								<div class="mega-menu-content">
+                                    <ul class="mega-menu-submenu">
+                                        <li>
+                                            <a href ng-click="goCardServicesConciliacaoVendas()" class="iconify">
+                                            <i class="fa fa-angle-right"></i>
+                                            Conciliação de Vendas </a>
+                                        </li>
+                                    </ul>
+								</div>
+							</li>
+						</ul>
+					</li>
+                    <!-- TAX SERVICES -- >
+					<li class="menu-dropdown mega-menu-dropdown mega-menu-full">
+						<a data-hover="megamenu-dropdown" data-close-others="true" data-toggle="dropdown" href="javascript:;" class="dropdown-toggle">
+						Tax Services <i class="fa fa-angle-down"></i>
+						</a>
+						<ul class="dropdown-menu">
+							<li>
+								<div class="mega-menu-content">
+									<div class="row">
+										<div class="col-md-3">
+											<ul class="mega-menu-submenu">
+												<li>
+													<h3>Op1 TS</h3>
+												</li>
+												<li>
+													<a href="">
+													<i class="fa fa-angle-right"></i>
+													Op1 </a>
+												</li>												
+											</ul>
+										</div>
+										<div class="col-md-3">
+											<ul class="mega-menu-submenu">
+												<li>
+													<h3>Op2 TS</h3>
+												</li>
+												<li>
+													<a href="">
+													<i class="fa fa-angle-right"></i>
+													Op2 </a>
+												</li>												
+											</ul>
+										</div>
+										<div class="col-md-3">
+											<ul class="mega-menu-submenu">
+												<li>
+													<h3>Op3 TS</h3>
+												</li>
+												<li>
+													<a href="">
+													<i class="fa fa-angle-right"></i>
+													Op3 </a>
+												</li>												
+											</ul>
+										</div>										
+									</div>
+								</div>
+							</li>
+						</ul>
+					</li>
+                    <!-- PROINFO -- >
+					<li class="menu-dropdown mega-menu-dropdown ">
+						<a data-hover="megamenu-dropdown" data-close-others="true" data-toggle="dropdown" href="javascript:;" class="dropdown-toggle">
+						ProInfo <i class="fa fa-angle-down"></i>
+						</a>
+						<ul class="dropdown-menu" style="min-width: 710px">
+							<li>
+								<div class="mega-menu-content">
+									<div class="row">
+										<div class="col-md-4">
+											<ul class="mega-menu-submenu">
+												<li>
+													<h3>Opção 1 PI</h3>
+												</li>
+												<li>
+													<a href="" class="iconify">
+													<i class="fa fa-angle-right"></i>
+													Op1 </a>
+												</li>
+											</ul>
+										</div>
+										<div class="col-md-4">
+											<ul class="mega-menu-submenu">
+												<li>
+													<h3>Opção 2 PI</h3>
+												</li>
+												<li>
+													<a href="" class="iconify">
+													<i class="fa fa-angle-right"></i>
+													Op2 </a>
+												</li>								
+											</ul>
+										</div>										
+									</div>
+								</div>
+							</li>
+						</ul>
+					</li-->
+				</ul>
+			</div>
+			<!-- END MEGA MENU -->
+		</div>
+	</div>
+	<!-- END HEADER MENU -->
+</div>
+<!-- END HEADER -->
+    
+<!-- BEGIN PAGE CONTAINER : View com o título e subtítulo do conteúdo exibido, além do botão para pesquisar grupo empresa -->
+<div class="page-container">
+	<!-- BEGIN PAGE HEAD -->
+	<div class="page-head">
+		<div class="container">
+			<!-- BEGIN PAGE TITLE : Título e subtítulo da página -->
+			<div class="page-title">
+				<h1>{{pagina.titulo || 'Home'}} <small>{{pagina.subtitulo || ''}}</small></h1>
+			</div>
+			<!-- END PAGE TITLE -->
+            
+			<!-- BEGIN PAGE TOOLBAR : Busca de grupo empresa para administrar -->
+			<div class="page-toolbar" ng-show="PERMISSAO_ADMINISTRATIVA">
+				<!-- BEGIN THEME PANEL -->
+				<div class="btn-group btn-theme-panel">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>             
+                                    <strong>{{grupoempresa.empresa || ''}}</strong>
+                                </td>
+                                <td>
+                                    <img ng-src="../img/loading-atos.gif" ng-show="carregandoGrupoEmpresas"/>
+                                    <a href="javascript:;" class="btn dropdown-toggle" data-toggle="dropdown">
+                                    <i class="icon-settings" ng-hide="carregandoGrupoEmpresas"></i>
+                                    </a>
+                                    <!-- LAYOUT DE BUSCA DO GRUPO EMPRESA -->
+                                    <div id="admBuscaGrupoEmpresa" class="dropdown-menu theme-panel pull-right hold-on-click" ng-click="$event.stopPropagation()" style="min-width: 400px">	
+                                        <h3>Grupo Empresa</h3>
+                                        <form class="search-form">
+                                            <div class="input-group" style="width:100%">
+                                               <input type="text" class="form-control" placeholder="Buscar" ng-model="gempresa"
+                                                      ng-keyup="$event.keyCode == 13"
+                                                      typeahead-focus-first=false
+                                                      typeahead-on-select="selecionaGrupoEmpresa($item)"
+                                                      typeahead="gempresa as gempresa.empresa for gempresa in grupoempresas | filter:{empresa:$viewValue} | limitTo:10" />
+                                            </div>
+                                            <div style="width:100%" ng-show="grupoempresa">
+                                                <a href="javascript:;" ng-click="limpaGrupoEmpresa()" class="btn">
+                                                    <img ng-src="../img/clear.png" title="Limpar">
+                                                </a>
+                                                <strong>{{grupoempresa.empresa || ''}}</strong>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </td> 
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <!-- END THEME PANEL -->
+            </div>
+			<!-- END PAGE TOOLBAR -->
+        </div>
+    </div>
+    <!-- END PAGE HEAD -->
+</div>
+<!-- END PAGE CONTAINER -->
+    
+<!-- BEGIN PAGE CONTENT : Conteúdo da página é incluído dinamicamente nesta div -->
+<div class="page-content">
+   <div ui-view></div>
+</div>
+<!-- END PAGE CONTENT -->
+
+    
+<!-- BEGIN PRE-FOOTER : Sobre (resumido) e Contato-->
+<div class="page-prefooter">
+	<div class="container">
+		<div class="row">
+            <!-- SOBRE -->
+			<div class="col-md-6 col-sm-6 col-xs-12 footer-block">
+				<h2>Sobre</h2>
+				<p>{{empresa.sobreResumido}}</p>
+			</div>
+            <!-- VISITE NOS -->
+			<div class="col-md-3 col-sm-6 col-xs-12 footer-block" align="center">
+				<h2>Visite-nos</h2>
+				<ul class="social-icons" style="display: inline-block">
+					<li>
+						<a href="{{empresa.facebook}}" data-original-title="facebook" class="facebook" target="_blank"></a>
+					</li>
+					<li>
+						<a href="{{empresa.linkedin}}" data-original-title="linkedin" class="linkedin" target="_blank"></a>
+					</li>
+				</ul>
+			</div>
+            <!-- CONTATO -->
+			<div class="col-md-3 col-sm-6 col-xs-12 footer-block">
+				<h2>Contato</h2>
+                <address class="margin-bottom-40">
+				 Telefone: {{empresa.telefone}}<br>
+				 Email: {{empresa.email}}
+				</address>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END PRE-FOOTER -->
+    
+<!-- BEGIN FOOTER : COPYRIGHT -->
+<div class="page-footer">
+	<div class="container">
+		 {{empresa.copyright}}
+	</div>
+</div>
+<div class="scroll-to-top">
+	<i class="icon-arrow-up"></i>
+</div>
+<!-- END FOOTER -->
+
+    
+    
+<!-- BEGIN JAVASCRIPTS (Load javascripts at bottom, this will reduce page load time) -->
+<!-- BEGIN CORE PLUGINS -->
+<script src="../lib/jquery.min.js" type="text/javascript"></script>
+<!--script src="../lib/jquery-migrate.min.js" type="text/javascript"></script-->
+<!-- IMPORTANT! Load jquery-ui.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip -->
+<script src="../lib/jquery-ui.min.js" type="text/javascript"></script>
+<script src="../lib/bootstrap/bootstrap.min.js" type="text/javascript"></script>
+<script src="../lib/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
+<script src="../lib/jquery.slimscroll.min.js" type="text/javascript"></script>
+<script src="../lib/jquery.blockui.min.js" type="text/javascript"></script>
+<script src="../lib/jquery.cokie.min.js" type="text/javascript"></script>
+<script src="../lib/uniform/jquery.uniform.min.js" type="text/javascript"></script>
+<!-- END CORE PLUGINS -->
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+<!--script src="../lib/jqvmap/jquery.vmap.js" type="text/javascript"></script>
+<script src="../lib/jqvmap/maps/jquery.vmap.russia.js" type="text/javascript"></script>
+<script src="../lib/jqvmap/maps/jquery.vmap.world.js" type="text/javascript"></script>
+<script src="../lib/jqvmap/maps/jquery.vmap.europe.js" type="text/javascript"></script>
+<script src="../lib/jqvmap/maps/jquery.vmap.germany.js" type="text/javascript"></script>
+<script src="../lib/jqvmap/maps/jquery.vmap.usa.js" type="text/javascript"></script>
+<script src="../lib/jqvmap/data/jquery.vmap.sampledata.js" type="text/javascript"></script -->
+<!-- IMPORTANT! fullcalendar depends on jquery-ui.min.js for drag & drop support -->
+<!--script src="../lib/morris/morris.min.js" type="text/javascript"></script>
+<script src="../lib/morris/raphael-min.js" type="text/javascript"></script>
+<script src="../lib/jquery.sparkline.min.js" type="text/javascript"></script-->
+<!-- END PAGE LEVEL PLUGINS -->
+<!-- ANGULAR -->
+<script src="../lib/angularjs/angular.min.js" type="text/javascript"></script>
+<script src="../lib/angularjs/angular-locale_pt-br.js" type="text/javascript"></script>
+<script src="../lib/bootstrap/ui-bootstrap-tpls-0.13.0.min.js" type="text/javascript"></script>
+<!--script src="../lib/select2/select2.min.js" rel="stylesheet" type="text/javascript"></script>
+<!--script src="../lib/bootstrap//datatable/dataTables.bootstrap.js" type="text/javascript"></script-->
+<script src="../lib/bootstrap/datepicker/bootstrap-datepicker.js" type="text/javascript"></script>
+<script src="../lib/angularjs/plugins/angular-ui-router.min.js" type="text/javascript"></script>  
+<script src="../js/services.js" type="text/javascript"></script>
+<script src="componentes/nao-autorizado/js/nao-autorizado.js" type="text/javascript"></script> <!-- DASHBOARD -->
+<script src="componentes/dashboard/js/dashboard.js" type="text/javascript"></script> <!-- DASHBOARD -->
+<script src="componentes/card-services/conciliacao-vendas/js/card-services.conciliacao-vendas.js" type="text/javascript"></script>
+<script src="js/app.js" type="text/javascript"></script> <!-- INDEX -->
+<!-- END - ANGULAR -->
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src="../lib/metronic/metronic.js" type="text/javascript"></script>
+<script src="js/layout.js" type="text/javascript"></script> <!-- INDEX -->
+<!--script src="componentes/dashboard/js/layout.js" type="text/javascript"></script--> <!-- DASHBOARD -->
+<script src="js/tasks.js" type="text/javascript"></script>
+<!-- END PAGE LEVEL SCRIPTS -->
+<!-- END JAVASCRIPTS -->    
+    
+</body>
+<!-- END BODY -->
+    
+</html>

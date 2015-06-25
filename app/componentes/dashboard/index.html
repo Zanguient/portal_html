@@ -1,0 +1,253 @@
+<!-- 
+/*
+ *  Atos Capital - www.atoscapital.com.br
+ *  
+ *  suporte@atoscapital.com.br
+ *
+ */
+-->
+
+<div class="container" ng-controller="dashboardCtrl" ng-init="dashboardInit()">
+        <!-- BEGIN PAGE BREADCRUMB -->
+        <ul class="page-breadcrumb breadcrumb">
+            <li>
+                <a href ng-click="goHome()">Início</a><i class="fa fa-circle"></i>
+            </li>
+            <li class="active">
+                 Dashboard
+            </li>
+        </ul>
+        <!-- END PAGE BREADCRUMB -->
+        <!-- BEGIN PAGE CONTENT INNER -->
+        <div class="row margin-top-10">
+            <div class="col-md-6 col-sm-12">
+                <!-- DASHBOARD 1.1 -->
+                <div class="portlet light ">
+                    <div class="portlet-title">
+                        <div class="caption caption-md">
+                            <i class="icon-bar-chart theme-font hide"></i>
+                            <span class="caption-subject theme-font bold uppercase">DASHBOARD 1.1</span>
+                            <span class="caption-helper hide">weekly stats...</span>
+                        </div>
+                        <div class="actions">
+                            <div class="btn-group btn-group-devided" data-toggle="buttons">
+                                <label class="btn btn-transparent grey-salsa btn-circle btn-sm active">
+                                <input type="radio" name="options" class="toggle" id="option1">OP1</label>
+                                <label class="btn btn-transparent grey-salsa btn-circle btn-sm">
+                                <input type="radio" name="options" class="toggle" id="option2">OP2</label>
+                                <label class="btn btn-transparent grey-salsa btn-circle btn-sm">
+                                <input type="radio" name="options" class="toggle" id="option2">OP3</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="row list-separated">
+                            <h3 align=center>CONTEUDO</h3>
+                        </div>
+                    </div>
+                </div>
+                <!-- END DASHBOARD 1.1 -->
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <!-- DASHBOARD 1.2 -->
+                <div class="portlet light ">
+                    <div class="portlet-title">
+                        <div class="caption caption-md">
+                            <i class="icon-bar-chart theme-font hide"></i>
+                            <span class="caption-subject theme-font bold uppercase">DASHBOARD 1.2</span>
+                            <span class="caption-helper hide">weekly stats...</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="row list-separated">
+                            <h3 align=center>CONTEUDO</h3>
+                        </div>
+                    </div>
+                </div>
+                <!-- END DASHBOARD 1.2 -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <!-- DASHBOARD 1.3 -->
+                <div class="portlet light tasks-widget">
+                    <div class="portlet-title">
+                        <div class="caption caption-md">
+                            <i class="icon-bar-chart theme-font hide"></i>
+                            <span class="caption-subject theme-font bold uppercase">DASHBOARD 1.3</span>
+                            <span class="caption-helper">subtitulo</span>
+                        </div>
+                        <div class="inputs">
+                            <div class="portlet-input input-small input-inline">
+                                <div class="input-icon right">
+                                    <i class="icon-magnifier"></i>
+                                    <input type="text" class="form-control form-control-solid" placeholder="pesquisar...">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="task-content">
+                            <div class="scroller" style="height: 282px;" data-always-visible="1" data-rail-visible1="0" data-handle-color="#D7DCE2">
+                                <!-- START LIST -->
+                                <ul class="task-list">
+                                    <li>
+                                        <div class="task-checkbox">
+                                            <input type="hidden" value="1" name="test"/>
+                                            <input type="checkbox" class="liChild" value="2" name="test"/>
+                                        </div>
+                                        <div class="task-title">
+                                            <span class="task-title-sp">
+                                            Op1 </span>
+                                            <span class="label label-sm label-success">Escolher</span>
+                                            <span class="task-bell">
+                                            </span>
+                                        </div>
+                                        <div class="task-config">
+                                            <div class="task-config-btn btn-group">
+                                                <a class="btn btn-xs default" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                                <i class="fa fa-cog"></i><i class="fa fa-angle-down"></i>
+                                                </a>
+                                                <ul class="dropdown-menu pull-right">
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                        <i class="fa fa-check"></i> Op 1.1 </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                        <i class="fa fa-pencil"></i> Op 1.2 </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                        <i class="fa fa-trash-o"></i> Op 1.3 </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="task-checkbox">
+                                            <input type="checkbox" class="liChild" value=""/>
+                                        </div>
+                                        <div class="task-title">
+                                            <span class="task-title-sp">
+                                            Op2 </span>
+                                            <span class="label label-sm label-danger">Escolher</span>
+                                        </div>
+                                        <div class="task-config">
+                                            <div class="task-config-btn btn-group">
+                                                <a class="btn btn-xs default" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                                <i class="fa fa-cog"></i><i class="fa fa-angle-down"></i>
+                                                </a>
+                                                <ul class="dropdown-menu pull-right">
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                        <i class="fa fa-check"></i> Op 1.1 </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                        <i class="fa fa-pencil"></i> Op 1.2 </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                        <i class="fa fa-trash-o"></i> Op 1.3 </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <!-- END LIST -->
+                            </div>
+                        </div>
+                        <div class="task-footer">
+                            <div class="btn-arrow-link pull-right">
+                                <a href="javascript:;">Todas as opções</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END DASHBOARD 1.3 -->
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <!-- DASHBOARD 1.4 -->
+                <div class="portlet light">
+                    <div class="portlet-title">
+                        <div class="caption caption-md">
+                            <i class="icon-bar-chart theme-font hide"></i>
+                            <span class="caption-subject theme-font bold uppercase">DASHBOARD 1.4</span>
+                            <span class="caption-helper">subtitulo</span>
+                        </div>
+                        <div class="inputs">
+                            <div class="portlet-input input-inline input-small ">
+                                <div class="input-icon right">
+                                    <i class="icon-magnifier"></i>
+                                    <input type="text" class="form-control form-control-solid" placeholder="pesquisar...">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="scroller" style="height: 305px;" data-always-visible="1" data-rail-visible1="0" data-handle-color="#D7DCE2">
+                            <div class="general-item-list">
+                                <div class="item">
+                                    <div class="item-head">
+                                        <div class="item-details">
+                                            <!--img class="item-pic" src="../../assets/admin/layout3/../img/avatar4.jpg"-->
+                                            <a href="" class="item-name primary-link">OP 1</a>
+                                            <span class="item-label">(conteudo)</span>
+                                        </div>
+                                        <span class="item-status"><span class="badge badge-empty badge-success"></span> Status</span>
+                                    </div>
+                                    <div class="item-body">
+                                         Texto...
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="item-head">
+                                        <div class="item-details">
+                                            <!--img class="item-pic" src="../../assets/admin/layout3/../img/avatar3.jpg"-->
+                                            <a href="" class="item-name primary-link">OP 2</a>
+                                            <span class="item-label">(conteudo)</span>
+                                        </div>
+                                        <span class="item-status"><span class="badge badge-empty badge-warning"></span> Status</span>
+                                    </div>
+                                    <div class="item-body">
+                                         Texto...
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="item-head">
+                                        <div class="item-details">
+                                            <!--img class="item-pic" src="../../assets/admin/layout3/../img/avatar6.jpg"-->
+                                            <a href="" class="item-name primary-link">OP 3</a>
+                                            <span class="item-label">(conteudo)</span>
+                                        </div>
+                                        <span class="item-status"><span class="badge badge-empty badge-primary"></span> Status</span>
+                                    </div>
+                                    <div class="item-body">
+                                         Texto...
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="item-head">
+                                        <div class="item-details">
+                                            <!--img class="item-pic" src="../../assets/admin/layout3/../img/avatar7.jpg"-->
+                                            <a href="" class="item-name primary-link">OP 4</a>
+                                            <span class="item-label">(contetudo)</span>
+                                        </div>
+                                        <span class="item-status"><span class="badge badge-empty badge-danger"></span> Status</span>
+                                    </div>
+                                    <div class="item-body">
+                                         Texto...
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END PORTLET-->
+            </div>
+        </div>
+        <!-- END PAGE CONTENT INNER -->
+    </div>
