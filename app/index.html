@@ -21,7 +21,7 @@
 <meta content="" name="description">
 <meta content="" name="author">
 <!-- BEGIN GLOBAL MANDATORY STYLES -->
-<!--link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css"-->
+<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css">
 <link href="../lib/font-awesome/font-awesome.min.css" rel="stylesheet" type="text/css">
 <link href="../lib/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css">
 <link href="../lib/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css">
@@ -149,7 +149,6 @@
                         </ul>
                     </li>
 				</ul>
-                <!-- END MENU DINÂMICO -->
 			</div>
 			<!-- END MEGA MENU -->
 		</div>
@@ -176,9 +175,12 @@
                     <table>
                         <thead>
                             <tr>
-                                <td>             
-                                    <strong>{{grupoempresa.empresa || ''}}</strong>
+                                <td>
+                                    <div  style="margin-top:-5px">
+                                    <strong>{{grupoempresa.empresa || ''}}</strong>  
+									</div>
                                 </td>
+                                    
                                 <td>
                                     <img ng-src="../img/loading-atos.gif" ng-show="carregandoGrupoEmpresas"/>
                                     <a href="javascript:;" class="btn dropdown-toggle" data-toggle="dropdown">
@@ -195,7 +197,7 @@
                                                       typeahead-on-select="selecionaGrupoEmpresa($item)"
                                                       typeahead="gempresa as gempresa.empresa for gempresa in grupoempresas | filter:{empresa:$viewValue} | limitTo:10" />
                                             </div>
-                                            <div style="width:100%" ng-show="grupoempresa">
+                                            <div style="width:100%; margin-top:15px" ng-show="grupoempresa">
                                                 <a href="javascript:;" ng-click="limpaGrupoEmpresa()" class="btn">
                                                     <img ng-src="../img/clear.png" title="Limpar">
                                                 </a>

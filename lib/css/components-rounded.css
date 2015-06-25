@@ -9004,11 +9004,11 @@ Grey Default
 /* Button */
 .grey.btn {
   color: #333333;
-  background-color: #E5E5E5;
+  background-color: #d3d3d3;
 }
 .grey.btn:hover, .grey.btn:focus, .grey.btn:active, .grey.btn.active {
   color: #333333;
-  background-color: lightgray;
+  background-color: #EAEAEA;
 }
 .open .grey.btn.dropdown-toggle {
   color: #333333;
@@ -10312,11 +10312,11 @@ Red Default
 /* Button */
 .red.btn {
   color: #FFFFFF;
-  background-color: #EAEAEA;
+  background-color: #7e1416;
 }
 .red.btn:hover, .red.btn:focus, .red.btn:active, .red.btn.active {
   color: #FFFFFF;
-  background-color: #c4c2c2;
+  background-color: #c22629;
 }
 .open .red.btn.dropdown-toggle {
   color: #FFFFFF;
