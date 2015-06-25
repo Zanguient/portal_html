@@ -85,7 +85,12 @@ Esse JSON é fundamental para a exibição correta do layout. Regras:
  
 Padronização dos títulos de serviços, subserviços e módulos:
  - Administrativo
-	- ... (identificar subserviços e módulos)
+	- Gestão de Acessos (Cadastrar, Editar, Excluir)
+		- Usuários (Resetar senha)
+		- Privilégios
+		- Módulos e Funcionalidades
+	- Logs
+		- Acesso de usuários
  - Dashboard
  - Card Services
 	- Conciliação

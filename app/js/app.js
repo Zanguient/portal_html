@@ -86,6 +86,7 @@ angular.module("AtosCapital", ['ui.router', 'ui.bootstrap', 'servicos', 'nao-aut
         switch(titulo.toUpperCase()){
             // Administrativo
             // case 'ADMINISTRATIVO' : ...  
+                //...
             // Dashboard
             case 'DASHBOARD': return $scope.goDashboard;  
             // Card Services
@@ -247,7 +248,7 @@ angular.module("AtosCapital", ['ui.router', 'ui.bootstrap', 'servicos', 'nao-aut
         }
         // Avalia Token
         // Solução jQuery (devido ao domínio diferente, a solução com angular não funciona)
-        var jqxhr = $.get($apis.autenticacao.login + '/' + token) 
+        var jqxhr = $.get($apis.autenticacao.login + token) 
                        .done(function(data){
                             // Nome do usuário
                             $scope.nome_usuario = data.nome;
@@ -267,6 +268,7 @@ angular.module("AtosCapital", ['ui.router', 'ui.bootstrap', 'servicos', 'nao-aut
                           else{ 
                               console.log("FALHA AO VALIDAR TOKEN: " + failData.status);
                               // o que fazer? exibir uma tela indicando falha de comunicação?
+                              // Status 0: sem resposta
                           }
                         });
     };
