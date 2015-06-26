@@ -28,7 +28,7 @@ angular.module('servicos', [ ])
 .factory('$apis', [function(){
   return {
     autenticacao: {
-      login: 'http://192.168.0.100/api/login/autenticacao/', //'http://api.taxservices.com.br/login/autenticacao/',
+      login: 'http://api.taxservices.com.br/login/autenticacao/', // 'http://192.168.0.100/api/login/autenticacao/'
       keyToken: 'token',
       keyLembrar: 'remember',
       keyDateTime: 'datetime'
