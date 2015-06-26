@@ -17,7 +17,7 @@ angular.module('servicos', [ ])
 .factory('$apis', [function(){
   return {
     autenticacao: {
-      login: 'http://api.taxservices.com.br/login/autenticacao/',
+      login: 'http://192.168.0.100/api/login/autenticacao/', //'http://api.taxservices.com.br/login/autenticacao/',
       keyToken: 'token',
       keyLembrar: 'remember',
       keyDateTime: 'datetime'
@@ -37,7 +37,12 @@ angular.module('servicos', [ ])
         fila: 'http://api.taxservices.com.br/monitor/cargas/pos/sucesso/'
       }
     },
-    clientes: {
+    administracao : {
+        pessoa : 'http://192.168.0.100/api/adminsitracao/pessoa/'    
+    },
+    cliente: {
+      empresa : 'http://192.168.0.100/api/cliente/empresa/',
+      grupoempresa : 'http://192.168.0.100/api/cliente/grupoempresa/',    
       grupos: {
         geral: 'http://192.168.0.100/api/cliente/grupoempresa/',
         cardServices: 'http://api.taxservices.com.br/kpi/cliente/1/s', //'http://192.168.0.100/api/cliente/grupoempresa/',
@@ -98,27 +103,26 @@ angular.module('servicos', [ ])
 
 .factory('$webapi', ['$q', '$http', function($q, $http) {
   return {
-    get: function(api, token) {
+    get: function(api, parametros) {
       // Setando o promise
       var deferido = $q.defer();
-      
+       
+      // Se for uma string, somente concatena ela    
+      if(typeof parametros === 'string'){ 
+          // Se for enviado uma string vazia, não concatena
+          if(parametros.length > 0) api = api.concat(parametros + '/');
+      }else{  
+          // Objeto array => Concatena todos
+          for(var k = 0; k < parametros.length; k++) api = api.concat(parametros[k] + '/');
+      }  
+        
       // Requisitar informações de monitoramento
       $http.get(api)
         .success(function(dados, status, headers, config){
-          console.log('log de sucesso: ');
-          console.log(dados);
-          console.log(status);
-          console.log(headers);
-          console.log(config);
           deferido.resolve(dados);
         }).error(function(dados, status, headers, config){
-          console.log('log de erro: ');
-          console.log(dados);
-          console.log(status);
-          console.log(headers);
-          console.log(config);
-          deferido.reject(dados);
-        })
+          deferido.reject({'dados':dados,'status':status});
+        });
       return deferido.promise;
     },
     update: function(api, token, id, dadosFormulario){
@@ -137,15 +141,13 @@ angular.module('servicos', [ ])
     post: function(api, token, dadosFormulario){
       // Setando o promise
       var deferido = $q.defer();
-      
-      // Requisitar informações de monitoramento
-      //$http.post('/api/monitor/cargas/pos/novacarga/', dadosFormulario)
+
       $http.post(api, dadosFormulario)
-        .success(function(dados){
+        .success(function(dados, status, headers, config){
           deferido.resolve(dados);
-        }).error(function(erro){
-          deferido.reject(erro);
-        })
+        }).error(function(dados, status, headers, config){
+          deferido.reject({'dados':dados,'status':status});
+        });
       return deferido.promise;
     }
   }

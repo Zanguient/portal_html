@@ -50,12 +50,12 @@ app.controller("loginCtrl", ['$scope',
     $scope.init = function(){
         if($autenticacao.usuarioEstaAutenticado()){
             // Avalia Token
-            // Solução jQuery (devido ao domínio diferente, a solução com angular não funciona)
-            var jqxhr = $.get($apis.autenticacao.login + '/' + $scope.json.token) 
-                           .done(function(data){
+            var dadosAPI = $webapi.get($apis.autenticacao.login, $autenticacao.getToken());
+            // Verifica se a requisição foi respondida com sucesso
+            dadosAPI.then(function(dados){
                                 redirecionaPagina();
-                            })
-                          .fail(function(failData){
+                            },
+                            function(failData){
                               // Avaliar código de erro
                               if(failData.status == 500){
                                   // Código 500 => Token já não é mais válido
@@ -80,46 +80,27 @@ app.controller("loginCtrl", ['$scope',
             // VALIDA LOGIN
             var jsonAutenticacao = { 'usuario': $scope.usuario.nome, 'senha': $scope.usuario.senha };
             // Envia os dados para autenticação
-            /*var novaEmpresaEnviar = $webapi.post($apis.autenticacao.login, '', jsonAutenticacao);
-            novaEmpresaEnviar.then(function(dados){
-              progressoLogin(false);
-              if(dados != null){
-                // LOGADO! => Vai para a página principal
-                // Armazena se é para lembrar a autenticação
-                var checked = !($('input[name="remember"]').attr('checked') === undefined); 
-                //$localStorage[$apis.autenticacao.keyLembrar] = JSON.stringify(checked);
-                // Armazena o JSON
-                //$localStorage[$apis.autenticacao.keyData] = JSON.stringify(data);
-                // Esconde Progress
-                progressoLogin(false);
-                // Redireciona
-                redirecionaPagina();
-              }else{
-                alert("Falha ao receber informações do servidor");
-              }
-            }, function(reject){
-              progressoLogin(false);
-              // Exibe mensagem reportando a falha deautenticação
-              $scope.mensagemErro = 'Usuário e/ou senha inválido(s).';
-              $('div[class="alert alert-danger display-hide"]').show();
-            });*/
             // Solução jQuery para POST (devido ao domínio diferente, a solução com angular não funciona)
             var jqxhr = $.post($apis.autenticacao.login, jsonAutenticacao)
+            //var dadosAPI = $webapi.post($apis.autenticacao.login, '', jsonAutenticacao);
+            //dadosAPI.then(function(dados){
                           .done(function(data){
                             // LOGADO! => Vai para a página principal
                             // Atualiza dados de autenticação
                             $autenticacao.atualizaDadosDeAutenticacao(data.token,$scope.lembrar,new Date());
                             // Redireciona e atualiza último horário de autenticação
-                            redirecionaPagina(); 
-                          })
-                          .fail(function(failData){
-                              //console.log("LOGIN FAILS: " + failData.status);
-                              // Exibe mensagem reportando a falha deautenticação
-                              $scope.mensagemErro = 'Usuário e/ou senha inválido(s).';
+                            redirecionaPagina();
+                            // Esconde Progress
+                            progressoLogin(false);
+                          }).fail(function(failData){
+                          //, function(failData){
+                              if(failData.status === 500)
+                                  // Exibe mensagem reportando a falha de autenticação
+                                  $scope.mensagemErro = 'Usuário e/ou senha inválido(s).';
+                              else if(failData.status === 0)
+                                  $scope.mensagemErro = 'Falha de comunicação com o servidor.';
                               $('div[class="alert alert-danger display-hide"]').show(); // temp...
-                          })
-                          .always(function(){
-                               // Esconde Progress
+                              // Esconde Progress
                               progressoLogin(false);
                           });
             
