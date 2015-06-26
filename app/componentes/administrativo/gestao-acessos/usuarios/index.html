@@ -22,232 +22,199 @@
     <!-- END PAGE BREADCRUMB -->
     <!-- BEGIN PAGE CONTENT INNER -->
     <div class="row">
-        <div class="col-md-12">
-            <div class="portlet light" id="form_wizard_1">
-                <div class="portlet-title">
-                    <div class="caption">
-                        <span class="caption-subject font-green-sharp bold uppercase">
-                        Cadastro de Usuário - <span class="step-title">Etapa {{tabCadastro}} de 4 </span>
-                        </span>
-                    </div>
-                </div>
-                <div class="portlet-body form">
-                    <form class="form-horizontal" id="submit_form"> <!--action="javascript:;" -->
-                        <div class="form-wizard">
-                            <div class="form-body">
-                                <ul class="nav nav-pills nav-justified steps">
-                                    <li ng-class="{ active:tabCadastroSelecionada(1) }">
-                                        <a href ng-click="setTabCadastro(1)" data-toggle="tab" class="step">
-                                        <span class="number">
-                                        1 </span>
-                                        <span class="desc">
-                                        <i class="fa fa-check"></i> Dados pessoais </span>
-                                        </a>
-                                    </li>
-                                    <li ng-class="{ active:tabCadastroSelecionada(2) }">
-                                        <a href ng-click="setTabCadastro(2)" data-toggle="tab" class="step">
-                                        <span class="number">
-                                        2 </span>
-                                        <span class="desc">
-                                        <i class="fa fa-check"></i> Dados da conta </span>
-                                        </a>
-                                    </li>
-                                    <li ng-class="{ active:tabCadastroSelecionada(3) }">
-                                        <a href ng-click="setTabCadastro(3)" data-toggle="tab" class="step active">
-                                        <span class="number">
-                                        3 </span>
-                                        <span class="desc">
-                                        <i class="fa fa-check"></i> Privilégios </span>
-                                        </a>
-                                    </li>
-                                    <li ng-class="{ active:tabCadastroSelecionada(4) }">
-                                        <a href ng-click="setTabCadastro(4)" data-toggle="tab" class="step">
-                                        <span class="number">
-                                        4 </span>
-                                        <span class="desc">
-                                        <i class="fa fa-check"></i> Confirmação </span>
-                                        </a>
-                                    </li>
-                                </ul>
-                                <div id="bar" class="progress progress-striped" role="progressbar">
-                                    <div class="progress-bar progress-bar-success">
-                                    </div>
-                                </div>
-                                <div class="tab-content">
-                                    <div class="alert alert-danger display-none">
-                                        <button class="close" data-dismiss="alert"></button>
-                                        Por favor, corrija os erros.
-                                    </div>
-                                    <div class="alert alert-success display-none">
-                                        <button class="close" data-dismiss="alert"></button>
-                                        Concluído!
-                                    </div>
-                                    <div class="tab-pane" ng-class="{ active:tabCadastroSelecionada(1) }">
-                                        <h3 class="block">Forneça seus dados pessoais</h3>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Nome <span class="required">
-                                            * </span>
-                                            </label>
-                                            <div class="col-md-4">
-                                                <input type="text" class="form-control" ng-model="pessoa.nome"/>
-                                                <!--span class="help-block">
-                                                Provide your username </span-->
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Data de Nascimento</label>
-                                            <div class="col-md-4">
-                                               <input type="text" placeholder="DD/MM/YYYY" maxlength="10" class="form-control" ng-model="pessoa.data_nasc"/>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Telefone </label>
-                                            <div class="col-md-4">
-                                                <input type="text" class="form-control" ng-model="pessoa.telefone"/>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Ramal </label>
-                                            <div class="col-md-4">
-                                                <input type="text" class="form-control" ng-model="pessoa.ramal"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane" ng-class="{ active:tabCadastroSelecionada(2) }">
-                                        <h3 class="block">Forneça os dados da conta</h3>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Login <span class="required">
-                                            * </span>
-                                            </label>
-                                            <div class="col-md-4">
-                                                <input type="text" class="form-control" ng-model="usuario.login"/>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">E-mail <span class="required">
-                                            * </span>
-                                            </label>
-                                            <div class="col-md-4">
-                                                <input type="text" class="form-control" ng-model="usuario.email"/>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Grupo Empresa </label>
-                                            <div class="col-md-4">
-                                                <input type="text" class="form-control" ng-model="usuario.grupoempresa"/>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Empresa </label>
-                                            <div class="col-md-4">
-                                                <input type="text" class="form-control" ng-model="usuario.empresa"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane" ng-class="{ active:tabCadastroSelecionada(3) }">
-                                        <h3 class="block">Forneça os privilégios</h3>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Privilégios <span class="required">
-                                            * </span>
-                                            </label>
-                                            <div class="col-md-4">
-                                                <div class="checkbox-list">
-                                                    <label>
-                                                    <input type="checkbox"/> ROLE 1 </label>
-                                                    <label>
-                                                    <input type="checkbox"/> ROLE 2 </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane" ng-class="{ active:tabCadastroSelecionada(4) }">
-                                        <h3 class="block">Confirme seus dados</h3>
-                                        <h4 class="form-section">Dados pessoais</h4>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Nome:</label>
-                                            <div class="col-md-4">
-                                                <p class="form-control-static" ng-model="pessoa.nome"></p>
-                                            </div>
-                                        </div>                                    
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Data de Nascimento:</label>
-                                            <div class="col-md-4">
-                                                <p class="form-control-static" ng-model="pessoa.data_nasc">
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Telefone:</label>
-                                            <div class="col-md-4">
-                                                <p class="form-control-static" ng-model="pessoa.telefone"></p>
-                                            </div>
-                                        </div>                                    
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Ramal:</label>
-                                            <div class="col-md-4">
-                                                <p class="form-control-static" ng-model="pessoa.ramal">
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <h4 class="form-section">Dados da conta</h4>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Login:</label>
-                                            <div class="col-md-4">
-                                                <p class="form-control-static" ng-model="usuario.login">
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">E-mail:</label>
-                                            <div class="col-md-4">
-                                                <p class="form-control-static" ng-model="usuario.email">
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Grupo Empresa:</label>
-                                            <div class="col-md-4">
-                                                <p class="form-control-static" ng-model="usuario.grupoempresa">
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Empresa:</label>
-                                            <div class="col-md-4">
-                                                <p class="form-control-static" ng-model="usuario.empresa">
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <h4 class="form-section">Privilégios</h4>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3">Privilégios:</label>
-                                            <div class="col-md-4">
-                                                <p class="form-control-static" ng-model="roles">
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-actions">
-                                <div class="row">
-                                    <div class="col-md-offset-3 col-md-9">
-                                        <a href="javascript:;" class="btn default button-previous">
-                                        <i class="m-icon-swapleft"></i> Voltar </a>
-                                        <a href="javascript:;" class="btn blue button-next">
-                                        Continuar <i class="m-icon-swapright m-icon-white"></i>
-                                        </a>
-                                        <a href="javascript:;" class="btn green button-submit">
-                                        Enviar <i class="m-icon-swapright m-icon-white"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+				<div class="col-md-12">
+					<!-- BEGIN EXAMPLE TABLE PORTLET-->
+					<div class="portlet light">
+						<div class="portlet-title">
+							<div class="caption">
+								<i class="fa fa-cogs font-green-sharp"></i>
+								<span class="caption-subject font-green-sharp bold uppercase">Usuários</span>
+							</div>
+                            <div class="actions">
+                <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;" data-original-title="" title="">								</a>
+                <div class="btn-group">
+                    <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
+                    <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu pull-right">
+                        <li>
+                            <a href="javascript:;">
+                            Export to Excel </a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                            Export to CSV </a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                            Export to XML </a>
+                        </li>
+                        <li class="divider">
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                            Print Invoices </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        </div>
-    </div>
+     </div>
+                        <div class="portlet-body">
+							<div class="table-toolbar">
+								<div class="row">
+									<div class="col-md-6">
+										<div class="btn-group">
+											<button id="sample_editable_1_new" class="btn red">
+											Novo Usuário <i class="fa fa-plus"></i>
+											</button>
+										</div>
+									</div>									
+								</div>
+							</div>
+							<div id="sample_editable_1_wrapper" class="dataTables_wrapper no-footer"><div class="row"><div class="col-md-6 col-sm-12"><div class="dataTables_length" id="sample_editable_1_length"><label><span class="seperator"></span>Exibindo 
+                                    <select name="datatable_products_length" aria-controls="datatable_products" class="form-control input-xsmall input-sm input-inline">
+                                           <option value="10">10</option>
+                                           <option value="20">20</option>
+                                           <option value="50">50</option>
+                                           <option value="100">100</option>
+                                           <option value="150">150</option>
+                                    </select> registros
+                                </label></div></div><div class="col-md-6 col-sm-12"><div id="sample_editable_1_filter" class="dataTables_filter"><label><span class="seperator"></span>Pequisar 
+                                    <select name="datatable_products_length" aria-controls="datatable_products" class="form-control input-xsmall input-sm input-inline">
+                                           <option value="10">10</option>
+                                           <option value="20">20</option>
+                                           <option value="50">50</option>
+                                           <option value="100">100</option>
+                                           <option value="150">150</option>
+                                    </select> 
+                                <input type="search" class="form-control input-small input-inline" placeholder="Buscar" aria-controls="sample_editable_1"></label></div></div></div><div class="table"><table class="table table-striped table-hover table-bordered dataTable no-footer" id="sample_editable_1" role="grid" aria-describedby="sample_editable_1_info">
+							<thead>
+							<tr role="row"><th class="sorting_asc" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-sort="ascending" aria-label="
+									 Login
+								: activate to sort column ascending" style="width: 148px;">
+									 Login
+								</th><th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="
+									 Email
+								: activate to sort column ascending" style="width: 189px;">
+									 Email
+								</th><th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="
+									 Grupo
+								: activate to sort column ascending" style="width: 100px;">
+									 Grupo
+								</th><th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="
+									 CNPJ Base Empresa
+								: activate to sort column ascending" style="width: 129px;">
+									 CNPJ Base Empresa
+								</th><th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="
+									  CNPJ Empresa
+								: activate to sort column ascending" style="width: 69px;">
+									 CNPJ Empresa
+								</th><th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="
+									 Opções
+								: activate to sort column ascending" style="width: 102px;">
+									 Opções
+								</th></tr>
+							</thead>
+							<tbody>
+							<tr role="row" class="odd">
+								<td class="sorting_1">
+									 <!--login-->00515701000163
+								</td>
+								<td>
+									 <!--Email-->mauriciocarvalhogomes@hotmail.com
+								</td>
+								<td>
+									 <!--Grupo-->Restaurante Cantina D'Italia Ltda
+								</td>
+								<td class="center">
+									 <!--CNPJ Base Empresa-->00515701
+								</td>
+								<td class="center">
+									 <!--CNPJ Empresa-->00515701000163
+								</td>
+								<td class="center">
+									<div class="btn-group">
+                                        <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
+                                            <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
+                                        </a>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li>
+                                            <a href="javascript:;">Editar </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;"> Excluir </a>
+                                        </li>                       
+                                    </ul>
+                                    </div>
+								</td>
+                                <tr role="row" class="odd">
+								<td class="sorting_1">
+									 <!--login-->00515701000163
+								</td>
+								<td>
+									 <!--Email-->mauriciocarvalhogomes@hotmail.com
+								</td>
+								<td>
+									 <!--Grupo-->Restaurante Cantina D'Italia Ltda
+								</td>
+								<td class="center">
+									 <!--CNPJ Base Empresa-->00515701
+								</td>
+								<td class="center">
+									 <!--CNPJ Empresa-->00515701000163
+								</td>
+								<td class="center">
+									<div class="btn-group">
+                                        <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
+                                            <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
+                                        </a>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li>
+                                            <a href="javascript:;">Editar </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;"> Excluir </a>
+                                        </li>                       
+                                    </ul>
+                                    </div>
+								</td>
+                                    <tr role="row" class="odd">
+								<td class="sorting_1">
+									 <!--login-->00515701000163
+								</td>
+								<td>
+									 <!--Email-->mauriciocarvalhogomes@hotmail.com
+								</td>
+								<td>
+									 <!--Grupo-->Restaurante Cantina D'Italia Ltda
+								</td>
+								<td class="center">
+									 <!--CNPJ Base Empresa-->00515701
+								</td>
+								<td class="center">
+									 <!--CNPJ Empresa-->00515701000163
+								</td>
+								<td class="center">
+									<div class="btn-group">
+                                        <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
+                                            <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
+                                        </a>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li>
+                                            <a href="javascript:;">Editar </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;"> Excluir </a>
+                                        </li>                       
+                                    </ul>
+                                    </div>
+								</td>
+							</tbody>
+							</table></div><div class="row"><div class="col-md-5 col-sm-12"><div class="dataTables_info" id="sample_editable_1_info" role="status" aria-live="polite">Mostrando 1 a 6 de 6 entradas</div></div><div class="col-md-7 col-sm-12"><div class="dataTables_paginate paging_simple_numbers" id="sample_editable_1_paginate"><ul class="pagination"><li class="paginate_button previous disabled" aria-controls="sample_editable_1" tabindex="0" id="sample_editable_1_previous"><a href="#"><i class="fa fa-angle-left"></i></a></li><li class="paginate_button active" aria-controls="sample_editable_1" tabindex="0"><a href="#">1</a></li><li class="paginate_button next disabled" aria-controls="sample_editable_1" tabindex="0" id="sample_editable_1_next"><a href="#"><i class="fa fa-angle-right"></i></a></li></ul></div></div></div></div>
+						</div>
+					</div>
+					<!-- END EXAMPLE TABLE PORTLET-->
+				</div>
+			</div>
     <!-- END PAGE CONTENT INNER -->
 </div>
