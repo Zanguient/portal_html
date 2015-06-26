@@ -8,3 +8,7 @@
     padding: 15px 34px !important;
     margin-top: 1px;
 }
+
+.element-hidden{
+    visibility: hidden
+}

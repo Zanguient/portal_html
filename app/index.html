@@ -9,9 +9,7 @@
 -->
 <!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
 <!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
-<!--[if !IE]><!-->
-<html lang="en" class="no-js" ng-app="AtosCapital">
-<!--<![endif]-->
+<html lang="pt-BR" class="no-js" ng-app="AtosCapital">
 <!-- BEGIN HEAD -->
 <head>
 <meta charset="utf-8">
@@ -29,17 +27,14 @@
 <!-- END GLOBAL MANDATORY STYLES -->
 <!-- BEGIN PAGE LEVEL PLUGIN STYLES -->
 <link href="../lib/css/page-error.css" rel="stylesheet" type="text/css"/>
-<!--link href="../lib/select2/select2.css" rel="stylesheet" type="text/css">
-<!--link href="../lib/bootstrap//datatable/dataTables.bootstrap.css" rel="stylesheet" type="text/css"-->
+<link href="../lib/select2/select2.css" rel="stylesheet" type="text/css">
 <link href="../lib/bootstrap/datepicker/bootstrap-datepicker.css" rel="stylesheet" type="text/css">
-<!--link href="../lib/jqvmap/jqvmap.css" rel="stylesheet" type="text/css">
-<link href="../lib/morris/morris.css" rel="stylesheet" type="text/css"-->
+<link href="../lib/morris/morris.css" rel="stylesheet" type="text/css">
 <!-- END PAGE LEVEL PLUGIN STYLES -->
 <!-- BEGIN PAGE STYLES -->
 <link href="../lib/css/tasks.css" rel="stylesheet" type="text/css"/> <!-- DASHBOARD-->
 <!-- END PAGE STYLES -->
 <!-- BEGIN THEME STYLES -->
-<!-- DOC: To use 'rounded corners' style just load 'components-rounded.css' stylesheet instead of 'components.css' in the below style tag -->
 <link href="../lib/css/components-rounded.css" id="style_components" rel="stylesheet" type="text/css">
 <link href="../lib/css/plugins.css" rel="stylesheet" type="text/css">
 <link href="css/layout.css" rel="stylesheet" type="text/css">
@@ -169,7 +164,7 @@
 			<!-- END PAGE TITLE -->
             
 			<!-- BEGIN PAGE TOOLBAR : Busca de grupo empresa para administrar -->
-			<div class="page-toolbar" ng-show="PERMISSAO_ADMINISTRATIVA">
+			<div class="page-toolbar" ng-show="PERMISSAO_ADMINISTRATIVO">
 				<!-- BEGIN THEME PANEL -->
 				<div class="btn-group btn-theme-panel">
                     <table>
@@ -274,9 +269,17 @@
     
     
 <!-- BEGIN JAVASCRIPTS (Load javascripts at bottom, this will reduce page load time) -->
+<!-- ANGULAR -->
+<script src="../lib/angularjs/angular.min.js" type="text/javascript"></script>
+<script src="../lib/angularjs/angular-locale_pt-br.js" type="text/javascript"></script>
+<script src="../lib/bootstrap/ui-bootstrap-tpls-0.13.0.min.js" type="text/javascript"></script>
+<!--script src="../lib/bootstrap//datatable/dataTables.bootstrap.js" type="text/javascript"></script-->
+<script src="../lib/angularjs/plugins/angular-ui-router.min.js" type="text/javascript"></script>  
+<!-- END - ANGULAR -->
 <!-- BEGIN CORE PLUGINS -->
 <script src="../lib/jquery.min.js" type="text/javascript"></script>
-<!--script src="../lib/jquery-migrate.min.js" type="text/javascript"></script-->
+<script src="../lib/bootstrap/datepicker/bootstrap-datepicker.js" type="text/javascript"></script>
+<script src="../lib/jquery-migrate.min.js" type="text/javascript"></script>
 <!-- IMPORTANT! Load jquery-ui.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip -->
 <script src="../lib/jquery-ui.min.js" type="text/javascript"></script>
 <script src="../lib/bootstrap/bootstrap.min.js" type="text/javascript"></script>
@@ -287,38 +290,24 @@
 <script src="../lib/uniform/jquery.uniform.min.js" type="text/javascript"></script>
 <!-- END CORE PLUGINS -->
 <!-- BEGIN PAGE LEVEL PLUGINS -->
-<!--script src="../lib/jqvmap/jquery.vmap.js" type="text/javascript"></script>
-<script src="../lib/jqvmap/maps/jquery.vmap.russia.js" type="text/javascript"></script>
-<script src="../lib/jqvmap/maps/jquery.vmap.world.js" type="text/javascript"></script>
-<script src="../lib/jqvmap/maps/jquery.vmap.europe.js" type="text/javascript"></script>
-<script src="../lib/jqvmap/maps/jquery.vmap.germany.js" type="text/javascript"></script>
-<script src="../lib/jqvmap/maps/jquery.vmap.usa.js" type="text/javascript"></script>
-<script src="../lib/jqvmap/data/jquery.vmap.sampledata.js" type="text/javascript"></script -->
-<!-- IMPORTANT! fullcalendar depends on jquery-ui.min.js for drag & drop support -->
-<!--script src="../lib/morris/morris.min.js" type="text/javascript"></script>
-<script src="../lib/morris/raphael-min.js" type="text/javascript"></script>
-<script src="../lib/jquery.sparkline.min.js" type="text/javascript"></script-->
+<!--script src="../lib/jquery-validation/jquery.validate.min.js" type="text/javascript"></script>  
+<script src="../lib/jquery-validation/additional-methods.min.js" type="text/javascript"></script>
+<script src="../lib/bootstrap/jquery.bootstrap.wizard.min.js" type="text/javascript"></script-->
+<script src="../lib/select2/select2.min.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL PLUGINS -->
-<!-- ANGULAR -->
-<script src="../lib/angularjs/angular.min.js" type="text/javascript"></script>
-<script src="../lib/angularjs/angular-locale_pt-br.js" type="text/javascript"></script>
-<script src="../lib/bootstrap/ui-bootstrap-tpls-0.13.0.min.js" type="text/javascript"></script>
-<!--script src="../lib/select2/select2.min.js" rel="stylesheet" type="text/javascript"></script>
-<!--script src="../lib/bootstrap//datatable/dataTables.bootstrap.js" type="text/javascript"></script-->
-<script src="../lib/bootstrap/datepicker/bootstrap-datepicker.js" type="text/javascript"></script>
-<script src="../lib/angularjs/plugins/angular-ui-router.min.js" type="text/javascript"></script>  
-<script src="../js/services.js" type="text/javascript"></script>
-<script src="componentes/nao-autorizado/js/nao-autorizado.js" type="text/javascript"></script> <!-- DASHBOARD -->
-<script src="componentes/dashboard/js/dashboard.js" type="text/javascript"></script> <!-- DASHBOARD -->
-<script src="componentes/card-services/conciliacao-vendas/js/card-services.conciliacao-vendas.js" type="text/javascript"></script>
-<script src="js/app.js" type="text/javascript"></script> <!-- INDEX -->
-<!-- END - ANGULAR -->
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
 <script src="../lib/metronic/metronic.js" type="text/javascript"></script>
 <script src="js/layout.js" type="text/javascript"></script> <!-- INDEX -->
-<!--script src="componentes/dashboard/js/layout.js" type="text/javascript"></script--> <!-- DASHBOARD -->
+<!--script src="componentes/administrativo/gestao-acessos/usuarios/js/form-wizard.js" type="text/javascript"></script-->
 <script src="js/tasks.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
+<!-- ANGULAR SCRIPTS -->
+<script src="../js/services.js" type="text/javascript"></script>
+<script src="componentes/nao-autorizado/js/nao-autorizado.js" type="text/javascript"></script> <!-- DASHBOARD -->
+<script src="componentes/administrativo/gestao-acessos/usuarios/js/gestao-acessos.usuarios.js" type="text/javascript"></script>
+<script src="componentes/dashboard/js/dashboard.js" type="text/javascript"></script> <!-- DASHBOARD -->
+<script src="componentes/card-services/conciliacao/conciliacao-vendas/js/card-services.conciliacao-vendas.js" type="text/javascript"></script>
+<script src="js/app.js" type="text/javascript"></script> <!-- INDEX -->
 <!-- END JAVASCRIPTS -->    
     
 </body>
