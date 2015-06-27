@@ -231,7 +231,7 @@ Page Header
 .page-header .page-header-menu .hor-menu .navbar-nav > li.active > a:hover, .page-header .page-header-menu .hor-menu .navbar-nav > li.current > a,
 .page-header .page-header-menu .hor-menu .navbar-nav > li.current > a:hover {
   color: #ffffff;
-  background: #7e1416;
+  background: #b22629;/*#7e1416;*/
 }
 .page-header .page-header-menu .hor-menu .navbar-nav > li.active > a > i,
 .page-header .page-header-menu .hor-menu .navbar-nav > li.active > a:hover > i, .page-header .page-header-menu .hor-menu .navbar-nav > li.current > a > i,

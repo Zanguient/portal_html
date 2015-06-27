@@ -62,8 +62,7 @@ angular.module("AtosCapital", ['ui.router',
                             
     // LINKS
     $scope.goAdministrativoUsuarios = function(){
-        //$state.go('administrativo-gestao-acesso-usuarios'); 
-        $scope.goAdministrativoUsuariosCadastro(); // CADASTRO É TEMPORÁRIO
+        $state.go('administrativo-gestao-acesso-usuarios'); 
     };
     $scope.goAdministrativoUsuariosCadastro = function(){
         $state.go('administrativo-gestao-acesso-usuarios-cadastro'); // CADASTRO É TEMPORÁRIO
@@ -146,14 +145,29 @@ angular.module("AtosCapital", ['ui.router',
         }
     };
              
-    // LAYOUT                        
+    // LAYOUT  
+    $scope.menuAtivo = function(titulo){
+        var state = $state.current.url.split('/')[1]; // nome da pasta inicial da url do estado atual
+        switch(titulo.toUpperCase()){
+            // Administrativo
+            case 'ADMINISTRATIVO' : return state == 'administrativo';
+            // Dashboard
+            case 'DASHBOARD': return state == 'dashboard';
+            // Card Services
+            case 'CARD SERVICES': return state == 'card-services';
+                
+            default : return false;        
+        }
+        
+    };
     // A partir do JSON recebido, obtem o JSON menu e as permissões do usuário
     var constroiMenu = function(data){
         // Exemplo
         data.id_grupo = 42;
         data.servicos = [
             {
-                titulo : 'Dashboard'
+                titulo : 'Dashboard',
+                home : true
             },
             {
                 titulo : 'Card Services',
@@ -187,8 +201,7 @@ angular.module("AtosCapital", ['ui.router',
                         titulo : 'Gestão de Acessos', 
                         modulos : [
                             {
-                                titulo : 'Usuários',
-                                home : true
+                                titulo : 'Usuários'
                             },
                             {
                                 titulo : 'Privilégios'
