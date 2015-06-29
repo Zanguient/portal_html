@@ -129,7 +129,7 @@ angular.module("AtosCapital", ['ui.router',
             // Card Services
             case 'CARD SERVICES': $scope.PERMISSAO_CARD_SERVICES = true; break;
             case 'CONCILIAÇÃO': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO = true; break;
-            //case 'CONCILIAÇÃO DE VENDAS': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_VENDAS = true; break;
+            case 'CONCILIAÇÃO DE VENDAS': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_VENDAS = true; break;
             // ...
             default : return ;        
         }
