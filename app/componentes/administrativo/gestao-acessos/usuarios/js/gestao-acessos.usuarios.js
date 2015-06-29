@@ -8,222 +8,83 @@
 // App
 angular.module("administrativo-usuarios", ['servicos']) 
 
-.controller("administrativo-usuariosCtrl", ['$scope','$state', '$campos', function($scope,$state,$campos){ 
-    
-    
+.controller("administrativo-usuariosCtrl", ['$scope',
+                                            '$state',
+                                            '$http',
+                                            '$campos',
+                                            '$webapi',
+                                            '$apis',
+                                            '$filter',
+                                            '$autenticacao', 
+                                            function($scope,$state,$http,$campos,
+                                                     $webapi,$apis,$filter,$autenticacao){ 
+    var token = '';
+    $scope.usuarios = [];
+    $scope.camposBusca = [
+                          {
+                            id: $campos.administracao.webpageusers.ds_email,
+                            nome: "E-mail"
+                          },{
+                            id: $campos.administracao.webpageusers.ds_login,
+                            nome: "Login"
+                          },{
+                            id: $campos.administracao.webpageusers.id_grupo,
+                            nome: "Grupo Empresa"
+                          },{
+                            id: $campos.administracao.webpageusers.nu_cnpjEmpresa,
+                            nome: "CNPJ da Empresa"
+                          },
+                         ];
+    $scope.itens_pagina = [10, 20, 50, 100];
+    $scope.usuario = {busca:'',campo_busca : $scope.camposBusca[0], itens_pagina : $scope.itens_pagina[0], pagina : 1, total : 0, total_paginas : 0};
+                                                
     // Inicialização do controller
     $scope.administrativoUsuariosInit = function(){
         // Título da página 
         $scope.pagina.titulo = 'Gestão de Acessos';                          
         $scope.pagina.subtitulo = 'Usuários';
-    };
-    
-}])
-
-
-// CADASTRO
-
-.controller("administrativo-usuarios-cadastroCtrl", ['$scope',
-                                                     '$state',
-                                                     '$campos',
-                                                     '$webapi',
-                                                     '$apis',
-                                                     '$autenticacao', function($scope,$state,$campos,$webapi,$apis,$autenticacao){ 
-    
-    var token = '';
-    // Tab
-    $scope.tabCadastro = 1;
-    // Dados
-    $scope.aa = 'meu nome';
-    $scope.pessoa = {nome:'', data_nasc:'', telefone:'', ramal:''};
-    $scope.usuario = {login:'', email:'', grupoempresa:undefined, empresa:undefined};
-    $scope.roles = [];
-    // Flags
-    var dataValida = false;
-    var loginValido = false;
-    var emailValido = false;
-    $scope.validandoLogin = false;
-    $scope.validandoEmail = false;                                                    
-    
-    // Inicialização do controller
-    $scope.administrativoUsuariosCadastroInit = function(){
-        // Título da página
-        $scope.pagina.titulo = 'Gestão de Acessos';                          
-        $scope.pagina.subtitulo = 'Cadastro de Usuário';
-        $scope.setTabCadastro(1);
-        $scope.atualizaProgressoDoCadastro();
+        // Token
         token = $autenticacao.getToken();
-    };
-    
-    
-    // Cancelar
-    $scope.cancelar = function(){
-        // Verifica se possui dados preenchidos
-        if($scope.pessoa.nome || $scope.pessoa.data_nasc || $scope.pessoa.telefone || $scope.pessoa.ramal || 
-           $scope.usuario.email || $scope.usuario.empresa || $scope.usuario.grupoempresa || $scope.usuario.login ||
-           $scope.roles.length > 0){
-           if(!confirm('Tem certeza que deseja descartar as informações preenchidas?')) return;
-        }
-        $scope.goAdministrativoUsuarios();
-    };
-                                                         
-    // Cadastrar Usuário
-    $scope.cadastrarUsuario = function(){
-        if($scope.formCadastroUsuario.$valid) {
-            alert("FORMULARIO VALIDO!");
-        }else alert("FORMULARIO INVALIDO!");
-    };
-                                                         
-    // TAB
-    
-    // Vai para a tab anterior
-    $scope.setTabAnterior = function(){
-        if($scope.tabCadastro > 1) $scope.setTabCadastro($scope.tabCadastro - 1);
-    };
-    // Vai para a próxima tab
-    $scope.setProximaTab = function(){
-        if($scope.tabCadastro < 4) $scope.setTabCadastro($scope.tabCadastro + 1);
-    };
-    // Modifica a tab atual
-    $scope.setTabCadastro = function(tab) {
-        $scope.tabCadastro = tab;
-    };
-    // Retorna true se a tab informada é a selecionada
-    $scope.tabCadastroSelecionada = function(tab){
-        return $scope.tabCadastro === tab;
-    };
-    
-    // Validação dos campos
-    // PESSOA
-    $scope.dataValida = function(){
-        return dataValida;    
-    };
-    $scope.validaData = function(){
-        if($scope.pessoa.data_nasc){
-            var parts = $scope.pessoa.data_nasc.split("/");
-            var data = new Date(parts[2], parts[1] - 1, parts[0]);//Date.parse($scope.pessoa.data_nasc);
-            // Verifica se a data é válida
-            dataValida = parts[0] == data.getDate() && (parts[1] - 1) == data.getMonth() && parts[2] == data.getFullYear();
-        }else dataValida = false;
-    };
-    // USUÁRIO
-    $scope.emailValido = function(){
-        return emailValido;    
-    }
-    $scope.loginValido = function(){
-        return loginValido;    
-    }
-    //Valida e-mail
-    $scope.validaEmail = function(){
-        if($scope.usuario.email){
-            $scope.validandoEmail = true;
-            var dadosAPI = $webapi.get($apis.administracao.webpageusers, [token, 0], {id:$campos.administracao.webpageusers.email, valor:$scope.usuario.email});
-            // Verifica se a requisição foi respondida com sucesso
-            dadosAPI.then(function(dados){
-                            if(!dados) console.log("DADOS NÃO FORAM RECEBIDOS!");
-                            else if(dados.Registros && dados.Registros.length > 0){ 
-                                $('#labelEmailEmUso').show();
-                                emailValido = false;
-                                $('#icon-email').show();
-                            }else{
-                                $('#labelEmailEmUso').hide();
-                                emailValido = true;
-                                $('#icon-email').show();
-                            }
-                            $scope.atualizaProgressoDoCadastro();
-                            $scope.validandoEmail = false;
-                        },
-                        function(failData){
-                            console.log("FALHA AO VALIDAR E-MAIL");
-                            $scope.validandoEmail = false;
-                        });
-        }else{
-            emailValido = false;  
-            $scope.atualizaProgressoDoCadastro();
+        // Busca Usuários
+        $scope.buscaUsuarios();
+        // Quando houver uma mudança de rota => modificar estado
+        $scope.$on('mudancaDeRota', function(event, state){
+            $state.go(state);
+        });
+    };   
+                                                
+    // PAGINAÇÃO
+    $scope.retrocedePagina = function(){
+        if($scope.usuario.pagina > 1){ 
+            $scope.usuario.pagina--;  
+            $scope.buscaUsuarios();
         }
     };
-    //Valida login
-    $scope.validaLogin = function(){
-        if($scope.usuario.login){
-            $scope.validandoLogin = true;
-            var dadosAPI = $webapi.get($apis.administracao.webpageusers, [token, 0], {id:$campos.administracao.webpageusers.login, valor:$scope.usuario.login});
-            // Verifica se a requisição foi respondida com sucesso
-            dadosAPI.then(function(dados){
-                            if(!dados) console.log("DADOS NÃO FORAM RECEBIDOS!");
-                            else if(dados.Registros && dados.Registros.length > 0){ 
-                                $('#labelLoginEmUso').show();
-                                loginValido = false;
-                                $('#icon-login').show();
-                            }else{
-                                $('#labelLoginEmUso').hide();
-                                loginValido = true;
-                                $('#icon-login').show();
-                            }
-                            $scope.atualizaProgressoDoCadastro();
-                            $scope.validandoLogin = false;
-                        },
-                        function(failData){
-                            console.log("FALHA AO VALIDAR LOGIN");
-                            $scope.validandoLogin = false;
-                        });
-        }else{
-            loginValido = false;  
-            $scope.atualizaProgressoDoCadastro();
+    $scope.avancaPagina = function(){
+        if($scope.usuario.pagina < $scope.usuario.total){ 
+            $scope.usuario.pagina++; 
+            $scope.buscaUsuarios();
         }
+    };
+     
+    // BUSCA
+    $scope.buscaUsuarios = function(){
+       // FAZER CONSIDERANDO O FILTRO!
+       $scope.obtendoUsuarios = true;
+       var dadosAPI = $webapi.get($apis.administracao.webpageusers, [token, 0, $scope.usuario.campo_busca.id, 0, 
+                                                                     $scope.usuario.itens_pagina, $scope.usuario.pagina]); 
+       dadosAPI.then(function(dados){
+                $scope.usuarios = dados.Registros;
+                $scope.usuario.total = dados.TotalDeRegistros;
+                $scope.obtendoUsuarios = false;
+              },
+              function(failData){
+                 console.log("FALHA AO OBTER ROLES: " + failData.status);
+                 $scope.obtendoUsuarios = false;
+              }); 
     };
     
-    // Progresso do cadastro
-    // Form Pessoa                                                     
-    var getPercentualFormPessoa = function(){
-        var percentual = $scope.pessoa.nome ? 25 : 0; // nome => obrigatório
-        if(percentual > 0){
-            // Avalia se há conteúdo no input. Se tiver, tem que ser um conteúdo válido
-            var conteudoData = '';
-            var conteudoTelefone = '';
-            var conteudoRamal = '';
-            if($scope.formCadastroUsuario){
-                conteudoData = $scope.formCadastroUsuario.pessoaDataNasc.$viewValue;
-                conteudoTelefone = $scope.formCadastroUsuario.pessoaTelefone.$viewValue;
-                conteudoRamal = $scope.formCadastroUsuario.pessoaRamal.$viewValue;
-            }
-            percentual += !conteudoData || dataValida ? 25 : 0; // data
-            percentual += !conteudoTelefone || $scope.pessoa.telefone ? 25 : 0; // telefone
-            percentual += !conteudoRamal || $scope.pessoa.ramal ? 25 : 0; // telefone
-        }else{
-            percentual += dataValida ? 25 : 0; // data
-            percentual += $scope.pessoa.telefone ? 25 : 0; // telefone
-            percentual += $scope.pessoa.ramal ? 25 : 0; // telefone
-        }
-        return percentual;    
+    $scope.filtraUsuarios = function(){
+        // FAZER!
     };
-    // Form Usuário                                                    
-    var getPercentualFormUsuario = function(){
-        var percentual = $scope.loginValido() ? 25 : 0; // login => obrigatório
-        percentual += $scope.emailValido() ? 25 : 0; // e-mail => obrigatório
-        if(percentual > 0){
-            percentual += $scope.loginValido() ? 25 : 0; // tanto faz o cara ter ou não associado um grupo empresa
-            percentual += $scope.emailValido() ? 25 : 0; // tanto faz o cara ter ou não associado uma empresa
-        }else{
-            percentual += $scope.usuario.empresa ? 25 : 0;
-            percentual += $scope.usuario.grupoempresa ? 25 : 0;
-        }
-        return percentual;    
-    };
-    // Form Roles
-    var getPercentualFormRoles = function(){
-        return $scope.roles.length > 0 ? 100 : 0 ; // temp  
-    };
-    // Progresso                                                     
-    $scope.atualizaProgressoDoCadastro = function(){
-        // São obrigatórios: 1 campo para pessoa (nome), 2 campos obrigatórios para usuário (login e e-mail) e alguma role
-        var progressoPessoa = getPercentualFormPessoa();
-        var progressoUsuario = getPercentualFormUsuario();
-        var progressoRoles = progressoPessoa + progressoUsuario == 200 ? 100 : 0;//getPercentualFormRoles();
-        // Atualiza
-        var percent = (progressoPessoa + progressoUsuario + progressoRoles) / 3;
-        $('#form_wizard_1').find('.progress-bar').css({
-            width: percent + '%'
-        });    
-    };
-    
-}]);
+}])

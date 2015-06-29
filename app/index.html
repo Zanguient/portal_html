@@ -13,7 +13,7 @@
 <!-- BEGIN HEAD -->
 <head>
 <meta charset="utf-8">
-<title>Atos Capital | Index</title>
+<title ng-bind="'Atos Capital | ' + titulo">Atos Capital</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta content="width=device-width, initial-scale=1" name="viewport">
 <meta content="" name="description">
@@ -43,6 +43,7 @@
 <link href="../css/custom.css" rel="stylesheet" type="text/css">
 <!-- END THEME STYLES -->
 <link rel="shortcut icon" href="../img/favicon.ico">
+    
 </head>
 <!-- END HEAD -->
     
@@ -173,7 +174,7 @@
                             <tr>
                                 <td>
                                     <div  style="margin-top:-5px">
-                                    <strong>{{grupoempresa.empresa || ''}}</strong>  
+                                    <strong>{{grupoempresa.ds_nome || ''}}</strong>  
 									</div>
                                 </td>
                                     
@@ -191,13 +192,14 @@
                                                       ng-keyup="$event.keyCode == 13"
                                                       typeahead-focus-first=false
                                                       typeahead-on-select="selecionaGrupoEmpresa($item)"
-                                                      typeahead="gempresa as gempresa.empresa for gempresa in grupoempresas | filter:{empresa:$viewValue} | limitTo:10" />
+                                                      typeahead-min-length='3'
+                                                      typeahead="gempresa as gempresa.ds_nome for gempresa in buscaGrupoEmpresas($viewValue)"/>
                                             </div>
                                             <div style="width:100%; margin-top:15px" ng-show="grupoempresa">
                                                 <a href="javascript:;" ng-click="limpaGrupoEmpresa()" class="btn">
                                                     <img ng-src="../img/clear.png" title="Limpar">
                                                 </a>
-                                                <strong>{{grupoempresa.empresa || ''}}</strong>
+                                                <strong>{{grupoempresa.ds_nome || ''}}</strong>
                                             </div>
                                         </form>
                                     </div>
@@ -298,6 +300,7 @@
 <script src="../js/services.js" type="text/javascript"></script>
 <script src="componentes/nao-autorizado/js/nao-autorizado.js" type="text/javascript"></script> <!-- DASHBOARD -->
 <script src="componentes/administrativo/gestao-acessos/usuarios/js/gestao-acessos.usuarios.js" type="text/javascript"></script>
+<script src="componentes/administrativo/gestao-acessos/usuarios/views/cadastro/js/gestao-acessos.usuarios.cadastro.js" type="text/javascript"></script>
 <script src="componentes/dashboard/js/dashboard.js" type="text/javascript"></script> <!-- DASHBOARD -->
 <script src="componentes/card-services/conciliacao/conciliacao-vendas/js/card-services.conciliacao-vendas.js" type="text/javascript"></script>
 <script src="js/app.js" type="text/javascript"></script> <!-- INDEX -->

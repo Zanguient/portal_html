@@ -8,7 +8,7 @@
 // App
 angular.module("card-services-conciliacao-vendas", []) 
 
-.controller("card-services-conciliacao-vendasCtrl", ['$scope',function($scope){ 
+.controller("card-services-conciliacao-vendasCtrl", ['$scope','$state',function($scope,$state){ 
     
     // Data
     $scope.datamin = new Date();
@@ -21,8 +21,10 @@ angular.module("card-services-conciliacao-vendas", [])
         // Título da página 
         $scope.pagina.titulo = 'Card Services';                          
         $scope.pagina.subtitulo = 'Conciliação de Vendas';
-        // Carrega o layout
-        // ...
+        // Quando houver uma mudança de rota => modificar estado
+        $scope.$on('mudancaDeRota', function(event, state){
+            $state.go(state);
+        });
     };
     
     // DATA

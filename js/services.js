@@ -11,14 +11,61 @@ angular.module('servicos', [ ])
 .factory('$campos', [function(){
    return{
       administracao : {
+        pessoa : {
+            id_pesssoa : 100,
+            nm_pessoa : 101, 
+            dt_nascimento : 102,
+            nu_telefone : 103,
+            nu_ramal : 104
+        },
+        webpageroles : {
+            RoleId : 100,
+            RoleName : 101
+        },
         webpageusers : {
-            id: 100,
-            login: 101,
-            email: 102,
-            grupoId: 103,
-            cnpjEmpresa: 104,
-            cnpjBaseEmpresa: 105,
-            pessoaId: 106    
+            id_users : 100,
+            ds_login : 101,
+            ds_email : 102,
+            id_grupo : 103,
+            nu_cnpjEmpresa : 104,
+            nu_cnpjBaseEmpresa : 105,
+            id_pessoa : 106
+        },
+        webpageusersinroles : {
+            UserId : 100,
+            RoleId : 101
+        }
+      },
+      cliente : {
+        empresa : {
+            nu_cnpj : 100,
+            nu_BaseCnpj : 101,
+            nu_SequenciaCnpj : 102,
+            nu_DigitoCnpj : 103,
+            ds_fantasia : 104,
+            ds_razaoSocial : 105,
+            ds_endereco : 106,
+            ds_cidade : 107,
+            sg_uf : 108,
+            nu_cep : 109,
+            nu_telefone : 110,
+            ds_bairro : 111,
+            ds_email : 112,
+            dt_cadastro : 113,
+            fl_ativo : 114,
+            token : 115,
+            id_grupo : 116,
+            filial : 117,
+            nu_inscEstadual : 118
+        },
+        grupoempresa : {
+            id_grupo : 100,
+            ds_nome : 101,
+            dt_cadastro : 102,
+            token : 103,
+            fl_cardservices : 104,
+            fl_taxservices : 105,
+            fl_proinfo : 106
         }
       }
    }
@@ -29,43 +76,20 @@ angular.module('servicos', [ ])
   return {
     autenticacao: {
       login: 'http://api.taxservices.com.br/login/autenticacao/', // 'http://192.168.0.100/api/login/autenticacao/'
+      // futuramente tirar daqui
       keyToken: 'token',
       keyLembrar: 'remember',
       keyDateTime: 'datetime'
     },
-    monitor: {
-      monitor: 'http://api.taxservices.com.br/monitor/',
-      pos: {
-        badges: 'http://api.taxservices.com.br/monitor/cargas/pos/contador/',
-        execucao: 'http://api.taxservices.com.br/monitor/cargas/pos/execucao/',
-        fila: 'http://api.taxservices.com.br/monitor/cargas/pos/fila/',
-        erro: 'http://api.taxservices.com.br/monitor/cargas/pos/erro/',
-        sucesso: 'http://api.taxservices.com.br/monitor/cargas/pos/sucesso/',
-        novaCarga: 'http://api.taxservices.com.br/monitor/cargas/pos/novacarga/' 
-      },
-      tef: {
-        execucao: 'http://api.taxservices.com.br/monitor/cargas/pos/erro/',
-        fila: 'http://api.taxservices.com.br/monitor/cargas/pos/sucesso/'
-      }
-    },
     administracao : {
         pessoa : 'http://192.168.0.100/api/administracao/pessoa/',
-        webpageusers : 'http://192.168.0.100/api/administracao/webpagesusers/' 
+        webpageroles : 'http://192.168.0.100/api/administracao/webpagesroles/',
+        webpageusers : 'http://192.168.0.100/api/administracao/webpagesusers/', 
+        webpageusersinroles : 'http://192.168.0.100/api/administracao/webpagesusersinroles/'
     },
     cliente: {
       empresa : 'http://192.168.0.100/api/cliente/empresa/',
-      grupoempresa : 'http://192.168.0.100/api/cliente/grupoempresa/',    
-      grupos: {
-        geral: 'http://192.168.0.100/api/cliente/grupoempresa/',
-        cardServices: 'http://api.taxservices.com.br/kpi/cliente/1/s', //'http://192.168.0.100/api/cliente/grupoempresa/',
-        semCardServices: 'http://192.168.0.100/api/cliente/grupoempresa/',
-        TaxServices: 'http://192.168.0.100/api/cliente/grupoempresa/',
-        semTaxServices: '',
-        ProInfo: '',
-        semProInfo: ''
-      },
-      filiais: '',
-      adquirentes: ''
+      grupoempresa : 'http://192.168.0.100/api/cliente/grupoempresa/'
     }
   }
 }])
@@ -115,10 +139,7 @@ angular.module('servicos', [ ])
 
 .factory('$webapi', ['$q', '$http', function($q, $http) {
   return {
-    get: function(api, parametros, filtros) {
-      // Setando o promise
-      var deferido = $q.defer();
-       
+    getUrl : function(api, parametros, filtros){
       // Se for uma string, somente concatena ela    
       if(typeof parametros === 'string'){ 
           // Se for enviado uma string vazia, não concatena
@@ -139,10 +160,32 @@ angular.module('servicos', [ ])
              }
          }else api = api.concat(filtros.id + '=' + filtros.valor); // é apenas um json
       }
-        
+    
+      return api;      
+    },
+    /**
+      * HTTP GET que retorna um promise. A URL e o primeiro parâmetro (token) são obrigatórios. 
+      * Se não for desejado utilizar filtro, apenas chamar a função usando dois argumentos em vez de três. 
+      *
+      * @param api : url da web api
+      * @param parametros: apenas uma string ou um array de strings/integers
+      *                    ORDEM: 0) token
+      *                           1) colecao: 0 = min (default) | 1 = max
+      *                           2) campoOrderBy: id do campo que define a ordenação
+      *                           3) orderBy : 0 = crescente (default) | 1 = decrescente)
+      *                           4) itensPorPagina : total de itens desejados para a busca
+      *                           5) pagina : página a ser exibida
+      * @param filtros : JSON ou array de JSON, ao qual cada elemento contem um 'id' e um 'valor'
+      *                  OBS: Para between de data, passar {CODIGO_DATA : DATA_INICIO%DATA_FIM}
+      */                
+    get: function(api, parametros, filtros) {
+      // Setando o promise
+      var deferido = $q.defer();
+       
+      var url = this.getUrl(api, parametros, filtros);
         
       // Requisitar informações de monitoramento
-      $http.get(api)
+      $http.get(url)
         .success(function(dados, status, headers, config){
           deferido.resolve(dados);
         }).error(function(dados, status, headers, config){
@@ -167,7 +210,7 @@ angular.module('servicos', [ ])
       // Setando o promise
       var deferido = $q.defer();
 
-      $http.post(api, dadosFormulario)
+      $http.post(api + '?token=' + token, dadosFormulario)
         .success(function(dados, status, headers, config){
           deferido.resolve(dados);
         }).error(function(dados, status, headers, config){
