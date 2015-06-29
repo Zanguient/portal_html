@@ -139,6 +139,22 @@ angular.module('servicos', [ ])
 
 .factory('$webapi', ['$q', '$http', function($q, $http) {
   return {
+    /**
+      * Obtem a url completa, considerando os parâmetros e os filtros. 
+      * A URL e o primeiro parâmetro (token) são obrigatórios. 
+      * Se não for desejado utilizar filtro, apenas chamar a função usando dois argumentos em vez de três. 
+      *
+      * @param api : url da web api
+      * @param parametros: apenas uma string ou um array de strings/integers
+      *                    ORDEM: 0) token
+      *                           1) colecao: 0 = min (default) | 1 = max
+      *                           2) campoOrderBy: id do campo que define a ordenação
+      *                           3) orderBy : 0 = crescente (default) | 1 = decrescente)
+      *                           4) itensPorPagina : total de itens desejados para a busca
+      *                           5) pagina : página a ser exibida
+      * @param filtros : JSON ou array de JSON, ao qual cada elemento contem um 'id' e um 'valor'
+      *                  OBS: Para between de data, passar {CODIGO_DATA : DATA_INICIO%DATA_FIM}
+      */  
     getUrl : function(api, parametros, filtros){
       // Se for uma string, somente concatena ela    
       if(typeof parametros === 'string'){ 
@@ -164,25 +180,16 @@ angular.module('servicos', [ ])
       return api;      
     },
     /**
-      * HTTP GET que retorna um promise. A URL e o primeiro parâmetro (token) são obrigatórios. 
-      * Se não for desejado utilizar filtro, apenas chamar a função usando dois argumentos em vez de três. 
-      *
-      * @param api : url da web api
-      * @param parametros: apenas uma string ou um array de strings/integers
-      *                    ORDEM: 0) token
-      *                           1) colecao: 0 = min (default) | 1 = max
-      *                           2) campoOrderBy: id do campo que define a ordenação
-      *                           3) orderBy : 0 = crescente (default) | 1 = decrescente)
-      *                           4) itensPorPagina : total de itens desejados para a busca
-      *                           5) pagina : página a ser exibida
-      * @param filtros : JSON ou array de JSON, ao qual cada elemento contem um 'id' e um 'valor'
-      *                  OBS: Para between de data, passar {CODIGO_DATA : DATA_INICIO%DATA_FIM}
+      * HTTP GET que retorna um promise. 
+      * Para entender os outros argumentos, ver função getUrl(api, parametros, filtros)
       */                
     get: function(api, parametros, filtros) {
       // Setando o promise
       var deferido = $q.defer();
        
       var url = this.getUrl(api, parametros, filtros);
+
+      console.log(url);    
         
       // Requisitar informações de monitoramento
       $http.get(url)

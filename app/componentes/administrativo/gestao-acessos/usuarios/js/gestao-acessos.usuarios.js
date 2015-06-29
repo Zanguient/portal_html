@@ -36,7 +36,7 @@ angular.module("administrativo-usuarios", ['servicos'])
                           },
                          ];
     $scope.itens_pagina = [10, 20, 50, 100];
-    $scope.usuario = {busca:'',campo_busca : $scope.camposBusca[0], itens_pagina : $scope.itens_pagina[0], pagina : 1, total : 0, total_paginas : 0};
+    $scope.usuario = {busca:'',campo_busca : $scope.camposBusca[0], itens_pagina : $scope.itens_pagina[0], pagina : 1, total_registros : 0, total_paginas : 0};
                                                 
     // Inicialização do controller
     $scope.administrativoUsuariosInit = function(){
@@ -61,21 +61,30 @@ angular.module("administrativo-usuarios", ['servicos'])
         }
     };
     $scope.avancaPagina = function(){
-        if($scope.usuario.pagina < $scope.usuario.total){ 
+        if($scope.usuario.pagina < $scope.usuario.total_paginas){ 
             $scope.usuario.pagina++; 
             $scope.buscaUsuarios();
         }
     };
+    $scope.alterouItensPagina = function(){
+        $scope.buscaUsuarios();   
+    };
      
     // BUSCA
     $scope.buscaUsuarios = function(){
-       // FAZER CONSIDERANDO O FILTRO!
+       var filtros = undefined;
+       
+       // Só considera busca de filtro a partir de três caracteres    
+       if($scope.usuario.busca.length > 0) filtros = {id: $scope.usuario.campo_busca.id, valor: '%' + $scope.usuario.busca + '%'};        
+        
        $scope.obtendoUsuarios = true;
-       var dadosAPI = $webapi.get($apis.administracao.webpageusers, [token, 0, $scope.usuario.campo_busca.id, 0, 
-                                                                     $scope.usuario.itens_pagina, $scope.usuario.pagina]); 
+       var dadosAPI = $webapi.get($apis.administracao.webpageusers, [token, 0, $campos.administracao.webpageusers.ds_email, 0, 
+                                                                     $scope.usuario.itens_pagina, $scope.usuario.pagina],
+                                  filtros); 
        dadosAPI.then(function(dados){
                 $scope.usuarios = dados.Registros;
-                $scope.usuario.total = dados.TotalDeRegistros;
+                $scope.usuario.total_registros = dados.TotalDeRegistros;
+                $scope.usuario.total_paginas = Math.ceil($scope.usuario.total_registros / $scope.usuario.itens_pagina);
                 $scope.obtendoUsuarios = false;
               },
               function(failData){
@@ -83,8 +92,5 @@ angular.module("administrativo-usuarios", ['servicos'])
                  $scope.obtendoUsuarios = false;
               }); 
     };
-    
-    $scope.filtraUsuarios = function(){
-        // FAZER!
-    };
+
 }])

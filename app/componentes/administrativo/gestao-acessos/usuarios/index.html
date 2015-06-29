@@ -89,8 +89,9 @@
                                         <select name="datatable_products_length" aria-controls="datatable_products" 
                                                 class="form-control input-xsmall input-sm input-inline"
                                                 ng-model="usuario.itens_pagina"
+                                                ng-change="alterouItensPagina()"
                                                 ng-options="item for item in itens_pagina">                                            
-                                        </select> registros
+                                        </select> registros de {{usuario.total_registros}}
                                     </label>
                                 </div>
                             </div>
@@ -108,8 +109,8 @@
                                                    class="form-control input-inline" 
                                                    placeholder="Buscar" 
                                                    aria-controls="sample_editable_1"
-                                                   ng-model="usuario.busca"
-                                                   ng-change="filtraUsuarios()">
+                                                   ng-model="usuario.busca">
+                                                   <!--ng-change="buscaUsuarios()"-->
                                     </label>
                                 </div>
                             </div>
@@ -131,7 +132,7 @@
                                         </th>
                                         <th class="sorting" tabindex="0" aria-controls="sample_editable_1" 
                                             rowspan="1" colspan="1" style="width: 100px">
-                                             Grupo
+                                             Grupo Empresa
                                         </th>
                                         <!--th class="sorting" tabindex="0" aria-controls="sample_editable_1" 
                                             rowspan="1" colspan="1" style="width: 129px;">
@@ -157,7 +158,7 @@
                                              {{usuario.ds_email}}
                                         </td>
                                         <td>
-                                             Grupo empresa
+                                             {{usuario.id_grupo}}
                                         </td>
                                         <!--td class="center">
                                              CNPJ Base Empresa
@@ -191,17 +192,16 @@
                         <div class="row">
                             <div class="col-md-5 col-sm-12">
                                 <div class="dataTables_info" id="sample_editable_1_info" role="status" aria-live="polite">
-                                    <strong>Total de registros encontrados: {{usuario.total}}</strong>
+                                    <strong>Total de registros encontrados: {{usuario.total_registros}}</strong>
                                 </div>
                             </div>
                             <!-- PAGINAÇÃO -->
                             <div class="col-md-7 col-sm-12">
                                 <div class="dataTables_paginate paging_simple_numbers" id="sample_editable_1_paginate">
                                     <ul class="pagination">
-                                        <li class="paginate_button previous disabled" 
+                                        <li class="paginate_button previous" ng-class="{'element-hidden': usuario.pagina <= 1}"
                                             aria-controls="sample_editable_1" tabindex="0" id="sample_editable_1_previous">
                                             <a href="javascript:;" 
-                                               ng-disabled="usuario.pagina <= 1"
                                                ng-click="retrocedePagina()">
                                                 <i class="fa fa-angle-left"></i>
                                             </a>
@@ -209,13 +209,16 @@
                                         <li class="paginate_button active" aria-controls="sample_editable_1" tabindex="0">
                                             <a href="javascript:;">{{usuario.pagina}}</a>
                                         </li>
-                                        <li class="paginate_button next disabled" aria-controls="sample_editable_1" 
+                                        <li class="paginate_button next" ng-class="{'element-hidden': usuario.pagina >= usuario.total_paginas}"
+                                            aria-controls="sample_editable_1" 
                                             tabindex="0" id="sample_editable_1_next">
                                             <a href="javascript:;" 
-                                               ng-disabled="usuario.pagina >= usuario.total"
                                                ng-click="avancaPagina()">
                                                 <i class="fa fa-angle-right"></i>
                                             </a>
+                                        </li>
+                                        <li>
+                                            <strong> de {{usuario.total_paginas}} página(s)</strong>
                                         </li>
                                     </ul>
                                 </div>
