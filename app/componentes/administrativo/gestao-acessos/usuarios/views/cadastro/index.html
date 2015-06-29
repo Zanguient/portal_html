@@ -1,0 +1,339 @@
+<!-- 
+/*
+ *  Atos Capital - www.atoscapital.com.br
+ *  
+ *  suporte@atoscapital.com.br
+ *
+ */
+-->
+
+<div class="container" ng-controller="administrativo-usuarios-cadastroCtrl" ng-init="administrativoUsuariosCadastroInit()">
+    <!-- BEGIN PAGE BREADCRUMB -->
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href ng-click="goHome()">Início</a><i class="fa fa-circle"></i>
+        </li>
+        <li class="active">
+             Administrativo<i class="fa fa-caret-right"></i>
+             Gestão de Acessos<i class="fa fa-caret-right"></i>
+             <a href ng-click="goAdministrativoUsuarios()">Usuários</a><i class="fa fa-circle"></i>
+             Cadastro
+        </li>
+    </ul>
+    <!-- END PAGE BREADCRUMB -->
+    <!-- BEGIN PAGE CONTENT INNER -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light" id="form_wizard_1">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject font-green-sharp bold uppercase">
+                        Cadastro de Usuário - <span class="step-title">Etapa {{tabCadastro}} de 4 </span>
+                        </span>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <form class="form-horizontal" name="formCadastroUsuario" novalidate> <!--action="javascript:;" -->
+                        <div class="form-wizard">
+                            <div class="form-body">
+                                <ul class="nav nav-pills nav-justified steps">
+                                    <li ng-class="{ active:tabCadastroSelecionada(1) }">
+                                        <a href ng-click="setTabCadastro(1)" data-toggle="tab" class="step">
+                                        <span class="number">
+                                        1 </span>
+                                        <span class="desc">
+                                        <i class="fa fa-check"></i> Dados pessoais </span>
+                                        </a>
+                                    </li>
+                                    <li ng-class="{ active:tabCadastroSelecionada(2) }">
+                                        <a href ng-click="setTabCadastro(2)" data-toggle="tab" class="step">
+                                        <span class="number">
+                                        2 </span>
+                                        <span class="desc">
+                                        <i class="fa fa-check"></i> Dados da conta </span>
+                                        </a>
+                                    </li>
+                                    <li ng-class="{ active:tabCadastroSelecionada(3) }">
+                                        <a href ng-click="setTabCadastro(3)" data-toggle="tab" class="step active">
+                                        <span class="number">
+                                        3 </span>
+                                        <span class="desc">
+                                        <i class="fa fa-check"></i> Privilégios </span>
+                                        </a>
+                                    </li>
+                                    <li ng-class="{ active:tabCadastroSelecionada(4) }">
+                                        <a href ng-click="setTabCadastro(4)" data-toggle="tab" class="step">
+                                        <span class="number">
+                                        4 </span>
+                                        <span class="desc">
+                                        <i class="fa fa-check"></i> Confirmação </span>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <!-- PROGRESS -->
+                                <div id="bar" class="progress progress-striped" role="progressbar">
+                                    <div class="progress-bar progress-bar-success">
+                                    </div>
+                                </div>
+                                <!-- CONTEUDO -->
+                                <div class="tab-content">
+                                    <!-- DADOS PESSOAIS -->
+                                    <div class="tab-pane" ng-class="{ active:tabCadastroSelecionada(1) }">
+                                        <h3 class="block">Forneça seus dados pessoais</h3>
+                                        <!-- NOME -->
+                                        <div class="form-group" ng-class="{ 'has-error' : formCadastroUsuario.pessoaNome.$invalid && !formCadastroUsuario.pessoaNome.$pristine }">
+                                            <label class="control-label col-md-3">Nome <span class="required">
+                                            * </span>
+                                            </label>
+                                            <div class="col-md-4">
+                                                <input type="text" 
+                                                       placeholder="Nome Sobrenome" 
+                                                       class="form-control" 
+                                                       ng-model="pessoa.nome" 
+                                                       ng-blur="atualizaProgressoDoCadastro()" 
+                                                       name="pessoaNome" required/>
+                                                <span style="color:red" ng-show="formCadastroUsuario.pessoaNome.$dirty && formCadastroUsuario.pessoaNome.$invalid">
+                                                    <span ng-show="formCadastroUsuario.pessoaNome.$error.required">Nome é obrigatório!</span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <!-- DATA DE NASCIMENTO -->
+                                        <div class="form-group" ng-class="{ 'has-error' : formCadastroUsuario.pessoaDataNasc.$invalid && !formCadastroUsuario.pessoaDataNasc.$pristine }">
+                                            <label class="control-label col-md-3">Data de Nascimento</label>
+                                            <div class="col-md-4">
+                                               <input type="text" placeholder="DD/MM/YYYY" maxlength="10" class="form-control" 
+                                                      ng-model="pessoa.data_nasc" ng-change="validaData()" name="pessoaDataNasc" 
+                                                      ng-pattern='/^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[012])\/\d{4}$/'
+                                                      ng-blur="atualizaProgressoDoCadastro()"/>
+                                                
+                                                <span style="color:red" ng-show='formCadastroUsuario.pessoaDataNasc.$dirty && (formCadastroUsuario.pessoaDataNasc.$error.pattern || !dataValida())'>Data de Nascimento informada é inválida!</span>
+                                            </div>
+                                        </div>
+                                        <!-- TELEFONE -->
+                                        <div class="form-group" ng-class="{ 'has-error' : formCadastroUsuario.pessoaTelefone.$invalid && !formCadastroUsuario.pessoaTelefone.$pristine }">
+                                            <label class="control-label col-md-3">Telefone </label>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" ng-model="pessoa.telefone" 
+                                                       maxlength="11" ng-minlength="10" ng-pattern="/^\d+$/"
+                                                       name="pessoaTelefone" placeholder="7912345678"
+                                                       ng-blur="atualizaProgressoDoCadastro()" />
+                                                <span style="color:red" ng-show="formCadastroUsuario.pessoaTelefone.$dirty && formCadastroUsuario.pessoaTelefone.$invalid">
+                                                    <span ng-show="formCadastroUsuario.pessoaTelefone.$error.minlength">Telefone deve conter no mínimo 10 dígitos!</span>
+                                                    <span ng-show="formCadastroUsuario.pessoaTelefone.$error.pattern">Telefone deve ser composto apenas de números!</span>    
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <!-- RAMAL -->
+                                        <div class="form-group" ng-class="{ 'has-error' : formCadastroUsuario.pessoaRamal.$invalid && !formCadastroUsuario.pessoaRamal.$pristine }">
+                                            <label class="control-label col-md-3">Ramal </label>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" ng-model="pessoa.ramal"
+                                                       maxlength="4" ng-minlength="2" ng-pattern="/^\d+$/"
+                                                       name="pessoaRamal" placeholder="1234"
+                                                       ng-blur="atualizaProgressoDoCadastro()"/>
+                                                <span style="color:red" ng-show="formCadastroUsuario.pessoaRamal.$dirty && formCadastroUsuario.pessoaRamal.$invalid">
+                                                    <span ng-show="formCadastroUsuario.pessoaRamal.$error.minlength">Ramal deve conter no mínimo 2 dígitos!</span>
+                                                    <span ng-show="formCadastroUsuario.pessoaRamal.$error.pattern">Ramal deve ser composto apenas de números!</span>    
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- DADOS DA CONTA -->
+                                    <div class="tab-pane" ng-class="{ active:tabCadastroSelecionada(2) }">
+                                        <h3 class="block">Forneça os dados da conta</h3>
+                                        <!-- LOGIN -->
+                                        <div class="form-group" ng-class="{ 'has-error' : formCadastroUsuario.usuarioLogin.$invalid && !formCadastroUsuario.usuarioLogin.$pristine }">
+                                            <label class="control-label col-md-3">Login <span class="required">
+                                            * </span>
+                                            </label>
+                                            <div class="col-md-4">
+                                                <div class="input-icon right">
+                                                    <i id="icon-login" class="fa" ng-class="{'fa-check': loginValido(), 'fa-warning': !loginValido()}" style="display:none" ng-hide="validandoLogin"></i>
+                                                    <input type="text" 
+                                                           placeholder="login" 
+                                                           class="form-control" 
+                                                           ng-model="usuario.login" 
+                                                           ng-blur="validaLogin()" 
+                                                           name="usuarioLogin" 
+                                                           ng-minlength="3" ng-maxlength="20" required/>
+                                                    <span style="color:red" ng-show="formCadastroUsuario.usuarioLogin.$dirty && formCadastroUsuario.usuarioLogin.$invalid">
+                                                    <span ng-show="formCadastroUsuario.usuarioLogin.$error.required">Login é obrigatório!</span>
+                                                    <span ng-show="formCadastroUsuario.usuarioLogin.$error.minlength">Login deve conter no mínimo três caracteres!</span>
+                                                    <span ng-show="formCadastroUsuario.usuarioLogin.$error.maxlength">Login deve conter no máximo vinte caracteres!</span>    
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <img ng-src="../../../../../img/loading-atos.gif" style="margin-top: 10px" ng-show="validandoLogin"/><label id="labelLoginEmUso" class="control-label" hidden><strong>Login já está em uso!</strong></label>
+                                        </div>
+                                        <!-- E-MAIL -->
+                                        <div class="form-group" ng-class="{ 'has-error' : formCadastroUsuario.usuarioEmail.$invalid && !formCadastroUsuario.usuarioEmail.$pristine }">
+                                            <label class="control-label col-md-3">E-mail <span class="required">
+                                            * </span>
+                                            </label>
+                                            <div class="col-md-4">
+                                                <div class="input-icon right">
+                                                    <i id="icon-email" class="fa" ng-class="{'fa-check': emailValido(), 'fa-warning': !emailValido()}" style="display:none" ng-hide="validandoEmail"></i>
+                                                    <input type="email" 
+                                                           placeholder="email@email.com" 
+                                                           class="form-control" 
+                                                           ng-model="usuario.email" 
+                                                           ng-blur="validaEmail()" 
+                                                           name="usuarioEmail" required/>
+                                                    <span style="color:red" ng-show="formCadastroUsuario.usuarioEmail.$dirty && formCadastroUsuario.usuarioEmail.$invalid">
+                                                    <span ng-show="formCadastroUsuario.usuarioEmail.$error.required">E-mail é obrigatório!</span>
+                                                    <span ng-show="formCadastroUsuario.usuarioEmail.$error.email">Endereço de e-mail é inválido!                                                       </span>
+                                                </div>
+                                            </div>
+                                            <img ng-src="../../../../../img/loading-atos.gif" style="margin-top: 10px" ng-show="validandoEmail"/><label id="labelEmailEmUso" class="control-label" hidden><strong>E-mail já está em uso!</strong></label>
+                                        </div>
+                                        <!-- GRUPO EMPRESA -->
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">Grupo Empresa </label>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" 
+                                                       placeholder="Digite o nome do grupo empresa" 
+                                                       ng-model="usuario.grupoempresa"
+                                                       ng-blur="atualizaProgressoDoCadastro()"
+                                                       onfocus="this.select();" onmouseup="return false;"
+                                                       typeahead-focus-first=false
+                                                       typeahead-min-length='3'
+                                                       typeahead="grupoempresa as grupoempresa.ds_nome for grupoempresa in buscaGrupoEmpresas($viewValue)" />
+                                            </div>
+                                            <img ng-src="../../../../../img/loading-atos.gif" style="margin-top: 10px" ng-show="pesquisandoGruposEmpresas"/>
+                                        </div>
+                                        <!-- EMPRESA -->
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">Empresa </label>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" 
+                                                       placeholder="Digite o nome da empresa" 
+                                                       ng-model="usuario.empresa"
+                                                       ng-blur="atualizaProgressoDoCadastro()"
+                                                       onfocus="this.select();" onmouseup="return false;"
+                                                       typeahead-focus-first=false
+                                                       typeahead-min-length='3'
+                                                       typeahead="empresa as empresa.ds_fantasia for empresa in buscaEmpresas($viewValue)" />
+                                            </div>
+                                            <img ng-src="../../../../../img/loading-atos.gif" style="margin-top: 10px" ng-show="pesquisandoEmpresas"/>
+                                        </div>
+                                    </div>
+                                    <!-- PRIVILÉGIOS -->
+                                    <div class="tab-pane" ng-class="{ active:tabCadastroSelecionada(3) }">
+                                        <h3 class="block">Forneça os privilégios</h3>
+                                        <div class="form-group" name="formRoles" >
+                                            <label class="control-label col-md-3">Privilégios <span class="required">
+                                            * </span>
+                                            </label>
+                                            <div class="col-md-4">
+                                                <div class="checkbox-list" ng-repeat="role in roles">
+                                                    <label class="checkbox">
+                                                        <input type="checkbox" 
+                                                               ng-change="handleRole()"
+                                                               ng-model="role.selecionado"/>&nbsp;{{role.RoleName}}
+                                                    </label>
+                                                </div>
+                                                <span style="color:red" ng-show="!rolesSelecionadas">
+                                                    <strong>Selecione pelo menos um privilégio</strong>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- CONFIRMAÇÃO -->
+                                    <div class="tab-pane" ng-class="{ active:tabCadastroSelecionada(4) }">
+                                        <h3 class="block">Confirme seus dados</h3>
+                                        <h4 class="form-section">Dados pessoais</h4>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">Nome:</label>
+                                            <div class="col-md-4">
+                                                <p class="form-control-static"><strong>{{pessoa.nome}}</strong></p>
+                                            </div>
+                                        </div>                                    
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">Data de Nascimento:</label>
+                                            <div class="col-md-4">
+                                                <p class="form-control-static"><strong>{{pessoa.data_nasc}}</strong></p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">Telefone:</label>
+                                            <div class="col-md-4">
+                                                <p class="form-control-static"><strong>{{pessoa.telefone}}</strong></p>
+                                            </div>
+                                        </div>                                    
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">Ramal:</label>
+                                            <div class="col-md-4">
+                                                <p class="form-control-static"><strong>{{pessoa.ramal}}</strong></p>
+                                            </div>
+                                        </div>
+                                        <h4 class="form-section">Dados da conta</h4>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">Login:</label>
+                                            <div class="col-md-4">
+                                                <p class="form-control-static"><strong>{{usuario.login}}</strong></p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">E-mail:</label>
+                                            <div class="col-md-4">
+                                                <p class="form-control-static"><strong>{{usuario.email}}</strong></p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">Grupo Empresa:</label>
+                                            <div class="col-md-4">
+                                                <p class="form-control-static"><strong>{{usuario.grupoempresa.ds_nome || ''}}</strong></p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">Empresa:</label>
+                                            <div class="col-md-4">
+                                                <p class="form-control-static"><strong>{{usuario.empresa.ds_fantasia || ''}}</strong></p>
+                                            </div>
+                                        </div>
+                                        <h4 class="form-section">Privilégios</h4>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">Privilégios:</label>
+                                            <div class="col-md-4">
+                                                <div ng-repeat="role in roles | filter:{selecionado:true}">
+                                                    <strong>{{role.RoleName}}</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- BOTÕES -->
+                            <div class="form-actions">
+                                <div class="row">
+                                    <div class="col-md-offset-3 col-md-9">
+                                        <a href="javascript:;" ng-click="goAdministrativoUsuarios()" class="btn red button-previous">
+										  <i class="fa fa-times" ng-disabled="cadastrando"></i> Cancelar 
+                                        </a>
+                                        <a href="javascript:;" ng-click="setTabAnterior()" 
+                                           class="btn default button-previous" 
+                                           ng-class="{'element-hidden': tabCadastroSelecionada(1)}">
+                                            <i class="m-icon-swapleft"></i> Voltar 
+                                        </a>
+                                        <a href="javascript:;" ng-click="setProximaTab()" 
+                                           class="btn blue button-next" 
+                                           ng-class="{'element-hidden': tabCadastroSelecionada(4)}">
+                                            Continuar <i class="m-icon-swapright m-icon-white"></i>
+                                        </a>
+                                        <a href="javascript:;" ng-click="cadastrarUsuario()"
+                                           class="btn green button-submit" 
+                                           ng-show="tabCadastroSelecionada(4) && !cadastrando">
+                                            Cadastrar <i class="fa fa-plus"></i><!--i class="m-icon-swapright m-icon-white"></i-->
+                                        </a>
+                                        <img ng-src="../../../../../img/loading-atos.gif" style="margin-top: 10px" ng-show="cadastrando"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END PAGE CONTENT INNER -->
+</div>

@@ -8,3 +8,12 @@
     padding: 15px 34px !important;
     margin-top: 1px;
 }
+
+.element-hidden{
+    visibility: hidden
+}
+
+.page-header .page-header-menu .hor-menu .navbar-nav > li.mega-menu-dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0;
+ }

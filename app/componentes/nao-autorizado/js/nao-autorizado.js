@@ -13,8 +13,9 @@ angular.module("nao-autorizado", [])
     // Inicialização do controller
     $scope.naoAutorizadoInit = function(){
         // Título da página : Deixa o que gostaria que aparecesse...
-        //$scope.pagina.titulo = 'Não autorizado';                          
-        //$scope.pagina.subtitulo = '';
-    };
-    
+        // Quando houver uma mudança de rota => modificar estado
+        $scope.$on('mudancaDeRota', function(event, state){
+            $state.go(state);
+        });
+    };    
 }]);

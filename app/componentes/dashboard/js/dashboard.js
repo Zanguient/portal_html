@@ -16,8 +16,10 @@ angular.module("dashboard", [])
         // Título da página 
         $scope.pagina.titulo = 'Dashboard';                          
         $scope.pagina.subtitulo = 'Resumo do dia';
-        // Carrega o layout
-        // ...
+        // Quando houver uma mudança de rota => modificar estado
+        $scope.$on('mudancaDeRota', function(event, state){
+            $state.go(state);
+        });
     };
     
 }]);

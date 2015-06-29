@@ -3,6 +3,10 @@ Alterar hover do drop down menu
 css/default.css >.navbar-nav > li . dropdown-menu li : hover/ > a (251)
 css/default.css >.navbar-nav > li . dropdown-menu li : hover/ > a (255)
 
+Alterar cor do menu quando ativo
+
+css/defaults.css > .page-header .page-header-menu .hor-menu .navbar-nav > li.active > a (230)
+
 Alterar corese submenu
 
 cor titulo do submenu (212)
@@ -11,6 +15,7 @@ cor titulo do submenu (212)
 Alterar o icone do hover dropdown
 
 css/default.css >.navbar-nav > li . dropdown-menu li : hover/ > a > i(259)
+
 
 
 -Alterar menu do usuario
