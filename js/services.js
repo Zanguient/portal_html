@@ -221,17 +221,22 @@ angular.module('servicos', [ ])
         });
       return deferido.promise;
     },
-    update: function(api, token, id, dadosFormulario){
+    /**
+      * HTTP PUT que retorna um promise
+      */   
+    update: function(api, token, dadosFormulario){
       // Setando o promise
       var deferido = $q.defer();
       
+      var url = this.getUrl(api, token);    
+        
       // Requisitar informações de monitoramento
-      $http.put(api + id, dadosFormulario)
+      $http.put(url, dadosFormulario)
         .success(function(dados){
           deferido.resolve(dados);
         }).error(function(erro){
           deferido.reject(erro);
-        })
+        });
       return deferido.promise; 
     },
     post: function(api, token, dadosFormulario){
