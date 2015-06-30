@@ -189,10 +189,31 @@ angular.module('servicos', [ ])
        
       var url = this.getUrl(api, parametros, filtros);
 
-      console.log(url);    
+      //console.log(url);    
         
       // Requisitar informações de monitoramento
       $http.get(url)
+        .success(function(dados, status, headers, config){
+          deferido.resolve(dados);
+        }).error(function(dados, status, headers, config){
+          deferido.reject({'dados':dados,'status':status});
+        });
+      return deferido.promise;
+    },
+    /**
+      * HTTP DELETE que retorna um promise. 
+      * Para entender os outros argumentos, ver função getUrl(api, parametros, filtros)
+      */                
+    delete: function(api, parametros, filtros) {
+      // Setando o promise
+      var deferido = $q.defer();
+       
+      var url = this.getUrl(api, parametros, filtros);
+
+      //console.log(url);    
+        
+      // Requisitar informações de monitoramento
+      $http.delete(url)
         .success(function(dados, status, headers, config){
           deferido.resolve(dados);
         }).error(function(dados, status, headers, config){

@@ -17,7 +17,7 @@
              Administrativo<i class="fa fa-caret-right"></i>
              Gestão de Acessos<i class="fa fa-caret-right"></i>
              <a href ng-click="goAdministrativoUsuarios()">Usuários</a><i class="fa fa-circle"></i>
-             Cadastro
+             {{tela.tipo}}
         </li>
     </ul>
     <!-- END PAGE BREADCRUMB -->
@@ -28,7 +28,7 @@
                 <div class="portlet-title">
                     <div class="caption">
                         <span class="caption-subject font-green-sharp bold uppercase">
-                        Cadastro de Usuário - <span class="step-title">Etapa {{tabCadastro}} de 4 </span>
+                        {{tela.tipo}} de Usuário - <span class="step-title">Etapa {{tabCadastro}} de 4 </span>
                         </span>
                     </div>
                 </div>
@@ -320,10 +320,11 @@
                                            ng-class="{'element-hidden': tabCadastroSelecionada(4)}">
                                             Continuar <i class="m-icon-swapright m-icon-white"></i>
                                         </a>
-                                        <a href="javascript:;" ng-click="cadastrarUsuario()"
+                                        <a href="javascript:;" ng-click="armazenaInformacoesDoUsuario()"
                                            class="btn green button-submit" 
                                            ng-show="tabCadastroSelecionada(4) && !cadastrando">
-                                            Cadastrar <i class="fa fa-plus"></i><!--i class="m-icon-swapright m-icon-white"></i-->
+                                            {{tela.acao}} 
+                                            <i class="fa" ng-class="{'fa-plus' : ehCadastro(), 'fa-edit' : !ehCadastro()}"></i>
                                         </a>
                                         <img ng-src="../../../../../img/loading-atos.gif" style="margin-top: 10px" ng-show="cadastrando"/>
                                     </div>

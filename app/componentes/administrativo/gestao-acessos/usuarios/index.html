@@ -103,7 +103,7 @@
                                             <select aria-controls="datatable_products" 
                                                     class="form-control input-sm input-inline"
                                                     ng-model="usuario.campo_busca"
-                                                    ng-options="campo as campo.nome for campo in camposBusca">
+                                                    ng-options="campo as campo.nome for campo in camposBusca | filter:{ativo:true}">
                                             </select> 
                                             <input type="text" 
                                                    class="form-control input-inline" 
@@ -122,25 +122,29 @@
                                 <!-- TÍTULOS -->
                                 <thead>
                                     <tr role="row">
-                                        <th class="sorting_asc" tabindex="0" aria-controls="sample_editable_1" 
-                                            rowspan="1" colspan="1" aria-sort="ascending" style="width: 148px">
+                                        <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 148px"
+                                            ng-click="ordenaPorLogin()"
+                                            ng-class="{'sorting_asc' : estaOrdenadoCrescentePorLogin(), 'sorting_desc' : estaOrdenadoDecrescentePorLogin()}">
                                              Login
                                         </th>
-                                        <th class="sorting" tabindex="0" aria-controls="sample_editable_1" 
-                                            rowspan="1" colspan="1" style="width: 189px">
+                                        <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 189px"
+                                            ng-click="ordenaPorEmail()"
+                                            ng-class="{'sorting_asc' : estaOrdenadoCrescentePorEmail(), 'sorting_desc' : estaOrdenadoDecrescentePorEmail()}">
                                              Email
                                         </th>
-                                        <th class="sorting" tabindex="0" aria-controls="sample_editable_1" 
-                                            rowspan="1" colspan="1" style="width: 100px">
+                                        <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 100px"
+                                            ng-click="ordenaPorGrupoEmpresa()"
+                                            ng-class="{'sorting_asc' : estaOrdenadoCrescentePorGrupoEmpresa(), 'sorting_desc' : estaOrdenadoDecrescentePorGrupoEmpresa()}">
                                              Grupo Empresa
                                         </th>
                                         <!--th class="sorting" tabindex="0" aria-controls="sample_editable_1" 
                                             rowspan="1" colspan="1" style="width: 129px;">
                                              CNPJ Base Empresa
                                         </th-->
-                                        <th class="sorting" tabindex="0" aria-controls="sample_editable_1" 
-                                            rowspan="1" colspan="1" style="width: 69px;">
-                                             CNPJ Empresa
+                                        <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 69px;"
+                                            ng-click="ordenaPorEmpresa()"
+                                            ng-class="{'sorting_asc' : estaOrdenadoCrescentePorEmpresa(), 'sorting_desc' : estaOrdenadoDecrescentePorEmpresa()}">
+                                             Empresa
                                         </th>
                                         <th class="center" tabindex="0" 
                                             rowspan="1" colspan="1" style="width: 102px;">
@@ -173,13 +177,13 @@
                                                 </a>
                                             <ul class="dropdown-menu pull-right">
                                                 <li>
-                                                    <a href="javascript:;" ng-click="resetarSenhaDoUsuario(usuario.id_users)"> Resetar Senha</a>
+                                                    <a href="javascript:;" ng-click="resetarSenhaDoUsuario(usuario)"> Resetar Senha</a>
                                                 </li>
                                                 <li>
-                                                    <a href="javascript:;" ng-click="editarUsuario(usuario.id_users)">Editar</a>
+                                                    <a href="javascript:;" ng-click="editarUsuario(usuario)">Editar</a>
                                                 </li>
                                                 <li>
-                                                    <a href="javascript:;" ng-click="exluirUsuario(usuario.id_users)">Excluir</a>
+                                                    <a href="javascript:;" ng-click="exluirUsuario(usuario)">Excluir</a>
                                                 </li> 
                                             </ul>
                                             </div>
