@@ -32,11 +32,11 @@ angular.module("administrativo-usuarios", ['servicos'])
                           },{
                             id: $campos.administracao.webpageusers.id_grupo,
                             ativo : !$scope.grupoempresa, // é desativado quando o $scope.grupoempresa !== undefined
-                            nome: "Grupo Empresa"
+                            nome: "Empresa"
                           },{
                             id: $campos.administracao.webpageusers.nu_cnpjEmpresa,
                             ativo: true,
-                            nome: "Empresa"
+                            nome: "Filial"
                           },
                          ];
     $scope.itens_pagina = [10, 20, 50, 100];

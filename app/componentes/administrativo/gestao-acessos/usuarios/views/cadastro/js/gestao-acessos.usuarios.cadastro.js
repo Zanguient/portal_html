@@ -42,8 +42,50 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
     $scope.pesquisandoEmpresas = false;
     $scope.cadastrando = false;
     
-    // Inicialização do controller
-    var obtemDadosDaPessoa = function(id_pessoa){
+    // Usuário da alteração
+    /**
+      * Obtém e atualiza informações do formulário do usuário
+      */
+    var obtemDadosDoUsuario = function(){
+        // Atualiza informações
+        loginValido = emailValido = true;
+        $scope.usuario.email = $scope.old.usuario.ds_email;
+        $scope.usuario.login = $scope.old.usuario.ds_login;
+        // GRUPO EMPRESA                                                    
+        if($scope.old.usuario.id_grupo === null) $scope.old.usuario.id_grupo = -1;
+        else{
+            $scope.pesquisandoGruposEmpresas = true;
+            $webapi.get($apis.cliente.grupoempresa, [token, 0], {id:$campos.cliente.grupoempresa.id_grupo, valor: $scope.old.usuario.id_grupo})
+                .then(function(dados){  
+                    $scope.usuario.grupoempresa = dados.Registros[0];
+                    $scope.pesquisandoGruposEmpresas = false;
+                 },
+                 function(failData){
+                    console.log("FALHA AO OBTER GRUPO EMPRESA: " + failData.status);
+                    $scope.pesquisandoGruposEmpresas = false;
+                 });
+        }
+        if($scope.old.usuario.nu_cnpjEmpresa === null) $scope.old.usuario.nu_cnpjEmpresa = '';
+        else{
+            // EMPRESA  
+            $scope.pesquisandoEmpresas = true;
+            $webapi.get($apis.cliente.empresa, [token, 0], {id:$campos.cliente.empresa.nu_cnpj, valor: $scope.old.usuario.nu_cnpjEmpresa})
+                .then(function(dados){  
+                    $scope.usuario.empresa = dados.Registros[0];
+                    $scope.pesquisandoEmpresas = false;
+                 },
+                 function(failData){
+                    console.log("FALHA AO OBTER EMPRESA: " + failData.status);
+                    $scope.pesquisandoEmpresas = false;
+                 }); 
+        }
+        // Obtém os dados associados ao user
+        obtemDadosDaPessoa();  
+    };
+    /**
+      * Obtém e atualiza informações do formulário pessoa
+      */                                                     
+    var obtemDadosDaPessoa = function(){
         $webapi.get($apis.administracao.pessoa, [token, 0], 
                     {id:$campos.administracao.pessoa.id_pesssoa, valor: $scope.old.usuario.id_pessoa})
                 .then(function(dados){
@@ -69,7 +111,7 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
                       });  
     };
     /**
-      * Obtém todas as roles associadas ao usuário
+      * Obtém e atualiza todas as roles associadas ao usuário
       */                                                     
     var obtemRolesDoUsuario = function(){
         $webapi.get($apis.administracao.webpageusersinroles, [token, 0], 
@@ -108,6 +150,8 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
                      $scope.atualizaProgressoDoCadastro();
                   }); 
     };
+                                                         
+                                                         
     /**
       * Inicialização do controller
       */
@@ -117,38 +161,11 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
         // Exibe o alert de progress
         $scope.showAlertProgress();
         // Verifica se tem parâmetros
-        if($stateParams.usuario != null){
+        if($stateParams.usuario !== null){
             $scope.tela.tipo = 'Alteração'; 
             $scope.tela.acao = 'Alterar';
             $scope.old.usuario = $stateParams.usuario;
-            // Atualiza informações
-            loginValido = emailValido = true;
-            $scope.usuario.email = $scope.old.usuario.ds_email;
-            $scope.usuario.login = $scope.old.usuario.ds_login;
-            // GRUPO EMPRESA                                                    
-            if($scope.old.usuario.id_grupo === null) $scope.old.usuario.id_grupo = -1;
-            else{
-                $webapi.get($apis.cliente.grupoempresa, [token, 0], {id:$campos.cliente.grupoempresa.id_grupo, valor: $scope.old.usuario.id_grupo})
-                    .then(function(dados){  
-                        $scope.usuario.grupoempresa = dados.Registros[0];
-                     },
-                     function(failData){
-                        console.log("FALHA AO OBTER GRUPO EMPRESA: " + failData.status);
-                     });
-            }
-            if($scope.old.usuario.nu_cnpjEmpresa === null) $scope.old.usuario.nu_cnpjEmpresa = '';
-            else{
-                // EMPRESA                                                    
-                $webapi.get($apis.cliente.empresa, [token, 0], {id:$campos.cliente.empresa.nu_cnpj, valor: $scope.old.usuario.nu_cnpjEmpresa})
-                    .then(function(dados){  
-                        $scope.usuario.empresa = dados.Registros[0];
-                     },
-                     function(failData){
-                        console.log("FALHA AO OBTER EMPRESA: " + failData.status);
-                     }); 
-            }
-            // Obtém os dados associados ao user
-            obtemDadosDaPessoa();
+            obtemDadosUsuario();
         }else obtemRoles(); // Obtém Roles
         // Título da página
         $scope.pagina.titulo = 'Gestão de Acessos';                          
@@ -172,48 +189,26 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
         }); 
     };
     
-    // ALTERAÇÃO OU CADASTRO                                                     
     /**
       * True se for cadastro. False se for alteração
       */
     $scope.ehCadastro = function(){
-        return $scope.tela.tipo === 'Cadastro';    
+        return $stateParams.usuario === null;    
     };
-                                                         
-    
-    // CADASTRO                                                     
-                                                         
-    // Cadastrar Usuário
-    // Reporta se está em progresso de cadastro
+    /**
+      * Reporta se algum progresso da tela de cadastro está em curso
+      */ 
     var progressoCadastro = function(emProgresso){
         $scope.cadastrando = emProgresso;
         if(!$scope.$$phase) $scope.$apply();
     };
+    
+    // CADASTRO                                                     
+                                                         
     /**
       * Envia o post para a api de administracao/webpageUsersInRoles, enviando o json { UserId : id_usuario, Role_Id : [<id_roles>] }
       */
     var postRoles = function(id_usuario){
-        /*var jsonRolesUsuario = {};
-        // ID do usuário e um array com os IDs das roles (mesmo que seja somente uma, é enviado um array)
-        jsonRolesUsuario.UserId = id_usuario;
-        var r = [];
-        for(var k in rolesSelecionadas) r.push(rolesSelecionadas[k].RoleId);
-        jsonRolesUsuario.RoleId = r;
-        // Envia
-        $webapi.post($apis.administracao.webpageusersinroles, token, jsonRolesUsuario)
-                .then(function(dados){
-                    progressoCadastro(false);
-                    alert("Cadastrado com sucesso!");
-                    // Reseta os dados
-                    $scope.pessoa = $scope.usuario = {};
-                    $scope.rolesSelecionadas = false;
-                    // Volta para a tela de Usuários
-                    $scope.goAdministrativoUsuarios();
-                  },
-                  function(failData){
-                     console.log("FALHA AO CADASTRAR ROLES DO USUARIO: " + failData.status);
-                     progressoCadastro(false);
-                  }); */ 
         progressoCadastro(true);
         for(var k = 0; k < rolesSelecionadas.length; k++){
             var jsonRolesUsuario = {UserId : id_usuario, RoleId : rolesSelecionadas[k].RoleId};
@@ -254,6 +249,7 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
         // Não-Obrigatórios
         if($scope.usuario.grupoempresa.ds_nome) jsonUsuario.id_grupo = $scope.usuario.grupoempresa.id_grupo;
         if($scope.usuario.empresa.ds_fantasia) jsonUsuario.nu_cnpjEmpresa = $scope.usuario.empresa.nu_cnpj;
+        console.log(jsonUsuario);
         // Envia
         //$webapi.post($apis.administracao.webpageusers, token, jsonUsuario)
         $.post($apis.administracao.webpageusers + '?token=' + token, jsonUsuario)
@@ -275,10 +271,15 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
         // Obrigatório
         jsonPessoa.nm_pessoa = $scope.pessoa.nome;
         // Não-Obrigatórios
-        if($scope.pessoa.data_nasc) jsonPessoa.dt_nascimento = $scope.pessoa.data_nasc;
+        if($scope.pessoa.data_nasc){
+            var data = $scope.pessoa.data_nasc.split('/');
+            var dt = new Date(data[2], data[1] - 1, data[0]);
+            jsonPessoa.dt_nascimento = '/Date(' + dt.getTime() + ')/';
+        }
         if($scope.pessoa.telefone) jsonPessoa.nu_telefone = $scope.pessoa.telefone;
         if($scope.pessoa.ramal) jsonPessoa.nu_ramal = $scope.pessoa.ramal;
         // Envia
+        console.log(jsonPessoa);
         //$webapi.post($apis.administracao.pessoa, token, jsonPessoa)
         $.post($apis.administracao.pessoa + '?token=' + token, jsonPessoa)
                 //.then(function(id_pessoa){
@@ -358,7 +359,7 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
            return true; 
         }
         if($scope.old.pessoa.nu_telefone !== $scope.pessoa.telefone){
-           console.log("HOUVE ALTERAÇÃO - PESSOA - TELEFONE"); 
+           //console.log("HOUVE ALTERAÇÃO - PESSOA - TELEFONE"); 
            return true;    
         }
         if($scope.old.pessoa.nu_ramal !== $scope.pessoa.ramal){
