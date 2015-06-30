@@ -67,14 +67,43 @@
                     <!-- TOPO DA TABELA COM BOTÃO 'Novo Usuário' -->
                     <div class="table-toolbar">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                                 <div class="btn-group">
                                     <a href="javascript:;" ng-click="goAdministrativoUsuariosCadastro()">
                                         <button id="sample_editable_1_new" class="btn red">
                                         Novo Usuário <i class="fa fa-plus"></i>
                                     </button></a>
                                 </div>
-                            </div>									
+                            </div>
+                            <div class="col-md-6">
+                                <div class="dataTables_paginate paging_simple_numbers" id="sample_editable_1_paginate">
+                                    <ul class="pagination">
+                                        <li class="paginate_button previous" ng-class="{'element-hidden': usuario.pagina <= 1}"
+                                            aria-controls="sample_editable_1" tabindex="0" id="sample_editable_1_previous">
+                                            <a href="javascript:;" 
+                                               ng-click="retrocedePagina()">
+                                                <i class="fa fa-angle-left"></i>
+                                            </a>
+                                        </li>
+                                        <li class="paginate_button active" aria-controls="sample_editable_1" tabindex="0">
+                                            <a href="javascript:;">{{usuario.pagina}}</a>
+                                        </li>
+                                        <li class="paginate_button next" ng-class="{'element-hidden': usuario.pagina >= usuario.total_paginas}"
+                                            aria-controls="sample_editable_1" 
+                                            tabindex="0" id="sample_editable_1_next">
+                                            <a href="javascript:;" 
+                                               ng-click="avancaPagina()">
+                                                <i class="fa fa-angle-right"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <div style="margin-top:5px">
+                                            <strong> de {{usuario.total_paginas}} página(s)</strong> 
+                                            </div>    
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!-- TABELA -->
@@ -116,7 +145,7 @@
                             </div>
                         </div>
                         <!-- TABELA -->
-                        <div class="table-scrollable">
+                        <div class="table">
                             <table class="table table-striped table-hover table-bordered dataTable no-footer" 
                                    role="grid" aria-describedby="sample_editable_1_info">
                                 <!-- TÍTULOS -->
@@ -193,14 +222,14 @@
                             </table
                         </div>
                         <!-- RODAPÉ : Exibição dos resultados e paginação -->
-                        <div class="row">
+                        <div class="row" style="margin-top:30px">
                             <div class="col-md-5 col-sm-12">
                                 <div class="dataTables_info" id="sample_editable_1_info" role="status" aria-live="polite">
                                     <strong>Total de registros encontrados: {{usuario.total_registros}}</strong>
                                 </div>
                             </div>
                             <!-- PAGINAÇÃO -->
-                            <div class="col-md-7 col-sm-12">
+                            <div class="col-md-6 col-sm-12">
                                 <div class="dataTables_paginate paging_simple_numbers" id="sample_editable_1_paginate">
                                     <ul class="pagination">
                                         <li class="paginate_button previous" ng-class="{'element-hidden': usuario.pagina <= 1}"
@@ -222,7 +251,9 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <strong> de {{usuario.total_paginas}} página(s)</strong>
+                                            <div style="margin-top:5px">
+                                            <strong> de {{usuario.total_paginas}} página(s)</strong> 
+                                            </div>    
                                         </li>
                                     </ul>
                                 </div>
