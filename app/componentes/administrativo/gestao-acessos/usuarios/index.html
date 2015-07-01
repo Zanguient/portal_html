@@ -74,56 +74,7 @@
                                         Novo Usuário <i class="fa fa-plus"></i>
                                     </button></a>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <!--div class="dataTables_paginate paging_simple_numbers" id="sample_editable_1_paginate">
-                                    <ul class="pagination">
-                                        <li class="paginate_button previous" ng-class="{'element-hidden': usuario.pagina <= 1}"
-                                            aria-controls="sample_editable_1" tabindex="0" id="sample_editable_1_previous">
-                                            <a href="javascript:;" 
-                                               ng-click="retrocedePagina()">
-                                                <i class="fa fa-angle-left"></i>
-                                            </a>
-                                        </li>
-                                        <li class="paginate_button active" aria-controls="sample_editable_1" tabindex="0">
-                                            <a href="javascript:;">{{usuario.pagina}}</a>
-                                        </li>
-                                        <li class="paginate_button next" ng-class="{'element-hidden': usuario.pagina >= usuario.total_paginas}"
-                                            aria-controls="sample_editable_1" 
-                                            tabindex="0" id="sample_editable_1_next">
-                                            <a href="javascript:;" 
-                                               ng-click="avancaPagina()">
-                                                <i class="fa fa-angle-right"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <div style="margin-top:5px">
-                                            <strong> de {{usuario.total_paginas}} página(s)</strong> 
-                                            </div>    
-                                        </li>
-                                    </ul>
-                                </div-->
-                                <div class="pagination-panel"> Página 
-                                    <a href="javascript:;" ng-click="retrocedePagina()"
-                                       class="btn btn-sm default prev" 
-                                       ng-class="{disabled: usuario.pagina <= 1}" 
-                                       title="Página anterior">
-                                            <i class="fa fa-angle-left"></i>
-                                    </a>
-                                    <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
-                                           maxlength="4" style="text-align:center; margin: 0 5px;"
-                                           ng-model="paginaInformada" valid-integer-number
-                                           ng-keypress="($event.which === 13) ? alteraPagina() : 0"
-                                           ng-blur="atualizaPaginaDigitada()">
-                                    <a href="javascript:;" ng-click="avancaPagina()"
-                                       class="btn btn-sm default next"
-                                       ng-class="{disabled: usuario.pagina >= usuario.total_paginas}"
-                                       title="Próxima página">
-                                        <i class="fa fa-angle-right"></i>
-                                    </a>
-                                     de <span class="pagination-panel-total">{{usuario.total_paginas}}</span>
-                                </div>                                
-                            </div>
+                            </div>                            
                         </div>
                     </div>
                     <!-- TABELA -->
@@ -131,7 +82,7 @@
                         <!-- EXIBIÇÃO E PESQUISA -->
                         <div class="row">
                             <!-- EXIBIÇÃO --> 
-                            <div class="col-md-6 col-sm-12">
+                            <div class="col-md-4 col-sm-12">
                                 <div class="dataTables_length" id="sample_editable_1_length">
                                     <label>
                                         <span class="seperator"></span>Exibindo 
@@ -144,8 +95,29 @@
                                     </label>
                                 </div>
                             </div>
+                            <!--PAGINAÇÃO-TOPO-->
+                            <div class="pagination-panel centralizarPaginacao col-md-3 col-sm-12"> Página 
+                                <a href="javascript:;" ng-click="retrocedePagina()"
+                                   class="btn btn-sm default prev" 
+                                   ng-class="{disabled: usuario.pagina <= 1}" 
+                                   title="Página anterior">
+                                        <i class="fa fa-angle-left"></i>
+                                </a>
+                                <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                       maxlength="4" style="text-align:center; margin: 0 5px;"
+                                       ng-model="paginaInformada" valid-integer-number
+                                       ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                                       ng-blur="atualizaPaginaDigitada()">
+                                <a href="javascript:;" ng-click="avancaPagina()"
+                                   class="btn btn-sm default next"
+                                   ng-class="{disabled: usuario.pagina >= usuario.total_paginas}"
+                                   title="Próxima página">
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                                 de <span class="pagination-panel-total">{{usuario.total_paginas}}</span>
+                            </div>
                             <!-- PESQUISA -->
-                            <div class="col-md-6 col-sm-12">
+                            <div class="col-md-5 col-sm-12">
                                 <div id="sample_editable_1_filter" class="dataTables_filter">
                                     <label>
                                         <span class="seperator"></span>Pesquisar 
@@ -195,8 +167,8 @@
                                             ng-class="{'sorting_asc' : estaOrdenadoCrescentePorEmpresa(), 'sorting_desc' : estaOrdenadoDecrescentePorEmpresa()}">
                                              Filial
                                         </th>
-                                        <th class="center" tabindex="4" 
-                                            rowspan="1" colspan="1" style="width: 48px;">
+                                        <th class="sorting_disabled" tabindex="4" 
+                                            rowspan="1" colspan="1" style="width: 48px;text-aling:center;">
                                              Opções
                                         </th>
                                     </tr>
@@ -219,7 +191,7 @@
                                         <td class="center">
                                              {{usuario.empresa}}
                                         </td>
-                                        <td class="center">
+                                        <td class="center btnacoes">
                                             <div class="btn-group">
                                                 <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
                                                     <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
@@ -243,40 +215,31 @@
                         </div>
                         <!-- RODAPÉ : Exibição dos resultados e paginação -->
                         <div class="row" style="margin-top:30px">
-                            <div class="col-md-5 col-sm-12">
+                            <div class="col-md-4 col-sm-12">
                                 <div class="dataTables_info" id="sample_editable_1_info" role="status" aria-live="polite">
                                     <strong>Total de registros encontrados: {{usuario.total_registros}}</strong>
                                 </div>
                             </div>
-                            <!-- PAGINAÇÃO -->
-                            <div class="col-md-6 col-sm-12">
-                                <div class="dataTables_paginate paging_simple_numbers" id="sample_editable_1_paginate">
-                                    <ul class="pagination">
-                                        <li class="paginate_button previous" ng-class="{'element-hidden': usuario.pagina <= 1}"
-                                            aria-controls="sample_editable_1" tabindex="0" id="sample_editable_1_previous">
-                                            <a href="javascript:;" 
-                                               ng-click="retrocedePagina()">
-                                                <i class="fa fa-angle-left"></i>
-                                            </a>
-                                        </li>
-                                        <li class="paginate_button active" aria-controls="sample_editable_1" tabindex="1">
-                                            <a href="javascript:;">{{usuario.pagina}}</a>
-                                        </li>
-                                        <li class="paginate_button next" ng-class="{'element-hidden': usuario.pagina >= usuario.total_paginas}"
-                                            aria-controls="sample_editable_1" 
-                                            tabindex="2" id="sample_editable_1_next">
-                                            <a href="javascript:;" 
-                                               ng-click="avancaPagina()">
-                                                <i class="fa fa-angle-right"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <div style="margin-top:5px">
-                                            <strong> de {{usuario.total_paginas}} página(s)</strong> 
-                                            </div>    
-                                        </li>
-                                    </ul>
-                                </div>
+                            <!--PAGINAÇÃO-RODAPÉ-->
+                            <div class="pagination-panel centralizarPaginacao col-md-3 col-sm-12"> Página 
+                                <a href="javascript:;" ng-click="retrocedePagina()"
+                                   class="btn btn-sm default prev" 
+                                   ng-class="{disabled: usuario.pagina <= 1}" 
+                                   title="Página anterior">
+                                        <i class="fa fa-angle-left"></i>
+                                </a>
+                                <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                       maxlength="4" style="text-align:center; margin: 0 5px;"
+                                       ng-model="paginaInformada" valid-integer-number
+                                       ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                                       ng-blur="atualizaPaginaDigitada()">
+                                <a href="javascript:;" ng-click="avancaPagina()"
+                                   class="btn btn-sm default next"
+                                   ng-class="{disabled: usuario.pagina >= usuario.total_paginas}"
+                                   title="Próxima página">
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                                 de <span class="pagination-panel-total">{{usuario.total_paginas}}</span>
                             </div>
                             <!-- FIM PAGINAÇÃO -->
                         </div>

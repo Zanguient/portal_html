@@ -4178,6 +4178,7 @@ Notes
   background-color: #eef7fb;
   border-color: #a6e1ec;
   color: #31708f;
+    width: auto;
 }
 .note.note-info.note-bordered {
   background-color: #d5ebf6;
@@ -4221,7 +4222,7 @@ Notes
 Customized Bootstrap Pagination
 ***/
 .pagination {
-  margin: 10px 0;
+  margin: 10px 0;      
 }
 .pagination.pagination-circle > li:first-child > a {
   border-radius: 25px 0 0 25px !important;
@@ -4234,6 +4235,9 @@ Customized Bootstrap Pagination
   background: #eee;
   border-color: #dddddd;
   color: #333;
+}
+.centralizarPaginacao{
+text-align: center;
 }
 
 /***
@@ -5728,6 +5732,7 @@ Custom tables
 .table thead tr th {
   font-size: 14px;
   font-weight: 600;
+    text-align: center;
 }
 
 .table-advance {

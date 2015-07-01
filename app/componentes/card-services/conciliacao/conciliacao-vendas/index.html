@@ -7,7 +7,8 @@
  */
 -->
 
-<div class="container" ng-controller="card-services-conciliacao-vendasCtrl as conciliacaoCtrl" ng-init="cardServices_conciliacaoVendasInit()">
+<div class="container" ng-controller="card-services-conciliacao-vendasCtrl as conciliacaoCtrl" ng-init="cardServices_conciliacaoVendasInit()"> 
+    
     <!-- BEGIN PAGE BREADCRUMB -->
     <ul class="page-breadcrumb breadcrumb">
         <li>
@@ -143,7 +144,7 @@
                                 </td>
                                 <td rowspan="1" colspan="1">
                                     <div class="margin-bottom-5">
-                                        <button class="btn btn-sm red filter-submit margin-bottom"><i class="fa fa-search"></i> Buscar</button>
+                                        <button class="btn btn-sm red filter-submit margin-bottom" ng-click="showModal('Meu titulo')"><i class="fa fa-search"></i> Buscar</button>
                                     </div>
                                     <button class="btn btn-sm grey filter-cancel"><i class="fa fa-times"></i> Limpar</button>
                                 </td>
@@ -233,8 +234,8 @@
                     </div>
                 </div>
             </div> 
-            <div class="table-responsive">
-                <table class="table-responsive col-md-12">
+            <div class="row">
+                <table class="col-sm-12">
                     <tr>
                         <td>
                             <!--<div class="note note-info">-->
