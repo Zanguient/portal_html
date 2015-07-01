@@ -34,6 +34,7 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
   * Faz referência direta ao controller de cadastro de usuários da Gestão de Acessos (gestao-acessos.usuarios.cadastro.js)
   * Quando for para alterar um usuário, envia como parâmetro no $state.go o JSON associado ao usuário
   * APIS:
+    - api/administracao/webpagesmembership
 	- api/administracao/webpagesusers
 	- api/cliente/grupoempresa
 	- api/cliente/empresa
@@ -48,6 +49,9 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
  
  ### Interação com a WEB API ###
  
+  * api/administracao/webpagesmembership
+     - PUT  : redefinir senha 
+	          { Password : '' } // password vazio => redefinir senha
   * api/administracao/webpagesusers
 	 - GET : listagem dos usuários na tabela (coleção 2)
 			{
@@ -58,7 +62,6 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
 				"empresa" : ds_fantasia
 			}
 	 - DELETE : deletar um determinado usuário
-	 - POST : resetar senha?
  
    
 

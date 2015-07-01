@@ -488,36 +488,45 @@ angular.module("AtosCapital", ['ui.router',
    // Esconde o alert
    $scope.hideAlert = function(){
        $timeout(function(){$('#' + alertId).remove();}, 0); // fecha alert
-   }; 
+   };
                             
-   
+                            
    // MODAL
    $scope.modal_titulo = 'Titulo';
    $scope.modal_mensagem = 'Mensagem';
    $scope.modal_textoConfirma = 'Ok';
    $scope.modal_textoCancela = 'Cancelar';
-   $scope.showModal = function(titulo, mensagem, textoConfirma, textoCancela){
-       // Seta os valores
-       $scope.modal_titulo = titulo ? titulo : 'Atos Capital';
-       $scope.modal_mensagem = mensagem ? mensagem : '';
-       $scope.modal_textoConfirma = textoConfirma ? textoConfirma : 'Ok';
-       $scope.modal_textoCancela = textoCancela ? textoCancela : 'Cancelar';
-       // Exibe o modal
-       $('#modalconfirmacao').modal('show'); 
-   };
-   $scope.modal_confirma = function(){
-       console.log("CONFIRMADO!");
-       $scope.$broadcast('modalConfirmado');          
-   };
-   $scope.modal_cancela = function(){
-       console.log("CANCELADO!");
-       $scope.$broadcast('modalCancelado');          
-   };                         
+   /**
+     * Exibe o modal
+     * @param titulo : título 
+     * @param mensagem : corpo
+     * @param funcaoConfirma : funcao que será invocada quando o botão confirma for pressionado
+     * @param parametroFuncaoConfirma : objeto passado como parâmetro da função confirma
+     * @param textoConfirma : texto exibido no botão de confirmação
+     * @param textoCancela : texto exibido no botão que cancela o modal
+     */
+   $scope.showModal = function(titulo, mensagem, funcaoConfirma, parametroFuncaoConfirma, textoConfirma, textoCancela){
+      // Seta os valores
+      $scope.modal_titulo = titulo ? titulo : 'Atos Capital';
+      $scope.modal_mensagem = mensagem ? mensagem : '';
+      $scope.modal_textoConfirma = textoConfirma ? textoConfirma : 'Ok';
+      $scope.modal_textoCancela = textoCancela ? textoCancela : 'Cancelar';
+      $scope.modal_confirma = funcaoConfirma ? function(){funcaoConfirma(parametroFuncaoConfirma);} : function(){};   
+      // Exibe o modal
+      $('#modalconfirmacao').modal('show');
+   };                        
                             
 }])
 
-.config(['$stateProvider','$urlRouterProvider','$locationProvider', function($stateProvider,$urlRouterProvider,$locationProvider) {
+.config(['$stateProvider','$urlRouterProvider','$locationProvider', '$httpProvider', 
+         function($stateProvider,$urlRouterProvider,$locationProvider,$httpProvider) {
     
+    // Aceitar "cross" de domínios
+    $httpProvider.defaults.useXDomain = true; 
+    delete $httpProvider.defaults.headers.common['X-Requested-With'];         
+             
+             
+    // ROTAS         
     var prefixo = '/';
     
     /* Remover o '#'

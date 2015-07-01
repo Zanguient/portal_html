@@ -4,6 +4,7 @@ Módulo que gerencia:
  - o layout principal (app/index.html), exibindo somente o que o usuário tem permissão para acessar;
  - as rotas, que fazem referência a página que é exibida na parte central da tela
  - a seleção do grupo empresas para gerenciar (USUÁRIO COM PERMISSÃO ADMINISTRATIVA)
+ - modal e alert
 Esse é o módulo pai.
  
 ### Pra Que Serve Este Módulo? ###

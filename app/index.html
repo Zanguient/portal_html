@@ -219,27 +219,27 @@
     
 <!-- BEGIN PAGE CONTENT : Conteúdo da página é incluído dinamicamente nesta div -->
 <div class="page-content">
-    <!-- /.modal -->
-    <div class="modal fade bs-modal-sm" id="modalconfirmacao" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title">{{modal_titulo}}</h4>
-                </div>
-                <div class="modal-body">
-                     {{modal_mensagem}}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn default" data-dismiss="modal">{{modal_textoCancela}}</button>
-                    <button type="button" class="btn red" data-dismiss="modal" ng-click="modal_confirma()">{{modal_textoConfirma}}</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-    <div ui-view></div>
+   <!-- MODAL -->
+   <div class="modal fade bs-modal-sm" id="modalconfirmacao" tabindex="-1" role="dialog" aria-hidden="true">
+       <div class="modal-dialog modal-sm">
+           <div class="modal-content">
+               <div class="modal-header">
+                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                   <h4 class="modal-title">{{modal_titulo}}</h4>
+               </div>
+               <div class="modal-body">
+                    {{modal_mensagem}}
+               </div>
+               <div class="modal-footer">
+                   <button type="button" class="btn default" data-dismiss="modal">{{modal_textoCancela}}</button>
+                   <button type="button" class="btn blue" 
+                           data-dismiss="modal" ng-click="modal_confirma()">{{modal_textoConfirma}}</button>
+               </div>
+           </div>
+       </div>
+       <!-- END MODAL -->
+   </div>
+   <div ui-view></div>
 </div>
 <!-- END PAGE CONTENT -->
 

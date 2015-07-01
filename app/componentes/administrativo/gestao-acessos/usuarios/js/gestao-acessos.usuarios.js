@@ -258,12 +258,32 @@ angular.module("administrativo-usuarios", ['servicos'])
     // AÇÕES
     /**
       * Redefinir senha
+      */                                            
+    var resetaSenhaDoUsuario = function(id_users){
+        //console.log("RESETANDO A SENHA DO USUARIO " + usuario.webpagesusers.ds_email + "(" + usuario.webpagesusers.id_users + ")"); 
+        $scope.showAlert('Redefinindo senha do usuário'); // exibe o alert
+        
+        // json reseta senha
+        var jsonResetSenha = {Password: ''};
+        
+        $webapi.update($apis.administracao.webpagesmembership,
+                       [{id: 'token', valor: token},{id: 'id_users', valor: id_users}], jsonResetSenha)
+            .then(function(dados){
+                    $scope.showAlert('Senha redefinida com sucesso!', true, 'success', true);
+                  },function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else $scope.showAlert('Houve uma falha ao redefinir a senha do usuário (' + failData.status + ')', true, 'danger', true);
+                  }); 
+    };
+    /**
+      * Solicitação confirmação para resetar a senha
       */
     $scope.resetarSenhaDoUsuario = function(usuario){
-        if(confirm("Tem certeza que deseja resetar a senha de " + usuario.ds_email)){
-            // Envia post para deletar
-            console.log("RESETANDO A SENHA DO USUARIO " + usuario.ds_email + "(" + usuario.id_users + ")");
-        }
+        // Envia post para deletar
+        $scope.showModal('Confirmação', 
+                         'Tem certeza que deseja resetar a senha de ' + usuario.webpagesusers.ds_email,
+                         resetaSenhaDoUsuario, usuario.webpagesusers.id_users,
+                         'Sim', 'Não');
     };
     /**
       * Editar usuario => Abre tela de cadastro, enviando como parâmetro o objeto usuario
@@ -273,23 +293,31 @@ angular.module("administrativo-usuarios", ['servicos'])
     }; 
     /**
       * Excluir usuario
-      */
-    $scope.exluirUsuario = function(usuario){
-        if(confirm("Tem certeza que deseja excluir " + usuario.ds_email)){
-            // Deleta
-            $scope.showAlert('Deletando usuário'); // exibe o alert
-            $webapi.delete($apis.administracao.webpagesusers, 
-                           [{id: 'token', valor: token},{id: 'id_users', valor: usuario.id_users}]) 
-                .then(function(dados){
-                    alert('Usuário deletado com sucesso');
-                    $scope.hideAlert(); // fecha o alert
-                  },
-                  function(failData){
+      */                                            
+    var exluirUsuario = function(id_users){
+        // Deleta
+        $scope.showAlert('Deletando usuário'); // exibe o alert
+        $webapi.delete($apis.administracao.webpagesusers,
+                       [{id: 'token', valor: token},{id: 'id_users', valor: id_users}])
+            .then(function(dados){
+                    $scope.showAlert('Usuário deletado com sucesso!', true, 'success', true);
+                    // atualiza tela de usuários
+                    $scope.buscaUsuarios();
+                  },function(failData){
                      //console.log("FALHA AO DELETAR USUARIO: " + failData.status);
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
                      else $scope.showAlert('Houve uma falha ao requisitar usuários (' + failData.status + ')', true, 'danger', true);
                   }); 
-        }
+    };
+    /**
+      * Solicitação confirmação para excluir o usuário
+      */                                                                              
+    $scope.exluirUsuario = function(usuario){
+        // Envia post para deletar
+        $scope.showModal('Confirmação', 
+                         'Tem certeza que deseja excluir ' + usuario.webpagesusers.ds_email,
+                         exluirUsuario, usuario.webpagesusers.id_users,
+                         'Sim', 'Não');
     };                                               
 
 }])

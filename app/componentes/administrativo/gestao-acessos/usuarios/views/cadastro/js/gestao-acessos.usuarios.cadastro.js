@@ -111,7 +111,7 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
             $scope.tela.acao = 'Alterar';
             $scope.old.usuario = $stateParams.usuario.webpagesusers;
             $scope.old.pessoa = $stateParams.usuario.pessoa;
-            $scope.old.roles = $stateParams.usuario.webpagesusersuserinroles;//webpagesusersinroles; // o nome está errado
+            $scope.old.roles = $stateParams.usuario.webpagesusersinroles;
             //console.log($stateParams.usuario);
             // Atualiza demais dados
             atualizaDadosDoUsuario();
@@ -176,6 +176,7 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
         if($scope.pessoa.data_nasc){ 
             var dt = $scope.pessoa.data_nasc.split('/');
             jsonPessoa.dt_nascimento = '/Date(' + (new Date(dt[2] + '/' + (dt[1] - 1) + '/' + dt[0]).getTime()) + ')/';
+            //jsonPessoa.dt_nascimento = '' + (new Date(dt[2] + '/' + (dt[1] - 1) + '/' + dt[0]).getTime()) + '';
         }
         if($scope.pessoa.telefone) jsonPessoa.nu_telefone = $scope.pessoa.telefone;
         if($scope.pessoa.ramal) jsonPessoa.nu_ramal = $scope.pessoa.ramal;
@@ -199,9 +200,9 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
         console.log(json);
         // Envia
         //$webapi.post($apis.administracao.pessoa, token, jsonPessoa)
-        $.post($apis.administracao.pessoa + '?token=' + token, json)
+        $.post($apis.administracao.webpagesusers + '?token=' + token, json)
                 //.then(function(id_pessoa){
-                .done(function(){
+                .done(function(dados){
                     progressoCadastro(false);
                     $scope.showAlert('Usuário cadastrado com sucesso!', true, 'success', true);
                     // Reseta os dados
@@ -266,7 +267,7 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
             return true;
         }
         for(var k = 0; k < $scope.old.roles.length; k++){
-           if($filter('filter')(rolesSelecionadas, {RoleId:$scope.old.roles[k].RoleId}).length == 0){ 
+           if($filter('filter')(rolesSelecionadas, {RoleId:$scope.old.roles[k]}).length == 0){ 
                console.log("HOUVE ALTERAÇÃO - ROLE");
                return true; 
            }
@@ -277,8 +278,22 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
       * Altera as informações do usuário
       */                                                     
     var alteraUsuario = function(){
-        if(houveAlteracoes()) console.log("HOUVE ALTERAÇÕES");
-        else console.log("NÃO HOUVE ALTERAÇÕES");
+        if(houveAlteracoes()){ 
+            console.log("HOUVE ALTERAÇÕES");
+    
+            // ROLES DO USUÁRIO
+            var r = [];
+            // Novas roles
+            for(var k in rolesSelecionadas){ 
+                if($filter('filter')($scope.old.roles, rolesSelecionadas[k].RoleId).length == 0) 
+                    r.push({RoleId : rolesSelecionadas[k].RoleId});
+            }
+            // Roles a serem desassociadas do usuário 
+            for(var k = 0; k < $scope.old.roles.length; k++){
+               if($filter('filter')(rolesSelecionadas, {RoleId:$scope.old.roles[k]}).length == 0)
+                   r.push({UserId: -1, RoleId : $scope.old.roles[k]});
+            }
+        }else console.log("NÃO HOUVE ALTERAÇÕES");
     };
      
                                                          
