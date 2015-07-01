@@ -488,7 +488,31 @@ angular.module("AtosCapital", ['ui.router',
    // Esconde o alert
    $scope.hideAlert = function(){
        $timeout(function(){$('#' + alertId).remove();}, 0); // fecha alert
-   };                          
+   }; 
+                            
+   
+   // MODAL
+   $scope.modal_titulo = 'Titulo';
+   $scope.modal_mensagem = 'Mensagem';
+   $scope.modal_textoConfirma = 'Ok';
+   $scope.modal_textoCancela = 'Cancelar';
+   $scope.showModal = function(titulo, mensagem, textoConfirma, textoCancela){
+       // Seta os valores
+       $scope.modal_titulo = titulo ? titulo : 'Atos Capital';
+       $scope.modal_mensagem = mensagem ? mensagem : '';
+       $scope.modal_textoConfirma = textoConfirma ? textoConfirma : 'Ok';
+       $scope.modal_textoCancela = textoCancela ? textoCancela : 'Cancelar';
+       // Exibe o modal
+       $('#modalconfirmacao').modal('show'); 
+   };
+   $scope.modal_confirma = function(){
+       console.log("CONFIRMADO!");
+       $scope.$broadcast('modalConfirmado');          
+   };
+   $scope.modal_cancela = function(){
+       console.log("CANCELADO!");
+       $scope.$broadcast('modalCancelado');          
+   };                         
                             
 }])
 

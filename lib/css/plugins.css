@@ -12,6 +12,9 @@ Bootstrap Colorpicker
   height: 20px;
   right: 6px;
 }
+.btnacoes{
+text-align: center;
+}
 
 .colorpicker.dropdown-menu {
   padding: 5px;
@@ -953,6 +956,7 @@ Datatables Plugin(in v1.3)
 .dataTable > thead > tr > th.sorting_asc,
 .dataTable > thead > tr > th.sorting_desc {
   padding-right: 18px;
+    text-align: center;
 }
 
 .dataTable .table-checkbox {
