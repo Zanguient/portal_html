@@ -18,6 +18,19 @@ angular.module('servicos', [ ])
             nu_telefone : 103,
             nu_ramal : 104
         },
+        webpagesmembership : {
+            UserId : 100,
+            //CreateDate : 101,
+            //ConfirmationToken : 102,
+            //IsConfirmed : 103,
+            //LastPasswordFailureDate : 104,
+            //PasswordFailuresSinceLastSuccess : 105,
+            Password : 106
+            //PasswordChangedDate: 107,
+            //PasswordSalt: 108,
+            //PasswordVerificationToken: 109,
+            //PasswordVerificationTokenExpirationDate: 110
+        },
         webpagesroles : {
             RoleId : 100,
             RoleName : 101
@@ -88,6 +101,7 @@ angular.module('servicos', [ ])
     },
     administracao : {
         pessoa : 'http://192.168.0.100/api/administracao/pessoa/',
+        webpagesmembership : 'http://192.168.0.100/api/administracao/webpagesmembership/',
         webpagesroles : 'http://192.168.0.100/api/administracao/webpagesroles/',
         webpagesusers : 'http://192.168.0.100/api/administracao/webpagesusers/', 
         webpagesusersinroles : 'http://192.168.0.100/api/administracao/webpagesusersinroles/'
@@ -215,7 +229,7 @@ angular.module('servicos', [ ])
       var deferido = $q.defer();
        
       var url = this.getUrl(api, undefined, filtros);
-      console.log(url);    
+      //console.log(url);    
         
       // Requisitar informações de monitoramento
       $http.delete(url)
@@ -229,11 +243,11 @@ angular.module('servicos', [ ])
     /**
       * HTTP PUT que retorna um promise
       */   
-    update: function(api, token, dadosFormulario){
+    update: function(api, filtros, dadosFormulario){
       // Setando o promise
       var deferido = $q.defer();
       
-      var url = this.getUrl(api, token);    
+      var url = this.getUrl(api, undefined, filtros);    
         
       // Requisitar informações de monitoramento
       $http.put(url, dadosFormulario)
