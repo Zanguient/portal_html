@@ -4,7 +4,8 @@ Módulo que gerencia:
  - o layout principal (app/index.html), exibindo somente o que o usuário tem permissão para acessar;
  - as rotas, que fazem referência a página que é exibida na parte central da tela
  - a seleção do grupo empresas para gerenciar (USUÁRIO COM PERMISSÃO ADMINISTRATIVA)
-
+Esse é o módulo pai.
+ 
 ### Pra Que Serve Este Módulo? ###
 
 Gerenciar a tela principal (entre outros, menus e links), levando em consideração as permissões do usuário autenticado. 
@@ -31,9 +32,23 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
  |                                      | tipo "text", para usar o recurso do auto-completar|                                        |
  |                                      | eficiente da biblioteca                           |                                        |
  |--------------------------------------|---------------------------------------------------|----------------------------------------|
+ |             diretivas                | Biblioteca que contém diretivas para uso no HTML  |             diretivas.js               |
+ |--------------------------------------|---------------------------------------------------|----------------------------------------|
  |              servicos                | Biblioteca que contém constantes, funções e       |              services.js               |
  |                                      | informações úteis do projeto, como os links para  |                                        |
  |                                      | interagir com a WEB API e info da empresa         |                                        |
+ |--------------------------------------|---------------------------------------------------|----------------------------------------|
+ |           nao-autorizado             | Módulo que gerencia a tela que reporta a não      |          nao-autorizado.js             |
+ |                                      | autorização do usuário ao acessar determinada     |                                        |
+ |                                      | página do website                                 |                                        |
+ |--------------------------------------|---------------------------------------------------|----------------------------------------|
+ |       administrativo-usuarios        | Módulo que gerencia a tela de usuários da         |      gestao-acessos.usuarios.js        |
+ |                                      | Gestão de Acessos                                 |                                        |
+ |                                      |                                                   |                                        |
+ |--------------------------------------|---------------------------------------------------|----------------------------------------|
+ |   administrativo-usuarios-cadastro   | Módulo que gerencia a tela de cadastro/alteração  |  gestao-acessos.usuarios.cadastro.js   |
+ |                                      | de usuários da Gestão de Acessos                  |                                        |
+ |                                      |                                                   |                                        |
  |--------------------------------------|---------------------------------------------------|----------------------------------------|
  |             dashboard                | Módulo que gerencia a tela de Dashboard           |              dashboard.js              |                                         |
  |--------------------------------------|---------------------------------------------------|----------------------------------------|
@@ -41,6 +56,19 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
  |                                      | Vendas, referente ao serviço Card Services        |                                        |
  |--------------------------------------|---------------------------------------------------|----------------------------------------|
 
+ 
+ ### Mudança de rotas/estados ###
+
+ Todos os controllers filhos devem escutar o evento "mudancaDeRota", que tem como argumentos "state" e "params", como exibido a seguir:
+
+		$scope.$on('mudancaDeRota', function(event, state, params){
+            // Faz alguma verificação ....
+			$state.go(state, params);
+        }); 
+		
+ O estado só é de fato modificado depois da execução do "$state.go(state, params);" interno à função de escuta citado.
+ Isso foi feito visando telas que possuem informações preenchidas pelo usuário e questiona se de fato ele deseja descartá-las antes de prosseguir.
+ 
  
  
  ### Interação com a local storage ###
@@ -100,6 +128,7 @@ Padronização dos títulos de serviços, subserviços e módulos:
 		- Relatório Analítico
    
 
+   
 ### Desenvolvedores ###
 
 Deivid Marinho - deividgfmarinho@gmail.com
