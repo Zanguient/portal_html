@@ -46,91 +46,35 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
     /**
       * Obtém e atualiza informações do formulário do usuário
       */
-    var obtemDadosDoUsuario = function(){
+    var atualizaDadosDoUsuario = function(){
         // Atualiza informações
         loginValido = emailValido = true;
         $scope.usuario.email = $scope.old.usuario.ds_email;
         $scope.usuario.login = $scope.old.usuario.ds_login;
-        // GRUPO EMPRESA                                                    
-        if($scope.old.usuario.id_grupo === null) $scope.old.usuario.id_grupo = -1;
-        else{
-            $scope.pesquisandoGruposEmpresas = true;
-            $webapi.get($apis.cliente.grupoempresa, [token, 0], {id:$campos.cliente.grupoempresa.id_grupo, valor: $scope.old.usuario.id_grupo})
-                .then(function(dados){  
-                    $scope.usuario.grupoempresa = dados.Registros[0];
-                    $scope.pesquisandoGruposEmpresas = false;
-                 },
-                 function(failData){
-                    console.log("FALHA AO OBTER GRUPO EMPRESA: " + failData.status);
-                    $scope.pesquisandoGruposEmpresas = false;
-                 });
+        // Grupo empresa
+        $scope.usuario.grupoempresa = $scope.old.usuario.grupoempresa;
+        // Empresa
+        $scope.usuario.empresa = $scope.old.usuario.empresa;
+        
+        // PESSOA
+        $scope.pessoa.nome = $scope.old.pessoa.nm_pessoa;
+        if($scope.old.pessoa.dt_nascimento !== null){ 
+            dataValida = true;
+            var data = new Date($scope.old.pessoa.dt_nascimento);
+            $scope.pessoa.data_nasc = data.getDate() + '/' + (data.getMonth() + 1) + '/' +  data.getFullYear();
         }
-        if($scope.old.usuario.nu_cnpjEmpresa === null) $scope.old.usuario.nu_cnpjEmpresa = '';
-        else{
-            // EMPRESA  
-            $scope.pesquisandoEmpresas = true;
-            $webapi.get($apis.cliente.empresa, [token, 0], {id:$campos.cliente.empresa.nu_cnpj, valor: $scope.old.usuario.nu_cnpjEmpresa})
-                .then(function(dados){  
-                    $scope.usuario.empresa = dados.Registros[0];
-                    $scope.pesquisandoEmpresas = false;
-                 },
-                 function(failData){
-                    console.log("FALHA AO OBTER EMPRESA: " + failData.status);
-                    $scope.pesquisandoEmpresas = false;
-                 }); 
-        }
-        // Obtém os dados associados ao user
-        obtemDadosDaPessoa();  
-    };
-    /**
-      * Obtém e atualiza informações do formulário pessoa
-      */                                                     
-    var obtemDadosDaPessoa = function(){
-        $webapi.get($apis.administracao.pessoa, [token, 0], 
-                    {id:$campos.administracao.pessoa.id_pesssoa, valor: $scope.old.usuario.id_pessoa})
-                .then(function(dados){
-                        $scope.old.pessoa = dados.Registros[0];
-                        // Atualiza informações
-                        $scope.pessoa.nome = $scope.old.pessoa.nm_pessoa;
-                        if($scope.old.pessoa.dt_nascimento !== null){ 
-                            dataValida = true;
-                            var data = new Date($scope.old.pessoa.dt_nascimento);
-                            $scope.pessoa.data_nasc = data.getDate() + '/' + (data.getMonth() + 1) + '/' +  data.getFullYear();
-                        }
-                        $scope.old.pessoa.dt_nascimento = $scope.pessoa.data_nasc; // deixa em string
-                        if($scope.old.pessoa.nu_telefone !== null) $scope.pessoa.telefone = $scope.old.pessoa.nu_telefone;
-                        else $scope.old.pessoa.nu_telefone = $scope.pessoa.telefone; // deixa em string
-                        if($scope.old.pessoa.nu_ramal !== null) $scope.pessoa.ramal = $scope.old.pessoa.nu_ramal;
-                        else $scope.old.pessoa.nu_ramal = $scope.pessoa.ramal; // deixa em string
-                        // Obtém roles do usuário
-                        obtemRolesDoUsuario();
-                      },
-                      function(failData){
-                         console.log("FALHA AO OBTER PESSOA: " + failData.status);
-                         obtemRolesDoUsuario();
-                      });  
-    };
-    /**
-      * Obtém e atualiza todas as roles associadas ao usuário
-      */                                                     
-    var obtemRolesDoUsuario = function(){
-        $webapi.get($apis.administracao.webpageusersinroles, [token, 0], 
-                    {id:$campos.administracao.webpageusersinroles.UserId, valor: $scope.old.usuario.id_users})
-            .then(function(dados){
-                    for(var k = 0; k < dados.Registros.length; k++) $scope.old.roles.push(dados.Registros[k].RoleId);
-                    obtemRoles();
-                  },
-                  function(failData){
-                     console.log("FALHA AO OBTER ROLES DO USER: " + failData.status);
-                     obtemRoles();
-                  }); 
-    };                                                    
+        $scope.old.pessoa.dt_nascimento = $scope.pessoa.data_nasc; // deixa em string
+        if($scope.old.pessoa.nu_telefone !== null) $scope.pessoa.telefone = $scope.old.pessoa.nu_telefone;
+        else $scope.old.pessoa.nu_telefone = $scope.pessoa.telefone; // deixa em string
+        if($scope.old.pessoa.nu_ramal !== null) $scope.pessoa.ramal = $scope.old.pessoa.nu_ramal;
+        else $scope.old.pessoa.nu_ramal = $scope.pessoa.ramal; // deixa em string
+    };                                                   
     /**
       * Obtém todas as roles cadastradas
       */
     var obtemRoles = function(){
         $scope.obtendoRoles = true;  
-        $webapi.get($apis.administracao.webpageroles, [token, 0, $campos.administracao.webpageroles.RoleName]) // ordenado pelo nome
+        $webapi.get($apis.administracao.webpagesroles, [token, 0, $campos.administracao.webpagesroles.RoleName]) // ordenado pelo nome
             .then(function(dados){
                     $scope.obtendoRoles = false;
                     $scope.roles = dados.Registros;
@@ -140,13 +84,14 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
                             $filter('filter')($scope.roles, {RoleId:$scope.old.roles[k]})[0].selecionado = true;
                         $scope.handleRole();
                     }
-                    $scope.hideAlertProgress(); // fecha o alert
+                    $scope.hideAlert(); // fecha o alert
                     $scope.atualizaProgressoDoCadastro(); // verificar datavalida
                   },
                   function(failData){
-                     console.log("FALHA AO OBTER ROLES: " + failData.status);
+                     //console.log("FALHA AO OBTER ROLES: " + failData.status);
                      $scope.obtendoRoles = false;
-                     $scope.hideAlertProgress(); // fecha o alert
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                     else $scope.showAlert('Houve uma falha ao requisitar informações (' + failData.status + ')', true, 'danger', true);
                      $scope.atualizaProgressoDoCadastro();
                   }); 
     };
@@ -159,14 +104,26 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
         // Obtem o token
         token = $autenticacao.getToken();
         // Exibe o alert de progress
-        $scope.showAlertProgress();
+        $scope.showAlert('Carregando informações');
         // Verifica se tem parâmetros
         if($stateParams.usuario !== null){
             $scope.tela.tipo = 'Alteração'; 
             $scope.tela.acao = 'Alterar';
-            $scope.old.usuario = $stateParams.usuario;
-            obtemDadosUsuario();
-        }else obtemRoles(); // Obtém Roles
+            $scope.old.usuario = $stateParams.usuario.webpagesusers;
+            $scope.old.pessoa = $stateParams.usuario.pessoa;
+            $scope.old.roles = $stateParams.usuario.webpagesusersuserinroles;//webpagesusersinroles; // o nome está errado
+            //console.log($stateParams.usuario);
+            // Atualiza demais dados
+            atualizaDadosDoUsuario();
+            // Grupo Empresa
+            $scope.usuario.grupoempresa = {id_grupo: $scope.old.usuario.id_grupo, 
+                                           ds_nome: $stateParams.usuario.grupoempresa};
+            // Empresa
+            $scope.usuario.empresa = {nu_cnpj: $scope.old.usuario.nu_cnpjEmpresa, 
+                                      ds_fantasia: $stateParams.usuario.empresa};
+        } 
+        // Obtém Roles
+        obtemRoles(); 
         // Título da página
         $scope.pagina.titulo = 'Gestão de Acessos';                          
         $scope.pagina.subtitulo = $scope.tela.tipo + ' de Usuário';
@@ -204,106 +161,22 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
     };
     
     // CADASTRO                                                     
-                                                         
-    /**
-      * Envia o post para a api de administracao/webpageUsersInRoles, enviando o json { UserId : id_usuario, Role_Id : [<id_roles>] }
-      */
-    var postRoles = function(id_usuario){
-        progressoCadastro(true);
-        for(var k = 0; k < rolesSelecionadas.length; k++){
-            var jsonRolesUsuario = {UserId : id_usuario, RoleId : rolesSelecionadas[k].RoleId};
-            console.log(jsonRolesUsuario);
-            // Envia
-            //$webapi.post($apis.administracao.webpageusersinroles, token, jsonRolesUsuario)
-            $.post($apis.administracao.webpageusersinroles + '?token=' + token, jsonRolesUsuario)
-                //.then(function(dados){
-                .done(function(dados){
-                    console.log("ROLES IN USER POSTED");
-                    console.log(dados);
-                    if(k == rolesSelecionadas.length){
-                        progressoCadastro(false);
-                        alert("Cadastrado com sucesso!");
-                        // Reseta os dados
-                        $scope.pessoa = $scope.usuario = {};
-                        $scope.rolesSelecionadas = false;
-                        // Volta para a tela de Usuários
-                        $scope.goAdministrativoUsuarios();
-                    }
-                  }//,function(failData){
-                  ).fail(function(failData){      
-                     console.log("FALHA AO CADASTRAR ROLES DO USUARIO: " + failData.status);
-                     progressoCadastro(false);
-                  });
-        }
-    };
-    /**
-      * Envia o post para a api de administracao/webpageUsers, enviando o json { ds_login : login, ds_email : email, id_pessoa : id_pessoa}
-      * enviando, se preenchido pelo usuário, { id_grupo : id_grupo_empresa, nu_cnpjEmpresa : cnpj_empresa }
-      */
-    var postUsuario = function(id_pessoa){
-        var jsonUsuario = {};
-        // Obrigatórios
-        jsonUsuario.ds_login = $scope.usuario.login;
-        jsonUsuario.ds_email = $scope.usuario.email;
-        jsonUsuario.id_pessoa = id_pessoa;
-        // Não-Obrigatórios
-        if($scope.usuario.grupoempresa.ds_nome) jsonUsuario.id_grupo = $scope.usuario.grupoempresa.id_grupo;
-        if($scope.usuario.empresa.ds_fantasia) jsonUsuario.nu_cnpjEmpresa = $scope.usuario.empresa.nu_cnpj;
-        console.log(jsonUsuario);
-        // Envia
-        //$webapi.post($apis.administracao.webpageusers, token, jsonUsuario)
-        $.post($apis.administracao.webpageusers + '?token=' + token, jsonUsuario)
-                //.then(function(id_usuario){
-                .done(function(id_usuario){
-                    postRoles(id_usuario);
-                  }//,function(failData){
-                  ).fail(function(failData){
-                     console.log("FALHA AO CADASTRAR USUARIO: " + failData.status);
-                     progressoCadastro(false);
-                  });  
-    };
-    /**
-      * Envia o post para a api de administracao/pessoa, enviando o json { nm_pessoa : nome }
-      * enviando, se preenchido pelo usuário, { dt_nascimento : data_nasc, nu_telefone : telefone, nu_ramal : ramal }
-      */
-    var postPessoa = function(){
-        var jsonPessoa = {};
-        // Obrigatório
-        jsonPessoa.nm_pessoa = $scope.pessoa.nome;
-        // Não-Obrigatórios
-        if($scope.pessoa.data_nasc){
-            var data = $scope.pessoa.data_nasc.split('/');
-            var dt = new Date(data[2], data[1] - 1, data[0]);
-            jsonPessoa.dt_nascimento = '/Date(' + dt.getTime() + ')/';
-        }
-        if($scope.pessoa.telefone) jsonPessoa.nu_telefone = $scope.pessoa.telefone;
-        if($scope.pessoa.ramal) jsonPessoa.nu_ramal = $scope.pessoa.ramal;
-        // Envia
-        console.log(jsonPessoa);
-        //$webapi.post($apis.administracao.pessoa, token, jsonPessoa)
-        $.post($apis.administracao.pessoa + '?token=' + token, jsonPessoa)
-                //.then(function(id_pessoa){
-                .done(function(id_pessoa){
-                    postUsuario(id_pessoa);
-                  }//,function(failData){
-                  ).fail(function(failData){
-                     console.log("FALHA AO CADASTRAR PESSOA: " + failData.status);
-                     progressoCadastro(false);
-                  });  
-    };
     /**
       * Cadastra o usuário na base de dados
       */
     var cadastraUsuario = function(){
         // Cadastra
         progressoCadastro(true)
-        postPessoa();
-        /* PESSOA
+        //postPessoa();
+        //* PESSOA
         var jsonPessoa = {};
         // Obrigatório
         jsonPessoa.nm_pessoa = $scope.pessoa.nome;
         // Não-Obrigatórios
-        if($scope.pessoa.data_nasc) jsonPessoa.dt_nascimento = $scope.pessoa.data_nasc;
+        if($scope.pessoa.data_nasc){ 
+            var dt = $scope.pessoa.data_nasc.split('/');
+            jsonPessoa.dt_nascimento = '/Date(' + (new Date(dt[2] + '/' + (dt[1] - 1) + '/' + dt[0]).getTime()) + ')/';
+        }
         if($scope.pessoa.telefone) jsonPessoa.nu_telefone = $scope.pessoa.telefone;
         if($scope.pessoa.ramal) jsonPessoa.nu_ramal = $scope.pessoa.ramal;
         // USUÁRIO
@@ -316,20 +189,21 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
         if($scope.usuario.empresa.ds_fantasia) jsonUsuario.nu_cnpjEmpresa = $scope.usuario.empresa.nu_cnpj;
         // ROLES DO USUÁRIO
         var r = [];
-        for(var k in rolesSelecionadas) r.push(rolesSelecionadas[k].RoleId);
+        for(var k in rolesSelecionadas) r.push({RoleId : rolesSelecionadas[k].RoleId});
         // JSON DE ENVIO
         var json = { 
                 "pessoa" : jsonPessoa,
                 "webpagesusers" : jsonUsuario,
                 "webpagesusersinroles" : r
             };
+        console.log(json);
         // Envia
         //$webapi.post($apis.administracao.pessoa, token, jsonPessoa)
         $.post($apis.administracao.pessoa + '?token=' + token, json)
                 //.then(function(id_pessoa){
-                .done(function(id_pessoa){
+                .done(function(){
                     progressoCadastro(false);
-                    alert("Cadastrado com sucesso!");
+                    $scope.showAlert('Usuário cadastrado com sucesso!', true, 'success', true);
                     // Reseta os dados
                     $scope.pessoa = $scope.usuario = {};
                     $scope.rolesSelecionadas = false;
@@ -337,9 +211,10 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
                     $scope.goAdministrativoUsuarios();
                   }//,function(failData){
                   ).fail(function(failData){
-                     console.log("FALHA AO CADASTRAR USUÁRIO: " + failData.status);
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else $scope.showAlert('Houve uma falha ao cadastrar o usuário (' + failData.status + ')', true, 'danger', true);
                      progressoCadastro(false);
-                  });  */
+                  });  
     };
      
                                                          
@@ -351,48 +226,48 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
         if($scope.old.usuario === null) return false;
         // PESSOA
         if($scope.old.pessoa.nm_pessoa !== $scope.pessoa.nome){
-           //console.log("HOUVE ALTERAÇÃO - PESSOA - NOME"); 
+           console.log("HOUVE ALTERAÇÃO - PESSOA - NOME"); 
            return true;
         }
         if($scope.old.pessoa.dt_nascimento !== $scope.pessoa.data_nasc){
-           //console.log("HOUVE ALTERAÇÃO - PESSOA - DATA NASC"); 
+           console.log("HOUVE ALTERAÇÃO - PESSOA - DATA NASC"); 
            return true; 
         }
         if($scope.old.pessoa.nu_telefone !== $scope.pessoa.telefone){
-           //console.log("HOUVE ALTERAÇÃO - PESSOA - TELEFONE"); 
+           console.log("HOUVE ALTERAÇÃO - PESSOA - TELEFONE"); 
            return true;    
         }
         if($scope.old.pessoa.nu_ramal !== $scope.pessoa.ramal){
-            //console.log("HOUVE ALTERAÇÃO - PESSOA - RAMAL"); 
+            console.log("HOUVE ALTERAÇÃO - PESSOA - RAMAL"); 
             return true;
         }
            // USUÁRIO
         if($scope.old.usuario.ds_email !== $scope.usuario.email){
-           //console.log("HOUVE ALTERAÇÃO - USUÁRIO - EMAIL"); 
+           console.log("HOUVE ALTERAÇÃO - USUÁRIO - EMAIL"); 
            return true; 
         }
         if($scope.old.usuario.ds_login !== $scope.usuario.login){
-           //console.log("HOUVE ALTERAÇÃO - USUÁRIO - LOGIN"); 
+           console.log("HOUVE ALTERAÇÃO - USUÁRIO - LOGIN"); 
            return true; 
         } 
         if(($scope.old.usuario.id_grupo === null ^ $scope.usuario.grupoempresa.ds_nome) ||
             $scope.old.usuario.id_grupo !== $scope.usuario.grupoempresa.id_grupo){
-           //console.log("HOUVE ALTERAÇÃO - USUÁRIO - GRUPO EMPRESA"); 
+           console.log("HOUVE ALTERAÇÃO - USUÁRIO - GRUPO EMPRESA"); 
            return true; 
         } 
         if(($scope.old.usuario.nu_cnpjEmpresa === null ^ $scope.usuario.empresa.ds_fantasia) ||
             $scope.old.usuario.nu_cnpjEmpresa !== $scope.usuario.empresa.nu_cnpj){ 
-            //console.log("HOUVE ALTERAÇÃO - USUÁRIO - EMPRESA"); 
+            console.log("HOUVE ALTERAÇÃO - USUÁRIO - EMPRESA"); 
             return true;
         }
         // ROLES
         if(rolesSelecionadas.length !== $scope.old.roles.length){ 
-            //console.log("HOUVE ALTERAÇÃO - ROLE");
+            console.log("HOUVE ALTERAÇÃO - ROLE - LENGTH");
             return true;
         }
         for(var k = 0; k < $scope.old.roles.length; k++){
-           if($filter('filter')(rolesSelecionadas, {RoleId:$scope.old.roles[k]}).length == 0){ 
-               //console.log("HOUVE ALTERAÇÃO - ROLE");
+           if($filter('filter')(rolesSelecionadas, {RoleId:$scope.old.roles[k].RoleId}).length == 0){ 
+               console.log("HOUVE ALTERAÇÃO - ROLE");
                return true; 
            }
         }
@@ -529,7 +404,7 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
                 return;
             }
             $scope.validandoEmail = true;
-            var dadosAPI = $webapi.get($apis.administracao.webpageusers, [token, 0], {id:$campos.administracao.webpageusers.ds_email, valor:$scope.usuario.email});
+            var dadosAPI = $webapi.get($apis.administracao.webpagesusers, [token, 0], {id:$campos.administracao.webpagesusers.ds_email, valor:$scope.usuario.email});
             // Verifica se a requisição foi respondida com sucesso
             dadosAPI.then(function(dados){
                             if(!dados) console.log("DADOS NÃO FORAM RECEBIDOS!");
@@ -565,7 +440,7 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
                 return;
             }
             $scope.validandoLogin = true;
-            var dadosAPI = $webapi.get($apis.administracao.webpageusers, [token, 0], {id:$campos.administracao.webpageusers.ds_login, valor:$scope.usuario.login});
+            var dadosAPI = $webapi.get($apis.administracao.webpagesusers, [token, 0], {id:$campos.administracao.webpagesusers.ds_login, valor:$scope.usuario.login});
             // Verifica se a requisição foi respondida com sucesso
             dadosAPI.then(function(dados){
                             if(!dados) console.log("DADOS NÃO FORAM RECEBIDOS!");

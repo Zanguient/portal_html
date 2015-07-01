@@ -8,6 +8,7 @@
 // App
 angular.module("AtosCapital", ['ui.router', 
                                'ui.bootstrap', 
+                               'diretivas',
                                'servicos', 
                                'nao-autorizado', 
                                'administrativo-usuarios',
@@ -203,8 +204,7 @@ angular.module("AtosCapital", ['ui.router',
         //data.id_grupo = 42;
         data.servicos = [
             {
-                titulo : 'Dashboard',
-                home : true
+                titulo : 'Dashboard'
             },
             {
                 titulo : 'Card Services',
@@ -238,7 +238,8 @@ angular.module("AtosCapital", ['ui.router',
                         titulo : 'Gestão de Acessos', 
                         modulos : [
                             {
-                                titulo : 'Usuários'
+                                titulo : 'Usuários',
+                                home : true
                             },
                             {
                                 titulo : 'Privilégios'
@@ -458,27 +459,34 @@ angular.module("AtosCapital", ['ui.router',
                             
    // Exibe o alert
    var alertId = '';
-   $scope.showAlertProgress = function(){
+   /**
+     * Exibe um alert no container
+     * @param mensagem : texto a ser exibido. Default: 'Por favor, aguarde'
+     * @param closable : set true se deseja que apareça um botão que fecha manualmente o alert. Default: false
+     * @param type : 'info' (default), 'success', 'danger', 'warning'.
+     * @param scroll : set true se deseja que, ao ser exibido, a barra de rolagem rolará até ele. Default: false
+     */
+   $scope.showAlert = function(mensagem, closable, type, scroll){
         jQuery(document).ready(function() { 
         //$rootScope.$on('$viewContentLoaded', function(){
            $timeout(function(){
                    alertId = Metronic.alert({
                     container: '', // alerts parent container(by default placed after the page breadcrumbs)
                     place: 'append', // append or prepent in container 
-                    type: 'info',  // alert's type
-                    message: 'Por favor, aguarde',  // alert's message
-                    close: false, // make alert closable
+                    type: type ? type : 'info',  // alert's type
+                    message: mensagem ? mensagem : 'Por favor, aguarde',  // alert's message
+                    close: closable ? true : false, // make alert closable
                     reset: true, // close all previouse alerts first
-                    focus: true, // auto scroll to the alert after shown
-                    closeInSeconds: 0, // auto close after defined seconds
-                    //icon: 'spinner' // put icon before the message
-                    img : '../../../../../img/loading-atos.gif' // put img before the message
+                    focus: scroll ? true : false, // auto scroll to the alert after shown
+                    closeInSeconds: type === 'success' ? 5 : 0, // auto close after defined seconds
+                    icon: type === 'danger' || type === 'warning' ? 'warning' : type === 'success' ? 'check' : '', // put icon before the message
+                    img : !type || type === 'info' ? '../../../../../img/loading-atos.gif' : '' // put img before the message
                 });
             }, 0);
         }); 
    };
    // Esconde o alert
-   $scope.hideAlertProgress = function(){
+   $scope.hideAlert = function(){
        $timeout(function(){$('#' + alertId).remove();}, 0); // fecha alert
    };                          
                             

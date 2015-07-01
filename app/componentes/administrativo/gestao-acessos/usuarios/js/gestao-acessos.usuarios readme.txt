@@ -1,0 +1,68 @@
+# README #
+
+Módulo que gerencia:
+ - o layout da tela de usuários da Gestão de acessos (app/componentes/administrativo/gestao-acessos/usuarios/index.html);
+ - exibe os usuários do sistema, permitindo filtros e ordenação distintas
+ - permite criação de um novo usuário ou a alteração de um existente (direcionando para a tela de cadastro, em views/cadastro/index.html)
+ - permite também a exclusão e a redefinição de senha de um determinado usuário
+ 
+
+### Pra Que Serve Este Módulo? ###
+
+Gerenciar completamente a tela de usuários da Gestão de acessos.  
+
+
+
+### O que é necessário para usar o módulo? ###
+
+O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados os seguintes arquivos:
+ |--------------------------------------|---------------------------------------------------|----------------------------------------|
+ |                MODULO                |                   DESCRIÇÃO                       |          IMPORT (no index.html)        |
+ |--------------------------------------|---------------------------------------------------|----------------------------------------|
+ |              servicos                | Biblioteca que contém constantes, funções e       |              services.js               |
+ |                                      | informações úteis do projeto, como os links para  |                                        |
+ |                                      | interagir com a WEB API e info da empresa         |                                        |
+ |--------------------------------------|---------------------------------------------------|----------------------------------------|
+
+ 
+### Outras depêndencias ###
+
+  * Controller é filho do controller principal "appCtrl" (app.js)
+  * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
+  * $scope.grupoempresa, do "appCtrl" : grupo empresa informado pelo usuário na barra administrativa
+  * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
+  * Faz referência direta ao controller de cadastro de usuários da Gestão de Acessos (gestao-acessos.usuarios.cadastro.js)
+  * Quando for para alterar um usuário, envia como parâmetro no $state.go o JSON associado ao usuário
+  * APIS:
+	- api/administracao/webpagesusers
+	- api/cliente/grupoempresa
+	- api/cliente/empresa
+
+ 
+ 
+ ### Interação com a local storage ###
+ 
+ Na local storage, está armazenado o token de acesso do usuário. O acesso é intermediado pela $localstorage, do módulo servicos (services.js)
+ 
+ 
+ 
+ ### Interação com a WEB API ###
+ 
+  * api/administracao/webpagesusers
+	 - GET : listagem dos usuários na tabela (coleção 2)
+			{
+				"pessoa" : json_pessoa, 
+				"webpagesusers" : json_usuario,
+				"webpagesusersinroles" : [roleids]
+				"grupoempresa" : ds_nome
+				"empresa" : ds_fantasia
+			}
+	 - DELETE : deletar um determinado usuário
+	 - POST : resetar senha?
+ 
+   
+
+   
+### Desenvolvedores ###
+
+Deivid Marinho - deividgfmarinho@gmail.com

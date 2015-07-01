@@ -19,22 +19,25 @@ angular.module("administrativo-usuarios", ['servicos'])
                                             function($scope,$state,$http,$campos,
                                                      $webapi,$apis,$filter,$autenticacao){ 
     var token = '';
+    $scope.paginaInformada = 1; // página digitada pelo usuário
     $scope.usuarios = [];
     $scope.camposBusca = [
                           {
-                            id: $campos.administracao.webpageusers.ds_email,
+                            id: $campos.administracao.webpagesusers.ds_email,
                             ativo: true,  
                             nome: "E-mail"
                           },{
-                            id: $campos.administracao.webpageusers.ds_login,
+                            id: $campos.administracao.webpagesusers.ds_login,
                             ativo: true,
                             nome: "Login"
                           },{
-                            id: $campos.administracao.webpageusers.id_grupo,
+                            id: $campos.administracao.webpagesusers.grupo_empresa + ($campos.cliente.grupoempresa.ds_nome - 100), 
+                            //id: $campos.administracao.webpagesusers.id_grupo,
                             ativo : !$scope.grupoempresa, // é desativado quando o $scope.grupoempresa !== undefined
                             nome: "Empresa"
                           },{
-                            id: $campos.administracao.webpageusers.nu_cnpjEmpresa,
+                            id: $campos.administracao.webpagesusers.empresa + ($campos.cliente.empresa.ds_fantasia - 100), 
+                            //id: $campos.administracao.webpagesusers.nu_cnpjEmpresa,
                             ativo: true,
                             nome: "Filial"
                           },
@@ -43,7 +46,7 @@ angular.module("administrativo-usuarios", ['servicos'])
     $scope.usuario = {busca:'', campo_busca : $scope.camposBusca[0], 
                       itens_pagina : $scope.itens_pagina[0], pagina : 1,
                       total_registros : 0, total_paginas : 0, 
-                      campo_ordenacao : {id: $campos.administracao.webpageusers.ds_email, order : 0}};
+                      campo_ordenacao : {id: $campos.administracao.webpagesusers.ds_email, order : 0}};
                                                 
     // Inicialização do controller
     $scope.administrativoUsuariosInit = function(){
@@ -69,136 +72,152 @@ angular.module("administrativo-usuarios", ['servicos'])
                                             
     // ORDENAÇÃO
     /**
+      * Modifica a ordenação
+      */
+    var ordena = function(posCampo){
+        if(posCampo >= 0 && posCampo < $scope.camposBusca.length){
+            if($scope.usuario.campo_ordenacao.id !== $scope.camposBusca[posCampo].id){ 
+                $scope.usuario.campo_ordenacao.id = $scope.camposBusca[posCampo].id;
+                $scope.usuario.campo_ordenacao.order = 0; // começa descendente                                 
+            }else
+                // Inverte a ordenação: ASCENDENTE => DESCENDENTE e vice-versa                                
+                $scope.usuario.campo_ordenacao.order = $scope.usuario.campo_ordenacao.order === 0 ? 1 : 0;                                
+            $scope.buscaUsuarios(); 
+        }
+    };
+    /**
       * Ordena por e-mail. 
       * Se já estava ordenando por e-mail, inverte a forma de ordenação
       */
     $scope.ordenaPorEmail = function(){
-        if($scope.usuario.campo_ordenacao.id !== $campos.administracao.webpageusers.ds_email){ 
-            $scope.usuario.campo_ordenacao.id = $campos.administracao.webpageusers.ds_email;
-            $scope.usuario.campo_ordenacao.order = 0; // começa descendente                                 
-        }else
-            // Inverte a ordenação: ASCENDENTE => DESCENDENTE e vice-versa                                
-            $scope.usuario.campo_ordenacao.order = $scope.usuario.campo_ordenacao.order === 0 ? 1 : 0;                                
-        $scope.buscaUsuarios();
+        ordena(0);
     };
     /**
       * Ordena por login. 
       * Se já estava ordenando por login, inverte a forma de ordenação
       */
     $scope.ordenaPorLogin = function(){
-        if($scope.usuario.campo_ordenacao.id !== $campos.administracao.webpageusers.ds_login){ 
-            $scope.usuario.campo_ordenacao.id = $campos.administracao.webpageusers.ds_login;
-            $scope.usuario.campo_ordenacao.order = 0; // começa descendente                                 
-        }else
-            // Inverte a ordenação: ASCENDENTE => DESCENDENTE e vice-versa                                
-            $scope.usuario.campo_ordenacao.order = $scope.usuario.campo_ordenacao.order === 0 ? 1 : 0;                                
-        $scope.buscaUsuarios();
+        ordena(1);
     };
     /**
       * Ordena por grupo empresa. 
       * Se já estava ordenando por grupo empresa, inverte a forma de ordenação
       */
     $scope.ordenaPorGrupoEmpresa = function(){
-        if($scope.usuario.campo_ordenacao.id !== $campos.administracao.webpageusers.id_grupo){ 
-            $scope.usuario.campo_ordenacao.id = $campos.administracao.webpageusers.id_grupo;
-            $scope.usuario.campo_ordenacao.order = 0; // começa descendente                                 
-        }else
-            // Inverte a ordenação: ASCENDENTE => DESCENDENTE e vice-versa                                
-            $scope.usuario.campo_ordenacao.order = $scope.usuario.campo_ordenacao.order === 0 ? 1 : 0;                                
-        $scope.buscaUsuarios();
+        ordena(2);
     }; 
     /**
       * Ordena por empresa. 
       * Se já estava ordenando por empresa, inverte a forma de ordenação
       */
     $scope.ordenaPorEmpresa = function(){
-        if($scope.usuario.campo_ordenacao.id !== $campos.administracao.webpageusers.nu_cnpjEmpresa){ 
-            $scope.usuario.campo_ordenacao.id = $campos.administracao.webpageusers.nu_cnpjEmpresa;
-            $scope.usuario.campo_ordenacao.order = 0; // começa descendente                                 
-        }else
-            // Inverte a ordenação: ASCENDENTE => DESCENDENTE e vice-versa                                
-            $scope.usuario.campo_ordenacao.order = $scope.usuario.campo_ordenacao.order === 0 ? 1 : 0;                                
-        $scope.buscaUsuarios();
+        ordena(3);
     };
     /**
       * Retorna true se a ordenação está sendo feito por login de forma crescente
       */
     $scope.estaOrdenadoCrescentePorLogin = function(){
-        return $scope.usuario.campo_ordenacao.id == $campos.administracao.webpageusers.ds_login && 
+        return $scope.usuario.campo_ordenacao.id == $scope.camposBusca[0].id && 
                $scope.usuario.campo_ordenacao.order == 0;    
     };
     /**
       * Retorna true se a ordenação está sendo feito por login de forma decrescente
       */
     $scope.estaOrdenadoDecrescentePorLogin = function(){
-        return $scope.usuario.campo_ordenacao.id == $campos.administracao.webpageusers.ds_login && 
+        return $scope.usuario.campo_ordenacao.id == $scope.camposBusca[0].id && 
                $scope.usuario.campo_ordenacao.order == 1;    
     };                                          
     /**
       * Retorna true se a ordenação está sendo feito por e-mail de forma crescente
       */
     $scope.estaOrdenadoCrescentePorEmail = function(){
-        return $scope.usuario.campo_ordenacao.id === $campos.administracao.webpageusers.ds_email && 
+        return $scope.usuario.campo_ordenacao.id === $scope.camposBusca[1].id && 
                $scope.usuario.campo_ordenacao.order === 0;    
     };
     /**
       * Retorna true se a ordenação está sendo feito por e-mail de forma decrescente
       */
     $scope.estaOrdenadoDecrescentePorEmail = function(){
-        return $scope.usuario.campo_ordenacao.id === $campos.administracao.webpageusers.ds_email && 
+        return $scope.usuario.campo_ordenacao.id === $scope.camposBusca[1].id && 
                $scope.usuario.campo_ordenacao.order === 1;    
     };                                         
     /**
       * Retorna true se a ordenação está sendo feito por grupo empresa de forma crescente
       */
     $scope.estaOrdenadoCrescentePorGrupoEmpresa = function(){
-        return $scope.usuario.campo_ordenacao.id === $campos.administracao.webpageusers.id_grupo && 
+        return $scope.usuario.campo_ordenacao.id === $scope.camposBusca[2].id && 
                $scope.usuario.campo_ordenacao.order === 0;    
     };
     /**
       * Retorna true se a ordenação está sendo feito por grupo empresa de forma decrescente
       */
     $scope.estaOrdenadoDecrescentePorGrupoEmpresa = function(){
-        return $scope.usuario.campo_ordenacao.id === $campos.administracao.webpageusers.id_grupo && 
+        return $scope.usuario.campo_ordenacao.id === $scope.camposBusca[2].id && 
                $scope.usuario.campo_ordenacao.order === 1;    
     }; 
     /**
       * Retorna true se a ordenação está sendo feito por empresa de forma crescente
       */
     $scope.estaOrdenadoCrescentePorEmpresa = function(){
-        return $scope.usuario.campo_ordenacao.id === $campos.administracao.webpageusers.nu_cnpjEmpresa && 
+        return $scope.usuario.campo_ordenacao.id === $scope.camposBusca[3].id && 
                $scope.usuario.campo_ordenacao.order === 0;    
     };
     /**
       * Retorna true se a ordenação está sendo feito por empresa de forma decrescente
       */
     $scope.estaOrdenadoDecrescentePorEmpresa = function(){
-        return $scope.usuario.campo_ordenacao.id === $campos.administracao.webpageusers.nu_cnpjEmpresa && 
+        return $scope.usuario.campo_ordenacao.id === $scope.camposBusca[3].id && 
                $scope.usuario.campo_ordenacao.order === 1;    
     };                                          
                                             
                                             
                                                 
     // PAGINAÇÃO
+    /**
+      * Altera efetivamente a página exibida
+      */                                            
+    var setPagina = function(pagina){
+       if(pagina >= 1 && pagina <= $scope.usuario.total_paginas){ 
+           $scope.usuario.pagina = pagina;
+           $scope.buscaUsuarios(); 
+       }
+       $scope.atualizaPaginaDigitada();    
+    };
+    /**
+      * Vai para a página anterior
+      */
     $scope.retrocedePagina = function(){
-        if($scope.usuario.pagina > 1){ 
-            $scope.usuario.pagina--;  
-            $scope.buscaUsuarios();
-        }
+        setPagina($scope.usuario.pagina - 1); 
     };
+    /**
+      * Vai para a página seguinte
+      */                                            
     $scope.avancaPagina = function(){
-        if($scope.usuario.pagina < $scope.usuario.total_paginas){ 
-            $scope.usuario.pagina++; 
-            $scope.buscaUsuarios();
-        }
+        setPagina($scope.usuario.pagina + 1); 
     };
+    /**
+      * Foi informada pelo usuário uma página para ser exibida
+      */                                            
+    $scope.alteraPagina = function(){
+        if($scope.paginaInformada) setPagina(parseInt($scope.paginaInformada));
+        else $scope.setaPaginaDigitada();  
+    };
+    /**
+      * Sincroniza a página digitada com a que efetivamente está sendo exibida
+      */                                            
+    $scope.atualizaPaginaDigitada = function(){
+        $scope.paginaInformada = $scope.usuario.pagina; 
+    };                                             
+    /**
+      * Notifica que o total de itens por página foi alterado
+      */                                            
     $scope.alterouItensPagina = function(){
         $scope.buscaUsuarios();   
     };
      
     // BUSCA
     $scope.buscaUsuarios = function(){
-       $scope.showAlertProgress(); // exibe o alert
+       $scope.showAlert('Obtendo usuários'); // exibe o alert
         
        var filtros = undefined;
        
@@ -206,13 +225,13 @@ angular.module("administrativo-usuarios", ['servicos'])
        if($scope.usuario.busca.length > 0) filtros = {id: $scope.usuario.campo_busca.id, valor: '%' + $scope.usuario.busca + '%'};        
        // Filtro do grupo empresa => barra administrativa
        if($scope.grupoempresa){
-            var filtroGrupoEmpresa = {id: $campos.administracao.webpageusers.id_grupo, valor: $scope.grupoempresa.id_grupo};
+            var filtroGrupoEmpresa = {id: $campos.administracao.webpagesusers.id_grupo, valor: $scope.grupoempresa.id_grupo};
             if(filtros) filtros = [filtros, filtroGrupoEmpresa];
             else filtros = filtroGrupoEmpresa;
        }
         
        $scope.obtendoUsuarios = true;
-       var dadosAPI = $webapi.get($apis.administracao.webpageusers, [token, 0, $scope.usuario.campo_ordenacao.id, 
+       var dadosAPI = $webapi.get($apis.administracao.webpagesusers, [token, 2, $scope.usuario.campo_ordenacao.id, 
                                                                      $scope.usuario.campo_ordenacao.order, 
                                                                      $scope.usuario.itens_pagina, $scope.usuario.pagina],
                                   filtros); 
@@ -221,12 +240,16 @@ angular.module("administrativo-usuarios", ['servicos'])
                 $scope.usuario.total_registros = dados.TotalDeRegistros;
                 $scope.usuario.total_paginas = Math.ceil($scope.usuario.total_registros / $scope.usuario.itens_pagina);
                 $scope.obtendoUsuarios = false;
-                $scope.hideAlertProgress(); // fecha o alert
+                $scope.hideAlert(); // fecha o alert
+                // Verifica se a página atual é maior que o total de páginas
+                if($scope.usuario.pagina > $scope.usuario.total_paginas)
+                    setPagina(1); // volta para a primeira página e refaz a busca
               },
               function(failData){
-                 console.log("FALHA AO OBTER USUARIOS: " + failData.status);
+                 //console.log("FALHA AO OBTER USUARIOS: " + failData.status);
                  $scope.obtendoUsuarios = false;
-                 $scope.hideAlertProgress(); // fecha o alert
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else $scope.showAlert('Houve uma falha ao requisitar usuários (' + failData.status + ')', true, 'danger', true);
               }); 
     };
                                                 
@@ -243,7 +266,7 @@ angular.module("administrativo-usuarios", ['servicos'])
         }
     };
     /**
-      * Editar usuario
+      * Editar usuario => Abre tela de cadastro, enviando como parâmetro o objeto usuario
       */
     $scope.editarUsuario = function(usuario){
         $scope.goAdministrativoUsuariosCadastro({usuario:usuario});
@@ -253,8 +276,19 @@ angular.module("administrativo-usuarios", ['servicos'])
       */
     $scope.exluirUsuario = function(usuario){
         if(confirm("Tem certeza que deseja excluir " + usuario.ds_email)){
-            // Envia post para deletar
-            console.log("EXCLUINDO USUARIO " + usuario.ds_email + "(" + usuario.id_users + ")");
+            // Deleta
+            $scope.showAlert('Deletando usuário'); // exibe o alert
+            $webapi.delete($apis.administracao.webpagesusers, 
+                           [{id: 'token', valor: token},{id: 'id_users', valor: usuario.id_users}]) 
+                .then(function(dados){
+                    alert('Usuário deletado com sucesso');
+                    $scope.hideAlert(); // fecha o alert
+                  },
+                  function(failData){
+                     //console.log("FALHA AO DELETAR USUARIO: " + failData.status);
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else $scope.showAlert('Houve uma falha ao requisitar usuários (' + failData.status + ')', true, 'danger', true);
+                  }); 
         }
     };                                               
 

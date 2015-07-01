@@ -18,20 +18,25 @@ angular.module('servicos', [ ])
             nu_telefone : 103,
             nu_ramal : 104
         },
-        webpageroles : {
+        webpagesroles : {
             RoleId : 100,
             RoleName : 101
         },
-        webpageusers : {
+        webpagesusers : {
             id_users : 100,
             ds_login : 101,
             ds_email : 102,
             id_grupo : 103,
             nu_cnpjEmpresa : 104,
             nu_cnpjBaseEmpresa : 105,
-            id_pessoa : 106
+            id_pessoa : 106,
+            // Relacionamentos
+            pessoa : 200,
+            grupo_empresa : 300,
+            empresa : 400,
+            webpagesrolesinusers : 500
         },
-        webpageusersinroles : {
+        webpagesusersinroles : {
             UserId : 100,
             RoleId : 101
         }
@@ -83,9 +88,9 @@ angular.module('servicos', [ ])
     },
     administracao : {
         pessoa : 'http://192.168.0.100/api/administracao/pessoa/',
-        webpageroles : 'http://192.168.0.100/api/administracao/webpagesroles/',
-        webpageusers : 'http://192.168.0.100/api/administracao/webpagesusers/', 
-        webpageusersinroles : 'http://192.168.0.100/api/administracao/webpagesusersinroles/'
+        webpagesroles : 'http://192.168.0.100/api/administracao/webpagesroles/',
+        webpagesusers : 'http://192.168.0.100/api/administracao/webpagesusers/', 
+        webpagesusersinroles : 'http://192.168.0.100/api/administracao/webpagesusersinroles/'
     },
     cliente: {
       empresa : 'http://192.168.0.100/api/cliente/empresa/',
@@ -140,8 +145,7 @@ angular.module('servicos', [ ])
 .factory('$webapi', ['$q', '$http', function($q, $http) {
   return {
     /**
-      * Obtem a url completa, considerando os parâmetros e os filtros. 
-      * A URL e o primeiro parâmetro (token) são obrigatórios. 
+      * Obtem a url completa, considerando os parâmetros e os filtros.  
       * Se não for desejado utilizar filtro, apenas chamar a função usando dois argumentos em vez de três. 
       *
       * @param api : url da web api
@@ -157,13 +161,15 @@ angular.module('servicos', [ ])
       */  
     getUrl : function(api, parametros, filtros){
       // Se for uma string, somente concatena ela    
-      if(typeof parametros === 'string'){ 
-          // Se for enviado uma string vazia, não concatena
-          if(parametros.length > 0) api = api.concat(parametros + '/');
-      }else{  
-          // Objeto array => Concatena todos
-          for(var k = 0; k < parametros.length; k++) api = api.concat(parametros[k] + '/');
-      }   
+      if(parametros){
+          if(typeof parametros === 'string'){ 
+              // Se for enviado uma string vazia, não concatena
+              if(parametros.length > 0) api = api.concat(parametros + '/');
+          }else{  
+              // Objeto array => Concatena todos
+              for(var k = 0; k < parametros.length; k++) api = api.concat(parametros[k] + '/');
+          }  
+      }
       
       // Filtros
       if(filtros){
@@ -204,13 +210,12 @@ angular.module('servicos', [ ])
       * HTTP DELETE que retorna um promise. 
       * Para entender os outros argumentos, ver função getUrl(api, parametros, filtros)
       */                
-    delete: function(api, parametros, filtros) {
+    delete: function(api, filtros) {
       // Setando o promise
       var deferido = $q.defer();
        
-      var url = this.getUrl(api, parametros, filtros);
-
-      //console.log(url);    
+      var url = this.getUrl(api, undefined, filtros);
+      console.log(url);    
         
       // Requisitar informações de monitoramento
       $http.delete(url)

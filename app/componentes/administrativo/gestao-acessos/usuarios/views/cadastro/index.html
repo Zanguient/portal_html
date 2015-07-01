@@ -104,6 +104,7 @@
                                                <input type="text" placeholder="DD/MM/YYYY" maxlength="10" class="form-control" 
                                                       ng-model="pessoa.data_nasc" ng-change="validaData()" name="pessoaDataNasc" 
                                                       ng-pattern='/^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[012])\/\d{4}$/'
+                                                      input-data
                                                       ng-blur="atualizaProgressoDoCadastro()"/>
                                                 
                                                 <span style="color:red" ng-show='formCadastroUsuario.pessoaDataNasc.$dirty && (formCadastroUsuario.pessoaDataNasc.$error.pattern || !dataValida())'>Data de Nascimento informada é inválida!</span>
@@ -114,7 +115,7 @@
                                             <label class="control-label col-md-3">Telefone </label>
                                             <div class="col-md-4">
                                                 <input type="text" class="form-control" ng-model="pessoa.telefone" 
-                                                       maxlength="11" ng-minlength="10" ng-pattern="/^\d+$/"
+                                                       maxlength="11" ng-minlength="10" valid-integer-number
                                                        name="pessoaTelefone" placeholder="7912345678"
                                                        ng-blur="atualizaProgressoDoCadastro()" />
                                                 <span style="color:red" ng-show="formCadastroUsuario.pessoaTelefone.$dirty && formCadastroUsuario.pessoaTelefone.$invalid">
@@ -128,7 +129,7 @@
                                             <label class="control-label col-md-3">Ramal </label>
                                             <div class="col-md-4">
                                                 <input type="text" class="form-control" ng-model="pessoa.ramal"
-                                                       maxlength="4" ng-minlength="2" ng-pattern="/^\d+$/"
+                                                       maxlength="4" ng-minlength="2" valid-integer-number
                                                        name="pessoaRamal" placeholder="1234"
                                                        ng-blur="atualizaProgressoDoCadastro()"/>
                                                 <span style="color:red" ng-show="formCadastroUsuario.pessoaRamal.$dirty && formCadastroUsuario.pessoaRamal.$invalid">
