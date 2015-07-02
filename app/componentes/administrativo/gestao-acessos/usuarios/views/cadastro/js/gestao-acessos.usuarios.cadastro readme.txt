@@ -1,7 +1,7 @@
 # README #
 
-Módulo que gerencia:
- - o layout da tela de cadastro/alteração de usuários da Gestão de acessos (app/componentes/administrativo/gestao-acessos/usuarios/views/cadastro/index.html);
+Módulo que:
+ - gerencia o layout da tela de cadastro/alteração de usuários da Gestão de acessos (app/componentes/administrativo/gestao-acessos/usuarios/views/cadastro/index.html)
  - permite cadastrar um novo usuário 
  - permite alterar um usuário existente
  
@@ -15,7 +15,8 @@ Gerenciar o cadastro de um novo usuário e a alteração de um usuário existente.
 ### Diferenciação da ação Cadastro para ação Alteração ###
 
 Esse controller recebe como parâmetro ($stateParams) o id "usuario". Caso este seja null => CADASTRO. Caso contrário => ALTERAÇÃO.
-Esse parâmetro é enviado com o "$state.go('rota', {usuario: user})"
+Esse parâmetro é enviado com o "$state.go('rota', {usuario: jsonUsuario})"
+
 
 
 ### O que é necessário para usar o módulo? ###
@@ -37,13 +38,11 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
   * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
   * Faz referência direta ao controller de usuários da Gestão de Acessos (gestao-acessos.usuarios.js)
   * $stateParams para receber o usuário para alteração (quando não receber, significa que é um cadastro)
-  * Tabelas:
+  * APIS:
+    - cliente/empresa (busca por nome fantasia)
     - cliente/grupoempresa (busca por nome)
-	- cliente/empresa (busca por nome fantasia)
-	- administracao/pessoa (cadastro, alteração) // temp
 	- administracao/webpagesroles (listagem, IDs)
     - administracao/webpagesusers (busca e-mail, busca login, cadastro, alteração)
-	- administracao/webpagesusersinroles (cadastro, remoção) // temp
 
 
  

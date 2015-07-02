@@ -7,6 +7,7 @@ Módulo que gerencia:
  - modal e alert
 Esse é o módulo pai.
  
+ 
 ### Pra Que Serve Este Módulo? ###
 
 Gerenciar a tela principal (entre outros, menus e links), levando em consideração as permissões do usuário autenticado. 
@@ -92,7 +93,7 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
  - servicos (OP) : array que contém os serviços o usuário tem acesso
    * titulo (OB) : titulo do serviço ('Card Services', 'Tax Services', 'Administrativo', ...)
    * home (OP) : se o serviço não possui subserviços, indica que ele deve ser exibido na tela inicial
-   * subServicos : array que contém os subserviços associados ao serviço
+   * subServicos (OP) : array que contém os subserviços associados ao serviço
      ** título (OB) : título do subserviço ('Consolidação', 'Conciliação', ...)
 	 ** home (OP) : se o subserviço não possui módulos, indica que ele deve ser exibido na tela inicial
 	 ** modulos (OP) : array que contém os módulos do subserviço
