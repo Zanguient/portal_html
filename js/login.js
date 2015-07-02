@@ -44,7 +44,8 @@ app.controller("loginCtrl", ['$scope',
             Layout.init(); // init current layout
             Login.init();
         });
-        $timeout(function(){$scope.exibeLayout  = true}, 500); // espera meio segundo  
+       $scope.exibeLayout  = true;
+        //$timeout(function(){$scope.exibeLayout  = true}, 500); // espera meio segundo  
     };
     // Inicialização do controller
     $scope.init = function(){

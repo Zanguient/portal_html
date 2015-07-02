@@ -131,20 +131,38 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
         // Quando houver uma mudança de rota => Avalia se tem informações preenchidas e 
         // solicita confirmação de descarte das mesmas. Se confirmado => muda estado                                              
         $scope.$on('mudancaDeRota', function(event, state, params){
+            // Obtem o JSON de mudança
+            var jsonMudanca = {state: state, params : params};            
             // Verifica se possui dados preenchidos
             if($scope.tela.tipo == 'Cadastro'){
                 if($scope.pessoa.nome || $scope.pessoa.data_nasc || $scope.pessoa.telefone || $scope.pessoa.ramal || 
                    $scope.usuario.email || $scope.usuario.empresa || $scope.usuario.grupoempresa || $scope.usuario.login ||
                    $scope.rolesSelecionadas){
-                   if(confirm('Tem certeza que deseja descartar as informações preenchidas?')) $state.go(state, params);
+                    // Exibe um modal de confirmação
+                    $scope.showModal('Confirmação', 
+                         'Tem certeza que deseja descartar as informações preenchidas?',
+                         mudaEstado, {state: state, params : params},
+                         'Sim', 'Não');
                 }else $state.go(state, params);
             }else{
                // Verifica se teve alterações
-               if(!houveAlteracoes() || confirm('Tem certeza que deseja descartar as informações alteradas?'))
-                    $state.go(state, params);    
+               if(!houveAlteracoes()) $state.go(state, params); // não houve alterações  
+               else{ 
+                   // Houve alterações!
+                   $scope.showModal('Confirmação', 
+                         'Tem certeza que deseja descartar as informações alteradas?',
+                         mudaEstado, {state: state, params : params},
+                         'Sim', 'Não');
+               }
             }
         }); 
     };
+    /**
+      * Altera o estado, enviado pelo json => usado no modal de confirmação
+      */
+    var mudaEstado = function(json){
+       $state.go(json.state, json.params); 
+    }
     
     /**
       * True se for cadastro. False se for alteração
@@ -504,11 +522,11 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
             }
             percentual += !conteudoData || dataValida ? 25 : 0; // data
             percentual += !conteudoTelefone || $scope.pessoa.telefone ? 25 : 0; // telefone
-            percentual += !conteudoRamal || $scope.pessoa.ramal ? 25 : 0; // telefone
+            percentual += !conteudoRamal || $scope.pessoa.ramal ? 25 : 0; // ramal
         }else{
             percentual += dataValida ? 25 : 0; // data
             percentual += $scope.pessoa.telefone ? 25 : 0; // telefone
-            percentual += $scope.pessoa.ramal ? 25 : 0; // telefone
+            percentual += $scope.pessoa.ramal ? 25 : 0; // ramal
         }
         return percentual;    
     };

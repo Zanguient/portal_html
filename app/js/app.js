@@ -518,12 +518,12 @@ angular.module("AtosCapital", ['ui.router',
                             
 }])
 
-.config(['$stateProvider','$urlRouterProvider','$locationProvider', '$httpProvider', 
-         function($stateProvider,$urlRouterProvider,$locationProvider,$httpProvider) {
+.config(['$stateProvider','$urlRouterProvider','$locationProvider', 
+         function($stateProvider,$urlRouterProvider,$locationProvider) {
     
     // Aceitar "cross" de domínios
-    $httpProvider.defaults.useXDomain = true; 
-    delete $httpProvider.defaults.headers.common['X-Requested-With'];         
+    //$httpProvider.defaults.useXDomain = true; 
+    //delete $httpProvider.defaults.headers.common['X-Requested-With'];         
              
              
     // ROTAS         
