@@ -7,8 +7,7 @@
  */
 -->
 
-<div class="container" ng-controller="card-services-conciliacao-vendasCtrl as conciliacaoCtrl" ng-init="cardServices_conciliacaoVendasInit()"> 
-    
+<div class="container" ng-controller="card-services-conciliacao-vendasCtrl as conciliacaoCtrl" ng-init="cardServices_conciliacaoVendasInit()">    
     <!-- BEGIN PAGE BREADCRUMB -->
     <ul class="page-breadcrumb breadcrumb">
         <li>
@@ -73,9 +72,7 @@
                             <tr role="row" class="filter">
                                 <td rowspan="1" colspan="1">             
                                     <div class="input-group date date-picker margin-bottom-5">
-                                        <input type="text" class="form-control form-filter input-sm" 
-                                               readonly style="cursor: pointer"
-                                               ng-click="exibeCalendarioDataMin($event)"
+                                        <input type="text" class="form-control form-filter input-sm" readonly=""
                                                placeholder="Início" 
                                                ng-model="datamin"
                                                ng-change="alterouDataMin()"
@@ -90,9 +87,7 @@
                                         </span>
                                     </div>
                                     <div class="input-group date date-picker margin-bottom-5" data-date-format="dd/mm/yyyy">
-                                        <input type="text" class="form-control form-filter input-sm" 
-                                               readonly style="cursor: pointer" 
-                                               ng-click="exibeCalendarioDataMax($event)"
+                                        <input type="text" class="form-control form-filter input-sm" readonly="" 
                                                placeholder="Fim" 
                                                ng-model="datamax" 
                                                ng-change="alterouDataMax()"
@@ -148,10 +143,7 @@
                                 </td>
                                 <td rowspan="1" colspan="1">
                                     <div class="margin-bottom-5">
-                                        <button class="btn btn-sm red filter-submit margin-bottom"
-                                                ng-click="showProgress(0)">
-                                            <i class="fa fa-search"></i> Buscar
-                                        </button>
+                                        <button class="btn btn-sm red filter-submit margin-bottom" ng-click="showModal('Meu titulo')"><i class="fa fa-search"></i> Buscar</button>
                                     </div>
                                     <button class="btn btn-sm grey filter-cancel"><i class="fa fa-times"></i> Limpar</button>
                                 </td>
@@ -240,141 +232,400 @@
                         </div>
                     </div>
                 </div>
-            </div> 
-            <div class="row">
-                <table class="col-sm-12">
-                    <tr>
-                        <td>
-                            <!--<div class="note note-info">-->
-                        <!--div class="col-xs-1" style="width: inherit !important"-->
-                            <table class="note note-info col-md-3" style="padding:10px;border-collapse:initial;">    
-                                <tr>
-                                    <td colspan="2" style="text-align:center">
-                                    <p><h5><strong>CIELO<br>VIA ESTABELECIMENTO</strong></h5></p>
-                                    </td>
-                                 </tr>
-                                <tr>
-                                    <td colspan="2" style="text-align:center">
-                                        AVENIDA PAULISTA, Nº8765<br> SÃO PAULO                                    
-                                    </td>                                    
-                                </tr>
-                                <!--1ª linha-->
-                                <tr>
-                                    <td colspan="2" >POS=896547</td>
-                                     <td></td>
-                                </tr>
-                                <!--2ª linha-->
-                                <tr>
-                                    <td>01/02/2013</td>
-                                    <td>18:00</td>
-                                </tr>
-                                <!--3ª linha-->
-                                <tr>
-                                    <td>AUT=999999</td>
-                                    <td>DOC=123456</td>
-                                </tr>
-                                <!--4ª linha-->
-                                <tr>
-                                    <td>C:</td>
-                                    <td>TERM:</td>
-                                </tr>
-                                <!--5ª linha-->
-                                <tr>
-                                    <td>111112222333345</td>
-                                    <td style="padding-left:10px">9015622</td>
-                                </tr>
-                                <!--6ª linha-->
-                                <tr>
-                                    <td colspan="2">MASTERCARD</td>                        
-                                </tr>
-                                <!--7ª linha-->
-                                <tr>
-                                    <td colspan="2">XXXXXXXXXXXXXXX4569</td>                        
-                                </tr>
-                                <!--8ª linha-->
-                                <tr>
-                                    <td colspan="2">CREDITO A VISTA</td>                        
-                                </tr>
-                                <!--9ª linha-->
-                                <tr>
-                                    <td>VALOR:</td>
-                                    <td>50,00</td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td>
-                            <div>
-                                <a href="javascript:;" class="btn btn-icon-only default">
-                                    <i class="fa fa-check" ng-click="showProgress(1)"></i>
-                                </a>
-                        <td>
-                            <!--<div class="note note-info">-->
-                        <!--div class="col-xs-1" style="width: inherit !important"-->                  
-                            <table class="note note-info col-md-3" style="padding:10px; border-collapse:initial;">    
-                                <tr>
-                                    <td colspan="2" style="text-align:center">
-                                    <p><h5><strong>CIELO<br>VIA ESTABELECIMENTO</strong></h5></p>
-                                    </td>
-                                 </tr>
-                                <tr>
-                                    <td colspan="2" style="text-align:center">
-                                        AVENIDA PAULISTA, Nº8765<br> SÃO PAULO                                    
-                                    </td>                                    
-                                </tr>
-                                <!--1ª linha-->
-                                <tr>
-                                    <td colspan="2" >POS=896547</td>
-                                     <td></td>
-                                </tr>
-                                <!--2ª linha-->
-                                <tr>
-                                    <td>01/02/2013</td>
-                                    <td>18:00</td>
-                                </tr>
-                                <!--3ª linha-->
-                                <tr>
-                                    <td>AUT=999999</td>
-                                    <td>DOC=123456</td>
-                                </tr>
-                                <!--4ª linha-->
-                                <tr>
-                                    <td>C:</td>
-                                    <td>TERM:</td>
-                                </tr>
-                                <!--5ª linha-->
-                                <tr>
-                                    <td>111112222333345</td>
-                                    <td style="padding-left:10px">9015622</td>
-                                </tr>
-                                <!--6ª linha-->
-                                <tr>
-                                    <td colspan="2">MASTERCARD</td>                        
-                                </tr>
-                                <!--7ª linha-->
-                                <tr>
-                                    <td colspan="2">XXXXXXXXXXXXXXX4569</td>                        
-                                </tr>
-                                <!--8ª linha-->
-                                <tr>
-                                    <td colspan="2">CREDITO A VISTA</td>                        
-                                </tr>
-                                <!--9ª linha-->
-                                <tr>
-                                    <td>VALOR:</td>
-                                    <td>50,00</td>
-                                </tr>
-                            </table>
-                        </td>
-                            </div>    
-                        </td>
-                    </tr>
-                </table>
             </div>
-        </div>    
-    </div> 
-</div>   
-
-
-
-
-
+            <!--CUPONS AZUIS-->
+            <div class="row">
+                <!--CUPONS CARD SERVICES- CONCILIAÇÃO VENDAS-->
+                <div class="col-sm-3 col-sm-offset-2">
+                    <div class="row">
+                        <div class="col-sm-10 col-sm-offset-1 cuponAzulConciliacaoVendas">
+                            <div class="row">
+                                <div class="col-sm-12" Style="text-align:center">
+                                    <strong>CIELO</strong>                            
+                                </div>
+                                <div class="col-sm-12" Style="text-align:center">
+                                    <strong>VIA ESTABELECIMENTO</strong>
+                                </div>
+                                <div class="col-sm-12" Style="text-align:center; margin-top:10px">
+                                     AVENIDA PAULISTA, Nº8765
+                                </div>
+                                <div class="col-sm-12" Style="text-align:center">
+                                    SÃO PAULO
+                                </div>
+                                <div class="col-sm-12" Style="margin-top:15px">
+                                     POS=896547
+                                </div>
+                                <div class="col-sm-6">
+                                    01/02/2013
+                                </div>
+                                <div class="col-sm-6">
+                                    18:00
+                                </div>
+                                <div class="col-sm-6">
+                                     AUT=999999
+                                </div>
+                                <div class="col-sm-6">
+                                    DOC=123456
+                                </div>
+                                <div class="col-sm-12">
+                                    TERM:
+                                </div>
+                                <div class="col-sm-12">
+                                    9015622
+                                </div>
+                                <div class="col-sm-12">
+                                   MASTERCARD
+                                </div>                        
+                                <div class="col-sm-12">
+                                    XXXXXXXXXXXXXXX4569
+                                </div>                        
+                                <div class="col-sm-12">
+                                    CREDITO A VISTA
+                                </div>                        
+                                <div class="col-sm-6">
+                                    VALOR:
+                                </div>
+                                <div class="col-sm-6">
+                                    50,00
+                                </div>                                
+                            </div>                            
+                        </div>
+                    </div>
+                </div>
+                <!--BOTÃO CHECK-->
+                <div class="col-sm-2 butaoCheckCociliacaoVendas">
+                    <div class="row">
+                        <div class="col-sm-10 col-sm-offset-4">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <a href="javascript:;" class="btn btn-icon-only default">
+                                        <i class="fa fa-check"></i>
+                                     </a>
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                </div>
+                <!--CUPONS CARD SERVICES- CONCILIAÇÃO VENDAS-->
+                <div class="col-sm-3">
+                    <div class="row">
+                        <div class="col-sm-10 col-sm-offset-1 cuponAzulConciliacaoVendas">
+                            <div class="row">
+                                <div class="col-sm-12" Style="text-align:center">
+                                    <strong>CIELO</strong>                            
+                                </div>
+                                <div class="col-sm-12" Style="text-align:center">
+                                    <strong>VIA ESTABELECIMENTO</strong>
+                                </div>
+                                <div class="col-sm-12" Style="text-align:center; margin-top:10px">
+                                     AVENIDA PAULISTA, Nº8765
+                                </div>
+                                <div class="col-sm-12" Style="text-align:center">
+                                    SÃO PAULO
+                                </div>
+                                <div class="col-sm-12" Style="margin-top:15px">
+                                     POS=896547
+                                </div>
+                                <div class="col-sm-6">
+                                    01/02/2013
+                                </div>
+                                <div class="col-sm-6">
+                                    18:00
+                                </div>
+                                <div class="col-sm-6">
+                                     AUT=999999
+                                </div>
+                                <div class="col-sm-6">
+                                    DOC=123456
+                                </div>
+                                <div class="col-sm-12">
+                                    TERM:
+                                </div>
+                                <div class="col-sm-12">
+                                    9015622
+                                </div>
+                                <div class="col-sm-12">
+                                   MASTERCARD
+                                </div>                        
+                                <div class="col-sm-12">
+                                    XXXXXXXXXXXXXXX4569
+                                </div>                        
+                                <div class="col-sm-12">
+                                    CREDITO A VISTA
+                                </div>                        
+                                <div class="col-sm-6">
+                                    VALOR:
+                                </div>
+                                <div class="col-sm-6">
+                                    50,00
+                                </div>                                
+                            </div>                            
+                        </div>
+                    </div>
+                </div>                
+            </div> 
+            <!--CUPONS LARANJAS-->
+            <div class="row">
+                <!--CUPONS CARD SERVICES- CONCILIAÇÃO VENDAS-->
+                <div class="col-sm-3 col-sm-offset-2">
+                    <div class="row">
+                        <div class="col-sm-10 col-sm-offset-1 cuponLaranjaConciliacaoVendas">
+                            <div class="row">
+                                <div class="col-sm-12" Style="text-align:center">
+                                    <strong>CIELO</strong>                            
+                                </div>
+                                <div class="col-sm-12" Style="text-align:center">
+                                    <strong>VIA ESTABELECIMENTO</strong>
+                                </div>
+                                <div class="col-sm-12" Style="text-align:center; margin-top:10px">
+                                     AVENIDA PAULISTA, Nº8765
+                                </div>
+                                <div class="col-sm-12" Style="text-align:center">
+                                    SÃO PAULO
+                                </div>
+                                <div class="col-sm-12" Style="margin-top:15px">
+                                     POS=896547
+                                </div>
+                                <div class="col-sm-6">
+                                    01/02/2013
+                                </div>
+                                <div class="col-sm-6">
+                                    18:00
+                                </div>
+                                <div class="col-sm-6">
+                                     AUT=999999
+                                </div>
+                                <div class="col-sm-6">
+                                    DOC=123456
+                                </div>
+                                <div class="col-sm-12">
+                                    TERM:
+                                </div>
+                                <div class="col-sm-12">
+                                    9015622
+                                </div>
+                                <div class="col-sm-12">
+                                   MASTERCARD
+                                </div>                        
+                                <div class="col-sm-12">
+                                    XXXXXXXXXXXXXXX4569
+                                </div>                        
+                                <div class="col-sm-12">
+                                    CREDITO A VISTA
+                                </div>                        
+                                <div class="col-sm-6">
+                                    VALOR:
+                                </div>
+                                <div class="col-sm-6">
+                                    50,00
+                                </div>                                
+                            </div>                            
+                        </div>
+                    </div>
+                </div>
+                <!--BOTÃO CHECK-->
+                <div class="col-sm-2 butaoCheckCociliacaoVendas">
+                    <div class="row">
+                        <div class="col-sm-10 col-sm-offset-4">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <a href="javascript:;" class="btn btn-icon-only default">
+                                        <i class="fa fa-check"></i>
+                                     </a>
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                </div>
+                <!--CUPONS CARD SERVICES- CONCILIAÇÃO VENDAS-->
+                <div class="col-sm-3">
+                    <div class="row">
+                        <div class="col-sm-10 col-sm-offset-1 cuponLaranjaConciliacaoVendas">
+                            <div class="row">
+                                <div class="col-sm-12" Style="text-align:center">
+                                    <strong>CIELO</strong>                            
+                                </div>
+                                <div class="col-sm-12" Style="text-align:center">
+                                    <strong>VIA ESTABELECIMENTO</strong>
+                                </div>
+                                <div class="col-sm-12" Style="text-align:center; margin-top:10px">
+                                     AVENIDA PAULISTA, Nº8765
+                                </div>
+                                <div class="col-sm-12" Style="text-align:center">
+                                    SÃO PAULO
+                                </div>
+                                <div class="col-sm-12" Style="margin-top:15px">
+                                     POS=896547
+                                </div>
+                                <div class="col-sm-6">
+                                    01/02/2013
+                                </div>
+                                <div class="col-sm-6">
+                                    18:00
+                                </div>
+                                <div class="col-sm-6">
+                                     AUT=999999
+                                </div>
+                                <div class="col-sm-6">
+                                    DOC=123456
+                                </div>
+                                <div class="col-sm-12">
+                                    TERM:
+                                </div>
+                                <div class="col-sm-12">
+                                    9015622
+                                </div>
+                                <div class="col-sm-12">
+                                   MASTERCARD
+                                </div>                        
+                                <div class="col-sm-12">
+                                    XXXXXXXXXXXXXXX4569
+                                </div>                        
+                                <div class="col-sm-12">
+                                    CREDITO A VISTA
+                                </div>                        
+                                <div class="col-sm-6">
+                                    VALOR:
+                                </div>
+                                <div class="col-sm-6">
+                                    50,00
+                                </div>                                
+                            </div>                            
+                        </div>
+                    </div>
+                </div>                
+            </div>
+            <!--CUPONS VERMELHOS-->
+            <div class="row">
+                <!--CUPONS CARD SERVICES- CONCILIAÇÃO VENDAS-->
+                <div class="col-sm-3 col-sm-offset-2">
+                    <div class="row">
+                        <div class="col-sm-10 col-sm-offset-1 cuponVermelhoConciliacaoVendas">
+                            <div class="row">
+                                <div class="col-sm-12" Style="text-align:center">
+                                    <strong>CIELO</strong>                            
+                                </div>
+                                <div class="col-sm-12" Style="text-align:center">
+                                    <strong>VIA ESTABELECIMENTO</strong>
+                                </div>
+                                <div class="col-sm-12" Style="text-align:center; margin-top:10px">
+                                     AVENIDA PAULISTA, Nº8765
+                                </div>
+                                <div class="col-sm-12" Style="text-align:center">
+                                    SÃO PAULO
+                                </div>
+                                <div class="col-sm-12" Style="margin-top:15px">
+                                     POS=896547
+                                </div>
+                                <div class="col-sm-6">
+                                    01/02/2013
+                                </div>
+                                <div class="col-sm-6">
+                                    18:00
+                                </div>
+                                <div class="col-sm-6">
+                                     AUT=999999
+                                </div>
+                                <div class="col-sm-6">
+                                    DOC=123456
+                                </div>
+                                <div class="col-sm-12">
+                                    TERM:
+                                </div>
+                                <div class="col-sm-12">
+                                    9015622
+                                </div>
+                                <div class="col-sm-12">
+                                   MASTERCARD
+                                </div>                        
+                                <div class="col-sm-12">
+                                    XXXXXXXXXXXXXXX4569
+                                </div>                        
+                                <div class="col-sm-12">
+                                    CREDITO A VISTA
+                                </div>                        
+                                <div class="col-sm-6">
+                                    VALOR:
+                                </div>
+                                <div class="col-sm-6">
+                                    50,00
+                                </div>                                
+                            </div>                            
+                        </div>
+                    </div>
+                </div>
+                <!--BOTÃO CHECK-->
+                <div class="col-sm-2 butaoCheckCociliacaoVendas">
+                    <div class="row">
+                        <div class="col-sm-10 col-sm-offset-4">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <a href="javascript:;" class="btn btn-icon-only default">
+                                        <i class="fa fa-check"></i>
+                                     </a>
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                </div>
+                <!--CUPONS CARD SERVICES- CONCILIAÇÃO VENDAS-->
+                <div class="col-sm-3">
+                    <div class="row">
+                        <div class="col-sm-10 col-sm-offset-1 cuponVermelhoConciliacaoVendas">
+                            <div class="row">
+                                <div class="col-sm-12" Style="text-align:center">
+                                    <strong>CIELO</strong>                            
+                                </div>
+                                <div class="col-sm-12" Style="text-align:center">
+                                    <strong>VIA ESTABELECIMENTO</strong>
+                                </div>
+                                <div class="col-sm-12" Style="text-align:center; margin-top:10px">
+                                     AVENIDA PAULISTA, Nº8765
+                                </div>
+                                <div class="col-sm-12" Style="text-align:center">
+                                    SÃO PAULO
+                                </div>
+                                <div class="col-sm-12" Style="margin-top:15px">
+                                     POS=896547
+                                </div>
+                                <div class="col-sm-6">
+                                    01/02/2013
+                                </div>
+                                <div class="col-sm-6">
+                                    18:00
+                                </div>
+                                <div class="col-sm-6">
+                                     AUT=999999
+                                </div>
+                                <div class="col-sm-6">
+                                    DOC=123456
+                                </div>
+                                <div class="col-sm-12">
+                                    TERM:
+                                </div>
+                                <div class="col-sm-12">
+                                    9015622
+                                </div>
+                                <div class="col-sm-12">
+                                   MASTERCARD
+                                </div>                        
+                                <div class="col-sm-12">
+                                    XXXXXXXXXXXXXXX4569
+                                </div>                        
+                                <div class="col-sm-12">
+                                    CREDITO A VISTA
+                                </div>                        
+                                <div class="col-sm-6">
+                                    VALOR:
+                                </div>
+                                <div class="col-sm-6">
+                                    50,00
+                                </div>                                
+                            </div>                            
+                        </div>
+                    </div>
+                </div>                
+            </div>
+        </div>
+    </div>
+</div>
