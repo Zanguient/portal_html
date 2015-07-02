@@ -101,13 +101,33 @@
                                         <div class="form-group" ng-class="{ 'has-error' : formCadastroUsuario.pessoaDataNasc.$invalid && !formCadastroUsuario.pessoaDataNasc.$pristine }">
                                             <label class="control-label col-md-3">Data de Nascimento</label>
                                             <div class="col-md-4">
-                                               <input type="text" placeholder="DD/MM/YYYY" maxlength="10" class="form-control" 
+                                               <!--input type="text" placeholder="DD/MM/YYYY" maxlength="10" class="form-control" 
                                                       ng-model="pessoa.data_nasc" ng-change="validaData()" name="pessoaDataNasc" 
                                                       ng-pattern='/^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[012])\/\d{4}$/'
                                                       input-data
-                                                      ng-blur="atualizaProgressoDoCadastro()"/>
+                                                      ng-blur="atualizaProgressoDoCadastro()"/-->
+                                                <div class="input-group date date-picker margin-bottom-5">
+                                                    <input type="text" readonly style="cursor: pointer"
+                                                           ng-click="exibeCalendarioDataNasc($event)"
+                                                           class="form-control form-filter input-sm" 
+                                                           placeholder="Data de Nascimento" 
+                                                           ng-model="pessoa.data_nasc"
+                                                           ng-change="alterouDataNasc()"
+                                                           datepicker-popup="dd MMMM yyyy"
+                                                           is-open="abrirCalendarioDataNasc" 
+                                                           min-date="1900-01-01"
+                                                           show-button-bar="false"
+                                                           show-weeks="false" />
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-sm default" 
+                                                                type="button" 
+                                                                ng-click="exibeCalendarioDataNasc($event)">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
                                                 
-                                                <span style="color:red" ng-show='formCadastroUsuario.pessoaDataNasc.$dirty && (formCadastroUsuario.pessoaDataNasc.$error.pattern || !dataValida())'>Data de Nascimento informada é inválida!</span>
+                                                <!--span style="color:red" ng-show='formCadastroUsuario.pessoaDataNasc.$dirty && (formCadastroUsuario.pessoaDataNasc.$error.pattern || !dataValida())'>Data de Nascimento informada é inválida!</span-->
                                             </div>
                                         </div>
                                         <!-- TELEFONE -->
@@ -252,7 +272,7 @@
                                         <div class="form-group">
                                             <label class="control-label col-md-3">Data de Nascimento:</label>
                                             <div class="col-md-4">
-                                                <p class="form-control-static"><strong>{{pessoa.data_nasc}}</strong></p>
+                                                <p class="form-control-static"><strong>{{getDataDeNascimento()}}</strong></p>
                                             </div>
                                         </div>
                                         <div class="form-group">

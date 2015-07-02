@@ -130,8 +130,8 @@
                                                    class="form-control input-inline" 
                                                    placeholder="Buscar" 
                                                    aria-controls="sample_editable_1"
-                                                   ng-model="usuario.busca">
-                                                   <!--ng-change="buscaUsuarios()"-->
+                                                   ng-model="usuario.busca"
+                                                   ng-keyup="$event.keyCode == 13 && buscaUsuarios()">
                                     </label>
                                 </div>
                             </div>
