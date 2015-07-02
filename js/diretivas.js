@@ -54,20 +54,20 @@ angular.module('diretivas', [ ])
             var render = false;
             if (val !== clean) render = true;
             else // Impede que sejam colocadas barras nos locais não válidos para o formato de data 
-                if((clear.length === 1 && clear.charAt(0) === '/') || 
-                   (clear.length > 1 && clear.charAt(val.length - 1) === '/' && clear.charAt(val.length - 2) === '/') || 
-                   ((clear.match(/\//g) || []).length > 2)){ // máximo de 2 barras
-                clean = clear.substr(0, clear.length - 1);
+                if((clean.length === 1 && clean.charAt(0) === '/') || 
+                   (clean.length > 1 && clean.charAt(val.length - 1) === '/' && clean.charAt(val.length - 2) === '/') || 
+                   ((clean.match(/\//g) || []).length > 2)){ // máximo de 2 barras
+                clean = clean.substr(0, clean.length - 1);
                 render = true;
             }else if(backspace){
                 // Se foi pressionado o backspace, verifica se o último caracter passou a ser uma barra
-                if(clear.length > 0 && clear.charAt(clear.length - 1) === '/'){
+                if(clean.length > 0 && clean.charAt(clean.length - 1) === '/'){
                     // Remove a barra também
                     clean = clean.substring(0, clean.length - 1);
                     render = true;
                 }
             }else // Acrescenta a barra
-                if(clear.length == 3 || clear.length == 6){
+                if(clean.length == 3 || clean.length == 6){
                 clean = clean.substring(0, clean.length - 1) + '/' + clean.substring(clean.length - 1);
                 render = true;
             }

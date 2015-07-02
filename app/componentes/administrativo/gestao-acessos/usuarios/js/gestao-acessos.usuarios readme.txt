@@ -49,7 +49,7 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
  
   * api/administracao/webpagesmembership
      - PUT  : redefinir senha 
-	          { Password : '' } // password vazio => redefinir senha
+	          { UserId : idUsuario, Password : '' } // password vazio => redefinir senha
   * api/administracao/webpagesusers
 	 - GET : listagem dos usuários na tabela (coleção 2)
 			{

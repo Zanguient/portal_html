@@ -73,11 +73,14 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
 	 - PUT : atualiza usuário existente	
 			{
 				"pessoa" : json_pessoa, 
-				"webpagesusers" : json_usuario,
+				"webpagesusers" : json_usuario, // inclui id_users
 				"webpagesusersinroles" : [{RoleId: roleid}]
 			}
-			Para deletar uma associação de role a um usuário, enviar o json  "{UserId: -1, RoleId: roleid}" no array 
+			OBS 1:Para deletar uma associação de role a um usuário, enviar o json  "{UserId: -1, RoleId: roleid}" no array 
 			(UserId tem que ser igual a -1)
+			OBS 2: ds_login não é alterado
+			OBS 3: Para remover a associação de um grupo empresa, id_grupo = -1
+			OBS 4: Para remover a associação de uma empresa, nu_cnpjEmpresa = ''
    
 
    

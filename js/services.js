@@ -43,11 +43,11 @@ angular.module('servicos', [ ])
             nu_cnpjEmpresa : 104,
             nu_cnpjBaseEmpresa : 105,
             id_pessoa : 106,
-            // Relacionamentos
+            // Relacionamentos   
             pessoa : 200,
             grupo_empresa : 300,
             empresa : 400,
-            webpagesrolesinusers : 500
+            webpagesusersinroles : 500
         },
         webpagesusersinroles : {
             UserId : 100,
@@ -93,7 +93,7 @@ angular.module('servicos', [ ])
 .factory('$apis', [function(){
   return {
     autenticacao: {
-      login: 'http://api.taxservices.com.br/login/autenticacao/', // 'http://192.168.0.100/api/login/autenticacao/'
+      login: 'http://192.168.0.100/api/login/autenticacao/', //'http://api.taxservices.com.br/login/autenticacao/',
       // futuramente tirar daqui
       keyToken: 'token',
       keyLembrar: 'remember',
@@ -251,10 +251,10 @@ angular.module('servicos', [ ])
         
       // Requisitar informações de monitoramento
       $http.put(url, dadosFormulario)
-        .success(function(dados){
+        .success(function(dados, status, headers, config){
           deferido.resolve(dados);
-        }).error(function(erro){
-          deferido.reject(erro);
+        }).error(function(dados, status, headers, config){
+          deferido.reject({'dados':dados,'status':status});
         });
       return deferido.promise; 
     },

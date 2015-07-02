@@ -73,7 +73,9 @@
                             <tr role="row" class="filter">
                                 <td rowspan="1" colspan="1">             
                                     <div class="input-group date date-picker margin-bottom-5">
-                                        <input type="text" class="form-control form-filter input-sm" readonly=""
+                                        <input type="text" class="form-control form-filter input-sm" 
+                                               readonly style="cursor: pointer"
+                                               ng-click="exibeCalendarioDataMin($event)"
                                                placeholder="Início" 
                                                ng-model="datamin"
                                                ng-change="alterouDataMin()"
@@ -88,7 +90,9 @@
                                         </span>
                                     </div>
                                     <div class="input-group date date-picker margin-bottom-5" data-date-format="dd/mm/yyyy">
-                                        <input type="text" class="form-control form-filter input-sm" readonly="" 
+                                        <input type="text" class="form-control form-filter input-sm" 
+                                               readonly style="cursor: pointer" 
+                                               ng-click="exibeCalendarioDataMax($event)"
                                                placeholder="Fim" 
                                                ng-model="datamax" 
                                                ng-change="alterouDataMax()"
@@ -144,7 +148,10 @@
                                 </td>
                                 <td rowspan="1" colspan="1">
                                     <div class="margin-bottom-5">
-                                        <button class="btn btn-sm red filter-submit margin-bottom" ng-click="showModal('Meu titulo')"><i class="fa fa-search"></i> Buscar</button>
+                                        <button class="btn btn-sm red filter-submit margin-bottom"
+                                                ng-click="showProgress(0)">
+                                            <i class="fa fa-search"></i> Buscar
+                                        </button>
                                     </div>
                                     <button class="btn btn-sm grey filter-cancel"><i class="fa fa-times"></i> Limpar</button>
                                 </td>
@@ -298,7 +305,7 @@
                         <td>
                             <div>
                                 <a href="javascript:;" class="btn btn-icon-only default">
-                                    <i class="fa fa-check"></i>
+                                    <i class="fa fa-check" ng-click="showProgress(1)"></i>
                                 </a>
                         <td>
                             <!--<div class="note note-info">-->
@@ -365,7 +372,6 @@
             </div>
         </div>    
     </div> 
-   <!--/div-->
 </div>   
 
 

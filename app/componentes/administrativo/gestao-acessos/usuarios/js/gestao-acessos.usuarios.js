@@ -18,6 +18,8 @@ angular.module("administrativo-usuarios", ['servicos'])
                                             '$autenticacao', 
                                             function($scope,$state,$http,$campos,
                                                      $webapi,$apis,$filter,$autenticacao){ 
+   
+    var divPortletBodyUsuarioPos = 0; // posição da div que vai receber o loading progress
     var token = '';
     $scope.paginaInformada = 1; // página digitada pelo usuário
     $scope.usuarios = [];
@@ -32,12 +34,10 @@ angular.module("administrativo-usuarios", ['servicos'])
                             nome: "Login"
                           },{
                             id: $campos.administracao.webpagesusers.grupo_empresa + ($campos.cliente.grupoempresa.ds_nome - 100), 
-                            //id: $campos.administracao.webpagesusers.id_grupo,
                             ativo : !$scope.grupoempresa, // é desativado quando o $scope.grupoempresa !== undefined
                             nome: "Empresa"
                           },{
                             id: $campos.administracao.webpagesusers.empresa + ($campos.cliente.empresa.ds_fantasia - 100), 
-                            //id: $campos.administracao.webpagesusers.nu_cnpjEmpresa,
                             ativo: true,
                             nome: "Filial"
                           },
@@ -112,35 +112,35 @@ angular.module("administrativo-usuarios", ['servicos'])
       */
     $scope.ordenaPorEmpresa = function(){
         ordena(3);
-    };
-    /**
-      * Retorna true se a ordenação está sendo feito por login de forma crescente
-      */
-    $scope.estaOrdenadoCrescentePorLogin = function(){
-        return $scope.usuario.campo_ordenacao.id == $scope.camposBusca[0].id && 
-               $scope.usuario.campo_ordenacao.order == 0;    
-    };
-    /**
-      * Retorna true se a ordenação está sendo feito por login de forma decrescente
-      */
-    $scope.estaOrdenadoDecrescentePorLogin = function(){
-        return $scope.usuario.campo_ordenacao.id == $scope.camposBusca[0].id && 
-               $scope.usuario.campo_ordenacao.order == 1;    
-    };                                          
+    };                                         
     /**
       * Retorna true se a ordenação está sendo feito por e-mail de forma crescente
       */
     $scope.estaOrdenadoCrescentePorEmail = function(){
-        return $scope.usuario.campo_ordenacao.id === $scope.camposBusca[1].id && 
+        return $scope.usuario.campo_ordenacao.id === $scope.camposBusca[0].id && 
                $scope.usuario.campo_ordenacao.order === 0;    
     };
     /**
       * Retorna true se a ordenação está sendo feito por e-mail de forma decrescente
       */
     $scope.estaOrdenadoDecrescentePorEmail = function(){
-        return $scope.usuario.campo_ordenacao.id === $scope.camposBusca[1].id && 
+        return $scope.usuario.campo_ordenacao.id === $scope.camposBusca[0].id && 
                $scope.usuario.campo_ordenacao.order === 1;    
-    };                                         
+    };
+    /**
+      * Retorna true se a ordenação está sendo feito por login de forma crescente
+      */
+    $scope.estaOrdenadoCrescentePorLogin = function(){
+        return $scope.usuario.campo_ordenacao.id == $scope.camposBusca[1].id && 
+               $scope.usuario.campo_ordenacao.order == 0;    
+    };
+    /**
+      * Retorna true se a ordenação está sendo feito por login de forma decrescente
+      */
+    $scope.estaOrdenadoDecrescentePorLogin = function(){
+        return $scope.usuario.campo_ordenacao.id == $scope.camposBusca[1].id && 
+               $scope.usuario.campo_ordenacao.order == 1;    
+    }; 
     /**
       * Retorna true se a ordenação está sendo feito por grupo empresa de forma crescente
       */
@@ -217,7 +217,8 @@ angular.module("administrativo-usuarios", ['servicos'])
      
     // BUSCA
     $scope.buscaUsuarios = function(){
-       $scope.showAlert('Obtendo usuários'); // exibe o alert
+       //$scope.showAlert('Obtendo usuários'); // exibe o alert
+       $scope.showProgress(divPortletBodyUsuarioPos);    
         
        var filtros = undefined;
        
@@ -240,7 +241,8 @@ angular.module("administrativo-usuarios", ['servicos'])
                 $scope.usuario.total_registros = dados.TotalDeRegistros;
                 $scope.usuario.total_paginas = Math.ceil($scope.usuario.total_registros / $scope.usuario.itens_pagina);
                 $scope.obtendoUsuarios = false;
-                $scope.hideAlert(); // fecha o alert
+                //$scope.hideAlert(); // fecha o alert
+                $scope.hideProgress(divPortletBodyUsuarioPos);
                 // Verifica se a página atual é maior que o total de páginas
                 if($scope.usuario.pagina > $scope.usuario.total_paginas)
                     setPagina(1); // volta para a primeira página e refaz a busca
@@ -250,6 +252,7 @@ angular.module("administrativo-usuarios", ['servicos'])
                  $scope.obtendoUsuarios = false;
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else $scope.showAlert('Houve uma falha ao requisitar usuários (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress(divPortletBodyUsuarioPos);
               }); 
     };
                                                 
@@ -261,18 +264,21 @@ angular.module("administrativo-usuarios", ['servicos'])
       */                                            
     var resetaSenhaDoUsuario = function(id_users){
         //console.log("RESETANDO A SENHA DO USUARIO " + usuario.webpagesusers.ds_email + "(" + usuario.webpagesusers.id_users + ")"); 
-        $scope.showAlert('Redefinindo senha do usuário'); // exibe o alert
+        //$scope.showAlert('Redefinindo senha do usuário'); // exibe o alert
+        $scope.showProgress(divPortletBodyUsuarioPos);
         
         // json reseta senha
-        var jsonResetSenha = {Password: ''};
+        var jsonResetSenha = {UserId: id_users, Password: ''};
         
         $webapi.update($apis.administracao.webpagesmembership,
-                       [{id: 'token', valor: token},{id: 'id_users', valor: id_users}], jsonResetSenha)
+                       {id: 'token', valor: token}, jsonResetSenha)
             .then(function(dados){
                     $scope.showAlert('Senha redefinida com sucesso!', true, 'success', true);
+                    $scope.hideProgress(divPortletBodyUsuarioPos);
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
-                     else $scope.showAlert('Houve uma falha ao redefinir a senha do usuário (' + failData.status + ')', true, 'danger', true);
+                     else $scope.showAlert('Houve uma falha ao redefinir a senha do usuário (' + failData.status + ')', true, 'danger', true); 
+                     $scope.hideProgress(divPortletBodyUsuarioPos);
                   }); 
     };
     /**
@@ -296,17 +302,20 @@ angular.module("administrativo-usuarios", ['servicos'])
       */                                            
     var exluirUsuario = function(id_users){
         // Deleta
-        $scope.showAlert('Deletando usuário'); // exibe o alert
+        //$scope.showAlert('Deletando usuário'); // exibe o alert
+        $scope.showProgress(divPortletBodyUsuarioPos);
         $webapi.delete($apis.administracao.webpagesusers,
                        [{id: 'token', valor: token},{id: 'id_users', valor: id_users}])
             .then(function(dados){
                     $scope.showAlert('Usuário deletado com sucesso!', true, 'success', true);
+                    $scope.hideProgress(divPortletBodyUsuarioPos);
                     // atualiza tela de usuários
                     $scope.buscaUsuarios();
                   },function(failData){
                      //console.log("FALHA AO DELETAR USUARIO: " + failData.status);
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
                      else $scope.showAlert('Houve uma falha ao requisitar usuários (' + failData.status + ')', true, 'danger', true);
+                     $scope.hideProgress(divPortletBodyUsuarioPos);
                   }); 
     };
     /**

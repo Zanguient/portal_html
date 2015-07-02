@@ -478,9 +478,9 @@ angular.module("AtosCapital", ['ui.router',
                     close: closable ? true : false, // make alert closable
                     reset: true, // close all previouse alerts first
                     focus: scroll ? true : false, // auto scroll to the alert after shown
-                    closeInSeconds: type === 'success' ? 5 : 0, // auto close after defined seconds
+                    closeInSeconds: type !== 'info' ? 10 : 0, // auto close after defined seconds
                     icon: type === 'danger' || type === 'warning' ? 'warning' : type === 'success' ? 'check' : '', // put icon before the message
-                    img : !type || type === 'info' ? '../../../../../img/loading-atos.gif' : '' // put img before the message
+                    img : !type || type === 'info' ? '/img/loading-atos.gif' : '' // put img before the message
                 });
             }, 0);
         }); 
@@ -514,7 +514,44 @@ angular.module("AtosCapital", ['ui.router',
       $scope.modal_confirma = funcaoConfirma ? function(){funcaoConfirma(parametroFuncaoConfirma);} : function(){};   
       // Exibe o modal
       $('#modalconfirmacao').modal('show');
-   };                        
+   };  
+                            
+                            
+   // PROGRESS
+   var lastel = undefined;                          
+   /**
+     * Obtém a div para exibir o loading progress
+     */
+   var getElementProgress = function(divPortletBodyPos){
+        var div = $('div[class="portlet light"]');
+        if(div.length == 0) return undefined; 
+        var body = div.children(".portlet-body");
+        if(divPortletBodyPos < 0 || divPortletBodyPos >= body.length) return undefined;
+        return body[divPortletBodyPos]; 
+   }
+   /**
+     * Exibe o loading progress no portlet-body
+     */
+   $scope.showProgress = function(divPortletBodyPos){
+        var el = getElementProgress(divPortletBodyPos);
+        if(el !== lastel){
+            Metronic.blockUI({
+                target: el,
+                animate: true,
+                overlayColor: '#000'//'none'
+            }); 
+        }
+   };
+   /**
+     * Remove da visão o loading progress no portlet-body
+     */                         
+   $scope.hideProgress = function(divPortletBodyPos){
+        var el = getElementProgress(divPortletBodyPos);
+        if(el){ 
+            Metronic.unblockUI(el);
+            lastel = undefined;
+        }
+   };                            
                             
 }])
 
