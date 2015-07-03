@@ -236,18 +236,18 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
                 "webpagesusersinroles" : r
             };
         // Envia
-        //$webapi.post($apis.administracao.pessoa, token, jsonPessoa)
-        $.post($apis.administracao.webpagesusers + '?token=' + token, json)
-                //.then(function(id_pessoa){
-                .done(function(dados){
+        $webapi.post($apis.administracao.webpagesusers, token, json)
+        //$.post($apis.administracao.webpagesusers + '?token=' + token, json)
+                .then(function(dados){
+                //.done(function(dados){
                     progressoCadastro(false);
                     $scope.showAlert('Usuário cadastrado com sucesso!', true, 'success', true);
                     // Reseta os dados
                     resetaVariaveis();
                     // Volta para a tela de Usuários
                     $scope.goAdministrativoUsuarios();
-                  }//,function(failData){
-                  ).fail(function(failData){
+                  },function(failData){
+                  //).fail(function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
                      else $scope.showAlert('Houve uma falha ao cadastrar o usuário (' + failData.status + ')', true, 'danger', true);
                      progressoCadastro(false);

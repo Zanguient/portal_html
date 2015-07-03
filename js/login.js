@@ -81,11 +81,10 @@ app.controller("loginCtrl", ['$scope',
             // VALIDA LOGIN
             var jsonAutenticacao = { 'usuario': $scope.usuario.nome, 'senha': $scope.usuario.senha };
             // Envia os dados para autenticação
-            // Solução jQuery para POST (devido ao domínio diferente, a solução com angular não funciona)
-            var jqxhr = $.post($apis.autenticacao.login, jsonAutenticacao)
-            //var dadosAPI = $webapi.post($apis.autenticacao.login, '', jsonAutenticacao);
-            //dadosAPI.then(function(dados){
-                          .done(function(data){
+           // var jqxhr = $.post($apis.autenticacao.login, jsonAutenticacao)
+            $webapi.post($apis.autenticacao.login, '', jsonAutenticacao);
+                .then(function(dados){
+                          //.done(function(data){
                             // LOGADO! => Vai para a página principal
                             // Atualiza dados de autenticação
                             $autenticacao.atualizaDadosDeAutenticacao(data.token,$scope.lembrar,new Date());
@@ -93,8 +92,8 @@ app.controller("loginCtrl", ['$scope',
                             redirecionaPagina();
                             // Esconde Progress
                             progressoLogin(false);
-                          }).fail(function(failData){
-                          //, function(failData){
+                          }//).fail(function(failData){
+                          , function(failData){
                               if(failData.status === 500)
                                   // Exibe mensagem reportando a falha de autenticação
                                   $scope.mensagemErro = 'Usuário e/ou senha inválido(s).';

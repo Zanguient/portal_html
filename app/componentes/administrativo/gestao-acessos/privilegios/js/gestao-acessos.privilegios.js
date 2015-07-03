@@ -33,7 +33,10 @@ angular.module("administrativo-privilegios", ['servicos'])
                       itens_pagina : $scope.itens_pagina[0], pagina : 1,
                       total_registros : 0, faixa_registros : '0-0', total_paginas : 0, 
                       campo_ordenacao : {id: $campos.administracao.webpagesroles.RoleName, order : 0}};    
-    $scope.permissoes = [];                                            
+    $scope.permissoes = [];     
+    $scope.novoPrivilegio = ''; // cadastro
+    // flags
+    $scope.cadastraNovoPrivilegio = false; // faz exibir a linha para adicionar um novo privilégio
                                                 
     // Inicialização do controller
     $scope.administrativoPrivilegiosInit = function(){
@@ -177,18 +180,35 @@ angular.module("administrativo-privilegios", ['servicos'])
                  $scope.hideProgress(divPortletBodyPrivilegioPos);
               }); 
     };
-                                                
-                                                
+        
+                                                                                       
                                                 
     // AÇÕES
     /**
-      * Editar privilégio => Abre tela de cadastro, enviando como parâmetro o objeto privilegio
+      * Exibe cadastro novo privilégio
+      */
+    $scope.exibeCadastroNovoPrivilegio = function(exibe){
+        $scope.cadastraNovoPrivilegio = exibe === undefined || exibe ? true : false;
+        $scope.novoPrivilegio = '';
+    }
+    /**
+      * Adiciona privilégio
+      */
+    $scope.addPrivilegio = function(){
+       if(!$scope.novoPrivilegio){
+           $scope.showAlert('Insira um nome!',true,'danger',true); 
+           return;   
+       }
+       console.log("Nome: " + $scope.novoPrivilegio);
+    }
+    /**
+      * Exibe as funcionalidades associadas ao privilégio
       */
     $scope.exibeFuncionalidades = function(privilegio){
         // Reseta permissões
         $scope.permissoes = [];
         // Exibe o modal
-        //$('#modalpermissoes').modal('show');
+        $('#modalFuncionalidades').modal('show');
         // Carrega as permissões
         console.log(privilegio);
     }; 

@@ -261,7 +261,9 @@ angular.module('servicos', [ ])
       // Setando o promise
       var deferido = $q.defer();
 
-      $http.post(api + '?token=' + token, dadosFormulario)
+      var url = token ? api + '?token=' + token : api;    
+        
+      $http.post(url, dadosFormulario)
         .success(function(dados, status, headers, config){
           deferido.resolve(dados);
         }).error(function(dados, status, headers, config){

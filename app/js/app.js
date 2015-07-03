@@ -584,7 +584,7 @@ angular.module("AtosCapital", ['ui.router',
       $scope.modal_textoCancela = textoCancela ? textoCancela : 'Cancelar';
       $scope.modal_confirma = funcaoConfirma ? function(){funcaoConfirma(parametroFuncaoConfirma);} : function(){};   
       // Exibe o modal
-      $('#modalconfirmacao').modal('show');
+      $('#modalConfirmacao').modal('show');
    };  
                             
                             
