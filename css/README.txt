@@ -51,3 +51,11 @@
 
 -Mudar cor do botão limpar ao passar o mouse
 >componentes-rounded.css>.red.btn:hover, .red.btn:focus, .red.btn:active, .red.btn.active(10317)
+
+----------------Usuários--------------------
+
+-Mudar configurações do btn-icon
+>componentes-rounded>.input-icon > i (3570)
+
+mudar o formulário buscar
+>

@@ -121,20 +121,27 @@
                             <div class="col-md-5 col-sm-12">
                                 <div id="sample_editable_1_filter" class="dataTables_filter">
                                     <label>
-                                        <span class="seperator"></span>Pesquisar 
+                                        <div class="col-sm-6">
+                                            <span class="seperator"></span>Pesquisar 
                                             <select aria-controls="datatable_products" 
                                                     class="form-control input-sm input-inline"
                                                     ng-model="usuario.campo_busca"
                                                     ng-options="campo as campo.nome for campo in camposBusca | filter:{ativo:true}">
-                                            </select> 
-                                            <input type="text" 
-                                                   class="form-control input-inline" 
-                                                   placeholder="Buscar" 
-                                                   aria-controls="sample_editable_1"
-                                                   ng-model="busca"
-                                                   ng-init="busca=''"
-                                                   ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !busca)) && filtraUsuarios(busca)"
-                                                   >
+                                            </select>
+                                        </div>
+                                            <div class="col-sm-6">
+                                                <div class="input-icon right">
+                                                    <i class="fa fa-microphone"></i>
+                                                    <input type="text" 
+                                                       class="form-control input-inline" 
+                                                       placeholder="Buscar" 
+                                                       aria-controls="sample_editable_1"
+                                                       ng-model="busca"
+                                                       ng-init="busca=''"
+                                                       ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !busca)) && filtraUsuarios(busca)"
+                                                    >
+                                                </div>
+                                            </div>    
                                     </label>
                                 </div>
                             </div>
