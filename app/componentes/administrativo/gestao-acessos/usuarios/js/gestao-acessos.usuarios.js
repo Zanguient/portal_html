@@ -227,7 +227,7 @@ angular.module("administrativo-usuarios", ['servicos'])
        var filtros = undefined;
        
        // Só considera busca de filtro a partir de três caracteres    
-       if($scope.usuario.busca.length > 0) filtros = {id: $scope.usuario.campo_busca.id, valor: '%' + $scope.usuario.busca + '%'};        
+       if($scope.usuario.busca.length > 0) filtros = {id: $scope.usuario.campo_busca.id, valor: $scope.usuario.busca + '%'};        
        // Filtro do grupo empresa => barra administrativa
        if($scope.grupoempresa){
             var filtroGrupoEmpresa = {id: $campos.administracao.webpagesusers.id_grupo, valor: $scope.grupoempresa.id_grupo};

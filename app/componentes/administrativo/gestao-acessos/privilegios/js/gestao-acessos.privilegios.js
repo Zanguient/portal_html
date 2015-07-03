@@ -145,7 +145,7 @@ angular.module("administrativo-privilegios", ['servicos'])
        var filtros = undefined;
        
        // Só considera busca de filtro a partir de três caracteres    
-       if($scope.privilegio.busca.length > 0) filtros = {id: $scope.privilegio.campo_busca.id, valor: '%' + $scope.privilegio.busca + '%'};        
+       if($scope.privilegio.busca.length > 0) filtros = {id: $scope.privilegio.campo_busca.id, valor: $scope.privilegio.busca + '%'};        
        // Filtro do grupo empresa => barra administrativa
        if($scope.grupoempresa){
             var filtroGrupoEmpresa = {id: $campos.administracao.webpagesusers.id_grupo, valor: $scope.grupoempresa.id_grupo};
@@ -154,11 +154,11 @@ angular.module("administrativo-privilegios", ['servicos'])
        }
         
        $scope.obtendoPrivilegios = true;
-       var dadosAPI = $webapi.get($apis.administracao.webpagesroles, [token, 0, $scope.privilegio.campo_ordenacao.id, 
+       $webapi.get($apis.administracao.webpagesroles, [token, 0, $scope.privilegio.campo_ordenacao.id, 
                                                                      $scope.privilegio.campo_ordenacao.order, 
                                                                      $scope.privilegio.itens_pagina, $scope.privilegio.pagina],
-                                  filtros); 
-       dadosAPI.then(function(dados){
+                                  filtros) 
+            .then(function(dados){
                 $scope.privilegios = dados.Registros;
                 $scope.privilegio.total_registros = dados.TotalDeRegistros;
                 $scope.privilegio.total_paginas = Math.ceil($scope.privilegio.total_registros / $scope.privilegio.itens_pagina);
@@ -210,7 +210,32 @@ angular.module("administrativo-privilegios", ['servicos'])
         // Exibe o modal
         $('#modalFuncionalidades').modal('show');
         // Carrega as permissões
-        console.log(privilegio);
+        //console.log(privilegio);
+        $webapi.get($apis.administracao.webpagespermissions, [token, 2, $campos.administracao.webpagespermissions., 
+                                                              $scope.privilegio.campo_ordenacao.order, 
+                                                              $scope.privilegio.itens_pagina, $scope.privilegio.pagina],
+                                  filtros) 
+            .then(function(dados){
+                $scope.privilegios = dados.Registros;
+                $scope.privilegio.total_registros = dados.TotalDeRegistros;
+                $scope.privilegio.total_paginas = Math.ceil($scope.privilegio.total_registros / $scope.privilegio.itens_pagina);
+                var registroInicial = ($scope.privilegio.pagina - 1)*$scope.privilegio.itens_pagina + 1;
+                var registroFinal = registroInicial - 1 + $scope.privilegio.itens_pagina;
+                if(registroFinal > $scope.privilegio.total_registros) registroFinal = $scope.privilegio.total_registros;
+                $scope.privilegio.faixa_registros =  registroInicial + '-' + registroFinal;
+                $scope.obtendoPrivilegios = false;
+                //$scope.hideAlert(); // fecha o alert
+                $scope.hideProgress(divPortletBodyPrivilegioPos);
+                // Verifica se a página atual é maior que o total de páginas
+                if($scope.privilegio.pagina > $scope.privilegio.total_paginas)
+                    setPagina(1); // volta para a primeira página e refaz a busca
+              },
+              function(failData){
+                 $scope.obtendoPrivilegios = false;
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else $scope.showAlert('Houve uma falha ao requisitar privilégios (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress(divPortletBodyPrivilegioPos);
+              }); 
     }; 
     /**
       * Excluir privilégio

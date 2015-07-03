@@ -29,6 +29,22 @@ angular.module('servicos', [ ])
             UserId : 100,
             Password : 106
         },
+        webpagesmethods : {
+            id_method : 100,
+            ds_method : 101,
+            nm_method : 102,
+            fl_menu : 103,
+            id_controller : 104
+        },
+        webpagespermissions : {
+            id_roles : 100,
+            id_method : 101,
+            fl_principal : 102,
+            // Relacionamentos
+            role : 200,
+            method : 300,
+            controller : 400
+        },
         webpagesroles : {
             RoleId : 100,
             RoleName : 101

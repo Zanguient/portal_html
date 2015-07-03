@@ -455,7 +455,7 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
        // Obtém a URL                                                      
        var url = $webapi.getUrl($apis.cliente.grupoempresa, 
                                   [token, 0, $campos.cliente.grupoempresa.ds_nome, 0, 10, 1], // ordenado crescente com 10 itens no máximo
-                                  {id:$campos.cliente.grupoempresa.ds_nome, valor: '%' + texto + '%'});
+                                  {id:$campos.cliente.grupoempresa.ds_nome, valor: texto + '%'});
        // Requisita e obtém os dados
        return $http.get(url).then(function(dados){
            $scope.pesquisandoGruposEmpresas = false;
@@ -473,7 +473,7 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
        // Obtém a URL                                                      
        var url = $webapi.getUrl($apis.cliente.empresa, 
                                   [token, 0, $campos.cliente.empresa.ds_fantasia, 0, 10, 1], // ordenado crescente com 10 itens no máximo
-                                  {id:$campos.cliente.empresa.ds_fantasia, valor: '%' + texto + '%'});
+                                  {id:$campos.cliente.empresa.ds_fantasia, valor: texto + '%'});
        // Requisita e obtém os dados
        return $http.get(url).then(function(dados){
            $scope.pesquisandoEmpresas = false;
