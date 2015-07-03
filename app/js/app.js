@@ -14,6 +14,7 @@ angular.module("AtosCapital", ['ui.router',
                                'nao-encontrado',
                                'administrativo-usuarios',
                                'administrativo-usuarios-cadastro',
+                               'administrativo-privilegios',
                                'dashboard', 
                                'card-services-conciliacao-vendas']) 
 
@@ -97,6 +98,12 @@ angular.module("AtosCapital", ['ui.router',
         $scope.go('administrativo-gestao-acesso-usuarios-cadastro', params);
     };
     /**
+      * Exibe como conteúdo a Gestão de Acessos Privilégios, de Administrativo
+      */                        
+    $scope.goAdministrativoPrivilegios = function(params){
+        $scope.go('administrativo-gestao-acesso-privilegios', params);
+    };                        
+    /**
       * Exibe como conteúdo o Dashboard
       */                        
     $scope.goDashboard = function(params){
@@ -126,6 +133,13 @@ angular.module("AtosCapital", ['ui.router',
         if(url === $state.get('administrativo-gestao-acesso-usuarios').url || url === $state.get('administrativo-gestao-acesso-usuarios-cadastro').url){ 
             // Gestão de Acesso > Usuários (cadastro ou não)
             if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_USUARIOS){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.go('nao-autorizado');
+            }
+        }if(url === $state.get('administrativo-gestao-acesso-privilegios').url){ 
+            // Gestão de Acesso > Usuários (cadastro ou não)
+            if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_PRIVILEGIOS){
                 // Não possui permissão!
                 event.preventDefault();
                 $scope.go('nao-autorizado');
@@ -161,6 +175,7 @@ angular.module("AtosCapital", ['ui.router',
         switch(titulo.toUpperCase()){
             // Administrativo
             case 'USUÁRIOS' : return $scope.goAdministrativoUsuarios;
+            case 'PRIVILÉGIOS' : return $scope.goAdministrativoPrivilegios;     
             // Dashboard
             case 'DASHBOARD': return $scope.goDashboard;  
             // Card Services
@@ -223,7 +238,7 @@ angular.module("AtosCapital", ['ui.router',
         //data.id_grupo = 42;
         data.servicos = [
             {
-                titulo : 'Dashboard'
+                titulo : 'Dashboard' // ds_controller
             },
             {
                 titulo : 'Card Services',
@@ -257,11 +272,11 @@ angular.module("AtosCapital", ['ui.router',
                         titulo : 'Gestão de Acessos', 
                         modulos : [
                             {
-                                titulo : 'Usuários',
-                                home : true
+                                titulo : 'Usuários'
                             },
                             {
-                                titulo : 'Privilégios'
+                                titulo : 'Privilégios',
+                                home : true
                             },
                             {
                                 titulo : 'Módulos e Funcionalidades'
@@ -367,6 +382,8 @@ angular.module("AtosCapital", ['ui.router',
                  $scope.goAdministrativoUsuarios(); break;
             case $state.get('administrativo-gestao-acesso-usuarios-cadastro').url : 
                 $scope.goAdministrativoUsuariosCadastro(); break;
+            case $state.get('administrativo-gestao-acesso-privilegios').url : 
+                 $scope.goAdministrativoPrivilegios(); break;    
             case $state.get('card-services-conciliacao-vendas').url : 
                 $scope.goCardServicesConciliacaoVendas(); break;
             default : $scope.goHome(); // Exibe tela inicial
@@ -648,6 +665,15 @@ angular.module("AtosCapital", ['ui.router',
         params: {usuario: null},
         templateUrl: 'componentes/administrativo/gestao-acessos/usuarios/views/cadastro/index.html',
         controller: "administrativo-usuarios-cadastroCtrl",
+        data: {
+            titulo: 'Administrativo'
+        }
+      })
+    
+      .state('administrativo-gestao-acesso-privilegios', {
+        url: prefixo + 'administrativo/privilegios',
+        templateUrl: 'componentes/administrativo/gestao-acessos/privilegios/index.html',
+        controller: "administrativo-privilegiosCtrl",
         data: {
             titulo: 'Administrativo'
         }

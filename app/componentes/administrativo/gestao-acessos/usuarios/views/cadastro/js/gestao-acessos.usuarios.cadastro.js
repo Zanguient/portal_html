@@ -64,12 +64,9 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
         $scope.pessoa.nome = $scope.old.pessoa.nm_pessoa;
         if($scope.old.pessoa.dt_nascimento !== null){ 
             dataValida = true;
-            //var data = new Date($scope.old.pessoa.dt_nascimento);
-            //console.log(data);
-            //$scope.pessoa.data_nasc = $scope.old.pessoa.dt_nascimento.substr(8, 2) + '/' + $scope.old.pessoa.dt_nascimento.substr(5, 2) + '/' + $scope.old.pessoa.dt_nascimento.substr(0, 4)//data.getDate() + '/' + (data.getMonth() + 1) + '/' +  data.getFullYear();
-            $scope.pessoa.data_nasc = new Date($scope.old.pessoa.dt_nascimento);
+            $scope.pessoa.data_nasc = new Date($scope.old.pessoa.dt_nascimento.substr(0, 4) + '/' + $scope.old.pessoa.dt_nascimento.substr(5, 2) + '/' + $scope.old.pessoa.dt_nascimento.substr(8, 2));
         }
-        $scope.old.pessoa.dt_nascimento = $scope.pessoa.data_nasc; // deixa em string
+        $scope.old.pessoa.dt_nascimento = $scope.pessoa.data_nasc; // deixa no mesmo formato
         if($scope.old.pessoa.nu_telefone !== null) $scope.pessoa.telefone = $scope.old.pessoa.nu_telefone;
         else $scope.old.pessoa.nu_telefone = $scope.pessoa.telefone; // deixa em string
         if($scope.old.pessoa.nu_ramal !== null) $scope.pessoa.ramal = $scope.old.pessoa.nu_ramal;
@@ -92,7 +89,6 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
                     }
                     $scope.hideProgress(divPortletBodyUsuarioCadPos);
                     $scope.atualizaProgressoDoCadastro(); // verificar datavalida
-                    dadosAPI.cancel();
                   },
                   function(failData){
                      //console.log("FALHA AO OBTER ROLES: " + failData.status);
@@ -102,6 +98,16 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
                      $scope.hideProgress(divPortletBodyUsuarioCadPos); 
                      $scope.atualizaProgressoDoCadastro();
                   }); 
+    };
+    
+    /**
+      * Reseta as variáveis
+      */
+    var resetaVariaveis = function(){
+        $scope.rolesSelecionadas = false;
+        $scope.old = {pessoa:null,usuario:null,roles:[]};
+        $scope.pessoa = {id:0, nome:'', data_nasc:null, telefone:'', ramal:''};
+        $scope.usuario = {login:'', email:'', grupoempresa:'', empresa:''};    
     };
                                                          
     /**
@@ -237,8 +243,7 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
                     progressoCadastro(false);
                     $scope.showAlert('Usuário cadastrado com sucesso!', true, 'success', true);
                     // Reseta os dados
-                    $scope.pessoa = $scope.usuario = {};
-                    $scope.rolesSelecionadas = false;
+                    resetaVariaveis();
                     // Volta para a tela de Usuários
                     $scope.goAdministrativoUsuarios();
                   }//,function(failData){
@@ -393,9 +398,7 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
                      progressoCadastro(false);
                      $scope.showAlert('Usuário alterado com sucesso!', true, 'success', true);
                      // Reseta os dados
-                     $scope.pessoa = $scope.usuario = {};
-                     $scope.rolesSelecionadas = false;
-                     $scope.old.usuario = null; 
+                     resetaVariaveis();
                      // Hide progress
                      $scope.hideProgress(divPortletBodyUsuarioCadPos);
                      // Volta para a tela de Usuários
@@ -535,9 +538,9 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
                 return;
             }
             $scope.validandoEmail = true;
-            var dadosAPI = $webapi.get($apis.administracao.webpagesusers, [token, 0], {id:$campos.administracao.webpagesusers.ds_email, valor:$scope.usuario.email});
+            $webapi.get($apis.administracao.webpagesusers, [token, 0], {id:$campos.administracao.webpagesusers.ds_email, valor:$scope.usuario.email})
             // Verifica se a requisição foi respondida com sucesso
-            dadosAPI.then(function(dados){
+                .then(function(dados){
                             if(!dados) console.log("DADOS NÃO FORAM RECEBIDOS!");
                             else if(dados.Registros && dados.Registros.length > 0){ 
                                 $('#labelEmailEmUso').show();
@@ -571,9 +574,9 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
                 return;
             }
             $scope.validandoLogin = true;
-            var dadosAPI = $webapi.get($apis.administracao.webpagesusers, [token, 0], {id:$campos.administracao.webpagesusers.ds_login, valor:$scope.usuario.login});
+            $webapi.get($apis.administracao.webpagesusers, [token, 0], {id:$campos.administracao.webpagesusers.ds_login, valor:$scope.usuario.login})
             // Verifica se a requisição foi respondida com sucesso
-            dadosAPI.then(function(dados){
+                .then(function(dados){
                             if(!dados) console.log("DADOS NÃO FORAM RECEBIDOS!");
                             else if(dados.Registros && dados.Registros.length > 0){ 
                                 $('#labelLoginEmUso').show();
@@ -673,9 +676,12 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
         $scope.atualizaProgressoDoCadastro();
         //console.log($scope.pessoa.data_nasc);
     };
+    /**
+      * Retorna a data em string
+      */
     $scope.getDataDeNascimento = function(){
         //console.log($scope.pessoa.data_nasc);
-        if($scope.pessoa.data_nasc !== null) 
+        if($scope.pessoa && $scope.pessoa.data_nasc !== null) 
             return $scope.pessoa.data_nasc.getDate() + '/' + ($scope.pessoa.data_nasc.getMonth() + 1) + '/' + $scope.pessoa.data_nasc.getFullYear();
         return '';
     };

@@ -184,7 +184,7 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            <img ng-src="/img/loading-atos.gif" style="margin-top: 10px" ng-show="validandoLogin"/><label id="labelLoginEmUso" class="control-label" hidden><strong>Login já está em uso!</strong></label>
+                                            <img ng-src="../img/loading-atos.gif" style="margin-top: 10px" ng-show="validandoLogin"/><label id="labelLoginEmUso" class="control-label" hidden><strong>Login já está em uso!</strong></label>
                                         </div>
                                         <!-- E-MAIL -->
                                         <div class="form-group" ng-class="{ 'has-error' : formCadastroUsuario.usuarioEmail.$invalid && !formCadastroUsuario.usuarioEmail.$pristine }">
@@ -205,7 +205,7 @@
                                                     <span ng-show="formCadastroUsuario.usuarioEmail.$error.email">Endereço de e-mail é inválido!                                                       </span>
                                                 </div>
                                             </div>
-                                            <img ng-src="/img/loading-atos.gif" style="margin-top: 10px" ng-show="validandoEmail"/><label id="labelEmailEmUso" class="control-label" hidden><strong>E-mail já está em uso!</strong></label>
+                                            <img ng-src="../img/loading-atos.gif" style="margin-top: 10px" ng-show="validandoEmail"/><label id="labelEmailEmUso" class="control-label" hidden><strong>E-mail já está em uso!</strong></label>
                                         </div>
                                         <!-- GRUPO EMPRESA -->
                                         <div class="form-group">
@@ -220,7 +220,7 @@
                                                        typeahead-min-length='3'
                                                        typeahead="grupoempresa as grupoempresa.ds_nome for grupoempresa in buscaGrupoEmpresas($viewValue)" />
                                             </div>
-                                            <img ng-src="/img/loading-atos.gif" style="margin-top: 10px" ng-show="pesquisandoGruposEmpresas"/>
+                                            <img ng-src="../img/loading-atos.gif" style="margin-top: 10px" ng-show="pesquisandoGruposEmpresas"/>
                                         </div>
                                         <!-- EMPRESA -->
                                         <div class="form-group">
@@ -235,7 +235,7 @@
                                                        typeahead-min-length='3'
                                                        typeahead="empresa as empresa.ds_fantasia for empresa in buscaEmpresas($viewValue)" />
                                             </div>
-                                            <img ng-src="/img/loading-atos.gif" style="margin-top: 10px" ng-show="pesquisandoEmpresas"/>
+                                            <img ng-src="../img/loading-atos.gif" style="margin-top: 10px" ng-show="pesquisandoEmpresas"/>
                                         </div>
                                     </div>
                                     <!-- PRIVILÉGIOS -->
@@ -347,7 +347,7 @@
                                             {{tela.acao}} 
                                             <i class="fa" ng-class="{'fa-plus' : ehCadastro(), 'fa-edit' : !ehCadastro()}"></i>
                                         </a>
-                                        <img ng-src="/img/loading-atos.gif" style="margin-top: 10px" ng-show="cadastrando"/>
+                                        <img ng-src="../img/loading-atos.gif" style="margin-top: 10px" ng-show="cadastrando"/>
                                     </div>
                                 </div>
                             </div>

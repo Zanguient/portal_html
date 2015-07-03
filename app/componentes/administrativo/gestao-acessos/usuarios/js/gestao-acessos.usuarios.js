@@ -45,7 +45,7 @@ angular.module("administrativo-usuarios", ['servicos'])
     $scope.itens_pagina = [10, 20, 50, 100];
     $scope.usuario = {busca:'', campo_busca : $scope.camposBusca[0], 
                       itens_pagina : $scope.itens_pagina[0], pagina : 1,
-                      total_registros : 0, total_paginas : 0, 
+                      total_registros : 0, faixa_registros : '0-0', total_paginas : 0, 
                       campo_ordenacao : {id: $campos.administracao.webpagesusers.ds_email, order : 0}};
                                                 
     // Inicialização do controller
@@ -216,6 +216,10 @@ angular.module("administrativo-usuarios", ['servicos'])
     };
      
     // BUSCA
+    $scope.filtraUsuarios = function(filtro){
+        $scope.usuario.busca = filtro;
+        $scope.buscaUsuarios();
+    };
     $scope.buscaUsuarios = function(){
        //$scope.showAlert('Obtendo usuários'); // exibe o alert
        $scope.showProgress(divPortletBodyUsuarioPos);    
@@ -240,6 +244,10 @@ angular.module("administrativo-usuarios", ['servicos'])
                 $scope.usuarios = dados.Registros;
                 $scope.usuario.total_registros = dados.TotalDeRegistros;
                 $scope.usuario.total_paginas = Math.ceil($scope.usuario.total_registros / $scope.usuario.itens_pagina);
+                var registroInicial = ($scope.usuario.pagina - 1)*$scope.usuario.itens_pagina + 1;
+                var registroFinal = registroInicial - 1 + $scope.usuario.itens_pagina;
+                if(registroFinal > $scope.usuario.total_registros) registroFinal = $scope.usuario.total_registros;
+                $scope.usuario.faixa_registros =  registroInicial + '-' + registroFinal;
                 $scope.obtendoUsuarios = false;
                 //$scope.hideAlert(); // fecha o alert
                 $scope.hideProgress(divPortletBodyUsuarioPos);

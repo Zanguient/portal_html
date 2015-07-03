@@ -18,18 +18,16 @@ angular.module('servicos', [ ])
             nu_telefone : 103,
             nu_ramal : 104
         },
+        webpagescontrollers : {
+            id_controller : 100,
+            ds_controller: 101,
+            nm_controller: 102, // nome do controller usado no angular
+            fl_menu: 103, // se true, aparece como MENU raiz
+            id_subController: 104 // se for filho de alguém, setar o ID dele aqui (FK)
+        },
         webpagesmembership : {
             UserId : 100,
-            //CreateDate : 101,
-            //ConfirmationToken : 102,
-            //IsConfirmed : 103,
-            //LastPasswordFailureDate : 104,
-            //PasswordFailuresSinceLastSuccess : 105,
             Password : 106
-            //PasswordChangedDate: 107,
-            //PasswordSalt: 108,
-            //PasswordVerificationToken: 109,
-            //PasswordVerificationTokenExpirationDate: 110
         },
         webpagesroles : {
             RoleId : 100,
