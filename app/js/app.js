@@ -11,6 +11,7 @@ angular.module("AtosCapital", ['ui.router',
                                'diretivas',
                                'servicos', 
                                'nao-autorizado', 
+                               'nao-encontrado',
                                'administrativo-usuarios',
                                'administrativo-usuarios-cadastro',
                                'dashboard', 
@@ -43,10 +44,11 @@ angular.module("AtosCapital", ['ui.router',
     var empresaId = -1; // se > 0 indica que já estava associado a um grupo empresa
     $scope.grupoempresa = undefined; // grupo empresa em uso
     $scope.gempresa = null;  // objeto que recebe temporariamente o grupo empresa da busca
-    // URL das páginas
-    var telaLogin = '../';
+    // URL da página de login
+    var telaLogin = '/';                      
     // Flag
     $scope.exibeLayout = false; // true => carrega layout completo
+    var menuConstruido = false;
     $scope.carregandoGrupoEmpresas = false; // indica se está aguardando o objeto com os grupos empresa (para usuário administrativo)
     // Permissões
     $scope.PERMISSAO_ADMINISTRATIVO = false;
@@ -62,6 +64,13 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_VENDAS = false;
                             
                             
+    
+    // Fullscreen                                                 
+    var removeDivFullscreen = function(){
+        if ($('body').hasClass('page-portlet-fullscreen')) $('body').removeClass('page-portlet-fullscreen');
+    }                       
+                            
+                            
     // LINKS
     /**
       * Envia o broadcast para os controllers filhos, notificando a requisição de mudança de estado
@@ -69,8 +78,11 @@ angular.module("AtosCapital", ['ui.router',
       * questiona se de fato ele deseja descarta-las antes de prosseguir
       */                         
     $scope.go = function(state, params){
-        if(!$state.current.name) $state.go(state, params); // estado inicial
-        else $scope.$broadcast('mudancaDeRota', state, params);
+        if(menuConstruido){ 
+            removeDivFullscreen();
+            if(!$state.current.name) $state.go(state, params); // estado inicial
+            else $scope.$broadcast('mudancaDeRota', state, params);
+        }
     };
     /**
       * Exibe como conteúdo a Gestão de Acessos Usuários, de Administrativo
@@ -98,10 +110,16 @@ angular.module("AtosCapital", ['ui.router',
     $scope.goCardServicesConciliacaoVendas = function(params){
         $scope.go('card-services-conciliacao-vendas', params);
     }; 
+                            
     /** 
       * Valida o acesso a url, considerando as permissões
       */
     $rootScope.$on("$locationChangeStart", function(event, next, current){
+        if(current === next){
+           event.preventDefault();
+           //console.log("LOCATION CHANGE ===");
+           return; 
+        }
         //console.log("FROM " + current + " TO " + next);
         var url = next.split('#')[1];
         // Avalia
@@ -125,7 +143,8 @@ angular.module("AtosCapital", ['ui.router',
                 event.preventDefault();
                 $scope.go('nao-autorizado');
             }
-        }//else event.preventDefault();//console.log("VAI PARA ONDE?");
+        }
+        //else event.preventDefault();//console.log("VAI PARA ONDE?");
      });
                             
     /**
@@ -320,15 +339,13 @@ angular.module("AtosCapital", ['ui.router',
         // Verifica se estava administrando algum grupo empresa
         if($scope.PERMISSAO_ADMINISTRATIVO && data.id_grupo) obtemGrupoEmpresa(data.id_grupo);
         
-        // Exibe tela inicial
-        $scope.goHome();
+        // Seta o flag para true
+        menuConstruido = true;
     };
     /**
       * Inicializa layout e seus handlers
       */
     var inicializaLayout = function(){
-        // Atualiza último datetime de autenticação
-        $autenticacao.atualizaDateTimeDeAutenticacao(new Date());
         // Carrega todos os handlers de layout
         jQuery(document).ready(function() { 
         //$rootScope.$on('$viewContentLoaded', function(){
@@ -336,8 +353,25 @@ angular.module("AtosCapital", ['ui.router',
            Layout.init(); // init layout
            Tasks.initDashboardWidget(); // init tash dashboard widget   
         });
-        $scope.exibeLayout = true;
     };
+                            
+    /**
+      * Redireciona página
+      */
+    var exibePaginaAtual = function(){
+        // Direciona para a página
+        switch($location.path()){
+            case $state.get('dashboard').url : 
+                $scope.goDashboard(); break;
+            case $state.get('administrativo-gestao-acesso-usuarios').url : 
+                 $scope.goAdministrativoUsuarios(); break;
+            case $state.get('administrativo-gestao-acesso-usuarios-cadastro').url : 
+                $scope.goAdministrativoUsuariosCadastro(); break;
+            case $state.get('card-services-conciliacao-vendas').url : 
+                $scope.goCardServicesConciliacaoVendas(); break;
+            default : $scope.goHome(); // Exibe tela inicial
+        }
+    };                        
     
     
     /**
@@ -356,6 +390,17 @@ angular.module("AtosCapital", ['ui.router',
             $scope.voltarTelaLogin(); // what?! FATAL ERROR!
             return;
         }
+        
+        // Inicializa o layout
+        inicializaLayout();
+        // Exibe o layout
+        $scope.exibeLayout = true;
+        // Exibe um loading que bloqueia a página toda
+        Metronic.blockUI({
+            animate: true,
+            overlayColor: '#000'
+        });
+        
         // Avalia Token
         var dadosAPI = $webapi.get($apis.autenticacao.login, token);
         // Verifica se a requisição foi respondida com sucesso
@@ -367,8 +412,12 @@ angular.module("AtosCapital", ['ui.router',
                             $autenticacao.atualizaToken(token);
                             // Controi menu e obtem as permissões do usuário
                             constroiMenu(dados);
-                            // Inicializa o layout
-                            inicializaLayout();
+                            // Exibe a página atual
+                            exibePaginaAtual();
+                            // Atualiza último datetime de autenticação
+                            $autenticacao.atualizaDateTimeDeAutenticacao(new Date());
+                            // Remove o loading da página
+                            Metronic.unblockUI();
                         },
                         function(failData){
                           // Avaliar código de erro
@@ -376,10 +425,12 @@ angular.module("AtosCapital", ['ui.router',
                               // Código 500 => Token já não é mais válido
                               $scope.voltarTelaLogin();
                           else{ 
-                              console.log("FALHA AO VALIDAR TOKEN: " + /*failData.*/status);
+                              console.log("FALHA AO VALIDAR TOKEN: " + failData.status);
                               // o que fazer? exibir uma tela indicando falha de comunicação?
                               // Status 0: sem resposta
                           }
+                          // Remove o loading da página
+                          Metronic.unblockUI();
                         });
     };
                             
@@ -454,8 +505,11 @@ angular.module("AtosCapital", ['ui.router',
     };
                             
                             
+             
                             
-   // Extras
+                            
+                            
+   // Extras                       
                             
    // Exibe o alert
    var alertId = '';
@@ -524,8 +578,12 @@ angular.module("AtosCapital", ['ui.router',
      */
    var getElementProgress = function(divPortletBodyPos){
         var div = $('div[class="portlet light"]');
-        if(div.length == 0) return undefined; 
-        var body = div.children(".portlet-body");
+        if(div.length == 0){ 
+            // Verifica se está em full screen
+            div = $('div[class="portlet light portlet-fullscreen"]');
+            if(div.length == 0) return undefined; 
+        }
+       var body = div.children(".portlet-body");
         if(divPortletBodyPos < 0 || divPortletBodyPos >= body.length) return undefined;
         return body[divPortletBodyPos]; 
    }
@@ -560,8 +618,7 @@ angular.module("AtosCapital", ['ui.router',
     
     // Aceitar "cross" de domínios
     //$httpProvider.defaults.useXDomain = true; 
-    //delete $httpProvider.defaults.headers.common['X-Requested-With'];         
-             
+    //delete $httpProvider.defaults.headers.common['X-Requested-With'];               
              
     // ROTAS         
     var prefixo = '/';
@@ -571,8 +628,6 @@ angular.module("AtosCapital", ['ui.router',
         $locationProvider.html5Mode({enabled: true, requireBase: false});
         prefixo = 'app/';
     }*/
-    
-    $urlRouterProvider.otherwise(prefixo);
     
     $stateProvider
 
@@ -627,6 +682,14 @@ angular.module("AtosCapital", ['ui.router',
         templateUrl: 'componentes/nao-autorizado/index.html',
         controller: "nao-autorizadoCtrl"
       })
+    
+      .state('nao-encontrado', {
+        url: prefixo + 'nao-encontrado',
+        templateUrl: 'componentes/nao-encontrado/index.html',
+        controller: "nao-encontradoCtrl"
+      });       
+             
+    $urlRouterProvider.otherwise(prefixo + 'nao-encontrado');
     
 }])
 

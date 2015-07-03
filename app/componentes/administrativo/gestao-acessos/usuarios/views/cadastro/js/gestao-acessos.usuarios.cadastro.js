@@ -30,7 +30,9 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
     $scope.pessoa = {id:0, nome:'', data_nasc:null, telefone:'', ramal:''};
     $scope.usuario = {login:'', email:'', grupoempresa:'', empresa:''};
     $scope.roles = [];  
-    var rolesSelecionadas = [];                                                    
+    var rolesSelecionadas = []; 
+    // Controle
+    //var dadosAPI = undefined;
     // Flags
     $scope.abrirCalendarioDataNasc = false;
     var dataValida = false;
@@ -88,9 +90,9 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
                             $filter('filter')($scope.roles, {RoleId:$scope.old.roles[k]})[0].selecionado = true;
                         $scope.handleRole();
                     }
-                    //$scope.hideAlert(); // fecha o alert
                     $scope.hideProgress(divPortletBodyUsuarioCadPos);
                     $scope.atualizaProgressoDoCadastro(); // verificar datavalida
+                    dadosAPI.cancel();
                   },
                   function(failData){
                      //console.log("FALHA AO OBTER ROLES: " + failData.status);
@@ -101,7 +103,6 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
                      $scope.atualizaProgressoDoCadastro();
                   }); 
     };
-                                                         
                                                          
     /**
       * Inicialização do controller
@@ -162,7 +163,13 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
                          'Sim', 'Não');
                }
             }
-        }); 
+        });
+        
+        /*($scope.$on("$destroy", function(event) {
+                // Cancela uma possível requisição em andamento
+                dadosAPI.cancel();
+            }
+        );*/
     };
     /**
       * Altera o estado, enviado pelo json => usado no modal de confirmação
