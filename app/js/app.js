@@ -7,7 +7,8 @@
 
 // App
 angular.module("AtosCapital", ['ui.router', 
-                               'ui.bootstrap', 
+                               'ui.bootstrap',
+                               'ui.checkbox',
                                'diretivas',
                                'servicos', 
                                'nao-autorizado', 
@@ -37,7 +38,7 @@ angular.module("AtosCapital", ['ui.router',
     // Título da página                            
     $scope.pagina = {'titulo': 'Home', 'subtitulo': ''};
     // Usuário
-    var token = '';
+    $scope.token = '';
     $scope.nome_usuario = 'Usuário';
     // Dados da empresa
     $scope.empresa = $empresa;
@@ -401,8 +402,8 @@ angular.module("AtosCapital", ['ui.router',
             return;
         }
         // Obtém o token
-        token = $autenticacao.getToken();
-        if(!token){ 
+        $scope.token = $autenticacao.getToken();
+        if(!$scope.token){ 
             $autenticacao.removeDadosDeAutenticacao();
             $scope.voltarTelaLogin(); // what?! FATAL ERROR!
             return;
@@ -419,14 +420,14 @@ angular.module("AtosCapital", ['ui.router',
         });
         
         // Avalia Token
-        var dadosAPI = $webapi.get($apis.autenticacao.login, token);
+        var dadosAPI = $webapi.get($apis.autenticacao.login, $scope.token);
         // Verifica se a requisição foi respondida com sucesso
         dadosAPI.then(function(dados){
                             // Nome do usuário
                             $scope.nome_usuario = dados.nome;
                             // Atualiza token na local storage
-                            token = dados.token;
-                            $autenticacao.atualizaToken(token);
+                            $scope.token = dados.token;
+                            $autenticacao.atualizaToken($scope.token);
                             // Controi menu e obtem as permissões do usuário
                             constroiMenu(dados);
                             // Exibe a página atual
@@ -467,7 +468,7 @@ angular.module("AtosCapital", ['ui.router',
          // Obtém os dados da empresa
          progressoGrupoEmpresas(true);
          // Obtém a URL                                                      
-         $webapi.get($apis.cliente.grupoempresa, [token, 0], {id:$campos.cliente.grupoempresa.id_grupo, valor: empresaId})
+         $webapi.get($apis.cliente.grupoempresa, [$scope.token, 0], {id:$campos.cliente.grupoempresa.id_grupo, valor: empresaId})
             .then(function(dados){  
                 $scope.grupoempresa = dados.Registros[0];
                 $scope.$broadcast("alterouGrupoEmpresa");
@@ -485,7 +486,7 @@ angular.module("AtosCapital", ['ui.router',
        progressoGrupoEmpresas(true);
        // Obtém a URL                                                      
        var url = $webapi.getUrl($apis.cliente.grupoempresa, 
-                                  [token, 0, $campos.cliente.grupoempresa.ds_nome, 0, 10, 1], // ordenado crescente com 10 itens no máximo
+                                  [$scope.token, 0, $campos.cliente.grupoempresa.ds_nome, 0, 10, 1], // ordenado crescente com 10 itens no máximo
                                   {id:$campos.cliente.grupoempresa.ds_nome, valor: texto + '%'});
        // Requisita e obtém os dados
        return $http.get(url).then(function(dados){

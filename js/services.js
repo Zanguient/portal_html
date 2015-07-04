@@ -204,7 +204,7 @@ angular.module('servicos', [ ])
       if(filtros){
          api = api.concat('?');
          // Se for array, percorre todo ele  
-         if(Array.isArray(filtros)){  
+         if(angular.isArray(filtros)){  
              for(var k = 0; k < filtros.length; k++){ 
                  api = api.concat(filtros[k].id + '=' + filtros[k].valor);
                  if(k < filtros.length - 1) api = api.concat('&');

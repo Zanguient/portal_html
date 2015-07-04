@@ -20,7 +20,6 @@ angular.module("administrativo-usuarios", ['servicos'])
                                                      $webapi,$apis,$filter,$autenticacao){ 
    
     var divPortletBodyUsuarioPos = 0; // posição da div que vai receber o loading progress
-    var token = '';
     $scope.paginaInformada = 1; // página digitada pelo usuário
     $scope.usuarios = [];
     $scope.camposBusca = [
@@ -53,8 +52,6 @@ angular.module("administrativo-usuarios", ['servicos'])
         // Título da página 
         $scope.pagina.titulo = 'Gestão de Acessos';                          
         $scope.pagina.subtitulo = 'Usuários';
-        // Token
-        token = $autenticacao.getToken();
         // Busca Usuários
         $scope.buscaUsuarios();
         // Quando houver uma mudança de rota => modificar estado
@@ -226,7 +223,7 @@ angular.module("administrativo-usuarios", ['servicos'])
         
        var filtros = undefined;
        
-       // Só considera busca de filtro a partir de três caracteres    
+       // Verifica se tem algum valor para ser filtrado    
        if($scope.usuario.busca.length > 0) filtros = {id: $scope.usuario.campo_busca.id, valor: $scope.usuario.busca + '%'};        
        // Filtro do grupo empresa => barra administrativa
        if($scope.grupoempresa){
@@ -236,7 +233,7 @@ angular.module("administrativo-usuarios", ['servicos'])
        }
         
        $scope.obtendoUsuarios = true;
-       var dadosAPI = $webapi.get($apis.administracao.webpagesusers, [token, 2, $scope.usuario.campo_ordenacao.id, 
+       var dadosAPI = $webapi.get($apis.administracao.webpagesusers, [$scope.token, 2, $scope.usuario.campo_ordenacao.id, 
                                                                      $scope.usuario.campo_ordenacao.order, 
                                                                      $scope.usuario.itens_pagina, $scope.usuario.pagina],
                                   filtros); 
@@ -279,7 +276,7 @@ angular.module("administrativo-usuarios", ['servicos'])
         var jsonResetSenha = {UserId: id_users, Password: ''};
         
         $webapi.update($apis.administracao.webpagesmembership,
-                       {id: 'token', valor: token}, jsonResetSenha)
+                       {id: 'token', valor: $scope.token}, jsonResetSenha)
             .then(function(dados){
                     $scope.showAlert('Senha redefinida com sucesso!', true, 'success', true);
                     $scope.hideProgress(divPortletBodyUsuarioPos);
@@ -313,7 +310,7 @@ angular.module("administrativo-usuarios", ['servicos'])
         //$scope.showAlert('Deletando usuário'); // exibe o alert
         $scope.showProgress(divPortletBodyUsuarioPos);
         $webapi.delete($apis.administracao.webpagesusers,
-                       [{id: 'token', valor: token},{id: 'id_users', valor: id_users}])
+                       [{id: 'token', valor: $scope.token},{id: 'id_users', valor: id_users}])
             .then(function(dados){
                     $scope.showAlert('Usuário deletado com sucesso!', true, 'success', true);
                     $scope.hideProgress(divPortletBodyUsuarioPos);
