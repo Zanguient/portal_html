@@ -38,7 +38,7 @@ angular.module("card-services-conciliacao-vendas", [])
         $event.preventDefault();
         $event.stopPropagation();
         $scope.abrirCalendarioDataMin = !$scope.abrirCalendarioDataMin;
-        $scope.abrirCalendarioDataMax = !$scope.abrirCalendarioDataMin;
+        $scope.abrirCalendarioDataMax = false;
       };
     $scope.alterouDataMin = function(){
       ajustaIntervaloDeData();
@@ -48,7 +48,7 @@ angular.module("card-services-conciliacao-vendas", [])
         $event.preventDefault();
         $event.stopPropagation();
         $scope.abrirCalendarioDataMax = !$scope.abrirCalendarioDataMax;
-        $scope.abrirCalendarioDataMin = !$scope.abrirCalendarioDataMax;
+        $scope.abrirCalendarioDataMin = false;
       };
     $scope.alterouDataMax = function(){
       ajustaIntervaloDeData();

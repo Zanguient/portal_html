@@ -70,14 +70,16 @@
                                 </th>
                             </tr>
                             <tr role="row" class="filter">
-                                <td rowspan="1" colspan="1">             
+                                <td rowspan="1" colspan="1">                                    
                                     <div class="input-group date date-picker margin-bottom-5">
+                                        <!--input type="text" class="form-control form-filter input-sm" readonly name="order_date_from" placeholder="Início"-->
                                         <input type="text" class="form-control form-filter input-sm" 
                                                readonly style="cursor: pointer"
                                                ng-click="exibeCalendarioDataMin($event)"
                                                placeholder="Início" 
                                                ng-model="datamin"
                                                ng-change="alterouDataMin()"
+                                               datepicker-append-to-body=true
                                                datepicker-popup="dd MMMM yyyy"
                                                is-open="abrirCalendarioDataMin" 
                                                min-date="2000-01-01"
@@ -97,6 +99,7 @@
                                                ng-change="alterouDataMax()"
                                                datepicker-popup="dd MMMM yyyy" 
                                                is-open="abrirCalendarioDataMax" 
+                                               datepicker-append-to-body=true
                                                min-date="2000-01-01"
                                                ng-required="false" 
                                                current-text="Hoje" 
@@ -107,7 +110,7 @@
                                         <span class="input-group-btn">
                                         <button class="btn btn-sm default" type="button" ng-click="exibeCalendarioDataMax($event)"><i class="fa fa-calendar"></i></button>
                                         </span>
-                                    </div>
+                                    </div>                                            
                                 </td>
                                 <td rowspan="1" colspan="1">
                                     <select name="order_status" class="form-control form-filter input-sm">
