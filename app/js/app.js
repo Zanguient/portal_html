@@ -9,6 +9,7 @@
 angular.module("AtosCapital", ['ui.router', 
                                'ui.bootstrap',
                                'ui.checkbox',
+                               'jsTree.directive',
                                'diretivas',
                                'servicos', 
                                'nao-autorizado', 
@@ -307,11 +308,11 @@ angular.module("AtosCapital", ['ui.router',
                                 titulo : 'Usuários'
                             },
                             {
-                                titulo : 'Privilégios',
-                                home : true
+                                titulo : 'Privilégios'
                             },
                             {
-                                titulo : 'Módulos e Funcionalidades'
+                                titulo : 'Módulos e Funcionalidades',
+                                home : true
                             }
                         ]
                     },

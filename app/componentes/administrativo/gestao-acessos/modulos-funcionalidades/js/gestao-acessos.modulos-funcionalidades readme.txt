@@ -40,7 +40,7 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
   * api/administracao/webpagescontrollers
 	 - DELETE : deleta um controller    
 				  ?token=...&id_controller=id  OBS: remove todos os controllers filhos (=> todos os métodos associados)
-	 - GET  : listagem de todos módulos (controllers), com suas respectivas funcionalidades (methods) (coleção 3)
+	 - GET  : listagem de todos módulos (controllers), com suas respectivas funcionalidades (methods) (coleção 2)
 			  Aqueles métodos ao qual a role tem acesso, terá o id 'selecionado' com valor igual a 'true'
 	          [{ id_controller : int,
 				ds_controller: string,	

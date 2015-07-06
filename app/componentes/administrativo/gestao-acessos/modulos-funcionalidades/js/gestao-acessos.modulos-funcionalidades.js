@@ -37,7 +37,27 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
     $scope.novoModuloMenu = ''; // cadastro
     // flags
     $scope.cadastroNovoModuloMenu = false; // faz exibir a linha para adicionar um novo módulo menu
-           
+          
+                                                
+    // Context Menu
+    $scope.contextMenu = {
+          "Novo": {
+            "label": "Menu 1",
+            "action": function(obj) {
+              console.log(obj);
+              alert("You clicked " + obj.item.label);
+            }
+          },
+          "Menu 2": {
+            "label": "Menu 2",
+            "action": function(obj) {
+              console.log(obj);
+              alert("You clicked " + obj.item.label);
+            }
+          }
+    };                                            
+    
+                                                
                                                 
     // Inicialização do controller
     $scope.administrativoModulosFuncionalidadesInit = function(){
@@ -158,8 +178,10 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
                                                        $scope.modulo.itens_pagina, $scope.modulo.pagina],
                    filtros) 
             .then(function(dados){
-                $scope.modulos = dados.Registros;
-                console.log(dados);
+                //$scope.modulos = dados.Registros;
+                // coloca modulos no formato da jstree  
+                $scope.modulos = obtemModulosJSTree(dados.Registros);
+                //console.log(dados.Registros);
                 $scope.modulo.total_registros = dados.TotalDeRegistros;
                 $scope.modulo.total_paginas = Math.ceil($scope.modulo.total_registros / $scope.modulo.itens_pagina);
                 var registroInicial = ($scope.modulo.pagina - 1)*$scope.modulo.itens_pagina + 1;
@@ -178,6 +200,24 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
                  else $scope.showAlert('Houve uma falha ao requisitar módulos (' + failData.status + ')', true, 'danger', true);
                  $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
               }); 
+    };
+    var obtemModulosJSTree = function(controllers){
+        var array = [];
+        if(controllers && angular.isArray(controllers)){
+            for(var k = 0; k < controllers.length; k++){
+                var controller = controllers[k];
+                var json = {text : controller.ds_controller,
+                            id : controller.id_controller,
+                            menu : controller.fl_menu,
+                            state: {opened: true},
+                            //icon : 'fa fa-square'
+                           };
+                if(controller.subControllers && controller.subControllers.length > 0) 
+                    json.children = obtemModulosJSTree(controller.subControllers);
+                array.push(json);    
+            }  
+        }
+        return array;
     };
         
                                                                                        

@@ -40,8 +40,9 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
  ### Interação com a WEB API ###
  
   * api/administracao/webpagescontrollers
-     - GET  : listagem de todos módulos (controllers), com suas respectivas funcionalidades (methods) (coleção 2)
+     - GET  : listagem de todos módulos (controllers), com suas respectivas funcionalidades (methods).
 			  Aqueles métodos ao qual a role tem acesso, terá o id 'selecionado' com valor igual a 'true'
+			  (por isso, deve-se enviar como filtro para a colação 3 o RoleId)
 	          [{ id_controller : int,
 				ds_controller: string,	
 				fl_menu : bool,
@@ -49,37 +50,38 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
 							 ds_method : string,
 							 selecionado : boolean // true se a role tem permissão para este método
 							}] // ORDER BY DS_METHOD
-				subcontrollers : [{ id_controller : int
+				subControllers : [{ id_controller : int
 									ds_controller: string,
 									fl_menu : bool,
 									methods : [{ id_method : int,
 												 ds_method : string,
 												 selecionado : boolean // true se a role tem permissão para este método
 												}] // ORDER BY DS_METHOD
-									subcontrollers : [{ id_controller : int
+									subControllers : [{ id_controller : int
 														ds_controller: string,
 														fl_menu : bool,
 														methods : [{ id_method : int,
 																	 ds_method : string,
 																	 selecionado : boolean // true se a role tem permissão para este método
 																	}] // ORDER BY DS_METHOD
-														subcontrollers : [] // só vai até o terceiro nível	
+														subControllers : [] // só vai até o terceiro nível	
 														}]	
 									}]
 			  }] // ORDER BY DS_CONTROLLER
   * api/administracao/webpagespermissions
-     - POST : armazenar as permissões associadas à role (methods)
-	          [ { id_roles : idRole,   
-				  id_method : idMethod,
-				  fl_principal : bit, // indica se é a página inicial para a role
-			    } ] 
+     - PUT : armazenar as permissões associadas à role (methods)
+	          { 
+			    id_roles : idRole,
+			    inserir : [ id_method : idMethod ],
+				deletar : [ id_method : idMethod ]
+			  }				
 			  // Como deletar?
   * api/administracao/webpagesroles
-	 - GET : listagem dos usuários na tabela (coleção 0) ou 2?
-			{
-				a definir...
-			}
-	 - DELETE : deletar uma determinada role    url/?token=...&RoleId=idRole
+     - DELETE : deletar uma determinada role    url/?token=...&RoleId=idRole
+	 - GET : listagem dos usuários na tabela (coleção 0)
+			{ RoleId: id, RoleName : name }
+	 - PUT : altera o nome da role 
+			{ RoleId : id, RoleName : name }
  
    
 
