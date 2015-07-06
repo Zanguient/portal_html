@@ -106,7 +106,7 @@
                                                       ng-pattern='/^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[012])\/\d{4}$/'
                                                       input-data
                                                       ng-blur="atualizaProgressoDoCadastro()"/-->
-                                                <div class="input-group date date-picker margin-bottom-5">
+                                                <div class="input-group margin-bottom-5">
                                                     <input type="text" readonly style="cursor: pointer"
                                                            ng-click="exibeCalendarioDataNasc($event)"
                                                            class="form-control form-filter input-sm" 
@@ -135,12 +135,12 @@
                                             <label class="control-label col-md-3">Telefone </label>
                                             <div class="col-md-4">
                                                 <input type="text" class="form-control" ng-model="pessoa.telefone" 
-                                                       maxlength="11" ng-minlength="10" valid-integer-number
-                                                       name="pessoaTelefone" placeholder="7912345678"
+                                                       maxlength="13" ng-minlength="11" ng-pattern="/\(\d{2}\)\d{8}\d?/"
+                                                       name="pessoaTelefone" placeholder="(79)12345678" valid-telefone
                                                        ng-blur="atualizaProgressoDoCadastro()" />
                                                 <span style="color:red" ng-show="formCadastroUsuario.pessoaTelefone.$dirty && formCadastroUsuario.pessoaTelefone.$invalid">
                                                     <span ng-show="formCadastroUsuario.pessoaTelefone.$error.minlength">Telefone deve conter no mínimo 10 dígitos!</span>
-                                                    <span ng-show="formCadastroUsuario.pessoaTelefone.$error.pattern">Telefone deve ser composto apenas de números!</span>    
+                                                    <span ng-show="formCadastroUsuario.pessoaTelefone.$error.pattern">Telefone informado é inválido!</span>    
                                                 </span>
                                             </div>
                                         </div>

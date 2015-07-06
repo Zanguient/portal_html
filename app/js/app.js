@@ -16,6 +16,7 @@ angular.module("AtosCapital", ['ui.router',
                                'administrativo-usuarios',
                                'administrativo-usuarios-cadastro',
                                'administrativo-privilegios',
+                               'administrativo-modulos-funcionalidades',
                                'dashboard', 
                                'card-services-conciliacao-vendas']) 
 
@@ -103,7 +104,13 @@ angular.module("AtosCapital", ['ui.router',
       */                        
     $scope.goAdministrativoPrivilegios = function(params){
         $scope.go('administrativo-gestao-acesso-privilegios', params);
-    };                        
+    };
+    /**
+      * Exibe como conteúdo a Gestão de Acessos Módulos e Funcionalidades, de Administrativo
+      */                        
+    $scope.goAdministrativoModulosFuncionalidades = function(params){
+        $scope.go('administrativo-modulos-funcionalidades', params);
+    };                                              
     /**
       * Exibe como conteúdo o Dashboard
       */                        
@@ -138,13 +145,20 @@ angular.module("AtosCapital", ['ui.router',
                 event.preventDefault();
                 $scope.go('nao-autorizado');
             }
-        }if(url === $state.get('administrativo-gestao-acesso-privilegios').url){ 
+        }else if(url === $state.get('administrativo-gestao-acesso-privilegios').url){ 
             // Gestão de Acesso > Usuários (cadastro ou não)
             if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_PRIVILEGIOS){
                 // Não possui permissão!
                 event.preventDefault();
                 $scope.go('nao-autorizado');
-            }
+            } 
+        }else if(url === $state.get('administrativo-modulos-funcionalidades').url){ 
+            // Gestão de Acesso > Usuários (cadastro ou não)
+            if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_MODULOS_FUNCIONALIDADES){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.go('nao-autorizado');
+            }  
         }else if(url === $state.get('dashboard').url){ 
             // Dashboard
             if(!$scope.PERMISSAO_DASHBOARD){
@@ -176,7 +190,8 @@ angular.module("AtosCapital", ['ui.router',
         switch(titulo.toUpperCase()){
             // Administrativo
             case 'USUÁRIOS' : return $scope.goAdministrativoUsuarios;
-            case 'PRIVILÉGIOS' : return $scope.goAdministrativoPrivilegios;     
+            case 'PRIVILÉGIOS' : return $scope.goAdministrativoPrivilegios; 
+            case 'MÓDULOS E FUNCIONALIDADES' : return $scope.goAdministrativoModulosFuncionalidades;     
             // Dashboard
             case 'DASHBOARD': return $scope.goDashboard;  
             // Card Services
@@ -230,6 +245,22 @@ angular.module("AtosCapital", ['ui.router',
             default : return false;        
         }
         
+    };
+    /**
+      * Informa se o título informado se refere ao módulo que está ativo no momento
+      */
+    $scope.moduloAtivo = function(titulo){
+        var state = $state.current.url.split('/')[2]; // nome da pasta inicial da url do estado atual
+        switch(titulo.toUpperCase()){
+            // Administrativo
+            case 'USUÁRIOS' : return state == 'usuarios' || state == 'cadastro-usuarios';
+            case 'PRIVILÉGIOS' : return state == 'privilegios';
+            case 'MÓDULOS E FUNCIONALIDADES' : return state == 'modulos-funcionalidades';
+            // Card Services
+            case 'CONCILIAÇÃO DE VENDAS': return state == 'conciliacao-vendas';
+                
+            default : return false;        
+        }        
     };
     /**
       * A partir do JSON recebido, obtem o JSON menu e as permissões do usuário
@@ -589,8 +620,7 @@ angular.module("AtosCapital", ['ui.router',
    };  
                             
                             
-   // PROGRESS
-   var lastel = undefined;                          
+   // PROGRESS                        
    /**
      * Obtém a div para exibir o loading progress
      */
@@ -609,24 +639,20 @@ angular.module("AtosCapital", ['ui.router',
      * Exibe o loading progress no portlet-body
      */
    $scope.showProgress = function(divPortletBodyPos){
-        var el = getElementProgress(divPortletBodyPos);
-        if(el !== lastel){
-            Metronic.blockUI({
-                target: el,
-                animate: true,
-                overlayColor: '#000'//'none'
-            }); 
-        }
+        var el = divPortletBodyPos ? getElementProgress(divPortletBodyPos) : undefined;
+        Metronic.blockUI({
+            target: el,
+            animate: true,
+            overlayColor: '#000'//'none'
+        }); 
    };
    /**
      * Remove da visão o loading progress no portlet-body
      */                         
    $scope.hideProgress = function(divPortletBodyPos){
-        var el = getElementProgress(divPortletBodyPos);
-        if(el){ 
-            Metronic.unblockUI(el);
-            lastel = undefined;
-        }
+        var el = divPortletBodyPos ? getElementProgress(divPortletBodyPos) : undefined;
+        Metronic.unblockUI(el);
+        
    };                            
                             
 }])
@@ -675,6 +701,15 @@ angular.module("AtosCapital", ['ui.router',
         url: prefixo + 'administrativo/privilegios',
         templateUrl: 'componentes/administrativo/gestao-acessos/privilegios/index.html',
         controller: "administrativo-privilegiosCtrl",
+        data: {
+            titulo: 'Administrativo'
+        }
+      })
+    
+      .state('administrativo-modulos-funcionalidades', {
+        url: prefixo + 'administrativo/modulos-funcionalidades',
+        templateUrl: 'componentes/administrativo/gestao-acessos/modulos-funcionalidades/index.html',
+        controller: "administrativo-modulos-funcionalidadesCtrl",
         data: {
             titulo: 'Administrativo'
         }

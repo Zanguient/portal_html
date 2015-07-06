@@ -23,7 +23,9 @@ angular.module('servicos', [ ])
             ds_controller: 101,
             nm_controller: 102, // nome do controller usado no angular
             fl_menu: 103, // se true, aparece como MENU raiz
-            id_subController: 104 // se for filho de alguém, setar o ID dele aqui (FK)
+            id_subController: 104, // se for filho de alguém, setar o ID dele aqui (FK)
+            // Relacionamentos
+            RoleId : 200
         },
         webpagesmembership : {
             UserId : 100,
@@ -107,8 +109,8 @@ angular.module('servicos', [ ])
 .factory('$apis', [function(){
   return {
     autenticacao: {
-      //login: 'http://192.168.0.100/api/login/autenticacao/', 
-      login: 'http://api.taxservices.com.br/login/autenticacao/',
+      login: 'http://192.168.0.100/api/login/autenticacao/', 
+      //login: 'http://api.taxservices.com.br/login/autenticacao/',
       // futuramente tirar daqui
       keyToken: 'token',
       keyLembrar: 'remember',
@@ -116,7 +118,10 @@ angular.module('servicos', [ ])
     },
     administracao : {
         pessoa : 'http://192.168.0.100/api/administracao/pessoa/',
+        webpagescontrollers : 'http://192.168.0.100/api/administracao/webpagescontrollers/',
         webpagesmembership : 'http://192.168.0.100/api/administracao/webpagesmembership/',
+        webpagesmethods : 'http://192.168.0.100/api/administracao/webpagesmethods/',
+        webpagespermissions : 'http://192.168.0.100/api/administracao/webpagespermissions/',
         webpagesroles : 'http://192.168.0.100/api/administracao/webpagesroles/',
         webpagesusers : 'http://192.168.0.100/api/administracao/webpagesusers/', 
         webpagesusersinroles : 'http://192.168.0.100/api/administracao/webpagesusersinroles/'

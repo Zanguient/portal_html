@@ -1,15 +1,14 @@
 # README #
 
 Módulo que:
- - gerencia o layout da tela de privilégios (roles) da Gestão de acessos (app/componentes/administrativo/gestao-acessos/privilegios/index.html);
- - permite criação de um novo privilégio
- - permite também a exclusão de um determinado privilégio
- - permite visualizar, adicionar e excluir funcionalidades (controllers e methods) associadas a cada role 
+ - gerencia o layout da tela de módulos (controllers) e funcionalidades (methods) da Gestão de acessos (app/componentes/administrativo/gestao-acessos/modulos-funcionalidades/index.html);
+ - permite criação e exclusão de um módulo
+ - permite também a inserção/alteração das funcionalidades de cada módulo
  
 
 ### Pra Que Serve Este Módulo? ###
 
-Gerenciar completamente a tela de privilégios da Gestão de acessos.  
+Gerenciar completamente a tela de módulos e funcionalidades da Gestão de acessos.  
 
 
 
@@ -32,54 +31,62 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
   * $scope.token do "appCtrl"
   * APIS:
     - administracao/webpagescontrollers
-    - administracao/webpagespermissions
-	- administracao/webpagesroles
+    - administracao/webpagesmethods
 	
  
  
  ### Interação com a WEB API ###
  
   * api/administracao/webpagescontrollers
-     - GET  : listagem de todos módulos (controllers), com suas respectivas funcionalidades (methods) (coleção 2)
+	 - DELETE : deleta um controller    
+				  ?token=...&id_controller=id  OBS: remove todos os controllers filhos (=> todos os métodos associados)
+	 - GET  : listagem de todos módulos (controllers), com suas respectivas funcionalidades (methods) (coleção 3)
 			  Aqueles métodos ao qual a role tem acesso, terá o id 'selecionado' com valor igual a 'true'
 	          [{ id_controller : int,
 				ds_controller: string,	
 				fl_menu : bool,
 				methods : [{ id_method : int,
 							 ds_method : string,
-							 selecionado : boolean // true se a role tem permissão para este método
 							}] // ORDER BY DS_METHOD
 				subcontrollers : [{ id_controller : int
 									ds_controller: string,
 									fl_menu : bool,
 									methods : [{ id_method : int,
-												 ds_method : string,
-												 selecionado : boolean // true se a role tem permissão para este método
+												 ds_method : string
 												}] // ORDER BY DS_METHOD
 									subcontrollers : [{ id_controller : int
 														ds_controller: string,
 														fl_menu : bool,
 														methods : [{ id_method : int,
-																	 ds_method : string,
-																	 selecionado : boolean // true se a role tem permissão para este método
+																	 ds_method : string
 																	}] // ORDER BY DS_METHOD
 														subcontrollers : [] // só vai até o terceiro nível	
 														}]	
 									}]
 			  }] // ORDER BY DS_CONTROLLER
-  * api/administracao/webpagespermissions
-     - POST : armazenar as permissões associadas à role (methods)
-	          [ { id_roles : idRole,   
-				  id_method : idMethod,
-				  fl_principal : bit, // indica se é a página inicial para a role
-			    } ] 
-			  // Como deletar?
-  * api/administracao/webpagesroles
-	 - GET : listagem dos usuários na tabela (coleção 0) ou 2?
-			{
-				a definir...
-			}
-	 - DELETE : deletar uma determinada role    url/?token=...&RoleId=idRole
+	- POST : novo módulo (controller)
+				{ ds_controller : string,
+				  fl_menu : bool // usado para indicar se é a página inicial
+				  id_subController : int // essa informação pode ser enviada ou não
+				}
+			 // obtém como resposta o id_controller
+	- PUT : altera o nome de exibição de um módulo e/ou se ele é a página inicial ou não (controller)
+				{ id_controller : int,
+				  ds_controller : string,
+				  fl_menu : bool
+				}
+  * api/administracao/webpagesmethods
+     - DELETE : deleta uma funcionalidade (method)    
+				  ?token=...&id_method=id  OBS: remove todos as permissões associadas
+	- POST : nova funcionalidade (method)
+				{ ds_method : string 
+				  id_controller : int // essa informação pode ser enviada ou não
+				}
+			 // obtém como resposta o id_method
+	- PUT : altera o nome de exibição de uma funcionalidade (method)
+				{ id_method : int,
+				  ds_method : string
+				}
  
    
 

@@ -158,13 +158,13 @@ angular.module("administrativo-privilegios", ['servicos'])
         
        $scope.obtendoPrivilegios = true;
        // TEMP
-       $scope.privilegios = [{ RoleId: 1, RoleName: 'Admin'}];
-       $scope.obtendoPrivilegios = false;
-       $scope.hideProgress(divPortletBodyPrivilegioPos);
-       /*$webapi.get($apis.administracao.webpagesroles, [$scope.token, 0, $scope.privilegio.campo_ordenacao.id, 
-                                                                     $scope.privilegio.campo_ordenacao.order, 
-                                                                     $scope.privilegio.itens_pagina, $scope.privilegio.pagina],
-                                  filtros) 
+       //$scope.privilegios = [{ RoleId: 1, RoleName: 'Admin'}];
+       //$scope.obtendoPrivilegios = false;
+       //$scope.hideProgress(divPortletBodyPrivilegioPos);
+       $webapi.get($apis.administracao.webpagesroles, [$scope.token, 0, $scope.privilegio.campo_ordenacao.id, 
+                                                       $scope.privilegio.campo_ordenacao.order, 
+                                                       $scope.privilegio.itens_pagina, $scope.privilegio.pagina],
+                   filtros) 
             .then(function(dados){
                 $scope.privilegios = dados.Registros;
                 $scope.privilegio.total_registros = dados.TotalDeRegistros;
@@ -184,7 +184,7 @@ angular.module("administrativo-privilegios", ['servicos'])
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else $scope.showAlert('Houve uma falha ao requisitar privilégios (' + failData.status + ')', true, 'danger', true);
                  $scope.hideProgress(divPortletBodyPrivilegioPos);
-              }); */
+              }); 
     };
         
                                                                                        
@@ -201,11 +201,23 @@ angular.module("administrativo-privilegios", ['servicos'])
       * Adiciona privilégio
       */
     $scope.addPrivilegio = function(){
-       if(!$scope.novoPrivilegio){
+        if(!$scope.novoPrivilegio){
            $scope.showAlert('Insira um nome!',true,'danger',true); 
            return;   
-       }
-       console.log("Nome: " + $scope.novoPrivilegio);
+        }
+        // Envia para o banco
+        $scope.showProgress(divPortletBodyPrivilegioPos);
+        $webapi.post($apis.administracao.webpagesroles, $scope.token, {RoleName : $scope.novoPrivilegio})
+                .then(function(dados){
+                    $scope.showAlert('Privilégio cadastrado com sucesso!', true, 'success', true);
+                    // Reseta o campo
+                    $scope.novoPrivilegio = '';
+                    $scope.hideProgress(divPortletBodyPrivilegioPos);
+                  },function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else $scope.showAlert('Houve uma falha ao cadastrar o privilégio (' + failData.status + ')', true, 'danger', true);
+                     $scope.hideProgress(divPortletBodyPrivilegioPos);
+                  }); 
     }
     /**
       * Exibe as funcionalidades associadas ao privilégio
@@ -217,29 +229,6 @@ angular.module("administrativo-privilegios", ['servicos'])
         // Exibe o modal
         $('#modalFuncionalidades').modal('show');
         // Carrega as permissões
-        //console.log(privilegio);
-        /*$webapi.get($apis.administracao.webpagespermissions, [$scope.token, 2]) 
-            .then(function(dados){
-                $scope.privilegios = dados.Registros;
-                $scope.privilegio.total_registros = dados.TotalDeRegistros;
-                $scope.privilegio.total_paginas = Math.ceil($scope.privilegio.total_registros / $scope.privilegio.itens_pagina);
-                var registroInicial = ($scope.privilegio.pagina - 1)*$scope.privilegio.itens_pagina + 1;
-                var registroFinal = registroInicial - 1 + $scope.privilegio.itens_pagina;
-                if(registroFinal > $scope.privilegio.total_registros) registroFinal = $scope.privilegio.total_registros;
-                $scope.privilegio.faixa_registros =  registroInicial + '-' + registroFinal;
-                $scope.obtendoPrivilegios = false;
-                //$scope.hideAlert(); // fecha o alert
-                $scope.hideProgress(divPortletBodyPrivilegioPos);
-                // Verifica se a página atual é maior que o total de páginas
-                if($scope.privilegio.pagina > $scope.privilegio.total_paginas)
-                    setPagina(1); // volta para a primeira página e refaz a busca
-              },
-              function(failData){
-                 $scope.obtendoPrivilegios = false;
-                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
-                 else $scope.showAlert('Houve uma falha ao requisitar privilégios (' + failData.status + ')', true, 'danger', true);
-                 $scope.hideProgress(divPortletBodyPrivilegioPos);
-              }); */
         obtemMódulosEFuncionalidades();
         
     }; 
@@ -258,7 +247,7 @@ angular.module("administrativo-privilegios", ['servicos'])
                     $scope.buscaPrivilegios();
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
-                     else $scope.showAlert('Houve uma falha ao requisitar privilégios (' + failData.status + ')', true, 'danger', true);
+                     else $scope.showAlert('Houve uma falha ao excluir o privilégio (' + failData.status + ')', true, 'danger', true);
                      $scope.hideProgress(divPortletBodyPrivilegioPos);
                   }); 
     };
@@ -269,7 +258,7 @@ angular.module("administrativo-privilegios", ['servicos'])
         // Envia post para deletar
         $scope.showModal('Confirmação', 
                          'Tem certeza que deseja excluir ' + privilegio.RoleName,
-                         exluirPrivilegio, privilegio.RoleName,
+                         exluirPrivilegio, privilegio.RoleId,
                          'Sim', 'Não');
     };    
                                                 
@@ -354,232 +343,39 @@ angular.module("administrativo-privilegios", ['servicos'])
       * Carrega todos os módulos e respectivas funcionalidades
       */
     var obtemMódulosEFuncionalidades = function(){
-       /*$webapi.get($apis.administracao.webpagescontrollers, [$scope.token, 2]) 
+       //$scope.obtendoModulosEFuncionalidades = true;
+       $scope.showProgress();
+       $webapi.get($apis.administracao.webpagescontrollers, [$scope.token, 2,       
+                                                             $campos.administracao.webpagescontrollers.ds_controller], 
+                   {id : $campos.administracao.webpagescontrollers.RoleId, valor: $scope.roleSelecionada.RoleId}) 
             .then(function(dados){
-                $scope.privilegios = dados.Registros;
-                $scope.privilegio.total_registros = dados.TotalDeRegistros;
-                $scope.privilegio.total_paginas = Math.ceil($scope.privilegio.total_registros / $scope.privilegio.itens_pagina);
-                var registroInicial = ($scope.privilegio.pagina - 1)*$scope.privilegio.itens_pagina + 1;
-                var registroFinal = registroInicial - 1 + $scope.privilegio.itens_pagina;
-                if(registroFinal > $scope.privilegio.total_registros) registroFinal = $scope.privilegio.total_registros;
-                $scope.privilegio.faixa_registros =  registroInicial + '-' + registroFinal;
-                $scope.obtendoPrivilegios = false;
-                //$scope.hideAlert(); // fecha o alert
+                $scope.controllers = dados.Registros;
+                // set selecionado dos controllers
+                determinaControllersSelecionados($scope.controllers);
+                // Faz uma cópia (por valor) do controller proveniente da base de dados
+                angular.copy($scope.controllers, $scope.originalControllers);
+                //$scope.obtendoModulosEFuncionalidades = false;
                 $scope.hideProgress(divPortletBodyPrivilegioPos);
-                // Verifica se a página atual é maior que o total de páginas
-                if($scope.privilegio.pagina > $scope.privilegio.total_paginas)
-                    setPagina(1); // volta para a primeira página e refaz a busca
               },
               function(failData){
-                 $scope.obtendoPrivilegios = false;
+                 //$scope.obtendoModulosEFuncionalidades = false;
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
-                 else $scope.showAlert('Houve uma falha ao requisitar privilégios (' + failData.status + ')', true, 'danger', true);
-                 $scope.hideProgress(divPortletBodyPrivilegioPos);
-              }); */
-        $scope.controllers = [{ id_controller : 1,
-				                ds_controller: 'Administração',
-                                selecionado : true, 
-				                methods : [{id_method : 1,
-							                ds_method : 'Atualização',
-                                            selecionado : true
-                                           },
-                                           {id_method : 2,
-							                ds_method : 'Cadastro',
-                                            selecionado : true
-                                           },
-                                           {id_method : 3,
-							                ds_method : 'Leitura',
-                                            selecionado : true
-                                           },
-                                           {id_method : 4,
-							                ds_method : 'Remoção',
-                                            selecionado : true
-                                           }],
-							    subcontrollers :[{id_controller : 50,
-                                                  ds_controller: 'Gestão de Acessos',
-                                                  selecionado : true,
-                                                  methods : [{id_method : 5,
-                                                              ds_method : 'Atualização',
-                                                              selecionado : true
-                                                             },
-                                                             {id_method : 6,
-                                                              ds_method : 'Cadastro',
-                                                              selecionado : true
-                                                             },
-                                                             {id_method : 7,
-                                                              ds_method : 'Leitura',
-                                                              selecionado : true
-                                                             },
-                                                             {id_method : 8,
-                                                              ds_method : 'Remoção',
-                                                              selecionado : true
-                                                             }],
-                                                 subcontrollers : [{id_controller : 100,
-                                                                    ds_controller: 'Usuários',
-                                                                    selecionado : true, 
-                                                                    methods : [{id_method : 9,
-                                                                                ds_method : 'Atualização',
-                                                                                selecionado : true
-                                                                                },
-                                                                                {id_method : 10,
-                                                                                 ds_method : 'Cadastro',
-                                                                                selecionado : true
-                                                                                },
-                                                                                {id_method : 11,
-                                                                                 ds_method : 'Leitura',
-                                                                                selecionado : true
-                                                                                },
-                                                                                {id_method : 12,
-                                                                                 ds_method : 'Remoção',
-                                                                                selecionado : true
-                                                                                }]
-									                               },
-                                                                   {id_controller : 101,
-                                                                    ds_controller: 'Privilégios',
-                                                                    selecionado : true,  
-                                                                    methods : [{id_method : 13,
-                                                                                ds_method : 'Atualização',
-                                                                                selecionado : true
-                                                                                },
-                                                                                {id_method : 14,
-                                                                                 ds_method : 'Cadastro',
-                                                                                selecionado : true
-                                                                                },
-                                                                                {id_method : 15,
-                                                                                 ds_method : 'Leitura',
-                                                                                selecionado : true
-                                                                                },
-                                                                                {id_method : 16,
-                                                                                 ds_method : 'Remoção',
-                                                                                selecionado : true
-                                                                                }]
-									                               },
-                                                                   {id_controller : 102,
-                                                                    ds_controller: 'Módulos e Funcionalidades',
-                                                                    selecionado : true, 
-                                                                    methods : [{id_method : 17,
-                                                                                ds_method : 'Atualização',
-                                                                                selecionado : true
-                                                                                },
-                                                                                {id_method : 18,
-                                                                                 ds_method : 'Cadastro',
-                                                                                selecionado : true
-                                                                                },
-                                                                                {id_method : 19,
-                                                                                 ds_method : 'Leitura',
-                                                                                selecionado : true
-                                                                                },
-                                                                                {id_method : 20,
-                                                                                 ds_method : 'Remoção',
-                                                                                selecionado : true
-                                                                                }]
-									                               }], // fim subcontrollers de 'Gestão de Acessos'
-                                                 }, // fim 'Gestão de Acessos'
-                                                 {id_controller : 51,
-                                                  ds_controller: 'Logs',
-                                                  selecionado : true, 
-                                                  methods : [{id_method : 21,
-                                                              ds_method : 'Atualização',
-                                                              selecionado : true 
-                                                             },
-                                                             {id_method : 22,
-                                                              ds_method : 'Cadastro',
-                                                              selecionado : true 
-                                                             },
-                                                             {id_method : 23,
-                                                              ds_method : 'Leitura',
-                                                              selecionado : true 
-                                                             },
-                                                             {id_method : 24,
-                                                              ds_method : 'Remoção',
-                                                              selecionado : true 
-                                                             }],
-                                                 subcontrollers : [{id_controller : 103,
-                                                                    ds_controller: 'Acesso de Usuários',
-                                                                    selecionado : true, 
-                                                                    methods : [{id_method : 25,
-                                                                                ds_method : 'Atualização',
-                                                                                selecionado : true 
-                                                                                },
-                                                                                {id_method : 26,
-                                                                                 ds_method : 'Cadastro',
-                                                                                selecionado : true 
-                                                                                },
-                                                                                {id_method : 27,
-                                                                                 ds_method : 'Leitura',
-                                                                                selecionado : true 
-                                                                                },
-                                                                                {id_method : 28,
-                                                                                 ds_method : 'Remoção',
-                                                                                selecionado : true 
-                                                                                },{id_method : 25,
-                                                                                ds_method : 'Atualização',
-                                                                                selecionado : true 
-                                                                                },
-                                                                                {id_method : 26,
-                                                                                 ds_method : 'Cadastro',
-                                                                                selecionado : true 
-                                                                                },
-                                                                                {id_method : 27,
-                                                                                 ds_method : 'Leitura',
-                                                                                selecionado : true 
-                                                                                },
-                                                                                {id_method : 28,
-                                                                                 ds_method : 'Remoção',
-                                                                                selecionado : true 
-                                                                                }],
-									                               }] // fim subcontrollers de 'Logs'
-                                                 } // fim 'Logs'
-                                         ] // fim subcontrollers de 'Administração'
-                                }, // fim 'Administração'
-                                { id_controller : 2,
-				                  ds_controller: 'Card Services', 
-				                  methods : [{id_method : 29,
-							                ds_method : 'Atualização'
-                                           },
-                                           {id_method : 30,
-							                ds_method : 'Cadastro'
-                                           },
-                                           {id_method : 31,
-							                ds_method : 'Leitura'
-                                           },
-                                           {id_method : 32,
-							                ds_method : 'Remoção'
-                                           }],
-							      subcontrollers :[{id_controller : 52,
-                                                  ds_controller: 'Conciliação', 
-                                                  methods : [{id_method : 33,
-                                                              ds_method : 'Atualização'
-                                                             },
-                                                             {id_method : 34,
-                                                              ds_method : 'Cadastro'
-                                                             },
-                                                             {id_method : 35,
-                                                              ds_method : 'Leitura'
-                                                             },
-                                                             {id_method : 36,
-                                                              ds_method : 'Remoção'
-                                                             }],
-                                                 subcontrollers : [{id_controller : 100,
-                                                                    ds_controller: 'Conciliação de Vendas', 
-                                                                    methods : [{id_method : 37,
-                                                                                ds_method : 'Atualização',
-                                                                                },
-                                                                                {id_method : 38,
-                                                                                 ds_method : 'Cadastro',
-                                                                                },
-                                                                                {id_method : 39,
-                                                                                 ds_method : 'Leitura',
-                                                                                },
-                                                                                {id_method : 40,
-                                                                                 ds_method : 'Remoção',
-                                                                                }]
-									                               }] // fim subcontrollers de 'Conciliação'
-                                                 }], // fim subcontrollers de 'Card Services'
-                                } // fim 'Card Services'
-                        ]; // fim controllers
-        // Faz uma cópia por valor das permissões
-        angular.copy($scope.controllers, $scope.originalControllers);
+                 else $scope.showAlert('Houve uma falha ao requisitar módulos e funcionalidades (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress();
+              }); 
+    };
+    /**
+      * Do conjunto de controllers, seleciona os elementos que tem métodos permitidos
+      */
+    var determinaControllersSelecionados = function(controllers){
+        if(!controllers || controllers.length == 0) return;
+        for(var k = 0; k < controllers.length; k++){
+            var controller = controllers[k];
+            // Indica se ele está marcado
+            controller.selecionado = $filter('filter')(controller.methods, {selecionado:true}).length > 0;
+            // Faz isso com os filhos
+            if(controller.subControllers) determinaControllersSelecionados(controller.subControllers);
+        }
     };
     /**
       * Retoma as permissões que estão salvas na base de dados

@@ -259,18 +259,18 @@ Page Header
 .page-header .page-header-menu .hor-menu .navbar-nav > li .dropdown-menu li.active > a:hover, .page-header .page-header-menu .hor-menu .navbar-nav > li .dropdown-menu li.current > a,
 .page-header .page-header-menu .hor-menu .navbar-nav > li .dropdown-menu li.current > a:hover {
   color: #ffffff; 
-  background: #5d6b7a;
+  background: #d65b5e; /*#5d6b7a;*/
 }
 .page-header .page-header-menu .hor-menu .navbar-nav > li .dropdown-menu li.active > a > i,
 .page-header .page-header-menu .hor-menu .navbar-nav > li .dropdown-menu li.active > a:hover > i, .page-header .page-header-menu .hor-menu .navbar-nav > li .dropdown-menu li.current > a > i,
 .page-header .page-header-menu .hor-menu .navbar-nav > li .dropdown-menu li.current > a:hover > i {
-  color: #6fa7d7;
+  color: #d65b5e; /*#6fa7d7;*/
 }
 .page-header .page-header-menu .hor-menu .navbar-nav > li .dropdown-menu li.divider {
-  background-color: #606d7d;
+  background-color: #7e1416; /*#606d7d;*/
 }
 .page-header .page-header-menu .hor-menu .navbar-nav > li .dropdown-submenu > a:after {
-  color: #6fa7d7;
+  color: #d65b5e; /*#6fa7d7;*/
 }
 .page-header .page-header-menu .hor-menu.hor-menu-light .navbar-nav {
   /* Mega menu content */
