@@ -19,6 +19,7 @@ angular.module("AtosCapital", ['ui.router',
                                'administrativo-usuarios-cadastro',
                                'administrativo-privilegios',
                                'administrativo-modulos-funcionalidades',
+                               'administrativo-acesso-usuarios',
                                'dashboard', 
                                'card-services-conciliacao-vendas']) 
 
@@ -112,8 +113,14 @@ angular.module("AtosCapital", ['ui.router',
       * Exibe como conteúdo a Gestão de Acessos Módulos e Funcionalidades, de Administrativo
       */                        
     $scope.goAdministrativoModulosFuncionalidades = function(params){
-        $scope.go('administrativo-modulos-funcionalidades', params);
-    };                                              
+        $scope.go('administrativo-gestao-acesso-modulos-funcionalidades', params);
+    }; 
+    /**
+      * Exibe como conteúdo a Logs Acesso de Usuários, de Administrativo
+      */                        
+    $scope.goAdministrativoAcessoUsuarios = function(params){
+        $scope.go('administrativo-logs-acesso-usuarios', params);
+    };                         
     /**
       * Exibe como conteúdo o Dashboard
       */                        
@@ -155,13 +162,20 @@ angular.module("AtosCapital", ['ui.router',
                 event.preventDefault();
                 $scope.go('nao-autorizado');
             } 
-        }else if(url === $state.get('administrativo-modulos-funcionalidades').url){ 
+        }else if(url === $state.get('administrativo-gestao-acesso-modulos-funcionalidades').url){ 
             // Gestão de Acesso > Usuários (cadastro ou não)
             if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_MODULOS_FUNCIONALIDADES){
                 // Não possui permissão!
                 event.preventDefault();
                 $scope.go('nao-autorizado');
             }  
+        }else if(url === $state.get('administrativo-logs-acesso-usuarios').url){ 
+            // Gestão de Acesso > Usuários (cadastro ou não)
+            if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_LOGS || !$scope.PERMISSAO_ADMINISTRATIVO_LOGS_ACESSO_USUARIOS){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.go('nao-autorizado');
+            } 
         }else if(url === $state.get('dashboard').url){ 
             // Dashboard
             if(!$scope.PERMISSAO_DASHBOARD){
@@ -194,7 +208,8 @@ angular.module("AtosCapital", ['ui.router',
             // Administrativo
             case 'USUÁRIOS' : return $scope.goAdministrativoUsuarios;
             case 'PRIVILÉGIOS' : return $scope.goAdministrativoPrivilegios; 
-            case 'MÓDULOS E FUNCIONALIDADES' : return $scope.goAdministrativoModulosFuncionalidades;     
+            case 'MÓDULOS E FUNCIONALIDADES' : return $scope.goAdministrativoModulosFuncionalidades;
+            case 'ACESSO DE USUÁRIOS' : return $scope.goAdministrativoAcessoUsuarios;    
             // Dashboard
             case 'DASHBOARD': return $scope.goDashboard;  
             // Card Services
@@ -259,6 +274,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'USUÁRIOS' : return state == 'usuarios' || state == 'cadastro-usuarios';
             case 'PRIVILÉGIOS' : return state == 'privilegios';
             case 'MÓDULOS E FUNCIONALIDADES' : return state == 'modulos-funcionalidades';
+            case 'ACESSO DE USUÁRIOS' : return state == 'acesso-usuarios';    
             // Card Services
             case 'CONCILIAÇÃO DE VENDAS': return state == 'conciliacao-vendas';
                 
@@ -722,10 +738,19 @@ angular.module("AtosCapital", ['ui.router',
         }
       })
     
-      .state('administrativo-modulos-funcionalidades', {
+      .state('administrativo-gestao-acesso-modulos-funcionalidades', {
         url: prefixo + 'administrativo/modulos-funcionalidades',
         templateUrl: 'componentes/administrativo/gestao-acessos/modulos-funcionalidades/index.html',
         controller: "administrativo-modulos-funcionalidadesCtrl",
+        data: {
+            titulo: 'Administrativo'
+        }
+      })
+    
+      .state('administrativo-logs-acesso-usuarios', {
+        url: prefixo + 'administrativo/acesso-usuarios',
+        templateUrl: 'componentes/administrativo/logs/acesso-usuarios/index.html',
+        controller: "administrativo-acesso-usuariosCtrl",
         data: {
             titulo: 'Administrativo'
         }

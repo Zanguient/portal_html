@@ -102,12 +102,12 @@
                         </div>
                     </div>
                     <!-- TABELA -->
-                    <div id="sample_editable_1_wrapper" class="dataTables_wrapper no-footer">
+                    <div class="dataTables_wrapper no-footer">
                         <!-- EXIBIÇÃO E PESQUISA -->
                         <div class="row">
                             <!-- EXIBIÇÃO --> 
                             <div class="col-md-4 col-sm-12">
-                                <div class="dataTables_length" id="sample_editable_1_length">
+                                <div class="dataTables_length">
                                     <label>
                                         <span class="seperator"></span>Exibindo 
                                         <select name="datatable_products_length" aria-controls="datatable_products" 
@@ -142,11 +142,10 @@
                             </div>
                             <!-- PESQUISA -->
                             <div class="col-md-5 col-sm-12">
-                                <!--div id="sample_editable_1_filter" class="dataTables_filter"-->
+                                <div class="dataTables_filter">
                                     <label>
-                                        <div class="col-sm-5" Style="padding-right: 1px;
-    padding-left: 1px;
-">
+                                        <div class="col-sm-5" 
+                                             style="padding-right: 1px;padding-left: 1px;">
                                             <span class="seperator"></span>Pesquisar 
                                             <select aria-controls="datatable_products" 
                                                     class="form-control input-sm input-inline"
@@ -154,39 +153,24 @@
                                                     ng-options="campo as campo.nome for campo in camposBusca | filter:{ativo:true}">
                                             </select>
                                         </div>
-                                        <div class="col-sm-7" Style="padding-right: 1px;
-    padding-left: 1px;
-">
+                                        <div class="col-sm-7" style="padding-right: 1px; padding-left: 1px;">
                                             <div class="input-group input-icon right">
-												 <i class="fa fa-times" style="right:50px"></i>
+                                                <i class="fa fa-times" style="right:50px;cursor:pointer"
+                                                   ng-click="resetaBusca()"
+                                                   ng-show="usuario.busca"></i>
                                                 <input type="text" 
                                                    class="form-control input-inline" 
                                                    placeholder="Buscar" 
-                                                   aria-controls="sample_editable_1"
                                                    ng-model="busca"
-                                                   ng-init="busca=''"
-                                                   ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !busca)) && filtraUsuarios(busca)"
-                                                >
+                                                   ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !busca)) && filtraUsuarios()">
 												<span class="input-group-addon">
-												<i class="fa fa-search"></i>
+                                                    <i class="fa fa-search" style="cursor:pointer"
+                                                           ng-click="filtraUsuarios()"></i>
 												</span>
 											</div>
-                                            <!--div class="input-icon right">
-                                                <i class="fa fa-microphone"></i>
-                                                <input type="text" 
-                                                   class="form-control input-inline" 
-                                                   placeholder="Buscar" 
-                                                   aria-controls="sample_editable_1"
-                                                   ng-model="busca"
-                                                   ng-init="busca=''"
-                                                   ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !busca)) && filtraUsuarios(busca)"
-                                                ><span class="input-group-addon">
-												<i class="fa fa-user"></i>
-												</span>
-                                            </div-->
                                         </div>    
                                     </label>
-                                <!--/div-->
+                                </div>
                             </div>
                         </div>
                         <!-- TABELA -->

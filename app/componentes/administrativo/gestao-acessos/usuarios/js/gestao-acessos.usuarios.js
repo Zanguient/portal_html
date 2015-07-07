@@ -43,6 +43,7 @@ angular.module("administrativo-usuarios", ['servicos'])
                           },
                          ];
     $scope.itens_pagina = [10, 20, 50, 100];
+    $scope.busca = ''; // model do input de busca                                            
     $scope.usuario = {busca:'', campo_busca : $scope.camposBusca[0], 
                       itens_pagina : $scope.itens_pagina[0], pagina : 1,
                       total_registros : 0, faixa_registros : '0-0', total_paginas : 0, 
@@ -214,8 +215,12 @@ angular.module("administrativo-usuarios", ['servicos'])
     };
      
     // BUSCA
-    $scope.filtraUsuarios = function(filtro){
-        $scope.usuario.busca = filtro;
+    $scope.resetaBusca = function(){
+        $scope.busca = '';
+        $scope.filtraUsuarios();
+    };
+    $scope.filtraUsuarios = function(){
+        $scope.usuario.busca = $scope.busca;
         $scope.buscaUsuarios();
     };
     $scope.buscaUsuarios = function(){
