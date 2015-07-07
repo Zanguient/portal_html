@@ -114,51 +114,69 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
         
       
     // MODAL
-    var inputType = 'modulo';                                           
+    var inputType = 'modulo'; 
+    $scope.input = {titulo : '', mensagem : '', textoConfirma : 'Ok', textoCancela : 'Cancelar',
+                    text : '', funcaoConfirma : function(){}};                                       
     /**
       * Exibe modal com o input
       */
     var exibeModalInput = function(){
         // Exibe o modal
         $('#modalInput').modal('show');
-    }                                            
+    }
+    var fechaModalInput = function(){
+        $('#modalInput').modal('hide');    
+    };
     /**
       * Exibe cadastro novo módulo menu
       */
     $scope.exibeCadastroNovoModuloMenu = function(){
+        $scope.input.titulo = 'Cadastro de módulo';
+        $scope.input.mensagem = 'Informe o nome de exibição do módulo';
+        $scope.input.textoConfirma = 'Salvar';
+        $scope.input.textoCancela = 'Cancelar';
+        $scope.input.funcaoConfirma = function(e){ 
+                                        if(!$scope.input.text){
+                                            return false;
+                                        }
+                                        if($scope.input.text.length < 3){
+                                            alert('Nome muito curto!');
+                                            return false;    
+                                        }
+                                        cadastraModulo({ ds_controller : $scope.input.text,
+                                                         fl_menu : 0 // não é página inicial
+                                                       });
+                                      };
         // Exibe o modal
-        $('#modalInput').modal('show');
+        exibeModalInput();
     }                                            
                                                 
                                                 
     // AÇÕES
-    
-    /**
-      * Adiciona módulo menu
-      */
-    $scope.addModuloMenu = function(){
-        if(!$scope.novoModuloMenu){
-           $scope.showAlert('Insira um nome!',true,'danger',true); 
-           return;   
-        }
+    var cadastraModulo = function(jsonModulo){
+        if(!jsonModulo) return;
+        console.log(jsonModulo);
         // Envia para o banco
-        $scope.showProgress(divPortletBodyModuloFuncionalidadePos);
-        $webapi.post($apis.administracao.webpagescontrollers, $scope.token, 
-                     {ds_controller : $scope.novoModuloMenu,
-				      fl_menu : 0, // usado para indicar se é a página inicial
-				      id_subController : null 
-                     })
+        $scope.showProgress();
+        $webapi.post($apis.administracao.webpagescontrollers, $scope.token, jsonModulo)
                 .then(function(dados){
                     $scope.showAlert('Módulo cadastrado com sucesso!', true, 'success', true);
-                    // Reseta o campo
-                    $scope.novoModuloMenu = '';
-                    $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
+                    // Dismiss o progress
+                    $scope.hideProgress();
+                    // Fecha o modal input
+                    fechaModalInput();
+                    // Recarrega os módulos
+                    $scope.buscaModulos();
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
                      else $scope.showAlert('Houve uma falha ao cadastrar o módulo (' + failData.status + ')', true, 'danger', true);
-                     $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
+                     // Dismiss o progress
+                     $scope.hideProgress();
+                     // Fecha o modal input
+                     fechaModalInput();
                   }); 
-    }
+    };
+
     /**
       * Exibe as funcionalidades associadas ao módulo
       */
