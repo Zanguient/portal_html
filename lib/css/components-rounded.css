@@ -4102,6 +4102,15 @@ Customized Bootstrap Modal
   font-weight: 600;
   text-align:center;    
 }  
+
+.modal-corpo{
+  text-align: center;
+  
+}
+
+.modal-corpo > imput{
+margin-top: 10px;
+}
     
 /***
 Notes
