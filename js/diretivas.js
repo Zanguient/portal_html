@@ -5,7 +5,7 @@
  *
  */
 
-angular.module('diretivas', [ ])
+angular.module('diretivas', ['ui.bootstrap'])
 
 // Número inteiro válido
 .directive('validIntegerNumber', function() {
@@ -160,4 +160,61 @@ angular.module('diretivas', [ ])
           });
     }
   };
-});
+})
+
+
+// Força exibir sugestões do typeahead on focus 
+.directive('focusMe', function($timeout, $parse) {
+  return {
+    //scope: { trigger: '@focusMe' },
+    link: function(scope, element, attrs) {
+      var model = $parse(attrs.focusMe);
+      scope.$watch(model, function(value) {
+        if(value === true) { 
+          $timeout(function() {
+            element[0].focus(); 
+          });
+        }
+      });
+      // to address @blesh's comment, set attribute value to 'false'
+      // on blur event:
+      /*element.bind('focus', function() {
+         console.log('focus');
+         //scope.$apply(model.assign(scope, false));
+      });*/
+    }
+  }
+})
+
+.directive('typeaheadFocus', function () {
+  return {
+    require: 'ngModel',
+    link: function (scope, element, attr, ngModel) {
+
+      //trigger the popup on 'click' because 'focus'
+      //is also triggered after the item selection
+      element.bind('focus', function () {
+
+        var viewValue = ngModel.$viewValue;
+
+        //restore to null value so that the typeahead can detect a change
+        if (ngModel.$viewValue == ' ') {
+          ngModel.$setViewValue(null);
+        }
+
+        //force trigger the popup
+        ngModel.$setViewValue(' ');
+
+        //set the actual value in case there was already a value in the input
+        ngModel.$setViewValue(viewValue || ' ');
+      });
+
+      //compare function that treats the empty space as a match
+      scope.emptyOrMatch = function (actual, expected) {
+          if (expected == ' ') return true; 
+          //return actual.indexOf(expected) > -1;
+          return (''+actual).toLowerCase().indexOf((''+expected).toLowerCase()) > -1
+      };
+    }
+  };
+});;

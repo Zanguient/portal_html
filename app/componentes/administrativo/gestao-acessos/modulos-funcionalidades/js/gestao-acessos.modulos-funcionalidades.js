@@ -21,38 +21,32 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
    
     var divPortletBodyModuloFuncionalidadePos = 0; // posição da div que vai receber o loading progress
     $scope.paginaInformada = 1; // página digitada pelo usuário
-    $scope.modulos = [];
-    $scope.camposBusca = [{
-                            id: $campos.administracao.webpagescontrollers.ds_controller,
-                            ativo: true,  
-                            nome: "Módulo"
-                          }];
-    $scope.itens_pagina = [10, 20, 50, 100];
-    $scope.modulo = {busca:'', campo_busca : $scope.camposBusca[0], 
-                      itens_pagina : $scope.itens_pagina[0], pagina : 1,
-                      total_registros : 0, faixa_registros : '0-0', total_paginas : 0, 
-                      campo_ordenacao : {id: $campos.administracao.webpagescontrollers.ds_controller, order : 0}};    
-    
-    $scope.moduloMenuSelecionado = undefined;     
+    $scope.modulos = [{text : '', children: [], parent: '#'}];
+    $scope.moduloSelecionado = undefined;     
     $scope.novoModuloMenu = ''; // cadastro
-    // flags
+    // flags                                            
     $scope.cadastroNovoModuloMenu = false; // faz exibir a linha para adicionar um novo módulo menu
           
                                                 
     // Context Menu
     $scope.contextMenu = {
-          "Novo": {
-            "label": "Menu 1",
-            "action": function(obj) {
-              console.log(obj);
-              alert("You clicked " + obj.item.label);
+          "novo": {
+            "label": "Novo submódulo",
+            "disabled" : true,  
+            "action": function(data) {
+                console.log("Criar novo submódulo em " + $scope.moduloSelecionado.text);
             }
           },
-          "Menu 2": {
-            "label": "Menu 2",
+          "alterar": {
+            "label": "Alterar",
             "action": function(obj) {
-              console.log(obj);
-              alert("You clicked " + obj.item.label);
+              console.log("Alterar " + $scope.moduloSelecionado.text);
+            }
+          },
+          "excluir": {
+            "label": "Excluir",
+            "action": function(obj) {
+              console.log("Excluir " + $scope.moduloSelecionado.text);
             }
           }
     };                                            
@@ -71,128 +65,23 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
             $state.go(state, params);
         });  
     }; 
-                                            
-    // ORDENAÇÃO
-    /**
-      * Modifica a ordenação
-      */
-    var ordena = function(posCampo){
-        if(posCampo >= 0 && posCampo < $scope.camposBusca.length){
-            if($scope.modulo.campo_ordenacao.id !== $scope.camposBusca[posCampo].id){ 
-                $scope.modulo.campo_ordenacao.id = $scope.camposBusca[posCampo].id;
-                $scope.modulo.campo_ordenacao.order = 0; // começa descendente                                 
-            }else
-                // Inverte a ordenação: ASCENDENTE => DESCENDENTE e vice-versa                                
-                $scope.modulo.campo_ordenacao.order = $scope.modulo.campo_ordenacao.order === 0 ? 1 : 0;                                
-            $scope.buscaModulos(); 
-        }
-    };
-    /**
-      * Ordena por nome
-      */
-    $scope.ordena = function(){
-        ordena(0);    
-    }
-    /**
-      * Retorna true se a ordenação está sendo feito por nome de forma crescente
-      */
-    $scope.estaOrdenadoCrescente = function(){
-        return $scope.modulo.campo_ordenacao.id === $scope.camposBusca[0].id && 
-               $scope.modulo.campo_ordenacao.order === 0;    
-    };
-    /**
-      * Retorna true se a ordenação está sendo feito por nome de forma decrescente
-      */
-    $scope.estaOrdenadoDecrescente = function(){
-        return $scope.modulo.campo_ordenacao.id === $scope.camposBusca[0].id && 
-               $scope.modulo.campo_ordenacao.order === 1;    
-    };                          
-                                            
-                                            
-                                                
-    // PAGINAÇÃO
-    /**
-      * Altera efetivamente a página exibida
-      */                                            
-    var setPagina = function(pagina){
-       if(pagina >= 1 && pagina <= $scope.modulo.total_paginas){ 
-           $scope.modulo.pagina = pagina;
-           $scope.buscaModulos(); 
-       }
-       $scope.atualizaPaginaDigitada();    
-    };
-    /**
-      * Vai para a página anterior
-      */
-    $scope.retrocedePagina = function(){
-        setPagina($scope.modulo.pagina - 1); 
-    };
-    /**
-      * Vai para a página seguinte
-      */                                            
-    $scope.avancaPagina = function(){
-        setPagina($scope.modulo.pagina + 1); 
-    };
-    /**
-      * Foi informada pelo usuário uma página para ser exibida
-      */                                            
-    $scope.alteraPagina = function(){
-        if($scope.paginaInformada) setPagina(parseInt($scope.paginaInformada));
-        else $scope.setaPaginaDigitada();  
-    };
-    /**
-      * Sincroniza a página digitada com a que efetivamente está sendo exibida
-      */                                            
-    $scope.atualizaPaginaDigitada = function(){
-        $scope.paginaInformada = $scope.Modulo.pagina; 
-    };                                             
-    /**
-      * Notifica que o total de itens por página foi alterado
-      */                                            
-    $scope.alterouItensPagina = function(){
-        $scope.buscaModulos();   
-    };
+
      
     // BUSCA
-    $scope.filtraModulos = function(filtro){
-        $scope.modulo.busca = filtro;
-        $scope.buscaModulos();
+    $scope.buscaModuloJSTree = function(busca){
+        var jstree = $('#jstree');//angular.element(document.querySelector('#jstree'));     
+        if(jstree) jstree.jstree(true).search(busca);
     };
+   
     $scope.buscaModulos = function(){
-       $scope.showProgress(divPortletBodyModuloFuncionalidadePos);    
-        
-       var filtros = undefined;
-       
-       // Só considera busca de filtro a partir de três caracteres    
-       if($scope.modulo.busca.length > 0) filtros = {id: $scope.modulo.campo_busca.id, valor: $scope.modulo.busca + '%'};        
-       // Filtro do grupo empresa => barra administrativa
-       if($scope.grupoempresa){
-            var filtroGrupoEmpresa = {id: $campos.administracao.webpagesusers.id_grupo, valor: $scope.grupoempresa.id_grupo};
-            if(filtros) filtros = [filtros, filtroGrupoEmpresa];
-            else filtros = filtroGrupoEmpresa;
-       }
-        
+       $scope.showProgress(divPortletBodyModuloFuncionalidadePos);     
        $scope.obtendoModulos = true;
-       $webapi.get($apis.administracao.webpagescontrollers, [$scope.token, 2, $scope.modulo.campo_ordenacao.id, 
-                                                       $scope.modulo.campo_ordenacao.order, 
-                                                       $scope.modulo.itens_pagina, $scope.modulo.pagina],
-                   filtros) 
+       $webapi.get($apis.administracao.webpagescontrollers, [$scope.token, 2]) 
             .then(function(dados){
-                //$scope.modulos = dados.Registros;
                 // coloca modulos no formato da jstree  
                 $scope.modulos = obtemModulosJSTree(dados.Registros);
-                //console.log(dados.Registros);
-                $scope.modulo.total_registros = dados.TotalDeRegistros;
-                $scope.modulo.total_paginas = Math.ceil($scope.modulo.total_registros / $scope.modulo.itens_pagina);
-                var registroInicial = ($scope.modulo.pagina - 1)*$scope.modulo.itens_pagina + 1;
-                var registroFinal = registroInicial - 1 + $scope.modulo.itens_pagina;
-                if(registroFinal > $scope.modulo.total_registros) registroFinal = $scope.modulo.total_registros;
-                $scope.modulo.faixa_registros =  registroInicial + '-' + registroFinal;
                 $scope.obtendoModulos = false;
                 $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
-                // Verifica se a página atual é maior que o total de páginas
-                if($scope.modulo.pagina > $scope.modulo.total_paginas)
-                    setPagina(1); // volta para a primeira página e refaz a busca
               },
               function(failData){
                  $scope.obtendoModulos = false;
@@ -201,6 +90,9 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
                  $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
               }); 
     };
+    /**
+      * Obtem o array dos controllers no formato de jstree
+      */
     var obtemModulosJSTree = function(controllers){
         var array = [];
         if(controllers && angular.isArray(controllers)){
@@ -208,7 +100,7 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
                 var controller = controllers[k];
                 var json = {text : controller.ds_controller,
                             id : controller.id_controller,
-                            menu : controller.fl_menu,
+                            data : {methods: controller.methods, menu : controller.fl_menu },
                             state: {opened: true},
                             //icon : 'fa fa-square'
                            };
@@ -220,16 +112,27 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
         return array;
     };
         
-                                                                                       
-                                                
-    // AÇÕES
+      
+    // MODAL
+    var inputType = 'modulo';                                           
+    /**
+      * Exibe modal com o input
+      */
+    var exibeModalInput = function(){
+        // Exibe o modal
+        $('#modalInput').modal('show');
+    }                                            
     /**
       * Exibe cadastro novo módulo menu
       */
-    $scope.exibeCadastroNovoModuloMenu = function(exibe){
-        $scope.cadastroNovoModuloMenu = exibe === undefined || exibe ? true : false;
-        $scope.novoModuloMenu = '';
-    }
+    $scope.exibeCadastroNovoModuloMenu = function(){
+        // Exibe o modal
+        $('#modalInput').modal('show');
+    }                                            
+                                                
+                                                
+    // AÇÕES
+    
     /**
       * Adiciona módulo menu
       */
@@ -240,7 +143,11 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
         }
         // Envia para o banco
         $scope.showProgress(divPortletBodyModuloFuncionalidadePos);
-        $webapi.post($apis.administracao.webpagesroles, $scope.token, {RoleName : $scope.novoModuloMenu})
+        $webapi.post($apis.administracao.webpagescontrollers, $scope.token, 
+                     {ds_controller : $scope.novoModuloMenu,
+				      fl_menu : 0, // usado para indicar se é a página inicial
+				      id_subController : null 
+                     })
                 .then(function(dados){
                     $scope.showAlert('Módulo cadastrado com sucesso!', true, 'success', true);
                     // Reseta o campo
@@ -255,15 +162,9 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
     /**
       * Exibe as funcionalidades associadas ao módulo
       */
-    $scope.exibeFuncionalidades = function(modulo){
-        // Reseta permissões
-        $scope.permissoes = [];
-        $scope.moduloMenuSelecionado = modulo;
-        // Exibe o modal
-        $('#modalFuncionalidades').modal('show');
-        // Carrega as permissões
-        obtemMódulosEFuncionalidades();
-        
+    $scope.selecionaModulo = function(event,object){
+        $scope.moduloSelecionado = object.node;
+        if(!$scope.$$phase) $scope.$apply();
     }; 
     /**
       * Excluir módulo

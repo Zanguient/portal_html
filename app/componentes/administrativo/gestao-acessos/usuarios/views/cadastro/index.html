@@ -237,7 +237,10 @@
                                                        placeholder="Digite o nome do grupo empresa" 
                                                        ng-model="usuario.grupoempresa"
                                                        ng-blur="atualizaProgressoDoCadastro()"
-                                                       onfocus="this.select();" onmouseup="return false;"
+                                                       ng-keydown="($event.which == 8) ? usuario.empresa = '' : 0"
+                                                       onfocus="this.select();" 
+                                                       onmouseup="return false;"
+                                                       typeahead-on-select="selecionouGrupoEmpresa()"
                                                        typeahead-focus-first=false
                                                        typeahead-min-length='3'
                                                        typeahead="grupoempresa as grupoempresa.ds_nome for grupoempresa in buscaGrupoEmpresas($viewValue)" />
@@ -249,13 +252,15 @@
                                             <label class="control-label col-md-3">Empresa </label>
                                             <div class="col-md-4">
                                                 <input type="text" class="form-control" 
+                                                       ng-disabled="!usuario.grupoempresa.ds_nome || empresas.length == 0" 
                                                        placeholder="Digite o nome da empresa" 
                                                        ng-model="usuario.empresa"
                                                        ng-blur="atualizaProgressoDoCadastro()"
                                                        onfocus="this.select();" onmouseup="return false;"
-                                                       typeahead-focus-first=false
-                                                       typeahead-min-length='3'
-                                                       typeahead="empresa as empresa.ds_fantasia for empresa in buscaEmpresas($viewValue)" />
+                                                       focus-me="empresas.length > 0"
+                                                       typeahead-focus ng-trim="false"
+                                                       typeahead-focus-first=true
+                                                       typeahead="empresa as empresa.ds_fantasia for empresa in empresas  | filter:$viewValue:emptyOrMatch" />
                                             </div>
                                             <img ng-src="../img/loading-atos.gif" style="margin-top: 10px" ng-show="pesquisandoEmpresas"/>
                                         </div>

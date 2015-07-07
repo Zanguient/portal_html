@@ -11,13 +11,14 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
 .controller("administrativo-usuarios-cadastroCtrl", ['$scope',
                                                      '$state',
                                                      '$stateParams',
+                                                     '$timeout',
                                                      '$http',
                                                      '$campos',
                                                      '$webapi',
                                                      '$apis',
                                                      '$filter',
                                                      '$autenticacao', 
-                                                     function($scope,$state,$stateParams,$http,$campos,
+                                                     function($scope,$state,$stateParams,$timeout,$http,$campos,
                                                               $webapi,$apis,$filter,$autenticacao){ 
     
     var divPortletBodyUsuarioCadPos = 0; // posição da div que vai receber o loading progress                                                               
@@ -25,6 +26,7 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
     // Tab
     $scope.tabCadastro = 1;
     // Dados
+    $scope.empresas = [];
     $scope.old = {pessoa:null,usuario:null,roles:[]};
     $scope.pessoa = {id:0, nome:'', data_nasc:null, telefone:'', ramal:''};
     $scope.usuario = {login:'', email:'', grupoempresa:'', empresa:''};
@@ -446,6 +448,10 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
                                                          
                                                          
     // Filtro
+    $scope.selecionouGrupoEmpresa = function(){
+        $scope.usuario.empresa = '';
+        $scope.buscaEmpresas();    
+    };
     $scope.buscaGrupoEmpresas = function(texto){
        $scope.pesquisandoGruposEmpresas = true;
        // Obtém a URL                                                      
@@ -466,21 +472,27 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
     };
     $scope.buscaEmpresas = function(texto){
        $scope.pesquisandoEmpresas = true;
-       // Obtém a URL                                                      
+       // filtro
+       var filtro = {id:$campos.cliente.empresa.id_grupo, valor: $scope.usuario.grupoempresa.id_grupo};
+       //if(texto) filtro = [filtro, {id:$campos.cliente.empresa.ds_fantasia, valor: texto + '%'}];
+       // Obtém a URL     
        var url = $webapi.getUrl($apis.cliente.empresa, 
-                                  [$scope.token, 0, $campos.cliente.empresa.ds_fantasia, 0, 10, 1], // ordenado crescente com 10 itens no máximo
-                                  {id:$campos.cliente.empresa.ds_fantasia, valor: texto + '%'});
+                                  [$scope.token, 0, $campos.cliente.empresa.ds_fantasia],//, 0, 10, 1], // ordenado crescente com 10 itens no máximo
+                                  filtro);
+       $scope.empresas = [];
        // Requisita e obtém os dados
-       return $http.get(url).then(function(dados){
+       //return 
+       $http.get(url).then(function(dados){
            $scope.pesquisandoEmpresas = false;
-           return dados.data.Registros;
+           $scope.empresas = dados.data.Registros;
+           //return dados.data.Registros;
         },function(failData){
              if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
              else $scope.showAlert('Houve uma falha ao requisitar o filtro de filiais (' + failData.status + ')', true, 'danger', true);
              $scope.pesquisandoEmpresas = false;
-             return [];
+             //return [];
           });
-    };                                                     
+    }; 
                                                          
                                                          
                                                          
