@@ -291,10 +291,11 @@ angular.module("administrativo-usuarios", ['servicos'])
       */
     $scope.resetarSenhaDoUsuario = function(usuario){
         // Envia post para deletar
-        $scope.showModal('Confirmação', 
+        /*$scope.showModal('Confirmação', 
                          'Tem certeza que deseja resetar a senha de ' + usuario.webpagesusers.ds_email,
                          resetaSenhaDoUsuario, usuario.webpagesusers.id_users,
-                         'Sim', 'Não');
+                         'Sim', 'Não');*/
+        if(confirm('Tem certeza que deseja resetar a senha de ' + usuario.webpagesusers.ds_email)) resetaSenhaDoUsuario(usuario.webpagesusers.id_users);
     };
     /**
       * Editar usuario => Abre tela de cadastro, enviando como parâmetro o objeto usuario
