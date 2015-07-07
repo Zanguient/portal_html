@@ -10,6 +10,7 @@ angular.module("AtosCapital", ['ui.router',
                                'ui.bootstrap',
                                'ui.checkbox',
                                'jsTree.directive',
+                               //'dialogs',
                                'diretivas',
                                'servicos', 
                                'nao-autorizado', 
@@ -29,13 +30,14 @@ angular.module("AtosCapital", ['ui.router',
                         '$stateParams',
                         '$http',
                         '$timeout',
+                        '$modal',
                         '$autenticacao',
                         '$apis',
                         '$webapi',
                         '$empresa',
                         '$campos',
                         '$filter',
-                        function($scope,$rootScope,$location,$state,$stateParams,$http,$timeout,
+                        function($scope,$rootScope,$location,$state,$stateParams,$http,$timeout,$modal,
                                  $autenticacao,$apis,$webapi,$empresa,$campos,$filter){ 
     // Título da página                            
     $scope.pagina = {'titulo': 'Home', 'subtitulo': ''};
@@ -49,7 +51,7 @@ angular.module("AtosCapital", ['ui.router',
     $scope.grupoempresa = undefined; // grupo empresa em uso
     $scope.gempresa = null;  // objeto que recebe temporariamente o grupo empresa da busca
     // URL da página de login
-    var telaLogin = '/';                      
+    var telaLogin = '../';                      
     // Flag
     $scope.exibeLayout = false; // true => carrega layout completo
     var menuConstruido = false;
@@ -618,6 +620,19 @@ angular.module("AtosCapital", ['ui.router',
       $scope.modal_confirma = funcaoConfirma ? function(){funcaoConfirma(parametroFuncaoConfirma);} : function(){};   
       // Exibe o modal
       $('#modalConfirmacao').modal('show');
+      /*var modalInstance = $modal.open({
+              animation: true,
+              templateUrl: 'modalContent.html',
+              controller: 'appCtrl',
+              size: 'sm'
+            });
+
+            modalInstance.result.then(function (selectedItem) {
+                console.log("Confirma");
+                //resetaSenhaDoUsuario(usuario.webpagesusers.id_users);
+            }, function () {
+                console.log("Fecha");
+            });*/
    };  
                             
                             

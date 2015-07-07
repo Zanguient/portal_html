@@ -9,6 +9,7 @@
 angular.module("administrativo-usuarios", ['servicos']) 
 
 .controller("administrativo-usuariosCtrl", ['$scope',
+                                            '$modal',
                                             '$state',
                                             '$http',
                                             '$campos',
@@ -16,7 +17,7 @@ angular.module("administrativo-usuarios", ['servicos'])
                                             '$apis',
                                             '$filter',
                                             '$autenticacao', 
-                                            function($scope,$state,$http,$campos,
+                                            function($scope,$modal,$state,$http,$campos,
                                                      $webapi,$apis,$filter,$autenticacao){ 
    
     var divPortletBodyUsuarioPos = 0; // posição da div que vai receber o loading progress
@@ -295,6 +296,12 @@ angular.module("administrativo-usuarios", ['servicos'])
                          'Tem certeza que deseja resetar a senha de ' + usuario.webpagesusers.ds_email,
                          resetaSenhaDoUsuario, usuario.webpagesusers.id_users,
                          'Sim', 'Não');
+        /*$dialog.messageBox('Confirmação', 
+                                        'Tem certeza que deseja resetar a senha de ' + usuario.webpagesusers.ds_email,
+                                        [{label:'Sim', result: 'yes'},{label:'No', result: 'no'}])
+                .open().then(function(result){
+                    if(result === 'yes') resetaSenhaDoUsuario(usuario.webpagesusers.id_users);
+                });*/
     };
     /**
       * Editar usuario => Abre tela de cadastro, enviando como parâmetro o objeto usuario
