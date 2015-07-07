@@ -25,6 +25,29 @@
         <div class="col-md-12">
             <!-- BEGIN TABLE PORTLET-->
             <div class="portlet light">
+                
+                <!-- MODAL CONFIRMAÇÃO -->
+               <div class="modal fade bs-modal-sm" id="modalConfirmacao" tabindex="-1" role="dialog" aria-hidden="true">
+                   <div class="modal-dialog modal-sm">
+                       <div class="modal-content">
+                           <div class="modal-header">
+                               <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                               <h4 class="modal-title">{{modal_titulo}}</h4>
+                           </div>
+                           <div class="modal-body">
+                                {{modal_mensagem}}
+                           </div>
+                           <div class="modal-footer">
+                               <button type="button" class="btn default" data-dismiss="modal">{{modal_textoCancela}}</button>
+                               <button type="button" class="btn blue" 
+                                       data-dismiss="modal" ng-click="modal_confirma()">{{modal_textoConfirma}}</button>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <!-- END MODAL CONFIRMAÇÃO -->
+                
+                
                 <!-- TOPO : Nome 'Usuários' e botões de 'Opções' e FullScreen -->
                 <div class="portlet-title">
                     <div class="caption">
