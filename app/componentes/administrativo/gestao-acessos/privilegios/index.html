@@ -11,24 +11,17 @@
     
     <!-- BEGIN MODAL FUNCIONALIDADES -->
     
-    <div class="modal fade ng-scope" id="modalFuncionalidades" tabindex="-1" aria-hidden="true" style="display: none;">
+    <!--div class="modal fade ng-scope" id="modalFuncionalidades" tabindex="-1" aria-hidden="true" style="display: none;">
         <div class="modal-dialog" style="min-width: 700px">
             <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 style="text-align:center" class="modal-title">{{roleSelecionada.RoleName}}</h4>
+                <div class="modal-header">                    
+                    <h4 style="text-align:center" class="modal-title modal-cabecalho">{{roleSelecionada.RoleName}}</h4>
                 </div>
                 <div class="modal-body height-auto" style="min-width: 500px">
-                    <div class="skin skin-square scroller" style="min-height: 300px" 
+                    <div class="skin skin-square scroller caption-subject font-green-sharp bold uppercase" style="min-height: 300px" 
                          data-always-visible="1" data-rail-visible1="1">
                         <center><label><strong>Módulos e Funcionalidades</strong></label></center>                           
                         <ul class="list-unstyled">
-                            <!--li>
-                                <checkbox normal ng-model="todos.selecionado" 
-                                          ng-change="handleCheckController(todos)"> 
-                                </checkbox>
-                                Todos
-                            </li-->
                             <li ng-repeat="controller in controllers">
                                 <checkbox normal ng-model="controller.selecionado" 
                                                  ng-change="handleCheckController(controller)">
@@ -115,9 +108,7 @@
                                     </li>
                                 </ul> 
                             </li>
-                        </ul>
-                            
-
+                        </ul>                           
                     </div>
                     <div class="modal-footer">
                         <div class="col-md-3">
@@ -143,7 +134,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div-->
             
                
     <!-- END MODAL FUNCIONALIDADES -->
@@ -166,7 +157,158 @@
     <div class="row">
         <div class="col-md-12">
             <!-- BEGIN TABLE PORTLET-->
-            <div class="portlet light">
+            <div class="portlet light">  
+                
+                <!-- MODAIS -->
+                <!-- MODAL CONFIRMAÇÃO -->
+               <div class="modal fade bs-modal-sm" id="modalConfirmacao" tabindex="-1" role="dialog" aria-hidden="true">
+                   <div class="modal-dialog modal-sm">
+                       <div class="modal-content">
+                           <div class="modal-header">
+                               <!--button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button-->
+                               <h4 class="modal-title modal-cabecalho">{{modal_titulo}}</h4>
+                           </div>
+                           <div class="modal-body">
+                                {{modal_mensagem}}
+                           </div>
+                           <div class="modal-footer">
+                               <button type="button" class="btn default" data-dismiss="modal">{{modal_textoCancela}}</button>
+                               <button type="button" class="btn blue" 
+                                       data-dismiss="modal" ng-click="modal_confirma()">{{modal_textoConfirma}}</button>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <!-- END MODAL CONFIRMAÇÃO -->
+                
+                <!-- MODAL MÓDULOS E FUNCIONALIDADES -->
+                <div class="modal fade ng-scope" id="modalFuncionalidades" tabindex="-1" aria-hidden="true" style="display: none;">
+                    <div class="modal-dialog" style="min-width: 700px">
+                        <div class="modal-content">
+                            <div class="modal-header">                    
+                                <h4 class="modal-title modal-cabecalho">{{roleSelecionada.RoleName}}</h4>
+                            </div>
+                            <div class="modal-body height-auto" style="min-width: 500px">
+                                <div class="skin skin-square scroller caption-subject font-green-sharp bold uppercase" style="min-height: 300px" 
+                                     data-always-visible="1" data-rail-visible1="1">
+                                    <center><label><strong>Módulos e Funcionalidades</strong></label></center>                           
+                                    <ul class="list-unstyled">
+                                        <li ng-repeat="controller in controllers">
+                                            <checkbox normal ng-model="controller.selecionado" 
+                                                             ng-change="handleCheckController(controller)">
+                                            </checkbox>
+                                            <label>
+                                                <button class="btn btn-link" style="color: black !important"
+                                                   ng-disabled="!controller.selecionado"
+                                                   popover-animation="true"
+                                                   popover-placement="right"
+                                                   popover-trigger="click"
+                                                   popover-title="Permissões de {{controller.ds_controller}}"
+                                                   popover-template="'methodsController.html'">          
+                                                    {{controller.ds_controller}}
+                                                </button> 
+                                                <script type="text/ng-template" id="methodsController.html">
+                                                    <ul class="list-unstyled" 
+                                                         ng-repeat="method in controller.methods">
+                                                        <li>
+                                                            <checkbox normal 
+                                                                ng-model="method.selecionado" 
+                                                                ng-change="handleCheckMethod(method, controller)">
+                                                            </checkbox>
+                                                            {{method.ds_method}}
+                                                        </li>
+                                                     </ul>
+                                                </script>
+                                            </label>
+                                            <ul class="list-unstyled">
+                                                <li ng-repeat="controller1 in controller.subControllers">
+                                                    <checkbox normal ng-model="controller1.selecionado" 
+                                                               ng-change="handleCheckController([controller1, controller])">
+                                                    </checkbox>
+                                                    <label>
+                                                        <button class="btn btn-link" style="color: black !important"
+                                                           ng-disabled="!controller1.selecionado"
+                                                           popover-animation="true"
+                                                           popover-placement="right"
+                                                           popover-title="Permissões de {{controller1.ds_controller}}"
+                                                           popover-template="'methodsController1.html'">          
+                                                            {{controller1.ds_controller}}
+                                                        </button> 
+                                                        <script type="text/ng-template" id="methodsController1.html">
+                                                            <ul class="list-unstyled" 
+                                                                 ng-repeat="method1 in controller1.methods">
+                                                                <li>
+                                                                    <checkbox normal 
+                                                                        ng-model="method1.selecionado" 
+                                                                        ng-change="handleCheckMethod(method1, controller1)">
+                                                                    </checkbox>
+                                                                    {{method1.ds_method}}
+                                                                </li>
+                                                             </ul>
+                                                        </script>
+                                                    </label>
+                                                    <ul class="list-unstyled">
+                                                        <li ng-repeat="controller2 in controller1.subControllers">
+                                                            <checkbox normal ng-model="controller2.selecionado" 
+                                                               ng-change="handleCheckController([controller2, controller1, controller])">
+                                                            </checkbox>
+                                                            <label>
+                                                                <button class="btn btn-link" style="color: black !important"
+                                                                   ng-disabled="!controller2.selecionado"
+                                                                   popover-animation="true"
+                                                                   popover-placement="right"
+                                                                   popover-title="Permissões de {{controller2.ds_controller}}"
+                                                                   popover-template="'methodsController2.html'">          
+                                                                    {{controller2.ds_controller}}
+                                                                </button> 
+                                                                <script type="text/ng-template" id="methodsController2.html" >
+                                                                    <ul class="list-unstyled" 
+                                                                         ng-repeat="method2 in controller2.methods">
+                                                                        <li>
+                                                                            <checkbox normal 
+                                                                                ng-model="method2.selecionado" 
+                                                                                ng-change="handleCheckMethod(method2, controller2)">
+                                                                            </checkbox>
+                                                                            {{method2.ds_method}}
+                                                                        </li>
+                                                                     </ul>
+                                                                </script>
+                                                            </label>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul> 
+                                        </li>
+                                    </ul>                           
+                                </div>
+                                <div class="modal-footer">
+                                    <div class="col-md-3">
+                                        <button type="button" 
+                                                class="btn btn-success"
+                                                ng-click="salvaPermissoes()">
+                                            Salvar
+                                        </button>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="button" class="btn btn-warning"
+                                                popover-placement="top"
+                                                popover="Retoma as permissões previamente salvas, sem alterações"
+                                                popover-trigger="mouseenter"
+                                                ng-click="resetaPermissoes()">
+                                            Resetar
+                                        </button>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="button" data-dismiss="modal" class="btn default">Fechar</button> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>                 <!-- END MODAL MÓDULOS E FUNCIONALIDADES -->
+                
+               <!-- END MODAIS -->
+                
                 <!-- TOPO : Nome 'Privilégios' e botões de 'Opções' e FullScreen -->
                 <div class="portlet-title">
                     <div class="caption">
@@ -276,7 +418,7 @@
                                                    ng-model="busca"
                                                    ng-init="busca=''"
                                                    ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !busca)) && filtraPrivilegios(busca)"
-                                                   >
+                                                   >                                            											
                                     </label>
                                 </div>
                             </div>
