@@ -230,6 +230,21 @@
     
 <!-- BEGIN PAGE CONTENT : Conteúdo da página é incluído dinamicamente nesta div -->
 <div class="page-content">
+    <!--script type="text/ng-template" id="modalContent.html">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+            <h4 class="modal-title">{{modal_titulo}}</h4>
+        </div>
+        <div class="modal-body">
+           {{modal_mensagem}}
+        </div>
+        <div class="modal-footer">
+           <button type="button" class="btn default" data-dismiss="modal">{{modal_textoCancela}}</button>
+           <button type="button" class="btn blue" 
+                   data-dismiss="modal" ng-click="modal_confirma()">{{modal_textoConfirma}}</button>
+       </div>
+    </script-->
+        
    <!-- MODAL -->
    <div class="modal fade bs-modal-sm" id="modalConfirmacao" tabindex="-1" role="dialog" aria-hidden="true">
        <div class="modal-dialog modal-sm">
@@ -248,8 +263,9 @@
                </div>
            </div>
        </div>
-       <!-- END MODAL -->
+       
    </div>
+   <!-- END MODAL -->
    <div ui-view></div>
 </div>
 <!-- END PAGE CONTENT -->
@@ -317,6 +333,7 @@
 <script src="../lib/uniform/jquery.uniform.min.js" type="text/javascript"></script>
 <!-- END CORE PLUGINS --> 
 <!-- BEGIN PAGE LEVEL PLUGINS -->
+<!--script src="../lib/dialogs.min.js" type="text/javascript"></script-->
 <script src="../lib/jstree/jstree.min.js" type="text/javascript"></script>
 <script src="../lib/jstree/jsTree.directive.js" type="text/javascript"></script> 
 <script src="../lib/bootstrap/angular-bootstrap-checkbox.js" type="text/javascript"></script> 
