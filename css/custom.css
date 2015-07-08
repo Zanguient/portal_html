@@ -53,8 +53,8 @@ input[type=number]::-webkit-outer-spin-button {
 
 /* Impede o scroll do background quando um modal é aberto*/
 body.modal-open {
-    overflow: hidden;
-    position:fixed;
+    overflow: auto, /*hidden;*/
+    position: relative !important; /* para permitir o scroll => Impedir: fixed; */
     width: 100%;
     background-color: rgba(0, 0, 0,0.5);
 }

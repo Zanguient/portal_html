@@ -34,13 +34,14 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
             "label": "Novo submódulo",
             "disabled" : true,  
             "action": function(data) {
-                console.log("Criar novo submódulo em " + $scope.moduloSelecionado.text);
+                // Cadastra submódulo
+                cadastraNovoModulo($scope.moduloSelecionado);
             }
           },
           "alterar": {
             "label": "Alterar",
             "action": function(obj) {
-              console.log("Alterar " + $scope.moduloSelecionado.text);
+                alteraNomeModulo($scope.moduloSelecionado);
             }
           },
           "excluir": {
@@ -75,7 +76,7 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
    
     $scope.buscaModulos = function(){
        $scope.showProgress(divPortletBodyModuloFuncionalidadePos);     
-       $scope.obtendoModulos = true;
+       /*$scope.obtendoModulos = true;
        $webapi.get($apis.administracao.webpagescontrollers, [$scope.token, 2]) 
             .then(function(dados){
                 // coloca modulos no formato da jstree  
@@ -88,7 +89,48 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else $scope.showAlert('Houve uma falha ao requisitar módulos (' + failData.status + ')', true, 'danger', true);
                  $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
-              }); 
+              });*/
+        $scope.modulos = [{text : 'Administração',
+                           id : 'controller50',
+                           //parent : '#',
+                           data : { methods : [], menu : 0 },
+                           state: {opened: true},
+                           children : [
+                               {text : 'Gestão de Acessos',
+                                id : 'controller51',
+                                //parent : 50,
+                                data : { methods : [], menu : 0 },
+                                state: {opened: true},
+                                children : [
+                                    {text : 'Usuários',
+                                     id : 'controller53',
+                                     //parent : 51,
+                                     data : { methods : [], menu : 0 }
+                                    },
+                                     {text : 'Privilégios',
+                                     id : 'controller54',
+                                     //parent : 51,
+                                     data : { methods : [], menu : 0 }
+                                    }
+                                 ]
+                               },
+                               {text : 'Logs',
+                                id : 'controller52',
+                                //parent : 50,
+                                data : { methods : [], menu : 0 },
+                                state: {opened: true},
+                                children : [
+                                    {text : 'Acesso de Usuários',
+                                     id : 'controller55',
+                                     //parent : 52,
+                                     data : { methods : [], menu : 0 }
+                                    }
+                                 ]
+                               }
+                            ]
+                          }
+                        ];
+        $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
     };
     /**
       * Obtem o array dos controllers no formato de jstree
@@ -99,7 +141,7 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
             for(var k = 0; k < controllers.length; k++){
                 var controller = controllers[k];
                 var json = {text : controller.ds_controller,
-                            id : controller.id_controller,
+                            id : 'controller' + controller.id_controller,
                             data : {methods: controller.methods, menu : controller.fl_menu },
                             state: {opened: true},
                             //icon : 'fa fa-square'
@@ -112,44 +154,155 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
         return array;
     };
         
+   
+                                                 
+                                                
+                                                
+    // MODAL ALERTA
+    $scope.alerta = {titulo : '', mensagem : '', textoOk : 'Ok', funcaoOk: function(){}};                                       
+    /**
+      * Exibe modal com a mensagem de alerta
+      */
+    var exibeModalAlerta = function(mensagem, titulo, textoOk, funcaoOk){
+        $scope.alerta.titulo = titulo ? titulo : 'Info';
+        $scope.alerta.mensagem = mensagem ? mensagem : 'Mensagem';
+        $scope.alerta.textoOk = textoOk ? textoOk : 'Ok';
+        $scope.alerta.funcaoOk = typeof funcaoOk === 'function' ? funcaoOk : function(){fechaModalAlerta()};
+        // Exibe o modal
+        $('#modalAlerta').modal('show');
+        if(!$scope.$$phase) $scope.$apply();
+    }
+    var fechaModalAlerta = function(){
+        $('#modalAlerta').modal('hide');    
+    };
+
+                                                
       
-    // MODAL
-    var inputType = 'modulo'; 
-    $scope.input = {titulo : '', mensagem : '', textoConfirma : 'Ok', textoCancela : 'Cancelar',
-                    text : '', funcaoConfirma : function(){}};                                       
+    // MODAL INPUT
+    $scope.input = {titulo : '', mensagem : '', text : '', textoCancela : 'Cancelar',
+                    textoConfirma : 'Ok', funcaoConfirma : function(){}};                                       
     /**
       * Exibe modal com o input
       */
-    var exibeModalInput = function(){
+    var exibeModalInput = function(mensagem, titulo, textoCancela, textoConfirma, funcaoConfirma, textInit){
+        $scope.input.mensagem = mensagem ? mensagem : 'Mensagem';
+        $scope.input.titulo = titulo ? titulo : 'Info';
+        $scope.input.textoCancela = textoCancela ? textoCancela : 'Cancelar';
+        $scope.input.textoConfirma = textoConfirma ? textoConfirma : 'Ok';
+        $scope.input.funcaoConfirma = typeof funcaoConfirma === 'function' ? funcaoConfirma : function(){fechaModalInput()};
+        $scope.input.text = textInit ? textInit : '';
         // Exibe o modal
         $('#modalInput').modal('show');
+        if(!$scope.$$phase) $scope.$apply();
     }
     var fechaModalInput = function(){
         $('#modalInput').modal('hide');    
     };
+                                                
+                                                
+                                                
     /**
-      * Exibe cadastro novo módulo menu
+      * Exibe cadastro um novo módulo menu
       */
-    $scope.exibeCadastroNovoModuloMenu = function(){
-        $scope.input.titulo = 'Cadastro de módulo';
-        $scope.input.mensagem = 'Informe o nome de exibição do módulo';
-        $scope.input.textoConfirma = 'Salvar';
-        $scope.input.textoCancela = 'Cancelar';
-        $scope.input.funcaoConfirma = function(e){ 
-                                        if(!$scope.input.text){
-                                            return false;
-                                        }
-                                        if($scope.input.text.length < 3){
-                                            alert('Nome muito curto!');
-                                            return false;    
-                                        }
-                                        cadastraModulo({ ds_controller : $scope.input.text,
-                                                         fl_menu : 0 // não é página inicial
-                                                       });
-                                      };
+    $scope.cadastraModuloMenu = function(){
+        cadastraNovoModulo(); // não existe pai
+    } 
+    /**
+      * Solicita ao usuário o nome do novo módulo e o avalia.
+      * Em caso de sucesso, requisita ao servidor o cadastro
+      */
+    var cadastraNovoModulo = function(parent){
+        var titulo = parent ? 'em "' + parent.text + "'" : 'menu';
+        var irmaos = parent ? parent.children : $scope.modulos;
+        var id_parent = parent ? parent.id : null;
         // Exibe o modal
-        exibeModalInput();
-    }                                            
+        exibeModalInput('Informe o nome de exibição do módulo', 'Cadastro de módulo ' + titulo, 'Cancelar', 'Salvar',
+                         function(){ 
+                                if(!$scope.input.text){
+                                    exibeModalAlerta('Informe um nome');
+                                    return false;
+                                }
+                                if($scope.input.text.length < 3){
+                                    //alert('Nome muito curto!');
+                                    exibeModalAlerta('Nome muito curto!');
+                                    return false;    
+                                }
+                                // Verifica se tem algum de mesmo nome no mesmo nível
+                                for(var k = 0; k < irmaos.length; k++){
+                                    if($scope.input.text.toUpperCase() === irmaos[k].text.toUpperCase()){
+                                        exibeModalAlerta('Já existe um módulo com esse nome no nível desejado!');
+                                        return false;    
+                                    }
+                                }
+                                console.log("CADASTRA " + $scope.input.text);
+                                /*cadastraModulo({ ds_controller : $scope.input.text,
+                                                 id_subController : id_parent,
+                                                 fl_menu : 0 // não é página inicial
+                                               });*/
+                              }); 
+    };
+    /**
+      * Solicita ao usuário o novo nome do novo módulo selecionado e o avalia
+      * Em caso de sucesso, requisita ao servidor a atualização
+      */
+    var alteraNomeModulo = function(node){
+        console.log(node)
+        // Exibe o modal
+        exibeModalInput('Informe o novo nome de exibição do módulo ' + node.text, 
+                        'Alteração de módulo', 'Cancelar', 'Salvar',
+                         function(){ 
+                                // Verifica se houve alteração
+                                if($scope.input.text === node.text){
+                                    // Não alterou => Nada faz
+                                    fechaModalInput();
+                                    return true;
+                                }
+                                if(!$scope.input.text){
+                                    exibeModalAlerta('Informe um nome');
+                                    return false;
+                                }
+                                if($scope.input.text.length < 3){
+                                    //alert('Nome muito curto!');
+                                    exibeModalAlerta('Nome muito curto!');
+                                    return false;    
+                                }
+                                // Busca o pai
+                                var irmaos = [];
+                                var jstree = undefined;
+                                if(node.parent === '#') irmaos = $scope.modulos;
+                                else{
+                                    jstree = $('#jstree');
+                                    var pai = undefined;
+                                    if(jstree){
+                                        pai = jstree.jstree(true)._model.data[node.parent];
+                                        console.log(pai);
+                                        if(pai) irmaos = pai.children;
+                                        else console.log("FALHA AO OBTER PAI");
+                                    }else console.log("FALHA AO OBTER JSTREE");
+                                }     
+                                // Verifica se tem algum de mesmo nome no mesmo nível (que não seja ele mesmo)
+                                for(var k = 0; k < irmaos.length; k++){
+                                    var irmao = irmaos[k];
+                                    if(!irmao.text)
+                                        // busca o rapaz
+                                        irmao = jstree.jstree(true)._model.data[irmao];
+                                    
+                                    if($scope.input.text.toUpperCase() === irmao.text.toUpperCase() && 
+                                       irmao.text !== node.text){ // é possível o cidadão alterar o CAPITAL de alguma(s) letra(s) do nome. Por exemplo: TAx Services => Tax Services
+                                        exibeModalAlerta('Já existe um módulo com esse nome no nível desejado!');
+                                        return false;    
+                                    }
+                                }
+                                console.log("ALTERA " + node.text + " PARA " + $scope.input.text);
+                                /*alteraModulo({ ds_controller : $scope.input.text,
+                                               id_controller : parent.id,
+                                               fl_menu : parent.data.menu // não altera
+                                             });*/
+                              }, node.text); 
+    };                                            
+    
+    
+    
                                                 
                                                 
     // AÇÕES

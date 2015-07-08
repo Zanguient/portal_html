@@ -27,36 +27,7 @@
         <div class="col-md-12">
             <!-- BEGIN TABLE PORTLET-->
             <div class="portlet light">
-                
-               <!-- MODAL INPUT -->
-               <div class="modal fade bs-modal-sm" id="modalInput" tabindex="-1" role="dialog" aria-hidden="true">
-                   <div class="modal-dialog modal-sm">
-                       <div class="modal-content">
-                           <div class="modal-header">
-                               <h4 class="modal-title modal-cabecalho">{{input.titulo}}</h4>
-                           </div>
-                           <div class="modal-body modal-corpo" style="text-align: center">
-                                {{input.mensagem}}
-                                <input class="form-control" type="text" ng-model="input.text">
-                           </div>
-                           <div class="modal-footer">
-                               <div class="col-sm-4 col-sm-offset-1">
-                                   <button type="button" class="btn default" data-dismiss="modal">
-                                       {{input.textoCancela}}
-                                   </button>
-                               </div>                           
-                               <div class="col-sm-4 col-sm-offset-1">
-                                   <button type="button" class="btn blue"
-                                           ng-click="input.funcaoConfirma($event)">
-                                       {{input.textoConfirma}}
-                                   </button>                                
-                               </div>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-               <!-- END MODAL CONFIRMAÇÃO -->
-                
+   
                 <!-- TOPO : Nome 'Módulo menu' e botões de 'Opções' e FullScreen -->
                 <div class="portlet-title">
                     <div class="caption">
@@ -102,7 +73,7 @@
                         <div class="row">
                             <div class="col-md-5">
                                 <div class="btn-group">
-                                    <a href="javascript:;" ng-click="exibeCadastroNovoModuloMenu()">
+                                    <a href="javascript:;" ng-click="cadastraModuloMenu()">
                                         <button class="btn red">
                                         Novo Módulo <i class="fa fa-plus"></i>
                                     </button></a>
@@ -124,8 +95,67 @@
                         </div>
                     </div>
                     <!-- TABELA -->
-                    <!--div class="dataTabl es_wrapper no-footer"-->
+                    <!--div class="dataTables_wrapper no-footer"-->
                     <div class="row">
+                    
+                       <!-- MODAIS -->    
+                        
+                       <!-- MODAL INPUT -->
+                       <div class="modal fade bs-modal-sm" id="modalInput" role="dialog"
+                            data-backdrop="static" data-keyboard="false">
+                           <div class="modal-dialog modal-sm">
+                               <div class="modal-content">
+                                   <div class="modal-header">
+                                       <h4 class="modal-title modal-cabecalho">{{input.titulo}}</h4>
+                                   </div>
+                                   <div class="modal-body modal-corpo" style="text-align: center">
+                                        {{input.mensagem}}
+                                        <input class="form-control" type="text" ng-model="input.text">
+                                   </div>
+                                   <div class="modal-footer">
+                                       <div class="col-sm-4 col-sm-offset-1">
+                                           <button type="button" class="btn default" data-dismiss="modal">
+                                               {{input.textoCancela}}
+                                           </button>
+                                       </div>                           
+                                       <div class="col-sm-4 col-sm-offset-1">
+                                           <button type="button" class="btn blue"
+                                                   ng-click="input.funcaoConfirma($event)">
+                                               {{input.textoConfirma}}
+                                           </button>                                
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                       <!-- END MODAL INPUT -->
+                        
+                        <!-- MODAL ALERT -->
+                       <div class="modal fade bs-modal-sm" id="modalAlerta" role="dialog"
+                            data-backdrop="static" data-keyboard="false">
+                           <div class="modal-dialog modal-sm">
+                               <div class="modal-content">
+                                   <div class="modal-header">
+                                       <h4 class="modal-title modal-cabecalho">{{alerta.titulo}}</h4>
+                                   </div>
+                                   <div class="modal-body modal-corpo" style="text-align: center">
+                                        {{alerta.mensagem}}
+                                   </div>
+                                   <div class="modal-footer">                           
+                                       <div class="col-sm-4 col-sm-offset-1">
+                                           <button type="button" class="btn blue"
+                                                   ng-click="alerta.funcaoOk($event)">
+                                               {{alerta.textoOk}}
+                                           </button>                                
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                       <!-- END MODAL ALERT -->
+                        
+                        <!-- END MODAIS -->
+                        
                         <div class="col-sm-6">
                             <js-tree id="jstree" tree-data="scope" tree-model="modulos"
                                  tree-plugins="contextmenu,unique,search" 

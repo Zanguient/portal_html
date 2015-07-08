@@ -657,13 +657,14 @@ angular.module("AtosCapital", ['ui.router',
      * Obtém a div para exibir o loading progress
      */
    var getElementProgress = function(divPortletBodyPos){
+        if(typeof divPortletBodyPos !== 'number') return undefined;
         var div = $('div[class="portlet light"]');
         if(div.length == 0){ 
             // Verifica se está em full screen
             div = $('div[class="portlet light portlet-fullscreen"]');
             if(div.length == 0) return undefined; 
         }
-       var body = div.children(".portlet-body");
+        var body = div.children(".portlet-body");
         if(divPortletBodyPos < 0 || divPortletBodyPos >= body.length) return undefined;
         return body[divPortletBodyPos]; 
    }
@@ -671,7 +672,7 @@ angular.module("AtosCapital", ['ui.router',
      * Exibe o loading progress no portlet-body
      */
    $scope.showProgress = function(divPortletBodyPos){
-        var el = divPortletBodyPos ? getElementProgress(divPortletBodyPos) : undefined;
+        var el = getElementProgress(divPortletBodyPos);
         Metronic.blockUI({
             target: el,
             animate: true,
@@ -682,9 +683,8 @@ angular.module("AtosCapital", ['ui.router',
      * Remove da visão o loading progress no portlet-body
      */                         
    $scope.hideProgress = function(divPortletBodyPos){
-        var el = divPortletBodyPos ? getElementProgress(divPortletBodyPos) : undefined;
+        var el = getElementProgress(divPortletBodyPos);
         Metronic.unblockUI(el);
-        
    };                            
                             
 }])
