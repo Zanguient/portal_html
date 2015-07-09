@@ -323,14 +323,14 @@ angular.module("AtosCapital", ['ui.router',
                         titulo : 'Gestão de Acessos', 
                         modulos : [
                             {
-                                titulo : 'Usuários'
+                                titulo : 'Usuários',
+								home : true
                             },
                             {
                                 titulo : 'Privilégios'
                             },
                             {
-                                titulo : 'Módulos e Funcionalidades',
-                                home : true
+                                titulo : 'Módulos e Funcionalidades'
                             }
                         ]
                     },
@@ -619,7 +619,7 @@ angular.module("AtosCapital", ['ui.router',
    $scope.modal_textoConfirma = 'Ok';
    $scope.modal_textoCancela = 'Cancelar';
    /**
-     * Exibe o modal
+     * Exibe o modal de confirmação
      * @param titulo : título 
      * @param mensagem : corpo
      * @param funcaoConfirma : funcao que será invocada quando o botão confirma for pressionado
@@ -627,7 +627,7 @@ angular.module("AtosCapital", ['ui.router',
      * @param textoConfirma : texto exibido no botão de confirmação
      * @param textoCancela : texto exibido no botão que cancela o modal
      */
-   $scope.showModal = function(titulo, mensagem, funcaoConfirma, parametroFuncaoConfirma, textoConfirma, textoCancela){
+   $scope.showModalConfirmacao = function(titulo, mensagem, funcaoConfirma, parametroFuncaoConfirma, textoConfirma, textoCancela){
       // Seta os valores
       $scope.modal_titulo = titulo ? titulo : 'Atos Capital';
       $scope.modal_mensagem = mensagem ? mensagem : '';
@@ -636,20 +636,49 @@ angular.module("AtosCapital", ['ui.router',
       $scope.modal_confirma = funcaoConfirma ? function(){funcaoConfirma(parametroFuncaoConfirma);} : function(){};   
       // Exibe o modal
       $('#modalConfirmacao').modal('show');
-      /*var modalInstance = $modal.open({
-              animation: true,
-              templateUrl: 'modalContent.html',
-              controller: 'appCtrl',
-              size: 'sm'
-            });
-
-            modalInstance.result.then(function (selectedItem) {
-                console.log("Confirma");
-                //resetaSenhaDoUsuario(usuario.webpagesusers.id_users);
-            }, function () {
-                console.log("Fecha");
-            });*/
+      if(!$scope.$$phase) $scope.$apply();   
    };  
+                            
+                            
+   // MODAL ALERTA
+    $scope.alerta = {titulo : '', mensagem : '', textoOk : 'Ok', funcaoOk: function(){}};                                       
+    /**
+      * Exibe modal com a mensagem de alerta
+      */
+    $scope.showModalAlerta = function(mensagem, titulo, textoOk, funcaoOk){
+        $scope.alerta.titulo = titulo ? titulo : 'Info';
+        $scope.alerta.mensagem = mensagem ? mensagem : 'Mensagem';
+        $scope.alerta.textoOk = textoOk ? textoOk : 'Ok';
+        $scope.alerta.funcaoOk = typeof funcaoOk === 'function' ? funcaoOk : function(){fechaModalAlerta()};
+        // Exibe o modal
+        $('#modalAlerta').modal('show');
+        if(!$scope.$$phase) $scope.$apply();
+    }
+    var fechaModalAlerta = function(){
+        $('#modalAlerta').modal('hide');    
+    }; 
+                            
+    // MODAL INPUT
+    $scope.input = {titulo : '', mensagem : '', text : '', textoCancela : 'Cancelar',
+                    textoConfirma : 'Ok', funcaoConfirma : function(){}};                                       
+    /**
+      * Exibe modal com o input
+      */
+    $scope.showModalInput = function(mensagem, titulo, textoCancela, textoConfirma, funcaoConfirma, textInit){
+        $scope.input.mensagem = mensagem ? mensagem : 'Mensagem';
+        $scope.input.titulo = titulo ? titulo : 'Info';
+        $scope.input.textoCancela = textoCancela ? textoCancela : 'Cancelar';
+        $scope.input.textoConfirma = textoConfirma ? textoConfirma : 'Ok';
+        $scope.input.funcaoConfirma = typeof funcaoConfirma === 'function' ? funcaoConfirma : function(){fechaModalInput()};
+        $scope.input.text = textInit ? textInit : '';
+        // Exibe o modal
+        $('#modalInput').modal('show');
+        if(!$scope.$$phase) $scope.$apply();
+    }
+    $scope.fechaModalInput = function(){
+        $('#modalInput').modal('hide');    
+    };                        
+                            
                             
                             
    // PROGRESS                        

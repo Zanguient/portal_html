@@ -58,3 +58,7 @@ body.modal-open {
     width: 100%;
     background-color: rgba(0, 0, 0,0.5);
 }
+
+.vakata-context { 
+     z-index:999 !important; 
+}

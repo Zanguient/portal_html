@@ -148,7 +148,8 @@ angular.module("administrativo-privilegios", ['servicos'])
        var filtros = undefined;
        
        // Só considera busca de filtro a partir de três caracteres    
-       if($scope.privilegio.busca.length > 0) filtros = {id: $scope.privilegio.campo_busca.id, valor: $scope.privilegio.busca + '%'};        
+       if($scope.privilegio.busca.length > 0) filtros = {id: $scope.privilegio.campo_busca.id, 
+                                                         valor: $scope.privilegio.busca + '%'};        
        // Filtro do grupo empresa => barra administrativa
        if($scope.grupoempresa){
             var filtroGrupoEmpresa = {id: $campos.administracao.webpagesusers.id_grupo, valor: $scope.grupoempresa.id_grupo};
@@ -157,10 +158,6 @@ angular.module("administrativo-privilegios", ['servicos'])
        }
         
        $scope.obtendoPrivilegios = true;
-       // TEMP
-       //$scope.privilegios = [{ RoleId: 1, RoleName: 'Admin'}];
-       //$scope.obtendoPrivilegios = false;
-       //$scope.hideProgress(divPortletBodyPrivilegioPos);
        $webapi.get($apis.administracao.webpagesroles, [$scope.token, 0, $scope.privilegio.campo_ordenacao.id, 
                                                        $scope.privilegio.campo_ordenacao.order, 
                                                        $scope.privilegio.itens_pagina, $scope.privilegio.pagina],
@@ -202,8 +199,19 @@ angular.module("administrativo-privilegios", ['servicos'])
       */
     $scope.addPrivilegio = function(){
         if(!$scope.novoPrivilegio){
-           $scope.showAlert('Insira um nome!',true,'danger',true); 
+           $scope.showModalAlerta('Insira um nome!'); 
            return;   
+        }
+        if($scope.novoPrivilegio.length < 3){
+           $scope.showModalAlerta('Nome muito curto!'); 
+           return;  
+        }
+        // Verifica se o nome é único
+        for(var k = 0; k < $scope.privilegios.length; k++){
+            if($scope.privilegios[k].RoleName.toUpperCase() === $scope.novoPrivilegio.toUpperCase()){
+                $scope.showModalAlerta('Já existe um privilégio com esse nome!');
+                return;    
+            }
         }
         // Envia para o banco
         $scope.showProgress(divPortletBodyPrivilegioPos);
@@ -213,12 +221,75 @@ angular.module("administrativo-privilegios", ['servicos'])
                     // Reseta o campo
                     $scope.novoPrivilegio = '';
                     $scope.hideProgress(divPortletBodyPrivilegioPos);
+                    // Não aparece mais a linha de cadastro
+                    $scope.exibeCadastroNovoPrivilegio(false);
+                    // Relista os privilégios
+                    $scope.buscaPrivilegios();
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
                      else $scope.showAlert('Houve uma falha ao cadastrar o privilégio (' + failData.status + ')', true, 'danger', true);
                      $scope.hideProgress(divPortletBodyPrivilegioPos);
                   }); 
     }
+    /**
+      * Altera o nome do privilégio
+      */
+    $scope.alteraPrivilegio = function(privilegio){
+        // Exibe o modal
+        $scope.showModalInput('Informe o novo nome do privilégio ' + privilegio.RoleName, 
+                        'Alteração de privilégio', 'Cancelar', 'Salvar',
+                         function(){ 
+                                // Verifica se houve alteração
+                                if($scope.input.text === privilegio.RoleName){
+                                    // Não alterou => Nada faz
+                                    $scope.fechaModalInput();
+                                    return true;
+                                }
+                                if(!$scope.input.text){
+                                    $scope.showModalAlerta('Informe um nome');
+                                    return false;
+                                }
+                                if($scope.input.text.length < 3){
+                                    //alert('Nome muito curto!');
+                                    $scope.showModalAlerta('Nome muito curto!');
+                                    return false;    
+                                }
+                                // Verifica se o nome é único
+                                for(var k = 0; k < $scope.privilegios.length; k++){
+                                    var p = $scope.privilegios[k];
+                                    if(p.RoleName.toUpperCase() === $scope.input.text.toUpperCase() && 
+                                       p.RoleName !== privilegio.RoleName){
+                                        $scope.showModalAlerta('Já existe um privilégio com esse nome!');
+                                        return false;    
+                                    }
+                                }   
+                                // Fecha o modal input
+                                $scope.fechaModalInput();
+                                // Atualiza
+                                atualizaNomePrivilegio(privilegio, $scope.input.text);
+                                return true;
+                              }, privilegio.RoleName); 
+    };
+    /**
+      * Atualiza efetivamente o nome do privilégio
+      */
+    var atualizaNomePrivilegio = function(privilegio, novoNome){
+        $scope.showProgress(divPortletBodyPrivilegioPos);
+        var jsonPrivilegio = {RoleId : privilegio.RoleId, RoleName : novoNome};
+        console.log(jsonPrivilegio);
+        $webapi.update($apis.administracao.webpagesroles,
+                       {id: 'token', valor: $scope.token}, jsonPrivilegio)
+            .then(function(dados){
+                    $scope.showAlert('Privilégio alterado com sucesso!', true, 'success', true);
+                    $scope.hideProgress(divPortletBodyPrivilegioPos);
+                    // Relista os privilégios
+                    $scope.buscaPrivilegios();
+                  },function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else $scope.showAlert('Houve uma falha ao alterar o privilégio (' + failData.status + ')', true, 'danger', true); 
+                     $scope.hideProgress(divPortletBodyPrivilegioPos);
+                  });  
+    };
     /**
       * Exibe as funcionalidades associadas ao privilégio
       */
@@ -256,7 +327,7 @@ angular.module("administrativo-privilegios", ['servicos'])
       */                                                                              
     $scope.exluirPrivilegio = function(privilegio){
         // Envia post para deletar
-        $scope.showModal('Confirmação', 
+        $scope.showModalConfirmacao('Confirmação', 
                          'Tem certeza que deseja excluir ' + privilegio.RoleName,
                          exluirPrivilegio, privilegio.RoleId,
                          'Sim', 'Não');
@@ -268,31 +339,42 @@ angular.module("administrativo-privilegios", ['servicos'])
     /**
       *  Marca/Desmarca todos métodos do controller
       */                                            
-    var  selecionaMetodosDoController = function(controller){
+    var  selecionaMetodosDoController = function(controller, method){
         var check = controller.selecionado;
-        if(controller.methods) 
+        if(method) console.log(method);
+        if(controller.methods){ 
             // Marca/Desmarca todos os métodos
-            for(var k = 0; k < controller.methods.length; k++) controller.methods[k].selecionado = check;   
+            for(var k = 0; k < controller.methods.length; k++){
+                var m = controller.methods[k];
+                if(!method) m.selecionado = check; 
+                else if(m.ds_method.toUpperCase() === method.ds_method.toUpperCase()) m.selecionado = method.selecionado;
+            }
+        }
     }
     /**
       *  Marca/Desmarca todos a partir do controller
       */
-    var selecionaController = function(controller){
+    var selecionaController = function(controller, method){
         var check = controller.selecionado;
-        // Tem métodos?
-        selecionaMetodosDoController(controller);
+        // Marca/Desmarca método(s) do controller
+        selecionaMetodosDoController(controller, method);
         // Tem sub controllers?
         if(!check && controller.subcontrollers){
             // Marca cada subcontroller, seus métodos e todos os seus filhos
             for(var k = 0; k < controller.subcontrollers.length; k++){
                 var sub = controller.subcontrollers[k];
                 sub.selecionado = check;
-                selecionaController(sub); // recursivo
+                selecionaController(sub, method); // recursivo
+            }
+        }else if(method && !method.selecionado && controller.subcontrollers){
+            // Marca o método de cada subcontroller
+            for(var k = 0; k < controller.subcontrollers.length; k++){
+                selecionaController(controller.subcontrollers[k], method); // recursivo
             }
         }
     };
     /**
-      *
+      * Manuseia a mudança de uso do controller 
       */
     $scope.handleCheckController = function(controller){
         if(!controller) return;
@@ -336,6 +418,9 @@ angular.module("administrativo-privilegios", ['servicos'])
                 // Não tem mais métodos selecionados => Desmarca o controller
                 controller.selecionado = false;
                 selecionaController(controller);
+            }else{
+                // todos os filhos não poderão ter esse método assinalado
+                selecionaController(controller, method);
             }
         }
     }
@@ -355,7 +440,7 @@ angular.module("administrativo-privilegios", ['servicos'])
                 // Faz uma cópia (por valor) do controller proveniente da base de dados
                 angular.copy($scope.controllers, $scope.originalControllers);
                 //$scope.obtendoModulosEFuncionalidades = false;
-                $scope.hideProgress(divPortletBodyPrivilegioPos);
+                $scope.hideProgress();
               },
               function(failData){
                  //$scope.obtendoModulosEFuncionalidades = false;

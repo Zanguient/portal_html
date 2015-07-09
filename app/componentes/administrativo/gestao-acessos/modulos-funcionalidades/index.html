@@ -35,7 +35,7 @@
                         <span class="caption-subject font-green-sharp bold uppercase">Módulos e Funcionalidades</span>
                     </div>
                     <div class="actions">
-                        <!-- FULLSCREEN -->
+                        <!-- FULLSCREEN -- >
                         <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;" 
                            data-original-title="" title=""></a>
                         <!-- OPÇÕES -->
@@ -71,15 +71,15 @@
                     <!-- TOPO DA TABELA COM BOTÃO 'Novo Módulo' -->
                     <div class="table-toolbar">
                         <div class="row">
-                            <div class="col-md-5">
+                            <!--div class="col-md-5">
                                 <div class="btn-group">
                                     <a href="javascript:;" ng-click="cadastraModuloMenu()">
                                         <button class="btn red">
                                         Novo Módulo <i class="fa fa-plus"></i>
                                     </button></a>
                                 </div>
-                            </div> 
-                            <div class="col-md-5 col-sm-12">
+                            </div--> 
+                            <div class="col-md-4 col-sm-12">
                                 <div class="dataTables_filter">
                                     <label>
                                         <span class="seperator"></span>Pesquisar 
@@ -110,7 +110,12 @@
                                    </div>
                                    <div class="modal-body modal-corpo" style="text-align: center">
                                         {{input.mensagem}}
-                                        <input class="form-control" type="text" ng-model="input.text">
+                                        <input class="form-control" type="text" ng-model="input.text"
+                                               ng-keypress="($event.which === 13) ? input.funcaoConfirma() : 0">
+                                        <span ng-show="inputCadastro" style="margin-top: 10px"> 
+                                            <checkbox normal ng-model="cadastrarFuncionalidadesPadrao"></checkbox>
+                                            Cadastrar funcionalidades padrão
+                                        </span>
                                    </div>
                                    <div class="modal-footer">
                                        <div class="col-sm-4 col-sm-offset-1">
@@ -120,7 +125,7 @@
                                        </div>                           
                                        <div class="col-sm-4 col-sm-offset-1">
                                            <button type="button" class="btn blue"
-                                                   ng-click="input.funcaoConfirma($event)">
+                                                   ng-click="input.funcaoConfirma()">
                                                {{input.textoConfirma}}
                                            </button>                                
                                        </div>
@@ -130,7 +135,33 @@
                        </div>
                        <!-- END MODAL INPUT -->
                         
-                        <!-- MODAL ALERT -->
+                       <!-- MODAL CONFIRMAÇÃO -->
+                       <div class="modal fade bs-modal-sm" id="modalConfirmacao" 
+                            tabindex="-1" role="dialog" aria-hidden="true">
+                           <div class="modal-dialog modal-sm">
+                               <div class="modal-content">
+                                   <div class="modal-header">
+                                       <!--button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button-->
+                                       <h4 class="modal-title modal-cabecalho">{{modal_titulo}}</h4>
+                                   </div>
+                                   <div class="modal-body">
+                                        {{modal_mensagem}}
+                                   </div>
+                                   <div class="modal-footer">
+                                       <button type="button" class="btn default" data-dismiss="modal">
+                                           {{modal_textoCancela}}
+                                       </button>
+                                       <button type="button" class="btn blue" 
+                                               data-dismiss="modal" ng-click="modal_confirma()">
+                                           {{modal_textoConfirma}}
+                                       </button>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                       <!-- END MODAL CONFIRMAÇÃO -->    
+                        
+                       <!-- MODAL ALERT -->
                        <div class="modal fade bs-modal-sm" id="modalAlerta" role="dialog"
                             data-backdrop="static" data-keyboard="false">
                            <div class="modal-dialog modal-sm">
@@ -141,20 +172,18 @@
                                    <div class="modal-body modal-corpo" style="text-align: center">
                                         {{alerta.mensagem}}
                                    </div>
-                                   <div class="modal-footer">                           
-                                       <div class="col-sm-4 col-sm-offset-1">
-                                           <button type="button" class="btn blue"
-                                                   ng-click="alerta.funcaoOk($event)">
-                                               {{alerta.textoOk}}
-                                           </button>                                
-                                       </div>
+                                   <div class="modal-footer" style="text-align: center">                           
+                                       <button type="button" class="btn blue"
+                                               ng-click="alerta.funcaoOk($event)">
+                                           {{alerta.textoOk}}
+                                       </button> 
                                    </div>
                                </div>
                            </div>
                        </div>
                        <!-- END MODAL ALERT -->
                         
-                        <!-- END MODAIS -->
+                       <!-- END MODAIS -->
                         
                         <div class="col-sm-6">
                             <js-tree id="jstree" tree-data="scope" tree-model="modulos"
@@ -162,12 +191,11 @@
                                  tree-contextmenu="contextMenu"
                                  tree-events="select_node:selecionaModulo"></js-tree>                            
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-6" ng-show="moduloSelecionado && moduloSelecionado.parent !== '#'">
                             <!-- FIM - JS TREE -->
                             <div class="form-group">
-                                <label>Funcionalidades</label>
-                                <select class="form-control"
-                                        size="6"
+                                <label>Funcionalidades de {{moduloSelecionado.text}}</label>
+                                <select class="form-control" size="6"
                                         ng-model="funcionalidadeSelecionada"
                                         ng-options="method as method.ds_method for method in moduloSelecionado.data.methods"> 
                                     <option style="display:none" value="">Funcionalidade</option>
@@ -175,9 +203,20 @@
                                 </select>
                             </div>
                             <div class="col-md-offset-3 col-md-9">
-                                <button type="submit" class="btn green">Adicionar</button>
-                                <button type="button" class="btn default">Alterar</button>
-                                <button type="button" class="btn default">Remover</button>
+                                <button type="submit" class="btn green"
+                                        ng-click="cadastraNovoMetodo()">
+                                    Adicionar
+                                </button>
+                                <button type="button" class="btn default"
+                                        ng-show="funcionalidadeSelecionada"
+                                        ng-click="alteraNomeMetodo()">
+                                    Alterar
+                                </button>
+                                <button type="button" class="btn default"
+                                        ng-show="funcionalidadeSelecionada"
+                                        ng-click="excluirMetodo()">
+                                    Remover
+                                </button>
 							</div>
                         </div>
                     </div>         

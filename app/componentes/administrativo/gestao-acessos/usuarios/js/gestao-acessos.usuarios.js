@@ -296,17 +296,10 @@ angular.module("administrativo-usuarios", ['servicos'])
       * Solicitação confirmação para resetar a senha
       */
     $scope.resetarSenhaDoUsuario = function(usuario){
-        // Envia post para deletar
-        $scope.showModal('Confirmação', 
+        $scope.showModalConfirmacao('Confirmação', 
                          'Tem certeza que deseja resetar a senha de ' + usuario.webpagesusers.ds_email,
                          resetaSenhaDoUsuario, usuario.webpagesusers.id_users,
                          'Sim', 'Não');
-        /*$dialog.messageBox('Confirmação', 
-                                        'Tem certeza que deseja resetar a senha de ' + usuario.webpagesusers.ds_email,
-                                        [{label:'Sim', result: 'yes'},{label:'No', result: 'no'}])
-                .open().then(function(result){
-                    if(result === 'yes') resetaSenhaDoUsuario(usuario.webpagesusers.id_users);
-                });*/
     };
     /**
       * Editar usuario => Abre tela de cadastro, enviando como parâmetro o objeto usuario
@@ -340,7 +333,7 @@ angular.module("administrativo-usuarios", ['servicos'])
       */                                                                              
     $scope.exluirUsuario = function(usuario){
         // Envia post para deletar
-        $scope.showModal('Confirmação', 
+        $scope.showModalConfirmacao('Confirmação', 
                          'Tem certeza que deseja excluir ' + usuario.webpagesusers.ds_email,
                          exluirUsuario, usuario.webpagesusers.id_users,
                          'Sim', 'Não');
