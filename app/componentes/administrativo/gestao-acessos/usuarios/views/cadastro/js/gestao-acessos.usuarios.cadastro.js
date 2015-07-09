@@ -28,7 +28,7 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
     // Dados
     $scope.empresas = [];
     $scope.old = {pessoa:null,usuario:null,roles:[]};
-    $scope.pessoa = {id:0, nome:'', data_nasc:null, telefone:'', ramal:''};
+    $scope.pessoa = {id:0, nome:'', data_nasc:''/*null*/, telefone:'', ramal:''};
     $scope.usuario = {login:'', email:'', grupoempresa:'', empresa:''};
     $scope.roles = [];  
     var rolesSelecionadas = []; 
@@ -65,7 +65,8 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
         $scope.pessoa.nome = $scope.old.pessoa.nm_pessoa;
         if($scope.old.pessoa.dt_nascimento !== null){ 
             dataValida = true;
-            $scope.pessoa.data_nasc = new Date($scope.old.pessoa.dt_nascimento.substr(0, 4) + '/' + $scope.old.pessoa.dt_nascimento.substr(5, 2) + '/' + $scope.old.pessoa.dt_nascimento.substr(8, 2));
+            //$scope.pessoa.data_nasc = new Date($scope.old.pessoa.dt_nascimento.substr(0, 4) + '/' + $scope.old.pessoa.dt_nascimento.substr(5, 2) + '/' + $scope.old.pessoa.dt_nascimento.substr(8, 2));
+            $scope.pessoa.data_nasc = $scope.old.pessoa.dt_nascimento.substr(8, 2) + '/' + $scope.old.pessoa.dt_nascimento.substr(5, 2) + '/' + $scope.old.pessoa.dt_nascimento.substr(0, 4);
         }
         $scope.old.pessoa.dt_nascimento = $scope.pessoa.data_nasc; // deixa no mesmo formato
         if($scope.old.pessoa.nu_telefone !== null) $scope.pessoa.telefone = $scope.old.pessoa.nu_telefone;
@@ -107,7 +108,7 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
     var resetaVariaveis = function(){
         $scope.rolesSelecionadas = false;
         $scope.old = {pessoa:null,usuario:null,roles:[]};
-        $scope.pessoa = {id:0, nome:'', data_nasc:null, telefone:'', ramal:''};
+        $scope.pessoa = {id:0, nome:'', data_nasc:''/*null*/, telefone:'', ramal:''};
         $scope.usuario = {login:'', email:'', grupoempresa:'', empresa:''};    
     };
                                                          
@@ -147,11 +148,11 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
             var jsonMudanca = {state: state, params : params};            
             // Verifica se possui dados preenchidos
             if($scope.ehCadastro()){
-                if($scope.pessoa.nome || $scope.pessoa.data_nasc !== null || $scope.pessoa.telefone || $scope.pessoa.ramal || 
+                if($scope.pessoa.nome || $scope.pessoa.data_nasc/* !== null*/ || $scope.pessoa.telefone || $scope.pessoa.ramal || 
                    $scope.usuario.email || $scope.usuario.empresa || $scope.usuario.grupoempresa || $scope.usuario.login ||
                    $scope.rolesSelecionadas){
                     // Exibe um modal de confirmação
-                    $scope.showModal('Confirmação', 
+                    $scope.showModalConfirmacao('Confirmação', 
                          'Tem certeza que deseja descartar as informações preenchidas?',
                          mudaEstado, {state: state, params : params},
                          'Sim', 'Não');
@@ -161,7 +162,7 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
                if(!houveAlteracoes()) $state.go(state, params); // não houve alterações  
                else{ 
                    // Houve alterações!
-                   $scope.showModal('Confirmação', 
+                   $scope.showModalConfirmacao('Confirmação', 
                          'Tem certeza que deseja descartar as informações alteradas?',
                          mudaEstado, {state: state, params : params},
                          'Sim', 'Não');
@@ -179,7 +180,7 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
       * Altera o estado, enviado pelo json => usado no modal de confirmação
       */
     var mudaEstado = function(json){
-       $state.go(json.state, json.params); 
+        $timeout(function(){$state.go(json.state, json.params);}, 500); // espera o tempo do modal se desfazer 
     }
     
     /**
@@ -203,16 +204,17 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
     var cadastraUsuario = function(){
         // Cadastra
         progressoCadastro(true)
+        $scope.showProgress(divPortletBodyUsuarioCadPos);
         //postPessoa();
         //* PESSOA
         var jsonPessoa = {};
         // Obrigatório
         jsonPessoa.nm_pessoa = $scope.pessoa.nome;
         // Não-Obrigatórios
-        if($scope.pessoa.data_nasc !== null){ 
-            //var dt = $scope.pessoa.data_nasc.split('/');
-            //jsonPessoa.dt_nascimento = $filter('date')(new Date(dt[2], dt[1] - 1, dt[0], 1, 0, 0, 0), "yyyy-MM-dd HH:mm:ss");
-            jsonPessoa.dt_nascimento = $filter('date')(new Date($scope.pessoa.data_nasc), "yyyy-MM-dd HH:mm:ss");
+        if($scope.pessoa.data_nasc /*!== null*/){ 
+            var dt = $scope.pessoa.data_nasc.split('/');
+            jsonPessoa.dt_nascimento = $filter('date')(new Date(dt[2], dt[1] - 1, dt[0], 1, 0, 0, 0), "yyyy-MM-dd HH:mm:ss");
+            //jsonPessoa.dt_nascimento = $filter('date')(new Date($scope.pessoa.data_nasc), "yyyy-MM-dd HH:mm:ss");
         }
         if($scope.pessoa.telefone) jsonPessoa.nu_telefone = $scope.pessoa.telefone;
         if($scope.pessoa.ramal) jsonPessoa.nu_ramal = $scope.pessoa.ramal;
@@ -242,6 +244,9 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
                     $scope.showAlert('Usuário cadastrado com sucesso!', true, 'success', true);
                     // Reseta os dados
                     resetaVariaveis();
+                    // Hide progress
+                    progressoCadastro(false);
+                    $scope.hideProgress(divPortletBodyUsuarioCadPos);
                     // Volta para a tela de Usuários
                     $scope.goAdministrativoUsuarios();
                   },function(failData){
@@ -249,6 +254,8 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
                      else $scope.showAlert('Houve uma falha ao cadastrar o usuário (' + failData.status + ')', true, 'danger', true);
                      progressoCadastro(false);
+                     // Hide progress
+                     $scope.hideProgress(divPortletBodyUsuarioCadPos);
                   });  
     };
      
@@ -329,9 +336,9 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
             alterouPessoa = true;
         }
         if($scope.old.pessoa.dt_nascimento !== $scope.pessoa.data_nasc){
-            //var dt = $scope.pessoa.data_nasc.split('/');
-            //jsonPessoa.dt_nascimento = $filter('date')(new Date(dt[2], dt[1] - 1, dt[0], 1, 0, 0, 0), "yyyy-MM-dd HH:mm:ss");
-            jsonPessoa.dt_nascimento = $filter('date')(new Date($scope.pessoa.data_nasc), "yyyy-MM-dd HH:mm:ss");
+            var dt = $scope.pessoa.data_nasc.split('/');
+            jsonPessoa.dt_nascimento = $filter('date')(new Date(dt[2], dt[1] - 1, dt[0], 1, 0, 0, 0), "yyyy-MM-dd HH:mm:ss");
+            //jsonPessoa.dt_nascimento = $filter('date')(new Date($scope.pessoa.data_nasc), "yyyy-MM-dd HH:mm:ss");
             alterouPessoa = true; 
         }
         if($scope.old.pessoa.nu_telefone !== $scope.pessoa.telefone){
@@ -421,27 +428,27 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
         }else{
             // Verifica quais campos estão faltando/errados
             if($scope.formCadastroUsuario.pessoaNome.$invalid){
-                alert("Nome é um campo obrigatório!");
+                $scope.showModalAlerta("Nome é um campo obrigatório!");
                 $scope.setTabCadastro(1);    
             }/*else if($scope.formCadastroUsuario.pessoaDataNasc.$invalid || !$scope.dataValida()){
-                alert("Data de nascimento digitada é inválida! Formato: DD/MM/AAAA (DD: dia. MM : mês. AAAA: ano");
+                $scope.showModalAlerta("Data de nascimento digitada é inválida! Formato: DD/MM/AAAA (DD: dia. MM : mês. AAAA: ano");
                 $scope.setTabCadastro(1);
             }*/else if($scope.formCadastroUsuario.pessoaTelefone.$invalid){
-                alert("Número de telefone informado é inválido!");
+                $scope.showModalAlerta("Número de telefone informado é inválido!");
                 $scope.setTabCadastro(1);
             }else if($scope.formCadastroUsuario.pessoaRamal.$invalid){
-                alert("Número do ramal informado é inválido!");
+                $scope.showModalAlerta("Número do ramal informado é inválido!");
                 $scope.setTabCadastro(1);
             }else if($scope.formCadastroUsuario.usuarioLogin.$invalid || !$scope.loginValido()){
-                alert("Informe um login válido!");
+                $scope.showModalAlerta("Informe um login válido!");
                 $scope.setTabCadastro(2);
             }else if($scope.formCadastroUsuario.usuarioEmail.$invalid || !$scope.emailValido()){
-                alert("Informe um e-mail válido!");
+                $scope.showModalAlerta("Informe um e-mail válido!");
                 $scope.setTabCadastro(2);
             }else if(!$scope.rolesSelecionadas){
-                alert("Selecione pelo menos um privilégio!");
+                $scope.showModalAlerta("Selecione pelo menos um privilégio!");
                 $scope.setTabCadastro(3);
-            }else alert("Por favor, verifique novamente se os dados preenchidos são válidos");
+            }else $scope.showModalAlerta("Por favor, verifique novamente se os dados preenchidos são válidos");
         }
     };
                                                          
@@ -463,7 +470,6 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
            $scope.pesquisandoGruposEmpresas = false;
            return dados.data.Registros;
         },function(failData){
-             //console.log("FALHA AO OBTER GRUPO EMPRESAS FILTRADOS: " + failData.status);
              if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
              else $scope.showAlert('Houve uma falha ao requisitar o filtro de empresas (' + failData.status + ')', true, 'danger', true);
              $scope.pesquisandoGruposEmpresas = false;
@@ -625,7 +631,7 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
             var conteudoTelefone = '';
             var conteudoRamal = '';
             if($scope.formCadastroUsuario){
-                conteudoData = $scope.pessoa.data_nasc !== null;//$scope.formCadastroUsuario.pessoaDataNasc.$viewValue;
+                conteudoData = $scope.pessoa.data_nasc /*!== null*/;//$scope.formCadastroUsuario.pessoaDataNasc.$viewValue;
                 conteudoTelefone = $scope.formCadastroUsuario.pessoaTelefone.$viewValue;
                 conteudoRamal = $scope.formCadastroUsuario.pessoaRamal.$viewValue;
             }
@@ -688,10 +694,11 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
       * Retorna a data em string
       */
     $scope.getDataDeNascimento = function(){
-        //console.log($scope.pessoa.data_nasc);
+        /*console.log($scope.pessoa.data_nasc);
         if($scope.pessoa && $scope.pessoa.data_nasc !== null) 
             return $scope.pessoa.data_nasc.getDate() + '/' + ($scope.pessoa.data_nasc.getMonth() + 1) + '/' + $scope.pessoa.data_nasc.getFullYear();
-        return '';
+        return '';*/
+        return dataValida ? $scope.pessoa.data_nasc : '';
     };
     
 }]);

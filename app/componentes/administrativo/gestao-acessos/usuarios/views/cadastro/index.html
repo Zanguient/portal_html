@@ -47,25 +47,28 @@
                </div>
                <!-- END MODAL CONFIRMAÇÃO -->
                 
-               <!-- MODAL INFO -->
-               <div class="modal fade bs-modal-sm" id="modalInfo" tabindex="-1" role="dialog" aria-hidden="true">
+                   
+               <!-- MODAL ALERT -->
+               <div class="modal fade bs-modal-sm" id="modalAlerta" role="dialog"
+                    data-backdrop="static" data-keyboard="false">
                    <div class="modal-dialog modal-sm">
                        <div class="modal-content">
                            <div class="modal-header">
-                               <!--button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button-->
-                               <h4 class="modal-title modal-cabecalho">{{modal_titulo}}</h4>
+                               <h4 class="modal-title modal-cabecalho">{{alerta.titulo}}</h4>
                            </div>
-                           <div class="modal-body">
-                                {{modal_mensagem}}
+                           <div class="modal-body modal-corpo" style="text-align: center">
+                                {{alerta.mensagem}}
                            </div>
-                           <div class="modal-footer">                               
-                               <button type="button" class="btn blue" 
-                                       data-dismiss="modal" ng-click="modal_confirma()">OK</button>
+                           <div class="modal-footer" style="text-align: center">                           
+                               <button type="button" class="btn blue"
+                                       ng-click="alerta.funcaoOk($event)">
+                                   {{alerta.textoOk}}
+                               </button> 
                            </div>
                        </div>
                    </div>
                </div>
-               <!-- END MODAL INFO -->
+               <!-- END MODAL ALERT -->
                 
                 <div class="portlet-title">
                     <div class="caption">
@@ -143,12 +146,12 @@
                                         <div class="form-group" ng-class="{ 'has-error' : formCadastroUsuario.pessoaDataNasc.$invalid && !formCadastroUsuario.pessoaDataNasc.$pristine }">
                                             <label class="control-label col-md-3">Data de Nascimento</label>
                                             <div class="col-md-4">
-                                               <!--input type="text" placeholder="DD/MM/YYYY" maxlength="10" class="form-control" 
+                                               <input type="text" placeholder="DD/MM/YYYY" maxlength="10" class="form-control" 
                                                       ng-model="pessoa.data_nasc" ng-change="validaData()" name="pessoaDataNasc" 
                                                       ng-pattern='/^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[012])\/\d{4}$/'
                                                       input-data
-                                                      ng-blur="atualizaProgressoDoCadastro()"/-->
-                                                <div class="input-group margin-bottom-5">
+                                                      ng-blur="atualizaProgressoDoCadastro()"/>
+                                                <!--div class="input-group margin-bottom-5">
                                                     <input type="text" readonly style="cursor: pointer"
                                                            ng-click="exibeCalendarioDataNasc($event)"
                                                            class="form-control form-filter input-sm" 
@@ -157,9 +160,8 @@
                                                            ng-change="alterouDataNasc()"
                                                            datepicker-popup="dd MMMM yyyy"
                                                            is-open="abrirCalendarioDataNasc" 
-                                                           min-date="1900-01-01"
                                                            show-button-bar="false"
-                                                           show-weeks="false" />
+                                                           show-weeks="false" >
                                                     <span class="input-group-btn">
                                                         <button class="btn btn-sm default" 
                                                                 type="button" 
@@ -167,9 +169,9 @@
                                                             <i class="fa fa-calendar"></i>
                                                         </button>
                                                     </span>
-                                                </div>
+                                                </div-->
                                                 
-                                                <!--span style="color:red" ng-show='formCadastroUsuario.pessoaDataNasc.$dirty && (formCadastroUsuario.pessoaDataNasc.$error.pattern || !dataValida())'>Data de Nascimento informada é inválida!</span-->
+                                                <span style="color:red" ng-show='formCadastroUsuario.pessoaDataNasc.$dirty && (formCadastroUsuario.pessoaDataNasc.$error.pattern || !dataValida())'>Data de Nascimento informada é inválida!</span>
                                             </div>
                                         </div>
                                         <!-- TELEFONE -->
@@ -251,7 +253,7 @@
                                         </div>
                                         <!-- GRUPO EMPRESA -->
                                         <div class="form-group">
-                                            <label class="control-label col-md-3">Grupo Empresa </label>
+                                            <label class="control-label col-md-3">Empresa </label>
                                             <div class="col-md-4">
                                                 <input type="text" class="form-control" 
                                                        placeholder="Digite o nome do grupo empresa" 
@@ -269,7 +271,7 @@
                                         </div>
                                         <!-- EMPRESA -->
                                         <div class="form-group">
-                                            <label class="control-label col-md-3">Empresa </label>
+                                            <label class="control-label col-md-3">Filial </label>
                                             <div class="col-md-4">
                                                 <input type="text" class="form-control" 
                                                        ng-disabled="!usuario.grupoempresa.ds_nome || empresas.length == 0" 
@@ -278,6 +280,10 @@
                                                        ng-blur="atualizaProgressoDoCadastro()"
                                                        onfocus="this.select();" onmouseup="return false;"
                                                        focus-me="empresas.length > 0"
+                                                       popover="Caso deseje associar todas, não selecionar uma filial específica"
+                                                       popover-trigger="focus"
+                                                       popover-placement="right"
+                                                       popover-append-to-body="true"
                                                        typeahead-focus ng-trim="false"
                                                        typeahead-focus-first=true
                                                        typeahead="empresa as empresa.ds_fantasia for empresa in empresas  | filter:$viewValue:emptyOrMatch" />
@@ -348,13 +354,13 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="control-label col-md-3">Grupo Empresa:</label>
+                                            <label class="control-label col-md-3">Empresa:</label>
                                             <div class="col-md-4">
                                                 <p class="form-control-static"><strong>{{usuario.grupoempresa.ds_nome || ''}}</strong></p>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="control-label col-md-3">Empresa:</label>
+                                            <label class="control-label col-md-3">Filial:</label>
                                             <div class="col-md-4">
                                                 <p class="form-control-static"><strong>{{usuario.empresa.ds_fantasia || ''}}</strong></p>
                                             </div>

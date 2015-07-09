@@ -256,7 +256,7 @@ angular.module("administrativo-acesso-usuarios", ['servicos'])
       */                                                                              
     $scope.exluirPrivilegio = function(privilegio){
         // Envia post para deletar
-        $scope.showModal('Confirmação', 
+        $scope.showModalConfirmacao('Confirmação', 
                          'Tem certeza que deseja excluir ' + privilegio.RoleName,
                          exluirPrivilegio, privilegio.RoleId,
                          'Sim', 'Não');

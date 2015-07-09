@@ -43,20 +43,17 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
 	 - GET  : listagem de todos módulos (controllers), com suas respectivas funcionalidades (methods) (coleção 2)
 			  Aqueles métodos ao qual a role tem acesso, terá o id 'selecionado' com valor igual a 'true'
 	          [{ id_controller : int,
-				ds_controller: string,	
-				fl_menu : bool,
+				ds_controller: string
 				methods : [{ id_method : int,
 							 ds_method : string,
 							}] // ORDER BY DS_METHOD
 				subcontrollers : [{ id_controller : int
-									ds_controller: string,
-									fl_menu : bool,
+									ds_controller: string
 									methods : [{ id_method : int,
 												 ds_method : string
 												}] // ORDER BY DS_METHOD
 									subcontrollers : [{ id_controller : int
 														ds_controller: string,
-														fl_menu : bool,
 														methods : [{ id_method : int,
 																	 ds_method : string
 																	}] // ORDER BY DS_METHOD
@@ -65,15 +62,15 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
 									}]
 			  }] // ORDER BY DS_CONTROLLER
 	- POST : novo módulo (controller)
-				{ ds_controller : string,
-				  fl_menu : bool // usado para indicar se é a página inicial
-				  id_subController : int // essa informação pode ser enviada ou não
+				{	webpagescontrollers: { ds_controller : string
+										   id_subController : int // essa informação pode ser enviada ou não
+										 }
+					methodspadrao : bool // indica se é para cadastrar os métodos padrão (Atualização / Cadastro / Leitura / Remoção)
 				}
 			 // obtém como resposta o id_controller
 	- PUT : altera o nome de exibição de um módulo e/ou se ele é a página inicial ou não (controller)
 				{ id_controller : int,
-				  ds_controller : string,
-				  fl_menu : bool
+				  ds_controller : string
 				}
   * api/administracao/webpagesmethods
      - DELETE : deleta uma funcionalidade (method)    

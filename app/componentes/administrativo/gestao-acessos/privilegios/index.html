@@ -27,9 +27,42 @@
             <!-- BEGIN TABLE PORTLET-->
             <div class="portlet light">  
                 
-                <!-- MODAIS -->
-                <!-- MODAL CONFIRMAÇÃO -->
-               <div class="modal fade bs-modal-sm" id="modalConfirmacao" tabindex="-1" role="dialog" aria-hidden="true">
+               <!-- MODAIS -->
+                
+               <!-- MODAL INPUT -->
+               <div class="modal fade bs-modal-sm" id="modalInput" role="dialog"
+                    data-backdrop="static" data-keyboard="false">
+                   <div class="modal-dialog modal-sm">
+                       <div class="modal-content">
+                           <div class="modal-header">
+                               <h4 class="modal-title modal-cabecalho">{{input.titulo}}</h4>
+                           </div>
+                           <div class="modal-body modal-corpo" style="text-align: center">
+                                {{input.mensagem}}
+                                <input class="form-control" type="text" ng-model="input.text"
+                                       ng-keypress="($event.which === 13) ? input.funcaoConfirma() : 0">
+                           </div>
+                           <div class="modal-footer">
+                               <div class="col-sm-4 col-sm-offset-1">
+                                   <button type="button" class="btn default" data-dismiss="modal">
+                                       {{input.textoCancela}}
+                                   </button>
+                               </div>                           
+                               <div class="col-sm-4 col-sm-offset-1">
+                                   <button type="button" class="btn blue"
+                                           ng-click="input.funcaoConfirma()">
+                                       {{input.textoConfirma}}
+                                   </button>                                
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <!-- END MODAL INPUT -->    
+                
+               <!-- MODAL CONFIRMAÇÃO -->
+               <div class="modal fade bs-modal-sm" id="modalConfirmacao" 
+                    tabindex="-1" role="dialog" aria-hidden="true">
                    <div class="modal-dialog modal-sm">
                        <div class="modal-content">
                            <div class="modal-header">
@@ -40,17 +73,44 @@
                                 {{modal_mensagem}}
                            </div>
                            <div class="modal-footer">
-                               <button type="button" class="btn default" data-dismiss="modal">{{modal_textoCancela}}</button>
+                               <button type="button" class="btn default" data-dismiss="modal">
+                                   {{modal_textoCancela}}
+                               </button>
                                <button type="button" class="btn blue" 
-                                       data-dismiss="modal" ng-click="modal_confirma()">{{modal_textoConfirma}}</button>
+                                       data-dismiss="modal" ng-click="modal_confirma()">
+                                   {{modal_textoConfirma}}
+                               </button>
                            </div>
                        </div>
                    </div>
                </div>
-               <!-- END MODAL CONFIRMAÇÃO -->
+               <!-- END MODAL CONFIRMAÇÃO --> 
+                
+                <!-- MODAL ALERT -->
+               <div class="modal fade bs-modal-sm" id="modalAlerta" role="dialog"
+                    data-backdrop="static" data-keyboard="false">
+                   <div class="modal-dialog modal-sm">
+                       <div class="modal-content">
+                           <div class="modal-header">
+                               <h4 class="modal-title modal-cabecalho">{{alerta.titulo}}</h4>
+                           </div>
+                           <div class="modal-body modal-corpo" style="text-align: center">
+                                {{alerta.mensagem}}
+                           </div>
+                           <div class="modal-footer" style="text-align: center">                           
+                               <button type="button" class="btn blue"
+                                       ng-click="alerta.funcaoOk($event)">
+                                   {{alerta.textoOk}}
+                               </button> 
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <!-- END MODAL ALERT -->
                 
                 <!-- MODAL MÓDULOS E FUNCIONALIDADES -->
-                <div class="modal fade ng-scope" id="modalFuncionalidades" tabindex="-1" aria-hidden="true" style="display: none;">
+                <div class="modal fade ng-scope" id="modalFuncionalidades" tabindex="-1" 
+                     aria-hidden="true" style="display: none;">
                     <div class="modal-dialog" style="min-width: 700px">
                         <div class="modal-content">
                             <div class="modal-header">                    
@@ -149,6 +209,7 @@
                                         </li>
                                     </ul>                           
                                 </div>
+                                <!-- BOTÕES -->
                                 <div class="modal-footer">
                                     <div class="col-md-3">
                                         <button type="button" 
@@ -173,7 +234,8 @@
                             </div>
                         </div>
                     </div>
-                </div>                 <!-- END MODAL MÓDULOS E FUNCIONALIDADES -->
+                </div>              
+                <!-- END MODAL MÓDULOS E FUNCIONALIDADES -->
                 
                <!-- END MODAIS -->
                 
@@ -317,13 +379,21 @@
                                                 <td colspan="2">
                                                     <form class="form-horizontal" name="formCadastroPrivilegio" novalidate>
                                                         <div class="form-group" ng-class="{ 'has-error' : formCadastroPrivilegio.nomePrivilegio.$invalid && !formCadastroPrivilegio.nomePrivilegio.$pristine }">
-                                                            <div class="col-md-3">
-                                                                <input class="form-control input-sm"                                                                                      type="text" ng-model="novoPrivilegio" style="margin-right: 20px"
+                                                            <div class="col-md-4">
+                                                                <input class="form-control input-sm" type="text" 
+                                                                       ng-model="novoPrivilegio" 
+                                                                       style="margin-right: 20px"
                                                                        placeholder="Nome do privilégio" 
-                                                                       name="nomePrivilegio" required ng-minlength="3">
-                                                                <span style="color:red" ng-show="formCadastroPrivilegio.nomePrivilegio.$dirty && formCadastroPrivilegio.nomePrivilegio.$invalid">
-                                                                    <span ng-show="formCadastroPrivilegio.nomePrivilegio.$error.required">Insira um nome!</span>    
-                                                                    <span ng-show="formCadastroPrivilegio.nomePrivilegio.$error.minlength">Nome deve conter no mínimo três caracteres!</span>
+                                                                       name="nomePrivilegio" required ng-minlength="3"
+                                                                       ng-keypress="($event.which === 13) ? addPrivilegio() : 0">
+                                                                <span style="color:red" 
+                                                                      ng-show="formCadastroPrivilegio.nomePrivilegio.$dirty && formCadastroPrivilegio.nomePrivilegio.$invalid">
+                                                                    <span ng-show="formCadastroPrivilegio.nomePrivilegio.$error.required">
+                                                                        Insira um nome!
+                                                                    </span>    
+                                                                    <span ng-show="formCadastroPrivilegio.nomePrivilegio.$error.minlength">
+                                                                        Nome deve conter no mínimo três caracteres!
+                                                                    </span>
                                                                 </span>
                                                             </div>
                                                             <a data-ng-click="addPrivilegio()" class="btn green">
@@ -347,11 +417,22 @@
                                                         </a>
                                                         <ul class="dropdown-menu pull-right">
                                                             <li>
-                                                                <a data-toggle="modal" 
-                                                                   ng-click="exibeFuncionalidades(privilegio)">Funcionalidades</a>
+                                                                <a data-toggle="modal"
+                                                                   ng-click="alteraPrivilegio(privilegio)">
+                                                                    Alterar
+                                                                </a>
                                                             </li>
                                                             <li>
-                                                                <a href="javascript:;" ng-click="exluirPrivilegio(privilegio)">Excluir</a>
+                                                                <a data-toggle="modal" 
+                                                                   ng-click="exibeFuncionalidades(privilegio)">
+                                                                    Funcionalidades
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="javascript:;" 
+                                                                   ng-click="exluirPrivilegio(privilegio)">
+                                                                    Excluir
+                                                                </a>
                                                             </li> 
                                                         </ul>
                                                     </div>

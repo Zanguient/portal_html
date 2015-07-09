@@ -22,31 +22,44 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
     var divPortletBodyModuloFuncionalidadePos = 0; // posição da div que vai receber o loading progress
     $scope.paginaInformada = 1; // página digitada pelo usuário
     $scope.modulos = [{text : '', children: [], parent: '#'}];
-    $scope.moduloSelecionado = undefined;     
+    $scope.moduloSelecionado = undefined; 
+    $scope.funcionalidadeSelecionada = undefined;                                            
     $scope.novoModuloMenu = ''; // cadastro
-    // flags                                            
-    $scope.cadastroNovoModuloMenu = false; // faz exibir a linha para adicionar um novo módulo menu
+    // flags
+    $scope.cadastrarFuncionalidadesPadrao = true;                                            
+    $scope.inputCadastro = false; // faz exibir a linha para adicionar um novo módulo menu
           
                                                 
     // Context Menu
     $scope.contextMenu = {
           "novo": {
             "label": "Novo submódulo",
-            "disabled" : true,  
-            "action": function(data) {
-                console.log("Criar novo submódulo em " + $scope.moduloSelecionado.text);
+            "_disabled" : function(obj) {return $scope.moduloSelecionado.parents.length >= 4;}, // sub módulo só pode ser criado até o nível 3  
+            "action": function(obj) {
+                // Cadastra submódulo
+                cadastraNovoModulo($scope.moduloSelecionado);
             }
           },
           "alterar": {
             "label": "Alterar",
+            "_disabled" : function(obj) {return $scope.moduloSelecionado.parents.length == 1;},
             "action": function(obj) {
-              console.log("Alterar " + $scope.moduloSelecionado.text);
+                alteraNomeModulo($scope.moduloSelecionado);
             }
           },
           "excluir": {
             "label": "Excluir",
+            "_disabled" : function(obj) {return $scope.moduloSelecionado.parents.length == 1;},  
             "action": function(obj) {
-              console.log("Excluir " + $scope.moduloSelecionado.text);
+                // Solicitação confirmação para excluir o módulo
+                text = "Tem certeza que deseja excluir " + $scope.moduloSelecionado.text;
+                if($scope.moduloSelecionado.parents.length < 4 && $scope.moduloSelecionado.children.length > 0){
+                    // Alerta sobre a exclusão dos módulos filhos
+                    text += "\n\r(OBS: A exclusão deste módulo também excluirá todos os submódulos dele)";
+                }
+                $scope.showModalConfirmacao('Confirmação', text,
+                         exluirModulo, parseInt($scope.moduloSelecionado.id),
+                         'Sim', 'Não');
             }
           }
     };                                            
@@ -79,7 +92,9 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
        $webapi.get($apis.administracao.webpagescontrollers, [$scope.token, 2]) 
             .then(function(dados){
                 // coloca modulos no formato da jstree  
-                $scope.modulos = obtemModulosJSTree(dados.Registros);
+                //$scope.modulos = obtemModulosJSTree(dados.Registros);
+                $scope.modulos = [{text: 'Módulos', id: '0', state: {opened: true}}];
+                $scope.modulos[0].children = obtemModulosJSTree(dados.Registros);
                 $scope.obtendoModulos = false;
                 $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
               },
@@ -88,7 +103,53 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else $scope.showAlert('Houve uma falha ao requisitar módulos (' + failData.status + ')', true, 'danger', true);
                  $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
-              }); 
+              });
+            /*$scope.modulos = [{text : 'Módulos',
+                               id : 'controller0',
+                               state: {opened: true},
+                               children : [
+                                   {text : 'Administração',
+                                    id : 'controller50',
+                                    //parent : '#',
+                                    data : { methods : [], menu : 0 },
+                                    state: {opened: true},
+                                    children : [
+                                       {text : 'Gestão de Acessos',
+                                        id : 'controller51',
+                                        //parent : 50,
+                                        data : { methods : [], menu : 0 },
+                                        state: {opened: true},
+                                        children : [
+                                            {text : 'Usuários',
+                                             id : 'controller53',
+                                             //parent : 51,
+                                             data : { methods : [], menu : 0 }
+                                            },
+                                             {text : 'Privilégios',
+                                             id : 'controller54',
+                                             //parent : 51,
+                                             data : { methods : [], menu : 0 }
+                                            }
+                                         ]
+                                       },
+                                       {text : 'Logs',
+                                        id : 'controller52',
+                                        //parent : 50,
+                                        data : { methods : [], menu : 0 },
+                                        state: {opened: true},
+                                        children : [
+                                            {text : 'Acesso de Usuários',
+                                             id : 'controller55',
+                                             //parent : 52,
+                                             data : { methods : [], menu : 0 }
+                                            }
+                                         ]
+                                       }
+                                ]
+                              }
+                            ]
+                          }];
+        $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);*/
     };
     /**
       * Obtem o array dos controllers no formato de jstree
@@ -99,8 +160,8 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
             for(var k = 0; k < controllers.length; k++){
                 var controller = controllers[k];
                 var json = {text : controller.ds_controller,
-                            id : controller.id_controller,
-                            data : {methods: controller.methods, menu : controller.fl_menu },
+                            id : '' + controller.id_controller,
+                            data : {methods: controller.methods },
                             state: {opened: true},
                             //icon : 'fa fa-square'
                            };
@@ -112,78 +173,178 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
         return array;
     };
         
-      
-    // MODAL
-    var inputType = 'modulo'; 
-    $scope.input = {titulo : '', mensagem : '', textoConfirma : 'Ok', textoCancela : 'Cancelar',
-                    text : '', funcaoConfirma : function(){}};                                       
+                                                
+                                                
+                                                
     /**
-      * Exibe modal com o input
+      * Exibe cadastro um novo módulo menu
       */
-    var exibeModalInput = function(){
+    $scope.cadastraModuloMenu = function(){
+        cadastraNovoModulo(); // não existe pai
+    } 
+    /**
+      * Solicita ao usuário o nome do novo módulo e o avalia.
+      * Em caso de sucesso, requisita ao servidor o cadastro
+      */
+    var cadastraNovoModulo = function(parent){
+        console.log(parent);
+        var irmaos = parent ? parent.children : $scope.modulos[0].children;
+        var id_parent = parent && parent.id !== '0' ? parseInt(parent.id) : null;
         // Exibe o modal
-        $('#modalInput').modal('show');
-    }
-    var fechaModalInput = function(){
-        $('#modalInput').modal('hide');    
+        $scope.cadastrarFuncionalidadesPadrao = true;                                            
+        $scope.inputCadastro = true;
+        $scope.showModalInput('Informe o nome de exibição do módulo', 'Cadastro de módulo em ' + parent.text, 
+                              'Cancelar', 'Salvar',
+                         function(){ 
+                                if(!$scope.input.text){
+                                    $scope.showModalAlerta('Informe um nome');
+                                    return false;
+                                }
+                                if($scope.input.text.length < 3){
+                                    //alert('Nome muito curto!');
+                                    $scope.showModalAlerta('Nome muito curto!');
+                                    return false;    
+                                }
+                                console.log(irmaos);
+                                var jstree = $('#jstree');
+                                // Verifica se tem algum de mesmo nome no mesmo nível
+                                for(var k = 0; k < irmaos.length; k++){
+                                    var irmao = irmaos[k];
+                                    if(!irmao.text) irmao = jstree.jstree(true)._model.data[irmao];
+                                    if($scope.input.text.toUpperCase() === irmao.text.toUpperCase()){
+                                        $scope.showModalAlerta('Já existe um módulo com esse nome no nível desejado!');
+                                        return false;    
+                                    }
+                                }
+                                // Fecha o modal input
+                                $scope.fechaModalInput();
+                                // Cadastra
+                                cadastraModulo({ ds_controller : $scope.input.text,
+                                                 id_subController : id_parent
+                                               }, $scope.cadastrarFuncionalidadesPadrao);
+                                return true;
+                              }); 
     };
     /**
-      * Exibe cadastro novo módulo menu
+      * Solicita ao usuário o novo nome do novo módulo selecionado e o avalia
+      * Em caso de sucesso, requisita ao servidor a atualização
       */
-    $scope.exibeCadastroNovoModuloMenu = function(){
-        $scope.input.titulo = 'Cadastro de módulo';
-        $scope.input.mensagem = 'Informe o nome de exibição do módulo';
-        $scope.input.textoConfirma = 'Salvar';
-        $scope.input.textoCancela = 'Cancelar';
-        $scope.input.funcaoConfirma = function(e){ 
-                                        if(!$scope.input.text){
-                                            return false;
-                                        }
-                                        if($scope.input.text.length < 3){
-                                            alert('Nome muito curto!');
-                                            return false;    
-                                        }
-                                        cadastraModulo({ ds_controller : $scope.input.text,
-                                                         fl_menu : 0 // não é página inicial
-                                                       });
-                                      };
+    var alteraNomeModulo = function(node){
+        //console.log(node)
         // Exibe o modal
-        exibeModalInput();
-    }                                            
+        $scope.inputCadastro = false;
+        $scope.showModalInput('Informe o novo nome de exibição do módulo ' + node.text, 
+                        'Alteração de módulo', 'Cancelar', 'Salvar',
+                         function(){ 
+                                // Verifica se houve alteração
+                                if($scope.input.text === node.text){
+                                    // Não alterou => Nada faz
+                                    $scope.fechaModalInput();
+                                    return true;
+                                }
+                                if(!$scope.input.text){
+                                    $scope.showModalAlerta('Informe um nome');
+                                    return false;
+                                }
+                                if($scope.input.text.length < 3){
+                                    //alert('Nome muito curto!');
+                                    $scope.showModalAlerta('Nome muito curto!');
+                                    return false;    
+                                }
+                                // Busca o pai
+                                var irmaos = [];
+                                var jstree = undefined;
+                                if(node.parent === '#') irmaos = $scope.modulos;
+                                else{
+                                    jstree = $('#jstree');
+                                    var pai = undefined;
+                                    if(jstree){
+                                        pai = jstree.jstree(true)._model.data[node.parent];
+                                        if(pai) irmaos = pai.children;
+                                        else console.log("FALHA AO OBTER PAI");
+                                    }else console.log("FALHA AO OBTER JSTREE");
+                                }     
+                                // Verifica se tem algum de mesmo nome no mesmo nível (que não seja ele mesmo)
+                                for(var k = 0; k < irmaos.length; k++){
+                                    var irmao = irmaos[k];
+                                    if(!irmao.text)
+                                        // busca o rapaz
+                                        irmao = jstree.jstree(true)._model.data[irmao];
+                                    
+                                    if($scope.input.text.toUpperCase() === irmao.text.toUpperCase() && 
+                                       irmao.text !== node.text){ // é possível o cidadão alterar o CAPITAL de alguma(s) letra(s) do nome. Por exemplo: TAx Services => Tax Services
+                                        $scope.showModalAlerta('Já existe um módulo com esse nome no nível desejado!');
+                                        return false;    
+                                    }
+                                }
+                                // Fecha o modal input
+                                $scope.fechaModalInput();
+                                // Atualiza
+                                atualizaNomeModulo(node, $scope.input.text);
+                                return true;
+                              }, node.text); 
+    };                                            
+    
+    
+    
                                                 
                                                 
     // AÇÕES
-    var cadastraModulo = function(jsonModulo){
+    /**
+      * Exibe as funcionalidades associadas ao módulo
+      */
+    $scope.selecionaModulo = function(event,object){
+        $scope.moduloSelecionado = object.node;
+        $scope.funcionalidadeSelecionada = undefined;
+        if(!$scope.$$phase) $scope.$apply();
+    };                                             
+    /**
+      * Cadastra efetivamente o módulo
+      */
+    var cadastraModulo = function(jsonModulo, cadastrarFuncionalidadesPadrao){
         if(!jsonModulo) return;
-        console.log(jsonModulo);
+        // Constroi o json
+        if(!cadastrarFuncionalidadesPadrao) cadastrarFuncionalidadesPadrao = false;
+        var json = {webpagescontrollers : jsonModulo, methodspadrao : cadastrarFuncionalidadesPadrao};
         // Envia para o banco
-        $scope.showProgress();
-        $webapi.post($apis.administracao.webpagescontrollers, $scope.token, jsonModulo)
-                .then(function(dados){
+        $scope.showProgress(divPortletBodyModuloFuncionalidadePos);
+        $webapi.post($apis.administracao.webpagescontrollers, $scope.token, json)
+                .then(function(id_controller){
                     $scope.showAlert('Módulo cadastrado com sucesso!', true, 'success', true);
                     // Dismiss o progress
-                    $scope.hideProgress();
-                    // Fecha o modal input
-                    fechaModalInput();
+                    $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
                     // Recarrega os módulos
                     $scope.buscaModulos();
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
                      else $scope.showAlert('Houve uma falha ao cadastrar o módulo (' + failData.status + ')', true, 'danger', true);
                      // Dismiss o progress
-                     $scope.hideProgress();
-                     // Fecha o modal input
-                     fechaModalInput();
+                     $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
                   }); 
     };
-
     /**
-      * Exibe as funcionalidades associadas ao módulo
+      * Atualiza efetivamente o nome do módulo
       */
-    $scope.selecionaModulo = function(event,object){
-        $scope.moduloSelecionado = object.node;
-        if(!$scope.$$phase) $scope.$apply();
-    }; 
+    var atualizaNomeModulo = function(nodeController, novoNome){
+        $scope.showProgress(divPortletBodyModuloFuncionalidadePos);
+        
+        var jsonModulo = {id_controller : parseInt(nodeController.id), 
+                          ds_controller : novoNome
+                         };
+        
+        $webapi.update($apis.administracao.webpagescontrollers,
+                       {id: 'token', valor: $scope.token}, jsonModulo)
+            .then(function(dados){
+                    $scope.showAlert('Módulo alterado com sucesso!', true, 'success', true);
+                    $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
+                    // Recarrega os módulos
+                    $scope.buscaModulos();
+                  },function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else $scope.showAlert('Houve uma falha ao alterar o módulo (' + failData.status + ')', true, 'danger', true); 
+                     $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
+                  });  
+    };                                            
     /**
       * Excluir módulo
       */                                            
@@ -195,7 +356,7 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
             .then(function(dados){
                     $scope.showAlert('Módulo deletado com sucesso!', true, 'success', true);
                     $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
-                    // atualiza tela de módulos
+                    // Recarrega os módulos
                     $scope.buscaModulos();
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
@@ -203,19 +364,166 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
                      $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
                   }); 
     };
-    /**
-      * Solicitação confirmação para excluir o módulo
-      */                                                                              
-    $scope.exluirModulo = function(modulo){
-        // Envia post para deletar
-        $scope.showModal('Confirmação', 
-                         'Tem certeza que deseja excluir ' + modulo.ds_controller,
-                         exluirModulo, modulo.id_controller,
-                         'Sim', 'Não');
-    };    
                                                 
                                                 
     
     // METHODS
+    /**
+      * Solicita nome do novo método
+      */
+    $scope.cadastraNovoMetodo = function(){
+        // Exibe o modal
+        $scope.showModalInput('Informe o nome de exibição do método', 'Cadastro de método em ' + $scope.moduloSelecionado.text, 
+                              'Cancelar', 'Salvar',
+                         function(){ 
+                                if(!$scope.input.text){
+                                    $scope.showModalAlerta('Informe um nome');
+                                    return false;
+                                }
+                                if($scope.input.text.length < 3){
+                                    $scope.showModalAlerta('Nome muito curto!');
+                                    return false;    
+                                }
+                                // Verifica se tem algum de mesmo nome
+                                for(var k = 0; k < $scope.moduloSelecionado.data.methods.length; k++){
+                                    if($scope.input.text.toUpperCase() === $scope.moduloSelecionado.data.methods[k].ds_method.toUpperCase()){
+                                        $scope.showModalAlerta('Já existe um método com esse nome!');
+                                        return false;    
+                                    }
+                                }
+                                // Fecha o modal input
+                                $scope.fechaModalInput();
+                                // Cadastra
+                                cadastraMetodo({ ds_method : $scope.input.text,
+                                                 id_controller : parseInt($scope.moduloSelecionado.id)
+                                               });
+                                return true;
+                              }); 
+    };
+    /**
+      * Solicita novo nome do método
+      */
+    $scope.alteraNomeMetodo = function(){
+        //console.log($scope.funcionalidadeSelecionada);
+        // Exibe o modal
+        $scope.showModalInput('Informe o novo nome de exibição do método ' + $scope.funcionalidadeSelecionada.ds_method, 
+                        'Alteração de método', 'Cancelar', 'Salvar',
+                         function(){ 
+                                // Verifica se houve alteração
+                                if($scope.input.text === $scope.funcionalidadeSelecionada.ds_method){
+                                    // Não alterou => Nada faz
+                                    $scope.fechaModalInput();
+                                    return true;
+                                }
+                                if(!$scope.input.text){
+                                    $scope.showModalAlerta('Informe um nome');
+                                    return false;
+                                }
+                                if($scope.input.text.length < 3){
+                                    $scope.showModalAlerta('Nome muito curto!');
+                                    return false;    
+                                }  
+                                // Verifica se tem algum de mesmo nome (que não seja ele mesmo)
+                                for(var k = 0; k < $scope.moduloSelecionado.data.methods.length; k++){
+                                    var metodo = $scope.moduloSelecionado.data.methods[k];
+                                    if($scope.input.text.toUpperCase() === metodo.ds_method.toUpperCase() && 
+                                       metodo.ds_method !== $scope.funcionalidadeSelecionada.ds_method){ // é possível o cidadão alterar o CAPITAL de alguma(s) letra(s) do nome
+                                        $scope.showModalAlerta('Já existe um método com esse nome!');
+                                        return false;    
+                                    }
+                                }
+                                // Fecha o modal input
+                                $scope.fechaModalInput();
+                                // Atualiza
+                                atualizaMetodo($scope.funcionalidadeSelecionada, $scope.input.text);
+                                return true;
+                              }, $scope.funcionalidadeSelecionada.ds_method); 
+    };
+    /**
+      * Solicita confirmação da exclusão do método selecionado
+      */
+    $scope.excluirMetodo = function(){
+        $scope.showModalConfirmacao('Confirmação', 
+                                    'Tem certeza que deseja excluir ' + $scope.funcionalidadeSelecionada.ds_method,
+                 excluirMetodo, $scope.funcionalidadeSelecionada.id_method,
+                 'Sim', 'Não');    
+    };
+    
+    /**
+      * Cadastra efetivamente o módulo
+      */
+    var cadastraMetodo = function(jsonMetodo){
+        if(!jsonMetodo) return;
+        console.log(jsonMetodo);
+        // Envia para o banco
+        $scope.showProgress(divPortletBodyModuloFuncionalidadePos);
+        $webapi.post($apis.administracao.webpagesmethods, $scope.token, jsonMetodo)
+                .then(function(id_method){
+                    $scope.showAlert('Métidi cadastrado com sucesso!', true, 'success', true);
+                    // Dismiss o progress
+                    $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
+                    // Adiciona o novo método de forma ordenada (por ds_method)
+                    var newMethod = {id_method : id_method, ds_method : jsonMetodo.ds_method};
+                    var k = 0;
+                    for(k = 0; k < $scope.moduloSelecionado.data.methods.length; k++){
+                        if(newMethod.ds_method < $scope.moduloSelecionado.data.methods[k].ds_method){
+                            $scope.moduloSelecionado.data.methods.splice(k, 0, newMethod);
+                            break;    
+                        }
+                    }
+                    if(k == $scope.moduloSelecionado.data.methods.length)
+                        // Não adicionou => Adiciona ao final 
+                        $scope.moduloSelecionado.data.methods.splice(k, 0, newMethod);
+                  },function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else $scope.showAlert('Houve uma falha ao cadastrar o método (' + failData.status + ')', true, 'danger', true);
+                     // Dismiss o progress
+                     $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
+                  }); 
+    };                                            
+    /**
+      * Atualiza efetivamente o nome do método
+      */
+    var atualizaMetodo = function(method, novoNome){
+        $scope.showProgress(divPortletBodyModuloFuncionalidadePos);
+        var jsonMethod = {id_method : method.id_method, ds_method : novoNome};
+        console.log(jsonMethod);
+        
+        $webapi.update($apis.administracao.webpagesmethods,
+                       {id: 'token', valor: $scope.token}, jsonMethod)
+            .then(function(dados){
+                    $scope.showAlert('Método alterado com sucesso!', true, 'success', true);
+                    $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
+                    // Altera o nome
+                    method.ds_method = novoNome;
+                  },function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else $scope.showAlert('Houve uma falha ao alterar o método (' + failData.status + ')', true, 'danger', true); 
+                     $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
+                  });  
+    };
+    /**
+      * Exclui efetivamente o método
+      */
+    var excluirMetodo = function(id_method){
+        // Deleta
+        $scope.showProgress(divPortletBodyModuloFuncionalidadePos);
+        $webapi.delete($apis.administracao.webpagesmethods,
+                       [{id: 'token', valor: $scope.token},{id: 'id_method', valor: id_method}])
+            .then(function(dados){
+                    $scope.showAlert('Método deletado com sucesso!', true, 'success', true);
+                    $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
+                    // Remove do array
+                    var index = $scope.moduloSelecionado.data.methods.indexOf($scope.funcionalidadeSelecionada);
+                    $scope.moduloSelecionado.data.methods.splice(index,1);
+                    // Atualiza o flag
+                    $scope.funcionalidadeSelecionada = undefined;
+                  },function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else $scope.showAlert('Houve uma falha ao excluir o método (' + failData.status + ')', true, 'danger', true);
+                     $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
+                  });  
+    };                                            
+                                                
 
 }])

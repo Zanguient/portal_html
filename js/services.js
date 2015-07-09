@@ -107,28 +107,31 @@ angular.module('servicos', [ ])
 
 
 .factory('$apis', [function(){
+  // Prefixos
+  var urlBase = 'http://192.168.0.100/api'; 
+  //var urlBase = 'http://api.taxservices.com.br';
+      
   return {
-    autenticacao: {
-      login: 'http://192.168.0.100/api/login/autenticacao/', 
-      //login: 'http://api.taxservices.com.br/login/autenticacao/',
+    autenticacao: { 
+      login: urlBase + '/login/autenticacao/',
       // futuramente tirar daqui
       keyToken: 'token',
       keyLembrar: 'remember',
       keyDateTime: 'datetime'
     },
     administracao : {
-        pessoa : 'http://192.168.0.100/api/administracao/pessoa/',
-        webpagescontrollers : 'http://192.168.0.100/api/administracao/webpagescontrollers/',
-        webpagesmembership : 'http://192.168.0.100/api/administracao/webpagesmembership/',
-        webpagesmethods : 'http://192.168.0.100/api/administracao/webpagesmethods/',
-        webpagespermissions : 'http://192.168.0.100/api/administracao/webpagespermissions/',
-        webpagesroles : 'http://192.168.0.100/api/administracao/webpagesroles/',
-        webpagesusers : 'http://192.168.0.100/api/administracao/webpagesusers/', 
-        webpagesusersinroles : 'http://192.168.0.100/api/administracao/webpagesusersinroles/'
+        pessoa : urlBase + '/administracao/pessoa/',
+        webpagescontrollers : urlBase + '/administracao/webpagescontrollers/',
+        webpagesmembership : urlBase + '/administracao/webpagesmembership/',
+        webpagesmethods : urlBase + '/administracao/webpagesmethods/',
+        webpagespermissions : urlBase + '/administracao/webpagespermissions/',
+        webpagesroles : urlBase + '/administracao/webpagesroles/',
+        webpagesusers : urlBase + '/administracao/webpagesusers/', 
+        webpagesusersinroles : urlBase + '/administracao/webpagesusersinroles/'
     },
     cliente: {
-      empresa : 'http://192.168.0.100/api/cliente/empresa/',
-      grupoempresa : 'http://192.168.0.100/api/cliente/grupoempresa/'
+      empresa : urlBase + '/cliente/empresa/',
+      grupoempresa : urlBase + '/cliente/grupoempresa/'
     }
   }
 }])
