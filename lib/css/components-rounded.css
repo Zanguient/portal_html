@@ -13712,8 +13712,22 @@ Transparent Button
   color: #888;
 }
 .tableAcessoUsuarios{
+  padding: 15px;   
+}
+.cabecalhoTableAcessoUsuarios{
   text-align: center;
+  font-weight: bolder;
+  vertical-align: middle;     
   background-color:#EAEAEA;     
-  border: 1px solid #000;
-  margin: 0 -20px 0 -20px;    
+  border: 1px solid #BDBDBD; 
+  margin:10px -20px -20px -20px; 
+  height: 40px;  
+}
+
+.componentesTableAcessoUsuarios{
+  text-align: center; 
+  background-color:#fff;     
+  border: 1px solid #BDBDBD; 
+  margin: -11px -20px -20px -20px;
+  height: 40px;     
 }
