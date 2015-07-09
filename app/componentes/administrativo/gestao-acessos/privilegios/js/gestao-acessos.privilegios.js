@@ -341,7 +341,6 @@ angular.module("administrativo-privilegios", ['servicos'])
       */                                            
     var  selecionaMetodosDoController = function(controller, method){
         var check = controller.selecionado;
-        if(method) console.log(method);
         if(controller.methods){ 
             // Marca/Desmarca todos os métodos
             for(var k = 0; k < controller.methods.length; k++){
@@ -359,17 +358,17 @@ angular.module("administrativo-privilegios", ['servicos'])
         // Marca/Desmarca método(s) do controller
         selecionaMetodosDoController(controller, method);
         // Tem sub controllers?
-        if(!check && controller.subcontrollers){
+        if(!check && controller.subControllers){
             // Marca cada subcontroller, seus métodos e todos os seus filhos
-            for(var k = 0; k < controller.subcontrollers.length; k++){
-                var sub = controller.subcontrollers[k];
+            for(var k = 0; k < controller.subControllers.length; k++){
+                var sub = controller.subControllers[k];
                 sub.selecionado = check;
                 selecionaController(sub, method); // recursivo
             }
-        }else if(method && !method.selecionado && controller.subcontrollers){
+        }else if(method && !method.selecionado && controller.subControllers){
             // Marca o método de cada subcontroller
-            for(var k = 0; k < controller.subcontrollers.length; k++){
-                selecionaController(controller.subcontrollers[k], method); // recursivo
+            for(var k = 0; k < controller.subControllers.length; k++){
+                selecionaController(controller.subControllers[k], method); // recursivo
             }
         }
     };
@@ -398,7 +397,7 @@ angular.module("administrativo-privilegios", ['servicos'])
                // Avalia se deve desmarcar os pais 
                for(var k = 1; k < controller.length; k++){
                    var ctrl = controller[k];
-                   if($filter('filter')(ctrl.subcontrollers, {selecionado:true}).length == 0){
+                   if($filter('filter')(ctrl.subControllers, {selecionado:true}).length == 0){
                        ctrl.selecionado = false;
                        selecionaMetodosDoController(ctrl);
                    }
@@ -419,9 +418,14 @@ angular.module("administrativo-privilegios", ['servicos'])
                 controller.selecionado = false;
                 selecionaController(controller);
             }else{
+                //console.log("DESMARCA " + method.ds_method + " FILHOS");
                 // todos os filhos não poderão ter esse método assinalado
                 selecionaController(controller, method);
             }
+        }else{
+            // todos os pais terão que ter esse método assinalado
+            console.log("MARCAR " + method.ds_method + " DOS PAIS DE");
+            console.log(controller);
         }
     }
     /**
@@ -490,7 +494,7 @@ angular.module("administrativo-privilegios", ['servicos'])
             var original = originalControllers[k];
             armazenaPermissoesModificadas(novo, original, permissoes);
             // Percorre os filhos
-            if(novo.subcontrollers) obtemPermissoesModificadas(novo.subcontrollers, original.subcontrollers, permissoes);
+            if(novo.subControllers) obtemPermissoesModificadas(novo.subControllers, original.subControllers, permissoes);
         }    
     };
     /**
