@@ -13717,7 +13717,7 @@ Transparent Button
 .cabecalhoTableAcessoUsuarios{
   text-align: center;
   font-weight: bolder;
-  vertical-align: middle;     
+  tevertical-align: middle;     
   background-color:#EAEAEA;     
   border: 1px solid #BDBDBD; 
   margin:10px -20px -20px -20px; 
@@ -13729,5 +13729,6 @@ Transparent Button
   background-color:#fff;     
   border: 1px solid #BDBDBD; 
   margin: -11px -20px -20px -20px;
-  height: 40px;     
+  height: 40px; 
+  vertical-align: middle;    
 }
