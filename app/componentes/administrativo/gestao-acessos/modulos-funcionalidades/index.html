@@ -27,11 +27,97 @@
         <div class="col-md-12">
             <!-- BEGIN TABLE PORTLET-->
             <div class="portlet light">
-   
+                
+               <!-- MODAIS -->    
+                        
+               <!-- MODAL INPUT -->
+               <div class="modal fade bs-modal-sm" id="modalInput" role="dialog"
+                    data-backdrop="static" data-keyboard="false">
+                   <div class="modal-dialog modal-sm">
+                       <div class="modal-content">
+                           <div class="modal-header">
+                               <h4 class="modal-title modal-cabecalho">{{input.titulo}}</h4>
+                           </div>
+                           <div class="modal-body modal-corpo" style="text-align: center">
+                                {{input.mensagem}}
+                                <input class="form-control" type="text" ng-model="input.text"
+                                       ng-keypress="($event.which === 13) ? input.funcaoConfirma() : 0">
+                                <span ng-show="inputCadastro" style="margin-top: 10px"> 
+                                    <checkbox normal ng-model="cadastrarFuncionalidadesPadrao"></checkbox>
+                                    Cadastrar funcionalidades padrão
+                                </span>
+                           </div>
+                           <div class="modal-footer">
+                               <div class="col-sm-4 col-sm-offset-1">
+                                   <button type="button" class="btn default" data-dismiss="modal">
+                                       {{input.textoCancela}}
+                                   </button>
+                               </div>                           
+                               <div class="col-sm-4 col-sm-offset-1">
+                                   <button type="button" class="btn blue"
+                                           ng-click="input.funcaoConfirma()">
+                                       {{input.textoConfirma}}
+                                   </button>                                
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <!-- END MODAL INPUT -->
+
+               <!-- MODAL CONFIRMAÇÃO -->
+               <div class="modal fade bs-modal-sm" id="modalConfirmacao" 
+                    tabindex="-1" role="dialog" aria-hidden="true">
+                   <div class="modal-dialog modal-sm">
+                       <div class="modal-content">
+                           <div class="modal-header">
+                               <!--button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button-->
+                               <h4 class="modal-title modal-cabecalho">{{modal_titulo}}</h4>
+                           </div>
+                           <div class="modal-body">
+                                {{modal_mensagem}}
+                           </div>
+                           <div class="modal-footer">
+                               <button type="button" class="btn default" data-dismiss="modal">
+                                   {{modal_textoCancela}}
+                               </button>
+                               <button type="button" class="btn blue" 
+                                       data-dismiss="modal" ng-click="modal_confirma()">
+                                   {{modal_textoConfirma}}
+                               </button>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <!-- END MODAL CONFIRMAÇÃO -->    
+
+               <!-- MODAL ALERT -->
+               <div class="modal fade bs-modal-sm" id="modalAlerta" role="dialog"
+                    data-backdrop="static" data-keyboard="false">
+                   <div class="modal-dialog modal-sm">
+                       <div class="modal-content">
+                           <div class="modal-header">
+                               <h4 class="modal-title modal-cabecalho">{{alerta.titulo}}</h4>
+                           </div>
+                           <div class="modal-body modal-corpo" style="text-align: center">
+                                {{alerta.mensagem}}
+                           </div>
+                           <div class="modal-footer" style="text-align: center">                           
+                               <button type="button" class="btn blue"
+                                       ng-click="alerta.funcaoOk($event)">
+                                   {{alerta.textoOk}}
+                               </button> 
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <!-- END MODAL ALERT -->
+
+               <!-- END MODAIS -->
+                
                 <!-- TOPO : Nome 'Módulo menu' e botões de 'Opções' e FullScreen -->
                 <div class="portlet-title">
                     <div class="caption">
-                        <!--i class="fa fa-cogs font-green-sharp"></i-->
                         <span class="caption-subject font-green-sharp bold uppercase">Módulos e Funcionalidades</span>
                     </div>
                     <div class="actions">
@@ -66,125 +152,31 @@
                         </div>
                     </div>
                 </div>
-                <!-- CORPO : Botão 'Novo Privilégio' e Tabela -->
+                <!-- CORPO : Busca e JSTREE -->
                 <div class="portlet-body">
-                    <!-- TOPO DA TABELA COM BOTÃO 'Novo Módulo' -->
+                    <!-- TOPO : Busca -->
                     <div class="table-toolbar">
                         <div class="row">
-                            <!--div class="col-md-5">
-                                <div class="btn-group">
-                                    <a href="javascript:;" ng-click="cadastraModuloMenu()">
-                                        <button class="btn red">
-                                        Novo Módulo <i class="fa fa-plus"></i>
-                                    </button></a>
-                                </div>
-                            </div--> 
                             <div class="col-md-4 col-sm-12">
                                 <div class="dataTables_filter">
                                     <label>
                                         <span class="seperator"></span>Pesquisar 
-                                            <input type="text" 
-                                                   class="form-control input-inline ng-tree-search" 
-                                                   placeholder="Buscar" 
-                                                   ng-model="busca"
-                                                   ng-init="busca=''"
-                                                   ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !busca)) && buscaModuloJSTree(busca)">
+                                    </label>
+                                    <label>
+                                        <input type="text" 
+                                               class="form-control input-inline ng-tree-search" 
+                                               placeholder="Buscar" 
+                                               ng-model="busca"
+                                               ng-init="busca=''"
+                                               ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !busca)) && buscaModuloJSTree(busca)">
                                     </label>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- TABELA -->
-                    <!--div class="dataTables_wrapper no-footer"-->
+                    <!-- CONTEUDO -->
                     <div class="row">
                     
-                       <!-- MODAIS -->    
-                        
-                       <!-- MODAL INPUT -->
-                       <div class="modal fade bs-modal-sm" id="modalInput" role="dialog"
-                            data-backdrop="static" data-keyboard="false">
-                           <div class="modal-dialog modal-sm">
-                               <div class="modal-content">
-                                   <div class="modal-header">
-                                       <h4 class="modal-title modal-cabecalho">{{input.titulo}}</h4>
-                                   </div>
-                                   <div class="modal-body modal-corpo" style="text-align: center">
-                                        {{input.mensagem}}
-                                        <input class="form-control" type="text" ng-model="input.text"
-                                               ng-keypress="($event.which === 13) ? input.funcaoConfirma() : 0">
-                                        <span ng-show="inputCadastro" style="margin-top: 10px"> 
-                                            <checkbox normal ng-model="cadastrarFuncionalidadesPadrao"></checkbox>
-                                            Cadastrar funcionalidades padrão
-                                        </span>
-                                   </div>
-                                   <div class="modal-footer">
-                                       <div class="col-sm-4 col-sm-offset-1">
-                                           <button type="button" class="btn default" data-dismiss="modal">
-                                               {{input.textoCancela}}
-                                           </button>
-                                       </div>                           
-                                       <div class="col-sm-4 col-sm-offset-1">
-                                           <button type="button" class="btn blue"
-                                                   ng-click="input.funcaoConfirma()">
-                                               {{input.textoConfirma}}
-                                           </button>                                
-                                       </div>
-                                   </div>
-                               </div>
-                           </div>
-                       </div>
-                       <!-- END MODAL INPUT -->
-                        
-                       <!-- MODAL CONFIRMAÇÃO -->
-                       <div class="modal fade bs-modal-sm" id="modalConfirmacao" 
-                            tabindex="-1" role="dialog" aria-hidden="true">
-                           <div class="modal-dialog modal-sm">
-                               <div class="modal-content">
-                                   <div class="modal-header">
-                                       <!--button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button-->
-                                       <h4 class="modal-title modal-cabecalho">{{modal_titulo}}</h4>
-                                   </div>
-                                   <div class="modal-body">
-                                        {{modal_mensagem}}
-                                   </div>
-                                   <div class="modal-footer">
-                                       <button type="button" class="btn default" data-dismiss="modal">
-                                           {{modal_textoCancela}}
-                                       </button>
-                                       <button type="button" class="btn blue" 
-                                               data-dismiss="modal" ng-click="modal_confirma()">
-                                           {{modal_textoConfirma}}
-                                       </button>
-                                   </div>
-                               </div>
-                           </div>
-                       </div>
-                       <!-- END MODAL CONFIRMAÇÃO -->    
-                        
-                       <!-- MODAL ALERT -->
-                       <div class="modal fade bs-modal-sm" id="modalAlerta" role="dialog"
-                            data-backdrop="static" data-keyboard="false">
-                           <div class="modal-dialog modal-sm">
-                               <div class="modal-content">
-                                   <div class="modal-header">
-                                       <h4 class="modal-title modal-cabecalho">{{alerta.titulo}}</h4>
-                                   </div>
-                                   <div class="modal-body modal-corpo" style="text-align: center">
-                                        {{alerta.mensagem}}
-                                   </div>
-                                   <div class="modal-footer" style="text-align: center">                           
-                                       <button type="button" class="btn blue"
-                                               ng-click="alerta.funcaoOk($event)">
-                                           {{alerta.textoOk}}
-                                       </button> 
-                                   </div>
-                               </div>
-                           </div>
-                       </div>
-                       <!-- END MODAL ALERT -->
-                        
-                       <!-- END MODAIS -->
-                        
                         <div class="col-sm-6">
                             <js-tree id="jstree" tree-data="scope" tree-model="modulos"
                                  tree-plugins="contextmenu,unique,search" 

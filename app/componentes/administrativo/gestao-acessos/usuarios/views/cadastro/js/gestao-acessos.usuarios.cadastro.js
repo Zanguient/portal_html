@@ -58,6 +58,7 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
         $scope.usuario.login = $scope.old.usuario.ds_login;
         // Grupo empresa
         $scope.usuario.grupoempresa = $scope.old.usuario.grupoempresa;
+        if($scope.usuario.grupoempresa !== null) $scope.buscaEmpresas(); // busca filiais 
         // Empresa
         $scope.usuario.empresa = $scope.old.usuario.empresa;
         
@@ -69,8 +70,10 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
             $scope.pessoa.data_nasc = $scope.old.pessoa.dt_nascimento.substr(8, 2) + '/' + $scope.old.pessoa.dt_nascimento.substr(5, 2) + '/' + $scope.old.pessoa.dt_nascimento.substr(0, 4);
         }
         $scope.old.pessoa.dt_nascimento = $scope.pessoa.data_nasc; // deixa no mesmo formato
-        if($scope.old.pessoa.nu_telefone !== null) $scope.pessoa.telefone = $scope.old.pessoa.nu_telefone;
-        else $scope.old.pessoa.nu_telefone = $scope.pessoa.telefone; // deixa em string
+        if($scope.old.pessoa.nu_telefone !== null){ 
+            $scope.pessoa.telefone = $scope.old.pessoa.nu_telefone;
+            // formata telefone aqui => VER TOTAL DE CARACTERES PERMITIDOS NO BANCO
+        }else $scope.old.pessoa.nu_telefone = $scope.pessoa.telefone; // deixa em string
         if($scope.old.pessoa.nu_ramal !== null) $scope.pessoa.ramal = $scope.old.pessoa.nu_ramal;
         else $scope.old.pessoa.nu_ramal = $scope.pessoa.ramal; // deixa em string
     };                                                   
