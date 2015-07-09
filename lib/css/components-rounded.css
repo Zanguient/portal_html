@@ -13710,3 +13710,9 @@ Transparent Button
   background: transparent;
   color: #888;
 }
+.tableAcessoUsuarios{
+  text-align: center;
+  background-color:#EAEAEA;     
+  border: 1px solid #000;
+  margin: 0 -20px 0 -20px;    
+}
