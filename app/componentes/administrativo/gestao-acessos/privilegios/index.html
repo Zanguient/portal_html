@@ -117,7 +117,8 @@
                                 <h4 class="modal-title modal-cabecalho">{{roleSelecionada.RoleName}}</h4>
                             </div>
                             <div class="modal-body height-auto" style="min-width: 500px">
-                                <div class="skin skin-square scroller caption-subject font-green-sharp bold uppercase" style="min-height: 300px" 
+                                <div class="skin skin-square scroller caption-subject font-green-sharp bold" 
+                                     style="min-height: 300px" 
                                      data-always-visible="1" data-rail-visible1="1">
                                     <center><label><strong>Módulos e Funcionalidades</strong></label></center>                           
                                     <ul class="list-unstyled">
@@ -127,14 +128,28 @@
                                             </checkbox>
                                             <label>
                                                 <button class="btn btn-link" style="color: black !important"
+                                                   ng-class="{'button-bolder' : controller.menu}"
                                                    ng-disabled="!controller.selecionado"
                                                    popover-animation="true"
                                                    popover-placement="right"
                                                    popover-trigger="click"
                                                    popover-title="Permissões de {{controller.ds_controller}}"
-                                                   popover-template="'methodsController.html'">          
+                                                   popover-template="'methodsController.html'"
+                                                   context-menu data-target="contextController"
+                                                   context-menu-margin-bottom="20">          
                                                     {{controller.ds_controller}}
                                                 </button> 
+                                                <div class="dropdown position-fixed" id="contextController">
+                                                    <ul class="dropdown-menu" role="menu">
+                                                      <li>
+                                                          <a class="pointer" role="menuitem"
+                                                             ng-click="definirPaginaInicial(controller)">
+                                                            Definir como página inicial
+                                                          </a>
+                                                      </li>
+                                                      <!--li class="divider"></li-->
+                                                    </ul>
+                                                </div>
                                                 <script type="text/ng-template" id="methodsController.html">
                                                     <ul class="list-unstyled" 
                                                          ng-repeat="method in controller.methods">
@@ -159,9 +174,22 @@
                                                            popover-animation="true"
                                                            popover-placement="right"
                                                            popover-title="Permissões de {{controller1.ds_controller}}"
-                                                           popover-template="'methodsController1.html'">          
+                                                           popover-template="'methodsController1.html'"
+                                                           context-menu data-target="contextController1"
+                                                           context-menu-margin-bottom="20">          
                                                             {{controller1.ds_controller}}
                                                         </button> 
+                                                        <div class="dropdown position-fixed" id="contextController1">
+                                                            <ul class="dropdown-menu" role="menu">
+                                                              <li>
+                                                                  <a class="pointer" role="menuitem"
+                                                                     ng-click="definirPaginaInicial(controller1)">
+                                                                    Definir como página inicial
+                                                                  </a>
+                                                              </li>
+                                                              <!--li class="divider"></li-->
+                                                            </ul>
+                                                        </div>
                                                         <script type="text/ng-template" id="methodsController1.html">
                                                             <ul class="list-unstyled" 
                                                                  ng-repeat="method1 in controller1.methods">
@@ -186,9 +214,22 @@
                                                                    popover-animation="true"
                                                                    popover-placement="right"
                                                                    popover-title="Permissões de {{controller2.ds_controller}}"
-                                                                   popover-template="'methodsController2.html'">          
+                                                                   popover-template="'methodsController2.html'"
+                                                                   context-menu data-target="contextController2"
+                                                                   context-menu-margin-bottom="20">          
                                                                     {{controller2.ds_controller}}
                                                                 </button> 
+                                                                <div class="dropdown position-fixed" id="contextController2">
+                                                                    <ul class="dropdown-menu" role="menu">
+                                                                      <li>
+                                                                          <a class="pointer" role="menuitem"
+                                                                             ng-click="definirPaginaInicial(controller2)">
+                                                                            Definir como página inicial
+                                                                          </a>
+                                                                      </li>
+                                                                      <!--li class="divider"></li-->
+                                                                    </ul>
+                                                                </div>
                                                                 <script type="text/ng-template" id="methodsController2.html" >
                                                                     <ul class="list-unstyled" 
                                                                          ng-repeat="method2 in controller2.methods">

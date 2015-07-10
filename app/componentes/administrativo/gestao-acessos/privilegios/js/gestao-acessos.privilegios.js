@@ -6,7 +6,7 @@
  */
 
 // App
-angular.module("administrativo-privilegios", ['servicos']) 
+angular.module("administrativo-privilegios", []) 
 
 .controller("administrativo-privilegiosCtrl", ['$scope',
                                             '$state',
@@ -337,6 +337,12 @@ angular.module("administrativo-privilegios", ['servicos'])
     
     // CONTROLLERS E METHODS
     /**
+      * Define o controller como página inicial
+      */
+    $scope.definirPaginaInicial = function(controller){
+        console.log("DEFINIR " + controller.ds_controller + " COMO PÁGINA INICIAL");
+    };
+    /**
       *  Marca/Desmarca todos métodos do controller se method is undefined.
       *  Caso contrário, marca/desmarca somente o método de mesmo ds_method de method
       */                                            
@@ -405,10 +411,6 @@ angular.module("administrativo-privilegios", ['servicos'])
                            if($filter('filter')(methodsNaoMarcadosNosPais, m.ds_method.toUpperCase()).length == 0)
                                 methodsNaoMarcadosNosPais.push(m.ds_method.toUpperCase());
                        }
-                           // Tem métodos selecionados => observar os que não estão selecionados
-                       //if($filter('filter')(methodsPais, m.ds_method.toUpperCase()).length > 0)
-                           // Remove da lista de métodos permitidos
-                    //       methodsPais.splice(methodsPais.indexOf(m.ds_method.toUpperCase()), 1);
                    }
                 }
                 // Finalmente, marca os métodos do controller selecionado
@@ -439,21 +441,8 @@ angular.module("administrativo-privilegios", ['servicos'])
             }
         }else{
             // todos os pais terão que ter esse método assinalado
-            //console.log("MARCAR " + method.ds_method + " DOS PAIS DE");
-            //console.log(controller);
-            //console.log(controller.parents);
             var controllers = $scope.controllers;
             for(var k = controller.parents.length; k > 0; k--){
-                /*var id_controller = controller.parents[k - 1];
-                for(var j = 0; j < controllers.length; j++){
-                    var ctrl = controllers[j];
-                    if(ctrl.id_controller === id_controller){
-                        console.log("MARCADO EM " + ctrl.ds_controller);
-                        selecionaMetodosDoController(ctrl, method);
-                        controllers = ctrl.subControllers ? ctrl.subControllers : [];
-                        break;    
-                    }
-                }*/
                 var ctrl = ($filter('filter')(controllers, {id_controller:controller.parents[k - 1]}))[0];
                 selecionaMetodosDoController(ctrl, method);
                 controllers = ctrl.subControllers ? ctrl.subControllers : [];
@@ -562,13 +551,34 @@ angular.module("administrativo-privilegios", ['servicos'])
       */
     $scope.salvaPermissoes = function(){
         // Guarda as permissões
-        var permissoes = [];
+        var permissoes = {id_roles : $scope.roleSelecionada.RoleId,
+                          inserir : [],
+                          deletar : []};
         // Armazena somente as que tiveram alterações
         obtemPermissoesModificadas($scope.controllers, $scope.originalControllers, permissoes);
         
         // Verifica se tiveram alterações
-        if(permissoes.length == 0) console.log("NÃO HOUVE ALTERAÇÕES");
-        else console.log(permissoes);
+        if(permissoes.inserir.length == 0 && permissoes.deletar.length == 0){ 
+            console.log("NÃO HOUVE ALTERAÇÕES");
+            // Fecha o modal
+            $('#modalFuncionalidades').modal('hide');
+        }else{ 
+            console.log(permissoes);
+            $scope.showProgress();
+
+            $webapi.update($apis.administracao.webpagespermissions,
+                           {id: 'token', valor: $scope.token}, permissoes)
+                .then(function(dados){
+                        $scope.showAlert('Permissões salvas com sucesso!', true, 'success', true);
+                        $scope.hideProgress();
+                        // Fecha o modal
+                        $('#modalFuncionalidades').modal('hide');
+                      },function(failData){
+                         if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                         else $scope.showAlert('Houve uma falha ao salvar permissões (' + failData.status + ')', true, 'danger', true); 
+                        $scope.hideProgress();
+                      });  
+        }
     }; 
     /**
       * Comparando cada método dos controllers novo e original, armazena no array permissoes somente as que foram modificadas
@@ -594,17 +604,13 @@ angular.module("administrativo-privilegios", ['servicos'])
             if(original.selecionado === undefined) original.selecionado = false;
             // Compara
             if(novo.selecionado !== original.selecionado){
-                console.log("DIFERENTES!");
-                var json = {id_roles : $scope.roleSelecionada.RoleId,
-                            id_method : novo.id_method,
-                            fl_principal : novo.home
-                           };
-                if(!novo.selecionado){
-                    // Remove par!
-                    json.remover = true; // DEFINIR SE VAI SER ISSO MESMO
-                }
-                // Coloca no array
-                permissoes.push(json);
+                //console.log("DIFERENTES!");
+                if(!novo.selecionado)
+                    // Coloca no array de remoções
+                    permissoes.deletar.push(novo.id_method);
+                else
+                    // Coloca no array de inserções
+                    permissoes.inserir.push(novo.id_method);
             }
         }
     };

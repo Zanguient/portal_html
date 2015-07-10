@@ -69,8 +69,9 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
      - PUT : armazenar as permissões associadas à role (methods)
 	          { 
 			    id_roles : idRole,
-			    inserir : [ id_method : idMethod ],
-				deletar : [ id_method : idMethod ]
+			    inserir : [ id_method ],
+				deletar : [ id_method ],
+				controller_principal : id_controller
 			  }				
 			  // Como deletar?
   * api/administracao/webpagesroles

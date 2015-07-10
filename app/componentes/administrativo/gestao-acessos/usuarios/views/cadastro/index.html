@@ -179,7 +179,7 @@
                                             <label class="control-label col-md-3">Telefone </label>
                                             <div class="col-md-4">
                                                 <input type="text" class="form-control" ng-model="pessoa.telefone" 
-                                                       maxlength="13" ng-minlength="11" ng-pattern="/\(\d{2}\)\d{8}\d?/"
+                                                       maxlength="15" ng-minlength="10" ng-pattern="/\(\d{2}\)\d{8}\d?/"
                                                        name="pessoaTelefone" placeholder="(79)12345678" valid-telefone
                                                        ng-blur="atualizaProgressoDoCadastro()" />
                                                 <span style="color:red" ng-show="formCadastroUsuario.pessoaTelefone.$dirty && formCadastroUsuario.pessoaTelefone.$invalid">

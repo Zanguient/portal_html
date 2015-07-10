@@ -57,10 +57,9 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
         $scope.usuario.email = $scope.old.usuario.ds_email;
         $scope.usuario.login = $scope.old.usuario.ds_login;
         // Grupo empresa
-        $scope.usuario.grupoempresa = $scope.old.usuario.grupoempresa;
-        if($scope.usuario.grupoempresa !== null) $scope.buscaEmpresas(); // busca filiais 
+        //$scope.usuario.grupoempresa = $scope.old.usuario.grupoempresa;
         // Empresa
-        $scope.usuario.empresa = $scope.old.usuario.empresa;
+        //$scope.usuario.empresa = $scope.old.usuario.empresa;
         
         // PESSOA
         $scope.pessoa.nome = $scope.old.pessoa.nm_pessoa;
@@ -72,8 +71,17 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
         $scope.old.pessoa.dt_nascimento = $scope.pessoa.data_nasc; // deixa no mesmo formato
         if($scope.old.pessoa.nu_telefone !== null){ 
             $scope.pessoa.telefone = $scope.old.pessoa.nu_telefone;
-            // formata telefone aqui => VER TOTAL DE CARACTERES PERMITIDOS NO BANCO
-        }else $scope.old.pessoa.nu_telefone = $scope.pessoa.telefone; // deixa em string
+            // formata telefone aqui
+            var regex = /[0-9]+/g;
+            if(regex.test($scope.pessoa.telefone.length)){ 
+                // Só tem números
+                if($scope.pessoa.telefone.length === 10 || $scope.pessoa.telefone.length === 11){
+                    $scope.pessoa.telefone = '(' + $scope.pessoa.telefone.substr(0, 2) + ')' + 
+                                             $scope.pessoa.telefone.substr(2);
+                }
+            }// else => verificar
+        }
+        $scope.old.pessoa.nu_telefone = $scope.pessoa.telefone; // deixa em string
         if($scope.old.pessoa.nu_ramal !== null) $scope.pessoa.ramal = $scope.old.pessoa.nu_ramal;
         else $scope.old.pessoa.nu_ramal = $scope.pessoa.ramal; // deixa em string
     };                                                   
@@ -132,11 +140,16 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
             // Atualiza demais dados
             atualizaDadosDoUsuario();
             // Grupo Empresa
-            $scope.usuario.grupoempresa = {id_grupo: $scope.old.usuario.id_grupo, 
-                                           ds_nome: $stateParams.usuario.grupoempresa};
+            if($scope.old.usuario.id_grupo && $scope.old.usuario.id_grupo !== null){
+                $scope.usuario.grupoempresa = {id_grupo: $scope.old.usuario.id_grupo, 
+                                               ds_nome: $stateParams.usuario.grupoempresa};
+                $scope.buscaEmpresas(); // busca filiais 
+            }
             // Empresa
-            $scope.usuario.empresa = {nu_cnpj: $scope.old.usuario.nu_cnpjEmpresa, 
-                                      ds_fantasia: $stateParams.usuario.empresa};
+            if($scope.old.usuario.nu_cnpjEmpresa && $scope.old.usuario.nu_cnpjEmpresa !== null){
+                $scope.usuario.empresa = {nu_cnpj: $scope.old.usuario.nu_cnpjEmpresa, 
+                                          ds_fantasia: $stateParams.usuario.empresa};
+            }
         } 
         // Obtém Roles
         obtemRoles(); 
@@ -275,7 +288,7 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
            return true;
         }
         if($scope.old.pessoa.dt_nascimento !== $scope.pessoa.data_nasc){
-           console.log("HOUVE ALTERAÇÃO - PESSOA - DATA NASC"); 
+           //console.log("HOUVE ALTERAÇÃO - PESSOA - DATA NASC"); 
            return true; 
         }
         if($scope.old.pessoa.nu_telefone !== $scope.pessoa.telefone){
@@ -283,7 +296,7 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
            return true;    
         }
         if($scope.old.pessoa.nu_ramal !== $scope.pessoa.ramal){
-            console.log("HOUVE ALTERAÇÃO - PESSOA - RAMAL"); 
+            //console.log("HOUVE ALTERAÇÃO - PESSOA - RAMAL"); 
             return true;
         }
            // USUÁRIO
@@ -295,14 +308,16 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
            //console.log("HOUVE ALTERAÇÃO - USUÁRIO - LOGIN"); 
            return true; 
         } 
-        if(($scope.old.usuario.id_grupo === null ^ $scope.usuario.grupoempresa.ds_nome === null) ||
-            $scope.old.usuario.id_grupo !== $scope.usuario.grupoempresa.id_grupo){
-           //console.log("HOUVE ALTERAÇÃO - USUÁRIO - GRUPO EMPRESA"); 
+        if(($scope.old.usuario.id_grupo === null ^ typeof $scope.usuario.grupoempresa.id_grupo === 'undefined') ||
+            ($scope.old.usuario.id_grupo !== null && typeof $scope.usuario.grupoempresa.id_grupo === 'number' && 
+             $scope.old.usuario.id_grupo !== $scope.usuario.grupoempresa.id_grupo)){
+           console.log("HOUVE ALTERAÇÃO - USUÁRIO - GRUPO EMPRESA");
            return true; 
         } 
-        if(($scope.old.usuario.nu_cnpjEmpresa === null ^ $scope.usuario.empresa.ds_fantasia === null) ||
-            $scope.old.usuario.nu_cnpjEmpresa !== $scope.usuario.empresa.nu_cnpj){ 
-            //console.log("HOUVE ALTERAÇÃO - USUÁRIO - EMPRESA"); 
+        if(($scope.old.usuario.nu_cnpjEmpresa === null ^ typeof $scope.usuario.empresa.nu_cnpj === 'undefined') ||
+            ($scope.old.usuario.nu_cnpjEmpresa !== null && $scope.usuario.empresa.nu_cnpj && 
+             $scope.old.usuario.nu_cnpjEmpresa !== $scope.usuario.empresa.nu_cnpj)){ 
+            console.log("HOUVE ALTERAÇÃO - USUÁRIO - EMPRESA"); 
             return true;
         }
         // ROLES
@@ -312,7 +327,7 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
         }
         for(var k = 0; k < $scope.old.roles.length; k++){
            if($filter('filter')(rolesSelecionadas, {RoleId:$scope.old.roles[k]}).length == 0){ 
-               console.log("HOUVE ALTERAÇÃO - ROLE");
+               //console.log("HOUVE ALTERAÇÃO - ROLE");
                return true; 
            }
         }

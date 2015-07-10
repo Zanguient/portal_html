@@ -56,9 +56,19 @@ body.modal-open {
     overflow: auto, /*hidden;*/
     position: relative !important; /* para permitir o scroll => Impedir: fixed; */
     width: 100%;
-    background-color: rgba(0, 0, 0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .vakata-context { 
      z-index:999 !important; 
+}
+
+.position-fixed {
+  position: fixed;
+  z-index:9999 !important; 
+}
+
+.button-bolder{
+  color: red !important;
+  font-weight: bolder;
 }
