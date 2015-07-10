@@ -45,19 +45,21 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
 			  (por isso, deve-se enviar como filtro para a coleção 3 o RoleId)
 	          [{ id_controller : int,
 				ds_controller: string,	
+				principal : boolean, // true se é o controller que deve ser exibido inicialmente
 				methods : [{ id_method : int,
 							 ds_method : string,
-							 principal : boolean, // true se é o controller que deve ser exibido inicialmente (opcional)
 							 selecionado : boolean // true se a role tem permissão para este método
 							}] // ORDER BY DS_METHOD
 				subControllers : [{ id_controller : int
 									ds_controller: string,
+									principal : boolean, // true se é o controller que deve ser exibido inicialmente
 									methods : [{ id_method : int,
 												 ds_method : string,
 												 selecionado : boolean // true se a role tem permissão para este método
 												}] // ORDER BY DS_METHOD
 									subControllers : [{ id_controller : int
 														ds_controller: string,
+														principal : boolean, // true se é o controller que deve ser exibido inicialmente
 														methods : [{ id_method : int,
 																	 ds_method : string,
 																	 selecionado : boolean // true se a role tem permissão para este método
@@ -72,9 +74,8 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
 			    id_roles : idRole,
 			    inserir : [ id_method ],
 				deletar : [ id_method ],
-				controller_principal : id_controller
+				id_controller_principal : id_controller
 			  }				
-			  // Como deletar?
   * api/administracao/webpagesroles
      - DELETE : deletar uma determinada role    url/?token=...&RoleId=idRole
 	 - GET : listagem dos usuários na tabela (coleção 0)
