@@ -8,7 +8,7 @@
 // App
 angular.module("administrativo-privilegios", []) 
 
-.controller("administrativo-privilegiosCtrl", ['$scope',
+.controller("administrativo-privilegiosCtrl", ['$scope',   
                                             '$state',
                                             '$http',
                                             '$campos',
@@ -35,7 +35,8 @@ angular.module("administrativo-privilegios", [])
     
     $scope.roleSelecionada = undefined; 
     var controllerPrincipal = undefined;
-    $scope.novoPrivilegio = ''; // cadastro
+    var oldControllerPrincipal = undefined;
+    //$scope.novoPrivilegio = ''; // cadastro
     // Controllers e Methods
     //$scope.todos = {id_controller : 0, ds_controller : 'Todos', selecionado : false};
     $scope.originalControllers = [];                                          
@@ -192,38 +193,50 @@ angular.module("administrativo-privilegios", [])
       * Exibe cadastro novo privilégio
       */
     $scope.exibeCadastroNovoPrivilegio = function(exibe){
-        $scope.cadastraNovoPrivilegio = exibe === undefined || exibe ? true : false;
-        $scope.novoPrivilegio = '';
+        //$scope.cadastraNovoPrivilegio = exibe === undefined || exibe ? true : false;
+        //$scope.novoPrivilegio = '';
+        // Exibe o modal
+        $scope.showModalInput('Informe o nome do privilégio', 
+                        'Cadastro de privilégio', 'Cancelar', 'Salvar',
+                         function(){ 
+                                if(!$scope.input.text){
+                                    $scope.showModalAlerta('Informe um nome');
+                                    return false;
+                                }
+                                if($scope.input.text.length < 3){
+                                    //alert('Nome muito curto!');
+                                    $scope.showModalAlerta('Nome muito curto!');
+                                    return false;    
+                                }
+                                // Verifica se o nome é único
+                                for(var k = 0; k < $scope.privilegios.length; k++){
+                                    var p = $scope.privilegios[k];
+                                    if(p.RoleName.toUpperCase() === $scope.input.text.toUpperCase()){
+                                        $scope.showModalAlerta('Já existe um privilégio com esse nome!');
+                                        return false;    
+                                    }
+                                }   
+                                // Fecha o modal input
+                                $scope.fechaModalInput();
+                                // Atualiza
+                                addPrivilegio($scope.input.text);
+                                return true;
+                              }); 
     }
     /**
       * Adiciona privilégio
       */
-    $scope.addPrivilegio = function(){
-        if(!$scope.novoPrivilegio){
-           $scope.showModalAlerta('Insira um nome!'); 
-           return;   
-        }
-        if($scope.novoPrivilegio.length < 3){
-           $scope.showModalAlerta('Nome muito curto!'); 
-           return;  
-        }
-        // Verifica se o nome é único
-        for(var k = 0; k < $scope.privilegios.length; k++){
-            if($scope.privilegios[k].RoleName.toUpperCase() === $scope.novoPrivilegio.toUpperCase()){
-                $scope.showModalAlerta('Já existe um privilégio com esse nome!');
-                return;    
-            }
-        }
+    var addPrivilegio = function(novoPrivilegio){
         // Envia para o banco
         $scope.showProgress(divPortletBodyPrivilegioPos);
-        $webapi.post($apis.administracao.webpagesroles, $scope.token, {RoleName : $scope.novoPrivilegio})
+        $webapi.post($apis.administracao.webpagesroles, $scope.token, {RoleName : novoPrivilegio})
                 .then(function(dados){
                     $scope.showAlert('Privilégio cadastrado com sucesso!', true, 'success', true);
                     // Reseta o campo
-                    $scope.novoPrivilegio = '';
+                    //$scope.novoPrivilegio = '';
                     $scope.hideProgress(divPortletBodyPrivilegioPos);
                     // Não aparece mais a linha de cadastro
-                    $scope.exibeCadastroNovoPrivilegio(false);
+                    //$scope.exibeCadastroNovoPrivilegio(false);
                     // Relista os privilégios
                     $scope.buscaPrivilegios();
                   },function(failData){
@@ -346,6 +359,7 @@ angular.module("administrativo-privilegios", [])
             if(controllerPrincipal) controllerPrincipal.principal = false;
             controller.principal = true;
             controllerPrincipal = controller; // aponta para o novo controller principal
+            //$timeout(function(){$scope.$apply();}, 0); // if(!$scope.$$phase) $scope.$apply();
         }
     };
     /**
@@ -466,10 +480,14 @@ angular.module("administrativo-privilegios", [])
                    {id : $campos.administracao.webpagescontrollers.RoleId, valor: $scope.roleSelecionada.RoleId}) 
             .then(function(dados){
                 $scope.controllers = dados.Registros;
+                // Reseta valores
+                controllerPrincipal = undefined;
+                oldControllerPrincipal = undefined;
                 // set selecionado dos controllers e transforma o array em uma estrutura de árvore
                 obtemEstruturaArvore($scope.controllers);
                 // Faz uma cópia (por valor) do controller proveniente da base de dados
                 angular.copy($scope.controllers, $scope.originalControllers);
+                oldControllerPrincipal = controllerPrincipal;
                 //$scope.obtendoModulosEFuncionalidades = false;
                 $scope.hideProgress();
               },
@@ -544,6 +562,8 @@ angular.module("administrativo-privilegios", [])
             // Faz isso com os filhos                   adiciona os pais na ordem do mais imediato até o raiz
             if(controller.subControllers) obtemEstruturaArvore(controller.subControllers, 
                                                                [controller.id_controller].concat(parents));
+            // É o principal ?
+            if(!controllerPrincipal && controller.principal) controllerPrincipal = controller;
         }
     };
     /**
@@ -559,17 +579,25 @@ angular.module("administrativo-privilegios", [])
         // Guarda as permissões
         var permissoes = {id_roles : $scope.roleSelecionada.RoleId,
                           inserir : [],
-                          deletar : []};
+                          deletar : [],
+                          id_controller_principal : controllerPrincipal ? controllerPrincipal.id_controller : 0,
+                         };
+        
+        if(typeof controllerPrincipal == 'undefined'){
+            $scope.showModalAlerta('Selecione uma página principal!'); 
+            return;    
+        }
+        
         // Armazena somente as que tiveram alterações
         obtemPermissoesModificadas($scope.controllers, $scope.originalControllers, permissoes);
         
         // Verifica se tiveram alterações
-        if(permissoes.inserir.length == 0 && permissoes.deletar.length == 0){ 
+        if(permissoes.inserir.length == 0 && permissoes.deletar.length == 0 && oldControllerPrincipal === controllerPrincipal){ 
             console.log("NÃO HOUVE ALTERAÇÕES");
             // Fecha o modal
             $('#modalFuncionalidades').modal('hide');
         }else{ 
-            console.log(permissoes);
+            //console.log(permissoes);
             $scope.showProgress();
 
             $webapi.update($apis.administracao.webpagespermissions,

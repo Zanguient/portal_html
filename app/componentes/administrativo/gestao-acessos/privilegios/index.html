@@ -29,85 +29,6 @@
                 
                <!-- MODAIS -->
                 
-               <!-- MODAL INPUT -->
-               <div class="modal fade bs-modal-sm" id="modalInput" role="dialog"
-                    data-backdrop="static" data-keyboard="false">
-                   <div class="modal-dialog modal-sm">
-                       <div class="modal-content">
-                           <div class="modal-header">
-                               <h4 class="modal-title modal-cabecalho">{{input.titulo}}</h4>
-                           </div>
-                           <div class="modal-body modal-corpo" style="text-align: center">
-                                {{input.mensagem}}
-                                <input class="form-control" type="text" ng-model="input.text"
-                                       ng-keypress="($event.which === 13) ? input.funcaoConfirma() : 0">
-                           </div>
-                           <div class="modal-footer">
-                               <div class="col-sm-4 col-sm-offset-1">
-                                   <button type="button" class="btn default" data-dismiss="modal">
-                                       {{input.textoCancela}}
-                                   </button>
-                               </div>                           
-                               <div class="col-sm-4 col-sm-offset-1">
-                                   <button type="button" class="btn blue"
-                                           ng-click="input.funcaoConfirma()">
-                                       {{input.textoConfirma}}
-                                   </button>                                
-                               </div>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-               <!-- END MODAL INPUT -->    
-                
-               <!-- MODAL CONFIRMAÇÃO -->
-               <div class="modal fade bs-modal-sm" id="modalConfirmacao" 
-                    tabindex="-1" role="dialog" aria-hidden="true">
-                   <div class="modal-dialog modal-sm">
-                       <div class="modal-content">
-                           <div class="modal-header">
-                               <!--button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button-->
-                               <h4 class="modal-title modal-cabecalho">{{modal_titulo}}</h4>
-                           </div>
-                           <div class="modal-body">
-                                {{modal_mensagem}}
-                           </div>
-                           <div class="modal-footer">
-                               <button type="button" class="btn default" data-dismiss="modal">
-                                   {{modal_textoCancela}}
-                               </button>
-                               <button type="button" class="btn blue" 
-                                       data-dismiss="modal" ng-click="modal_confirma()">
-                                   {{modal_textoConfirma}}
-                               </button>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-               <!-- END MODAL CONFIRMAÇÃO --> 
-                
-                <!-- MODAL ALERT -->
-               <div class="modal fade bs-modal-sm" id="modalAlerta" role="dialog"
-                    data-backdrop="static" data-keyboard="false">
-                   <div class="modal-dialog modal-sm">
-                       <div class="modal-content">
-                           <div class="modal-header">
-                               <h4 class="modal-title modal-cabecalho">{{alerta.titulo}}</h4>
-                           </div>
-                           <div class="modal-body modal-corpo" style="text-align: center">
-                                {{alerta.mensagem}}
-                           </div>
-                           <div class="modal-footer" style="text-align: center">                           
-                               <button type="button" class="btn blue"
-                                       ng-click="alerta.funcaoOk($event)">
-                                   {{alerta.textoOk}}
-                               </button> 
-                           </div>
-                       </div>
-                   </div>
-               </div>
-               <!-- END MODAL ALERT -->
-                
                 <!-- MODAL MÓDULOS E FUNCIONALIDADES -->
                 <div class="modal fade ng-scope" id="modalFuncionalidades" tabindex="-1" 
                      aria-hidden="true" style="display: none;">
@@ -286,6 +207,88 @@
                 </div>              
                 <!-- END MODAL MÓDULOS E FUNCIONALIDADES -->
                 
+               <!-- MODAL INPUT -->
+               <div class="modal fade bs-modal-sm" id="modalInput" role="dialog"
+                    data-backdrop="static" data-keyboard="false"
+                    style="z-index: 12000 !important">
+                   <div class="modal-dialog modal-sm">
+                       <div class="modal-content">
+                           <div class="modal-header">
+                               <h4 class="modal-title modal-cabecalho">{{input.titulo}}</h4>
+                           </div>
+                           <div class="modal-body modal-corpo" style="text-align: center">
+                                {{input.mensagem}}
+                                <input class="form-control" type="text" ng-model="input.text"
+                                       ng-keypress="($event.which === 13) ? input.funcaoConfirma() : 0">
+                           </div>
+                           <div class="modal-footer">
+                               <div class="col-sm-4 col-sm-offset-1">
+                                   <button type="button" class="btn default" data-dismiss="modal">
+                                       {{input.textoCancela}}
+                                   </button>
+                               </div>                           
+                               <div class="col-sm-4 col-sm-offset-1">
+                                   <button type="button" class="btn blue"
+                                           ng-click="input.funcaoConfirma()">
+                                       {{input.textoConfirma}}
+                                   </button>                                
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <!-- END MODAL INPUT -->    
+                
+               <!-- MODAL CONFIRMAÇÃO -->
+               <div class="modal fade bs-modal-sm" id="modalConfirmacao" 
+                    tabindex="-1" role="dialog" aria-hidden="true"
+                    style="z-index: 12000 !important">
+                   <div class="modal-dialog modal-sm">
+                       <div class="modal-content">
+                           <div class="modal-header">
+                               <!--button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button-->
+                               <h4 class="modal-title modal-cabecalho">{{modal_titulo}}</h4>
+                           </div>
+                           <div class="modal-body">
+                                {{modal_mensagem}}
+                           </div>
+                           <div class="modal-footer">
+                               <button type="button" class="btn default" data-dismiss="modal">
+                                   {{modal_textoCancela}}
+                               </button>
+                               <button type="button" class="btn blue" 
+                                       data-dismiss="modal" ng-click="modal_confirma()">
+                                   {{modal_textoConfirma}}
+                               </button>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <!-- END MODAL CONFIRMAÇÃO --> 
+                
+                <!-- MODAL ALERT -->
+               <div class="modal fade bs-modal-sm" id="modalAlerta" role="dialog"
+                    data-backdrop="static" data-keyboard="false"
+                    style="z-index: 12000 !important">
+                   <div class="modal-dialog modal-sm">
+                       <div class="modal-content">
+                           <div class="modal-header">
+                               <h4 class="modal-title modal-cabecalho">{{alerta.titulo}}</h4>
+                           </div>
+                           <div class="modal-body modal-corpo" style="text-align: center">
+                                {{alerta.mensagem}}
+                           </div>
+                           <div class="modal-footer" style="text-align: center">                           
+                               <button type="button" class="btn blue"
+                                       ng-click="alerta.funcaoOk($event)">
+                                   {{alerta.textoOk}}
+                               </button> 
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <!-- END MODAL ALERT -->
+                
                <!-- END MODAIS -->
                 
                 <!-- TOPO : Nome 'Privilégios' e botões de 'Opções' e FullScreen -->
@@ -429,7 +432,7 @@
                                         </thead>
                                         <!-- CONTEUDO DA TABELA -->
                                         <tbody>
-                                            <tr role="row" class="odd" ng-show="cadastraNovoPrivilegio">
+                                            <!--tr role="row" class="odd" ng-show="cadastraNovoPrivilegio">
                                                 <td colspan="2">
                                                     <form class="form-horizontal" name="formCadastroPrivilegio" novalidate>
                                                         <div class="form-group" ng-class="{ 'has-error' : formCadastroPrivilegio.nomePrivilegio.$invalid && !formCadastroPrivilegio.nomePrivilegio.$pristine }">
@@ -459,7 +462,7 @@
                                                         </div>
                                                     </form>
                                                 </td>
-                                            </tr>
+                                            </tr-->
                                             <tr role="row" class="odd" ng-repeat="privilegio in privilegios">
                                                 <td>
                                                      {{privilegio.RoleName}}
