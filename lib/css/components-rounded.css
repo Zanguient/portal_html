@@ -13716,12 +13716,12 @@ Transparent Button
 }
 .cabecalhoTableAcessoUsuarios{
   text-align: center;
-  font-weight: bolder;
-  tevertical-align: middle;     
+  font-weight: bolder;       
   background-color:#EAEAEA;     
   border: 1px solid #BDBDBD; 
   margin:10px -20px -20px -20px; 
   height: 40px;  
+  padding-top: 5px;     
 }
 
 .componentesTableAcessoUsuarios{
@@ -13730,5 +13730,33 @@ Transparent Button
   border: 1px solid #BDBDBD; 
   margin: -11px -20px -20px -20px;
   height: 40px; 
-  vertical-align: middle;    
+  padding-top: 5px;  
+}
+
+.cabecalhoVisualizacaoTableAcessoUsuarios{
+  text-align: center;
+  font-weight: bolder;       
+  background-color:#EAEAEA;     
+  border: 1px solid #BDBDBD; 
+  margin:-11px -20px -20px -20px;
+  height: 40px;  
+  padding-top: 5px;     
+}
+
+.botoesAdicionar{
+  margin-bottom: 3px;
+}
+
+.form-controlModuloseFuncionalidades{
+  display: block;
+  width: 70%;
+      
+}
+
+.barrapesquisa{
+  width: 29.33333333%;
+}
+
+.vertical-center {
+   margin: 6px 0 0 15px;    
 }

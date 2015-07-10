@@ -157,7 +157,7 @@
                     <!-- TOPO : Busca -->
                     <div class="table-toolbar">
                         <div class="row">
-                            <div class="col-md-4 col-sm-12">
+                            <div class="col-md-4 col-sm-12 barrapesquisa">
                                 <div class="dataTables_filter">
                                     <label>
                                         <span class="seperator"></span>Pesquisar 
@@ -171,12 +171,11 @@
                                                ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !busca)) && buscaModuloJSTree(busca)">
                                     </label>
                                 </div>
-                            </div>
+                            </div>                            
                         </div>
                     </div>
                     <!-- CONTEUDO -->
-                    <div class="row">
-                    
+                    <div class="row">                    
                         <div class="col-sm-6">
                             <js-tree id="jstree" tree-data="scope" tree-model="modulos"
                                  tree-plugins="contextmenu,unique,search" 
@@ -186,30 +185,50 @@
                         <div class="col-sm-6" ng-show="moduloSelecionado && moduloSelecionado.parent !== '#'">
                             <!-- FIM - JS TREE -->
                             <div class="form-group">
-                                <label>Funcionalidades de {{moduloSelecionado.text}}</label>
-                                <select class="form-control" size="6"
-                                        ng-model="funcionalidadeSelecionada"
-                                        ng-options="method as method.ds_method for method in moduloSelecionado.data.methods"> 
-                                    <option style="display:none" value="">Funcionalidade</option>
-                                    <!-- data-ng-attr-size="{{moduloSelecionado.data.methods.length}}" --> 
-                                </select>
-                            </div>
-                            <div class="col-md-offset-3 col-md-9">
-                                <button type="submit" class="btn green"
+                                <div class="row">
+                                    <div class="col-sm-1">
+                                        <button type="submit" class="btn btn-icon-only red fa fa-plus botoesAdicionar"
+                                                ng-click="cadastraNovoMetodo()">
+                                            
+                                        </button>
+                                    </div>    
+                                    <div>
+                                        <div class="col-sm-8">
+                                            <div class="vertical-center">
+                                                <label>Funcionalidades de {{moduloSelecionado.text}}</label>
+                                            </div>
+                                        </div>                                  
+                                    </div>
+                                </div>     
+                                <select class="form-control form-controlModuloseFuncionalidades" size="6"
+                                                ng-model="funcionalidadeSelecionada"
+                                                ng-options="method as method.ds_method for method in moduloSelecionado.data.methods"> 
+                                            <option style="display:none" value="">Funcionalidade</option>
+                                            <!-- data-ng-attr-size="{{moduloSelecionado.data.methods.length}}" --> 
+                                </select>                                       
+                            </div>                                              
+                            <div class="col-sm-9">
+                                <!--button type="submit" class="btn green"
                                         ng-click="cadastraNovoMetodo()">
                                     Adicionar
-                                </button>
-                                <button type="button" class="btn default"
+                                </button-->
+                                <div class="row">
+                                    <div class="col-sm-3 col-sm-offset-2">
+                                        <button type="button" class="btn default"
                                         ng-show="funcionalidadeSelecionada"
-                                        ng-click="alteraNomeMetodo()">
-                                    Alterar
-                                </button>
-                                <button type="button" class="btn default"
+                                        ng-click="alteraNomeMetodo()">Alterar
+                                        <i class="fa fa-pencil"></i>    
+                                        </button>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <button type="button" class="btn green"
                                         ng-show="funcionalidadeSelecionada"
-                                        ng-click="excluirMetodo()">
-                                    Remover
-                                </button>
-							</div>
+                                        ng-click="excluirMetodo()">Remover
+                                        <i class="fa fa-times"></i>    
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>         
                 </div>

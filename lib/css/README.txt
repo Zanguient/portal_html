@@ -11,3 +11,6 @@
 -Modificar linha divisória do cabeçalho do modal
 >componentes-rounded>.modal .modal-header (4040)
 
+-------------Módulos e funcionalidades------
+
+
