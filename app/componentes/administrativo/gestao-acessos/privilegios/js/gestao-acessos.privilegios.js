@@ -33,7 +33,8 @@ angular.module("administrativo-privilegios", [])
                       total_registros : 0, faixa_registros : '0-0', total_paginas : 0, 
                       campo_ordenacao : {id: $campos.administracao.webpagesroles.RoleName, order : 0}};    
     
-    $scope.roleSelecionada = undefined;     
+    $scope.roleSelecionada = undefined; 
+    var controllerPrincipal = undefined;
     $scope.novoPrivilegio = ''; // cadastro
     // Controllers e Methods
     //$scope.todos = {id_controller : 0, ds_controller : 'Todos', selecionado : false};
@@ -340,7 +341,12 @@ angular.module("administrativo-privilegios", [])
       * Define o controller como página inicial
       */
     $scope.definirPaginaInicial = function(controller){
-        console.log("DEFINIR " + controller.ds_controller + " COMO PÁGINA INICIAL");
+        //console.log("DEFINIR " + controller.ds_controller + " COMO PÁGINA INICIAL");
+        if(!controllerPrincipal || controllerPrincipal.id_controller !== controller.id_controller){
+            if(controllerPrincipal) controllerPrincipal.principal = false;
+            controller.principal = true;
+            controllerPrincipal = controller; // aponta para o novo controller principal
+        }
     };
     /**
       *  Marca/Desmarca todos métodos do controller se method is undefined.

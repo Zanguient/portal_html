@@ -127,29 +127,18 @@
                                                              ng-change="handleCheckController(controller)">
                                             </checkbox>
                                             <label>
-                                                <button class="btn btn-link" style="color: black !important"
-                                                   ng-class="{'button-bolder' : controller.menu}"
+                                                <button class="btn btn-link" 
+                                                   style="color: black !important"
                                                    ng-disabled="!controller.selecionado"
                                                    popover-animation="true"
                                                    popover-placement="right"
                                                    popover-trigger="click"
                                                    popover-title="Permissões de {{controller.ds_controller}}"
-                                                   popover-template="'methodsController.html'"
-                                                   context-menu data-target="contextController"
-                                                   context-menu-margin-bottom="20">          
+                                                   popover-template="'methodsController.html'">          
                                                     {{controller.ds_controller}}
+                                                    <i class="fa fa-home"
+                                                       ng-show="controller.principal"></i>
                                                 </button> 
-                                                <div class="dropdown position-fixed" id="contextController">
-                                                    <ul class="dropdown-menu" role="menu">
-                                                      <li>
-                                                          <a class="pointer" role="menuitem"
-                                                             ng-click="definirPaginaInicial(controller)">
-                                                            Definir como página inicial
-                                                          </a>
-                                                      </li>
-                                                      <!--li class="divider"></li-->
-                                                    </ul>
-                                                </div>
                                                 <script type="text/ng-template" id="methodsController.html">
                                                     <ul class="list-unstyled" 
                                                          ng-repeat="method in controller.methods">
@@ -160,7 +149,20 @@
                                                             </checkbox>
                                                             {{method.ds_method}}
                                                         </li>
+                                                        <li class="divider"></li> 
                                                      </ul>
+                                                     <div class="btn-group"
+                                                         ng-show="!controller.subControllers || controller.subControllers.length == 0">
+                                                        <a href="javascript:;" 
+                                                            ng-click="definirPaginaInicial(controller)">
+                                                            
+                                                            <i class="fa fa-home"></i> 
+                                                            <button class="btn btn-link"
+                                                                    style="color: black !important">
+                                                                Definir como página inicial 
+                                                            </button>
+                                                         </a>
+                                                     </div>
                                                 </script>
                                             </label>
                                             <ul class="list-unstyled">
@@ -169,27 +171,17 @@
                                                                ng-change="handleCheckController([controller1, controller])">
                                                     </checkbox>
                                                     <label>
-                                                        <button class="btn btn-link" style="color: black !important"
+                                                        <button class="btn btn-link" 
+                                                           style="color: black !important"
                                                            ng-disabled="!controller1.selecionado"
                                                            popover-animation="true"
                                                            popover-placement="right"
                                                            popover-title="Permissões de {{controller1.ds_controller}}"
-                                                           popover-template="'methodsController1.html'"
-                                                           context-menu data-target="contextController1"
-                                                           context-menu-margin-bottom="20">          
+                                                           popover-template="'methodsController1.html'">          
                                                             {{controller1.ds_controller}}
+                                                            <i class="fa fa-home"
+                                                               ng-show="controller1.principal"></i>
                                                         </button> 
-                                                        <div class="dropdown position-fixed" id="contextController1">
-                                                            <ul class="dropdown-menu" role="menu">
-                                                              <li>
-                                                                  <a class="pointer" role="menuitem"
-                                                                     ng-click="definirPaginaInicial(controller1)">
-                                                                    Definir como página inicial
-                                                                  </a>
-                                                              </li>
-                                                              <!--li class="divider"></li-->
-                                                            </ul>
-                                                        </div>
                                                         <script type="text/ng-template" id="methodsController1.html">
                                                             <ul class="list-unstyled" 
                                                                  ng-repeat="method1 in controller1.methods">
@@ -200,7 +192,20 @@
                                                                     </checkbox>
                                                                     {{method1.ds_method}}
                                                                 </li>
+                                                                <li class="divider"></li> 
                                                              </ul>
+                                                             <div class="btn-group"
+                                                                 ng-show="!controller1.subControllers || controller1.subControllers.length == 0">
+                                                                <a href="javascript:;" 
+                                                                    ng-click="definirPaginaInicial(controller1)">
+
+                                                                    <i class="fa fa-home"></i> 
+                                                                    <button class="btn btn-link"
+                                                                            style="color: black !important">
+                                                                        Definir como página inicial 
+                                                                    </button>
+                                                                 </a>
+                                                             </div>
                                                         </script>
                                                     </label>
                                                     <ul class="list-unstyled">
@@ -209,27 +214,17 @@
                                                                ng-change="handleCheckController([controller2, controller1, controller])">
                                                             </checkbox>
                                                             <label>
-                                                                <button class="btn btn-link" style="color: black !important"
+                                                                <button class="btn btn-link" 
+                                                                   style="color: black !important"
                                                                    ng-disabled="!controller2.selecionado"
                                                                    popover-animation="true"
                                                                    popover-placement="right"
                                                                    popover-title="Permissões de {{controller2.ds_controller}}"
-                                                                   popover-template="'methodsController2.html'"
-                                                                   context-menu data-target="contextController2"
-                                                                   context-menu-margin-bottom="20">          
+                                                                   popover-template="'methodsController2.html'">          
                                                                     {{controller2.ds_controller}}
+                                                                    <i class="fa fa-home"
+                                                                       ng-show="controller2.principal"></i>
                                                                 </button> 
-                                                                <div class="dropdown position-fixed" id="contextController2">
-                                                                    <ul class="dropdown-menu" role="menu">
-                                                                      <li>
-                                                                          <a class="pointer" role="menuitem"
-                                                                             ng-click="definirPaginaInicial(controller2)">
-                                                                            Definir como página inicial
-                                                                          </a>
-                                                                      </li>
-                                                                      <!--li class="divider"></li-->
-                                                                    </ul>
-                                                                </div>
                                                                 <script type="text/ng-template" id="methodsController2.html" >
                                                                     <ul class="list-unstyled" 
                                                                          ng-repeat="method2 in controller2.methods">
@@ -240,7 +235,20 @@
                                                                             </checkbox>
                                                                             {{method2.ds_method}}
                                                                         </li>
+                                                                        <li class="divider"></li> 
                                                                      </ul>
+                                                                     <div class="btn-group"
+                                                                         ng-show="!controller2.subControllers || controller2.subControllers.length == 0">
+                                                                        <a href="javascript:;" 
+                                                                            ng-click="definirPaginaInicial(controller2)">
+
+                                                                            <i class="fa fa-home"></i> 
+                                                                            <button class="btn btn-link"
+                                                                                    style="color: black !important">
+                                                                            Definir como página inicial 
+                                                                            </button>
+                                                                         </a>
+                                                                     </div>
                                                                 </script>
                                                             </label>
                                                         </li>
