@@ -142,18 +142,22 @@
                             </div>
                             <!-- PESQUISA -->
                             <div class="col-md-5 col-sm-12">
-                                <div class="dataTables_filter">
-                                    <label>
-                                        <div class="col-sm-5" 
-                                             style="padding-right: 1px;padding-left: 1px;">
-                                            <span class="seperator"></span>Pesquisar 
-                                            <select aria-controls="datatable_products" 
-                                                    class="form-control input-sm input-inline"
-                                                    ng-model="usuario.campo_busca"
-                                                    ng-options="campo as campo.nome for campo in camposBusca | filter:{ativo:true}">
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-7" style="padding-right: 1px; padding-left: 1px;">
+                                <div class="dataTables_filter">  
+                                    <div class="col-sm-5" style="padding-right: 1px;padding-left: 1px;">
+                                        <label>
+                                                <select aria-controls="datatable_products" 
+                                                        class="form-control input-sm input-inline"
+                                                        ng-model="usuario.campo_busca"
+                                                        ng-options="campo as campo.nome for campo in camposBusca | filter:{ativo:true}">
+                                                </select>
+                                        </label>
+                                        
+                                        <label>
+                                                <span class="seperator"></span>Pesquisar 
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-7" style="padding-right: 1px; padding-left: 1px;">
+                                        <label>
                                             <div class="input-group input-icon right">
                                                 <i class="fa fa-times" style="right:50px;cursor:pointer"
                                                    ng-click="resetaBusca()"
@@ -167,9 +171,9 @@
                                                     <i class="fa fa-search" style="cursor:pointer"
                                                            ng-click="filtraUsuarios()"></i>
 												</span>
-											</div>
-                                        </div>    
-                                    </label>
+											</div> 
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>

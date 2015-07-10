@@ -295,12 +295,12 @@ angular.module("administrativo-privilegios", ['servicos'])
       */
     $scope.exibeFuncionalidades = function(privilegio){
         // Reseta permissões
-        $scope.permissoes = [];
+        //$scope.permissoes = [];
         $scope.roleSelecionada = privilegio;
         // Exibe o modal
         $('#modalFuncionalidades').modal('show');
         // Carrega as permissões
-        obtemMódulosEFuncionalidades();
+        obtemModulosEFuncionalidades();
         
     }; 
     /**
@@ -337,7 +337,8 @@ angular.module("administrativo-privilegios", ['servicos'])
     
     // CONTROLLERS E METHODS
     /**
-      *  Marca/Desmarca todos métodos do controller
+      *  Marca/Desmarca todos métodos do controller se method is undefined.
+      *  Caso contrário, marca/desmarca somente o método de mesmo ds_method de method
       */                                            
     var  selecionaMetodosDoController = function(controller, method){
         var check = controller.selecionado;
@@ -351,18 +352,20 @@ angular.module("administrativo-privilegios", ['servicos'])
         }
     }
     /**
-      *  Marca/Desmarca todos a partir do controller
+      *  Seleciona os métodos e, caso o controller não esteja marcado, desmarca todos a partir os seus filhos
       */
     var selecionaController = function(controller, method){
-        var check = controller.selecionado;
         // Marca/Desmarca método(s) do controller
         selecionaMetodosDoController(controller, method);
+        if($filter('filter')(controller.methods, {selecionado:true}).length == 0)
+            controller.selecionado = false;
+        var check = controller.selecionado;
         // Tem sub controllers?
         if(!check && controller.subControllers){
-            // Marca cada subcontroller, seus métodos e todos os seus filhos
+            // Desmarca cada subcontroller, seus métodos e todos os seus filhos
             for(var k = 0; k < controller.subControllers.length; k++){
                 var sub = controller.subControllers[k];
-                sub.selecionado = check;
+                sub.selecionado = false;
                 selecionaController(sub, method); // recursivo
             }
         }else if(method && !method.selecionado && controller.subControllers){
@@ -382,34 +385,46 @@ angular.module("administrativo-privilegios", ['servicos'])
             // é um controller filho
             var ctrlFilho = controller[0];
             var check = ctrlFilho.selecionado;
-            selecionaController(ctrlFilho);
             // Se ele acabou de ser marcado => marca os pais
             if(check){
-               for(var k = 1; k < controller.length; k++){ 
-                   var ctrl = controller[k];
+                var methodsNaoMarcadosNosPais = [];
+                for(var k = controller.length; k > 1; k--){ 
+                   var ctrl = controller[k - 1];
                    ctrl.selecionado = true;
                    // Verifica se tem algum método selecionado do controller
-                   // Se não tiver => seleciona todos
-                   //if($filter('filter')(ctrl.methods, {selecionado:true}).length == 0)
-                   selecionaMetodosDoController(ctrl);
-               }
-            }/*else{
-               // Avalia se deve desmarcar os pais 
-               for(var k = 1; k < controller.length; k++){
-                   var ctrl = controller[k];
-                   if($filter('filter')(ctrl.subControllers, {selecionado:true}).length == 0){
-                       ctrl.selecionado = false;
+                   if($filter('filter')(ctrl.methods, {selecionado:true}).length == 0){
+                       // Não tem método selecionado => seleciona tudo
                        selecionaMetodosDoController(ctrl);
+                       methodsNaoMarcadosNosPais = [];
+                       //var methodPaisUpper = methodsPais.map(function(x) { return x.toUpperCase(); });
+                   }else{ 
+                       var methodsNaoSelecionados = $filter('filter')(ctrl.methods, {selecionado:false});
+                       // Adiciona aos métodos não marcados nos pais
+                       for(var j = 0; j < methodsNaoSelecionados.length; j++){
+                           var m = methodsNaoSelecionados[j];
+                           if($filter('filter')(methodsNaoMarcadosNosPais, m.ds_method.toUpperCase()).length == 0)
+                                methodsNaoMarcadosNosPais.push(m.ds_method.toUpperCase());
+                       }
+                           // Tem métodos selecionados => observar os que não estão selecionados
+                       //if($filter('filter')(methodsPais, m.ds_method.toUpperCase()).length > 0)
+                           // Remove da lista de métodos permitidos
+                    //       methodsPais.splice(methodsPais.indexOf(m.ds_method.toUpperCase()), 1);
                    }
                 }
-            }*/
-        /*}else if(controller.id_controller === $scope.todos.id_controller){
-            // seleciona/desmarca tudo      
-        */}else{
-            // Marca do controller para baixo
+                // Finalmente, marca os métodos do controller selecionado
+                for(var k = 0; k < ctrlFilho.methods.length; k++){
+                    var m = ctrlFilho.methods[k];
+                    if($filter('filter')(methodsNaoMarcadosNosPais, m.ds_method.toUpperCase()).length == 0)
+                        m.selecionado = true;
+                }
+            }else selecionaController(ctrlFilho); // desmarca todos abaixo dele
+        }else
+            // Desmarca do controller para baixo ou apenas marca ele
             selecionaController(controller);
-        }
     }
+    /**
+      * Manuseia a mudança de uso do método do controller 
+      */
     $scope.handleCheckMethod = function(method, controller){
         if(!method.selecionado){
             // Verifica se ainda tem algum método selecionado
@@ -424,23 +439,40 @@ angular.module("administrativo-privilegios", ['servicos'])
             }
         }else{
             // todos os pais terão que ter esse método assinalado
-            console.log("MARCAR " + method.ds_method + " DOS PAIS DE");
-            console.log(controller);
+            //console.log("MARCAR " + method.ds_method + " DOS PAIS DE");
+            //console.log(controller);
+            //console.log(controller.parents);
+            var controllers = $scope.controllers;
+            for(var k = controller.parents.length; k > 0; k--){
+                /*var id_controller = controller.parents[k - 1];
+                for(var j = 0; j < controllers.length; j++){
+                    var ctrl = controllers[j];
+                    if(ctrl.id_controller === id_controller){
+                        console.log("MARCADO EM " + ctrl.ds_controller);
+                        selecionaMetodosDoController(ctrl, method);
+                        controllers = ctrl.subControllers ? ctrl.subControllers : [];
+                        break;    
+                    }
+                }*/
+                var ctrl = ($filter('filter')(controllers, {id_controller:controller.parents[k - 1]}))[0];
+                selecionaMetodosDoController(ctrl, method);
+                controllers = ctrl.subControllers ? ctrl.subControllers : [];
+            }
         }
     }
     /**
       * Carrega todos os módulos e respectivas funcionalidades
       */
-    var obtemMódulosEFuncionalidades = function(){
+    var obtemModulosEFuncionalidades = function(){
        //$scope.obtendoModulosEFuncionalidades = true;
        $scope.showProgress();
-       $webapi.get($apis.administracao.webpagescontrollers, [$scope.token, 2,       
+       $webapi.get($apis.administracao.webpagescontrollers, [$scope.token, 3,       
                                                              $campos.administracao.webpagescontrollers.ds_controller], 
                    {id : $campos.administracao.webpagescontrollers.RoleId, valor: $scope.roleSelecionada.RoleId}) 
             .then(function(dados){
                 $scope.controllers = dados.Registros;
-                // set selecionado dos controllers
-                determinaControllersSelecionados($scope.controllers);
+                // set selecionado dos controllers e transforma o array em uma estrutura de árvore
+                obtemEstruturaArvore($scope.controllers);
                 // Faz uma cópia (por valor) do controller proveniente da base de dados
                 angular.copy($scope.controllers, $scope.originalControllers);
                 //$scope.obtendoModulosEFuncionalidades = false;
@@ -452,18 +484,71 @@ angular.module("administrativo-privilegios", ['servicos'])
                  else $scope.showAlert('Houve uma falha ao requisitar módulos e funcionalidades (' + failData.status + ')', true, 'danger', true);
                  $scope.hideProgress();
               }); 
+        
+        /*$scope.controllers = [{id_controller: 50,
+                               ds_controller: 'Administração',
+                               methods: [{id_method : 100,
+                                          ds_method : 'Atualização'},
+                                         {id_method : 101,
+                                          ds_method : 'Leitura'},
+                                        ],
+                               subControllers : [
+                                  {id_controller: 51,
+                                   ds_controller: 'Gestão de Acessos',
+                                   methods: [{id_method : 102,
+                                              ds_method : 'Atualização'},
+                                             {id_method : 103,
+                                              ds_method : 'Leitura'},
+                                            ],
+                                   subControllers : [
+                                       {id_controller: 53,
+                                        ds_controller: 'Usuários',
+                                        methods: [{id_method : 110,
+                                                  ds_method : 'Atualização'},
+                                                 {id_method : 111,
+                                                  ds_method : 'Leitura'}]
+                                       },
+                                       {id_controller: 54,
+                                        ds_controller: 'Privilégios',
+                                        methods: [{id_method : 112,
+                                                  ds_method : 'Atualização'},
+                                                 {id_method : 113,
+                                                  ds_method : 'Leitura'}]
+                                       }
+
+                                   ]
+                                  },
+                                  {id_controller: 52,
+                                   ds_controller: 'Logs',
+                                   methods: [{id_method : 104,
+                                              ds_method : 'Cadastro'},
+                                             {id_method : 105,
+                                              ds_method : 'Leitura'},
+                                            ],
+                                   subControllers : [
+
+                                   ]
+                                  }   
+                               ]
+                              }];
+        obtemEstruturaArvore($scope.controllers);
+        angular.copy($scope.controllers, $scope.originalControllers);*/
     };
     /**
-      * Do conjunto de controllers, seleciona os elementos que tem métodos permitidos
+      * Do conjunto de controllers, seleciona os elementos que tem métodos permitidos e transforma a estrutura em árvore
       */
-    var determinaControllersSelecionados = function(controllers){
+    var obtemEstruturaArvore = function(controllers, parents){
         if(!controllers || controllers.length == 0) return;
+        if(typeof parents === 'undefined') parents = []; 
         for(var k = 0; k < controllers.length; k++){
             var controller = controllers[k];
+            // Seta os pais
+            controller.parents = parents;
             // Indica se ele está marcado
             controller.selecionado = $filter('filter')(controller.methods, {selecionado:true}).length > 0;
-            // Faz isso com os filhos
-            if(controller.subControllers) determinaControllersSelecionados(controller.subControllers);
+            // Faz isso com os filhos                   adiciona os pais na ordem do mais imediato até o raiz
+            if(controller.subControllers) obtemEstruturaArvore(controller.subControllers, 
+                                                               [controller.id_controller].concat(parents));
         }
     };
     /**

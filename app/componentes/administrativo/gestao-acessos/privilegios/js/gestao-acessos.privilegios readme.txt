@@ -42,7 +42,7 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
   * api/administracao/webpagescontrollers
      - GET  : listagem de todos módulos (controllers), com suas respectivas funcionalidades (methods).
 			  Aqueles métodos ao qual a role tem acesso, terá o id 'selecionado' com valor igual a 'true'
-			  (por isso, deve-se enviar como filtro para a colação 3 o RoleId)
+			  (por isso, deve-se enviar como filtro para a coleção 3 o RoleId)
 	          [{ id_controller : int,
 				ds_controller: string,	
 				methods : [{ id_method : int,
