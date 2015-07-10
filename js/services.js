@@ -108,8 +108,8 @@ angular.module('servicos', [ ])
 
 .factory('$apis', [function(){
   // Prefixos
-  //var urlBase = 'http://192.168.0.100/api'; 
-  var urlBase = 'http://api.taxservices.com.br';
+  var urlBase = 'http://192.168.0.100/api'; 
+  //var urlBase = 'http://api.taxservices.com.br';
       
   return {
     autenticacao: { 

@@ -109,7 +109,7 @@ angular.module('diretivas', ['ui.bootstrap'])
             // Se tiver definido maxlength, impede de entrar com um número maior
             if(element[0].maxLength && val.length > element[0].maxLength)
                 return val.substring(0, val.length - 1);    
-
+            
             var clean = val.replace( /[^0-9\(\)]+/g, '');
             var render = false;
             if (val !== clean) render = true;
