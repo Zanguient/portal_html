@@ -9,7 +9,7 @@
 angular.module("AtosCapital", ['ui.router', 
                                'ui.bootstrap',
                                'ui.checkbox',
-                               'ng-context-menu',
+                               //'ng-context-menu',
                                'jsTree.directive',
                                'diretivas',
                                'servicos', 

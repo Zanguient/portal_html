@@ -47,6 +47,7 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
 				ds_controller: string,	
 				methods : [{ id_method : int,
 							 ds_method : string,
+							 principal : boolean, // true se é o controller que deve ser exibido inicialmente (opcional)
 							 selecionado : boolean // true se a role tem permissão para este método
 							}] // ORDER BY DS_METHOD
 				subControllers : [{ id_controller : int
