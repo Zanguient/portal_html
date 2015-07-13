@@ -49,7 +49,8 @@ angular.module('webapi', [ ])
         },
         webpagesroles : {
             RoleId : 100,
-            RoleName : 101
+            RoleName : 101,
+            RolePrincipal : 102
         },
         webpagesusers : {
             id_users : 100,

@@ -258,7 +258,7 @@
                                             <label class="control-label col-md-3">Privilégios <span class="required">
                                             * </span>
                                             </label>
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div class="checkbox-list" ng-repeat="role in roles">
                                                     <label class="checkbox">
                                                         <input type="checkbox" 
@@ -269,6 +269,17 @@
                                                 <span style="color:red" ng-show="!rolesSelecionadas">
                                                     <strong>Selecione pelo menos um privilégio</strong>
                                                 </span>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label style="text-align : center; font-weight: bolder">
+                                                    Página inicial
+                                                </label>
+                                                <select class="form-control" size="6"
+                                                        ng-model="rolePrincipal"
+                                                        ng-change="handleRolePrincipal()"
+                                                        ng-options="role as role.PaginaInicial for role in roles | filter:{selecionado: true}"> 
+                                                    <option style="display:none" value="">Página inicial</option>
+                                                </select> 
                                             </div>
                                         </div>
                                     </div>
@@ -331,6 +342,8 @@
                                             <div class="col-md-4">
                                                 <div ng-repeat="role in roles | filter:{selecionado:true}">
                                                     <strong>{{role.RoleName}}</strong>
+                                                    <i class="fa fa-home"
+                                                       ng-show="rolePrincipal.RoleId === role.RoleId"></i>
                                                 </div>
                                             </div>
                                         </div>
