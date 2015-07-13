@@ -103,15 +103,14 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
  - nome (OB) : nome do usuário
  - token (OB) : token validado => atualiza valor na local storage
  - id_grupo (OP_A) : indica qual grupo empresa o usuário está administrando
- - servicos (OP) : array que contém os serviços o usuário tem acesso
-   * titulo (OB) : titulo do serviço ('Card Services', 'Tax Services', 'Administrativo', ...)
-   * home (OP) : se o serviço não possui subserviços, indica que ele deve ser exibido na tela inicial
-   * subServicos (OP) : array que contém os subserviços associados ao serviço
-     ** título (OB) : título do subserviço ('Consolidação', 'Conciliação', ...)
-	 ** home (OP) : se o subserviço não possui módulos, indica que ele deve ser exibido na tela inicial
-	 ** modulos (OP) : array que contém os módulos do subserviço
-	    *** titulo (OB) : título do módulo ('Relatório Sintético', 'Conciliação de Vendas', ...)
-		*** home (OP) : indica que o módulo deve ser exibido na tela inicial
+ - controllers (OP) : array que contém os serviços o usuário tem acesso
+   * ds_controller (OB) : titulo do controller ('Card Services', 'Tax Services', 'Administrativo', ...)
+   * id_controller (OB) : id do controller
+   * home (OP) : se o controller não possui subControllers, indica que ele deve ser exibido na tela inicial
+   * subControllers (OP) : array que contém os subControllers associados ao controller
+     ** ds_controller
+	 ** id_controller
+	 ** ...
  
  LEGENDA: OB : Obrigatório  
 		  OP : Opcional  

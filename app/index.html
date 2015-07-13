@@ -137,24 +137,34 @@
 			<div class="hor-menu">
                 <!-- MENU DINÂMICO -->
 				<ul class="nav navbar-nav" ng-repeat="item in menu">
-                    <li ng-class="{ active : menuAtivo(item.titulo), 'menu-dropdown mega-menu-dropdown' : item.subServicos}">
-                        <a data-hover="megamenu-dropdown" data-close-others="true" href="javascript:;" ng-click="item.link()" data-toggle="dropdown" ng-class="{'dropdown-toggle' : item.subServicos}">
-						{{item.titulo}} <i ng-show="item.subServicos" class="fa fa-angle-down"></i>
+                    <li ng-class="{ active : menuAtivo(item.ds_controller), 'menu-dropdown mega-menu-dropdown' : item.subControllers && item.subControllers.length > 0}">
+                        <a data-hover="megamenu-dropdown" 
+                           data-close-others="true" 
+                           href="javascript:;" 
+                           ng-click="item.link()" 
+                           data-toggle="dropdown" 
+                           ng-class="{'dropdown-toggle' : item.subControllers && item.subControllers.length > 0}">
+                            {{item.ds_controller}} 
+                            <i ng-show="item.subControllers && item.subControllers.length > 0" 
+                               class="fa fa-angle-down"></i>
 						</a>
-                        <ul ng-show="item.subServicos" class="dropdown-menu">
+                        <ul ng-show="item.subControllers && item.subControllers.length > 0" class="dropdown-menu">
                             <li>
 								<div class="mega-menu-content">
 									<div class="row">
-										<div class="col-xs-1" style="width: inherit !important" ng-repeat="subservico in item.subServicos">
+										<div class="col-xs-1" 
+                                             style="width: inherit !important" 
+                                             ng-repeat="subController1 in item.subControllers">
 											<ul class="mega-menu-submenu">
 												<li>
-													<h3>{{subservico.titulo}}</h3>
+													<h3>{{subController1.ds_controller}}</h3>
 												</li>
-												<li ng-repeat="modulo in subservico.modulos"
-                                                    ng-class="{ active : moduloAtivo(modulo.titulo) }">
-													<a href="javascript:;" ng-click="modulo.link()">
-													<i class="fa fa-angle-right"></i>
-													{{modulo.titulo}} </a>
+												<li ng-repeat="subController2 in subController1.subControllers"
+                                                    ng-class="{ active : moduloAtivo(subController1.ds_controller) }">
+													<a href="javascript:;" ng-click="subController2.link()">
+													   <i class="fa fa-angle-right"></i>
+													   {{subController2.ds_controller}}
+                                                    </a>
 												</li>												
 											</ul>
 										</div>

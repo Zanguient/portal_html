@@ -341,15 +341,15 @@ angular.module("AtosCapital", ['ui.router',
     /**
       * Retorna a função que faz o link para o item com o título informado
       */                        
-    var getLink = function(titulo){
-        switch(titulo.toUpperCase()){
+    var getLink = function(titulo){//id_controller){
+        switch(titulo.toUpperCase()){//id_controller){
             // Administrativo
             case 'USUÁRIOS' : return $scope.goAdministrativoUsuarios;
             case 'PRIVILÉGIOS' : return $scope.goAdministrativoPrivilegios; 
             case 'MÓDULOS E FUNCIONALIDADES' : return $scope.goAdministrativoModulosFuncionalidades;
             case 'ACESSO DE USUÁRIOS' : return $scope.goAdministrativoAcessoUsuarios;    
             // Dashboard
-            case 'DASHBOARD': return $scope.goDashboard;  
+            case 'DASHBOARD ATOS': return $scope.goDashboard;  
             // Card Services
             case 'CONCILIAÇÃO DE VENDAS': return $scope.goCardServicesConciliacaoVendas;
             case 'RELATÓRIOS': return $scope.goCardServicesRelatorios; 
@@ -360,12 +360,12 @@ angular.module("AtosCapital", ['ui.router',
     
     // PERMISSÕES
     /**
-      * Atribui a permissão para o respectivo título 
+      * Atribui a permissão para o respectivo id_controller //título 
       * OBS: título não é uma boa referência. O ideal seria identificadores, 
       * visto que podem existir títulos idênticos em Serviços distintos
       */                         
-    var atribuiPermissao = function(titulo){ // , tituloPai){
-        switch(titulo.toUpperCase()){
+    var atribuiPermissao = function(titulo){//id_controller){
+        switch(titulo.toUpperCase()){//id_controller){
             // Administrativo
             case 'ADMINISTRATIVO' : $scope.PERMISSAO_ADMINISTRATIVO = true; break;
             case 'GESTÃO DE ACESSOS' : $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS = true; break;
@@ -374,8 +374,6 @@ angular.module("AtosCapital", ['ui.router',
             case 'MÓDULOS E FUNCIONALIDADES' : $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_MODULOS_FUNCIONALIDADES = true; break;
             case 'LOGS' : $scope.PERMISSAO_ADMINISTRATIVO_LOGS = true; break;
             case 'ACESSO DE USUÁRIOS' : $scope.PERMISSAO_ADMINISTRATIVO_LOGS_ACESSO_USUARIOS = true; break;
-            // Dashboard
-            case 'DASHBOARD': $scope.PERMISSAO_DASHBOARD = true; break;
             // Card Services
             case 'CARD SERVICES': $scope.PERMISSAO_CARD_SERVICES = true; break;
             case 'CONCILIAÇÃO': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO = true; break;
@@ -383,6 +381,8 @@ angular.module("AtosCapital", ['ui.router',
             case 'CONSOLIDAÇÃO': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO = true; break;   
             case 'DADOS DE ACESSO': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_DADOS_ACESSO = true; break;    
             case 'RELATÓRIOS': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_RELATORIOS = true; break;
+            // Dashboard
+            case 'DASHBOARD ATOS': $scope.PERMISSAO_DASHBOARD = true; break;
             // ...
             default : return ;        
         }
@@ -390,15 +390,15 @@ angular.module("AtosCapital", ['ui.router',
              
     // LAYOUT
     /**
-      * Informa se o título informado se refere ao menu que está ativo no momento
+      * Informa se o id_controller informado se refere ao menu que está ativo no momento
       */
-    $scope.menuAtivo = function(titulo){
+    $scope.menuAtivo = function(titulo){//id_controller){
         var state = $state.current.url.split('/')[1]; // nome da pasta inicial da url do estado atual
-        switch(titulo.toUpperCase()){
+        switch(titulo.toUpperCase()){//id_controller){
             // Administrativo
             case 'ADMINISTRATIVO' : return state == 'administrativo';
             // Dashboard
-            case 'DASHBOARD': return state == 'dashboard';
+            case 'DASHBOARD ATOS': return state == 'dashboard';
             // Card Services
             case 'CARD SERVICES': return state == 'card-services';
                 
@@ -407,11 +407,11 @@ angular.module("AtosCapital", ['ui.router',
         
     };
     /**
-      * Informa se o título informado se refere ao módulo que está ativo no momento
+      * Informa se o id_controller informado se refere ao módulo que está ativo no momento
       */
-    $scope.moduloAtivo = function(titulo){
+    $scope.moduloAtivo = function(titulo){//id_controller){
         var state = $state.current.url.split('/')[2]; // nome da pasta inicial da url do estado atual
-        switch(titulo.toUpperCase()){
+        switch(titulo.toUpperCase()){//id_controller){
             // Administrativo
             case 'USUÁRIOS' : return state == 'usuarios' || state == 'cadastro-usuarios';
             case 'PRIVILÉGIOS' : return state == 'privilegios';
@@ -429,116 +429,130 @@ angular.module("AtosCapital", ['ui.router',
       */                        
     var constroiMenu = function(data){
         // Exemplo
-        //data.id_grupo = 42;
-        data.servicos = [
+        /*data.id_grupo = 42;
+        data.controllers = [
             {
-                titulo : 'Dashboard' // ds_controller
+                ds_controller : 'Dashboard',
+                id_controller : 64
             },
             {
-                titulo : 'Card Services',
-                subServicos : [
+                ds_controller : 'Card Services',
+                id_controller : 59,
+                subControllers : [
                     {
-                        titulo : 'Conciliação', 
-                        modulos : [
+                        ds_controller : 'Conciliação',
+                        id_controller : 60,
+                        subControllers : [
                             {
-                                titulo : 'Conciliação de Vendas',
-                                // Pq em JSON? Pq pode ser a página inicial do cara, enviando assim o 'home=true' aqui!
+                                ds_controller : 'Conciliação de Vendas',
+                                id_controller : 62
                             }
                         ]
                     },
                     {
-                        titulo : 'Consolidação', 
-                        modulos : [
+                        ds_controller : 'Consolidação',
+                        id_controller : 61,
+                        subControllers : [
                             {
-                                titulo : 'Relatórios'
+                                ds_controller : 'Relatórios',
+                                id_controller : 63
                             },
                             {
-                                titulo : 'Dados de Acesso'
+                                ds_controller : 'Dados de Acesso',
+                                id_controller : 65
                             }
                         ]
                     }
                 ]
             },
             {
-                titulo : 'Administrativo', // possui perfil administrativo
-                subServicos : [
+                ds_controller : 'Administrativo', // possui perfil administrativo
+                id_controller : 52,
+                subControllers : [
                     {
-                        titulo : 'Gestão de Acessos', 
-                        modulos : [
+                        ds_controller : 'Gestão de Acessos',
+                        id_controller : 53,
+                        subControllers : [
                             {
-                                titulo : 'Usuários',
+                                ds_controller : 'Usuários',
+                                id_controller : 54,
 								home : true
                             },
                             {
-                                titulo : 'Privilégios'
+                                ds_controller : 'Privilégios',
+                                id_controller : 55
                             },
                             {
-                                titulo : 'Módulos e Funcionalidades'
+                                ds_controller : 'Módulos e Funcionalidades',
+                                id_controller : 56
                             }
                         ]
                     },
                     {
-                        titulo : 'Logs', 
-                        modulos : [
+                        ds_controller : 'Logs',
+                        id_controller : 57,
+                        subControllers : [
                             {
-                                titulo : 'Acesso de usuários'
+                                ds_controller : 'Acesso de usuários',
+                                id_controller : 58
                             }
                         ]
                     }
                 ]
             }
-        ];
+        ];*/
         
         // Constrói o menu
         $scope.menu = [];
-        for(var k = 0; k < data.servicos.length; k++){
-            var servico = data.servicos[k];
+        for(var k = 0; k < data.controllers.length; k++){
+            var controller = data.controllers[k];
             var menu = {};
-            menu.titulo = servico.titulo;
+            menu.ds_controller = controller.ds_controller;
+            menu.id_controller = controller.id_controller;
             // Atribui permissão
-            atribuiPermissao(menu.titulo);
-            // Verifica se estava administrando algum grupo empresa
-            if(servico.id_grupo) empresaId = servico.id_grupo;
+            atribuiPermissao(menu.ds_controller);//menu.id_controller);
             
             // Subserviços
-            if(servico.subServicos){
-                menu.subServicos = [];
-                for(var j = 0; j < servico.subServicos.length; j++){
-                    var subServico = servico.subServicos[j];
+            if(controller.subControllers  && controller.subControllers.length > 0){
+                menu.subControllers = [];
+                for(var j = 0; j < controller.subControllers.length; j++){
+                    var subController1 = controller.subControllers[j];
                     var subMenu = {};
-                    subMenu.titulo = subServico.titulo;
+                    subMenu.ds_controller = subController1.ds_controller;
+                    subMenu.id_controller = subController1.id_controller;
                     // Atribui permissão
-                    atribuiPermissao(subMenu.titulo);
+                    atribuiPermissao(subMenu.ds_controller);//subMenu.id_controller);
                     
                     // Módulos
-                    if(subServico.modulos){
-                        subMenu.modulos = [];
-                        for(var i = 0; i < subServico.modulos.length; i++){
-                            var modulo = subServico.modulos[i];
+                    if(subController1.subControllers && subController1.subControllers.length > 0){
+                        subMenu.subControllers = [];
+                        for(var i = 0; i < subController1.subControllers.length; i++){
+                            var subController2 = subController1.subControllers[i];
                             var itemMenu = {};
-                            itemMenu.titulo = modulo.titulo;
+                            itemMenu.ds_controller = subController2.ds_controller;
+                            itemMenu.id_controller = subController2.id_controller;
                             // Atribui permissão
-                            atribuiPermissao(itemMenu.titulo);
-                            itemMenu.link = getLink(itemMenu.titulo);
-                            if(modulo.home && !$scope.goHome) $scope.goHome = itemMenu.link;
+                            atribuiPermissao(itemMenu.ds_controller);//itemMenu.id_controller);
+                            itemMenu.link = getLink(itemMenu.ds_controller);//itemMenu.id_controller);
+                            if(subController2.home && !$scope.goHome) $scope.goHome = itemMenu.link;
                             // Adiciona o módulo
-                            subMenu.modulos.push(itemMenu);
+                            subMenu.subControllers.push(itemMenu);
                         }
                     }else{
                         // Se não tem módulos, então deve ter um link
-                        subMenu.link = getLink(subMenu.titulo); 
+                        subMenu.link = getLink(subMenu.ds_controller);//subMenu.id_controller); 
                         // Página inicial é definido pelo primeiro 'home=true' encontrado        
-                        if(subServico.home && !$scope.goHome) $scope.goHome = subMenu.link;
+                        if(subController1.home && !$scope.goHome) $scope.goHome = subMenu.link;
                     }
                     
                     // Adiciona o subserviço
-                    menu.subServicos.push(subMenu);
+                    menu.subControllers.push(subMenu);
                 }
             }else{
                 // Se não tem subserviços, então deve ter um link
-                menu.link = getLink(menu.titulo); 
+                menu.link = getLink(menu.ds_controller);//menu.id_controller); 
                 // Página inicial é definido pelo primeiro 'home=true' encontrado        
-                if(servico.home && !$scope.goHome) $scope.goHome = menu.link;
+                if(controller.home && !$scope.goHome) $scope.goHome = menu.link;
             }
             
             // Adiciona o menu
@@ -546,7 +560,11 @@ angular.module("AtosCapital", ['ui.router',
         }
         
         // Verifica se estava administrando algum grupo empresa
+        //if(data.id_grupo) empresaId = servico.id_grupo;
         if($scope.PERMISSAO_ADMINISTRATIVO && data.id_grupo) obtemGrupoEmpresa(data.id_grupo);
+        
+        // Go Home
+        if(typeof $scope.goHome == 'function') $scope.goHome();
         
         // Seta o flag para true
         menuConstruido = true;
@@ -587,7 +605,7 @@ angular.module("AtosCapital", ['ui.router',
                 $scope.goCardServicesConciliacaoVendas(); break;
             case $state.get('card-services-consolidacao-relatorios').url : 
                 $scope.goCardServicesRelatorios(); break; 
-            default : $scope.goHome(); // Exibe tela inicial
+            default : if(typeof $scope.goHome == 'function') $scope.goHome(); // Exibe tela inicial
         }
     };                        
     
