@@ -458,7 +458,7 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
         $scope.showProgress(divPortletBodyModuloFuncionalidadePos);
         $webapi.post($apis.getUrl($apis.administracao.webpagesmethods, $scope.token), jsonMetodo)
                 .then(function(id_method){
-                    $scope.showAlert('Métidi cadastrado com sucesso!', true, 'success', true);
+                    $scope.showAlert('Método cadastrado com sucesso!', true, 'success', true);
                     // Dismiss o progress
                     $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
                     // Adiciona o novo método de forma ordenada (por ds_method)
