@@ -24,132 +24,131 @@
         <div class="col-md-12">
             <!-- BEGIN TABLE PORTLET-->
             <div class="portlet light">
-				<div class="portlet light"> 
-                    <div class="portlet-title">
-                        <div class="caption">								
-                            <span class="caption-subject font-green-sharp bold uppercase">Filtros</span>						
-                        </div>
-                        <div class="actions">
+				 
+                <div class="portlet-title">
+                    <div class="caption">								
+                        <span class="caption-subject font-green-sharp bold uppercase">Filtros</span>						
+                    </div>
+                    <div class="actions">
 
 
-                        </div>
                     </div>
-                    <div class="portlet-body">
-                        <div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">
-                            <div class="row">                       
-                                <div class="col-md-8 col-sm-12">
-                                    <div class="dataTables_paginate paging_bootstrap_extended" id="datatable_ajax_paginate">
-                                    </div>
-                                    <div class="dataTables_info" id="datatable_ajax_info" role="status" aria-live="polite">
-                                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">
+                        <div class="row">                       
+                            <div class="col-md-8 col-sm-12">
+                                <div class="dataTables_paginate paging_bootstrap_extended" id="datatable_ajax_paginate">
                                 </div>
-                                <div class="col-md-4 col-sm-12">
-                                    <div class="table-group-actions pull-right">
-                                        <span> </span>
-                                    </div>
+                                <div class="dataTables_info" id="datatable_ajax_info" role="status" aria-live="polite">
                                 </div>
                             </div>
-                            <!--div class="table-scrollable"-->
-                            <div class="table-scrollable">
-                                <table class="table table-striped table-bordered table-hover dataTable no-footer" id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
-                                    <thead>
-                                        <tr role="row" class="heading">
-                                            <th width="15%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
-                                                 Data
-                                            </th>
-                                            <th width="10%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
-                                                 Filiais 
-                                            </th>
-                                            <th width="10%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
-                                                 Adquirentes
-                                            </th>
-                                            <th width="10%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
-                                                 Bandeiras
-                                            </th>
-                                            <th width="10%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
-                                                 Status
-                                            </th>
-                                            <th width="10%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
-                                                 Opções
-                                            </th>
-                                        </tr>
-                                        <tr role="row" class="filter">
-                                            <td rowspan="1" colspan="1">                                    
-                                                <div class="input-group date date-picker margin-bottom-5">
-                                                    <!--input type="text" class="form-control form-filter input-sm" readonly name="order_date_from" placeholder="Início"-->
-                                                    <input type="text" class="form-control form-filter input-sm ng-pristine ng-untouched ng-valid ng-isolate-scope ng-valid-required ng-valid-date" readonly="" style="cursor: pointer" ng-click="exibeCalendarioDataMin($event)" placeholder="Início" ng-model="datamin" ng-change="alterouDataMin()" datepicker-append-to-body="true" datepicker-popup="dd MMMM yyyy" is-open="abrirCalendarioDataMin" min-date="2000-01-01" ng-required="true" show-button-bar="false" show-weeks="false" required="required">
-                                                    <span class="input-group-btn">
-                                                    <button class="btn btn-sm default" type="button" ng-click="exibeCalendarioDataMin($event)"><i class="fa fa-calendar"></i></button>
-                                                    </span>
-                                                </div>
-                                                <div class="input-group date date-picker margin-bottom-5" data-date-format="dd/mm/yyyy">
-                                                    <input type="text" class="form-control form-filter input-sm ng-pristine ng-untouched ng-valid ng-isolate-scope ng-valid-date ng-valid-required" readonly="" style="cursor: pointer" ng-click="exibeCalendarioDataMax($event)" placeholder="Fim" ng-model="datamax" ng-change="alterouDataMax()" datepicker-popup="dd MMMM yyyy" is-open="abrirCalendarioDataMax" datepicker-append-to-body="true" min-date="2000-01-01" ng-required="false" current-text="Hoje" clear-text="Limpar" close-text="Fechar" show-button-bar="true" show-weeks="false">
-                                                    <span class="input-group-btn">
-                                                    <button class="btn btn-sm default" type="button" ng-click="exibeCalendarioDataMax($event)"><i class="fa fa-calendar"></i></button>
-                                                    </span>
-                                                </div>                                            
-                                            </td>
-                                            <td rowspan="1" colspan="1">
-                                                <select name="order_status" class="form-control form-filter input-sm">
-                                                    <option value="">Todas</option>
-                                                    <option value="pending">Pending</option>
-                                                    <option value="closed">Closed</option>
-                                                    <option value="hold">On Hold</option>
-                                                    <option value="fraud">Fraud</option>
-                                                </select>
-                                            </td>
-                                            <td rowspan="1" colspan="1">
-                                                <select name="order_status" class="form-control form-filter input-sm">
-                                                    <option value="">Todas</option>
-                                                    <option value="pending">Pending</option>
-                                                    <option value="closed">Closed</option>
-                                                    <option value="hold">On Hold</option>
-                                                    <option value="fraud">Fraud</option>
-                                                </select>
-                                            </td>
-                                            <td rowspan="1" colspan="1">
-                                                <select name="order_status" class="form-control form-filter input-sm">
-                                                    <option value="">Todas</option>
-                                                    <option value="pending">Pending</option>
-                                                    <option value="closed">Closed</option>
-                                                    <option value="hold">On Hold</option>
-                                                    <option value="fraud">Fraud</option>
-                                                </select>
-                                            </td>
-                                            <td rowspan="1" colspan="1">
-                                                <select name="order_status" class="form-control form-filter input-sm">
-                                                    <option value="">Todas</option>
-                                                    <option value="pending">Pending</option>
-                                                    <option value="closed">Closed</option>
-                                                    <option value="hold">On Hold</option>
-                                                    <option value="fraud">Fraud</option>
-                                                </select>
-                                            </td>
-                                            <td rowspan="1" colspan="1">
-                                                <div class="margin-bottom-5">
-                                                    <button class="btn btn-sm red filter-submit margin-bottom" ng-click="showModalConfirmacao('Meu titulo')"><i class="fa fa-search"></i> Buscar</button>
-                                                </div>
-                                                <button class="btn btn-sm grey filter-cancel"><i class="fa fa-times"></i> Limpar</button>
-                                            </td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-8 col-sm-12">
-                                    <div class="dataTables_paginate paging_bootstrap_extended">
-                                    </div>
-                                    <div class="dataTables_info">
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-sm-12">
+                            <div class="col-md-4 col-sm-12">
+                                <div class="table-group-actions pull-right">
+                                    <span> </span>
                                 </div>
                             </div>
                         </div>
+                        <!--div class="table-scrollable"-->
+                        <div class="table-scrollable">
+                            <table class="table table-striped table-bordered table-hover dataTable no-footer" id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
+                                <thead>
+                                    <tr role="row" class="heading">
+                                        <th width="15%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                             Data
+                                        </th>
+                                        <th width="10%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                             Filiais 
+                                        </th>
+                                        <th width="10%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                             Adquirentes
+                                        </th>
+                                        <th width="10%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                             Bandeiras
+                                        </th>
+                                        <th width="10%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                             Status
+                                        </th>
+                                        <th width="10%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                             Opções
+                                        </th>
+                                    </tr>
+                                    <tr role="row" class="filter">
+                                        <td rowspan="1" colspan="1">                                    
+                                            <div class="input-group date date-picker margin-bottom-5">
+                                                <!--input type="text" class="form-control form-filter input-sm" readonly name="order_date_from" placeholder="Início"-->
+                                                <input type="text" class="form-control form-filter input-sm ng-pristine ng-untouched ng-valid ng-isolate-scope ng-valid-required ng-valid-date" readonly="" style="cursor: pointer" ng-click="exibeCalendarioDataMin($event)" placeholder="Início" ng-model="datamin" ng-change="alterouDataMin()" datepicker-append-to-body="true" datepicker-popup="dd MMMM yyyy" is-open="abrirCalendarioDataMin" min-date="2000-01-01" ng-required="true" show-button-bar="false" show-weeks="false" required="required">
+                                                <span class="input-group-btn">
+                                                <button class="btn btn-sm default" type="button" ng-click="exibeCalendarioDataMin($event)"><i class="fa fa-calendar"></i></button>
+                                                </span>
+                                            </div>
+                                            <div class="input-group date date-picker margin-bottom-5" data-date-format="dd/mm/yyyy">
+                                                <input type="text" class="form-control form-filter input-sm ng-pristine ng-untouched ng-valid ng-isolate-scope ng-valid-date ng-valid-required" readonly="" style="cursor: pointer" ng-click="exibeCalendarioDataMax($event)" placeholder="Fim" ng-model="datamax" ng-change="alterouDataMax()" datepicker-popup="dd MMMM yyyy" is-open="abrirCalendarioDataMax" datepicker-append-to-body="true" min-date="2000-01-01" ng-required="false" current-text="Hoje" clear-text="Limpar" close-text="Fechar" show-button-bar="true" show-weeks="false">
+                                                <span class="input-group-btn">
+                                                <button class="btn btn-sm default" type="button" ng-click="exibeCalendarioDataMax($event)"><i class="fa fa-calendar"></i></button>
+                                                </span>
+                                            </div>                                            
+                                        </td>
+                                        <td rowspan="1" colspan="1">
+                                            <select name="order_status" class="form-control form-filter input-sm">
+                                                <option value="">Todas</option>
+                                                <option value="pending">Pending</option>
+                                                <option value="closed">Closed</option>
+                                                <option value="hold">On Hold</option>
+                                                <option value="fraud">Fraud</option>
+                                            </select>
+                                        </td>
+                                        <td rowspan="1" colspan="1">
+                                            <select name="order_status" class="form-control form-filter input-sm">
+                                                <option value="">Todas</option>
+                                                <option value="pending">Pending</option>
+                                                <option value="closed">Closed</option>
+                                                <option value="hold">On Hold</option>
+                                                <option value="fraud">Fraud</option>
+                                            </select>
+                                        </td>
+                                        <td rowspan="1" colspan="1">
+                                            <select name="order_status" class="form-control form-filter input-sm">
+                                                <option value="">Todas</option>
+                                                <option value="pending">Pending</option>
+                                                <option value="closed">Closed</option>
+                                                <option value="hold">On Hold</option>
+                                                <option value="fraud">Fraud</option>
+                                            </select>
+                                        </td>
+                                        <td rowspan="1" colspan="1">
+                                            <select name="order_status" class="form-control form-filter input-sm">
+                                                <option value="">Todas</option>
+                                                <option value="pending">Pending</option>
+                                                <option value="closed">Closed</option>
+                                                <option value="hold">On Hold</option>
+                                                <option value="fraud">Fraud</option>
+                                            </select>
+                                        </td>
+                                        <td rowspan="1" colspan="1">
+                                            <div class="margin-bottom-5">
+                                                <button class="btn btn-sm red filter-submit margin-bottom" ng-click="showModalConfirmacao('Meu titulo')"><i class="fa fa-search"></i> Buscar</button>
+                                            </div>
+                                            <button class="btn btn-sm grey filter-cancel"><i class="fa fa-times"></i> Limpar</button>
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8 col-sm-12">
+                                <div class="dataTables_paginate paging_bootstrap_extended">
+                                </div>
+                                <div class="dataTables_info">
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                            </div>
+                        </div>
                     </div>
-    </div>		
+                </div>    		
             </div>
             <!-- END TABLE PORTLET-->
         </div>
@@ -157,10 +156,295 @@
     <div class="row">
         <div class="col-md-12">
             <!-- BEGIN TABLE PORTLET-->
-            <div class="portlet light">
-						
+            <div class="portlet light">                
+                
+                <!-- TOPO : Nome 'Usuários' e botões de 'Opções' e FullScreen -->
+                <div class="portlet-title">
+                    <div class="caption">
+                        <!--i class="fa fa-cogs font-green-sharp"></i-->
+                        <span class="caption-subject font-green-sharp bold uppercase">Informações</span>
+                    </div>
+                    <div class="actions">
+                        <!-- FULLSCREEN -->
+                        <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;" data-original-title="" title=""></a>
+                        <!-- OPÇÕES -->
+                        <div class="btn-group">
+                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
+                            <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to Excel </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to CSV </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to XML </a>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Print Invoices </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- CORPO : Botão 'Novo Usuário' e Tabela -->
+                <div class="portlet-body">                    
+                    <!-- TABELA -->
+                    <div class="dataTables_wrapper no-footer">
+                        <!-- EXIBIÇÃO E PESQUISA -->
+                        <div class="row">
+                            <!-- EXIBIÇÃO --> 
+                            <div class="col-sm-6">
+                                <div class="dataTables_length">
+                                    <label class="ng-binding">
+                                        <span class="seperator"></span>Exibindo 
+                                        <select name="datatable_products_length" aria-controls="datatable_products" class="form-control input-xsmall input-sm input-inline ng-pristine ng-untouched ng-valid" ng-model="usuario.itens_pagina" ng-change="alterouItensPagina()" ng-options="item for item in itens_pagina"><option value="0" selected="selected" label="10">10</option><option value="1" label="20">20</option><option value="2" label="50">50</option><option value="3" label="100">100</option></select> registros de 189
+                                    </label>
+                                </div>
+                            </div>                            
+                            <!-- PESQUISA -->
+                            <div class="col-sm-6">
+                                <div class="dataTables_filter">                                      
+                                    <div class="col-sm-7" style="padding-right: 1px; padding-left: 1px; float:right">
+                                        <label>
+                                            <div class="input-group input-icon right">
+                                                <i class="fa fa-times ng-hide" style="right:50px;cursor:pointer" ng-click="resetaBusca()" ng-show="usuario.busca"></i>
+                                                <input type="text" class="form-control input-inline ng-pristine ng-untouched ng-valid" placeholder="Buscar" ng-model="busca" ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 &amp;&amp; !busca)) &amp;&amp; filtraUsuarios()">
+												<span class="input-group-addon">
+                                                    <i class="fa fa-search" style="cursor:pointer" ng-click="filtraUsuarios()"></i>
+												</span>
+											</div> 
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!--NAVEGAÇÃO-->
+                        <div class="portlet-title tabbable-line" style="float:right">                            
+                                <ul class="nav nav-tabs">
+                                    <li>
+                                        <a href="#portlet_tab1" data-toggle="tab" id="statistics_amounts_tab">
+                                        terminal Lógico </a>
+                                    </li>
+                                    <li class="active">
+                                        <a href="#portlet_tab2" data-toggle="tab">
+                                        Sintético </a>
+                                    </li>
+                                    <li>
+                                        <a href="#portlet_tab3" data-toggle="tab">
+                                        Analítico </a>
+                                    </li>
+                                </ul>
+                        </div>
+                        <div class="portlet-body">
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="portlet_tab2">
+                                    <div id="statistics_1" class="chart">
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="portlet_tab2">
+                                    <div id="statistics_2" class="chart">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="margin-top-20 no-margin no-border">
+                                <div class="row">
+                                    <div class="col-md-3 col-sm-3 col-xs-6 text-stat">
+                                        <span class="label label-success uppercase">
+                                        Revenue: </span>
+                                        <h3>$1,234,112.20</h3>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-6 text-stat">
+                                        <span class="label label-info uppercase">
+                                        Tax: </span>
+                                        <h3>$134,90.10</h3>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-6 text-stat">
+                                        <span class="label label-danger uppercase">
+                                        Shipment: </span>
+                                        <h3>$1,134,90.10</h3>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-6 text-stat">
+                                        <span class="label label-warning uppercase">
+                                        Orders: </span>
+                                        <h3>235090</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+					</div>
+					<!-- End: life time stats -->
+                </div>
+                <!-- FIM RODAPÉ -->    
             </div>
-            <!-- END TABLE PORTLET-->
         </div>
+        <!-- FIM TABELA -->
+    </div>
+    <!-- END TABLE PORTLET--> 
+    
+    <!--Area de teste-->
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN TABLE PORTLET-->
+            <div class="portlet light">                
+                
+                <!-- TOPO : Nome 'Usuários' e botões de 'Opções' e FullScreen -->
+                <div class="portlet-title">
+                    <div class="caption">
+                        <!--i class="fa fa-cogs font-green-sharp"></i-->
+                        <span class="caption-subject font-green-sharp bold uppercase">Informações</span>
+                    </div>
+                    <div class="actions">
+                        <!-- FULLSCREEN -->
+                        <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;" data-original-title="" title=""></a>
+                        <!-- OPÇÕES -->
+                        <div class="btn-group">
+                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
+                            <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to Excel </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to CSV </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to XML </a>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Print Invoices </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- CORPO : Botão 'Novo Usuário' e Tabela -->
+                <div class="portlet-body">                    
+                    <!-- TABELA -->
+                    <div class="dataTables_wrapper no-footer">
+                        <!-- EXIBIÇÃO E PESQUISA -->
+                        <div class="row">
+                            <!-- EXIBIÇÃO --> 
+                            <div class="col-sm-6">
+                                <div class="dataTables_length">
+                                    <label class="ng-binding">
+                                        <span class="seperator"></span>Exibindo 
+                                        <select name="datatable_products_length" aria-controls="datatable_products" class="form-control input-xsmall input-sm input-inline ng-pristine ng-untouched ng-valid" ng-model="usuario.itens_pagina" ng-change="alterouItensPagina()" ng-options="item for item in itens_pagina"><option value="0" selected="selected" label="10">10</option><option value="1" label="20">20</option><option value="2" label="50">50</option><option value="3" label="100">100</option></select> registros de 189
+                                    </label>
+                                </div>
+                            </div>                            
+                            <!-- PESQUISA -->
+                            <div class="col-sm-6">
+                                <div class="dataTables_filter">                                      
+                                    <div class="col-sm-7" style="padding-right: 1px; padding-left: 1px; float:right">
+                                        <label>
+                                            <div class="input-group input-icon right">
+                                                <i class="fa fa-times ng-hide" style="right:50px;cursor:pointer" ng-click="resetaBusca()" ng-show="usuario.busca"></i>
+                                                <input type="text" class="form-control input-inline ng-pristine ng-untouched ng-valid" placeholder="Buscar" ng-model="busca" ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 &amp;&amp; !busca)) &amp;&amp; filtraUsuarios()">
+												<span class="input-group-addon">
+                                                    <i class="fa fa-search" style="cursor:pointer" ng-click="filtraUsuarios()"></i>
+												</span>
+											</div> 
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>  
+                        
+                        <div class="table-scrollable">
+                            <table class="table table-striped table-hover table-bordered dataTable no-footer" id="sample_editable_1" role="grid" aria-describedby="sample_editable_1_info">
+				                <thead>
+                                    <tr role="row">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-sort="ascending" aria-label="
+									 Username
+								: activate to sort column ascending" style="width: 188px;">
+									 Bandeira
+								        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="
+									 Full Name
+								: activate to sort column ascending" style="width: 237px;">
+									 Total de Transações
+								        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="
+									 Points
+								: activate to sort column ascending" style="width: 128px;">
+									 Valor Bruto
+								        </th>
+                                        <th tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="
+									 Notes
+								: activate to sort column ascending" style="width: 163px;">
+									 ---
+								        </th>                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr role="row" class="odd">
+                                        <td class="sorting_1">
+                                             GOODCARD-GOODCARD
+                                        </td>
+                                        <td>
+                                             303 Nilson
+                                        </td>
+                                        <td>
+                                             R$
+                                        </td>
+                                        <td class="center">
+                                             power user
+                                        </td>                                        
+                                    </tr>
+                                    <tr role="row" class="odd">
+                                        <td class="sorting_1">
+                                             alex
+                                        </td>
+                                        <td>
+                                             Alex Nilson
+                                        </td>
+                                        <td>
+                                             1234
+                                        </td>
+                                        <td class="center">
+                                             power user
+                                        </td>                                        
+                                    </tr>
+                                    <tr role="row" class="odd">
+                                        <td class="sorting_1">
+                                             alex
+                                        </td>
+                                        <td>
+                                             Alex Nilson
+                                        </td>
+                                        <td>
+                                             1234
+                                        </td>
+                                        <td class="center">
+                                             power user
+                                        </td>                                        
+                                    </tr>                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+					<!-- End: life time stats -->
+                </div>
+                <!-- FIM RODAPÉ -->    
+            </div>
+        </div>
+        <!-- FIM TABELA -->
     </div>
 </div>
