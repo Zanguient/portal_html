@@ -226,62 +226,36 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <!--NAVEGAÇÃO-->
-                        <div class="portlet-title tabbable-line" style="float:right">                            
-                                <ul class="nav nav-tabs">
-                                    <li>
-                                        <a href="#portlet_tab1" data-toggle="tab" id="statistics_amounts_tab">
-                                        terminal Lógico </a>
-                                    </li>
-                                    <li class="active">
-                                        <a href="#portlet_tab2" data-toggle="tab">
-                                        Sintético </a>
-                                    </li>
-                                    <li>
-                                        <a href="#portlet_tab3" data-toggle="tab">
-                                        Analítico </a>
-                                    </li>
-                                </ul>
-                        </div>
-                        <div class="portlet-body">
-                            <div class="tab-content">
-                                <div class="tab-pane active" id="portlet_tab2">
-                                    <div id="statistics_1" class="chart">
+                            <!--NAVEGAÇÃO-->  
+                            <div class="col-md-12">
+                            <!-- Begin: life time stats -->
+                                <div class="portlet light">
+                                    <div class="portlet-title tabbable-line">							
+                                        <ul class="nav nav-tabs">
+                                            <li>
+                                                <a href="#portlet_tab2" data-toggle="tab-pane" id="statistics_amounts_tab">
+                                                Terminal Lógico </a>
+                                            </li>
+                                            <li class="active">
+                                                <a href="#portlet_tab1" data-toggle="tab">
+                                                Sintético </a>
+                                            </li>
+                                        </ul>
                                     </div>
-                                </div>
-                                <div class="tab-pane" id="portlet_tab2">
-                                    <div id="statistics_2" class="chart">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="margin-top-20 no-margin no-border">
-                                <div class="row">
-                                    <div class="col-md-3 col-sm-3 col-xs-6 text-stat">
-                                        <span class="label label-success uppercase">
-                                        Revenue: </span>
-                                        <h3>$1,234,112.20</h3>
-                                    </div>
-                                    <div class="col-md-3 col-sm-3 col-xs-6 text-stat">
-                                        <span class="label label-info uppercase">
-                                        Tax: </span>
-                                        <h3>$134,90.10</h3>
-                                    </div>
-                                    <div class="col-md-3 col-sm-3 col-xs-6 text-stat">
-                                        <span class="label label-danger uppercase">
-                                        Shipment: </span>
-                                        <h3>$1,134,90.10</h3>
-                                    </div>
-                                    <div class="col-md-3 col-sm-3 col-xs-6 text-stat">
-                                        <span class="label label-warning uppercase">
-                                        Orders: </span>
-                                        <h3>235090</h3>
+                                    <div class="portlet-body">
+                                        <div class="tab-content">
+                                            <div class="tab-pane" id="portlet_tab1">
+                                                <p>Olá</p>
+                                            </div>
+                                            <div class="tab-pane" id="portlet_tab2">
+                                                <p>Oi</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-					</div>
+                            <!--FIM NAVEGAÇÃO-->
+                    </div>
 					<!-- End: life time stats -->
                 </div>
                 <!-- FIM RODAPÉ -->    
@@ -399,44 +373,203 @@
                                              GOODCARD-GOODCARD
                                         </td>
                                         <td>
-                                             303 Nilson
+                                             303 
                                         </td>
                                         <td>
                                              R$
                                         </td>
-                                        <td class="center">
-                                             power user
-                                        </td>                                        
+                                        <!-- BOTÃO AÇÕES-->
+                                        <td class="center btnacoes">
+                                            <div class="btn-group">
+                                                <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
+                                                </a>
+                                                <ul class="dropdown-menu pull-right">
+                                                    <li>
+                                                        <a href="javascript:;" ng-click="resetarSenhaDoUsuario(usuario)"> Resetar Senha</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;" ng-click="editarUsuario(usuario)">Editar</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;" ng-click="exluirUsuario(usuario)">Excluir</a>
+                                                    </li> 
+                                                </ul>
+                                            </div>
+                                        </td> 
+                                        <!--FIM BOTÃO-->
                                     </tr>
                                     <tr role="row" class="odd">
                                         <td class="sorting_1">
-                                             alex
+                                             REDE-DINERS CLUB
                                         </td>
                                         <td>
-                                             Alex Nilson
+                                             5
                                         </td>
                                         <td>
-                                             1234
+                                             R$ 293,00
                                         </td>
-                                        <td class="center">
-                                             power user
-                                        </td>                                        
+                                        <!-- BOTÃO AÇÕES-->
+                                        <td class="center btnacoes">
+                                            <div class="btn-group">
+                                                <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
+                                                </a>
+                                                <ul class="dropdown-menu pull-right">
+                                                    <li>
+                                                        <a href="javascript:;" ng-click="resetarSenhaDoUsuario(usuario)"> Resetar Senha</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;" ng-click="editarUsuario(usuario)">Editar</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;" ng-click="exluirUsuario(usuario)">Excluir</a>
+                                                    </li> 
+                                                </ul>
+                                            </div>
+                                        </td>   
+                                        <!--FIM BOTÃO-->
                                     </tr>
                                     <tr role="row" class="odd">
                                         <td class="sorting_1">
-                                             alex
+                                             REDE-HIPERCARD
                                         </td>
                                         <td>
-                                             Alex Nilson
+                                             127
                                         </td>
                                         <td>
-                                             1234
+                                             R$ 6.990,93
                                         </td>
-                                        <td class="center">
-                                             power user
-                                        </td>                                        
-                                    </tr>                                    
+                                        <!-- BOTÃO AÇÕES-->
+                                        <td class="center btnacoes">
+                                            <div class="btn-group">
+                                                <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
+                                                </a>
+                                                <ul class="dropdown-menu pull-right">
+                                                    <li>
+                                                        <a href="javascript:;" ng-click="resetarSenhaDoUsuario(usuario)"> Resetar Senha</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;" ng-click="editarUsuario(usuario)">Editar</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;" ng-click="exluirUsuario(usuario)">Excluir</a>
+                                                    </li> 
+                                                </ul>
+                                            </div>
+                                        </td>  
+                                        <!--FIM BOTÃO-->
+                                    </tr> 
+                                    <tr role="row" class="odd">
+                                        <td class="sorting_1">
+                                             REDE-MAESTRO
+                                        </td>
+                                        <td>
+                                             119
+                                        </td>
+                                        <td>
+                                             R$ 6.737,62
+                                        </td>
+                                        <!-- BOTÃO AÇÕES-->
+                                        <td class="center btnacoes">
+                                            <div class="btn-group">
+                                                <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
+                                                </a>
+                                                <ul class="dropdown-menu pull-right">
+                                                    <li>
+                                                        <a href="javascript:;" ng-click="resetarSenhaDoUsuario(usuario)"> Resetar Senha</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;" ng-click="editarUsuario(usuario)">Editar</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;" ng-click="exluirUsuario(usuario)">Excluir</a>
+                                                    </li> 
+                                                </ul>
+                                            </div>
+                                        </td>  
+                                        <!--FIM BOTÃO-->
+                                    </tr>
+                                    <tr role="row" class="odd">
+                                        <td class="sorting_1">
+                                             REDE-MASTERCARD
+                                        </td>
+                                        <td>
+                                             196
+                                        </td>
+                                        <td>
+                                             R$ 12.176,09
+                                        </td>
+                                        <!-- BOTÃO AÇÕES-->
+                                        <td class="center btnacoes">
+                                            <div class="btn-group">
+                                                <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
+                                                </a>
+                                                <ul class="dropdown-menu pull-right">
+                                                    <li>
+                                                        <a href="javascript:;" ng-click="resetarSenhaDoUsuario(usuario)"> Resetar Senha</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;" ng-click="editarUsuario(usuario)">Editar</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;" ng-click="exluirUsuario(usuario)">Excluir</a>
+                                                    </li> 
+                                                </ul>
+                                            </div>
+                                        </td>  
+                                        <!--FIM BOTÃO-->
+                                    </tr>
+                                    <tr role="row" class="odd">
+                                        <td class="sorting_1">
+                                             REDE-VISA
+                                        </td>
+                                        <td>
+                                             23
+                                        </td>
+                                        <td>
+                                             R$ 1.724,73
+                                        </td>
+                                        <!-- BOTÃO AÇÕES-->
+                                        <td class="center btnacoes">
+                                            <div class="btn-group">
+                                                <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
+                                                </a>
+                                                <ul class="dropdown-menu pull-right">
+                                                    <li>
+                                                        <a href="javascript:;" ng-click="resetarSenhaDoUsuario(usuario)"> Resetar Senha</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;" ng-click="editarUsuario(usuario)">Editar</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;" ng-click="exluirUsuario(usuario)">Excluir</a>
+                                                    </li> 
+                                                </ul>
+                                            </div>
+                                        </td>  
+                                        <!--FIM BOTÃO-->
+                                    </tr>
                                 </tbody>
+                                    <tr role="row" class="odd" style="font-weight:bolder">
+                                        <td class="sorting_1">
+                                             Total Exibido
+                                        </td>
+                                        <td>
+                                             773
+                                        </td>
+                                        <td>
+                                             R$ 57.250,81
+                                        </td>
+                                        <!-- BOTÃO AÇÕES-->
+                                        <td>                                            
+                                        </td>  
+                                        <!--FIM BOTÃO-->
+                                    </tr>
                             </table>
                         </div>
                     </div>
