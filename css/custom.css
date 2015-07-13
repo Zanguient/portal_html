@@ -60,7 +60,7 @@ body.modal-open {
 }
 
 .vakata-context { 
-     z-index:999 !important; 
+     z-index:11000 !important; 
 }
 
 .position-fixed {
@@ -71,4 +71,16 @@ body.modal-open {
 .button-bolder{
   color: red !important;
   font-weight: bolder;
+}
+
+.modal-simples{
+  z-index:12000 !important;   
+}
+
+.modal-input{
+  z-index:13000 !important;   
+}
+
+.modal-mensagem{
+  z-index:14000 !important;   
 }

@@ -160,10 +160,10 @@ angular.module("administrativo-privilegios", [])
        }
         
        $scope.obtendoPrivilegios = true;
-       $webapi.get($apis.administracao.webpagesroles, [$scope.token, 0, $scope.privilegio.campo_ordenacao.id, 
+       $webapi.get($apis.getUrl($apis.administracao.webpagesroles, [$scope.token, 0, $scope.privilegio.campo_ordenacao.id, 
                                                        $scope.privilegio.campo_ordenacao.order, 
                                                        $scope.privilegio.itens_pagina, $scope.privilegio.pagina],
-                   filtros) 
+                   filtros)) 
             .then(function(dados){
                 $scope.privilegios = dados.Registros;
                 $scope.privilegio.total_registros = dados.TotalDeRegistros;
@@ -229,7 +229,7 @@ angular.module("administrativo-privilegios", [])
     var addPrivilegio = function(novoPrivilegio){
         // Envia para o banco
         $scope.showProgress(divPortletBodyPrivilegioPos);
-        $webapi.post($apis.administracao.webpagesroles, $scope.token, {RoleName : novoPrivilegio})
+        $webapi.post($apis.getUrl($apis.administracao.webpagesroles, $scope.token), {RoleName : novoPrivilegio})
                 .then(function(dados){
                     $scope.showAlert('Privilégio cadastrado com sucesso!', true, 'success', true);
                     // Reseta o campo
@@ -291,8 +291,8 @@ angular.module("administrativo-privilegios", [])
         $scope.showProgress(divPortletBodyPrivilegioPos);
         var jsonPrivilegio = {RoleId : privilegio.RoleId, RoleName : novoNome};
         console.log(jsonPrivilegio);
-        $webapi.update($apis.administracao.webpagesroles,
-                       {id: 'token', valor: $scope.token}, jsonPrivilegio)
+        $webapi.update($apis.getUrl($apis.administracao.webpagesroles, undefined,
+                       {id: 'token', valor: $scope.token}), jsonPrivilegio)
             .then(function(dados){
                     $scope.showAlert('Privilégio alterado com sucesso!', true, 'success', true);
                     $scope.hideProgress(divPortletBodyPrivilegioPos);
@@ -323,8 +323,8 @@ angular.module("administrativo-privilegios", [])
     var exluirPrivilegio = function(RoleId){
         // Deleta
         $scope.showProgress(divPortletBodyPrivilegioPos);
-        $webapi.delete($apis.administracao.webpagesroles,
-                       [{id: 'token', valor: $scope.token},{id: 'RoleId', valor: RoleId}])
+        $webapi.delete($apis.getUrl($apis.administracao.webpagesroles, undefined,
+                       [{id: 'token', valor: $scope.token},{id: 'RoleId', valor: RoleId}]))
             .then(function(dados){
                     $scope.showAlert('Privilégio deletado com sucesso!', true, 'success', true);
                     $scope.hideProgress(divPortletBodyPrivilegioPos);
@@ -475,9 +475,9 @@ angular.module("administrativo-privilegios", [])
     var obtemModulosEFuncionalidades = function(){
        //$scope.obtendoModulosEFuncionalidades = true;
        $scope.showProgress();
-       $webapi.get($apis.administracao.webpagescontrollers, [$scope.token, 3,       
+       $webapi.get($apis.getUrl($apis.administracao.webpagescontrollers, [$scope.token, 3,       
                                                              $campos.administracao.webpagescontrollers.ds_controller], 
-                   {id : $campos.administracao.webpagescontrollers.RoleId, valor: $scope.roleSelecionada.RoleId}) 
+                   {id : $campos.administracao.webpagescontrollers.RoleId, valor: $scope.roleSelecionada.RoleId})) 
             .then(function(dados){
                 $scope.controllers = dados.Registros;
                 // Reseta valores
@@ -600,8 +600,8 @@ angular.module("administrativo-privilegios", [])
             //console.log(permissoes);
             $scope.showProgress();
 
-            $webapi.update($apis.administracao.webpagespermissions,
-                           {id: 'token', valor: $scope.token}, permissoes)
+            $webapi.update($apis.getUrl($apis.administracao.webpagespermissions, undefined,
+                           {id: 'token', valor: $scope.token}), permissoes)
                 .then(function(dados){
                         $scope.showAlert('Permissões salvas com sucesso!', true, 'success', true);
                         $scope.hideProgress();

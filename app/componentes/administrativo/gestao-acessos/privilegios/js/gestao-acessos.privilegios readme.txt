@@ -15,19 +15,12 @@ Gerenciar completamente a tela de privilégios da Gestão de acessos.
 
 ### O que é necessário para usar o módulo? ###
 
-O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados os seguintes arquivos:
- |--------------------------------------|---------------------------------------------------|----------------------------------------|
- |                MODULO                |                   DESCRIÇÃO                       |        IMPORT (no app/index.html)      |
- |--------------------------------------|---------------------------------------------------|----------------------------------------|
- |              servicos                | Biblioteca que contém constantes, funções e       |              services.js               |
- |                                      | informações úteis do projeto, como os links para  |                                        |
- |                                      | interagir com a WEB API e info da empresa         |                                        |
- |--------------------------------------|---------------------------------------------------|----------------------------------------|
+Como esse é um controller filho do controller principal "appCtrl" (app.js), ele herda todos os módulos importados por ele.
+Não é necessário nenhum outro módulo externo.
 
  
 ### Outras depêndencias ###
 
-  * Controller é filho do controller principal "appCtrl" (app.js)
   * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
   * $scope.token do "appCtrl"
   * APIS:

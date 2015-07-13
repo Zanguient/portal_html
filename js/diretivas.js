@@ -45,10 +45,7 @@ angular.module('diretivas', ['ui.bootstrap'])
       
           var backspace = false;
         
-          ngModelCtrl.$parsers.push(function(val) {
-            // Se tiver definido maxlength, impede de entrar com um número maior
-            if(element[0].maxLength && val.length > element[0].maxLength)
-                return val.substring(0, val.length - 1);    
+          var avaliaData = function(val){   
 
             var clean = val.replace( /[^0-9/]+/g, '');
             var render = false;
@@ -79,8 +76,16 @@ angular.module('diretivas', ['ui.bootstrap'])
             }
             // Reajusta o valor do flag  
             backspace = false;
+              
             // Retorna o valor utilizado
+            if(element[0].maxLength && clean.length > element[0].maxLength)
+                return clean.substring(0, element[0].maxLength); 
             return clean;
+          };
+        
+          // Mudança direta no input text
+          ngModelCtrl.$parsers.push(function(val) {
+              return avaliaData(val);
           });
          
           element.bind('keydown', function(event) {
@@ -105,10 +110,8 @@ angular.module('diretivas', ['ui.bootstrap'])
       
           var backspace = false;
         
-          ngModelCtrl.$parsers.push(function(val) {
-            // Se tiver definido maxlength, impede de entrar com um número maior
-            if(element[0].maxLength && val.length > element[0].maxLength)
-                return val.substring(0, val.length - 1);    
+          var avaliaNumeroTelefone = function(val){
+            //console.log("VAL: " + val);      
             
             var clean = val.replace( /[^0-9\(\)]+/g, '');
             var render = false;
@@ -139,6 +142,35 @@ angular.module('diretivas', ['ui.bootstrap'])
                     render = true;
                 }
             }
+            
+            // Pode ser que tenha acontecido um Ctrl + C, Ctrl + V
+            if(clean.length > 0){
+                // Formata
+                if(clean.charAt(0) !== '('){ 
+                    clean = '(' + clean;
+                    render = true;
+                }
+                if(clean.length >= 4 && clean.charAt(3) !== ')'){ 
+                    clean = clean.substring(0, 3) + ')' + clean.substring(3);
+                    render = true;
+                }
+                // Remove os '(' dos locais indevidos
+                var idx = clean.lastIndexOf('(');
+                while(idx > -1 && idx !== 0){
+                    clean = idx < clean.length ? clean.substr(0, idx) + clean.substr(idx + 1) : clean.substr(0, idx);
+                    idx = clean.lastIndexOf('(');    
+                    render = true;
+                }
+                // Remove os ')' dos locais indevidos
+                idx = clean.lastIndexOf(')');
+                if(idx === 3) clean.indexOf(')');
+                while(idx > -1 && idx !== 3){
+                    clean = idx < clean.length ? clean.substr(0, idx) + clean.substr(idx + 1) : clean.substr(0, idx);   
+                    idx = clean.lastIndexOf(')');
+                    if(idx === 3) clean.indexOf(')');
+                    render = true;
+                }
+            }
               
             // Altera o valor do input?
             if(render){
@@ -147,8 +179,21 @@ angular.module('diretivas', ['ui.bootstrap'])
             }
             // Reajusta o valor do flag  
             backspace = false;
+              
             // Retorna o valor utilizado
-            return clean;
+            // Se tiver definido maxlength, impede de entrar com um número maior
+            if(element[0].maxLength && clean.length > element[0].maxLength)
+                return clean.substring(0, element[0].maxLength);
+            return clean;   
+          };
+        
+          // Mudança direta do ng-model
+          ngModelCtrl.$formatters.push(function(val) {
+              return avaliaNumeroTelefone(val);
+          });
+          // Mudança direta no input text
+          ngModelCtrl.$parsers.push(function(val) {
+              return avaliaNumeroTelefone(val);
           });
          
           element.bind('keydown', function(event) {

@@ -11,11 +11,8 @@ Esse é o módulo pai.
 ### Pra Que Serve Este Módulo? ###
 
 Gerenciar a tela principal (entre outros, menus e links), levando em consideração as permissões do usuário autenticado. 
-
 O controller se responsabiliza em avaliar a autenticação do usuário, assim como a validade do token.
-
 Os menus e suas opções são exibidas conforme as permissões do usuário.
-
 É neste módulo que são definidos também as rotas, isto é, os links para acessar as páginas do site. 
 
 
@@ -23,40 +20,56 @@ Os menus e suas opções são exibidas conforme as permissões do usuário.
 ### O que é necessário para usar o módulo? ###
 
 O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados os seguintes arquivos:
- |--------------------------------------|---------------------------------------------------|----------------------------------------|
- |                MODULO                |                   DESCRIÇÃO                       |          IMPORT (no index.html)        |
- |--------------------------------------|---------------------------------------------------|----------------------------------------|
- |              ui.router               | Permite usar os factories $stateProvider, $state, |         angular-ui-router.min.js       |
- |                                      | $stateParams e $urlRouterProvider para fazer uso  |                                        |
- |                                      | das rotas do app, exibindo url amigáveis          |                                        |
- |--------------------------------------|---------------------------------------------------|----------------------------------------|
- |            ui.bootstrap              | Permite usar a directive typeahead em um input do |     ui-bootstrap-tpls-0.13.0.min.js    |
- |                                      | tipo "text", para usar o recurso do auto-completar|                                        |
- |                                      | eficiente da biblioteca                           |                                        |
- |--------------------------------------|---------------------------------------------------|----------------------------------------|
- |             diretivas                | Biblioteca que contém diretivas para uso no HTML  |             diretivas.js               |
- |--------------------------------------|---------------------------------------------------|----------------------------------------|
- |              servicos                | Biblioteca que contém constantes, funções e       |              services.js               |
- |                                      | informações úteis do projeto, como os links para  |                                        |
- |                                      | interagir com a WEB API e info da empresa         |                                        |
- |--------------------------------------|---------------------------------------------------|----------------------------------------|
- |           nao-autorizado             | Módulo que gerencia a tela que reporta a não      |          nao-autorizado.js             |
- |                                      | autorização do usuário ao acessar determinada     |                                        |
- |                                      | página do website                                 |                                        |
- |--------------------------------------|---------------------------------------------------|----------------------------------------|
- |       administrativo-usuarios        | Módulo que gerencia a tela de usuários da         |      gestao-acessos.usuarios.js        |
- |                                      | Gestão de Acessos                                 |                                        |
- |                                      |                                                   |                                        |
- |--------------------------------------|---------------------------------------------------|----------------------------------------|
- |   administrativo-usuarios-cadastro   | Módulo que gerencia a tela de cadastro/alteração  |  gestao-acessos.usuarios.cadastro.js   |
- |                                      | de usuários da Gestão de Acessos                  |                                        |
- |                                      |                                                   |                                        |
- |--------------------------------------|---------------------------------------------------|----------------------------------------|
- |             dashboard                | Módulo que gerencia a tela de Dashboard           |              dashboard.js              |                                         |
- |--------------------------------------|---------------------------------------------------|----------------------------------------|
- |   card-services-conciliacao-vendas   | Módulo que gerencia a tela de Conciliação de      |   card-services.conciliacao-vendas.js  |                                         |
- |                                      | Vendas, referente ao serviço Card Services        |                                        |
- |--------------------------------------|---------------------------------------------------|----------------------------------------|
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |                MODULO                  |                   DESCRIÇÃO                       |            IMPORT (no index.html)         |
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |              ui.router                 | Permite usar os factories $stateProvider, $state, |           angular-ui-router.min.js        |
+ |                                        | $stateParams e $urlRouterProvider para fazer uso  |                                           |
+ |                                        | das rotas do app, exibindo url amigáveis          |                                           |
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |            ui.bootstrap                | Permite usar a directive typeahead em um input do |       ui-bootstrap-tpls-0.13.0.min.js     |
+ |                                        | tipo "text", para usar o recurso do auto-completar|                                           |
+ |                                        | eficiente da biblioteca                           |                                           |
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |            ui.checkbox                 | Permite usar a directive <checkbox>em um input do |        angular-bootstrap-checkbox.js      |                    |
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |             diretivas                  | Biblioteca que contém diretivas personalizadas    |                diretivas.js               |
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |               utils                    | Biblioteca que contém funções de acesso a local   |                  utils.js                 |
+ |                                        | e session storage, funções http (get, post, put e |                                           |
+ |                                        | delete), info da empresa e de autenticação        |                                           |
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |              webapi                    | Biblioteca que contém constantes, URLs associadas |                  webapi.js                |
+ |                                        | e o padrão adotado para interação com cada API    |                                           |
+ |                                        | que o portal interage                             |                                           |
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |           nao-autorizado               | Módulo que gerencia a tela que reporta a não      |            nao-autorizado.js              |
+ |                                        | autorização do usuário ao acessar determinada     |                                           |
+ |                                        | página do website                                 |                                           |
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |           nao-encontrado               | Módulo que gerencia a tela que reporta a não      |            nao-encontrado.js              |
+ |                                        | localização de uma determinada página requisitada |                                           |
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |       administrativo-usuarios          | Módulo que gerencia a tela de usuários da         |        gestao-acessos.usuarios.js         |
+ |                                        | Gestão de Acessos                                 |                                           |
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |   administrativo-usuarios-cadastro     | Módulo que gerencia a tela de cadastro/alteração  |    gestao-acessos.usuarios.cadastro.js    |
+ |                                        | de usuários da Gestão de Acessos                  |                                           |
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |     administrativo-privilegios         | Módulo que gerencia a tela de privilégios (roles) |     gestao-acessos.privilegios.js         |
+ |                                        | da Gestão de Acessos                              |                                           |
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ | administrativo-modulos-funcionalidades | Módulo que gerencia a tela de módulos (controller)| gestao-acessos.modulos-funcionalidades.js |
+ |                                        | e funcionalidades (method) da Gestão de Acessos   |                                           |
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |     administrativo-acesso-usuarios     | Módulo que gerencia a tela de acesso de usuários, |           logs.acesso-usuarios.js         |
+ |                                        | de Logs                                           |                                           |
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |             dashboard                  | Módulo que gerencia a tela de Dashboard           |                dashboard.js               |                                         |
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |   card-services-conciliacao-vendas     | Módulo que gerencia a tela de Conciliação de      |     card-services.conciliacao-vendas.js   |                                         |
+ |                                        | Vendas, referente ao serviço Card Services        |                                           |
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
 
  
  ### Mudança de rotas/estados ###
@@ -82,7 +95,7 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
  ### Interação com a WEB API ###
  
  Na inicialização do controller, é feita a validação do token armazenado na local storage, enviando ao servidor via WEB API.
-  => GET(URL_LOGIN + '/' + token)
+  => GET(URL_API_LOGIN + '/' + token)
  - Se ocorrer o erro de código 500, significa que o token não é (mais) válido, portanto, um novo login é requisitado.
  - Outro código de erro é avaliado (sem resposta do servidor => nada acontece)
  
@@ -115,8 +128,8 @@ Esse JSON é fundamental para a exibição correta do layout. Regras:
  
 Padronização dos títulos de serviços, subserviços e módulos:
  - Administrativo
-	- Gestão de Acessos (Cadastrar, Editar, Excluir)
-		- Usuários (Resetar senha)
+	- Gestão de Acessos
+		- Usuários
 		- Privilégios
 		- Módulos e Funcionalidades
 	- Logs
@@ -126,8 +139,8 @@ Padronização dos títulos de serviços, subserviços e módulos:
 	- Conciliação
 		- Conciliação de Vendas
 	- Consolidação
-		- Relatório Sintético
-		- Relatório Analítico
+		- Relatórios
+		- Dados de acesso
    
 
    

@@ -5,16 +5,14 @@
  *
  */
 
-var app = angular.module("Login", ['servicos']);
+var app = angular.module("Login", ['utils']);
 
 app.controller("loginCtrl", ['$scope',
                               '$http',
-                              '$timeout',
                               '$webapi',
-                              '$apis',
                               '$autenticacao',
                               '$empresa',
-                              function($scope,$http,$timeout,$webapi,$apis,$autenticacao,$empresa){ 
+                              function($scope,$http,$webapi,$autenticacao,$empresa){ 
 
     // Dados da empresa
     $scope.empresa = $empresa;
@@ -29,31 +27,39 @@ app.controller("loginCtrl", ['$scope',
     $scope.exibeLayout = false; // flag para indicar se o layout pode ser exibido completamente
     $scope.efetuandoLogin = false;
                                  
-    // Acessa a página principal
+    /**
+      * Acessa a página principal
+      */                              
     var redirecionaPagina = function(){
         // Redireciona
         $scope.exibeLayout = false; 
         window.location.replace(paginaRedirecionamento);
     }; 
-    // Exibição do Layout
+    /**
+      * Exibe o layout e inicializa seus handlers
+      */
     var exibeLayout = function(){
-      jQuery(document).ready(function() { 
-        //$scope.$on('$viewContentLoaded', function(){
-            // Carrega layout
+      // Inicializa todos os handlers de layout 
+      angular.element(document).ready(function(){ 
+      //$scope.$on('$viewContentLoaded', function(){
+            //$scope.exibeLayout = true; // não funciona aqui
             Metronic.init(); // init metronic core components
-            Layout.init(); // init current layout
+            //Layout.init(); // init current layout
             Login.init();
         });
-       $scope.exibeLayout  = true;
-        //$timeout(function(){$scope.exibeLayout  = true}, 500); // espera meio segundo  
+        $scope.exibeLayout = true;
     };
-    // Inicialização do controller
+                                  
+
+    /**
+      * Inicialização do controller
+      */                              
     $scope.init = function(){
         if($autenticacao.usuarioEstaAutenticado()){
             // Avalia Token
-            var dadosAPI = $webapi.get($apis.autenticacao.login, $autenticacao.getToken());
+            $webapi.get($autenticacao.autenticacao.login + '/' + $autenticacao.getToken())
             // Verifica se a requisição foi respondida com sucesso
-            dadosAPI.then(function(dados){
+                .then(function(dados){
                                 redirecionaPagina();
                             },
                             function(failData){
@@ -69,20 +75,27 @@ app.controller("loginCtrl", ['$scope',
                             });
         }else exibeLayout();
     };
-    // Reporta se está em progresso de autenticação
+                                  
+                                  
+    // LOGIN                              
+    /**
+      * Reporta se está em progresso de autenticação
+      */                                
     var progressoLogin = function(emProgresso){
         $scope.efetuandoLogin = emProgresso;
         if(!$scope.$$phase) $scope.$apply();
     };
-    // Efetua Login
+    /**
+      * Efetua login
+      */
     $scope.efetuaLogin = function() {
         if ($('.login-form').validate().form()) {
             progressoLogin(true);
             // VALIDA LOGIN
             var jsonAutenticacao = { 'usuario': $scope.usuario.nome, 'senha': $scope.usuario.senha };
             // Envia os dados para autenticação
-            $.post($apis.autenticacao.login, jsonAutenticacao)
-            //$webapi.post($apis.autenticacao.login, '', jsonAutenticacao)
+            $.post($autenticacao.autenticacao.login, jsonAutenticacao)
+            //$webapi.post($autenticacao.autenticacao.login, jsonAutenticacao)
                 //.then(function(dados){
                           .done(function(data){
                             // LOGADO! => Vai para a página principal

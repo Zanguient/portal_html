@@ -6,7 +6,7 @@
  */
 
 // App
-angular.module("administrativo-acesso-usuarios", ['servicos']) 
+angular.module("administrativo-acesso-usuarios", []) 
 
 .controller("administrativo-acesso-usuariosCtrl", ['$scope',
                                             '$state',
@@ -161,10 +161,10 @@ angular.module("administrativo-acesso-usuarios", ['servicos'])
        //$scope.privilegios = [{ RoleId: 1, RoleName: 'Admin'}];
        //$scope.obtendoPrivilegios = false;
        //$scope.hideProgress(divPortletBodyPrivilegioPos);
-       $webapi.get($apis.administracao.webpagesroles, [$scope.token, 0, $scope.privilegio.campo_ordenacao.id, 
+       $webapi.get($apis.getUrl($apis.administracao.webpagesroles, [$scope.token, 0, $scope.privilegio.campo_ordenacao.id, 
                                                        $scope.privilegio.campo_ordenacao.order, 
                                                        $scope.privilegio.itens_pagina, $scope.privilegio.pagina],
-                   filtros) 
+                   filtros)) 
             .then(function(dados){
                 $scope.privilegios = dados.Registros;
                 $scope.privilegio.total_registros = dados.TotalDeRegistros;
@@ -207,7 +207,7 @@ angular.module("administrativo-acesso-usuarios", ['servicos'])
         }
         // Envia para o banco
         $scope.showProgress(divPortletBodyPrivilegioPos);
-        $webapi.post($apis.administracao.webpagesroles, $scope.token, {RoleName : $scope.novoPrivilegio})
+        $webapi.post($apis.getUrl($apis.administracao.webpagesroles, $scope.token), {RoleName : $scope.novoPrivilegio})
                 .then(function(dados){
                     $scope.showAlert('Privilégio cadastrado com sucesso!', true, 'success', true);
                     // Reseta o campo
@@ -238,8 +238,8 @@ angular.module("administrativo-acesso-usuarios", ['servicos'])
     var exluirPrivilegio = function(RoleId){
         // Deleta
         $scope.showProgress(divPortletBodyPrivilegioPos);
-        $webapi.delete($apis.administracao.webpagesroles,
-                       [{id: 'token', valor: $scope.token},{id: 'RoleId', valor: RoleId}])
+        $webapi.delete($apis.getUrl($apis.administracao.webpagesroles, undefined,
+                       [{id: 'token', valor: $scope.token},{id: 'RoleId', valor: RoleId}]))
             .then(function(dados){
                     $scope.showAlert('Privilégio deletado com sucesso!', true, 'success', true);
                     $scope.hideProgress(divPortletBodyPrivilegioPos);
@@ -345,9 +345,9 @@ angular.module("administrativo-acesso-usuarios", ['servicos'])
     var obtemMódulosEFuncionalidades = function(){
        //$scope.obtendoModulosEFuncionalidades = true;
        $scope.showProgress();
-       $webapi.get($apis.administracao.webpagescontrollers, [$scope.token, 2,       
-                                                             $campos.administracao.webpagescontrollers.ds_controller], 
-                   {id : $campos.administracao.webpagescontrollers.RoleId, valor: $scope.roleSelecionada.RoleId}) 
+       $webapi.get($apis.getUrl($apis.administracao.webpagescontrollers, 
+                                [$scope.token, 2, $campos.administracao.webpagescontrollers.ds_controller], 
+                   {id : $campos.administracao.webpagescontrollers.RoleId, valor: $scope.roleSelecionada.RoleId})) 
             .then(function(dados){
                 $scope.controllers = dados.Registros;
                 // set selecionado dos controllers

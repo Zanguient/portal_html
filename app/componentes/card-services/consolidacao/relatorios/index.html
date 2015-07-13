@@ -1,0 +1,166 @@
+<!-- 
+/*
+ *  Atos Capital - www.atoscapital.com.br
+ *  
+ *  suporte@atoscapital.com.br
+ *
+ */
+-->
+
+<div class="container" ng-controller="card-services-relatoriosCtrl" ng-init="cardServices_relatoriosInit()">    
+    <!-- BEGIN PAGE BREADCRUMB -->
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href ng-click="goHome()">Início</a><i class="fa fa-circle"></i>
+        </li>
+        <li class="active">
+             Card Services<i class="fa fa-caret-right"></i>
+             Consolidação<i class="fa fa-caret-right"></i>
+             Relatórios
+        </li>
+    </ul>
+    <!-- END PAGE BREADCRUMB -->
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN TABLE PORTLET-->
+            <div class="portlet light">
+				<div class="portlet light"> 
+                    <div class="portlet-title">
+                        <div class="caption">								
+                            <span class="caption-subject font-green-sharp bold uppercase">Filtros</span>						
+                        </div>
+                        <div class="actions">
+
+
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">
+                            <div class="row">                       
+                                <div class="col-md-8 col-sm-12">
+                                    <div class="dataTables_paginate paging_bootstrap_extended" id="datatable_ajax_paginate">
+                                    </div>
+                                    <div class="dataTables_info" id="datatable_ajax_info" role="status" aria-live="polite">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-12">
+                                    <div class="table-group-actions pull-right">
+                                        <span> </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--div class="table-scrollable"-->
+                            <div class="table-scrollable">
+                                <table class="table table-striped table-bordered table-hover dataTable no-footer" id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
+                                    <thead>
+                                        <tr role="row" class="heading">
+                                            <th width="15%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                                 Data
+                                            </th>
+                                            <th width="10%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                                 Filiais 
+                                            </th>
+                                            <th width="10%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                                 Adquirentes
+                                            </th>
+                                            <th width="10%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                                 Bandeiras
+                                            </th>
+                                            <th width="10%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                                 Status
+                                            </th>
+                                            <th width="10%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                                 Opções
+                                            </th>
+                                        </tr>
+                                        <tr role="row" class="filter">
+                                            <td rowspan="1" colspan="1">                                    
+                                                <div class="input-group date date-picker margin-bottom-5">
+                                                    <!--input type="text" class="form-control form-filter input-sm" readonly name="order_date_from" placeholder="Início"-->
+                                                    <input type="text" class="form-control form-filter input-sm ng-pristine ng-untouched ng-valid ng-isolate-scope ng-valid-required ng-valid-date" readonly="" style="cursor: pointer" ng-click="exibeCalendarioDataMin($event)" placeholder="Início" ng-model="datamin" ng-change="alterouDataMin()" datepicker-append-to-body="true" datepicker-popup="dd MMMM yyyy" is-open="abrirCalendarioDataMin" min-date="2000-01-01" ng-required="true" show-button-bar="false" show-weeks="false" required="required">
+                                                    <span class="input-group-btn">
+                                                    <button class="btn btn-sm default" type="button" ng-click="exibeCalendarioDataMin($event)"><i class="fa fa-calendar"></i></button>
+                                                    </span>
+                                                </div>
+                                                <div class="input-group date date-picker margin-bottom-5" data-date-format="dd/mm/yyyy">
+                                                    <input type="text" class="form-control form-filter input-sm ng-pristine ng-untouched ng-valid ng-isolate-scope ng-valid-date ng-valid-required" readonly="" style="cursor: pointer" ng-click="exibeCalendarioDataMax($event)" placeholder="Fim" ng-model="datamax" ng-change="alterouDataMax()" datepicker-popup="dd MMMM yyyy" is-open="abrirCalendarioDataMax" datepicker-append-to-body="true" min-date="2000-01-01" ng-required="false" current-text="Hoje" clear-text="Limpar" close-text="Fechar" show-button-bar="true" show-weeks="false">
+                                                    <span class="input-group-btn">
+                                                    <button class="btn btn-sm default" type="button" ng-click="exibeCalendarioDataMax($event)"><i class="fa fa-calendar"></i></button>
+                                                    </span>
+                                                </div>                                            
+                                            </td>
+                                            <td rowspan="1" colspan="1">
+                                                <select name="order_status" class="form-control form-filter input-sm">
+                                                    <option value="">Todas</option>
+                                                    <option value="pending">Pending</option>
+                                                    <option value="closed">Closed</option>
+                                                    <option value="hold">On Hold</option>
+                                                    <option value="fraud">Fraud</option>
+                                                </select>
+                                            </td>
+                                            <td rowspan="1" colspan="1">
+                                                <select name="order_status" class="form-control form-filter input-sm">
+                                                    <option value="">Todas</option>
+                                                    <option value="pending">Pending</option>
+                                                    <option value="closed">Closed</option>
+                                                    <option value="hold">On Hold</option>
+                                                    <option value="fraud">Fraud</option>
+                                                </select>
+                                            </td>
+                                            <td rowspan="1" colspan="1">
+                                                <select name="order_status" class="form-control form-filter input-sm">
+                                                    <option value="">Todas</option>
+                                                    <option value="pending">Pending</option>
+                                                    <option value="closed">Closed</option>
+                                                    <option value="hold">On Hold</option>
+                                                    <option value="fraud">Fraud</option>
+                                                </select>
+                                            </td>
+                                            <td rowspan="1" colspan="1">
+                                                <select name="order_status" class="form-control form-filter input-sm">
+                                                    <option value="">Todas</option>
+                                                    <option value="pending">Pending</option>
+                                                    <option value="closed">Closed</option>
+                                                    <option value="hold">On Hold</option>
+                                                    <option value="fraud">Fraud</option>
+                                                </select>
+                                            </td>
+                                            <td rowspan="1" colspan="1">
+                                                <div class="margin-bottom-5">
+                                                    <button class="btn btn-sm red filter-submit margin-bottom" ng-click="showModalConfirmacao('Meu titulo')"><i class="fa fa-search"></i> Buscar</button>
+                                                </div>
+                                                <button class="btn btn-sm grey filter-cancel"><i class="fa fa-times"></i> Limpar</button>
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8 col-sm-12">
+                                    <div class="dataTables_paginate paging_bootstrap_extended">
+                                    </div>
+                                    <div class="dataTables_info">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-12">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    </div>		
+            </div>
+            <!-- END TABLE PORTLET-->
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN TABLE PORTLET-->
+            <div class="portlet light">
+						
+            </div>
+            <!-- END TABLE PORTLET-->
+        </div>
+    </div>
+</div>

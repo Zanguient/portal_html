@@ -25,6 +25,11 @@
 <script src="../lib/jquery-ui.min.js" type="text/javascript"></script>
 <!-- END JQUERY -->
 <!-- ANGULAR -->
+<style> <!-- ANTES DE CARREGAR O ANGULAR, CARREGA O CSS DO NGCLOAK -->
+    [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+      display: none !important;
+    }
+</style>
 <script src="../lib/angularjs/angular.min.js" type="text/javascript"></script>
 <script src="../lib/angularjs/angular-locale_pt-br.js" type="text/javascript"></script>
 <script src="../lib/bootstrap/ui-bootstrap-tpls-0.13.0.min.js" type="text/javascript"></script>  
@@ -43,12 +48,9 @@
 <link href="../lib/select2/select2.css" rel="stylesheet" type="text/css">
 <link href="../lib/bootstrap/datatable/dataTables.bootstrap.css" rel="stylesheet" type="text/css">
 <link href="../lib/bootstrap/datepicker/bootstrap-datepicker.css" rel="stylesheet" type="text/css">
-<!--link href="../lib/morris/morris.css" rel="stylesheet" type="text/css"-->
 <!-- END PAGE LEVEL PLUGIN STYLES -->
 <!-- BEGIN PAGE STYLES -->
-<link href="../lib/css/tasks.css" rel="stylesheet" type="text/css"> <!-- DASHBOARD-->
 <link href="../lib/jstree/style.min.css" rel="stylesheet" type="text/css">
-<!--link href="../lib/icheck/skins/all.css" rel="stylesheet" type="text/css"-->
 <!-- END PAGE STYLES -->
 <!-- BEGIN THEME STYLES -->
 <link href="../lib/css/components-rounded.css" id="style_components" rel="stylesheet" type="text/css">
@@ -63,7 +65,7 @@
 <!-- END HEAD -->
     
 <!-- BEGIN BODY -->
-<body ng-controller="appCtrl" ng-init="init()" ng-show="exibeLayout">
+<body ng-controller="appCtrl" ng-init="init()" ng-show="exibeLayout" ng-cloak>
 <!-- BEGIN HEADER : Logo, Usuário Conectado, Menu e Barra de Pesquisa -->
 <div class="page-header">
     
@@ -201,7 +203,7 @@
                                     </a>
                                     <!-- LAYOUT DE BUSCA DO GRUPO EMPRESA -->
                                     <div id="admBuscaGrupoEmpresa" class="dropdown-menu theme-panel pull-right hold-on-click" ng-click="$event.stopPropagation()" style="min-width: 400px">	
-                                        <h3>Grupo Empresa</h3>
+                                        <h3>Empresa</h3>
                                         <form class="search-form">
                                             <div class="input-group" style="width:100%">
                                                <input type="text" class="form-control" placeholder="Buscar" ng-model="gempresa"
@@ -235,26 +237,93 @@
     
 <!-- BEGIN PAGE CONTENT : Conteúdo da página é incluído dinamicamente nesta div -->
 <div class="page-content">
-   <!-- MODAL -- >
-   <div class="modal fade bs-modal-sm" id="modalConfirmacao" tabindex="-1" role="dialog" aria-hidden="true">
+   <!-- MODAIS -->    
+                        
+   <!-- MODAL INPUT -->
+   <div class="modal fade bs-modal-sm modal-input" id="modalInput" role="dialog"
+        data-backdrop="static" data-keyboard="false">
        <div class="modal-dialog modal-sm">
            <div class="modal-content">
                <div class="modal-header">
-                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                   <h4 class="modal-title">{{modal_titulo}}</h4>
+                   <h4 class="modal-title modal-cabecalho">{{input.titulo}}</h4>
+               </div>
+               <div class="modal-body modal-corpo" style="text-align: center">
+                    {{input.mensagem}}
+                    <input class="form-control" type="text" ng-model="input.text"
+                           ng-keypress="($event.which === 13) ? input.funcaoConfirma(input.text) : 0">
+                    <span ng-show="input.showCheckbox" style="margin-top: 10px"> 
+                        <checkbox normal ng-model="input.checkbox" 
+                                  ng-change="input.funcaoCheckboxChange(input.checkbox)"></checkbox>
+                        {{input.checkboxText}}
+                    </span>
+               </div>
+               <div class="modal-footer">
+                   <div class="col-sm-4 col-sm-offset-1">
+                       <button type="button" class="btn default" data-dismiss="modal">
+                           {{input.textoCancela}}
+                       </button>
+                   </div>                           
+                   <div class="col-sm-4 col-sm-offset-1">
+                       <button type="button" class="btn blue"
+                               ng-click="input.funcaoConfirma(input.text)">
+                           {{input.textoConfirma}}
+                       </button>                                
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+   <!-- END MODAL INPUT -->
+
+   <!-- MODAL CONFIRMAÇÃO -->
+   <div class="modal fade bs-modal-sm modal-mensagem" id="modalConfirmacao" 
+        tabindex="-1" role="dialog" aria-hidden="true">
+       <div class="modal-dialog modal-sm">
+           <div class="modal-content">
+               <div class="modal-header">
+                   <!--button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button-->
+                   <h4 class="modal-title modal-cabecalho">{{modal_titulo}}</h4>
                </div>
                <div class="modal-body">
                     {{modal_mensagem}}
                </div>
                <div class="modal-footer">
-                   <button type="button" class="btn default" data-dismiss="modal">{{modal_textoCancela}}</button>
+                   <button type="button" class="btn default" data-dismiss="modal">
+                       {{modal_textoCancela}}
+                   </button>
                    <button type="button" class="btn blue" 
-                           data-dismiss="modal" ng-click="modal_confirma()">{{modal_textoConfirma}}</button>
+                           data-dismiss="modal" ng-click="modal_confirma()">
+                       {{modal_textoConfirma}}
+                   </button>
                </div>
            </div>
        </div>
    </div>
-   <!-- END MODAL -->
+   <!-- END MODAL CONFIRMAÇÃO -->    
+
+   <!-- MODAL ALERT -->
+   <div class="modal fade bs-modal-sm modal-mensagem" id="modalAlerta" role="dialog"
+        data-backdrop="static" data-keyboard="false">
+       <div class="modal-dialog modal-sm">
+           <div class="modal-content">
+               <div class="modal-header">
+                   <h4 class="modal-title modal-cabecalho">{{alerta.titulo}}</h4>
+               </div>
+               <div class="modal-body modal-corpo" style="text-align: center">
+                    {{alerta.mensagem}}
+               </div>
+               <div class="modal-footer" style="text-align: center">                           
+                   <button type="button" class="btn blue"
+                           ng-click="alerta.funcaoOk($event)">
+                       {{alerta.textoOk}}
+                   </button> 
+               </div>
+           </div>
+       </div>
+   </div>
+   <!-- END MODAL ALERT -->
+
+   <!-- END MODAIS -->
    <div ui-view></div>
 </div>
 <!-- END PAGE CONTENT -->
@@ -321,7 +390,6 @@
 <script src="../lib/jstree/jstree.min.js" type="text/javascript"></script>
 <script src="../lib/jstree/jsTree.directive.js" type="text/javascript"></script> 
 <script src="../lib/bootstrap/angular-bootstrap-checkbox.js" type="text/javascript"></script> 
-<!--script src="../lib/ng-context-menu.js" type="text/javascript"></script-->  
 <script src="../lib/select2/select2.min.js" type="text/javascript"></script>
 <script src="../lib/jquery.dataTables.min.js" type="text/javascript"></script>
 <script src="../lib/bootstrap/datatable/dataTables.bootstrap.js" type="text/javascript"></script>
@@ -329,11 +397,11 @@
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
 <script src="../lib/metronic/metronic.js" type="text/javascript"></script>
 <script src="js/layout.js" type="text/javascript"></script> <!-- INDEX -->
-<script src="js/tasks.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 <!-- ANGULAR SCRIPTS -->
-<script src="../js/diretivas.js" type="text/javascript"></script>    
-<script src="../js/services.js" type="text/javascript"></script>
+<script src="../js/diretivas.js" type="text/javascript"></script> 
+<script src="../js/utils.js" type="text/javascript"></script>     
+<script src="js/webapi.js" type="text/javascript"></script>
 <script src="componentes/nao-autorizado/js/nao-autorizado.js" type="text/javascript"></script> 
 <script src="componentes/nao-encontrado/js/nao-encontrado.js" type="text/javascript"></script>     
 <script src="componentes/administrativo/gestao-acessos/usuarios/js/gestao-acessos.usuarios.js" type="text/javascript"></script>
@@ -343,6 +411,7 @@
 <script src="componentes/administrativo/logs/acesso-usuarios/js/logs.acesso-usuarios.js" type="text/javascript"></script>
 <script src="componentes/dashboard/js/dashboard.js" type="text/javascript"></script> <!-- DASHBOARD -->
 <script src="componentes/card-services/conciliacao/conciliacao-vendas/js/card-services.conciliacao-vendas.js" type="text/javascript"></script>
+<script src="componentes/card-services/consolidacao/relatorios/js/card-services.relatorios.js" type="text/javascript"></script>
 <script src="js/app.js" type="text/javascript"></script> <!-- INDEX -->
 <!-- END ANGULAR SCRIPTS -->
 <!-- END JAVASCRIPTS -->    

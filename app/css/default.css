@@ -460,7 +460,7 @@ Page Footer
     /* Horizontal mega menu */
   }
   .page-header .page-header-menu .hor-menu .navbar-nav {
-    background: #fff !important;
+    background: /*#fff*/ #7e1416 !important;
     /* Mega menu content */
     /* Classic menu */
   }
@@ -471,7 +471,7 @@ Page Footer
     border-right: none !important;
   }
   .page-header .page-header-menu .hor-menu .navbar-nav > li.mega-menu-dropdown > .dropdown-menu .mega-menu-content .mega-menu-submenu li > h3 {
-    color: #72808a;
+    color: /*#72808a*/ #fff;
   }
   .page-header .page-header-menu .hor-menu .navbar-nav > li {
     border-bottom: 1px solid #F0F0F0;
@@ -481,24 +481,24 @@ Page Footer
   }
   .page-header .page-header-menu .hor-menu .navbar-nav > li > a {
     background: none !important;
-    color: #666 !important;
+    color: /*#666*/ #fff !important;
   }
   .page-header .page-header-menu .hor-menu .navbar-nav > li > a > i {
-    color: #666 !important;
+    color: /*#666*/ #fff !important;
   }
   .page-header .page-header-menu .hor-menu .navbar-nav > li:hover > a {
     background: none !important;
-    color: #4db3a4 !important;
+    color: /*#4db3a4*/ #fff !important;
   }
   .page-header .page-header-menu .hor-menu .navbar-nav > li:hover > a > i {
-    color: #4db3a4 !important;
+    color: /*#4db3a4*/ #d65b5e !important;
   }
   .page-header .page-header-menu .hor-menu .navbar-nav > li.open > a,
   .page-header .page-header-menu .hor-menu .navbar-nav > li.open > a:hover, .page-header .page-header-menu .hor-menu .navbar-nav > li.active > a,
   .page-header .page-header-menu .hor-menu .navbar-nav > li.active > a:hover, .page-header .page-header-menu .hor-menu .navbar-nav > li.current > a,
   .page-header .page-header-menu .hor-menu .navbar-nav > li.current > a:hover {
     color: #fff !important;
-    background: #7e1416 !important;
+    background: /*#7e1416*/ #c22629 !important;
   }
   .page-header .page-header-menu .hor-menu .navbar-nav > li.open > a > i,
   .page-header .page-header-menu .hor-menu .navbar-nav > li.open > a:hover > i, .page-header .page-header-menu .hor-menu .navbar-nav > li.active > a > i,
@@ -510,7 +510,7 @@ Page Footer
     border: 0 !important;
     border-top: 1px solid #eee;
     box-shadow: none !important;
-    background: #fff !important;
+    background: /*#fff*/ #c22629 !important;
   }
   .page-header .page-header-menu .hor-menu .navbar-nav > li .dropdown-menu li.divider {
     border-bottom: 1px solid #F0F0F0;
@@ -519,24 +519,24 @@ Page Footer
     margin-top: 1px;
   }
   .page-header .page-header-menu .hor-menu .navbar-nav > li .dropdown-menu li > a {
-    color: #666 !important;
+    color: /*#666*/ #fff !important;
   }
   .page-header .page-header-menu .hor-menu .navbar-nav > li .dropdown-menu li > a > i {
-    color: #666 !important;
+    color: /*#666*/ #fff !important;
   }
   .page-header .page-header-menu .hor-menu .navbar-nav > li .dropdown-menu li:hover > a {
     background: none !important;
-    color: #4db3a4 !important;
+    color: /*#4db3a4*/ #fff !important;
   }
   .page-header .page-header-menu .hor-menu .navbar-nav > li .dropdown-menu li:hover > a > i {
-    color: #4db3a4 !important;
+    color: /*#4db3a4*/ #fff !important;
   }
   .page-header .page-header-menu .hor-menu .navbar-nav > li .dropdown-menu li.open > a,
   .page-header .page-header-menu .hor-menu .navbar-nav > li .dropdown-menu li.open > a:hover, .page-header .page-header-menu .hor-menu .navbar-nav > li .dropdown-menu li.active > a,
   .page-header .page-header-menu .hor-menu .navbar-nav > li .dropdown-menu li.active > a:hover, .page-header .page-header-menu .hor-menu .navbar-nav > li .dropdown-menu li.current > a,
   .page-header .page-header-menu .hor-menu .navbar-nav > li .dropdown-menu li.current > a:hover {
     color: #fff !important;
-    background: #4db3a4 !important;
+    background: /*#4db3a4*/ #d65b5e !important;
   }
   .page-header .page-header-menu .hor-menu .navbar-nav > li .dropdown-menu li.open > a > i,
   .page-header .page-header-menu .hor-menu .navbar-nav > li .dropdown-menu li.open > a:hover > i, .page-header .page-header-menu .hor-menu .navbar-nav > li .dropdown-menu li.active > a > i,
@@ -557,7 +557,7 @@ Page Footer
     border: 0 !important;
     margin: 0 !important;
     color: #fff !important;
-    background: #5fbbad !important;
+    background: /*#5fbbad*/ #d65b5e !important;
   }
   .page-header .page-header-menu .hor-menu .nav .dropdown-submenu.open > a > i,
   .page-header .page-header-menu .hor-menu .nav .dropdown-submenu.open > a:hover > i {

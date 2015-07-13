@@ -6,7 +6,7 @@
  */
 
 // App
-angular.module("administrativo-modulos-funcionalidades", ['servicos']) 
+angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive']) 
 
 .controller("administrativo-modulos-funcionalidadesCtrl", ['$scope',
                                             '$state',
@@ -27,7 +27,6 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
     $scope.novoModuloMenu = ''; // cadastro
     // flags
     $scope.cadastrarFuncionalidadesPadrao = true;                                            
-    $scope.inputCadastro = false; // faz exibir a linha para adicionar um novo módulo menu
           
                                                 
     // Context Menu
@@ -89,7 +88,7 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
     $scope.buscaModulos = function(){
        $scope.showProgress(divPortletBodyModuloFuncionalidadePos);     
        $scope.obtendoModulos = true;
-       $webapi.get($apis.administracao.webpagescontrollers, [$scope.token, 2]) 
+       $webapi.get($apis.getUrl($apis.administracao.webpagescontrollers, [$scope.token, 2])) 
             .then(function(dados){
                 // coloca modulos no formato da jstree  
                 //$scope.modulos = obtemModulosJSTree(dados.Registros);
@@ -187,31 +186,30 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
       * Em caso de sucesso, requisita ao servidor o cadastro
       */
     var cadastraNovoModulo = function(parent){
-        console.log(parent);
+        //console.log(parent);
         var irmaos = parent ? parent.children : $scope.modulos[0].children;
         var id_parent = parent && parent.id !== '0' ? parseInt(parent.id) : null;
         // Exibe o modal
-        $scope.cadastrarFuncionalidadesPadrao = true;                                            
-        $scope.inputCadastro = true;
+        $scope.cadastrarFuncionalidadesPadrao = true;    
         $scope.showModalInput('Informe o nome de exibição do módulo', 'Cadastro de módulo em ' + parent.text, 
                               'Cancelar', 'Salvar',
-                         function(){ 
-                                if(!$scope.input.text){
+                         function(text){ 
+                                if(!text){
                                     $scope.showModalAlerta('Informe um nome');
                                     return false;
                                 }
-                                if($scope.input.text.length < 3){
+                                if(text.length < 3){
                                     //alert('Nome muito curto!');
                                     $scope.showModalAlerta('Nome muito curto!');
                                     return false;    
                                 }
-                                console.log(irmaos);
+                                //console.log(irmaos);
                                 var jstree = $('#jstree');
                                 // Verifica se tem algum de mesmo nome no mesmo nível
                                 for(var k = 0; k < irmaos.length; k++){
                                     var irmao = irmaos[k];
                                     if(!irmao.text) irmao = jstree.jstree(true)._model.data[irmao];
-                                    if($scope.input.text.toUpperCase() === irmao.text.toUpperCase()){
+                                    if(text.toUpperCase() === irmao.text.toUpperCase()){
                                         $scope.showModalAlerta('Já existe um módulo com esse nome no nível desejado!');
                                         return false;    
                                     }
@@ -219,11 +217,14 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
                                 // Fecha o modal input
                                 $scope.fechaModalInput();
                                 // Cadastra
-                                cadastraModulo({ ds_controller : $scope.input.text,
+                                cadastraModulo({ ds_controller : text,
                                                  id_subController : id_parent
                                                }, $scope.cadastrarFuncionalidadesPadrao);
                                 return true;
-                              }); 
+                              }, '', true, 'Cadastrar funcionalidades padrão', $scope.cadastrarFuncionalidadesPadrao, 
+                                    function(checked){
+                                       $scope.cadastrarFuncionalidadesPadrao = checked;
+                                    }); 
     };
     /**
       * Solicita ao usuário o novo nome do novo módulo selecionado e o avalia
@@ -232,22 +233,20 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
     var alteraNomeModulo = function(node){
         //console.log(node)
         // Exibe o modal
-        $scope.inputCadastro = false;
         $scope.showModalInput('Informe o novo nome de exibição do módulo ' + node.text, 
                         'Alteração de módulo', 'Cancelar', 'Salvar',
-                         function(){ 
+                         function(text){ 
                                 // Verifica se houve alteração
-                                if($scope.input.text === node.text){
+                                if(text === node.text){
                                     // Não alterou => Nada faz
                                     $scope.fechaModalInput();
                                     return true;
                                 }
-                                if(!$scope.input.text){
+                                if(!text){
                                     $scope.showModalAlerta('Informe um nome');
                                     return false;
                                 }
-                                if($scope.input.text.length < 3){
-                                    //alert('Nome muito curto!');
+                                if(text.length < 3){
                                     $scope.showModalAlerta('Nome muito curto!');
                                     return false;    
                                 }
@@ -271,7 +270,7 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
                                         // busca o rapaz
                                         irmao = jstree.jstree(true)._model.data[irmao];
                                     
-                                    if($scope.input.text.toUpperCase() === irmao.text.toUpperCase() && 
+                                    if(text.toUpperCase() === irmao.text.toUpperCase() && 
                                        irmao.text !== node.text){ // é possível o cidadão alterar o CAPITAL de alguma(s) letra(s) do nome. Por exemplo: TAx Services => Tax Services
                                         $scope.showModalAlerta('Já existe um módulo com esse nome no nível desejado!');
                                         return false;    
@@ -280,7 +279,7 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
                                 // Fecha o modal input
                                 $scope.fechaModalInput();
                                 // Atualiza
-                                atualizaNomeModulo(node, $scope.input.text);
+                                atualizaNomeModulo(node, text);
                                 return true;
                               }, node.text); 
     };                                            
@@ -308,7 +307,7 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
         var json = {webpagescontrollers : jsonModulo, methodspadrao : cadastrarFuncionalidadesPadrao};
         // Envia para o banco
         $scope.showProgress(divPortletBodyModuloFuncionalidadePos);
-        $webapi.post($apis.administracao.webpagescontrollers, $scope.token, json)
+        $webapi.post($apis.getUrl($apis.administracao.webpagescontrollers, $scope.token), json)
                 .then(function(id_controller){
                     $scope.showAlert('Módulo cadastrado com sucesso!', true, 'success', true);
                     // Dismiss o progress
@@ -332,8 +331,8 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
                           ds_controller : novoNome
                          };
         
-        $webapi.update($apis.administracao.webpagescontrollers,
-                       {id: 'token', valor: $scope.token}, jsonModulo)
+        $webapi.update($apis.getUrl($apis.administracao.webpagescontrollers, undefined,
+                       {id: 'token', valor: $scope.token}), jsonModulo)
             .then(function(dados){
                     $scope.showAlert('Módulo alterado com sucesso!', true, 'success', true);
                     $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
@@ -351,8 +350,8 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
     var exluirModulo = function(id_controller){
         // Deleta
         $scope.showProgress(divPortletBodyModuloFuncionalidadePos);
-        $webapi.delete($apis.administracao.webpagescontrollers,
-                       [{id: 'token', valor: $scope.token},{id: 'id_controller', valor: id_controller}])
+        $webapi.delete($apis.getUrl($apis.administracao.webpagescontrollers, undefined,
+                       [{id: 'token', valor: $scope.token},{id: 'id_controller', valor: id_controller}]))
             .then(function(dados){
                     $scope.showAlert('Módulo deletado com sucesso!', true, 'success', true);
                     $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
@@ -375,18 +374,18 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
         // Exibe o modal
         $scope.showModalInput('Informe o nome de exibição do método', 'Cadastro de método em ' + $scope.moduloSelecionado.text, 
                               'Cancelar', 'Salvar',
-                         function(){ 
-                                if(!$scope.input.text){
+                         function(text){ 
+                                if(!text){
                                     $scope.showModalAlerta('Informe um nome');
                                     return false;
                                 }
-                                if($scope.input.text.length < 3){
+                                if(text.length < 3){
                                     $scope.showModalAlerta('Nome muito curto!');
                                     return false;    
                                 }
                                 // Verifica se tem algum de mesmo nome
                                 for(var k = 0; k < $scope.moduloSelecionado.data.methods.length; k++){
-                                    if($scope.input.text.toUpperCase() === $scope.moduloSelecionado.data.methods[k].ds_method.toUpperCase()){
+                                    if(text.toUpperCase() === $scope.moduloSelecionado.data.methods[k].ds_method.toUpperCase()){
                                         $scope.showModalAlerta('Já existe um método com esse nome!');
                                         return false;    
                                     }
@@ -394,7 +393,7 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
                                 // Fecha o modal input
                                 $scope.fechaModalInput();
                                 // Cadastra
-                                cadastraMetodo({ ds_method : $scope.input.text,
+                                cadastraMetodo({ ds_method : text,
                                                  id_controller : parseInt($scope.moduloSelecionado.id)
                                                });
                                 return true;
@@ -408,25 +407,25 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
         // Exibe o modal
         $scope.showModalInput('Informe o novo nome de exibição do método ' + $scope.funcionalidadeSelecionada.ds_method, 
                         'Alteração de método', 'Cancelar', 'Salvar',
-                         function(){ 
+                         function(text){ 
                                 // Verifica se houve alteração
-                                if($scope.input.text === $scope.funcionalidadeSelecionada.ds_method){
+                                if(text === $scope.funcionalidadeSelecionada.ds_method){
                                     // Não alterou => Nada faz
                                     $scope.fechaModalInput();
                                     return true;
                                 }
-                                if(!$scope.input.text){
+                                if(!text){
                                     $scope.showModalAlerta('Informe um nome');
                                     return false;
                                 }
-                                if($scope.input.text.length < 3){
+                                if(text.length < 3){
                                     $scope.showModalAlerta('Nome muito curto!');
                                     return false;    
                                 }  
                                 // Verifica se tem algum de mesmo nome (que não seja ele mesmo)
                                 for(var k = 0; k < $scope.moduloSelecionado.data.methods.length; k++){
                                     var metodo = $scope.moduloSelecionado.data.methods[k];
-                                    if($scope.input.text.toUpperCase() === metodo.ds_method.toUpperCase() && 
+                                    if(text.toUpperCase() === metodo.ds_method.toUpperCase() && 
                                        metodo.ds_method !== $scope.funcionalidadeSelecionada.ds_method){ // é possível o cidadão alterar o CAPITAL de alguma(s) letra(s) do nome
                                         $scope.showModalAlerta('Já existe um método com esse nome!');
                                         return false;    
@@ -435,7 +434,7 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
                                 // Fecha o modal input
                                 $scope.fechaModalInput();
                                 // Atualiza
-                                atualizaMetodo($scope.funcionalidadeSelecionada, $scope.input.text);
+                                atualizaMetodo($scope.funcionalidadeSelecionada, text);
                                 return true;
                               }, $scope.funcionalidadeSelecionada.ds_method); 
     };
@@ -457,7 +456,7 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
         console.log(jsonMetodo);
         // Envia para o banco
         $scope.showProgress(divPortletBodyModuloFuncionalidadePos);
-        $webapi.post($apis.administracao.webpagesmethods, $scope.token, jsonMetodo)
+        $webapi.post($apis.getUrl($apis.administracao.webpagesmethods, $scope.token), jsonMetodo)
                 .then(function(id_method){
                     $scope.showAlert('Métidi cadastrado com sucesso!', true, 'success', true);
                     // Dismiss o progress
@@ -489,8 +488,8 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
         var jsonMethod = {id_method : method.id_method, ds_method : novoNome};
         console.log(jsonMethod);
         
-        $webapi.update($apis.administracao.webpagesmethods,
-                       {id: 'token', valor: $scope.token}, jsonMethod)
+        $webapi.update($apis.getUrl($apis.administracao.webpagesmethods, undefined,
+                       {id: 'token', valor: $scope.token}), jsonMethod)
             .then(function(dados){
                     $scope.showAlert('Método alterado com sucesso!', true, 'success', true);
                     $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
@@ -508,8 +507,8 @@ angular.module("administrativo-modulos-funcionalidades", ['servicos'])
     var excluirMetodo = function(id_method){
         // Deleta
         $scope.showProgress(divPortletBodyModuloFuncionalidadePos);
-        $webapi.delete($apis.administracao.webpagesmethods,
-                       [{id: 'token', valor: $scope.token},{id: 'id_method', valor: id_method}])
+        $webapi.delete($apis.getUrl($apis.administracao.webpagesmethods, undefined,
+                       [{id: 'token', valor: $scope.token},{id: 'id_method', valor: id_method}]))
             .then(function(dados){
                     $scope.showAlert('Método deletado com sucesso!', true, 'success', true);
                     $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);

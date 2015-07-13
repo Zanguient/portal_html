@@ -6,7 +6,7 @@
  */
 
 // App
-angular.module("administrativo-usuarios-cadastro", ['servicos']) 
+angular.module("administrativo-usuarios-cadastro", []) 
 
 .controller("administrativo-usuarios-cadastroCtrl", ['$scope',
                                                      '$state',
@@ -32,8 +32,6 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
     $scope.usuario = {login:'', email:'', grupoempresa:'', empresa:''};
     $scope.roles = [];  
     var rolesSelecionadas = []; 
-    // Controle
-    //var dadosAPI = undefined;
     // Flags
     $scope.abrirCalendarioDataNasc = false;
     var dataValida = false;
@@ -71,7 +69,7 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
         $scope.old.pessoa.dt_nascimento = $scope.pessoa.data_nasc; // deixa no mesmo formato
         if($scope.old.pessoa.nu_telefone !== null){ 
             $scope.pessoa.telefone = $scope.old.pessoa.nu_telefone;
-            // formata telefone aqui
+            /* formata telefone aqui
             var regex = /[0-9]+/g;
             if(regex.test($scope.pessoa.telefone.length)){ 
                 // Só tem números
@@ -79,7 +77,7 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
                     $scope.pessoa.telefone = '(' + $scope.pessoa.telefone.substr(0, 2) + ')' + 
                                              $scope.pessoa.telefone.substr(2);
                 }
-            }// else => verificar
+            }// else => verificar */
         }
         $scope.old.pessoa.nu_telefone = $scope.pessoa.telefone; // deixa em string
         if($scope.old.pessoa.nu_ramal !== null) $scope.pessoa.ramal = $scope.old.pessoa.nu_ramal;
@@ -90,7 +88,8 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
       */
     var obtemRoles = function(){
         $scope.obtendoRoles = true;  
-        $webapi.get($apis.administracao.webpagesroles, [$scope.token, 0, $campos.administracao.webpagesroles.RoleName]) // ordenado pelo nome
+        $webapi.get($apis.getUrl($apis.administracao.webpagesroles, 
+                                 [$scope.token, 0, $campos.administracao.webpagesroles.RoleName])) // ordenado pelo nome
             .then(function(dados){
                     $scope.obtendoRoles = false;
                     $scope.roles = dados.Registros;
@@ -185,12 +184,6 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
                }
             }
         });
-        
-        /*($scope.$on("$destroy", function(event) {
-                // Cancela uma possível requisição em andamento
-                dadosAPI.cancel();
-            }
-        );*/
     };
     /**
       * Altera o estado, enviado pelo json => usado no modal de confirmação
@@ -252,7 +245,7 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
                 "webpagesusersinroles" : r
             };
         // Envia
-        $webapi.post($apis.administracao.webpagesusers, $scope.token, json)
+        $webapi.post($apis.getUrl($apis.administracao.webpagesusers, $scope.token), json)
         //$.post($apis.administracao.webpagesusers + '?token=' + $scope.token, json)
                 .then(function(dados){
                 //.done(function(dados){
@@ -416,7 +409,7 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
         json.webpagesusers = jsonUsuario;
         if(r.length > 0) json.webpagesusersinroles = r;
         // Envia
-        $webapi.update($apis.administracao.webpagesusers, {id: 'token', valor: $scope.token}, json)
+        $webapi.update($apis.getUrl($apis.administracao.webpagesusers, undefined, {id: 'token', valor: $scope.token}), json)
             .then(function(dados){
                      progressoCadastro(false);
                      $scope.showAlert('Usuário alterado com sucesso!', true, 'success', true);
@@ -480,7 +473,7 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
     $scope.buscaGrupoEmpresas = function(texto){
        $scope.pesquisandoGruposEmpresas = true;
        // Obtém a URL                                                      
-       var url = $webapi.getUrl($apis.cliente.grupoempresa, 
+       var url = $apis.getUrl($apis.cliente.grupoempresa, 
                                   [$scope.token, 0, $campos.cliente.grupoempresa.ds_nome, 0, 10, 1], // ordenado crescente com 10 itens no máximo
                                   {id:$campos.cliente.grupoempresa.ds_nome, valor: texto + '%'});
        // Requisita e obtém os dados
@@ -500,7 +493,7 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
        var filtro = {id:$campos.cliente.empresa.id_grupo, valor: $scope.usuario.grupoempresa.id_grupo};
        //if(texto) filtro = [filtro, {id:$campos.cliente.empresa.ds_fantasia, valor: texto + '%'}];
        // Obtém a URL     
-       var url = $webapi.getUrl($apis.cliente.empresa, 
+       var url = $apis.getUrl($apis.cliente.empresa, 
                                   [$scope.token, 0, $campos.cliente.empresa.ds_fantasia],//, 0, 10, 1], // ordenado crescente com 10 itens no máximo
                                   filtro);
        $scope.empresas = [];
@@ -570,7 +563,8 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
                 return;
             }
             $scope.validandoEmail = true;
-            $webapi.get($apis.administracao.webpagesusers, [$scope.token, 0], {id:$campos.administracao.webpagesusers.ds_email, valor:$scope.usuario.email})
+            $webapi.get($apis.getUrl($apis.administracao.webpagesusers, [$scope.token, 0], 
+                                     {id:$campos.administracao.webpagesusers.ds_email, valor:$scope.usuario.email}))
             // Verifica se a requisição foi respondida com sucesso
                 .then(function(dados){
                             if(!dados) console.log("DADOS NÃO FORAM RECEBIDOS!");
@@ -606,7 +600,8 @@ angular.module("administrativo-usuarios-cadastro", ['servicos'])
                 return;
             }
             $scope.validandoLogin = true;
-            $webapi.get($apis.administracao.webpagesusers, [$scope.token, 0], {id:$campos.administracao.webpagesusers.ds_login, valor:$scope.usuario.login})
+            $webapi.get($apis.getUrl($apis.administracao.webpagesusers, [$scope.token, 0], 
+                                     {id:$campos.administracao.webpagesusers.ds_login, valor:$scope.usuario.login}))
             // Verifica se a requisição foi respondida com sucesso
                 .then(function(dados){
                             if(!dados) console.log("DADOS NÃO FORAM RECEBIDOS!");

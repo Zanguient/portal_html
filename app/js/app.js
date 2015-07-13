@@ -9,10 +9,9 @@
 angular.module("AtosCapital", ['ui.router', 
                                'ui.bootstrap',
                                'ui.checkbox',
-                               //'ng-context-menu',
-                               'jsTree.directive',
                                'diretivas',
-                               'servicos', 
+                               'utils',
+                               'webapi', 
                                'nao-autorizado', 
                                'nao-encontrado',
                                'administrativo-usuarios',
@@ -21,7 +20,131 @@ angular.module("AtosCapital", ['ui.router',
                                'administrativo-modulos-funcionalidades',
                                'administrativo-acesso-usuarios',
                                'dashboard', 
-                               'card-services-conciliacao-vendas']) 
+                               'card-services-conciliacao-vendas',
+                               'card-services-relatorios']) 
+
+
+/**
+  * Rotas
+  */
+.config(['$stateProvider','$urlRouterProvider','$locationProvider', 
+         function($stateProvider,$urlRouterProvider,$locationProvider) {
+    
+    // Aceitar "cross" de domínios
+    //$httpProvider.defaults.useXDomain = true; 
+    //delete $httpProvider.defaults.headers.common['X-Requested-With'];               
+             
+    // ROTAS         
+    var prefixo = '/';
+    
+    /* Remover o '#'
+    if(window.history && window.history.pushState){ 
+        $locationProvider.html5Mode({enabled: true, requireBase: false});
+        prefixo = 'app/';
+    }*/
+    
+    $stateProvider
+
+      // ADMINISTRATIVO
+    
+      .state('administrativo-gestao-acesso-usuarios', {
+        url: prefixo + 'administrativo/usuarios',
+        templateUrl: 'componentes/administrativo/gestao-acessos/usuarios/index.html',
+        controller: "administrativo-usuariosCtrl",
+        data: {
+            titulo: 'Administrativo'
+        }
+      })
+    
+      .state('administrativo-gestao-acesso-usuarios-cadastro', {
+        title: 'Administrativo',
+        url: prefixo + 'administrativo/cadastro-usuarios',
+        params: {usuario: null},
+        templateUrl: 'componentes/administrativo/gestao-acessos/usuarios/views/cadastro/index.html',
+        controller: "administrativo-usuarios-cadastroCtrl",
+        data: {
+            titulo: 'Administrativo'
+        }
+      })
+    
+      .state('administrativo-gestao-acesso-privilegios', {
+        url: prefixo + 'administrativo/privilegios',
+        templateUrl: 'componentes/administrativo/gestao-acessos/privilegios/index.html',
+        controller: "administrativo-privilegiosCtrl",
+        data: {
+            titulo: 'Administrativo'
+        }
+      })
+    
+      .state('administrativo-gestao-acesso-modulos-funcionalidades', {
+        url: prefixo + 'administrativo/modulos-funcionalidades',
+        templateUrl: 'componentes/administrativo/gestao-acessos/modulos-funcionalidades/index.html',
+        controller: "administrativo-modulos-funcionalidadesCtrl",
+        data: {
+            titulo: 'Administrativo'
+        }
+      })
+    
+      .state('administrativo-logs-acesso-usuarios', {
+        url: prefixo + 'administrativo/acesso-usuarios',
+        templateUrl: 'componentes/administrativo/logs/acesso-usuarios/index.html',
+        controller: "administrativo-acesso-usuariosCtrl",
+        data: {
+            titulo: 'Administrativo'
+        }
+      })
+    
+      // DASHBOARD
+      .state('dashboard', {
+        url: prefixo + 'dashboard',
+        templateUrl: 'componentes/dashboard/index.html',
+        controller: "dashboardCtrl",
+        data: {
+            titulo: 'Dashboard'
+        }
+      })
+    
+      // CARD SERVICES
+      /*.state('card-services', {
+        abstract: true
+      })*/
+    
+      .state('card-services-conciliacao-conciliacao-vendas', {
+        url: prefixo + 'card-services/conciliacao-vendas',
+        templateUrl: 'componentes/card-services/conciliacao/conciliacao-vendas/index.html',
+        controller: "card-services-conciliacao-vendasCtrl",
+        data: {
+            titulo: 'Card Services'
+        }
+      })
+    
+      .state('card-services-consolidacao-relatorios', {
+        url: prefixo + 'card-services/relatorios',
+        templateUrl: 'componentes/card-services/consolidacao/relatorios/index.html',
+        controller: "card-services-relatoriosCtrl",
+        data: {
+            titulo: 'Card Services'
+        }
+      })    
+    
+    
+      .state('nao-autorizado', {
+        url: prefixo + 'nao-autorizado',
+        templateUrl: 'componentes/nao-autorizado/index.html',
+        controller: "nao-autorizadoCtrl"
+      })
+    
+      .state('nao-encontrado', {
+        url: prefixo + 'nao-encontrado',
+        templateUrl: 'componentes/nao-encontrado/index.html',
+        controller: "nao-encontradoCtrl"
+      });       
+             
+    $urlRouterProvider.otherwise(prefixo + 'nao-encontrado');
+    
+}])
+
+
 
 // CONTROLLER  PAI
 .controller("appCtrl", ['$scope',
@@ -69,6 +192,9 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_CARD_SERVICES = false;
     $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO = false;
     $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_VENDAS = false;
+    $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO = false;
+    $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_RELATORIOS = false;                        
+    $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_DADOS_ACESSO = false; 
                             
                             
     
@@ -130,11 +256,17 @@ angular.module("AtosCapital", ['ui.router',
         //else console.log("JA ESTÁ NO DASHBOARD");
     };
     /**
-      * Exibe como conteúdo a Conciliação de Vendas de Card Services
+      * Exibe como conteúdo a Conciliação Conciliação de Vendas, de Card Services
       */
     $scope.goCardServicesConciliacaoVendas = function(params){
-        $scope.go('card-services-conciliacao-vendas', params);
+        $scope.go('card-services-conciliacao-conciliacao-vendas', params);
     }; 
+    /**
+      * Exibe como conteúdo a Consolidação Relatórios, de Card Services
+      */
+    $scope.goCardServicesRelatorios = function(params){
+        $scope.go('card-services-consolidacao-relatorios', params);
+    };    
                             
     /** 
       * Valida o acesso a url, considerando as permissões
@@ -183,8 +315,14 @@ angular.module("AtosCapital", ['ui.router',
                 event.preventDefault();
                 $scope.go('nao-autorizado');
             }
-        }else if(url === $state.get('card-services-conciliacao-vendas').url){ 
+        }else if(url === $state.get('card-services-conciliacao-conciliacao-vendas').url){ 
             if(!$scope.PERMISSAO_CARD_SERVICES || !$scope.PERMISSAO_CARD_SERVICES_CONCILIACAO || !$scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_VENDAS){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.go('nao-autorizado');
+            }
+        }else if(url === $state.get('card-services-consolidacao-relatorios').url){ 
+            if(!$scope.PERMISSAO_CARD_SERVICES || !$scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO || !$scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_RELATORIOS){
                 // Não possui permissão!
                 event.preventDefault();
                 $scope.go('nao-autorizado');
@@ -214,6 +352,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'DASHBOARD': return $scope.goDashboard;  
             // Card Services
             case 'CONCILIAÇÃO DE VENDAS': return $scope.goCardServicesConciliacaoVendas;
+            case 'RELATÓRIOS': return $scope.goCardServicesRelatorios; 
             // ...
             default : return function(){};        
         }
@@ -241,6 +380,9 @@ angular.module("AtosCapital", ['ui.router',
             case 'CARD SERVICES': $scope.PERMISSAO_CARD_SERVICES = true; break;
             case 'CONCILIAÇÃO': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO = true; break;
             case 'CONCILIAÇÃO DE VENDAS': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_VENDAS = true; break;
+            case 'CONSOLIDAÇÃO': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO = true; break;   
+            case 'DADOS DE ACESSO': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_DADOS_ACESSO = true; break;    
+            case 'RELATÓRIOS': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_RELATORIOS = true; break;
             // ...
             default : return ;        
         }
@@ -277,6 +419,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'ACESSO DE USUÁRIOS' : return state == 'acesso-usuarios';    
             // Card Services
             case 'CONCILIAÇÃO DE VENDAS': return state == 'conciliacao-vendas';
+            case 'RELATÓRIOS': return state == 'relatorios'; 
                 
             default : return false;        
         }        
@@ -307,10 +450,10 @@ angular.module("AtosCapital", ['ui.router',
                         titulo : 'Consolidação', 
                         modulos : [
                             {
-                                titulo : 'Relatório Sintético'
+                                titulo : 'Relatórios'
                             },
                             {
-                                titulo : 'Relatório Analítico'
+                                titulo : 'Dados de Acesso'
                             }
                         ]
                     }
@@ -409,15 +552,16 @@ angular.module("AtosCapital", ['ui.router',
         menuConstruido = true;
     };
     /**
-      * Inicializa layout e seus handlers
+      * Exibe o layout e inicializa seus handlers
       */
-    var inicializaLayout = function(){
-        // Carrega todos os handlers de layout
-        jQuery(document).ready(function() { 
-        //$rootScope.$on('$viewContentLoaded', function(){
+    var exibeLayout = function(){
+        // Inicializa todos os handlers de layout 
+        angular.element(document).ready(function(){ // SÓ chama um vez
+        //$scope.$on('$viewContentLoaded', function() { // chama duas vezes. why??
+           //console.log("CONTENT LOADED");
+           $scope.exibeLayout = true;  // só exibe após carregamento completo da página    
            Metronic.init(); // init metronic core componets
-           Layout.init(); // init layout
-           Tasks.initDashboardWidget(); // init tash dashboard widget   
+           Layout.init(); // init layout  
         });
     };
                             
@@ -435,8 +579,14 @@ angular.module("AtosCapital", ['ui.router',
                 $scope.goAdministrativoUsuariosCadastro(); break;
             case $state.get('administrativo-gestao-acesso-privilegios').url : 
                  $scope.goAdministrativoPrivilegios(); break;    
-            case $state.get('card-services-conciliacao-vendas').url : 
+            case $state.get('administrativo-gestao-acesso-modulos-funcionalidades').url : 
+                 $scope.goAdministrativoModulosFuncionalidades(); break; 
+            case $state.get('administrativo-logs-acesso-usuarios').url :
+                 $scope.goAdministrativoAcessoUsuarios(); break;
+            case $state.get('card-services-conciliacao-conciliacao-vendas').url : 
                 $scope.goCardServicesConciliacaoVendas(); break;
+            case $state.get('card-services-consolidacao-relatorios').url : 
+                $scope.goCardServicesRelatorios(); break; 
             default : $scope.goHome(); // Exibe tela inicial
         }
     };                        
@@ -459,10 +609,8 @@ angular.module("AtosCapital", ['ui.router',
             return;
         }
         
-        // Inicializa o layout
-        inicializaLayout();
         // Exibe o layout
-        $scope.exibeLayout = true;
+        exibeLayout();
         // Exibe um loading que bloqueia a página toda
         Metronic.blockUI({
             animate: true,
@@ -470,36 +618,36 @@ angular.module("AtosCapital", ['ui.router',
         });
         
         // Avalia Token
-        var dadosAPI = $webapi.get($apis.autenticacao.login, $scope.token);
+        $webapi.get($apis.getUrl($autenticacao.autenticacao.login, $scope.token))
         // Verifica se a requisição foi respondida com sucesso
-        dadosAPI.then(function(dados){
-                            // Nome do usuário
-                            $scope.nome_usuario = dados.nome;
-                            // Atualiza token na local storage
-                            $scope.token = dados.token;
-                            $autenticacao.atualizaToken($scope.token);
-                            // Controi menu e obtem as permissões do usuário
-                            constroiMenu(dados);
-                            // Exibe a página atual
-                            exibePaginaAtual();
-                            // Atualiza último datetime de autenticação
-                            $autenticacao.atualizaDateTimeDeAutenticacao(new Date());
-                            // Remove o loading da página
-                            Metronic.unblockUI();
-                        },
-                        function(failData){
-                          // Avaliar código de erro
-                          if(failData.status === 500)
-                              // Código 500 => Token já não é mais válido
-                              $scope.voltarTelaLogin();
-                          else{ 
-                              console.log("FALHA AO VALIDAR TOKEN: " + failData.status);
-                              // o que fazer? exibir uma tela indicando falha de comunicação?
-                              // Status 0: sem resposta
-                          }
-                          // Remove o loading da página
-                          Metronic.unblockUI();
-                        });
+            .then(function(dados){
+                // Nome do usuário
+                $scope.nome_usuario = dados.nome;
+                // Atualiza token na local storage
+                $scope.token = dados.token;
+                $autenticacao.atualizaToken($scope.token);
+                // Controi menu e obtem as permissões do usuário
+                constroiMenu(dados);
+                // Exibe a página atual
+                exibePaginaAtual();
+                // Atualiza último datetime de autenticação
+                $autenticacao.atualizaDateTimeDeAutenticacao(new Date());
+                // Remove o loading da página
+                Metronic.unblockUI();
+            },
+            function(failData){
+              // Avaliar código de erro
+              if(failData.status === 500)
+                  // Código 500 => Token já não é mais válido
+                  $scope.voltarTelaLogin();
+              else{ 
+                  console.log("FALHA AO VALIDAR TOKEN: " + failData.status);
+                  // o que fazer? exibir uma tela indicando falha de comunicação?
+                  // Status 0: sem resposta
+              }
+              // Remove o loading da página
+              Metronic.unblockUI();
+            });
     };
                             
     // GRUPO EMPRESA
@@ -535,9 +683,9 @@ angular.module("AtosCapital", ['ui.router',
     $scope.buscaGrupoEmpresas = function(texto){
        progressoGrupoEmpresas(true);
        // Obtém a URL                                                      
-       var url = $webapi.getUrl($apis.cliente.grupoempresa, 
-                                  [$scope.token, 0, $campos.cliente.grupoempresa.ds_nome, 0, 10, 1], // ordenado crescente com 10 itens no máximo
-                                  {id:$campos.cliente.grupoempresa.ds_nome, valor: texto + '%'});
+       var url = $apis.getUrl($apis.cliente.grupoempresa, 
+                              [$scope.token, 0, $campos.cliente.grupoempresa.ds_nome, 0, 10, 1], // ordenado crescente com 10 itens no máximo
+                              {id:$campos.cliente.grupoempresa.ds_nome, valor: texto + '%'});
        // Requisita e obtém os dados
        return $http.get(url).then(function(dados){
            progressoGrupoEmpresas(false);
@@ -660,17 +808,23 @@ angular.module("AtosCapital", ['ui.router',
                             
     // MODAL INPUT
     $scope.input = {titulo : '', mensagem : '', text : '', textoCancela : 'Cancelar',
-                    textoConfirma : 'Ok', funcaoConfirma : function(){}};                                       
+                    textoConfirma : 'Ok', funcaoConfirma : function(text){},
+                    showCheckbox : false, checkboxText : '', checkbox : false, funcaoCheckboxChange : function(checked){}};                                       
     /**
       * Exibe modal com o input
       */
-    $scope.showModalInput = function(mensagem, titulo, textoCancela, textoConfirma, funcaoConfirma, textInit){
+    $scope.showModalInput = function(mensagem, titulo, textoCancela, textoConfirma, funcaoConfirma, textInit, 
+                                     showCheckbox, checkboxText, checked, funcaoCheckboxChange){
         $scope.input.mensagem = mensagem ? mensagem : 'Mensagem';
         $scope.input.titulo = titulo ? titulo : 'Info';
         $scope.input.textoCancela = textoCancela ? textoCancela : 'Cancelar';
         $scope.input.textoConfirma = textoConfirma ? textoConfirma : 'Ok';
-        $scope.input.funcaoConfirma = typeof funcaoConfirma === 'function' ? funcaoConfirma : function(){fechaModalInput()};
+        $scope.input.funcaoConfirma = typeof funcaoConfirma === 'function' ? funcaoConfirma : function(text){fechaModalInput()};
         $scope.input.text = textInit ? textInit : '';
+        $scope.input.showCheckbox = showCheckbox ? true : false;
+        $scope.input.checkboxText = checkboxText ? checkboxText : '';
+        $scope.input.checkbox = checked ? true : false;
+        $scope.input.funcaoCheckboxChange = typeof funcaoCheckboxChange === 'function' ? funcaoCheckboxChange : function(checked){};
         // Exibe o modal
         $('#modalInput').modal('show');
         if(!$scope.$$phase) $scope.$apply();
@@ -718,112 +872,7 @@ angular.module("AtosCapital", ['ui.router',
                             
 }])
 
-.config(['$stateProvider','$urlRouterProvider','$locationProvider', 
-         function($stateProvider,$urlRouterProvider,$locationProvider) {
-    
-    // Aceitar "cross" de domínios
-    //$httpProvider.defaults.useXDomain = true; 
-    //delete $httpProvider.defaults.headers.common['X-Requested-With'];               
-             
-    // ROTAS         
-    var prefixo = '/';
-    
-    /* Remover o '#'
-    if(window.history && window.history.pushState){ 
-        $locationProvider.html5Mode({enabled: true, requireBase: false});
-        prefixo = 'app/';
-    }*/
-    
-    $stateProvider
 
-      // ADMINISTRATIVO
-    
-      .state('administrativo-gestao-acesso-usuarios', {
-        url: prefixo + 'administrativo/usuarios',
-        templateUrl: 'componentes/administrativo/gestao-acessos/usuarios/index.html',
-        controller: "administrativo-usuariosCtrl",
-        data: {
-            titulo: 'Administrativo'
-        }
-      })
-    
-      .state('administrativo-gestao-acesso-usuarios-cadastro', {
-        title: 'Administrativo',
-        url: prefixo + 'administrativo/cadastro-usuarios',
-        params: {usuario: null},
-        templateUrl: 'componentes/administrativo/gestao-acessos/usuarios/views/cadastro/index.html',
-        controller: "administrativo-usuarios-cadastroCtrl",
-        data: {
-            titulo: 'Administrativo'
-        }
-      })
-    
-      .state('administrativo-gestao-acesso-privilegios', {
-        url: prefixo + 'administrativo/privilegios',
-        templateUrl: 'componentes/administrativo/gestao-acessos/privilegios/index.html',
-        controller: "administrativo-privilegiosCtrl",
-        data: {
-            titulo: 'Administrativo'
-        }
-      })
-    
-      .state('administrativo-gestao-acesso-modulos-funcionalidades', {
-        url: prefixo + 'administrativo/modulos-funcionalidades',
-        templateUrl: 'componentes/administrativo/gestao-acessos/modulos-funcionalidades/index.html',
-        controller: "administrativo-modulos-funcionalidadesCtrl",
-        data: {
-            titulo: 'Administrativo'
-        }
-      })
-    
-      .state('administrativo-logs-acesso-usuarios', {
-        url: prefixo + 'administrativo/acesso-usuarios',
-        templateUrl: 'componentes/administrativo/logs/acesso-usuarios/index.html',
-        controller: "administrativo-acesso-usuariosCtrl",
-        data: {
-            titulo: 'Administrativo'
-        }
-      })
-    
-      // DASHBOARD
-      .state('dashboard', {
-        url: prefixo + 'dashboard',
-        templateUrl: 'componentes/dashboard/index.html',
-        controller: "dashboardCtrl",
-        data: {
-            titulo: 'Dashboard'
-        }
-      })
-    
-      // CARD SERVICES
-      /*.state('card-services', {
-        abstract: true
-      })*/
-    
-      .state('card-services-conciliacao-vendas', {
-        url: prefixo + 'card-services/conciliacao-vendas',
-        templateUrl: 'componentes/card-services/conciliacao/conciliacao-vendas/index.html',
-        controller: "card-services-conciliacao-vendasCtrl",
-        data: {
-            titulo: 'Card Services'
-        }
-      })
-    
-      .state('nao-autorizado', {
-        url: prefixo + 'nao-autorizado',
-        templateUrl: 'componentes/nao-autorizado/index.html',
-        controller: "nao-autorizadoCtrl"
-      })
-    
-      .state('nao-encontrado', {
-        url: prefixo + 'nao-encontrado',
-        templateUrl: 'componentes/nao-encontrado/index.html',
-        controller: "nao-encontradoCtrl"
-      });       
-             
-    $urlRouterProvider.otherwise(prefixo + 'nao-encontrado');
-    
-}])
 
 // Init global settings and run the app
 .run(['$rootScope', '$location', function($rootScope, $location) {
