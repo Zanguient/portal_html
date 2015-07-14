@@ -75,7 +75,8 @@ Não é necessário nenhum outro módulo externo.
 			{ RoleId: id, RoleName : name }
 	 - PUT : altera o nome da role 
 			{ RoleId : id, RoleName : name }
- 
+	 - POST : adiciona uma nova role
+            { RoleName : name }	 
    
 
    

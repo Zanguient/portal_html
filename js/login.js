@@ -32,7 +32,7 @@ app.controller("loginCtrl", ['$scope',
       */                              
     var redirecionaPagina = function(){
         // Redireciona
-        $scope.exibeLayout = false; 
+        //$scope.exibeLayout = false; 
         window.location.replace(paginaRedirecionamento);
     }; 
     /**
@@ -94,28 +94,28 @@ app.controller("loginCtrl", ['$scope',
             // VALIDA LOGIN
             var jsonAutenticacao = { 'usuario': $scope.usuario.nome, 'senha': $scope.usuario.senha };
             // Envia os dados para autenticação
-            $.post($autenticacao.autenticacao.login, jsonAutenticacao)
-            //$webapi.post($autenticacao.autenticacao.login, jsonAutenticacao)
-                //.then(function(dados){
-                          .done(function(data){
-                            // LOGADO! => Vai para a página principal
-                            // Atualiza dados de autenticação
-                            $autenticacao.atualizaDadosDeAutenticacao(data.token,$scope.lembrar,new Date());
-                            // Redireciona e atualiza último horário de autenticação
-                            redirecionaPagina();
-                            // Esconde Progress
-                            progressoLogin(false);
-                          }).fail(function(failData){
-                          //, function(failData){
-                              if(failData.status === 500)
-                                  // Exibe mensagem reportando a falha de autenticação
-                                  $scope.mensagemErro = 'Usuário e/ou senha inválido(s).';
-                              else if(failData.status === 0)
-                                  $scope.mensagemErro = 'Falha de comunicação com o servidor.';
-                              $('div[class="alert alert-danger display-hide"]').show(); // temp...
-                              // Esconde Progress
-                              progressoLogin(false);
-                          });
+            //$.post($autenticacao.autenticacao.login, jsonAutenticacao)
+            $webapi.post($autenticacao.autenticacao.login, jsonAutenticacao)
+                .then(function(data){
+                //.done(function(data){
+                    // LOGADO! => Vai para a página principal
+                    // Atualiza dados de autenticação
+                    $autenticacao.atualizaDadosDeAutenticacao(data.token,$scope.lembrar,new Date());
+                    // Redireciona e atualiza último horário de autenticação
+                    redirecionaPagina();
+                    // Esconde Progress
+                    progressoLogin(false);
+                  }//).fail(function(failData){
+                  , function(failData){
+                      if(failData.status === 500)
+                          // Exibe mensagem reportando a falha de autenticação
+                          $scope.mensagemErro = 'Usuário e/ou senha inválido(s).';
+                      else if(failData.status === 0)
+                          $scope.mensagemErro = 'Falha de comunicação com o servidor.';
+                      $('div[class="alert alert-danger display-hide"]').show(); // temp...
+                      // Esconde Progress
+                      progressoLogin(false);
+                  });
             
             return true;
         }

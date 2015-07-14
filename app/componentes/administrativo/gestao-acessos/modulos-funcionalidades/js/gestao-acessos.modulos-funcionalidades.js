@@ -307,7 +307,8 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
         var json = {webpagescontrollers : jsonModulo, methodspadrao : cadastrarFuncionalidadesPadrao};
         // Envia para o banco
         $scope.showProgress(divPortletBodyModuloFuncionalidadePos);
-        $webapi.post($apis.getUrl($apis.administracao.webpagescontrollers, $scope.token), json)
+        $webapi.post($apis.getUrl($apis.administracao.webpagescontrollers, undefined, 
+                                  {id: 'token', valor: $scope.token}), json)
                 .then(function(id_controller){
                     $scope.showAlert('Módulo cadastrado com sucesso!', true, 'success', true);
                     // Dismiss o progress
@@ -456,7 +457,8 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
         console.log(jsonMetodo);
         // Envia para o banco
         $scope.showProgress(divPortletBodyModuloFuncionalidadePos);
-        $webapi.post($apis.getUrl($apis.administracao.webpagesmethods, $scope.token), jsonMetodo)
+        $webapi.post($apis.getUrl($apis.administracao.webpagesmethods, undefined,
+                                  {id: 'token', valor: $scope.token}), jsonMetodo)
                 .then(function(id_method){
                     $scope.showAlert('Método cadastrado com sucesso!', true, 'success', true);
                     // Dismiss o progress

@@ -27,12 +27,12 @@ angular.module("AtosCapital", ['ui.router',
 /**
   * Rotas
   */
-.config(['$stateProvider','$urlRouterProvider','$locationProvider', 
-         function($stateProvider,$urlRouterProvider,$locationProvider) {
+.config(['$stateProvider','$urlRouterProvider','$locationProvider', '$httpProvider', 
+         function($stateProvider,$urlRouterProvider,$locationProvider,$httpProvider) {
     
     // Aceitar "cross" de domínios
-    //$httpProvider.defaults.useXDomain = true; 
-    //delete $httpProvider.defaults.headers.common['X-Requested-With'];               
+    $httpProvider.defaults.useXDomain = true; 
+    delete $httpProvider.defaults.headers.common['X-Requested-With'];               
              
     // ROTAS         
     var prefixo = '/';
@@ -354,7 +354,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'CONCILIAÇÃO DE VENDAS': return $scope.goCardServicesConciliacaoVendas;
             case 'RELATÓRIOS': return $scope.goCardServicesRelatorios; 
             // ...
-            default : return function(){};        
+            default : return null;        
         }
     };
     
@@ -430,9 +430,9 @@ angular.module("AtosCapital", ['ui.router',
     var constroiMenu = function(data){
         // Exemplo
         //data.id_grupo = 42;
-        data.controllers = [
+        /*data.controllers = [
             {
-                ds_controller : 'Dashboard',
+                ds_controller : 'Dashboard Atos',
                 id_controller : 64
             },
             {
@@ -500,7 +500,7 @@ angular.module("AtosCapital", ['ui.router',
                     }
                 ]
             }
-        ];
+        ];*/
         
         // Constrói o menu
         $scope.menu = [];
@@ -511,6 +511,8 @@ angular.module("AtosCapital", ['ui.router',
             menu.id_controller = controller.id_controller;
             // Atribui permissão
             atribuiPermissao(menu.ds_controller);//menu.id_controller);
+            // A priori não tem premissão
+            menu.temLink = false;
             
             // Subserviços
             if(controller.subControllers  && controller.subControllers.length > 0){
@@ -522,6 +524,8 @@ angular.module("AtosCapital", ['ui.router',
                     subMenu.id_controller = subController1.id_controller;
                     // Atribui permissão
                     atribuiPermissao(subMenu.ds_controller);//subMenu.id_controller);
+                    // A priori não tem premissão
+                    subMenu.temLink = false;
                     
                     // Módulos
                     if(subController1.subControllers && subController1.subControllers.length > 0){
@@ -533,7 +537,12 @@ angular.module("AtosCapital", ['ui.router',
                             itemMenu.id_controller = subController2.id_controller;
                             // Atribui permissão
                             atribuiPermissao(itemMenu.ds_controller);//itemMenu.id_controller);
+                            // A priori não tem premissão
+                            itemMenu.temLink = false;
+                            
                             itemMenu.link = getLink(itemMenu.ds_controller);//itemMenu.id_controller);
+                            if(itemMenu.link === null) itemMenu.link = function(){};
+                            else itemMenu.temLink = subMenu.temLink = menu.temLink = true;
                             if(subController2.home && !$scope.goHome) $scope.goHome = itemMenu.link;
                             // Adiciona o módulo
                             subMenu.subControllers.push(itemMenu);
@@ -541,6 +550,8 @@ angular.module("AtosCapital", ['ui.router',
                     }else{
                         // Se não tem módulos, então deve ter um link
                         subMenu.link = getLink(subMenu.ds_controller);//subMenu.id_controller); 
+                        if(subMenu.link === null) subMenu.link = function(){};
+                        else subMenu.temLink = menu.temLink = true;
                         // Página inicial é definido pelo primeiro 'home=true' encontrado        
                         if(subController1.home && !$scope.goHome) $scope.goHome = subMenu.link;
                     }
@@ -551,6 +562,8 @@ angular.module("AtosCapital", ['ui.router',
             }else{
                 // Se não tem subserviços, então deve ter um link
                 menu.link = getLink(menu.ds_controller);//menu.id_controller); 
+                if(menu.link === null) menu.link = function(){};
+                else menu.temLink = true;
                 // Página inicial é definido pelo primeiro 'home=true' encontrado        
                 if(controller.home && !$scope.goHome) $scope.goHome = menu.link;
             }
@@ -613,7 +626,7 @@ angular.module("AtosCapital", ['ui.router',
     /**
       * INICIALIZAÇÃO DO CONTROLLER
       */                        
-    $scope.init = function(){
+    $scope.init = function(){        
         // Verifica se está autenticado
         if(!$autenticacao.usuarioEstaAutenticado()){ 
             $scope.voltarTelaLogin();

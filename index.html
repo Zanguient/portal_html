@@ -58,18 +58,18 @@
 <!-- END HEAD -->
     
 <!-- BEGIN BODY -->
-<body class="login" ng-controller="loginCtrl" ng-init="init()" ng-show="exibeLayout" ng-cloak>
-<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
-<div class="menu-toggler sidebar-toggler">
-</div>
-<!-- END SIDEBAR TOGGLER BUTTON -->
+<body class="login" ng-controller="loginCtrl" ng-init="init()">
+    
+<!-- PRE-LOADER IMAGE -->
+<img class="imgPreloader" ng-src="img/preloader.gif" ng-hide="exibeLayout">
+    
 <!-- BEGIN LOGO -->
-<div class="logo">
+<div class="logo" ng-show="exibeLayout" ng-cloak>
 	<img ng-src="img/AtosCapital.jpg" title="{{empresa.nome}}"/>
 </div>
 <!-- END LOGO -->
 <!-- BEGIN LOGIN -->
-<div class="content">
+<div class="content" ng-show="exibeLayout" ng-cloak>
 	<!-- BEGIN LOGIN FORM -->
 	<form class="login-form" action="index.html" method="post">
 		<h3 class="form-title">Login</h3>
@@ -204,7 +204,7 @@
 	</form>
 	<!-- END REGISTRATION FORM -->
 </div>
-<div class="copyright">
+<div class="copyright" ng-show="exibeLayout" ng-cloak>
 	 {{empresa.copyright}}
 </div>
 <!-- END LOGIN -->

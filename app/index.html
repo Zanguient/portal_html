@@ -65,9 +65,13 @@
 <!-- END HEAD -->
     
 <!-- BEGIN BODY -->
-<body ng-controller="appCtrl" ng-init="init()" ng-show="exibeLayout" ng-cloak>
+<body ng-controller="appCtrl" ng-init="init()">
+    
+<!-- PRE-LOADER IMAGE -->
+<!--img class="imgPreloader" ng-src="../img/preloader.gif" ng-hide="exibeLayout"-->
+    
 <!-- BEGIN HEADER : Logo, Usuário Conectado, Menu e Barra de Pesquisa -->
-<div class="page-header">
+<div class="page-header" ng-show="exibeLayout" ng-cloak>
     
 	<!-- BEGIN HEADER TOP : Logo e Usuário Conectado -->
 	<div class="page-header-top">
@@ -137,7 +141,7 @@
 			<div class="hor-menu">
                 <!-- MENU DINÂMICO -->
 				<ul class="nav navbar-nav" ng-repeat="item in menu">
-                    <li ng-class="{ active : menuAtivo(item.ds_controller), 'menu-dropdown mega-menu-dropdown' : item.subControllers && item.subControllers.length > 0}">
+                    <li ng-class="{ active : menuAtivo(item.ds_controller), 'menu-dropdown mega-menu-dropdown' : item.subControllers && item.subControllers.length > 0}" ng-show="item.temLink">
                         <a data-hover="megamenu-dropdown" 
                            data-close-others="true" 
                            href="javascript:;" 
@@ -155,13 +159,14 @@
 										<div class="col-xs-1" 
                                              style="width: inherit !important" 
                                              ng-repeat="subController1 in item.subControllers">
-											<ul class="mega-menu-submenu">
+											<ul class="mega-menu-submenu" ng-show="subController1.temLink">
 												<li>
 													<h3>{{subController1.ds_controller}}</h3>
 												</li>
 												<li ng-repeat="subController2 in subController1.subControllers"
                                                     ng-class="{ active : moduloAtivo(subController1.ds_controller) }">
-													<a href="javascript:;" ng-click="subController2.link()">
+													<a href="javascript:;" ng-click="subController2.link()"
+                                                       ng-show="subController2.temLink">
 													   <i class="fa fa-angle-right"></i>
 													   {{subController2.ds_controller}}
                                                     </a>
@@ -183,7 +188,7 @@
 <!-- END HEADER -->
     
 <!-- BEGIN PAGE CONTAINER : View com o título e subtítulo do conteúdo exibido, além do botão para pesquisar grupo empresa -->
-<div class="page-container">
+<div class="page-container" ng-show="exibeLayout" ng-cloak>
 	<!-- BEGIN PAGE HEAD -->
 	<div class="page-head">
 		<div class="container">
@@ -246,7 +251,7 @@
 <!-- END PAGE CONTAINER -->
     
 <!-- BEGIN PAGE CONTENT : Conteúdo da página é incluído dinamicamente nesta div -->
-<div class="page-content">
+<div class="page-content" ng-show="exibeLayout" ng-cloak>
    <!-- MODAIS -->    
                         
    <!-- MODAL INPUT -->
@@ -259,7 +264,7 @@
                </div>
                <div class="modal-body modal-corpo" style="text-align: center">
                     {{input.mensagem}}
-                    <input class="form-control" type="text" ng-model="input.text"
+                    <input class="form-control modalConfig" type="text" ng-model="input.text"
                            ng-keypress="($event.which === 13) ? input.funcaoConfirma(input.text) : 0">
                     <span ng-show="input.showCheckbox" style="margin-top: 10px"> 
                         <checkbox normal ng-model="input.checkbox" 
@@ -340,7 +345,7 @@
 
     
 <!-- BEGIN PRE-FOOTER : Sobre (resumido) e Contato-->
-<div class="page-prefooter">
+<div class="page-prefooter" ng-show="exibeLayout" ng-cloak>
 	<div class="container">
 		<div class="row">
             <!-- SOBRE -->
@@ -374,12 +379,12 @@
 <!-- END PRE-FOOTER -->
     
 <!-- BEGIN FOOTER : COPYRIGHT -->
-<div class="page-footer">
+<div class="page-footer" ng-show="exibeLayout" ng-cloak>
 	<div class="container">
 		 {{empresa.copyright}}
 	</div>
 </div>
-<div class="scroll-to-top">
+<div class="scroll-to-top" ng-show="exibeLayout" ng-cloak>
 	<i class="icon-arrow-up"></i>
 </div>
 <!-- END FOOTER -->
