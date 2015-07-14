@@ -255,7 +255,8 @@ angular.module("administrativo-usuarios-cadastro", [])
                 "webpagesusersinroles" : r
             };
         // Envia
-        $webapi.post($apis.getUrl($apis.administracao.webpagesusers, $scope.token), json)
+        $webapi.post($apis.getUrl($apis.administracao.webpagesusers, undefined,
+                                  {id: 'token', valor: $scope.token}), json)
                 .then(function(dados){
                     progressoCadastro(false);
                     $scope.showAlert('Usuário cadastrado com sucesso!', true, 'success', true);

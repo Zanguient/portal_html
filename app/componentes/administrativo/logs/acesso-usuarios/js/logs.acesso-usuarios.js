@@ -207,7 +207,8 @@ angular.module("administrativo-acesso-usuarios", [])
         }
         // Envia para o banco
         $scope.showProgress(divPortletBodyPrivilegioPos);
-        $webapi.post($apis.getUrl($apis.administracao.webpagesroles, $scope.token), {RoleName : $scope.novoPrivilegio})
+        $webapi.post($apis.getUrl($apis.administracao.webpagesroles, undefined, 
+                                  {id: 'token', valor: $scope.token}), {RoleName : $scope.novoPrivilegio})
                 .then(function(dados){
                     $scope.showAlert('Privilégio cadastrado com sucesso!', true, 'success', true);
                     // Reseta o campo

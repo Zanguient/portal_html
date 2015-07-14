@@ -1956,7 +1956,7 @@ Customized Bootstrap Buttons
 
 .btn-default {
   border-width: 1px;
-  padding: 6px 13px;
+  padding: 4px 13px;
 }
 
 .btn-block {
@@ -4236,38 +4236,6 @@ Notes
   border-color: #dca7b0;
   box-shadow: 5px 5px rgba(222, 171, 179, 0.2);
 }
-.cuponAzulConciliacaoVendas{
-background-color: #eef7fb;
-border-color: #a6e1ec;
-color: #31708f;
-border-left: 5px solid #a6e1ec;  
-border-radius: 0 4px 4px 0; 
-padding: 15px 30px 15px 15px;
-margin-top:40px;      
-}
-.cuponLaranjaConciliacaoVendas{
-background-color: #fcf8e3;
-border-color: #f5d89e;
-color: #8a6d3b;
-border-left: 5px solid #f5d89e;  
-border-radius: 0 4px 4px 0; 
-padding: 15px 30px 15px 15px;
-margin-top:40px;      
-}
-.cuponVermelhoConciliacaoVendas{
-background-color: #f9f0f0;
-border-color: #e4b9c0;
-color: #a94442;
-border-left: 5px solid #e4b9c0;  
-border-radius: 0 4px 4px 0; 
-padding: 15px 30px 15px 15px;
-margin-top:40px;      
-}
-
-.butaoCheckCociliacaoVendas{
-margin-top:170px;
-}
-
 
 /***
 Customized Bootstrap Pagination
@@ -13707,56 +13675,3 @@ Purple Soft
 /***
 Transparent Button
 ***/
-.btn-transparent.btn {
-  background: transparent;
-  color: #888;
-}
-.tableAcessoUsuarios{
-  padding: 15px;   
-}
-.cabecalhoTableAcessoUsuarios{
-  text-align: center;
-  font-weight: bolder;       
-  background-color:#EAEAEA;     
-  border: 1px solid #BDBDBD; 
-  margin:10px -20px -20px -20px; 
-  height: 40px;  
-  padding-top: 5px;     
-}
-
-.componentesTableAcessoUsuarios{
-  text-align: center; 
-  background-color:#fff;     
-  border: 1px solid #BDBDBD; 
-  margin: -11px -20px -20px -20px;
-  height: 40px; 
-  padding-top: 5px;  
-}
-
-.cabecalhoVisualizacaoTableAcessoUsuarios{
-  text-align: center;
-  font-weight: bolder;       
-  background-color:#EAEAEA;     
-  border: 1px solid #BDBDBD; 
-  margin:-11px -20px -20px -20px;
-  height: 40px;  
-  padding-top: 5px;     
-}
-
-.botoesAdicionar{
-  margin-bottom: 3px;
-}
-
-.form-controlModuloseFuncionalidades{
-  display: block;
-  width: 70%;
-      
-}
-
-.barrapesquisa{
-  width: 29.33333333%;
-}
-
-.vertical-center {
-   margin: 6px 0 0 15px;    
-}

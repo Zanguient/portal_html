@@ -75,14 +75,13 @@ angular.module('utils', [ ])
     delete: function(url) {
       // Setando o promise
       var deferido = $q.defer();
-
-      // Requisitar informações de monitoramento
+        
       $http.delete(url)
         .success(function(dados, status, headers, config){
           deferido.resolve(dados);
         }).error(function(dados, status, headers, config){
           deferido.reject({'dados':dados,'status':status});
-        });
+        }); 
       return deferido.promise;
     },
     /**
@@ -91,14 +90,13 @@ angular.module('utils', [ ])
     update: function(url, dadosFormulario){
       // Setando o promise
       var deferido = $q.defer();
-
-      // Requisitar informações de monitoramento
+       
       $http.put(url, dadosFormulario)
         .success(function(dados, status, headers, config){
           deferido.resolve(dados);
         }).error(function(dados, status, headers, config){
           deferido.reject({'dados':dados,'status':status});
-        });
+        });   
       return deferido.promise; 
     },
     /**
@@ -107,7 +105,7 @@ angular.module('utils', [ ])
     post: function(url, dadosFormulario){
       // Setando o promise
       var deferido = $q.defer();
-
+        
       $http.post(url, dadosFormulario)
         .success(function(dados, status, headers, config){
           deferido.resolve(dados);
@@ -142,6 +140,7 @@ angular.module('utils', [ ])
   // URL base da WEBAPI
   var urlBase = 'http://192.168.0.100/api'; 
   //var urlBase = 'http://api.taxservices.com.br';
+  //var urlBase = 'http://api.atoscapital.com.br';
   // Tempo em horas máximos definido de inatividade para requerer novo login, caso LEMBRAR não tenha sido marcado
   const HORAS_NOVO_LOGIN = 2;
     
