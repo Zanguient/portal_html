@@ -7,7 +7,7 @@ Alterar cor do menu quando ativo
 
 css/defaults.css > .page-header .page-header-menu .hor-menu .navbar-nav > li.active > a (230)
 
-Alterar corese submenu
+Alterar cores submenu
 
 cor titulo do submenu (212)
 

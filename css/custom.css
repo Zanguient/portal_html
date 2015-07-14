@@ -59,13 +59,19 @@ body.modal-open {
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-.vakata-context { 
-     z-index:11000 !important; 
+/*Classes Organizadas em ordem alfabética*/
+
+.barrapesquisa{
+  width: 29.33333333%;
 }
 
-.position-fixed {
-  position: fixed;
-  z-index:9999 !important; 
+.botoesAdicionar{
+  margin-bottom: 3px;
+}
+
+.btn-transparent.btn {
+  background: transparent;
+  color: #888;
 }
 
 .button-bolder{
@@ -73,8 +79,92 @@ body.modal-open {
   font-weight: bolder;
 }
 
-.modal-simples{
-  z-index:12000 !important;   
+.butaoCheckCociliacaoVendas{
+margin-top:170px;
+}
+
+.cabecalhoTableAcessoUsuarios{
+  text-align: center;
+  font-weight: bolder;       
+  background-color:#EAEAEA;     
+  border: 1px solid #BDBDBD; 
+  margin:10px -20px -20px -20px; 
+  height: 40px;  
+  padding-top: 5px;     
+}
+
+.cabecalhoVisualizacaoTableAcessoUsuarios{
+  text-align: center;
+  font-weight: bolder;       
+  background-color:#EAEAEA;     
+  border: 1px solid #BDBDBD; 
+  margin:-11px -20px -20px -20px;
+  height: 40px;  
+  padding-top: 5px;     
+}
+
+.componentesTableAcessoUsuarios{
+  text-align: center; 
+  background-color:#fff;     
+  border: 1px solid #BDBDBD; 
+  margin: -11px -20px -20px -20px;
+  height: 40px; 
+  padding-top: 5px;  
+}
+
+.conteudoNavegacao{
+  margin-top: -30px;
+}
+
+.cuponAzulConciliacaoVendas{
+background-color: #eef7fb;
+border-color: #a6e1ec;
+color: #31708f;
+border-left: 5px solid #a6e1ec;  
+border-radius: 0 4px 4px 0; 
+padding: 15px 30px 15px 15px;
+margin-top:40px;      
+}
+
+.cuponLaranjaConciliacaoVendas{
+background-color: #fcf8e3;
+border-color: #f5d89e;
+color: #8a6d3b;
+border-left: 5px solid #f5d89e;  
+border-radius: 0 4px 4px 0; 
+padding: 15px 30px 15px 15px;
+margin-top:40px;      
+}
+
+.cuponVermelhoConciliacaoVendas{
+background-color: #f9f0f0;
+border-color: #e4b9c0;
+color: #a94442;
+border-left: 5px solid #e4b9c0;  
+border-radius: 0 4px 4px 0; 
+padding: 15px 30px 15px 15px;
+margin-top:40px;      
+}
+
+.form-controlModuloseFuncionalidades{
+  display: block;
+  width: 70%;
+      
+}
+
+.imgPreloader{
+  display: block;
+  margin: auto;
+  z-index: 15000;s
+}
+
+.linhaTolalRelatorios{
+  text-align: right;
+  font-weight:bolder;    
+}
+
+.modalConfig{
+  margin-bottom: 15px;
 }
 
 .modal-input{
@@ -84,3 +174,46 @@ body.modal-open {
 .modal-mensagem{
   z-index:14000 !important;   
 }
+
+.modal-simples{
+  z-index:12000 !important;   
+}
+
+.paddingDivs{
+    margin-left: 4px;
+    margin: 4px;
+}
+
+.position-fixed {
+  position: fixed;
+  z-index:9999 !important; 
+}
+
+.StatusSenhaValida{
+  background-color: #45B6AF;  
+  color: #fff; 
+  padding: 3px 6px 3px 6px;
+  text-align: center;
+  border-radius: .25em; 
+}
+
+.StatusSenhaInvalida{
+  background-color: #F3565D;  
+  color: #fff;  
+  padding: 3px 6px 3px 6px;
+  text-align: center;
+  border-radius: .25em; 
+}
+
+.tableAcessoUsuarios{
+  padding: 15px;   
+}
+
+.vakata-context { 
+     z-index:11000 !important; 
+}
+
+.vertical-center {
+   margin: 6px 0 0 15px;    
+}
+

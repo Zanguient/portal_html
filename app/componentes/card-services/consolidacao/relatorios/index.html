@@ -28,11 +28,7 @@
                 <div class="portlet-title">
                     <div class="caption">								
                         <span class="caption-subject font-green-sharp bold uppercase">Filtros</span>						
-                    </div>
-                    <div class="actions">
-
-
-                    </div>
+                    </div>                    
                 </div>
                 <div class="portlet-body">
                     <div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">
@@ -157,7 +153,6 @@
         <div class="col-md-12">
             <!-- BEGIN TABLE PORTLET-->
             <div class="portlet light">                
-                
                 <!-- TOPO : Nome 'Usuários' e botões de 'Opções' e FullScreen -->
                 <div class="portlet-title">
                     <div class="caption">
@@ -194,13 +189,12 @@
                             </ul>
                         </div>
                     </div>
-                </div>
-                <!-- CORPO : Botão 'Novo Usuário' e Tabela -->
+                </div>                
                 <div class="portlet-body">                    
                     <!-- TABELA -->
                     <div class="dataTables_wrapper no-footer">
                         <!-- EXIBIÇÃO E PESQUISA -->
-                        <div class="row">
+                        <div class="row paddingDivs">
                             <!-- EXIBIÇÃO --> 
                             <div class="col-sm-6">
                                 <div class="dataTables_length">
@@ -210,374 +204,187 @@
                                     </label>
                                 </div>
                             </div>                            
-                            <!-- PESQUISA -->
+                            <!-- PESQUISA -->                            
                             <div class="col-sm-6">
-                                <div class="dataTables_filter">                                      
-                                    <div class="col-sm-7" style="padding-right: 1px; padding-left: 1px; float:right">
-                                        <label>
-                                            <div class="input-group input-icon right">
-                                                <i class="fa fa-times ng-hide" style="right:50px;cursor:pointer" ng-click="resetaBusca()" ng-show="usuario.busca"></i>
-                                                <input type="text" class="form-control input-inline ng-pristine ng-untouched ng-valid" placeholder="Buscar" ng-model="busca" ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 &amp;&amp; !busca)) &amp;&amp; filtraUsuarios()">
-												<span class="input-group-addon">
-                                                    <i class="fa fa-search" style="cursor:pointer" ng-click="filtraUsuarios()"></i>
-												</span>
-											</div> 
-                                        </label>
-                                    </div>
+                                <div class="dataTables_filter">
+                                    <label>
+                                        <input type="text" class="form-control input-inline ng-pristine ng-untouched ng-valid" placeholder="Buscar" aria-controls="sample_editable_1" ng-model="busca" ng-init="busca=''" ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 &amp;&amp; !busca)) &amp;&amp; filtraPrivilegios(busca)">                                            											
+                                    </label>
+                                    <label>
+                                        <select aria-controls="datatable_products" class="form-control input-sm input-inline ng-pristine ng-untouched ng-valid" ng-model="privilegio.campo_busca" ng-options="campo as campo.nome for campo in camposBusca | filter:{ativo:true}"><option value="0" selected="selected" label="Privilégio">Privilégio</option></select> 
+                                    </label>
+                                    <label>
+                                        <span class="seperator"></span>Pesquisar 
+                                    </label>                                    
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">                            
                             <!--NAVEGAÇÃO-->  
                             <div class="col-md-12">
-                            <!-- Begin: life time stats -->
-                                <div class="portlet light">
-                                    <div class="portlet-title tabbable-line">							
-                                        <ul class="nav nav-tabs">
-                                            <li>
-                                                <a href="#portlet_tab2" data-toggle="tab-pane" id="statistics_amounts_tab">
-                                                Terminal Lógico </a>
-                                            </li>
-                                            <li class="active">
-                                                <a href="#portlet_tab1" data-toggle="tab">
-                                                Sintético </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="portlet-body">
-                                        <div class="tab-content">
-                                            <div class="tab-pane" id="portlet_tab1">
-                                                <p>Olá</p>
-                                            </div>
-                                            <div class="tab-pane" id="portlet_tab2">
-                                                <p>Oi</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--FIM NAVEGAÇÃO-->
+                                <div class="portlet light">                                    
+                                    <!--TAEBELA TÉRMINAL LÓGICO-->
+                                    <div class="table">
+                                        <table class="table table-striped table-hover table-bordered dataTable no-footer" id="sample_editable_1" role="grid" aria-describedby="sample_editable_1_info">
+                                            <thead>
+                                                <tr role="row">
+                                                    <th class="sorting_asc" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-sort="ascending" aria-label="
+                                                 Username
+                                            : activate to sort column ascending" style="width: 188px; text-align:left">
+                                                  Aquirente
+                                                    </th>
+                                                    <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="
+                                                 Full Name
+                                            : activate to sort column ascending" style="width: 237px;text-align:left">
+                                                    CNPJ
+                                                    </th>
+                                                    <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="
+                                                 Full Name
+                                            : activate to sort column ascending" style="width: 237px;">
+                                                 login
+                                                    </th>
+                                                    <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="
+                                                 Full Name
+                                            : activate to sort column ascending" style="width: 237px;">
+                                                 Estabelecimento
+                                                    </th>
+                                                    <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="
+                                                 Points
+                                            : activate to sort column ascending" style="width: 128px;">
+                                                 Senha
+                                                    </th>
+                                                    <th tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="
+                                                 Notes
+                                            : activate to sort column ascending" style="width: 163px;">
+                                                 ---
+                                                    </th>                                        
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr role="row" class="odd">
+                                                    <td class="sorting_1">
+                                                         <input type="text" class="form-control" placeholder="Enter text">
+                                                    </td>
+                                                    <td>
+                                                         <input type="text" class="form-control" placeholder="Enter text">
+                                                    </td>
+                                                    <td style="text-align:center">
+                                                         <input type="text" class="form-control" placeholder="Enter text">
+                                                    </td>
+                                                    <td style="text-align:center">
+                                                         <input type="text" class="form-control" placeholder="Enter text">
+                                                    </td>
+                                                    <td style="text-align:center">
+                                                         <input type="text" class="form-control" placeholder="Enter text">
+                                                    </td>
+                                                    <!-- BOTÃO AÇÕES-->
+                                                    <td class="center btnacoes">
+                                                        <div class="btn-group">
+                                                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
+                                                                <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
+                                                            </a>
+                                                            <ul class="dropdown-menu pull-right">
+                                                                <li>
+                                                                    <a href="javascript:;" ng-click="resetarSenhaDoUsuario(usuario)"> Resetar Senha</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="javascript:;" ng-click="editarUsuario(usuario)">Editar</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="javascript:;" ng-click="exluirUsuario(usuario)">Excluir</a>
+                                                                </li> 
+                                                            </ul>
+                                                        </div>
+                                                    </td> 
+                                                    <!--FIM BOTÃO-->
+                                                </tr> 
+                                                <tr role="row" class="odd">
+                                                    <td class="sorting_1">
+                                                         REDE
+                                                    </td>
+                                                    <td>
+                                                         78.456.534/0987-23
+                                                    </td>
+                                                    <td style="text-align:center">
+                                                         Alex
+                                                    </td>
+                                                    <td style="text-align:center">
+                                                         Exemplo
+                                                    </td>
+                                                    <td style="text-align:center">
+                                                         <span class="StatusSenhaInvalida">
+                                                             Senha Inválida
+                                                        </span>
+                                                    </td>
+                                                    <!-- BOTÃO AÇÕES-->
+                                                    <td class="center btnacoes">
+                                                        <div class="btn-group">
+                                                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
+                                                                <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
+                                                            </a>
+                                                            <ul class="dropdown-menu pull-right">
+                                                                <li>
+                                                                    <a href="javascript:;" ng-click="resetarSenhaDoUsuario(usuario)"> Resetar Senha</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="javascript:;" ng-click="editarUsuario(usuario)">Editar</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="javascript:;" ng-click="exluirUsuario(usuario)">Excluir</a>
+                                                                </li> 
+                                                            </ul>
+                                                        </div>
+                                                    </td> 
+                                                    <!--FIM BOTÃO-->
+                                                </tr>
+                                                <tr role="row" class="odd">
+                                                    <td class="sorting_1">
+                                                         REDE
+                                                    </td>
+                                                    <td>
+                                                         78.456.534/0987-23
+                                                    </td>
+                                                    <td style="text-align:center">
+                                                         Alex
+                                                    </td>
+                                                    <td style="text-align:center">
+                                                         Exemplo
+                                                    </td>
+                                                    <td style="text-align:center">
+                                                         <span class="StatusSenhaValida">
+                                                             Senha Válida
+                                                        </span>
+                                                    </td>
+                                                    <!-- BOTÃO AÇÕES-->
+                                                    <td class="center btnacoes">
+                                                        <div class="btn-group">
+                                                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
+                                                                <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
+                                                            </a>
+                                                            <ul class="dropdown-menu pull-right">
+                                                                <li>
+                                                                    <a href="javascript:;" ng-click="resetarSenhaDoUsuario(usuario)"> Resetar Senha</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="javascript:;" ng-click="editarUsuario(usuario)">Editar</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="javascript:;" ng-click="exluirUsuario(usuario)">Excluir</a>
+                                                                </li> 
+                                                            </ul>
+                                                        </div>
+                                                    </td> 
+                                                    <!--FIM BOTÃO-->
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>    
+                                </div>    
+                            </div>					
+                        </div>                   
                     </div>
-					<!-- End: life time stats -->
-                </div>
-                <!-- FIM RODAPÉ -->    
-            </div>
+                </div>        
+            </div>    
         </div>
-        <!-- FIM TABELA -->
-    </div>
-    <!-- END TABLE PORTLET--> 
-    
-    <!--Area de teste-->
-    <div class="row">
-        <div class="col-md-12">
-            <!-- BEGIN TABLE PORTLET-->
-            <div class="portlet light">                
-                
-                <!-- TOPO : Nome 'Usuários' e botões de 'Opções' e FullScreen -->
-                <div class="portlet-title">
-                    <div class="caption">
-                        <!--i class="fa fa-cogs font-green-sharp"></i-->
-                        <span class="caption-subject font-green-sharp bold uppercase">Informações</span>
-                    </div>
-                    <div class="actions">
-                        <!-- FULLSCREEN -->
-                        <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;" data-original-title="" title=""></a>
-                        <!-- OPÇÕES -->
-                        <div class="btn-group">
-                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
-                            <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
-                            </a>
-                            <ul class="dropdown-menu pull-right">
-                                <li>
-                                    <a href="javascript:;">
-                                    Export to Excel </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                    Export to CSV </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                    Export to XML </a>
-                                </li>
-                                <li class="divider">
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                    Print Invoices </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!-- CORPO : Botão 'Novo Usuário' e Tabela -->
-                <div class="portlet-body">                    
-                    <!-- TABELA -->
-                    <div class="dataTables_wrapper no-footer">
-                        <!-- EXIBIÇÃO E PESQUISA -->
-                        <div class="row">
-                            <!-- EXIBIÇÃO --> 
-                            <div class="col-sm-6">
-                                <div class="dataTables_length">
-                                    <label class="ng-binding">
-                                        <span class="seperator"></span>Exibindo 
-                                        <select name="datatable_products_length" aria-controls="datatable_products" class="form-control input-xsmall input-sm input-inline ng-pristine ng-untouched ng-valid" ng-model="usuario.itens_pagina" ng-change="alterouItensPagina()" ng-options="item for item in itens_pagina"><option value="0" selected="selected" label="10">10</option><option value="1" label="20">20</option><option value="2" label="50">50</option><option value="3" label="100">100</option></select> registros de 189
-                                    </label>
-                                </div>
-                            </div>                            
-                            <!-- PESQUISA -->
-                            <div class="col-sm-6">
-                                <div class="dataTables_filter">                                      
-                                    <div class="col-sm-7" style="padding-right: 1px; padding-left: 1px; float:right">
-                                        <label>
-                                            <div class="input-group input-icon right">
-                                                <i class="fa fa-times ng-hide" style="right:50px;cursor:pointer" ng-click="resetaBusca()" ng-show="usuario.busca"></i>
-                                                <input type="text" class="form-control input-inline ng-pristine ng-untouched ng-valid" placeholder="Buscar" ng-model="busca" ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 &amp;&amp; !busca)) &amp;&amp; filtraUsuarios()">
-												<span class="input-group-addon">
-                                                    <i class="fa fa-search" style="cursor:pointer" ng-click="filtraUsuarios()"></i>
-												</span>
-											</div> 
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>  
-                        
-                        <div class="table-scrollable">
-                            <table class="table table-striped table-hover table-bordered dataTable no-footer" id="sample_editable_1" role="grid" aria-describedby="sample_editable_1_info">
-				                <thead>
-                                    <tr role="row">
-                                        <th class="sorting_asc" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-sort="ascending" aria-label="
-									 Username
-								: activate to sort column ascending" style="width: 188px;">
-									 Bandeira
-								        </th>
-                                        <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="
-									 Full Name
-								: activate to sort column ascending" style="width: 237px;">
-									 Total de Transações
-								        </th>
-                                        <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="
-									 Points
-								: activate to sort column ascending" style="width: 128px;">
-									 Valor Bruto
-								        </th>
-                                        <th tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="
-									 Notes
-								: activate to sort column ascending" style="width: 163px;">
-									 ---
-								        </th>                                        
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr role="row" class="odd">
-                                        <td class="sorting_1">
-                                             GOODCARD-GOODCARD
-                                        </td>
-                                        <td>
-                                             303 
-                                        </td>
-                                        <td>
-                                             R$
-                                        </td>
-                                        <!-- BOTÃO AÇÕES-->
-                                        <td class="center btnacoes">
-                                            <div class="btn-group">
-                                                <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
-                                                    <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
-                                                </a>
-                                                <ul class="dropdown-menu pull-right">
-                                                    <li>
-                                                        <a href="javascript:;" ng-click="resetarSenhaDoUsuario(usuario)"> Resetar Senha</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="javascript:;" ng-click="editarUsuario(usuario)">Editar</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="javascript:;" ng-click="exluirUsuario(usuario)">Excluir</a>
-                                                    </li> 
-                                                </ul>
-                                            </div>
-                                        </td> 
-                                        <!--FIM BOTÃO-->
-                                    </tr>
-                                    <tr role="row" class="odd">
-                                        <td class="sorting_1">
-                                             REDE-DINERS CLUB
-                                        </td>
-                                        <td>
-                                             5
-                                        </td>
-                                        <td>
-                                             R$ 293,00
-                                        </td>
-                                        <!-- BOTÃO AÇÕES-->
-                                        <td class="center btnacoes">
-                                            <div class="btn-group">
-                                                <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
-                                                    <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
-                                                </a>
-                                                <ul class="dropdown-menu pull-right">
-                                                    <li>
-                                                        <a href="javascript:;" ng-click="resetarSenhaDoUsuario(usuario)"> Resetar Senha</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="javascript:;" ng-click="editarUsuario(usuario)">Editar</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="javascript:;" ng-click="exluirUsuario(usuario)">Excluir</a>
-                                                    </li> 
-                                                </ul>
-                                            </div>
-                                        </td>   
-                                        <!--FIM BOTÃO-->
-                                    </tr>
-                                    <tr role="row" class="odd">
-                                        <td class="sorting_1">
-                                             REDE-HIPERCARD
-                                        </td>
-                                        <td>
-                                             127
-                                        </td>
-                                        <td>
-                                             R$ 6.990,93
-                                        </td>
-                                        <!-- BOTÃO AÇÕES-->
-                                        <td class="center btnacoes">
-                                            <div class="btn-group">
-                                                <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
-                                                    <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
-                                                </a>
-                                                <ul class="dropdown-menu pull-right">
-                                                    <li>
-                                                        <a href="javascript:;" ng-click="resetarSenhaDoUsuario(usuario)"> Resetar Senha</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="javascript:;" ng-click="editarUsuario(usuario)">Editar</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="javascript:;" ng-click="exluirUsuario(usuario)">Excluir</a>
-                                                    </li> 
-                                                </ul>
-                                            </div>
-                                        </td>  
-                                        <!--FIM BOTÃO-->
-                                    </tr> 
-                                    <tr role="row" class="odd">
-                                        <td class="sorting_1">
-                                             REDE-MAESTRO
-                                        </td>
-                                        <td>
-                                             119
-                                        </td>
-                                        <td>
-                                             R$ 6.737,62
-                                        </td>
-                                        <!-- BOTÃO AÇÕES-->
-                                        <td class="center btnacoes">
-                                            <div class="btn-group">
-                                                <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
-                                                    <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
-                                                </a>
-                                                <ul class="dropdown-menu pull-right">
-                                                    <li>
-                                                        <a href="javascript:;" ng-click="resetarSenhaDoUsuario(usuario)"> Resetar Senha</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="javascript:;" ng-click="editarUsuario(usuario)">Editar</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="javascript:;" ng-click="exluirUsuario(usuario)">Excluir</a>
-                                                    </li> 
-                                                </ul>
-                                            </div>
-                                        </td>  
-                                        <!--FIM BOTÃO-->
-                                    </tr>
-                                    <tr role="row" class="odd">
-                                        <td class="sorting_1">
-                                             REDE-MASTERCARD
-                                        </td>
-                                        <td>
-                                             196
-                                        </td>
-                                        <td>
-                                             R$ 12.176,09
-                                        </td>
-                                        <!-- BOTÃO AÇÕES-->
-                                        <td class="center btnacoes">
-                                            <div class="btn-group">
-                                                <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
-                                                    <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
-                                                </a>
-                                                <ul class="dropdown-menu pull-right">
-                                                    <li>
-                                                        <a href="javascript:;" ng-click="resetarSenhaDoUsuario(usuario)"> Resetar Senha</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="javascript:;" ng-click="editarUsuario(usuario)">Editar</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="javascript:;" ng-click="exluirUsuario(usuario)">Excluir</a>
-                                                    </li> 
-                                                </ul>
-                                            </div>
-                                        </td>  
-                                        <!--FIM BOTÃO-->
-                                    </tr>
-                                    <tr role="row" class="odd">
-                                        <td class="sorting_1">
-                                             REDE-VISA
-                                        </td>
-                                        <td>
-                                             23
-                                        </td>
-                                        <td>
-                                             R$ 1.724,73
-                                        </td>
-                                        <!-- BOTÃO AÇÕES-->
-                                        <td class="center btnacoes">
-                                            <div class="btn-group">
-                                                <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
-                                                    <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
-                                                </a>
-                                                <ul class="dropdown-menu pull-right">
-                                                    <li>
-                                                        <a href="javascript:;" ng-click="resetarSenhaDoUsuario(usuario)"> Resetar Senha</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="javascript:;" ng-click="editarUsuario(usuario)">Editar</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="javascript:;" ng-click="exluirUsuario(usuario)">Excluir</a>
-                                                    </li> 
-                                                </ul>
-                                            </div>
-                                        </td>  
-                                        <!--FIM BOTÃO-->
-                                    </tr>
-                                </tbody>
-                                    <tr role="row" class="odd" style="font-weight:bolder">
-                                        <td class="sorting_1">
-                                             Total Exibido
-                                        </td>
-                                        <td>
-                                             773
-                                        </td>
-                                        <td>
-                                             R$ 57.250,81
-                                        </td>
-                                        <!-- BOTÃO AÇÕES-->
-                                        <td>                                            
-                                        </td>  
-                                        <!--FIM BOTÃO-->
-                                    </tr>
-                            </table>
-                        </div>
-                    </div>
-					<!-- End: life time stats -->
-                </div>
-                <!-- FIM RODAPÉ -->    
-            </div>
-        </div>
-        <!-- FIM TABELA -->
     </div>
 </div>

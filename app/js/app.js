@@ -429,7 +429,7 @@ angular.module("AtosCapital", ['ui.router',
       */                        
     var constroiMenu = function(data){
         // Exemplo
-        /*data.id_grupo = 42;
+        //data.id_grupo = 42;
         data.controllers = [
             {
                 ds_controller : 'Dashboard',
@@ -500,7 +500,7 @@ angular.module("AtosCapital", ['ui.router',
                     }
                 ]
             }
-        ];*/
+        ];
         
         // Constrói o menu
         $scope.menu = [];
