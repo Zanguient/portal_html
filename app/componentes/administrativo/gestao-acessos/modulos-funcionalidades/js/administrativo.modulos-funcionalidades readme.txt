@@ -73,6 +73,12 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				{ id_controller : int,
 				  ds_controller : string
 				}
+				
+	OBSERVAÇÕES : Cadastrar ou Alterar um controller implica em: 
+	               => Alterar o código do portal (index e javascripts para o módulo, considerando o ds_controller)
+				   => Adicionar do lado da webapi, na classe Negocios/GatewayModulo
+	
+				
   * api/administracao/webpagesmethods
      - DELETE : deleta uma funcionalidade (method)    
 				  ?token=...&id_method=id  OBS: remove todos as permissões associadas

@@ -1,0 +1,107 @@
+# README #
+
+Módulo que:
+ - gerencia o layout da tela de relatórios da Consolidação (app/componentes/card-services/consolidacao/relatorios/index.html);
+ - permite a visualização de relatórios sintéticos, analítico e terminal lógico a partir de filtros
+ 
+
+### Pra Que Serve Este Módulo? ###
+
+Gerenciar completamente a tela de relatórios da Consolidação (Card Services).  
+
+
+
+### O que é necessário para usar o módulo? ###
+
+Como esse é um controller filho do controller principal "appCtrl" (app.js), ele herda todos os módulos importados por ele.
+Além deles, é necessária a importação dos seguintes módulos externos.
+
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |                MODULO                  |                   DESCRIÇÃO                       |         IMPORT (no app/index.html)        |
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |                       
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+
+
+ 
+### Outras depêndencias ###
+
+  * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
+  * $scope.token do "appCtrl"
+  * APIS:
+    - cliente/empresa (filiais)
+	- pos/bandeirapos (bandeiras)
+    - pos/operadora (adquirente)
+	- pos/terminallogico (terminais lógicos)
+	- pos/recebimento
+	
+ 
+ 
+ ### Interação com a WEB API ###
+ 
+  * cliente/empresa
+    - GET : listagem das filiais (coleção 0)
+			[
+			  { nu_cnpj : string,
+				ds_fantasia : string,
+				id_grupo : int
+			  }
+			]
+			Filtro de id_grupo pode ser enviado ou não para filtrar as filiais por grupo empresa
+			
+  * pos/operadora
+    - GET : listagem das adquirentes (coleção 0)
+			[
+			  { id : int,
+				nmOperadora : string,
+				idGrupoEmpresa : int
+			  }
+			]	
+			Filtro de idGrupoEmpresa pode ser enviado ou não para filtrar as adquirentes por grupo empresa
+				
+   * pos/bandeirapos
+    - GET : listagem das bandeiras (coleção 0)
+			[
+			  { id : int
+				desBandeira : string
+				idOperadora : int
+			  }
+			]
+			Filtro de idOperadora pode ser enviado ou não para filtrar as bandeiras por adquirente			
+ 
+   * pos/terminallogico
+    - GET : listagem das bandeiras (coleção 2)
+			[
+			  { idTerminalLogico : int,
+				dsTerminalLogico : string,
+				idOperadora : int
+			  }
+			]
+			Filtro de idOperadora pode ser enviado ou não para filtrar os terminais lógicos por adquirente			
+ 
+  
+   * pos/recebimento
+    - GET : listagem do conteúdo do relatório
+	       
+		-> TERMINAL LÓGICO (coleção 3) : ordenado por dsTerminalLogico
+			 [
+			    {
+					terminal : { idTerminalLogico : int,
+								 dsTerminalLogico : string,
+								 idOperadora : int
+							   },
+					bandeira : { id : int
+								 desBandeira : string
+								 idOperadora : int
+							   },
+                    totalTransacoes	: total,
+					valorBruto : valor
+				}
+			 ]
+ 
+   
+
+   
+### Desenvolvedores ###
+
+Deivid Marinho - deividgfmarinho@gmail.com
