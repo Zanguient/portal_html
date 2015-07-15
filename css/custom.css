@@ -103,6 +103,14 @@ margin-top:170px;
   padding-top: 5px;     
 }
 
+.colunasCenter{
+  text-align: center;  
+}
+
+.colunasLeft{
+  text-align: left;
+}
+
 .componentesTableAcessoUsuarios{
   text-align: center; 
   background-color:#fff;     
@@ -112,38 +120,51 @@ margin-top:170px;
   padding-top: 5px;  
 }
 
+.conteudoFiliais{
+    margin:8px 10px 0 0;
+    color: #6f6e6e;
+}
+
 .conteudoNavegacao{
   margin-top: -30px;
 }
 
 .cuponAzulConciliacaoVendas{
-background-color: #eef7fb;
-border-color: #a6e1ec;
-color: #31708f;
-border-left: 5px solid #a6e1ec;  
-border-radius: 0 4px 4px 0; 
-padding: 15px 30px 15px 15px;
-margin-top:40px;      
+    background-color: #eef7fb;
+    border-color: #a6e1ec;
+    color: #31708f;
+    border-left: 5px solid #a6e1ec;  
+    border-radius: 0 4px 4px 0; 
+    padding: 15px 30px 15px 15px;
+    margin-top:40px;      
 }
 
 .cuponLaranjaConciliacaoVendas{
-background-color: #fcf8e3;
-border-color: #f5d89e;
-color: #8a6d3b;
-border-left: 5px solid #f5d89e;  
-border-radius: 0 4px 4px 0; 
-padding: 15px 30px 15px 15px;
-margin-top:40px;      
+    background-color: #fcf8e3;
+    border-color: #f5d89e;
+    color: #8a6d3b;
+    border-left: 5px solid #f5d89e;  
+    border-radius: 0 4px 4px 0; 
+    padding: 15px 30px 15px 15px;
+    margin-top:40px;      
 }
 
 .cuponVermelhoConciliacaoVendas{
-background-color: #f9f0f0;
-border-color: #e4b9c0;
-color: #a94442;
-border-left: 5px solid #e4b9c0;  
-border-radius: 0 4px 4px 0; 
-padding: 15px 30px 15px 15px;
-margin-top:40px;      
+    background-color: #f9f0f0;
+    border-color: #e4b9c0;
+    color: #a94442;
+    border-left: 5px solid #e4b9c0;  
+    border-radius: 0 4px 4px 0; 
+    padding: 15px 30px 15px 15px;
+    margin-top:40px;      
+}
+
+.dadosGetaoEmpresas{
+    margin:20px 4px 0 4px;
+    padding-bottom:20px;
+    border-bottom:1px  solid #eaeaea;
+    font-size: 15px;
+    
 }
 
 .form-controlModuloseFuncionalidades{
@@ -169,6 +190,7 @@ margin-top:40px;
 
 .modalConfig{
   margin-bottom: 15px;
+  margin-top: 15px;    
 }
 
 .modal-input{
@@ -193,6 +215,13 @@ margin-top:40px;
   z-index:9999 !important; 
 }
 
+.rodapeConteudoFiliaias{
+    color: #e5e5e5;
+    font-size: 13px;
+    text-align: center;
+    
+}
+
 .StatusSenhaValida{
   background-color: #45B6AF;  
   color: #fff; 
@@ -213,11 +242,26 @@ margin-top:40px;
   padding: 15px;   
 }
 
+.titulosconteudos{
+    font-weight: bolder; 
+    margin-bottom:10px
+}
+
+.tituloFilial{
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: bolder;
+    text-align: center;
+}
+
 .vakata-context { 
      z-index:11000 !important; 
 }
 
 .vertical-center {
    margin: 6px 0 0 15px;    
+}
+img:hover{
+ background: red;
 }
 

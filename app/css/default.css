@@ -243,7 +243,7 @@ Page Header
   background: #c22629;
 }
 .page-header .page-header-menu .hor-menu .navbar-nav > li .dropdown-menu li > a {
-  color: #ffffff;<!--#ced5de;-->
+  color: #ffffff;/*#ced5de*/
 }
 .page-header .page-header-menu .hor-menu .navbar-nav > li .dropdown-menu li > a > i {
   color: #ffffff;
