@@ -102,6 +102,42 @@ angular.module('webapi', [ ])
             fl_taxservices : 105,
             fl_proinfo : 106
         }
+      },
+      pos :{
+        bandeirapos : {
+            id : 100,
+            desBandeira : 101,
+            idOperadora : 102
+        },
+        operadora : {
+            id : 100,
+            nmOperadora : 101,
+            idGrupoEmpresa : 102
+        },
+        recebimento : {
+            id : 100,
+            idBandeira : 101,
+            cnpj : 102,
+            nsu : 103,
+            cdAutorizador : 104,
+            dtaVenda : 105,
+            valorVendaBruta : 106,
+            valorVendaLiquida : 107,
+            loteImportacao : 108,
+            dtaRecebimento : 109,
+            idLogicoTerminal : 110,
+            codTituloERP : 111,
+            codVendaERP : 112,
+            codResumoVenda : 113,
+            numParcelaTotal : 114,
+            // Relacionamento
+            terminallogico : 200
+        },
+        terminallogico : {
+            idTerminalLogico: 100,
+            dsTerminalLogico : 101,
+            idOperadora : 102    
+        }
       }
    }
 }])
@@ -171,8 +207,14 @@ angular.module('webapi', [ ])
         webpagesusersinroles : urlBase + '/administracao/webpagesusersinroles/'
     },
     cliente: {
-      empresa : urlBase + '/cliente/empresa/',
-      grupoempresa : urlBase + '/cliente/grupoempresa/'
+        empresa : urlBase + '/cliente/empresa/',
+        grupoempresa : urlBase + '/cliente/grupoempresa/'
+    },
+    pos : {
+        bandeirapos : urlBase + '/pos/bandeirapos/',
+        operadora : urlBase + '/pos/operadora/',
+        recebimento : urlBase + '/pos/recebimento/',
+        terminallogico : urlBase + '/pos/terminallogico/'
     }
   }
 }])

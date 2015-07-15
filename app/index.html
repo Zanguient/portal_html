@@ -217,11 +217,15 @@
                                     <i class="icon-settings" ng-hide="carregandoGrupoEmpresas"></i>
                                     </a>
                                     <!-- LAYOUT DE BUSCA DO GRUPO EMPRESA -->
-                                    <div id="admBuscaGrupoEmpresa" class="dropdown-menu theme-panel pull-right hold-on-click" ng-click="$event.stopPropagation()" style="min-width: 400px">	
+                                    <div id="admBuscaGrupoEmpresa" 
+                                         class="dropdown-menu theme-panel pull-right hold-on-click" 
+                                         ng-click="$event.stopPropagation()" style="min-width: 400px">	
                                         <h3>Empresa</h3>
                                         <form class="search-form">
                                             <div class="input-group" style="width:100%">
-                                               <input type="text" class="form-control" placeholder="Buscar" ng-model="gempresa"
+                                               <input type="text" class="form-control" 
+                                                      placeholder="Buscar" 
+                                                      ng-model="gempresa"
                                                       ng-keyup="$event.keyCode == 13"
                                                       typeahead-focus-first=false
                                                       typeahead-on-select="selecionaGrupoEmpresa($item)"

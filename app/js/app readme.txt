@@ -94,6 +94,22 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
  
  ### Interação com a WEB API ###
  
+   * api/administracao/webpagescontrollers
+     - GET : OBTER PERMISSÕES DO USUÁRIO NO CONTROLLER (coleção 4)
+		   url/token/?100=id_controller
+		   Retorno: 
+			[
+			   { ds_method : string,
+				 id_method : int
+			   }		 
+			 ]
+	
+	* api/administracao/webpagesusers
+	 - PUT : Informar que um grupo empresa foi associado ou dessaciado na "catraca"
+	       url/?token=...
+		   Enviar como data o id_grupo (sem estar dentro de um json)
+ 
+ 
  Na inicialização do controller, é feita a validação do token armazenado na local storage, enviando ao servidor via WEB API.
   => GET(URL_API_LOGIN + '/' + token)
  - Se ocorrer o erro de código 500, significa que o token não é (mais) válido, portanto, um novo login é requisitado.

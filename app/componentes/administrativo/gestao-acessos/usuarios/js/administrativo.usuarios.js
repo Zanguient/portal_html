@@ -10,13 +10,12 @@ angular.module("administrativo-usuarios", [])
 
 .controller("administrativo-usuariosCtrl", ['$scope',
                                             '$state',
-                                            '$http',
                                             '$campos',
                                             '$webapi',
                                             '$apis',
                                             '$filter',
                                             '$autenticacao', 
-                                            function($scope,$state,$http,$campos,
+                                            function($scope,$state,$campos,
                                                      $webapi,$apis,$filter,$autenticacao){ 
    
     var divPortletBodyUsuarioPos = 0; // posição da div que vai receber o loading progress

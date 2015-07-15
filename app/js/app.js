@@ -739,10 +739,7 @@ angular.module("AtosCapital", ['ui.router',
         // Exibe o layout
         exibeLayout();
         // Exibe um loading que bloqueia a página toda
-        Metronic.blockUI({
-            animate: true,
-            overlayColor: '#000'
-        });
+        $scope.showProgress();
         
         // Avalia Token
         $webapi.get($apis.getUrl($autenticacao.autenticacao.login, $scope.token))
@@ -760,7 +757,7 @@ angular.module("AtosCapital", ['ui.router',
                 // Atualiza último datetime de autenticação
                 $autenticacao.atualizaDateTimeDeAutenticacao(new Date());
                 // Remove o loading da página
-                Metronic.unblockUI();
+                $scope.hideProgress();
             },
             function(failData){
               // Avaliar código de erro
@@ -773,7 +770,7 @@ angular.module("AtosCapital", ['ui.router',
                   // Status 0: sem resposta
               }
               // Remove o loading da página
-              Metronic.unblockUI();
+              $scope.hideProgress();
             });
     };
                             
@@ -800,7 +797,8 @@ angular.module("AtosCapital", ['ui.router',
                 progressoGrupoEmpresas(false);
              },
              function(failData){
-                console.log("FALHA AO OBTER GRUPO EMPRESA: " + failData.status);
+                if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                else $scope.showAlert('Houve uma falha ao se associar ao grupo empresa (' + failData.status + ')', true, 'danger', true);
                 progressoGrupoEmpresas(false);
              });    
     };
@@ -828,23 +826,48 @@ angular.module("AtosCapital", ['ui.router',
       */
     $scope.selecionaGrupoEmpresa = function(grupoempresa){
         $scope.grupoempresa = grupoempresa;
-        $scope.gempresa = null; // reinicia o valor
-        // Notifica
-        $scope.$broadcast("alterouGrupoEmpresa");
+        $scope.gempresa = null; 
         // Remove da visão a tela de busca do grupo empresa
         $('#admBuscaGrupoEmpresa').parent().removeClass('open');
-        // Envia 
-        // ....
+        // Notifica
+        $scope.$broadcast("alterouGrupoEmpresa"); //*/
+        //associaUsuarioAGrupoEmpresa(grupoempresa.id_grupo, function(dados){ $scope.grupoempresa = grupoempresa; });
     };
     /** 
       * Limpar Grupo Empresa
       */
     $scope.limpaGrupoEmpresa = function(){
         $scope.grupoempresa = undefined;
-        // Notifica
+        $scope.gempresa = null; 
         $scope.$broadcast("alterouGrupoEmpresa");
-        // Envia
-        // ....
+        // Dessassocia (id_grupo = -1) //*/
+        //associaUsuarioAGrupoEmpresa(-1, function(dados){ $scope.grupoempresa = undefined; });
+    };
+    var associaUsuarioAGrupoEmpresa = function(id_grupo, funcaoSucesso){
+        //console.log(id_grupo);
+        // Envia 
+        $scope.showProgress();
+        $webapi.update($apis.getUrl($apis.administracao.webpagesusers, undefined, 
+                                    {id:'token', valor: $scope.token}), {id_grupo : id_grupo})
+            .then(function(dados){  
+                if(typeof funcaoSucesso === 'function') funcaoSucesso(dados);
+                // Reinicia o valor do model
+                $scope.gempresa = null; 
+                // Remove da visão a tela de busca do grupo empresa
+                $('#admBuscaGrupoEmpresa').parent().removeClass('open');
+                // Notifica
+                $scope.$broadcast("alterouGrupoEmpresa");
+                // Remove o progress
+                $scope.hideProgress();
+             },
+             function(failData){
+                if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                else $scope.showAlert('Houve uma falha ao se associar ao grupo empresa (' + failData.status + ')', true, 'danger', true);
+                // Reinicia o valor do model
+                $scope.gempresa = null; 
+                // Remove o progress
+                $scope.hideProgress();
+             });         
     };
                             
                             

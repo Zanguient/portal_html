@@ -8,10 +8,39 @@
 // App
 angular.module("card-services-relatorios", []) 
 
-.controller("card-services-relatoriosCtrl", ['$scope','$state',function($scope,$state){ 
+.controller("card-services-relatoriosCtrl", ['$scope',
+                                             '$state',
+                                             '$campos',
+                                             '$webapi',
+                                             '$apis',
+                                             function($scope,$state,$campos,$webapi,$apis){ 
     
-    $scope.tab = 1; // init Sintético
+    // Exibição
+    $scope.itens_pagina = [10, 20, 50, 100]; 
+    $scope.paginaInformada = 1; // página digitada pelo usuário                                             
+    // Filtros
+    $scope.filiais = $scope.adquirentes = $scope.bandeiras =  $scope.terminais = [];                                          
+    $scope.filtro = {datamin : new Date(), datamax : null, 
+                     filial : null, adquirente : null,
+                     bandeira : null, terminallogico : null,
+                     itens_pagina : $scope.itens_pagina[0], order : 0,
+                     campo_ordenacao : {id: $campos.pos.recebimento.terminallogico + $campos.pos.terminallogico.dsTerminalLogico - 100, order : 0},
+                     terminal :  { pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0},
+                     sintetico : { pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0},
+                     analitico : { pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0},
+                    };
+    $scope.abrirCalendarioDataMin = false;
+    $scope.abrirCalendarioDataMax = false;                                           
+                                                 
+    var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
+    var divPortletBodyRelatorioPos = 1; // posição da div que vai receber o loading progress
+    $scope.tab = 0; // init Sintético
     
+    // Relatórios
+    $scope.relatorio = {terminal : [], sintetico : [], analitico : []};                                             
+    // Totais
+    $scope.total = {terminal : {totalTransacoes : 0, valorBruto : 0}, sintetico : 0, analitico : 0};                                             
+                                                 
     // Inicialização do controller
     $scope.cardServices_relatoriosInit = function(){
         // Título da página 
@@ -21,19 +50,376 @@ angular.module("card-services-relatorios", [])
         $scope.$on('mudancaDeRota', function(event, state){
             $state.go(state);
         });
+        // Quando houver alteração do grupo empresa na barra administrativa                                           
+        $scope.$on('alterouGrupoEmpresa', function(event){ 
+            // Refaz a busca
+            buscaFiliais(true);
+        }); 
+        // Carrega filiais
+        buscaFiliais(true);
     };
     
     $scope.buscar = function(){
         // nothing ...
-        $scope.reloadPage();
+        //$scope.reloadPage();
     }
     
+    
+    /* FILTRO */
+    
+    /**
+      * Limpa os filtros
+      */
+    $scope.limpaFiltros = function(){
+        // Limpar data => Refazer busca?
+        $scope.filtro.datamin = new Date();
+        $scope.filtro.datamax = null; 
+        if($scope.filtro.filial !== null){ 
+            $scope.filtro.filial = null;
+            buscaFiliais(false);
+        }
+        if($scope.filtro.adquirente !== null){
+            $scope.filtro.adquirente = null;
+            // Acarreta em mudanças nos filtros de bandeira e terminais lógicos
+            buscaAdquirentes();
+        }else{ 
+            if($scope.filtro.bandeira !== null){
+                $scope.filtro.bandeira = null; 
+                buscaBandeiras();
+            }
+            if($scope.filtro.terminal !== null){
+                $scope.filtro.terminallogico = null;
+                buscaTerminaisLogicos();
+            }
+        }
+    }
+    
+    // DATA
+    var ajustaIntervaloDeData = function(){
+      // Verifica se é necessário reajustar a data max para ser no mínimo igual a data min
+      if($scope.filtro.datamax && $scope.filtro.datamax < $scope.filtro.datamin) $scope.filtro.datamax = $scope.filtro.datamin;
+      if(!$scope.$$phase) $scope.$apply();
+    };
+    // Data MIN
+    $scope.exibeCalendarioDataMin = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.abrirCalendarioDataMin = !$scope.abrirCalendarioDataMin;
+        $scope.abrirCalendarioDataMax = false;
+      };
+    $scope.alterouDataMin = function(){
+      ajustaIntervaloDeData();
+    };
+    // Data MAX
+    $scope.exibeCalendarioDataMax = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.abrirCalendarioDataMax = !$scope.abrirCalendarioDataMax;
+        $scope.abrirCalendarioDataMin = false;
+      };
+    $scope.alterouDataMax = function(){
+       ajustaIntervaloDeData();
+    };
+    $scope.limpaDataMax = function () {
+        $scope.filtro.datamax = null;
+    };
+    
+    // FILIAIS
+    /**
+      * Busca as filiais
+      */
+    var buscaFiliais = function(buscarAdquirentes){
+        
+       $scope.showProgress(divPortletBodyFiltrosPos);    
+        
+       var filtros = undefined;
+
+       // Filtro do grupo empresa => barra administrativa
+       if($scope.grupoempresa) filtros = {id: $campos.cliente.empresa.id_grupo, valor: $scope.grupoempresa.id_grupo};
+       
+       $webapi.get($apis.getUrl($apis.cliente.empresa, 
+                                [$scope.token, 0, $campos.cliente.empresa.ds_fantasia],
+                                filtros)) 
+            .then(function(dados){
+                $scope.filiais = dados.Registros;
+                // Reseta
+                $scope.filtro.filial = null;
+                // Fecha o alert
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+                // Busca adquirentes
+                if(buscarAdquirentes) buscaAdquirentes();
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else $scope.showAlert('Houve uma falha ao obter filiais (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+              });     
+    };
+    /**
+      * Selecionou uma filial
+      */
+    $scope.alterouFilial = function(){
+        console.log($scope.filtro.filial);    
+    };
+    
+                                                                                         
+    // ADQUIRENTES 
+    /**
+      * Busca as adquirentes
+      */
+    var buscaAdquirentes = function(){
+       $scope.showProgress(divPortletBodyFiltrosPos);    
+        
+       var filtros = undefined;
+
+       // Filtro do grupo empresa => barra administrativa
+       if($scope.grupoempresa) filtros = {id: $campos.pos.operadora.idGrupoEmpresa, valor: $scope.grupoempresa.id_grupo};
+       
+       $webapi.get($apis.getUrl($apis.pos.operadora, 
+                                [$scope.token, 0, $campos.pos.operadora.nmOperadora],
+                                filtros)) 
+            .then(function(dados){
+                $scope.adquirentes = dados.Registros;
+                // Reseta
+                $scope.filtro.adquirente = null;
+                // Fecha o alert
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+                // Busca bandeiras
+                buscaBandeiras();
+                // Busca terminais lógicos
+                buscaTerminaisLogicos();
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else $scope.showAlert('Houve uma falha ao obter adquirentes (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+              });        
+    }
+    /**
+      * Selecionou uma adquirente
+      */
+    $scope.alterouAdquirente = function(){
+        console.log($scope.filtro.adquirente); 
+        buscaBandeiras();
+        buscaTerminaisLogicos();
+    };
+                
+                                                 
+    // BANDEIRAS  
+    /**
+      * Busca as bandeiras
+      */                                             
+    var buscaBandeiras = function(){
+       $scope.showProgress(divPortletBodyFiltrosPos);    
+        
+       var filtros = undefined;
+
+       // Filtro de adquirente
+       if($scope.filtro.adquirente !== null) filtros = {id: $campos.pos.bandeirapos.idOperadora, valor: $scope.filtro.adquirente.id};
+       
+       $webapi.get($apis.getUrl($apis.pos.bandeirapos, 
+                                [$scope.token, 0, $campos.pos.bandeirapos.desBandeira],
+                                filtros)) 
+            .then(function(dados){
+                $scope.bandeiras = dados.Registros;
+                // Reseta
+                $scope.filtro.bandeira = null;
+                // Fecha o alert
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else $scope.showAlert('Houve uma falha ao obter bandeiras (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+              });     
+    };
+    /**
+      * Selecionou uma bandeira
+      */
+    $scope.alterouBandeira = function(){
+        console.log($scope.filtro.bandeira);    
+    }; 
+                                                 
+                                                 
+    // TERMINAL LÓGICO
+    $scope.buscandoTerminaisLogicos = false;                  
+    var progressoTerminaisLogicos = function(emProgresso){
+        $scope.buscandoTerminaisLogicos = emProgresso;
+        if(!$scope.$$phase) $scope.$apply();
+    };                                             
+    /**
+      * Busca as bandeiras
+      */                                             
+    var buscaTerminaisLogicos = function(){
+       progressoTerminaisLogicos(true);    
+        
+       var filtros = undefined;
+
+       // Filtro de adquirente
+       if($scope.filtro.adquirente !== null) filtros = {id: $campos.pos.terminallogico.idOperadora, valor: $scope.filtro.adquirente.id};
+       
+       $webapi.get($apis.getUrl($apis.pos.terminallogico, 
+                                [$scope.token, 2, $campos.pos.terminallogico.dsTerminalLogico],
+                                filtros)) 
+            .then(function(dados){
+                $scope.terminais = dados.Registros;
+                // Reseta
+                $scope.filtro.terminallogico = null;
+                // Esconde o progress
+                progressoTerminaisLogicos(false); 
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else $scope.showAlert('Houve uma falha ao obter terminais lógicos (' + failData.status + ')', true, 'danger', true);
+                 // Esconde o progress
+                 progressoTerminaisLogicos(false);
+              });     
+    };                                             
+    $scope.alterouTerminalLogico = function(){
+        console.log($scope.filtro.terminallogico);
+        // Rebusca
+    };
+      
+                                                 
+
+    // PAGINAÇÃO
+    /**
+      * Altera efetivamente a página exibida
+      */                                            
+    var setPagina = function(pagina){
+       var totalPaginas = $scope.tabIs(0) ? $scope.filtro.terminal.total_paginas :
+                          $scope.tabIs(1) ? $scope.filtro.sintetico.total_paginas : 
+                          $scope.tabIs(2) ? $scope.filtro.analitico.total_paginas : 0;
+       if(pagina >= 1 && pagina <= totalPaginas){ 
+           if($scope.tabIs(0)) $scope.filtro.terminal.pagina = pagina;
+           else if($scope.tabIs(1)) $scope.filtro.sintetico.pagina = pagina;
+           else if(tabIs(2)) $scope.filtro.analitico.pagina = pagina;
+           //$scope.buscaUsuarios(); 
+       }
+       $scope.atualizaPaginaDigitada();    
+    };
+    /**
+      * Vai para a página anterior
+      */
+    $scope.retrocedePagina = function(){
+        var pagina = $scope.tabIs(0) ? $scope.filtro.terminal.pagina :
+                     $scope.tabIs(1) ? $scope.filtro.sintetico.pagina : 
+                     $scope.tabIs(2) ? $scope.filtro.analitico.pagina : 0;
+        setPagina(pagina - 1); 
+    };
+    /**
+      * Vai para a página seguinte
+      */                                            
+    $scope.avancaPagina = function(){
+        var pagina = $scope.tabIs(0) ? $scope.filtro.terminal.pagina :
+                     $scope.tabIs(1) ? $scope.filtro.sintetico.pagina : 
+                     $scope.tabIs(2) ? $scope.filtro.analitico.pagina : 0;
+        setPagina(pagina + 1); 
+    };
+    /**
+      * Foi informada pelo usuário uma página para ser exibida
+      */                                            
+    $scope.alteraPagina = function(){
+        if($scope.paginaInformada) setPagina(parseInt($scope.paginaInformada));
+        else $scope.setaPaginaDigitada();  
+    };
+    /**
+      * Sincroniza a página digitada com a que efetivamente está sendo exibida
+      */                                            
+    $scope.atualizaPaginaDigitada = function(){
+        $scope.paginaInformada = $scope.tabIs(0) ? $scope.filtro.terminal.pagina :
+                                 $scope.tabIs(1) ? $scope.filtro.sintetico.pagina : 
+                                 $scope.tabIs(2) ? $scope.filtro.analitico.pagina : 1; 
+    };
+                                                 
+    // EXIBIÇÃO                                             
+    /**
+      * Notifica que o total de itens por página foi alterado
+      */                                            
+    $scope.alterouItensPagina = function(){
+       //console.log($scope.filtro.itens_pagina);
+        if($scope.tabIs(0)){ 
+            if($scope.relatorio.terminal.length > 0) buscaRelatorioTerminal();
+        }
+        //else ...
+    };                                             
+                                                 
+    
+    // TABS
+    /**
+      * Seta a tab
+      */
     $scope.setTab = function(tab){
-        if(typeof tab === 'number' && tab >= 0 && tab < 3) $scope.tab = tab;
+        if(typeof tab === 'number' && tab >= 0 && tab < 3){ 
+            $scope.tab = tab;
+            // Nova busca?
+            if(tab === 0){
+                if($scope.relatorio.terminal.length == 0) buscaRelatorioTerminal();
+            }//else if(tab === 1) // ....
+        }
     }
-    
+    /**
+      * Retorna true se a tab selecionada é inforamda
+      */
     $scope.tabIs = function(tab){
         return $scope.tab === tab;
+    }
+    
+    
+    
+    // BUSCA
+    $scope.buscaRelatorio = function(){
+        // nova busca
+        // if(tab ......
+        buscaRelatorioTerminal();
+    };
+                                                 
+    // TERMINAL LÓGICO
+    $scope.detalharTerminal = function(idTerminalLogico){
+       console.log(idTerminalLogico); 
+    };
+    var buscaRelatorioTerminal = function(){
+       $scope.showProgress(divPortletBodyFiltrosPos);    
+       $scope.showProgress(divPortletBodyRelatorioPos);
+        
+       var filtros = undefined;
+
+       // Filtros
+       //if($scope.filtro.adquirente !== null) filtros = {id: $campos.pos.bandeirapos.idOperadora, valor: $scope.filtro.adquirente.id};
+       
+       $webapi.get($apis.getUrl($apis.pos.recebimento, 
+                                [$scope.token, 3, 100,//$scope.filtro.campo_ordenacao.id, 
+                                 $scope.filtro.campo_ordenacao.order, 
+                                 $scope.filtro.itens_pagina, $scope.filtro.terminal.pagina],
+                                filtros)) 
+            .then(function(dados){
+                // Reseta os valores totais
+                $scope.total.terminal.totalTransacoes = $scope.total.terminal.valorBruto = 0;
+                // Recebe os dados
+                $scope.relatorio.terminal = dados.Registros;
+                // Set valores
+                $scope.filtro.terminal.total_registros = dados.TotalDeRegistros;
+                $scope.filtro.terminal.total_paginas = Math.ceil($scope.filtro.terminal.total_registros / $scope.filtro.itens_pagina);
+                var registroInicial = ($scope.filtro.terminal.pagina - 1)*$scope.filtro.itens_pagina + 1;
+                var registroFinal = registroInicial - 1 + $scope.filtro.itens_pagina;
+                if(registroFinal > $scope.filtro.terminal.total_registros) registroFinal = $scope.filtro.terminal.total_registros;
+                $scope.filtro.terminal.faixa_registros =  registroInicial + '-' + registroFinal;
+                $scope.obtendoUsuarios = false;
+                // Verifica se a página atual é maior que o total de páginas
+                if($scope.filtro.terminal.pagina > $scope.filtro.terminal.total_paginas)
+                    setPagina(1); // volta para a primeira página e refaz a busca
+                // Reseta os outros
+                $scope.relatorio.analitico = $scope.relatorio.sintetico = [];
+                // Fecha o alert
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+                $scope.hideProgress(divPortletBodyRelatorioPos);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else $scope.showAlert('Houve uma falha ao obter relatório por terminal lógico (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+                 $scope.hideProgress(divPortletBodyRelatorioPos);
+              });       
     }
     
 }]);
