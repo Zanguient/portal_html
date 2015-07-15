@@ -20,6 +20,8 @@ angular.module("AtosCapital", ['ui.router',
                                'administrativo-privilegios',
                                'administrativo-modulos-funcionalidades',
                                'administrativo-acesso-usuarios',
+                               'administrativo-empresas',
+                               'administrativo-filiais',
                                'dashboard', 
                                'card-services-conciliacao-vendas',
                                'card-services-dados-acesso',
@@ -49,7 +51,7 @@ angular.module("AtosCapital", ['ui.router',
 
       // ADMINISTRATIVO
     
-      .state('administrativo-gestao-acesso-usuarios', {
+      .state('administrativo-gestao-acessos-usuarios', {
         url: prefixo + 'administrativo/usuarios',
         templateUrl: 'componentes/administrativo/gestao-acessos/usuarios/index.html',
         controller: "administrativo-usuariosCtrl",
@@ -58,7 +60,7 @@ angular.module("AtosCapital", ['ui.router',
         }
       })
     
-      .state('administrativo-gestao-acesso-usuarios-cadastro', {
+      .state('administrativo-gestao-acessos-usuarios-cadastro', {
         title: 'Administrativo',
         url: prefixo + 'administrativo/cadastro-usuarios',
         params: {usuario: null},
@@ -69,7 +71,7 @@ angular.module("AtosCapital", ['ui.router',
         }
       })
     
-      .state('administrativo-gestao-acesso-privilegios', {
+      .state('administrativo-gestao-acessos-privilegios', {
         url: prefixo + 'administrativo/privilegios',
         templateUrl: 'componentes/administrativo/gestao-acessos/privilegios/index.html',
         controller: "administrativo-privilegiosCtrl",
@@ -78,7 +80,7 @@ angular.module("AtosCapital", ['ui.router',
         }
       })
     
-      .state('administrativo-gestao-acesso-modulos-funcionalidades', {
+      .state('administrativo-gestao-acessos-modulos-funcionalidades', {
         url: prefixo + 'administrativo/modulos-funcionalidades',
         templateUrl: 'componentes/administrativo/gestao-acessos/modulos-funcionalidades/index.html',
         controller: "administrativo-modulos-funcionalidadesCtrl",
@@ -95,6 +97,25 @@ angular.module("AtosCapital", ['ui.router',
             titulo: 'Administrativo'
         }
       })
+    
+      .state('administrativo-gestao-empresas-empresas', {
+        url: prefixo + 'administrativo/empresas',
+        templateUrl: 'componentes/administrativo/gestao-empresas/empresas/index.html',
+        controller: "administrativo-empresasCtrl",
+        data: {
+            titulo: 'Administrativo'
+        }
+      })
+    
+      .state('administrativo-gestao-empresas-filiais', {
+        url: prefixo + 'administrativo/filiais',
+        templateUrl: 'componentes/administrativo/gestao-empresas/filiais/index.html',
+        controller: "administrativo-filiaisCtrl",
+        data: {
+            titulo: 'Administrativo'
+        }
+      })
+    
     
       // DASHBOARD
       .state('dashboard', {
@@ -197,9 +218,12 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS = false;
     $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_USUARIOS = false;
     $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_PRIVILEGIOS = false;
-    $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_MODULOS_FUNCIONALIDADES = false;
+    $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_MODULOS_FUNCIONALIDADES = false; 
+    $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS = false;
+    $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_EMPRESAS = false;
+    $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_FILIAIS = false;                       
     $scope.PERMISSAO_ADMINISTRATIVO_LOGS = false;
-    $scope.PERMISSAO_ADMINISTRATIVO_LOGS_ACESSO_USUARIOS = false;
+    $scope.PERMISSAO_ADMINISTRATIVO_LOGS_ACESSO_USUARIOS = false;                       
     $scope.PERMISSAO_DASHBOARD = false;
     $scope.PERMISSAO_CARD_SERVICES = false;
     $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO = false;
@@ -240,26 +264,38 @@ angular.module("AtosCapital", ['ui.router',
       * Exibe como conteúdo a Gestão de Acessos Usuários, de Administrativo
       */                     
     $scope.goAdministrativoUsuarios = function(params){
-        $scope.go('administrativo-gestao-acesso-usuarios', params); 
+        $scope.go('administrativo-gestao-acessos-usuarios', params); 
     };
     /**
       * Exibe como conteúdo de cadastro de usuário da Gestão de Acessos, de Administrativo
       */                        
     $scope.goAdministrativoUsuariosCadastro = function(params){
-        $scope.go('administrativo-gestao-acesso-usuarios-cadastro', params);
+        $scope.go('administrativo-gestao-acessos-usuarios-cadastro', params);
     };
     /**
       * Exibe como conteúdo a Gestão de Acessos Privilégios, de Administrativo
       */                        
     $scope.goAdministrativoPrivilegios = function(params){
-        $scope.go('administrativo-gestao-acesso-privilegios', params);
+        $scope.go('administrativo-gestao-acessos-privilegios', params);
     };
     /**
       * Exibe como conteúdo a Gestão de Acessos Módulos e Funcionalidades, de Administrativo
       */                        
     $scope.goAdministrativoModulosFuncionalidades = function(params){
-        $scope.go('administrativo-gestao-acesso-modulos-funcionalidades', params);
+        $scope.go('administrativo-gestao-acessos-modulos-funcionalidades', params);
     }; 
+    /**
+      * Exibe como conteúdo a Empresas Gestão de Empresas, de Administrativo
+      */                        
+    $scope.goAdministrativoEmpresas = function(params){
+        $scope.go('administrativo-gestao-empresas-empresas', params);
+    };
+    /**
+      * Exibe como conteúdo a Filiais Gestão de Empresas, de Administrativo
+      */                        
+    $scope.goAdministrativoFiliais = function(params){
+        $scope.go('administrativo-gestao-empresas-filiais', params);
+    };                       
     /**
       * Exibe como conteúdo a Logs Acesso de Usuários, de Administrativo
       */                        
@@ -305,23 +341,37 @@ angular.module("AtosCapital", ['ui.router',
         //console.log("FROM " + current + " TO " + next);
         var url = next.split('#')[1];
         // Avalia
-        if(url === $state.get('administrativo-gestao-acesso-usuarios').url || url === $state.get('administrativo-gestao-acesso-usuarios-cadastro').url){ 
+        if(url === $state.get('administrativo-gestao-acessos-usuarios').url || url === $state.get('administrativo-gestao-acessos-usuarios-cadastro').url){ 
             // Gestão de Acesso > Usuários (cadastro ou não)
             if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_USUARIOS){
                 // Não possui permissão!
                 event.preventDefault();
                 $scope.go('nao-autorizado');
             }
-        }else if(url === $state.get('administrativo-gestao-acesso-privilegios').url){ 
+        }else if(url === $state.get('administrativo-gestao-acessos-privilegios').url){ 
             // Gestão de Acesso > Usuários (cadastro ou não)
             if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_PRIVILEGIOS){
                 // Não possui permissão!
                 event.preventDefault();
                 $scope.go('nao-autorizado');
             } 
-        }else if(url === $state.get('administrativo-gestao-acesso-modulos-funcionalidades').url){ 
+        }else if(url === $state.get('administrativo-gestao-acessos-modulos-funcionalidades').url){ 
             // Gestão de Acesso > Usuários (cadastro ou não)
             if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_MODULOS_FUNCIONALIDADES){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.go('nao-autorizado');
+            }  
+        }else if(url === $state.get('administrativo-gestao-empresas-empresas').url){ 
+            // Gestão de Acesso > Usuários (cadastro ou não)
+            if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_EMPRESAS){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.go('nao-autorizado');
+            }  
+        }else if(url === $state.get('administrativo-gestao-empresas-filiais').url){ 
+            // Gestão de Acesso > Usuários (cadastro ou não)
+            if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_FILIAIS){
                 // Não possui permissão!
                 event.preventDefault();
                 $scope.go('nao-autorizado');
@@ -378,6 +428,8 @@ angular.module("AtosCapital", ['ui.router',
             case 'USUÁRIOS' : return $scope.goAdministrativoUsuarios;
             case 'PRIVILÉGIOS' : return $scope.goAdministrativoPrivilegios; 
             case 'MÓDULOS E FUNCIONALIDADES' : return $scope.goAdministrativoModulosFuncionalidades;
+            case 'EMPRESAS' : return $scope.goAdministrativoEmpresas;  
+            case 'FILIAIS' : return $scope.goAdministrativoFiliais;     
             case 'ACESSO DE USUÁRIOS' : return $scope.goAdministrativoAcessoUsuarios;    
             // Dashboard
             case 'DASHBOARD ATOS': return $scope.goDashboard;  
@@ -404,6 +456,9 @@ angular.module("AtosCapital", ['ui.router',
             case 'USUÁRIOS' : $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_USUARIOS = true; break;
             case 'PRIVILÉGIOS' : $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_PRIVILEGIOS = true; break;
             case 'MÓDULOS E FUNCIONALIDADES' : $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_MODULOS_FUNCIONALIDADES = true; break;
+            case 'GESTÃO DE EMPRESAS' : $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS = true; break;    
+            case 'EMPRESAS' : $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_EMPRESAS = true; break; 
+            case 'FILIAIS' : $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_FILIAIS = true; break;    
             case 'LOGS' : $scope.PERMISSAO_ADMINISTRATIVO_LOGS = true; break;
             case 'ACESSO DE USUÁRIOS' : $scope.PERMISSAO_ADMINISTRATIVO_LOGS_ACESSO_USUARIOS = true; break;
             // Card Services
@@ -448,6 +503,8 @@ angular.module("AtosCapital", ['ui.router',
             case 'USUÁRIOS' : return state == 'usuarios' || state == 'cadastro-usuarios';
             case 'PRIVILÉGIOS' : return state == 'privilegios';
             case 'MÓDULOS E FUNCIONALIDADES' : return state == 'modulos-funcionalidades';
+            case 'EMPRESAS' : return state == 'empresas';
+            case 'FILIAIS' :  return state == 'filiais';  
             case 'ACESSO DE USUÁRIOS' : return state == 'acesso-usuarios';    
             // Card Services
             case 'CONCILIAÇÃO DE VENDAS': return state == 'conciliacao-vendas';
@@ -637,14 +694,18 @@ angular.module("AtosCapital", ['ui.router',
         switch($location.path()){
             case $state.get('dashboard').url : 
                 $scope.goDashboard(); break;
-            case $state.get('administrativo-gestao-acesso-usuarios').url : 
+            case $state.get('administrativo-gestao-acessos-usuarios').url : 
                  $scope.goAdministrativoUsuarios(); break;
-            case $state.get('administrativo-gestao-acesso-usuarios-cadastro').url : 
+            case $state.get('administrativo-gestao-acessos-usuarios-cadastro').url : 
                 $scope.goAdministrativoUsuariosCadastro(); break;
-            case $state.get('administrativo-gestao-acesso-privilegios').url : 
+            case $state.get('administrativo-gestao-acessos-privilegios').url : 
                  $scope.goAdministrativoPrivilegios(); break;    
-            case $state.get('administrativo-gestao-acesso-modulos-funcionalidades').url : 
+            case $state.get('administrativo-gestao-acessos-modulos-funcionalidades').url : 
                  $scope.goAdministrativoModulosFuncionalidades(); break; 
+            case $state.get('administrativo-gestao-empresas-empresas').url : 
+                 $scope.goAdministrativoEmpresas(); break;   
+            case $state.get('administrativo-gestao-empresas-filiais').url : 
+                 $scope.goAdministrativoFiliais(); break;     
             case $state.get('administrativo-logs-acesso-usuarios').url :
                  $scope.goAdministrativoAcessoUsuarios(); break;
             case $state.get('card-services-conciliacao-conciliacao-vendas').url : 
