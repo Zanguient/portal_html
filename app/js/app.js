@@ -9,6 +9,7 @@
 angular.module("AtosCapital", ['ui.router', 
                                'ui.bootstrap',
                                'ui.checkbox',
+                               'angular.filter',
                                'diretivas',
                                'utils',
                                'webapi', 
@@ -21,6 +22,7 @@ angular.module("AtosCapital", ['ui.router',
                                'administrativo-acesso-usuarios',
                                'dashboard', 
                                'card-services-conciliacao-vendas',
+                               'card-services-dados-acesso',
                                'card-services-relatorios']) 
 
 
@@ -118,6 +120,15 @@ angular.module("AtosCapital", ['ui.router',
         }
       })
     
+      .state('card-services-consolidacao-dados-acesso', {
+        url: prefixo + 'card-services/dados-acesso',
+        templateUrl: 'componentes/card-services/consolidacao/dados-acesso/index.html',
+        controller: "card-services-dados-acessoCtrl",
+        data: {
+            titulo: 'Card Services'
+        }
+      }) 
+    
       .state('card-services-consolidacao-relatorios', {
         url: prefixo + 'card-services/relatorios',
         templateUrl: 'componentes/card-services/consolidacao/relatorios/index.html',
@@ -149,6 +160,7 @@ angular.module("AtosCapital", ['ui.router',
 // CONTROLLER  PAI
 .controller("appCtrl", ['$scope',
                         '$rootScope',
+                        '$window',
                         '$location',
                         '$state',
                         '$stateParams',
@@ -161,7 +173,7 @@ angular.module("AtosCapital", ['ui.router',
                         '$empresa',
                         '$campos',
                         '$filter',
-                        function($scope,$rootScope,$location,$state,$stateParams,$http,$timeout,$modal,
+                        function($scope,$rootScope,$window,$location,$state,$stateParams,$http,$timeout,$modal,
                                  $autenticacao,$apis,$webapi,$empresa,$campos,$filter){ 
     // Título da página                            
     $scope.pagina = {'titulo': 'Home', 'subtitulo': ''};
@@ -201,7 +213,14 @@ angular.module("AtosCapital", ['ui.router',
     // Fullscreen                                                 
     var removeDivFullscreen = function(){
         if ($('body').hasClass('page-portlet-fullscreen')) $('body').removeClass('page-portlet-fullscreen');
-    }                       
+    }   
+    
+    /**
+      * Recarrega completamente a página, reiniciando todos os controllers e serviços
+      */
+    $scope.reloadPage = function(){
+        $window.location.reload();    
+    };
                             
                             
     // LINKS
@@ -260,6 +279,12 @@ angular.module("AtosCapital", ['ui.router',
       */
     $scope.goCardServicesConciliacaoVendas = function(params){
         $scope.go('card-services-conciliacao-conciliacao-vendas', params);
+    };
+    /**
+      * Exibe como conteúdo a Consolidação Dados Acesso, de Card Services
+      */
+    $scope.goCardServicesDadosAcesso = function(params){
+        $scope.go('card-services-consolidacao-dados-acesso', params);
     }; 
     /**
       * Exibe como conteúdo a Consolidação Relatórios, de Card Services
@@ -321,6 +346,12 @@ angular.module("AtosCapital", ['ui.router',
                 event.preventDefault();
                 $scope.go('nao-autorizado');
             }
+        }else if(url === $state.get('card-services-consolidacao-dados-acesso').url){ 
+            if(!$scope.PERMISSAO_CARD_SERVICES || !$scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO || !$scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_DADOS_ACESSO){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.go('nao-autorizado');
+            } 
         }else if(url === $state.get('card-services-consolidacao-relatorios').url){ 
             if(!$scope.PERMISSAO_CARD_SERVICES || !$scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO || !$scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_RELATORIOS){
                 // Não possui permissão!
@@ -336,7 +367,7 @@ angular.module("AtosCapital", ['ui.router',
       */
     $scope.voltarTelaLogin = function(){
         $autenticacao.removeDadosDeAutenticacao();
-        window.location.replace(telaLogin);
+        $window.location.replace(telaLogin);
     };   
     /**
       * Retorna a função que faz o link para o item com o título informado
@@ -352,6 +383,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'DASHBOARD ATOS': return $scope.goDashboard;  
             // Card Services
             case 'CONCILIAÇÃO DE VENDAS': return $scope.goCardServicesConciliacaoVendas;
+            case 'DADOS DE ACESSO': return $scope.goCardServicesDadosAcesso;
             case 'RELATÓRIOS': return $scope.goCardServicesRelatorios; 
             // ...
             default : return null;        
@@ -419,6 +451,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'ACESSO DE USUÁRIOS' : return state == 'acesso-usuarios';    
             // Card Services
             case 'CONCILIAÇÃO DE VENDAS': return state == 'conciliacao-vendas';
+            case 'DADOS DE ACESSO': return state == 'dados-acesso';
             case 'RELATÓRIOS': return state == 'relatorios'; 
                 
             default : return false;        
@@ -577,7 +610,7 @@ angular.module("AtosCapital", ['ui.router',
         if($scope.PERMISSAO_ADMINISTRATIVO && data.id_grupo) obtemGrupoEmpresa(data.id_grupo);
         
         // Go Home
-        if(typeof $scope.goHome == 'function') $scope.goHome();
+        //if(typeof $scope.goHome == 'function') $scope.goHome();
         
         // Seta o flag para true
         menuConstruido = true;
@@ -616,8 +649,10 @@ angular.module("AtosCapital", ['ui.router',
                  $scope.goAdministrativoAcessoUsuarios(); break;
             case $state.get('card-services-conciliacao-conciliacao-vendas').url : 
                 $scope.goCardServicesConciliacaoVendas(); break;
+            case $state.get('card-services-consolidacao-dados-acesso').url : 
+                $scope.goCardServicesDadosAcesso(); break;     
             case $state.get('card-services-consolidacao-relatorios').url : 
-                $scope.goCardServicesRelatorios(); break; 
+                $scope.goCardServicesRelatorios(); break;
             default : if(typeof $scope.goHome == 'function') $scope.goHome(); // Exibe tela inicial
         }
     };                        
@@ -626,7 +661,7 @@ angular.module("AtosCapital", ['ui.router',
     /**
       * INICIALIZAÇÃO DO CONTROLLER
       */                        
-    $scope.init = function(){        
+    $scope.init = function(){       
         // Verifica se está autenticado
         if(!$autenticacao.usuarioEstaAutenticado()){ 
             $scope.voltarTelaLogin();

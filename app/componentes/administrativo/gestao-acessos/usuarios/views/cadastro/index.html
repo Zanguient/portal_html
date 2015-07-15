@@ -266,7 +266,7 @@
                                                                ng-model="role.selecionado"/>&nbsp;{{role.RoleName}}
                                                     </label>
                                                 </div>
-                                                <span style="color:red" ng-show="!rolesSelecionadas">
+                                                <span style="color:red" ng-show="!temRoleSelecionada">
                                                     <strong>Selecione pelo menos um privilégio</strong>
                                                 </span>
                                             </div>
@@ -277,7 +277,7 @@
                                                 <select class="form-control" size="6"
                                                         ng-model="rolePrincipal"
                                                         ng-change="handleRolePrincipal()"
-                                                        ng-options="role as role.PaginaInicial for role in roles | filter:{selecionado: true}"> 
+                                                        ng-options="role as role.PaginaInicial for role in rolesSelecionadas">
                                                     <option style="display:none" value="">Página inicial</option>
                                                 </select> 
                                             </div>

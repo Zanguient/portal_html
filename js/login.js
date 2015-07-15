@@ -8,11 +8,11 @@
 var app = angular.module("Login", ['utils']);
 
 app.controller("loginCtrl", ['$scope',
-                              '$http',
+                              '$window',
                               '$webapi',
                               '$autenticacao',
                               '$empresa',
-                              function($scope,$http,$webapi,$autenticacao,$empresa){ 
+                              function($scope,$window,$webapi,$autenticacao,$empresa){ 
 
     // Dados da empresa
     $scope.empresa = $empresa;
@@ -32,8 +32,7 @@ app.controller("loginCtrl", ['$scope',
       */                              
     var redirecionaPagina = function(){
         // Redireciona
-        //$scope.exibeLayout = false; 
-        window.location.replace(paginaRedirecionamento);
+        $window.location.replace(paginaRedirecionamento);
     }; 
     /**
       * Exibe o layout e inicializa seus handlers

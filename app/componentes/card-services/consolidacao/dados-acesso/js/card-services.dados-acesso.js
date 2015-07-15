@@ -6,27 +6,22 @@
  */
 
 // App
-angular.module("card-services-relatorios", []) 
+angular.module("card-services-dados-acesso", []) 
 
-.controller("card-services-relatoriosCtrl", ['$scope','$state',function($scope,$state){ 
+.controller("card-services-dados-acessoCtrl", ['$scope','$state',function($scope,$state){ 
     
-    $scope.tab = 1; // init Sintético
+    $scope.tab = 0;
     
     // Inicialização do controller
-    $scope.cardServices_relatoriosInit = function(){
+    $scope.cardServices_dadosAcessoInit = function(){
         // Título da página 
         $scope.pagina.titulo = 'Card Services';                          
-        $scope.pagina.subtitulo = 'Relatórios';
+        $scope.pagina.subtitulo = 'Dados de Acesso';
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state){
             $state.go(state);
         });
     };
-    
-    $scope.buscar = function(){
-        // nothing ...
-        $scope.reloadPage();
-    }
     
     $scope.setTab = function(tab){
         if(typeof tab === 'number' && tab >= 0 && tab < 3) $scope.tab = tab;

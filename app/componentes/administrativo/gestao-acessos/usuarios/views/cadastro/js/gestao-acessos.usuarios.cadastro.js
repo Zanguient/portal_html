@@ -32,7 +32,7 @@ angular.module("administrativo-usuarios-cadastro", [])
     $scope.usuario = {login:'', email:'', grupoempresa:'', empresa:''};
     $scope.rolePrincipal = undefined;
     $scope.roles = [];  
-    var rolesSelecionadas = []; 
+    $scope.rolesSelecionadas = []; 
     // Flags
     $scope.abrirCalendarioDataNasc = false;
     var dataValida = false;
@@ -41,7 +41,7 @@ angular.module("administrativo-usuarios-cadastro", [])
     $scope.validandoLogin = false;
     $scope.validandoEmail = false;
     $scope.obtendoRoles = false; 
-    $scope.rolesSelecionadas = false;
+    $scope.temRoleSelecionada = false;
     $scope.pesquisandoGruposEmpresas = false;  
     $scope.pesquisandoEmpresas = false;
     $scope.cadastrando = false;
@@ -123,7 +123,7 @@ angular.module("administrativo-usuarios-cadastro", [])
       * Reseta as variáveis
       */
     var resetaVariaveis = function(){
-        $scope.rolesSelecionadas = false;
+        $scope.temRoleSelecionada = false;
         $scope.old = {pessoa:null,usuario:null,roles:[]};
         $scope.pessoa = {id:0, nome:'', data_nasc:''/*null*/, telefone:'', ramal:''};
         $scope.usuario = {login:'', email:'', grupoempresa:'', empresa:''};    
@@ -172,7 +172,7 @@ angular.module("administrativo-usuarios-cadastro", [])
             if($scope.ehCadastro()){
                 if($scope.pessoa.nome || $scope.pessoa.data_nasc/* !== null*/ || $scope.pessoa.telefone || $scope.pessoa.ramal || 
                    $scope.usuario.email || $scope.usuario.empresa || $scope.usuario.grupoempresa || $scope.usuario.login ||
-                   $scope.rolesSelecionadas){
+                   $scope.temRoleSelecionada){
                     // Exibe um modal de confirmação
                     $scope.showModalConfirmacao('Confirmação', 
                          'Tem certeza que deseja descartar as informações preenchidas?',
@@ -244,8 +244,8 @@ angular.module("administrativo-usuarios-cadastro", [])
         if($scope.usuario.empresa.ds_fantasia) jsonUsuario.nu_cnpjEmpresa = $scope.usuario.empresa.nu_cnpj;
         // ROLES DO USUÁRIO
         var r = [];
-        for(var k in rolesSelecionadas){ 
-            var role = rolesSelecionadas[k];
+        for(var k in $scope.rolesSelecionadas){ 
+            var role = $scope.rolesSelecionadas[k];
             r.push({RoleId : role.RoleId, RolePrincipal: role.RoleId === $scope.rolePrincipal.RoleId});
         }
         // JSON DE ENVIO
@@ -322,12 +322,12 @@ angular.module("administrativo-usuarios-cadastro", [])
             return true;
         }
         // ROLES
-        if(rolesSelecionadas.length !== $scope.old.roles.length){ 
+        if($scope.rolesSelecionadas.length !== $scope.old.roles.length){ 
             //console.log("HOUVE ALTERAÇÃO - ROLE - LENGTH");
             return true;
         }
         for(var k = 0; k < $scope.old.roles.length; k++){
-           if($filter('filter')(rolesSelecionadas, {RoleId:$scope.old.roles[k].RoleId}).length == 0){ 
+           if($filter('filter')($scope.rolesSelecionadas, {RoleId:$scope.old.roles[k].RoleId}).length == 0){ 
                //console.log("HOUVE ALTERAÇÃO - ROLE");
                return true; 
            }
@@ -395,8 +395,8 @@ angular.module("administrativo-usuarios-cadastro", [])
         // ROLES DO USUÁRIO
         var r = [];
         // Novas roles
-        for(var k in rolesSelecionadas){ 
-            var role = rolesSelecionadas[k];
+        for(var k in $scope.rolesSelecionadas){ 
+            var role = $scope.rolesSelecionadas[k];
             var principal = role.RoleId === $scope.rolePrincipal.RoleId; // essa é a "nova" role principal?
             var old = $filter('filter')($scope.old.roles, {RoleId:role.RoleId}); // roles antigas
             
@@ -407,7 +407,7 @@ angular.module("administrativo-usuarios-cadastro", [])
         // Roles a serem desassociadas do usuário 
         for(var k = 0; k < $scope.old.roles.length; k++){
             var old = $scope.old.roles[k];
-            if($filter('filter')(rolesSelecionadas, {RoleId:old.RoleId}).length == 0)
+            if($filter('filter')($scope.rolesSelecionadas, {RoleId:old.RoleId}).length == 0)
                 r.push({UserId: -1, RoleId : old.RoleId, RolePrincipal : false});
         }        
         // Verifica se houve alterações
@@ -447,7 +447,7 @@ angular.module("administrativo-usuarios-cadastro", [])
       * Armazena as informações
       */
     $scope.armazenaInformacoesDoUsuario = function(){
-        if($scope.formCadastroUsuario.$valid && $scope.dataValida() && $scope.loginValido() && $scope.emailValido() && $scope.rolesSelecionadas && $scope.rolePrincipal) {
+        if($scope.formCadastroUsuario.$valid && $scope.dataValida() && $scope.loginValido() && $scope.emailValido() && $scope.temRoleSelecionada && $scope.rolePrincipal) {
             if($scope.ehCadastro()) cadastraUsuario();
             else alteraUsuario();
         }else{
@@ -470,7 +470,7 @@ angular.module("administrativo-usuarios-cadastro", [])
             }else if($scope.formCadastroUsuario.usuarioEmail.$invalid || !$scope.emailValido()){
                 $scope.showModalAlerta("Informe um e-mail válido!");
                 $scope.setTabCadastro(2);
-            }else if(!$scope.rolesSelecionadas){
+            }else if(!$scope.temRoleSelecionada){
                 $scope.showModalAlerta("Selecione pelo menos um privilégio!");
                 $scope.setTabCadastro(3);
             }else if(!$scope.rolePrincipal){
@@ -646,14 +646,26 @@ angular.module("administrativo-usuarios-cadastro", [])
     // ROLES
     $scope.handleRole = function(){
       // Obtém o array das roles que tem o campo 'selecionado' com valor true
-      rolesSelecionadas = $filter('filter')($scope.roles, {selecionado:true});
-      // Verifica se foi a primeira role a ser selecionada
-      if(rolesSelecionadas.length === 1) $scope.rolePrincipal = rolesSelecionadas[0];
-      // Atualiza o flag
-      $scope.rolesSelecionadas = rolesSelecionadas.length > 0;
+      $scope.rolesSelecionadas = $filter('filter')($scope.roles, {selecionado:true});
+      if($scope.rolesSelecionadas.length > 0){
+          // Remove as duplicatas
+          $scope.rolesSelecionadas = $filter('unique')($scope.rolesSelecionadas, 'PaginaInicial');
+          // Verifica se foi a primeira role a ser selecionada
+          if($scope.rolesSelecionadas.length === 1) $scope.rolePrincipal = $scope.rolesSelecionadas[0];
+          else if($filter('filter')($scope.rolesSelecionadas, $scope.rolePrincipal).length == 0){
+             // Role previamente selecionada como principal não aparece na list (é uma página inicial duplicada!)
+             $scope.rolePrincipal = $filter('filter')($scope.rolesSelecionadas, $scope.rolePrincipal.PaginaInicial)[0];
+          }
+          // Atualiza o flag
+          $scope.temRoleSelecionada = true;
+      }else{ 
+          $scope.temRoleSelecionada = false;
+          $scope.rolePrincipal = undefined;
+      }
       // Atualiza o progresso do cadastro
       $scope.atualizaProgressoDoCadastro();
     };
+    
 
                                                          
     // Progresso do cadastro
@@ -695,7 +707,7 @@ angular.module("administrativo-usuarios-cadastro", [])
     };
     // Form Roles
     var getPercentualFormRoles = function(){
-        return $scope.rolesSelecionadas ? 100 : 0 ; 
+        return $scope.temRoleSelecionada ? 100 : 0 ; 
     };
     // Progresso                                                     
     $scope.atualizaProgressoDoCadastro = function(){
