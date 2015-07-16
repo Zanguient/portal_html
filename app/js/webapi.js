@@ -131,7 +131,8 @@ angular.module('webapi', [ ])
             codResumoVenda : 113,
             numParcelaTotal : 114,
             // Relacionamento
-            terminallogico : 200
+            operadora : 300,
+            empresa : 400 // pode ser usado para buscar o id_grupo
         },
         terminallogico : {
             idTerminalLogico: 100,

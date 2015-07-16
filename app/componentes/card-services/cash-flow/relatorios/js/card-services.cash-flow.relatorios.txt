@@ -28,12 +28,14 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 
   * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
   * $scope.token do "appCtrl"
+  * $scope.grupoempresa, do "appCtrl" : grupo empresa informado pelo usuário na barra administrativa
+  * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
   * APIS:
     - cliente/empresa (filiais)
 	- pos/bandeirapos (bandeiras)
     - pos/operadora (adquirente)
 	- pos/terminallogico (terminais lógicos)
-	- pos/recebimento
+	- pos/recebimento (relatórios)
 	
  
  
@@ -82,22 +84,51 @@ Além deles, é necessária a importação dos seguintes módulos externos.
   
    * pos/recebimento
     - GET : listagem do conteúdo do relatório
-	       
+	    -> FILTROS 
+           . Data : 'yyyyMMdd' (ano com 4 dígitos seguido de mês com dois dígitos seguido de dia com 2 dígitos)
+           . Filial : cnpj
+		   . Adquirente : personalizado => 300 + código do campo id - 100
+		   . Bandeira : idBandeira
+		   . Terminal Lógico : idLogicoTerminal
+ 		   
 		-> TERMINAL LÓGICO (coleção 3) : ordenado por dsTerminalLogico
 			 [
 			    {
 					terminal : { idTerminalLogico : int,
-								 dsTerminalLogico : string,
-								 idOperadora : int
+								 dsTerminalLogico : string
 							   },
 					bandeira : { id : int
 								 desBandeira : string
-								 idOperadora : int
 							   },
+					idOperadora : int,
                     totalTransacoes	: total,
 					valorBruto : valor
 				}
 			 ]
+			 
+		-> SINTÉTICO (coleção 4) : ordenado por desBandeira
+			 [
+			    {
+					bandeira : { id : int
+								 desBandeira : string
+							   },
+					idOperadora : int,
+                    totalTransacoes	: total,
+					valorBruto : valor
+				}
+			 ]
+
+       -> ANALÍTICO (coleção 5) : ordenado por dtVenda
+			 [
+			    {
+					cnpj : string,
+					dtaVenda : date,
+					desBandeira : string
+                    nsu	: string,
+					cdAutorizador : string,
+					valorVendaBruta : double
+				}
+			 ]			 
  
    
 
