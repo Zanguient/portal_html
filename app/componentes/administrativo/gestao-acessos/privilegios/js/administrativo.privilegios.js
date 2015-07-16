@@ -598,8 +598,6 @@ angular.module("administrativo-privilegios", [])
             // Fecha o modal
             $('#modalFuncionalidades').modal('hide');
         }else{ 
-            console.log(permissoes);
-            //console.log(permissoes);
             $scope.showProgress();
 
             $webapi.update($apis.getUrl($apis.administracao.webpagespermissions, undefined,

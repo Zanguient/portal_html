@@ -87,6 +87,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				  id_controller : int // essa informação pode ser enviada ou não
 				}
 			 // obtém como resposta o id_method
+			 OBS: Não é possível armazenar o método "Filtro Empresa" em outro lugar que não seja Administrativo
 	- PUT : altera o nome de exibição de uma funcionalidade (method)
 				{ id_method : int,
 				  ds_method : string

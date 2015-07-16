@@ -225,6 +225,7 @@
                                                        typeahead-on-select="selecionouGrupoEmpresa()"
                                                        typeahead-focus-first=false
                                                        typeahead-min-length='3'
+                                                       typeahead-wait-ms="500"
                                                        typeahead="grupoempresa as grupoempresa.ds_nome for grupoempresa in buscaGrupoEmpresas($viewValue)" />
                                             </div>
                                             <img ng-src="../img/loading-atos.gif" style="margin-top: 10px" ng-show="pesquisandoGruposEmpresas"/>

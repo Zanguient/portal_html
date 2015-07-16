@@ -23,9 +23,10 @@ angular.module("AtosCapital", ['ui.router',
                                'administrativo-empresas',
                                'administrativo-filiais',
                                'dashboard', 
+                               'card-services-cash-flow-relatorios',
                                'card-services-conciliacao-vendas',
                                'card-services-dados-acesso',
-                               'card-services-relatorios']) 
+                               'card-services-consolidacao-relatorios']) 
 
 
 /**
@@ -131,6 +132,14 @@ angular.module("AtosCapital", ['ui.router',
       /*.state('card-services', {
         abstract: true
       })*/
+      .state('card-services-cash-flow-relatorios', {
+        url: prefixo + 'card-services/cash-flow-relatorios',
+        templateUrl: 'componentes/card-services/cash-flow/relatorios/index.html',
+        controller: "card-services-cash-flow-relatoriosCtrl",
+        data: {
+            titulo: 'Card Services'
+        }
+      })
     
       .state('card-services-conciliacao-conciliacao-vendas', {
         url: prefixo + 'card-services/conciliacao-vendas',
@@ -151,9 +160,9 @@ angular.module("AtosCapital", ['ui.router',
       }) 
     
       .state('card-services-consolidacao-relatorios', {
-        url: prefixo + 'card-services/relatorios',
+        url: prefixo + 'card-services/consolidacao-relatorios',
         templateUrl: 'componentes/card-services/consolidacao/relatorios/index.html',
-        controller: "card-services-relatoriosCtrl",
+        controller: "card-services-consolidacao-relatoriosCtrl",
         data: {
             titulo: 'Card Services'
         }
@@ -214,6 +223,7 @@ angular.module("AtosCapital", ['ui.router',
     var menuConstruido = false;
     $scope.carregandoGrupoEmpresas = false; // indica se está aguardando o objeto com os grupos empresa (para usuário administrativo)
     // Permissões
+    $scope.PERMISSAO_FILTRO_EMPRESA = false;                        
     $scope.PERMISSAO_ADMINISTRATIVO = false;
     $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS = false;
     $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_USUARIOS = false;
@@ -226,6 +236,8 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_ADMINISTRATIVO_LOGS_ACESSO_USUARIOS = false;                       
     $scope.PERMISSAO_DASHBOARD = false;
     $scope.PERMISSAO_CARD_SERVICES = false;
+    $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW = false;   
+    $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW_RELATORIOS = false;                        
     $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO = false;
     $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_VENDAS = false;
     $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO = false;
@@ -311,6 +323,12 @@ angular.module("AtosCapital", ['ui.router',
         //else console.log("JA ESTÁ NO DASHBOARD");
     };
     /**
+      * Exibe como conteúdo a Cash Flow Relatórios, de Card Services
+      */
+    $scope.goCardServicesCashFlowRelatorios = function(params){
+        $scope.go('card-services-cash-flow-relatorios', params);
+    };                         
+    /**
       * Exibe como conteúdo a Conciliação Conciliação de Vendas, de Card Services
       */
     $scope.goCardServicesConciliacaoVendas = function(params){
@@ -325,7 +343,7 @@ angular.module("AtosCapital", ['ui.router',
     /**
       * Exibe como conteúdo a Consolidação Relatórios, de Card Services
       */
-    $scope.goCardServicesRelatorios = function(params){
+    $scope.goCardServicesConsolidacaoRelatorios = function(params){
         $scope.go('card-services-consolidacao-relatorios', params);
     };    
                             
@@ -390,6 +408,12 @@ angular.module("AtosCapital", ['ui.router',
                 event.preventDefault();
                 $scope.go('nao-autorizado');
             }
+        }else if(url === $state.get('card-services-cash-flow-relatorios').url){ 
+            if(!$scope.PERMISSAO_CARD_SERVICES || !$scope.PERMISSAO_CARD_SERVICES_CASH_FLOW || !$scope.PERMISSAO_CARD_SERVICES_CASH_FLOW_RELATORIOS){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.go('nao-autorizado');
+            }
         }else if(url === $state.get('card-services-conciliacao-conciliacao-vendas').url){ 
             if(!$scope.PERMISSAO_CARD_SERVICES || !$scope.PERMISSAO_CARD_SERVICES_CONCILIACAO || !$scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_VENDAS){
                 // Não possui permissão!
@@ -422,7 +446,7 @@ angular.module("AtosCapital", ['ui.router',
     /**
       * Retorna a função que faz o link para o item com o título informado
       */                        
-    var getLink = function(titulo){//id_controller){
+    var getLink = function(titulo, titulopai){//id_controller){
         switch(titulo.toUpperCase()){//id_controller){
             // Administrativo
             case 'USUÁRIOS' : return $scope.goAdministrativoUsuarios;
@@ -436,7 +460,11 @@ angular.module("AtosCapital", ['ui.router',
             // Card Services
             case 'CONCILIAÇÃO DE VENDAS': return $scope.goCardServicesConciliacaoVendas;
             case 'DADOS DE ACESSO': return $scope.goCardServicesDadosAcesso;
-            case 'RELATÓRIOS': return $scope.goCardServicesRelatorios; 
+                
+            // AMBÍGUOS    
+            case 'RELATÓRIOS': return titulopai.toUpperCase() === 'CASH FLOW' ? 
+                                $scope.goCardServicesCashFlowRelatorios :
+                                $scope.goCardServicesConsolidacaoRelatorios; 
             // ...
             default : return null;        
         }
@@ -448,7 +476,7 @@ angular.module("AtosCapital", ['ui.router',
       * OBS: título não é uma boa referência. O ideal seria identificadores, 
       * visto que podem existir títulos idênticos em Serviços distintos
       */                         
-    var atribuiPermissao = function(titulo){//id_controller){
+    var atribuiPermissao = function(titulo, titulopai){//id_controller){
         switch(titulo.toUpperCase()){//id_controller){
             // Administrativo
             case 'ADMINISTRATIVO' : $scope.PERMISSAO_ADMINISTRATIVO = true; break;
@@ -463,13 +491,20 @@ angular.module("AtosCapital", ['ui.router',
             case 'ACESSO DE USUÁRIOS' : $scope.PERMISSAO_ADMINISTRATIVO_LOGS_ACESSO_USUARIOS = true; break;
             // Card Services
             case 'CARD SERVICES': $scope.PERMISSAO_CARD_SERVICES = true; break;
+            case 'CASH FLOW' : $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW = true; break;
             case 'CONCILIAÇÃO': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO = true; break;
             case 'CONCILIAÇÃO DE VENDAS': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_VENDAS = true; break;
             case 'CONSOLIDAÇÃO': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO = true; break;   
-            case 'DADOS DE ACESSO': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_DADOS_ACESSO = true; break;    
-            case 'RELATÓRIOS': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_RELATORIOS = true; break;
+            case 'DADOS DE ACESSO': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_DADOS_ACESSO = true; break; 
             // Dashboard
             case 'DASHBOARD ATOS': $scope.PERMISSAO_DASHBOARD = true; break;
+                
+            // AMBÍGUOS    
+            case 'RELATÓRIOS': titulopai.toUpperCase() === 'CASH FLOW' ? 
+                                $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW_RELATORIOS = true  :
+                                $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_RELATORIOS = true; 
+                               break;
+            
             // ...
             default : return ;        
         }
@@ -496,7 +531,7 @@ angular.module("AtosCapital", ['ui.router',
     /**
       * Informa se o id_controller informado se refere ao módulo que está ativo no momento
       */
-    $scope.moduloAtivo = function(titulo){//id_controller){
+    $scope.moduloAtivo = function(titulo, titulopai){//id_controller){
         var state = $state.current.url.split('/')[2]; // nome da pasta inicial da url do estado atual
         switch(titulo.toUpperCase()){//id_controller){
             // Administrativo
@@ -509,7 +544,12 @@ angular.module("AtosCapital", ['ui.router',
             // Card Services
             case 'CONCILIAÇÃO DE VENDAS': return state == 'conciliacao-vendas';
             case 'DADOS DE ACESSO': return state == 'dados-acesso';
-            case 'RELATÓRIOS': return state == 'relatorios'; 
+                
+                
+            // AMBÍGUOS    
+            case 'RELATÓRIOS': return titulopai.toUpperCase() === 'CASH FLOW' ? 
+                                state == 'cash-flow-relatorios' :
+                                state == 'consolidacao-relatorios';
                 
             default : return false;        
         }        
@@ -517,81 +557,7 @@ angular.module("AtosCapital", ['ui.router',
     /**
       * A partir do JSON recebido, obtem o JSON menu e as permissões do usuário
       */                        
-    var constroiMenu = function(data){
-        // Exemplo
-        //data.id_grupo = 42;
-        /*data.controllers = [
-            {
-                ds_controller : 'Dashboard Atos',
-                id_controller : 64
-            },
-            {
-                ds_controller : 'Card Services',
-                id_controller : 59,
-                subControllers : [
-                    {
-                        ds_controller : 'Conciliação',
-                        id_controller : 60,
-                        subControllers : [
-                            {
-                                ds_controller : 'Conciliação de Vendas',
-                                id_controller : 62
-                            }
-                        ]
-                    },
-                    {
-                        ds_controller : 'Consolidação',
-                        id_controller : 61,
-                        subControllers : [
-                            {
-                                ds_controller : 'Relatórios',
-                                id_controller : 63
-                            },
-                            {
-                                ds_controller : 'Dados de Acesso',
-                                id_controller : 65
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                ds_controller : 'Administrativo', // possui perfil administrativo
-                id_controller : 52,
-                subControllers : [
-                    {
-                        ds_controller : 'Gestão de Acessos',
-                        id_controller : 53,
-                        subControllers : [
-                            {
-                                ds_controller : 'Usuários',
-                                id_controller : 54,
-								home : true
-                            },
-                            {
-                                ds_controller : 'Privilégios',
-                                id_controller : 55
-                            },
-                            {
-                                ds_controller : 'Módulos e Funcionalidades',
-                                id_controller : 56
-                            }
-                        ]
-                    },
-                    {
-                        ds_controller : 'Logs',
-                        id_controller : 57,
-                        subControllers : [
-                            {
-                                ds_controller : 'Acesso de usuários',
-                                id_controller : 58
-                            }
-                        ]
-                    }
-                ]
-            }
-        ];*/
-        
+    var constroiMenu = function(data){        
         // Constrói o menu
         $scope.menu = [];
         for(var k = 0; k < data.controllers.length; k++){
@@ -613,7 +579,7 @@ angular.module("AtosCapital", ['ui.router',
                     subMenu.ds_controller = subController1.ds_controller;
                     subMenu.id_controller = subController1.id_controller;
                     // Atribui permissão
-                    atribuiPermissao(subMenu.ds_controller);//subMenu.id_controller);
+                    atribuiPermissao(subMenu.ds_controller, menu.ds_controller);//subMenu.id_controller);
                     // A priori não tem premissão
                     subMenu.temLink = false;
                     
@@ -626,11 +592,11 @@ angular.module("AtosCapital", ['ui.router',
                             itemMenu.ds_controller = subController2.ds_controller;
                             itemMenu.id_controller = subController2.id_controller;
                             // Atribui permissão
-                            atribuiPermissao(itemMenu.ds_controller);//itemMenu.id_controller);
+                            atribuiPermissao(itemMenu.ds_controller, subMenu.ds_controller);//itemMenu.id_controller);
                             // A priori não tem premissão
                             itemMenu.temLink = false;
                             
-                            itemMenu.link = getLink(itemMenu.ds_controller);//itemMenu.id_controller);
+                            itemMenu.link = getLink(itemMenu.ds_controller, subMenu.ds_controller);//itemMenu.id_controller);
                             if(itemMenu.link === null) itemMenu.link = function(){};
                             else itemMenu.temLink = subMenu.temLink = menu.temLink = true;
                             if(subController2.home && !$scope.goHome) $scope.goHome = itemMenu.link;
@@ -639,7 +605,7 @@ angular.module("AtosCapital", ['ui.router',
                         }
                     }else{
                         // Se não tem módulos, então deve ter um link
-                        subMenu.link = getLink(subMenu.ds_controller);//subMenu.id_controller); 
+                        subMenu.link = getLink(subMenu.ds_controller, menu.ds_controller);//subMenu.id_controller); 
                         if(subMenu.link === null) subMenu.link = function(){};
                         else subMenu.temLink = menu.temLink = true;
                         // Página inicial é definido pelo primeiro 'home=true' encontrado        
@@ -662,12 +628,10 @@ angular.module("AtosCapital", ['ui.router',
             $scope.menu.push(menu);
         }
         
-        // Verifica se estava administrando algum grupo empresa
-        //if(data.id_grupo) empresaId = servico.id_grupo;
-        if($scope.PERMISSAO_ADMINISTRATIVO && data.id_grupo && data.id_grupo !== -1) obtemGrupoEmpresa(data.id_grupo);
+        if(data.filtro_empresa) $scope.PERMISSAO_FILTRO_EMPRESA = true;
         
-        // Go Home
-        //if(typeof $scope.goHome == 'function') $scope.goHome();
+        // Verifica se estava administrando algum grupo empresa
+        if(data.id_grupo && data.id_grupo !== -1) obtemGrupoEmpresa(data.id_grupo);
         
         // Seta o flag para true
         menuConstruido = true;
@@ -708,12 +672,14 @@ angular.module("AtosCapital", ['ui.router',
                  $scope.goAdministrativoFiliais(); break;     
             case $state.get('administrativo-logs-acesso-usuarios').url :
                  $scope.goAdministrativoAcessoUsuarios(); break;
+            case $state.get('card-services-cash-flow-relatorios').url : 
+                $scope.goCardServicesCashFlowRelatorios(); break;
             case $state.get('card-services-conciliacao-conciliacao-vendas').url : 
                 $scope.goCardServicesConciliacaoVendas(); break;
             case $state.get('card-services-consolidacao-dados-acesso').url : 
                 $scope.goCardServicesDadosAcesso(); break;     
             case $state.get('card-services-consolidacao-relatorios').url : 
-                $scope.goCardServicesRelatorios(); break;
+                $scope.goCardServicesConsolidacaoRelatorios(); break;
             default : if(typeof $scope.goHome == 'function') $scope.goHome(); // Exibe tela inicial
         }
     };                        
@@ -735,6 +701,7 @@ angular.module("AtosCapital", ['ui.router',
             $scope.voltarTelaLogin(); // what?! FATAL ERROR!
             return;
         }
+        //console.log($scope.token);
         
         // Exibe o layout
         exibeLayout();
@@ -780,7 +747,7 @@ angular.module("AtosCapital", ['ui.router',
       * Altera a visibilidade
       */
     $scope.setVisibilidadeBoxGrupoEmpresa = function(visivel){
-        if($scope.PERMISSAO_ADMINISTRATIVO){
+        if($scope.PERMISSAO_FILTRO_EMPRESA && $scope.PERMISSAO_ADMINISTRATIVO){
             if(visivel){ 
                 $('#admBuscaGrupoEmpresa').parent().addClass('open'); 
                 $window.scrollTo(0, 0); // scroll to top
@@ -802,7 +769,8 @@ angular.module("AtosCapital", ['ui.router',
          // Obtém os dados da empresa
          progressoGrupoEmpresas(true);
          // Obtém a URL                                                      
-         $webapi.get($apis.cliente.grupoempresa, [$scope.token, 0], {id:$campos.cliente.grupoempresa.id_grupo, valor: empresaId})
+         $webapi.get($apis.getUrl($apis.cliente.grupoempresa, [$scope.token, 0], 
+                                  {id:$campos.cliente.grupoempresa.id_grupo, valor: empresaId}))
             .then(function(dados){  
                 $scope.grupoempresa = dados.Registros[0];
                 $scope.$broadcast("alterouGrupoEmpresa");
@@ -819,6 +787,7 @@ angular.module("AtosCapital", ['ui.router',
       */
     $scope.buscaGrupoEmpresas = function(texto){
        progressoGrupoEmpresas(true);
+       
        // Obtém a URL                                                      
        var url = $apis.getUrl($apis.cliente.grupoempresa, 
                               [$scope.token, 0, $campos.cliente.grupoempresa.ds_nome, 0, 10, 1], // ordenado crescente com 10 itens no máximo
@@ -828,7 +797,7 @@ angular.module("AtosCapital", ['ui.router',
            progressoGrupoEmpresas(false);
            return dados.data.Registros;
         },function(failData){
-             console.log("FALHA AO OBTER GRUPOS EMPRESA FILTRADOS: " + failData.status);
+             //console.log("FALHA AO OBTER GRUPOS EMPRESA FILTRADOS: " + failData.status);
              progressoGrupoEmpresas(false);
              return [];
           });
@@ -837,30 +806,20 @@ angular.module("AtosCapital", ['ui.router',
       * Seleciona Grupo Empresa
       */
     $scope.selecionaGrupoEmpresa = function(grupoempresa){
-        $scope.grupoempresa = grupoempresa;
-        $scope.gempresa = null; 
-        // Remove da visão a tela de busca do grupo empresa
-        $scope.setVisibilidadeBoxGrupoEmpresa(false);
-        // Notifica
-        $scope.$broadcast("alterouGrupoEmpresa"); //*/
-        //associaUsuarioAGrupoEmpresa(grupoempresa.id_grupo, function(dados){ $scope.grupoempresa = grupoempresa; });
+        associaUsuarioAGrupoEmpresa(grupoempresa.id_grupo, function(dados){ $scope.grupoempresa = grupoempresa; });
     };
     /** 
       * Limpar Grupo Empresa
       */
     $scope.limpaGrupoEmpresa = function(){
-        $scope.grupoempresa = undefined;
-        $scope.gempresa = null; 
-        $scope.$broadcast("alterouGrupoEmpresa");
-        // Dessassocia (id_grupo = -1) //*/
-        //associaUsuarioAGrupoEmpresa(-1, function(dados){ $scope.grupoempresa = undefined; });
+        associaUsuarioAGrupoEmpresa(-1, function(dados){ $scope.grupoempresa = undefined; });
     };
     var associaUsuarioAGrupoEmpresa = function(id_grupo, funcaoSucesso){
         //console.log(id_grupo);
         // Envia 
         $scope.showProgress();
         $webapi.update($apis.getUrl($apis.administracao.webpagesusers, undefined, 
-                                    {id:'token', valor: $scope.token}), {id_grupo : id_grupo})
+                                    [{id:'token', valor: $scope.token},{id:'id_grupo', valor: id_grupo}]), null)
             .then(function(dados){  
                 if(typeof funcaoSucesso === 'function') funcaoSucesso(dados);
                 // Reinicia o valor do model

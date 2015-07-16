@@ -391,6 +391,12 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
                                         return false;    
                                     }
                                 }
+                                // Verifica se o nome é "Filtro Empresa"
+                                if(text.toUpperCase() === 'FILTRO EMPRESA' && 
+                                   $scope.moduloSelecionado.text.toUpperCase() !== 'ADMINISTRATIVO'){
+                                    $scope.showModalAlerta('Não é permitido cadastrar essa funcionalidade no módulo selecionado!');
+                                    return false;
+                                }
                                 // Fecha o modal input
                                 $scope.fechaModalInput();
                                 // Cadastra
@@ -432,6 +438,12 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
                                         return false;    
                                     }
                                 }
+                                // Verifica se o nome é "Filtro Empresa"
+                                if(text.toUpperCase() === 'FILTRO EMPRESA' && 
+                                   $scope.moduloSelecionado.text.toUpperCase() !== 'ADMINISTRATIVO'){
+                                    $scope.showModalAlerta('Não é permitido cadastrar essa funcionalidade no módulo selecionado!');
+                                    return false;
+                                }
                                 // Fecha o modal input
                                 $scope.fechaModalInput();
                                 // Atualiza
@@ -454,7 +466,7 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
       */
     var cadastraMetodo = function(jsonMetodo){
         if(!jsonMetodo) return;
-        console.log(jsonMetodo);
+
         // Envia para o banco
         $scope.showProgress(divPortletBodyModuloFuncionalidadePos);
         $webapi.post($apis.getUrl($apis.administracao.webpagesmethods, undefined,
