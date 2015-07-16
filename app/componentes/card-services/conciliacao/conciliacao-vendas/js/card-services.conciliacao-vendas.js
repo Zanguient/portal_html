@@ -30,7 +30,7 @@ angular.module("card-services-conciliacao-vendas", [])
     // DATA
     var ajustaIntervaloDeData = function(){
       // Verifica se é necessário reajustar a data max para ser no mínimo igual a data min
-      if($scope.datamax && $scope.datamax < $scope.datamin) $scope.datamax = $scope.datamin;
+      if($scope.datamax !== null && $scope.datamax < $scope.datamin) $scope.datamax = $scope.datamin;
       if(!$scope.$$phase) $scope.$apply();
     };
     // Data MIN

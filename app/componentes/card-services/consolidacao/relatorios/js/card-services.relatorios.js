@@ -10,17 +10,26 @@ angular.module("card-services-relatorios", [])
 
 .controller("card-services-relatoriosCtrl", ['$scope',
                                              '$state',
+                                             '$timeout',
                                              '$campos',
                                              '$webapi',
                                              '$apis',
-                                             function($scope,$state,$campos,$webapi,$apis){ 
+                                             function($scope,$state,$timeout,
+                                                      $campos,$webapi,$apis){ 
     
     // Exibição
     $scope.itens_pagina = [10, 20, 50, 100]; 
+    var ordenacao = {terminal : {id: $campos.pos.recebimento.terminallogico + 
+                                     $campos.pos.terminallogico.dsTerminalLogico - 100, 
+                                 order : 0},
+                     terminal : {id: $campos.pos.recebimento.terminallogico + 
+                                     $campos.pos.terminallogico.dsTerminalLogico - 100, 
+                                 order : 0}
+                    };
     $scope.paginaInformada = 1; // página digitada pelo usuário                                             
     // Filtros
     $scope.filiais = $scope.adquirentes = $scope.bandeiras =  $scope.terminais = [];                                          
-    $scope.filtro = {datamin : new Date(), datamax : null, 
+    $scope.filtro = {datamin : new Date(), datamax : '', 
                      filial : null, adquirente : null,
                      bandeira : null, terminallogico : null,
                      itens_pagina : $scope.itens_pagina[0], order : 0,
@@ -52,17 +61,14 @@ angular.module("card-services-relatorios", [])
         });
         // Quando houver alteração do grupo empresa na barra administrativa                                           
         $scope.$on('alterouGrupoEmpresa', function(event){ 
-            // Refaz a busca
-            buscaFiliais(true);
+            // Avalia grupo empresa
+            if($scope.grupoempresa) buscaFiliais(true);
+            else // reseta tudo e não faz buscas 
+                $scope.filiais = $scope.adquirentes = $scope.bandeiras =  $scope.terminais = []; 
         }); 
         // Carrega filiais
-        buscaFiliais(true);
+        if($scope.grupoempresa) buscaFiliais(true);
     };
-    
-    $scope.buscar = function(){
-        // nothing ...
-        //$scope.reloadPage();
-    }
     
     
     /* FILTRO */
@@ -73,25 +79,17 @@ angular.module("card-services-relatorios", [])
     $scope.limpaFiltros = function(){
         // Limpar data => Refazer busca?
         $scope.filtro.datamin = new Date();
-        $scope.filtro.datamax = null; 
-        if($scope.filtro.filial !== null){ 
-            $scope.filtro.filial = null;
-            buscaFiliais(false);
-        }
+        $scope.filtro.datamax = ''; 
+        
+        $scope.filtro.filial = null;
+        
         if($scope.filtro.adquirente !== null){
-            $scope.filtro.adquirente = null;
+            $scope.filtro.adquirente = null;    
             // Acarreta em mudanças nos filtros de bandeira e terminais lógicos
-            buscaAdquirentes();
-        }else{ 
-            if($scope.filtro.bandeira !== null){
-                $scope.filtro.bandeira = null; 
-                buscaBandeiras();
-            }
-            if($scope.filtro.terminal !== null){
-                $scope.filtro.terminallogico = null;
-                buscaTerminaisLogicos();
-            }
-        }
+            buscaBandeiras();
+            buscaTerminaisLogicos();
+        }else $scope.filtro.adquirente = null;
+        $scope.filtro.bandeira = $scope.filtro.terminallogico = null; 
     }
     
     // DATA
@@ -102,8 +100,10 @@ angular.module("card-services-relatorios", [])
     };
     // Data MIN
     $scope.exibeCalendarioDataMin = function($event) {
-        $event.preventDefault();
-        $event.stopPropagation();
+        if($event){
+            $event.preventDefault();
+            $event.stopPropagation();
+        }
         $scope.abrirCalendarioDataMin = !$scope.abrirCalendarioDataMin;
         $scope.abrirCalendarioDataMax = false;
       };
@@ -112,17 +112,18 @@ angular.module("card-services-relatorios", [])
     };
     // Data MAX
     $scope.exibeCalendarioDataMax = function($event) {
-        $event.preventDefault();
-        $event.stopPropagation();
+        if($event){
+            $event.preventDefault();
+            $event.stopPropagation();
+        }
         $scope.abrirCalendarioDataMax = !$scope.abrirCalendarioDataMax;
         $scope.abrirCalendarioDataMin = false;
       };
     $scope.alterouDataMax = function(){
-       ajustaIntervaloDeData();
+       if($scope.filtro.datamax === null) $scope.filtro.datamax = '';
+       else ajustaIntervaloDeData();
     };
-    $scope.limpaDataMax = function () {
-        $scope.filtro.datamax = null;
-    };
+                                                 
     
     // FILIAIS
     /**
@@ -144,10 +145,8 @@ angular.module("card-services-relatorios", [])
                 $scope.filiais = dados.Registros;
                 // Reseta
                 $scope.filtro.filial = null;
-                // Fecha o alert
-                $scope.hideProgress(divPortletBodyFiltrosPos);
                 // Busca adquirentes
-                if(buscarAdquirentes) buscaAdquirentes();
+                if(buscarAdquirentes) buscaAdquirentes(true);
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
@@ -159,7 +158,7 @@ angular.module("card-services-relatorios", [])
       * Selecionou uma filial
       */
     $scope.alterouFilial = function(){
-        console.log($scope.filtro.filial);    
+        //console.log($scope.filtro.filial);    
     };
     
                                                                                          
@@ -167,8 +166,9 @@ angular.module("card-services-relatorios", [])
     /**
       * Busca as adquirentes
       */
-    var buscaAdquirentes = function(){
-       $scope.showProgress(divPortletBodyFiltrosPos);    
+    var buscaAdquirentes = function(progressEstaAberto){
+ 
+       if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos);    
         
        var filtros = undefined;
 
@@ -182,12 +182,8 @@ angular.module("card-services-relatorios", [])
                 $scope.adquirentes = dados.Registros;
                 // Reseta
                 $scope.filtro.adquirente = null;
-                // Fecha o alert
-                $scope.hideProgress(divPortletBodyFiltrosPos);
                 // Busca bandeiras
-                buscaBandeiras();
-                // Busca terminais lógicos
-                buscaTerminaisLogicos();
+                $scope.hideProgress(divPortletBodyFiltrosPos);
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
@@ -199,9 +195,15 @@ angular.module("card-services-relatorios", [])
       * Selecionou uma adquirente
       */
     $scope.alterouAdquirente = function(){
-        console.log($scope.filtro.adquirente); 
-        buscaBandeiras();
-        buscaTerminaisLogicos();
+        //console.log($scope.filtro.adquirente); 
+        if($scope.filtro.adquirente !== null){
+            buscaBandeiras();
+            buscaTerminaisLogicos();
+        }else{
+            // Só exibe filtro de bandeiras e terminais lógicos se existir uma adquirentes válida selecionada
+            $scope.filtro.bandeira = $scope.filtro.terminallogico = null;
+            $scope.bandeiras = $scope.terminais = [];
+        }
     };
                 
                                                  
@@ -209,8 +211,9 @@ angular.module("card-services-relatorios", [])
     /**
       * Busca as bandeiras
       */                                             
-    var buscaBandeiras = function(){
-       $scope.showProgress(divPortletBodyFiltrosPos);    
+    var buscaBandeiras = function(progressEstaAberto){
+       
+       if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos);    
         
        var filtros = undefined;
 
@@ -224,7 +227,7 @@ angular.module("card-services-relatorios", [])
                 $scope.bandeiras = dados.Registros;
                 // Reseta
                 $scope.filtro.bandeira = null;
-                // Fecha o alert
+                // Esconde o progress
                 $scope.hideProgress(divPortletBodyFiltrosPos);
               },
               function(failData){
@@ -237,7 +240,7 @@ angular.module("card-services-relatorios", [])
       * Selecionou uma bandeira
       */
     $scope.alterouBandeira = function(){
-        console.log($scope.filtro.bandeira);    
+        //console.log($scope.filtro.bandeira);    
     }; 
                                                  
                                                  
@@ -276,7 +279,7 @@ angular.module("card-services-relatorios", [])
               });     
     };                                             
     $scope.alterouTerminalLogico = function(){
-        console.log($scope.filtro.terminallogico);
+        //console.log($scope.filtro.terminallogico);
         // Rebusca
     };
       
@@ -294,7 +297,7 @@ angular.module("card-services-relatorios", [])
            if($scope.tabIs(0)) $scope.filtro.terminal.pagina = pagina;
            else if($scope.tabIs(1)) $scope.filtro.sintetico.pagina = pagina;
            else if(tabIs(2)) $scope.filtro.analitico.pagina = pagina;
-           //$scope.buscaUsuarios(); 
+           alteraFiltroDeBusca();
        }
        $scope.atualizaPaginaDigitada();    
     };
@@ -337,11 +340,7 @@ angular.module("card-services-relatorios", [])
       * Notifica que o total de itens por página foi alterado
       */                                            
     $scope.alterouItensPagina = function(){
-       //console.log($scope.filtro.itens_pagina);
-        if($scope.tabIs(0)){ 
-            if($scope.relatorio.terminal.length > 0) buscaRelatorioTerminal();
-        }
-        //else ...
+        alteraFiltroDeBusca();
     };                                             
                                                  
     
@@ -352,10 +351,7 @@ angular.module("card-services-relatorios", [])
     $scope.setTab = function(tab){
         if(typeof tab === 'number' && tab >= 0 && tab < 3){ 
             $scope.tab = tab;
-            // Nova busca?
-            if(tab === 0){
-                if($scope.relatorio.terminal.length == 0) buscaRelatorioTerminal();
-            }//else if(tab === 1) // ....
+            alteraFiltroDeBusca();
         }
     }
     /**
@@ -368,10 +364,44 @@ angular.module("card-services-relatorios", [])
     
     
     // BUSCA
+    var alteraFiltroDeBusca = function(){
+        if($scope.grupoempresa){
+            // Nova busca?
+            if($scope.tabIs(0)){
+                if($scope.relatorio.terminal.length == 0 && 
+                   ($scope.relatorio.sintetico.length > 0 ||
+                    $scope.relatorio.analitico.length > 0)) buscaRelatorioTerminal();
+            }//else if(tab === 1) // ....
+        }    
+    };
+    
+    
     $scope.buscaRelatorio = function(){
-        // nova busca
-        // if(tab ......
-        buscaRelatorioTerminal();
+        // Avalia se há um grupo empresa selecionado
+        if(!$scope.grupoempresa){
+            $scope.showModalAlerta('Por favor, selecione um grupo empresa', 'Atos Capital', 'OK', 
+                                   function(){
+                                         $timeout(function(){$scope.setVisibilidadeBoxGrupoEmpresa(true);}, 300);
+                                    }
+                                  );
+            return;   
+        }
+        // Intervalo de data
+        if($scope.filtro.datamax){
+            var timeDiff = Math.abs($scope.filtro.datamax.getTime() - $scope.filtro.datamin.getTime());
+            var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+            if(diffDays > 30){
+                var periodo = diffDays <= 366 ? diffDays + ' dias' : 'mais de um ano';
+                $scope.showModalAlerta('Por favor, selecione um intervalo de data de no máximo 30 dias. (Sua seleção consta ' + periodo + ')', 'Atos Capital', 'OK', 
+                                   function(){
+                                         $timeout(function(){$scope.exibeCalendarioDataMax();}, 300);
+                                    }
+                                  );
+                return; 
+            }
+        }
+        // Nova busca
+        if($scope.tabIs(0)) buscaRelatorioTerminal();
     };
                                                  
     // TERMINAL LÓGICO
@@ -395,9 +425,10 @@ angular.module("card-services-relatorios", [])
             .then(function(dados){
                 // Reseta os valores totais
                 $scope.total.terminal.totalTransacoes = $scope.total.terminal.valorBruto = 0;
-                // Recebe os dados
+                // Obtém os dados
                 $scope.relatorio.terminal = dados.Registros;
-                // Set valores
+           
+                // Set valores de exibição
                 $scope.filtro.terminal.total_registros = dados.TotalDeRegistros;
                 $scope.filtro.terminal.total_paginas = Math.ceil($scope.filtro.terminal.total_registros / $scope.filtro.itens_pagina);
                 var registroInicial = ($scope.filtro.terminal.pagina - 1)*$scope.filtro.itens_pagina + 1;
@@ -408,9 +439,15 @@ angular.module("card-services-relatorios", [])
                 // Verifica se a página atual é maior que o total de páginas
                 if($scope.filtro.terminal.pagina > $scope.filtro.terminal.total_paginas)
                     setPagina(1); // volta para a primeira página e refaz a busca
-                // Reseta os outros
+           
+                // Reseta os outros para forçar uma nova busca
                 $scope.relatorio.analitico = $scope.relatorio.sintetico = [];
-                // Fecha o alert
+                $scope.filtro.analitico.pagina = $scope.filtro.sintetico.pagina = 1;
+                $scope.filtro.analitico.total_registros = $scope.filtro.sintetico.total_registros = 0;
+                $scope.filtro.analitico.faixa_registros = $scope.filtro.sintetico.faixa_registros = '0-0';
+                $scope.filtro.analitico.total_paginas = $scope.filtro.sintetico.total_paginas = 0;
+           
+                // Fecha os progress
                 $scope.hideProgress(divPortletBodyFiltrosPos);
                 $scope.hideProgress(divPortletBodyRelatorioPos);
               },

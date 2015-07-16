@@ -118,7 +118,8 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
  Em caso de sucesso da validação do token, é esperado um objeto JSON do server com a seguinte estrutura:
  - nome (OB) : nome do usuário
  - token (OB) : token validado => atualiza valor na local storage
- - id_grupo (OP_A) : indica qual grupo empresa o usuário está administrando
+ - id_grupo (OB) : indica qual grupo empresa o usuário está associado
+ - filtro_empresa (OP_A) : indica se o usuário pode usar o filtro de empresa ("catraca")
  - controllers (OP) : array que contém os serviços o usuário tem acesso
    * ds_controller (OB) : titulo do controller ('Card Services', 'Tax Services', 'Administrativo', ...)
    * id_controller (OB) : id do controller

@@ -59,17 +59,17 @@
                                         <th width="10%" tabindex="1" 
                                             aria-controls="datatable_ajax" 
                                             rowspan="1" colspan="1">
-                                             Filiais 
+                                             Filial 
                                         </th>
                                         <th width="10%" tabindex="2" 
                                             aria-controls="datatable_ajax" 
                                             rowspan="1" colspan="1">
-                                             Adquirentes
+                                             Adquirente
                                         </th>
                                         <th width="10%" tabindex="3" 
                                             aria-controls="datatable_ajax" 
                                             rowspan="1" colspan="1">
-                                             Bandeiras
+                                             Bandeira
                                         </th>
                                         <!--th width="10%" tabindex="4" 
                                             aria-controls="datatable_ajax" 
@@ -79,7 +79,7 @@
                                         <th width="10%" tabindex="5" 
                                             aria-controls="datatable_ajax" 
                                             rowspan="1" colspan="1">
-                                             Ações
+                                             Ações de filtro
                                         </th>
                                     </tr>
                                     <!-- CONTEUDO DO FILTRO -->
@@ -111,8 +111,7 @@
                                                     </button>
                                                 </span>
                                             </div>
-                                            <div class="input-group date date-picker margin-bottom-5" 
-                                                 data-date-format="dd/mm/yyyy">
+                                            <div class="input-group"> <!--  date date-picker margin-bottom-5" -->
                                                 <input type="text" 
                                                        class="form-control form-filter input-sm" 
                                                        readonly="" 
@@ -140,31 +139,49 @@
                                             </div>                                            
                                         </td>
                                         <!-- FILIAIS -->
-                                        <td rowspan="1" colspan="1">
+                                        <td rowspan="1" colspan="1" style="text-align: center">
                                             <select class="form-control form-filter input-sm"
+                                                    ng-disabled="filiais.length == 0"
                                                     ng-model="filtro.filial"
                                                     ng-change="alterouFilial()"
                                                     ng-options="filial as filial.ds_fantasia for filial in filiais">
                                                 <option value="">Todas</option>
                                             </select>
+                                            <i class="fa fa-question-circle"
+                                               ng-show="!grupoempresa"
+                                               popover-placement="bottom"
+                                               popover="É necessário selecionar uma empresa"
+                                               popover-trigger="mouseenter"></i>
                                         </td>
                                         <!-- ADQUIRENTES -->
-                                        <td rowspan="1" colspan="1">
+                                        <td rowspan="1" colspan="1" style="text-align: center">
                                             <select class="form-control form-filter input-sm"
+                                                    ng-disabled="adquirentes.length == 0"
                                                     ng-model="filtro.adquirente"
                                                     ng-change="alterouAdquirente()"
                                                     ng-options="adquirente as adquirente.nmOperadora for adquirente in adquirentes">
                                                 <option value="">Todas</option>
                                             </select>
+                                            <i class="fa fa-question-circle"
+                                               ng-show="!grupoempresa"
+                                               popover-placement="bottom"
+                                               popover="É necessário selecionar uma empresa"
+                                               popover-trigger="mouseenter"></i>
                                         </td>
                                         <!-- BANDEIRAS -->
-                                        <td rowspan="1" colspan="1">
+                                        <td rowspan="1" colspan="1" style="text-align: center">
                                             <select class="form-control form-filter input-sm"
+                                                    ng-disabled="bandeiras.length == 0"
                                                     ng-model="filtro.bandeira"
                                                     ng-change="alterouBandeira()"
                                                     ng-options="bandeira as bandeira.desBandeira for bandeira in bandeiras">
                                                 <option value="">Todas</option>
                                             </select>
+                                            <i class="fa fa-question-circle"
+                                               ng-show="grupoempresa && filtro.adquirente === null"
+                                               popover-placement="bottom"
+                                               popover="É necessário selecionar uma adquirente"
+                                               popover-trigger="mouseenter"></i>
                                         </td>
                                         <!-- STATUS -->
                                         <!--td rowspan="1" colspan="1">
@@ -305,21 +322,31 @@
                             </div>
                             <!-- FILTRO DE TERMINAL LÓGICO -->
                             <div class="col-md-5 col-sm-12">
-                                <div class="dataTables_filter"> <!--ng-class="{'element-hidden' : tabIs(1)}"-->
+                                <div class="dataTables_filter" style="margin-right: 10px"> <!--ng-class="{'element-hidden' : tabIs(1)}"-->
+                                    <label>
+                                        <i class="fa fa-question-circle"
+                                           ng-show="grupoempresa && filtro.adquirente === null"
+                                           popover-placement="bottom"
+                                           popover="É necessário selecionar uma adquirente"
+                                           popover-trigger="mouseenter"></i>
+                                    </label>
                                     <label>
                                         <select class="form-control form-filter input-sm"
                                                 ng-hide="buscandoTerminaisLogicos"
+                                                ng-disabled="terminais.length == 0"
                                                 ng-model="filtro.terminallogico"
                                                 ng-change="alterouTerminalLogico()"
                                                 ng-options="terminal as terminal.dsTerminalLogico for terminal in terminais">
-                                                <option value="">Todas</option>
+                                                <option value="">Todos</option>
                                         </select>
+                                    </label>
+                                    <label>
                                         <img ng-src="../img/loading-atos.gif" 
                                              ng-show="buscandoTerminaisLogicos"
                                              style="display:inline; padding: 0px 40px !important; margin-top: 0px;"/>
                                     </label>
                                     <label>
-                                        <span class="seperator"></span>Terminal Lógico 
+                                        <span class="seperator"></span>Terminal  
                                     </label>
                                 </div>
                             </div>

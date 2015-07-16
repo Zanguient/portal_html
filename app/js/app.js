@@ -664,7 +664,7 @@ angular.module("AtosCapital", ['ui.router',
         
         // Verifica se estava administrando algum grupo empresa
         //if(data.id_grupo) empresaId = servico.id_grupo;
-        if($scope.PERMISSAO_ADMINISTRATIVO && data.id_grupo) obtemGrupoEmpresa(data.id_grupo);
+        if($scope.PERMISSAO_ADMINISTRATIVO && data.id_grupo && data.id_grupo !== -1) obtemGrupoEmpresa(data.id_grupo);
         
         // Go Home
         //if(typeof $scope.goHome == 'function') $scope.goHome();
@@ -773,8 +773,20 @@ angular.module("AtosCapital", ['ui.router',
               $scope.hideProgress();
             });
     };
+     
                             
     // GRUPO EMPRESA
+    /**
+      * Altera a visibilidade
+      */
+    $scope.setVisibilidadeBoxGrupoEmpresa = function(visivel){
+        if($scope.PERMISSAO_ADMINISTRATIVO){
+            if(visivel){ 
+                $('#admBuscaGrupoEmpresa').parent().addClass('open'); 
+                $window.scrollTo(0, 0); // scroll to top
+            }else $('#admBuscaGrupoEmpresa').parent().removeClass('open');
+        }
+    };
                             
     /**
       * Reporta se está em progresso de autenticação
@@ -828,7 +840,7 @@ angular.module("AtosCapital", ['ui.router',
         $scope.grupoempresa = grupoempresa;
         $scope.gempresa = null; 
         // Remove da visão a tela de busca do grupo empresa
-        $('#admBuscaGrupoEmpresa').parent().removeClass('open');
+        $scope.setVisibilidadeBoxGrupoEmpresa(false);
         // Notifica
         $scope.$broadcast("alterouGrupoEmpresa"); //*/
         //associaUsuarioAGrupoEmpresa(grupoempresa.id_grupo, function(dados){ $scope.grupoempresa = grupoempresa; });
@@ -854,7 +866,7 @@ angular.module("AtosCapital", ['ui.router',
                 // Reinicia o valor do model
                 $scope.gempresa = null; 
                 // Remove da visão a tela de busca do grupo empresa
-                $('#admBuscaGrupoEmpresa').parent().removeClass('open');
+                $scope.setVisibilidadeBoxGrupoEmpresa(false);
                 // Notifica
                 $scope.$broadcast("alterouGrupoEmpresa");
                 // Remove o progress
@@ -947,7 +959,9 @@ angular.module("AtosCapital", ['ui.router',
         $scope.alerta.titulo = titulo ? titulo : 'Info';
         $scope.alerta.mensagem = mensagem ? mensagem : 'Mensagem';
         $scope.alerta.textoOk = textoOk ? textoOk : 'Ok';
-        $scope.alerta.funcaoOk = typeof funcaoOk === 'function' ? funcaoOk : function(){fechaModalAlerta()};
+        $scope.alerta.funcaoOk = typeof funcaoOk === 'function' ? 
+                                    function(){funcaoOk(); fechaModalAlerta()}  : 
+                                    function(){fechaModalAlerta()};
         // Exibe o modal
         $('#modalAlerta').modal('show');
         if(!$scope.$$phase) $scope.$apply();
