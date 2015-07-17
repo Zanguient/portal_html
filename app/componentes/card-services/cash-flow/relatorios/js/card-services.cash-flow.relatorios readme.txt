@@ -118,8 +118,9 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 							}
 			 ],
 			Totais : {
+			            valorBruto : double,
 						valorParcelaBruta : double,
-						valorParcelaLiquida" : double,
+						valorParcelaLiquida : double,
 						valorDescontado : double
 					  }		
  

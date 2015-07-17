@@ -437,7 +437,7 @@ angular.module("card-services-cash-flow-relatorios", [])
            
        $webapi.get($apis.getUrl($apis.pos.recebimentoparcela, 
                                 [$scope.token, 9, 
-                                 $campos.pos.recebimentoparcela.bandeira + $campos.pos.bandeirapos.id - 100, 0, 
+                                 $campos.pos.recebimentoparcela.bandeira + $campos.pos.bandeirapos.desBandeira - 100, 0, 
                                  $scope.filtro.itens_pagina, $scope.filtro.sintetico.pagina],
                                 filtros)) 
             .then(function(dados){
@@ -538,7 +538,8 @@ angular.module("card-services-cash-flow-relatorios", [])
                 // Obtém os dados
                 $scope.relatorio.analitico = dados.Registros;
                 // Obtém os totais
-                $scope.total.analitico.valorBrutoFiltrado = dados.Totais.valorParcelaBruta;
+                $scope.total.analitico.valorParcelaFiltrado = dados.Totais.valorParcelaBruta;
+                $scope.total.analitico.valorBrutoFiltrado = dados.Totais.valorBruto;
                 $scope.total.analitico.valorDescontadoFiltrado = dados.Totais.valorDescontado;
                 $scope.total.analitico.valorLiquidoFiltrado = dados.Totais.valorParcelaLiquida;
            
