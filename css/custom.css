@@ -148,6 +148,13 @@ margin-top:170px;
  text-align: center;
 }
 
+.conteudoRelatorioAnaliticoCash{
+    margin-top: 20px;
+    border-bottom: 1px solid #EAEAEA;    
+}
+
+
+
 .cuponAzulConciliacaoVendas{
     background-color: #eef7fb;
     border-color: #a6e1ec;
@@ -190,6 +197,11 @@ margin-top:170px;
     border-bottom:1px  solid #eaeaea;
     font-size: 15px;
     
+}
+
+.dadosRelatorioAnaliticoCash{
+    font-weight: bolder;
+    margin-right: 10px;
 }
 
 .form-controlModuloseFuncionalidades{
