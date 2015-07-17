@@ -346,14 +346,29 @@
                                                                 <th tabindex="1" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 237px;">
-                                                                    Total de Transações
+                                                                    Valor Bruto
                                                                 </th>
                                                                 <th tabindex="2" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 128px;">
-                                                                    Valor Bruto
+                                                                    style="width: 237px;">
+                                                                    Valor Parcela
                                                                 </th>
                                                                 <th tabindex="3" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 237px;">
+                                                                    Valor Líquido
+                                                                </th>
+                                                                <th tabindex="4" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 237px;">
+                                                                    Valor Descontado
+                                                                </th>                                                        
+                                                                <th tabindex="5" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 237px;">
+                                                                    Total de Transações
+                                                                </th>                                                       
+                                                                <th tabindex="6" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 163px;">
                                                                     Detalhar Bandeira
@@ -367,14 +382,26 @@
                                                                 <td>
                                                                      {{relsintetico.bandeira.desBandeira}}
                                                                 </td>
+                                                                <!-- VALOR BRUTO -->
+                                                                <td>
+                                                                     {{relsintetico.bandeira.desBandeira}}
+                                                                </td>
+                                                                <!-- VALOR PARCELA -->
+                                                                <td>
+                                                                     {{relsintetico.bandeira.desBandeira}}
+                                                                </td>
+                                                                <!-- VALOR LÍQUIDO -->
+                                                                <td>
+                                                                     {{relsintetico.bandeira.desBandeira}}
+                                                                </td>
+                                                                <!-- VALOR DESCONTADO -->
+                                                                <td>
+                                                                     {{relsintetico.bandeira.desBandeira}}
+                                                                </td>
                                                                 <!-- TOTAL DE TRANSAÇÕES -->
                                                                 <td ng-init="total.sintetico.totalTransacoes = total.sintetico.totalTransacoes + relsintetico.totalTransacoes">
                                                                      {{relsintetico.totalTransacoes}} 
-                                                                </td>
-                                                                <!-- VALOR BRUTO -->
-                                                                <td ng-init="total.sintetico.valorBruto = total.sintetico.valorBruto + relsintetico.valorBruto">
-                                                                     {{relsintetico.valorBruto | currency:'R$'}}
-                                                                </td>
+                                                                </td>                                                      
                                                                 <!-- BOTÃO DETALHAR -->
                                                                 <td class="center btnacoes">
                                                                     <div class="btn-group">
@@ -424,28 +451,53 @@
                                                                 <th tabindex="0" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 237px;">
-                                                                    Data da Venda
+                                                                    Bandeira
                                                                 </th>
                                                                 <th tabindex="1" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 237px;">
-                                                                    Bandeira
+                                                                    Data da Venda
                                                                 </th>
                                                                 <th tabindex="2" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 128px;">
-                                                                    NSU
+                                                                    Data de Recebimento
                                                                 </th>
                                                                 <th tabindex="3" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 128px;">
-                                                                    Cod. Autorizador
+                                                                   Resumo Vendas
                                                                 </th>
                                                                 <th tabindex="4" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 163px;">
-                                                                    Valor Bruto
+                                                                    NSU
                                                                 </th> 
+                                                                <th tabindex="5" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 163px;">
+                                                                    Parcela
+                                                                </th>
+                                                                <th tabindex="6" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 163px;">
+                                                                    Valor Parcela
+                                                                </th>
+                                                                <th tabindex="7" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 163px;">
+                                                                    Valor Bruto
+                                                                </th>
+                                                                <th tabindex="8" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 163px;">
+                                                                    Valor Descontado
+                                                                </th>
+                                                                <th tabindex="9" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 163px;">
+                                                                    Valor Líquido
+                                                                </th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -455,33 +507,61 @@
                                                                 <td>
                                                                      {{relanalitico.cnpj}}
                                                                 </td>
-                                                                <!-- DATA DA VENDA -->
-                                                                <td ng-bind="getDataString(relanalitico.dtaVenda)">
-                                                                </td>
+                                                                
                                                                 <!-- BANDEIRA -->
                                                                 <td>
                                                                      {{relanalitico.desBandeira}}
+                                                                </td>
+                                                                <!-- DATA DA VENDA -->
+                                                                <td ng-bind="getDataString(relanalitico.dtaVenda)">
+                                                                </td>
+                                                                <!-- DATA DE RECEBIMENTO -->
+                                                                <td ng-bind="getDataString(relanalitico.dtaVenda)">
+                                                                </td>
+                                                                <!-- RESUMO VENDAS -->
+                                                                <td ng-bind="getDataString(relanalitico.dtaVenda)">
                                                                 </td>
                                                                 <!-- NSU -->
                                                                 <td>
                                                                      {{relanalitico.nsu}}
                                                                 </td>
-                                                                <!-- COD. AUTORIZADOR -->
-                                                                <td>
-                                                                     {{relanalitico.cdAutorizador}} 
+                                                                <!-- PARCELA -->
+                                                                <td ng-bind="getDataString(relanalitico.dtaVenda)">
+                                                                </td>
+                                                                <!-- VALOR PARCELA -->
+                                                                <td ng-bind="getDataString(relanalitico.dtaVenda)">
                                                                 </td>
                                                                 <!-- VALOR BRUTO -->
+                                                                <td ng-bind="getDataString(relanalitico.dtaVenda)">
+                                                                </td>
+                                                                <!-- VALOR DESCONTADO -->
+                                                                <td ng-bind="getDataString(relanalitico.dtaVenda)">
+                                                                </td>
+                                                                
+                                                                <!-- VALOR LÍQUIDO -->
                                                                 <td ng-init="total.analitico.valorBruto = total.analitico.valorBruto + relanalitico.valorVendaBruta">
                                                                      {{relanalitico.valorVendaBruta | currency:'R$'}}
                                                                 </td>
                                                             </tr>
                                                             <tr role="row" class="odd linhaTolalRelatorios">
-                                                                <td colspan="4">
+                                                                <td colspan="5">
                                                                      Total Exibido
-                                                                </td>                                                     
+                                                                </td>  
                                                                 <td>
-                                                                     {{total.analitico.valorBruto | currency:'R$'}}
-                                                                </td> 
+                                                                  parcela  
+                                                                </td>
+                                                                <td>
+                                                                  valor parcela  
+                                                                </td>
+                                                                <td>
+                                                                  {{total.analitico.valorBruto | currency:'R$'}}    
+                                                                </td>
+                                                                <td>
+                                                                   valor descontado 
+                                                                </td>
+                                                                <td>
+                                                                   valor líquido 
+                                                                </td>                                                        
                                                             </tr>
                                                         </tbody>    
                                                     </table>
