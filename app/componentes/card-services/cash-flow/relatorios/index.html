@@ -346,7 +346,7 @@
                                                                 <th tabindex="1" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 237px;">
-                                                                    Valor Bruto
+                                                                    Total de Transações
                                                                 </th>
                                                                 <th tabindex="2" 
                                                                     rowspan="1" colspan="1" 
@@ -356,7 +356,7 @@
                                                                 <th tabindex="3" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 237px;">
-                                                                    Valor Líquido
+                                                                    Valor Bruto
                                                                 </th>
                                                                 <th tabindex="4" 
                                                                     rowspan="1" colspan="1" 
@@ -366,7 +366,7 @@
                                                                 <th tabindex="5" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 237px;">
-                                                                    Total de Transações
+                                                                    Valor Líquido
                                                                 </th>                                                       
                                                                 <th tabindex="6" 
                                                                     rowspan="1" colspan="1" 
@@ -382,15 +382,15 @@
                                                                 <td>
                                                                      {{relsintetico.bandeira.desBandeira}}
                                                                 </td>
-                                                                <!-- VALOR BRUTO -->
-                                                                <td>
-                                                                     {{relsintetico.bandeira.desBandeira}}
-                                                                </td>
+                                                                <!-- TOTAL DE TRANSAÇÕES -->
+                                                                <td ng-init="total.sintetico.totalTransacoes = total.sintetico.totalTransacoes + relsintetico.totalTransacoes">
+                                                                     {{relsintetico.totalTransacoes}} 
+                                                                </td>  
                                                                 <!-- VALOR PARCELA -->
                                                                 <td>
                                                                      {{relsintetico.bandeira.desBandeira}}
                                                                 </td>
-                                                                <!-- VALOR LÍQUIDO -->
+                                                                <!-- VALOR BRUTO -->
                                                                 <td>
                                                                      {{relsintetico.bandeira.desBandeira}}
                                                                 </td>
@@ -398,10 +398,10 @@
                                                                 <td>
                                                                      {{relsintetico.bandeira.desBandeira}}
                                                                 </td>
-                                                                <!-- TOTAL DE TRANSAÇÕES -->
-                                                                <td ng-init="total.sintetico.totalTransacoes = total.sintetico.totalTransacoes + relsintetico.totalTransacoes">
-                                                                     {{relsintetico.totalTransacoes}} 
-                                                                </td>                                                      
+                                                                <!-- VALOR LÍQUIDO -->
+                                                                <td>
+                                                                     {{relsintetico.bandeira.desBandeira}}
+                                                                </td>                                                   
                                                                 <!-- BOTÃO DETALHAR -->
                                                                 <td class="center btnacoes">
                                                                     <div class="btn-group">
@@ -414,7 +414,7 @@
                                                                     </div>
                                                                 </td> 
                                                             </tr>
-                                                            <tr role="row" class="odd linhaTolalRelatorios" 
+                                                            <tr role="row" class="odd linhaTotalRelatorios" 
                                                                 style="font-weight:bolder">
                                                                 <td>
                                                                      Total Exibido
@@ -422,8 +422,17 @@
                                                                 <td>
                                                                      {{total.sintetico.totalTransacoes}}
                                                                 </td>
+                                                                <td>  
+                                                                     parcela
+                                                                </td>
                                                                 <td>
                                                                      {{total.sintetico.valorBruto | currency:'R$'}}
+                                                                </td>
+                                                                <td>
+                                                                     descontado
+                                                                </td>
+                                                                <td>
+                                                                     liquido
                                                                 </td>
                                                                 <!-- BOTÃO DETALHAR -->
                                                                 <td>
@@ -443,11 +452,6 @@
                                                           role="grid">
                                                         <thead>
                                                             <tr role="row">
-                                                                <!--th tabindex="0" 
-                                                                    rowspan="1" colspan="1" 
-                                                                    style="width: 188px;">
-                                                                    CNPJ
-                                                                </th-->
                                                                 <th tabindex="0" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 237px;">
@@ -503,11 +507,6 @@
                                                         <tbody>
                                                             <tr role="row" class="odd"
                                                                 ng-repeat="relanalitico in relatorio.analitico">
-                                                                <!-- CNPJ -- >
-                                                                <td>
-                                                                     {{relanalitico.cnpj}}
-                                                                </td>
-                                                                
                                                                 <!-- BANDEIRA -->
                                                                 <td>
                                                                      {{relanalitico.desBandeira}}
@@ -516,52 +515,53 @@
                                                                 <td ng-bind="getDataString(relanalitico.dtaVenda)">
                                                                 </td>
                                                                 <!-- DATA DE RECEBIMENTO -->
-                                                                <td ng-bind="getDataString(relanalitico.dtaVenda)">
+                                                                <td ng-bind="getDataString(relanalitico.dtaRecebimento)">
                                                                 </td>
                                                                 <!-- RESUMO VENDAS -->
-                                                                <td ng-bind="getDataString(relanalitico.dtaVenda)">
+                                                                <td>
+                                                                    {{relanalitico.codResumoVenda}}
                                                                 </td>
                                                                 <!-- NSU -->
                                                                 <td>
                                                                      {{relanalitico.nsu}}
                                                                 </td>
                                                                 <!-- PARCELA -->
-                                                                <td ng-bind="getDataString(relanalitico.dtaVenda)">
+                                                                <td>
+                                                                    {{relanalitico.numParcela}}
                                                                 </td>
                                                                 <!-- VALOR PARCELA -->
-                                                                <td ng-bind="getDataString(relanalitico.dtaVenda)">
+                                                                <td ng-init="total.analitico.valorParcela = total.analitico.valorParcela + relanalitico.valorParcela">
+                                                                    {{relanalitico.valorParcela | currency:'R$'}}
                                                                 </td>
                                                                 <!-- VALOR BRUTO -->
-                                                                <td ng-bind="getDataString(relanalitico.dtaVenda)">
+                                                                <td ng-init="total.analitico.valorBruto = total.analitico.valorBruto + relanalitico.valorBruto">
+                                                                     {{relanalitico.valorBruto | currency:'R$'}}
                                                                 </td>
                                                                 <!-- VALOR DESCONTADO -->
-                                                                <td ng-bind="getDataString(relanalitico.dtaVenda)">
+                                                                <td ng-init="total.analitico.valorDescontado = total.analitico.valorDescontado + relanalitico.valorDescontado">
+                                                                    {{relanalitico.valorDescontado | currency:'R$'}}
                                                                 </td>
-                                                                
                                                                 <!-- VALOR LÍQUIDO -->
-                                                                <td ng-init="total.analitico.valorBruto = total.analitico.valorBruto + relanalitico.valorVendaBruta">
-                                                                     {{relanalitico.valorVendaBruta | currency:'R$'}}
+                                                                <td ng-init="total.analitico.valorLiquido = total.analitico.valorLiquido + relanalitico.valorLiquida">
+                                                                     {{relanalitico.valorLiquida | currency:'R$'}}
                                                                 </td>
                                                             </tr>
-                                                            <tr role="row" class="odd linhaTolalRelatorios">
-                                                                <td colspan="5">
-                                                                     Total Exibido
+                                                            <tr role="row" class="odd linhaTotalRelatorios">
+                                                                <td colspan="6">
+                                                                    Total Exibido
                                                                 </td>  
                                                                 <td>
-                                                                  parcela  
+                                                                    {{total.analitico.valorParcela  | currency:'R$'}}  
                                                                 </td>
                                                                 <td>
-                                                                  valor parcela  
+                                                                    {{total.analitico.valorBruto | currency:'R$'}}    
                                                                 </td>
                                                                 <td>
-                                                                  {{total.analitico.valorBruto | currency:'R$'}}    
+                                                                    {{total.analitico.valorDescontado | currency:'R$'}} 
                                                                 </td>
                                                                 <td>
-                                                                   valor descontado 
-                                                                </td>
-                                                                <td>
-                                                                   valor líquido 
-                                                                </td>                                                        
+                                                                    {{total.analitico.valorLiquido | currency:'R$'}} 
+                                                                </td>                                                    
                                                             </tr>
                                                         </tbody>    
                                                     </table>

@@ -145,7 +145,8 @@ angular.module('webapi', [ ])
             valorDescontado : 105,
             // Relacionamento
             empresa : 300,
-            operadora : 400
+            operadora : 400,
+            bandeira : 500
         },
         terminallogico : {
             idTerminalLogico: 100,
