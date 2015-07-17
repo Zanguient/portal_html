@@ -344,7 +344,7 @@ angular.module("card-services-cash-flow-relatorios", [])
     var obtemFiltroDeBusca = function(){
        var filtros = undefined;
        // Data
-       var filtroData = {id: $campos.pos.recebimento.dtaVenda,
+       var filtroData = {id: $campos.pos.recebimentoparcela.dtaRecebimento,
                          valor: $scope.getFiltroData($scope.filtro.datamin)}; 
        if($scope.filtro.datamax)
            filtroData.valor = filtroData.valor + '|' + $scope.getFiltroData($scope.filtro.datamax);
@@ -352,21 +352,21 @@ angular.module("card-services-cash-flow-relatorios", [])
         
        // Filial
        if($scope.filtro.filial !== null){
-           var filtroFilial = {id: $campos.pos.recebimento.cnpj, 
+           var filtroFilial = {id: $campos.pos.recebimentoparcela.empresa + $campos.cliente.empresa.nu_cnpj - 100, 
                                valor: $scope.filtro.filial.nu_cnpj};
            filtros.push(filtroFilial);  
        }
         
        // Adquirente
        if($scope.filtro.adquirente !== null){
-           var filtroAdquirente = {id: $campos.pos.recebimento.operadora + $campos.pos.operadora.id - 100, 
+           var filtroAdquirente = {id: $campos.pos.recebimentoparcela.operadora + $campos.pos.operadora.id - 100, 
                                    valor: $scope.filtro.adquirente.id};
            filtros.push(filtroAdquirente);
        } 
         
        // Bandeira
        if($scope.filtro.bandeira !== null){
-           var filtroBandeira = {id: $campos.pos.recebimento.idBandeira, 
+           var filtroBandeira = {id: $campos.pos.recebimentoparcela.bandeira + $campos.pos.bandeirapos.id - 100, 
                                  valor: $scope.filtro.bandeira.id};
            filtros.push(filtroBandeira);
        }
@@ -423,7 +423,7 @@ angular.module("card-services-cash-flow-relatorios", [])
       * Busca o relatório agrupado por bandeira
       */
     var buscaRelatorioSintetico = function(resetaRelatorioAnalitico){
-       $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen    
+       /*$scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen    
        $scope.showProgress(divPortletBodyRelatorioPos);
         
        // Filtros    
@@ -471,7 +471,7 @@ angular.module("card-services-cash-flow-relatorios", [])
                  else $scope.showAlert('Houve uma falha ao obter relatório sintético (' + failData.status + ')', true, 'danger', true);
                  $scope.hideProgress(divPortletBodyFiltrosPos);
                  $scope.hideProgress(divPortletBodyRelatorioPos);
-              });       
+              });   */    
     }
     
     
@@ -512,8 +512,8 @@ angular.module("card-services-cash-flow-relatorios", [])
        // Filtros    
        var filtros = obtemFiltroDeBusca();
            
-       $webapi.get($apis.getUrl($apis.pos.recebimento, 
-                                [$scope.token, 5, $campos.pos.recebimento.dtaVenda, 0, 
+       $webapi.get($apis.getUrl($apis.pos.recebimentoparcela, 
+                                [$scope.token, 8, $campos.pos.recebimentoparcela.dtaRecebimento, 0, 
                                  $scope.filtro.itens_pagina, $scope.filtro.analitico.pagina],
                                 filtros)) 
             .then(function(dados){

@@ -22,6 +22,7 @@ angular.module("AtosCapital", ['ui.router',
                                'administrativo-acesso-usuarios',
                                'administrativo-empresas',
                                'administrativo-filiais',
+                               'administrativo-filiais-cadastro',
                                'dashboard', 
                                'card-services-cash-flow-relatorios',
                                'card-services-conciliacao-vendas',
@@ -61,17 +62,6 @@ angular.module("AtosCapital", ['ui.router',
         }
       })
     
-      .state('administrativo-gestao-acessos-usuarios-cadastro', {
-        title: 'Administrativo',
-        url: prefixo + 'administrativo/cadastro-usuarios',
-        params: {usuario: null},
-        templateUrl: 'componentes/administrativo/gestao-acessos/usuarios/views/cadastro/index.html',
-        controller: "administrativo-usuarios-cadastroCtrl",
-        data: {
-            titulo: 'Administrativo'
-        }
-      })
-    
       .state('administrativo-gestao-acessos-privilegios', {
         url: prefixo + 'administrativo/privilegios',
         templateUrl: 'componentes/administrativo/gestao-acessos/privilegios/index.html',
@@ -99,6 +89,16 @@ angular.module("AtosCapital", ['ui.router',
         }
       })
     
+      .state('administrativo-gestao-acessos-usuarios-cadastro', {
+        url: prefixo + 'administrativo/cadastro-usuarios',
+        params: {usuario: null},
+        templateUrl: 'componentes/administrativo/gestao-acessos/usuarios/views/cadastro/index.html',
+        controller: "administrativo-usuarios-cadastroCtrl",
+        data: {
+            titulo: 'Administrativo'
+        }
+      })
+    
       .state('administrativo-gestao-empresas-empresas', {
         url: prefixo + 'administrativo/empresas',
         templateUrl: 'componentes/administrativo/gestao-empresas/empresas/index.html',
@@ -112,6 +112,16 @@ angular.module("AtosCapital", ['ui.router',
         url: prefixo + 'administrativo/filiais',
         templateUrl: 'componentes/administrativo/gestao-empresas/filiais/index.html',
         controller: "administrativo-filiaisCtrl",
+        data: {
+            titulo: 'Administrativo'
+        }
+      })
+    
+      .state('administrativo-gestao-empresas-filiais-cadastro', {
+        url: prefixo + 'administrativo/cadastro-filiais',
+        params: {empresa: null},
+        templateUrl: 'componentes/administrativo/gestao-empresas/filiais/views/cadastro/index.html',
+        controller: "administrativo-filiais-cadastroCtrl",
         data: {
             titulo: 'Administrativo'
         }
@@ -303,13 +313,19 @@ angular.module("AtosCapital", ['ui.router',
       */                        
     $scope.goAdministrativoEmpresas = function(params){
         $scope.go('administrativo-gestao-empresas-empresas', params);
-    };
+    };                    
     /**
       * Exibe como conteúdo a Filiais Gestão de Empresas, de Administrativo
       */                        
     $scope.goAdministrativoFiliais = function(params){
         $scope.go('administrativo-gestao-empresas-filiais', params);
-    };                       
+    };  
+    /**
+      * Exibe como conteúdo de cadastro de Filiais Gestão de Empresas, de Administrativo
+      */                        
+    $scope.goAdministrativoFiliaisCadastro = function(params){
+        $scope.go('administrativo-gestao-empresas-filiais-cadastro', params);
+    };                           
     /**
       * Exibe como conteúdo a Logs Acesso de Usuários, de Administrativo
       */                        
@@ -369,35 +385,35 @@ angular.module("AtosCapital", ['ui.router',
                 $scope.go('nao-autorizado');
             }
         }else if(url === $state.get('administrativo-gestao-acessos-privilegios').url){ 
-            // Gestão de Acesso > Usuários (cadastro ou não)
+            // Gestão de Acesso > Privilégios
             if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_PRIVILEGIOS){
                 // Não possui permissão!
                 event.preventDefault();
                 $scope.go('nao-autorizado');
             } 
         }else if(url === $state.get('administrativo-gestao-acessos-modulos-funcionalidades').url){ 
-            // Gestão de Acesso > Usuários (cadastro ou não)
+            // Gestão de Acesso > Módulos e Funcionalidades
             if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_MODULOS_FUNCIONALIDADES){
                 // Não possui permissão!
                 event.preventDefault();
                 $scope.go('nao-autorizado');
             }  
         }else if(url === $state.get('administrativo-gestao-empresas-empresas').url){ 
-            // Gestão de Acesso > Usuários (cadastro ou não)
+            // Gestão de Empresas > Empresas
             if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_EMPRESAS){
                 // Não possui permissão!
                 event.preventDefault();
                 $scope.go('nao-autorizado');
             }  
-        }else if(url === $state.get('administrativo-gestao-empresas-filiais').url){ 
-            // Gestão de Acesso > Usuários (cadastro ou não)
+        }else if(url === $state.get('administrativo-gestao-empresas-filiais').url || url === $state.get('administrativo-gestao-empresas-filiais-cadastro').url){ 
+            // Gestão de Empresas > Filiais (cadastro ou não)
             if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_FILIAIS){
                 // Não possui permissão!
                 event.preventDefault();
                 $scope.go('nao-autorizado');
             }  
         }else if(url === $state.get('administrativo-logs-acesso-usuarios').url){ 
-            // Gestão de Acesso > Usuários (cadastro ou não)
+            // Logs > Acesso de usuários
             if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_LOGS || !$scope.PERMISSAO_ADMINISTRATIVO_LOGS_ACESSO_USUARIOS){
                 // Não possui permissão!
                 event.preventDefault();
@@ -411,12 +427,14 @@ angular.module("AtosCapital", ['ui.router',
                 $scope.go('nao-autorizado');
             }
         }else if(url === $state.get('card-services-cash-flow-relatorios').url){ 
+            // Card Services > Cash Flow > Relatórios
             if(!$scope.PERMISSAO_CARD_SERVICES || !$scope.PERMISSAO_CARD_SERVICES_CASH_FLOW || !$scope.PERMISSAO_CARD_SERVICES_CASH_FLOW_RELATORIOS){
                 // Não possui permissão!
                 event.preventDefault();
                 $scope.go('nao-autorizado');
             }
         }else if(url === $state.get('card-services-conciliacao-conciliacao-vendas').url){ 
+            // Card Services > Conciliação > Conciliação de Vendas
             if(!$scope.PERMISSAO_CARD_SERVICES || !$scope.PERMISSAO_CARD_SERVICES_CONCILIACAO || !$scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_VENDAS){
                 // Não possui permissão!
                 event.preventDefault();
@@ -429,6 +447,7 @@ angular.module("AtosCapital", ['ui.router',
                 $scope.go('nao-autorizado');
             } 
         }else if(url === $state.get('card-services-consolidacao-relatorios').url){ 
+            // Card Services > Consolidação > Relatórios
             if(!$scope.PERMISSAO_CARD_SERVICES || !$scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO || !$scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_RELATORIOS){
                 // Não possui permissão!
                 event.preventDefault();
@@ -541,7 +560,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'PRIVILÉGIOS' : return state == 'privilegios';
             case 'MÓDULOS E FUNCIONALIDADES' : return state == 'modulos-funcionalidades';
             case 'EMPRESAS' : return state == 'empresas';
-            case 'FILIAIS' :  return state == 'filiais';  
+            case 'FILIAIS' :  return state == 'filiais' || state == 'cadastro-filiais';  
             case 'ACESSO DE USUÁRIOS' : return state == 'acesso-usuarios';    
             // Card Services
             case 'CONCILIAÇÃO DE VENDAS': return state == 'conciliacao-vendas';
@@ -671,7 +690,9 @@ angular.module("AtosCapital", ['ui.router',
             case $state.get('administrativo-gestao-empresas-empresas').url : 
                  $scope.goAdministrativoEmpresas(); break;   
             case $state.get('administrativo-gestao-empresas-filiais').url : 
-                 $scope.goAdministrativoFiliais(); break;     
+                 $scope.goAdministrativoFiliais(); break;   
+            case $state.get('administrativo-gestao-empresas-filiais-cadastro').url : 
+                $scope.goAdministrativoFiliaisCadastro(); break;    
             case $state.get('administrativo-logs-acesso-usuarios').url :
                  $scope.goAdministrativoAcessoUsuarios(); break;
             case $state.get('card-services-cash-flow-relatorios').url : 

@@ -58,7 +58,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				idGrupoEmpresa : int
 			  }
 			]	
-			Filtro de idGrupoEmpresa pode ser enviado ou não para filtrar as adquirentes por grupo empresa
+			Filtro de nu_cnpj deve ser enviado para ser exibido corretamente
 				
    * pos/bandeirapos
     - GET : listagem das bandeiras (coleção 0)
@@ -77,23 +77,8 @@ Além deles, é necessária a importação dos seguintes módulos externos.
            . Filial : cnpj   =>  300 + código do campo cnpj - 100
 		   . Adquirente : personalizado => 400 + código do campo id - 100
 		   . Bandeira : idBandeira
- 		   
-		-> TERMINAL LÓGICO (coleção 3) : ordenado por dsTerminalLogico
-			 [
-			    {
-					terminal : { idTerminalLogico : int,
-								 dsTerminalLogico : string
-							   },
-					bandeira : { id : int
-								 desBandeira : string
-							   },
-					idOperadora : int,
-                    totalTransacoes	: total,
-					valorBruto : valor
-				}
-			 ]
 			 
-		-> SINTÉTICO (coleção 4) : ordenado por desBandeira
+		-> SINTÉTICO (coleção 9 ?) : ordenado por desBandeira
 			 [
 			    {
 					bandeira : { id : int
@@ -105,15 +90,20 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				}
 			 ]
 
-       -> ANALÍTICO (coleção 5) : ordenado por dtVenda
+       -> ANALÍTICO (coleção 8) : ordenado por dtaVenda
 			 [
 			    {
 					cnpj : string,
+					desBandeira : string,
 					dtaVenda : date,
-					desBandeira : string
+					dtaRecebimento : date,
+					codResumoVenda : string
                     nsu	: string,
-					cdAutorizador : string,
-					valorVendaBruta : double
+					numParcela : string,
+					valorBruto : double,
+					valorParcela : double,
+					valorLiquida" : double,
+					valorDescontado : double
 				}
 			 ]			 
  
