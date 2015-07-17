@@ -103,6 +103,14 @@ margin-top:170px;
   padding-top: 5px;     
 }
 
+.cabecalhoEmpresas{
+    margin-bottom: 20px;
+    margin-top: 10px;
+    font-size: 15px;
+    font-weight: bolder;
+    text-align: left;
+}
+
 .colunasCenter{
   text-align: center;  
 }
@@ -127,6 +135,17 @@ margin-top:170px;
 
 .conteudoNavegacao{
   margin-top: -30px;
+}
+
+.conteudoEmpresas{
+    text-align: center;
+    margin:0 4px 10px 4px;
+    border-bottom: 1px solid #EAEAEA;
+    
+}
+
+.conteudoTabelas{
+ text-align: center;
 }
 
 .cuponAzulConciliacaoVendas{
@@ -159,6 +178,12 @@ margin-top:170px;
     margin-top:40px;      
 }
 
+.dadosEmpresa{
+    margin-bottom: 10px;
+    text-align: left;
+    
+}
+
 .dadosGetaoEmpresas{
     margin:20px 4px 0 4px;
     padding-bottom:20px;
@@ -183,8 +208,8 @@ margin-top:170px;
   z-index: 15000;
 }
 
-.linhaTolalRelatorios{
-  text-align: right;
+.linhaTotalRelatorios{
+  text-align: center;
   font-weight:bolder;    
 }
 
@@ -245,6 +270,14 @@ margin-top:170px;
 .titulosconteudos{
     font-weight: bolder; 
     margin-bottom:10px
+}
+
+.tituloEmpresa{
+    margin:0 4px 20px 4px;
+    font-size: 15px;
+    font-weight: bolder;
+    text-align: left;
+    border-bottom: 1px solid #EAEAEA;
 }
 
 .tituloFilial{

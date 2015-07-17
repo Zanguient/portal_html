@@ -24,7 +24,152 @@
         <div class="col-md-12">
             <!-- BEGIN TABLE PORTLET-->
             <div class="portlet light">
-						
+                <div class="portlet-title">
+                    <div class="caption">								
+                        <span class="caption-subject font-green-sharp bold uppercase">Filtros</span>						
+                    </div>                    
+                </div>
+                <div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">
+                    <div class="row">                       
+                        <div class="col-md-8 col-sm-12">
+                            <div class="dataTables_paginate paging_bootstrap_extended" id="datatable_ajax_paginate">
+                            </div>
+                            <div class="dataTables_info" id="datatable_ajax_info" role="status" aria-live="polite">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <div class="table-group-actions pull-right">
+                            <span> </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!--div class="table-scrollable"-->
+                    <div class="table-scrollable">
+                        <table class="table table-striped table-bordered table-hover dataTable no-footer" id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
+                            <thead>
+                                <tr role="row" class="heading">
+                                    <th width="15%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                         Data
+                                    </th>
+                                    <th width="10%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                         Filiais 
+                                    </th>
+                                    <th width="10%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                         Adquirentes
+                                    </th>
+                                    <th width="10%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                         Bandeiras
+                                    </th>
+                                    <th width="10%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                         Status
+                                    </th>
+                                    <th width="10%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                         Opções
+                                    </th>
+                                </tr>
+                                <tr role="row" class="filter">
+                                    <td rowspan="1" colspan="1">                                    
+                                        <div class="input-group date date-picker margin-bottom-5">
+                                            <!--input type="text" class="form-control form-filter input-sm" readonly name="order_date_from" placeholder="Início"-->
+                                            <input type="text" class="form-control form-filter input-sm" 
+                                                   readonly style="cursor: pointer"
+                                                   ng-click="exibeCalendarioDataMin($event)"
+                                                   placeholder="Início" 
+                                                   ng-model="datamin"
+                                                   ng-change="alterouDataMin()"
+                                                   datepicker-append-to-body=true
+                                                   datepicker-popup="dd MMMM yyyy"
+                                                   is-open="abrirCalendarioDataMin" 
+                                                   min-date="2000-01-01"
+                                                   ng-required="true" 
+                                                   show-button-bar="false"
+                                                   show-weeks="false" />
+                                            <span class="input-group-btn">
+                                            <button class="btn btn-sm default" type="button" ng-click="exibeCalendarioDataMin($event)"><i class="fa fa-calendar"></i></button>
+                                            </span>
+                                        </div>
+                                        <div class="input-group date date-picker margin-bottom-5" data-date-format="dd/mm/yyyy">
+                                            <input type="text" class="form-control form-filter input-sm" 
+                                                   readonly style="cursor: pointer" 
+                                                   ng-click="exibeCalendarioDataMax($event)"
+                                                   placeholder="Fim" 
+                                                   ng-model="datamax" 
+                                                   ng-change="alterouDataMax()"
+                                                   datepicker-popup="dd MMMM yyyy" 
+                                                   is-open="abrirCalendarioDataMax" 
+                                                   datepicker-append-to-body=true
+                                                   min-date="2000-01-01"
+                                                   ng-required="false" 
+                                                   current-text="Hoje" 
+                                                   clear-text="Limpar" 
+                                                   close-text="Fechar" 
+                                                   show-button-bar="true"
+                                                   show-weeks="false" />
+                                            <span class="input-group-btn">
+                                            <button class="btn btn-sm default" type="button" ng-click="exibeCalendarioDataMax($event)"><i class="fa fa-calendar"></i></button>
+                                            </span>
+                                        </div>                                            
+                                    </td>
+                                    <td rowspan="1" colspan="1">
+                                        <select name="order_status" class="form-control form-filter input-sm">
+                                            <option value="">Todas</option>
+                                            <option value="pending">Pending</option>
+                                            <option value="closed">Closed</option>
+                                            <option value="hold">On Hold</option>
+                                            <option value="fraud">Fraud</option>
+                                        </select>
+                                    </td>
+                                    <td rowspan="1" colspan="1">
+                                        <select name="order_status" class="form-control form-filter input-sm">
+                                            <option value="">Todas</option>
+                                            <option value="pending">Pending</option>
+                                            <option value="closed">Closed</option>
+                                            <option value="hold">On Hold</option>
+                                            <option value="fraud">Fraud</option>
+                                        </select>
+                                    </td>
+                                    <td rowspan="1" colspan="1">
+                                        <select name="order_status" class="form-control form-filter input-sm">
+                                            <option value="">Todas</option>
+                                            <option value="pending">Pending</option>
+                                            <option value="closed">Closed</option>
+                                            <option value="hold">On Hold</option>
+                                            <option value="fraud">Fraud</option>
+                                        </select>
+                                    </td>
+                                    <td rowspan="1" colspan="1">
+                                        <select name="order_status" class="form-control form-filter input-sm">
+                                            <option value="">Todas</option>
+                                            <option value="pending">Pending</option>
+                                            <option value="closed">Closed</option>
+                                            <option value="hold">On Hold</option>
+                                            <option value="fraud">Fraud</option>
+                                        </select>
+                                    </td>
+                                    <td rowspan="1" colspan="1">
+                                        <div class="margin-bottom-5">
+                                            <button class="btn btn-sm red filter-submit margin-bottom" 
+                                                    ng-click="showModalConfirmacao('Meu titulo')"><i class="fa fa-search"></i> Buscar</button>
+                                        </div>
+                                        <button class="btn btn-sm grey filter-cancel"><i class="fa fa-times"></i> Limpar</button>
+                                    </td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8 col-sm-12">
+                            <div class="dataTables_paginate paging_bootstrap_extended">
+                            </div>
+                            <div class="dataTables_info">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                        </div>
+                    </div>
+                </div>						
             </div>
             <!-- END TABLE PORTLET-->
         </div>
@@ -33,9 +178,166 @@
         <div class="col-md-12">
             <!-- BEGIN TABLE PORTLET-->
             <div class="portlet light">
-						
+                <div class="portlet-title">
+                    <div class="caption">                        
+                        <span class="caption-subject font-green-sharp bold uppercase">Empresas</span>
+                    </div>
+                    <div class="actions">
+                        <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;" data-original-title="" title=""></a>
+                        <div class="btn-group">
+                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
+                            <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to Excel </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to CSV </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to XML </a>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Print Invoices </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!--CABEÇALHO-->
+                <div class="row tituloEmpresa">
+                    
+                    <!--NOME DA EMPRESA-->
+                    <div class="col-sm-4">
+                        <label class="cabecalhoEmpresas">
+                            EMPRESA
+                        </label>    
+                    </div>
+                    
+                    <!--DATA DE CADASTRO-->
+                    <div class="col-sm-4">
+                        <label class="cabecalhoEmpresas">
+                            DATA DE CADASTRO
+                        </label>    
+                    </div>
+                    
+                    <!--AÇÕES-->
+                    <div class="col-sm-4" style="text-align:center">
+                        <label class="cabecalhoEmpresas">
+                            ---
+                        </label>    
+                    </div>
+                </div>
+                
+                <!--CONTEÚDO-->
+                <div class="row conteudoEmpresas">
+                    <!--NOME DA EMPRESA-->
+                    <div class="col-sm-4 dadosEmpresa">
+                        A Suprema
+                    </div>
+                    
+                    <!--DATA DE CADASTRO-->
+                    <div class="col-sm-4 dadosEmpresa">
+                        25/04/2015    
+                    </div>
+                    
+                    <!--BOTÃO AÇÕES-->
+                    <div class="col-sm-4 dadosEmpresa" style="text-align:center">
+                        <div class="btn-group">
+                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li>
+                                    <a href="javascript:;" ng-click="resetarSenhaDoUsuario(usuario)"> Resetar Senha</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" ng-click="editarUsuario(usuario)">Editar</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" ng-click="exluirUsuario(usuario)">Excluir</a>
+                                </li> 
+                            </ul>
+                        </div>         
+                    </div>              
+                </div>
+                
+                <!--RÉPLICA CONTEÚDO-->
+                <div class="row conteudoEmpresas">
+                    <!--NOME DA EMPRESA-->
+                    <div class="col-sm-4 dadosEmpresa">
+                        Petróx
+                    </div>
+                    
+                    <!--DATA DE CADASTRO-->
+                    <div class="col-sm-4 dadosEmpresa">
+                        23/07/2015    
+                    </div>
+                    
+                    <!--BOTÃO AÇÕES-->
+                    <div class="col-sm-4 dadosEmpresa" style="text-align:center">
+                        <div class="btn-group">
+                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li>
+                                    <a href="javascript:;" ng-click="resetarSenhaDoUsuario(usuario)"> Resetar Senha</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" ng-click="editarUsuario(usuario)">Editar</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" ng-click="exluirUsuario(usuario)">Excluir</a>
+                                </li> 
+                            </ul>
+                        </div>         
+                    </div>              
+                </div>
+                
+                <!--RÉPLICA CONTEÚDO-->
+                <div class="row conteudoEmpresas">
+                    <!--NOME DA EMPRESA-->
+                    <div class="col-sm-4 dadosEmpresa">
+                        Le Biscui
+                    </div>
+                    
+                    <!--DATA DE CADASTRO-->
+                    <div class="col-sm-4 dadosEmpresa">
+                        05/04/2015    
+                    </div>
+                    
+                    <!--BOTÃO AÇÕES-->
+                    <div class="col-sm-4 dadosEmpresa" style="text-align:center">
+                        <div class="btn-group">
+                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li>
+                                    <a href="javascript:;" ng-click="resetarSenhaDoUsuario(usuario)"> Resetar Senha</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" ng-click="editarUsuario(usuario)">Editar</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" ng-click="exluirUsuario(usuario)">Excluir</a>
+                                </li> 
+                            </ul>
+                        </div>         
+                    </div>              
+                </div>
+                
             </div>
             <!-- END TABLE PORTLET-->
         </div>
-    </div>
+    </div>  
 </div>
