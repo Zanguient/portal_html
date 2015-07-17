@@ -29,50 +29,65 @@
                  <!-- MODAL EMPRESA -->
                 <div class="modal fade ng-scope" id="modalEmpresa" tabindex="-1" 
                      aria-hidden="true" style="display: none;">
-                    <div class="modal-dialog" style="min-width: 300px">
+                    <div class="modal-dialog" style="width: 500px">
                         <div class="modal-content">
                             <div class="modal-header">                    
                                 <h4 class="modal-title modal-cabecalho">{{modalEmpresa.titulo}}</h4>
                             </div>
-                            <div class="modal-body height-auto" style="min-width: 300px">
-                                <label>NOME:</label>
-                                <input type="text" class="form-control" placeholder="Enter text">
-                                
+                            <div class="modal-body height-auto" style="width: 500px">
+                                <div class="row">
+                                    <div class="col-sm-12" style="margin-bottom:10px" >
+                                        <label>NOME:</label>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        
-                                        <div class="col-sm-12">
-                                            <checkbox normal ng-model="input.checkbox" 
-                                                        ng-change="">
-                                            </checkbox>TAX SERVICES
+                                        <input type="text" class="form-control" placeholder="Enter text"> 
+                                    </div>
+                                       
+                                </div>
+                                <div class="row" style="margin-top:17px; margin-bottom:10px">
+                                    <div class="col-sm-12">
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <checkbox normal ng-model="input.checkbox" 
+                                                            ng-change="">
+                                                </checkbox>
+                                                <label style="padding-left:3px">TAX SERVICES</label>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <checkbox normal ng-model="input.checkbox" 
+                                                          ng-change="">
+                                                </checkbox>
+                                                <label style="padding-left:3px">CARD SERVICES</label>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <checkbox normal ng-model="input.checkbox" 
+                                                          ng-change="">
+                                                </checkbox>
+                                                <label style="padding-left:3px">PROINFO</label>
+                                            </div>
                                         </div>
-                                        <div class="col-sm-12">
-                                            <checkbox normal ng-model="input.checkbox" 
-                                                      ng-change="">
-                                            </checkbox>CARD SERVICES
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <checkbox normal ng-model="input.checkbox" 
-                                                      ng-change="">
-                                            </checkbox>PROINFO
-                                        </div>
-                                        
                                     </div>
                                 </div>
                                 
                                 
                                 
                                 <!-- BOTÕES -->
-                                <div class="modal-footer">
-                                    <div class="col-md-3">
+                                <div class="modal-footer" style="text-align:center">
+                                    <div class="col-md-6">
                                         <button type="button" 
                                                 class="btn btn-success"
                                                 ng-click="">
                                             Salvar
                                         </button>
                                     </div>
-                                    <div class="col-md-4">
-                                        <button type="button" data-dismiss="modal" class="btn default">Fechar</button> 
+                                    <div class="col-md-6">
+                                        <button type="button" 
+                                                data-dismiss="modal"
+                                                class="btn default">
+                                            Fechar
+                                        </button> 
                                     </div>
                                 </div>
                             </div>
@@ -204,7 +219,7 @@
                     </div>
                     
                     <!--DATA DE CADASTRO-->
-                    <div class="col-sm-4">
+                    <div class="col-sm-4" style="text-align:center">
                         <label class="cabecalhoEmpresas">
                             DATA DE CADASTRO
                         </label>    
@@ -229,7 +244,7 @@
                     
                     <!--DATA DE CADASTRO-->
                     <div class="col-sm-4 dadosEmpresa"
-                         ng-bind="getDataString(empresa.dt_cadastro)">
+                         ng-bind="getDataString(empresa.dt_cadastro)" style="text-align:center">
                     </div>
                     
                     <!--BOTÃO AÇÕES-->
