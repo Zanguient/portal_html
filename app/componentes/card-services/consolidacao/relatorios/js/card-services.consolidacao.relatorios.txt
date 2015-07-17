@@ -59,7 +59,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				idGrupoEmpresa : int
 			  }
 			]	
-			Filtro de idGrupoEmpresa pode ser enviado ou não para filtrar as adquirentes por grupo empresa
+			Filtro de cnpj pode ser enviado  com  300 + código do cnpj - 100 
 				
    * pos/bandeirapos
     - GET : listagem das bandeiras (coleção 0)

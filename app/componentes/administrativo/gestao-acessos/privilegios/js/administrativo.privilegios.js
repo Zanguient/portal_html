@@ -384,7 +384,7 @@ angular.module("administrativo-privilegios", [])
     var selecionaController = function(controller, method){
         // Marca/Desmarca método(s) do controller
         selecionaMetodosDoController(controller, method);
-        if($filter('filter')(controller.methods, {selecionado:true}).length == 0)
+        if($filter('filter')(controller.methods, function(m){return m.selecionado === true;}).length == 0)
             controller.selecionado = false;
         var check = controller.selecionado;
         // Tem sub controllers?
@@ -419,13 +419,13 @@ angular.module("administrativo-privilegios", [])
                    var ctrl = controller[k - 1];
                    ctrl.selecionado = true;
                    // Verifica se tem algum método selecionado do controller
-                   if($filter('filter')(ctrl.methods, {selecionado:true}).length == 0){
+                   if($filter('filter')(ctrl.methods, function(m){return m.selecionado === true;}).length == 0){
                        // Não tem método selecionado => seleciona tudo
                        selecionaMetodosDoController(ctrl);
                        methodsNaoMarcadosNosPais = [];
                        //var methodPaisUpper = methodsPais.map(function(x) { return x.toUpperCase(); });
                    }else{ 
-                       var methodsNaoSelecionados = $filter('filter')(ctrl.methods, {selecionado:false});
+                       var methodsNaoSelecionados = $filter('filter')(ctrl.methods, function(m){return m.selecionado === false;});
                        // Adiciona aos métodos não marcados nos pais
                        for(var j = 0; j < methodsNaoSelecionados.length; j++){
                            var m = methodsNaoSelecionados[j];
@@ -451,7 +451,7 @@ angular.module("administrativo-privilegios", [])
     $scope.handleCheckMethod = function(method, controller){
         if(!method.selecionado){
             // Verifica se ainda tem algum método selecionado
-            if($filter('filter')(controller.methods, {selecionado:true}).length == 0){
+            if($filter('filter')(controller.methods, function(m){return m.selecionado === true;}).length == 0){
                 // Não tem mais métodos selecionados => Desmarca o controller
                 controller.selecionado = false;
                 selecionaController(controller);
@@ -559,7 +559,7 @@ angular.module("administrativo-privilegios", [])
             // Seta os pais
             controller.parents = parents;
             // Indica se ele está marcado
-            controller.selecionado = $filter('filter')(controller.methods, {selecionado:true}).length > 0;
+            controller.selecionado = $filter('filter')(controller.methods, function(m){return m.selecionado === true;}).length > 0;
             // Faz isso com os filhos                   adiciona os pais na ordem do mais imediato até o raiz
             if(controller.subControllers) obtemEstruturaArvore(controller.subControllers, 
                                                                [controller.id_controller].concat(parents));

@@ -202,9 +202,8 @@ angular.module("AtosCapital", ['ui.router',
                         '$webapi',
                         '$empresa',
                         '$campos',
-                        '$filter',
                         function($scope,$rootScope,$window,$location,$state,$stateParams,$http,$timeout,$modal,
-                                 $autenticacao,$apis,$webapi,$empresa,$campos,$filter){ 
+                                 $autenticacao,$apis,$webapi,$empresa,$campos){ 
     // Título da página                            
     $scope.pagina = {'titulo': 'Home', 'subtitulo': ''};
     // Usuário
@@ -246,9 +245,12 @@ angular.module("AtosCapital", ['ui.router',
                             
                             
     
-    // Fullscreen                                                 
+    // Fullscreen 
+    $scope.telaEstaEmFullScreen = function(){
+        return $('body').hasClass('page-portlet-fullscreen');    
+    }
     var removeDivFullscreen = function(){
-        if ($('body').hasClass('page-portlet-fullscreen')) $('body').removeClass('page-portlet-fullscreen');
+        if($scope.telaEstaEmFullScreen()) $('body').removeClass('page-portlet-fullscreen');
     }   
     
     /**
@@ -977,12 +979,13 @@ angular.module("AtosCapital", ['ui.router',
    /**
      * Exibe o loading progress no portlet-body
      */
-   $scope.showProgress = function(divPortletBodyPos){
+   $scope.showProgress = function(divPortletBodyPos, zIndex){
         var el = getElementProgress(divPortletBodyPos);
         Metronic.blockUI({
             target: el,
             animate: true,
-            overlayColor: '#000'//'none'
+            overlayColor: '#000',//'none'
+            zIndex : zIndex
         }); 
    };
    /**
@@ -991,7 +994,46 @@ angular.module("AtosCapital", ['ui.router',
    $scope.hideProgress = function(divPortletBodyPos){
         var el = getElementProgress(divPortletBodyPos);
         Metronic.unblockUI(el);
-   };                            
+   };     
+                            
+                            
+                            
+   // FUNÇÕES EXTRAS
+   /**
+     * Retorna true se os dois arrays são iguais (contém mesmas keys com mesmos correspondentes valores)
+     */
+   $scope.arraysAreEqual = function(ary1, ary2){
+      return (ary1.join('') == ary2.join(''));
+   };
+   /**
+     * Retorna a data do tipo Date yyyy-MM-dd em string dd/MM/yyyy
+     */
+   $scope.getDataString = function(data){
+        if(typeof data !== 'undefined' && data !== null) 
+            return data.substr(8, 2) + '/' + data.substr(5, 2) + '/' + data.substr(0, 4);
+        return '';
+   };
+   /**
+      * Retorna a string aceita para filtro de data
+      */
+   $scope.getFiltroData = function(data){
+        var ano = data.getFullYear(); 
+        var mes = (data.getMonth() + 1); 
+        var dia = data.getDate(); 
+        
+        if(ano >= 1000) ano = '' + ano; 
+        else if(ano >= 100) ano = '0' + ano;
+        else if(ano >= 10) ano = '00' + ano;
+        else ano = '000' + ano;
+        
+        if(mes >= 10) mes = '' + mes;
+        else mes = '0' + mes;
+        
+        if(dia >= 10) dia = '' + dia;
+        else dia = '0' + dia;
+        
+        return ano + mes + dia;
+    };                       
                             
 }])
 
