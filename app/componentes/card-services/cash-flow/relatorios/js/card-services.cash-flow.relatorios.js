@@ -39,8 +39,14 @@ angular.module("card-services-cash-flow-relatorios", [])
     // Relatórios
     $scope.relatorio = {sintetico : [], analitico : []};                                             
     // Totais
-    $scope.total = {sintetico : {totalTransacoes : 0, valorBruto : 0, valorParcela : 0, valorLiquido : 0, valorDescontado : 0}, 
-                    analitico : {valorBruto : 0, valorParcela : 0, valorLiquido : 0, valorDescontado : 0}};                         // flag
+    $scope.total = {sintetico : {totalTransacoes : 0, valorBruto : 0, valorParcela : 0, 
+                                 valorLiquido : 0, valorDescontado : 0,
+                                totalTransacoesFiltrado : 0, valorBrutoFiltrado : 0, valorParcelaFiltrado : 0, 
+                                 valorLiquidoFiltrado : 0, valorDescontadoFiltrado : 0}, 
+                    analitico : {valorBruto : 0, valorParcela : 0, valorLiquido : 0, valorDescontado : 0,
+                                 valorBrutoFiltrado : 0, valorParcelaFiltrado : 0, 
+                                 valorLiquidoFiltrado : 0, valorDescontadoFiltrado : 0}};                         
+    // flag
     var ultimoFiltro = undefined;                     
                                             
                                                  
@@ -423,14 +429,15 @@ angular.module("card-services-cash-flow-relatorios", [])
       * Busca o relatório agrupado por bandeira
       */
     var buscaRelatorioSintetico = function(resetaRelatorioAnalitico){
-       /*$scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen    
+       $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen    
        $scope.showProgress(divPortletBodyRelatorioPos);
         
        // Filtros    
        var filtros = obtemFiltroDeBusca();
            
-       $webapi.get($apis.getUrl($apis.pos.recebimento, 
-                                [$scope.token, 4, 100, 0, 
+       $webapi.get($apis.getUrl($apis.pos.recebimentoparcela, 
+                                [$scope.token, 9, 
+                                 $campos.pos.recebimentoparcela.bandeira + $campos.pos.bandeirapos.desBandeira - 100, 0, 
                                  $scope.filtro.itens_pagina, $scope.filtro.sintetico.pagina],
                                 filtros)) 
             .then(function(dados){
@@ -440,7 +447,13 @@ angular.module("card-services-cash-flow-relatorios", [])
                 $scope.total.sintetico.totalTransacoes = $scope.total.sintetico.valorBruto = $scope.total.sintetico.valorParcela = $scope.total.sintetico.valorLiquido = $scope.total.sintetico.valorDescontado = 0;
                 // Obtém os dados
                 $scope.relatorio.sintetico = dados.Registros;
-           
+                // Obtém os totais
+                $scope.total.sintetico.totalTransacoesFiltrado = dados.Totais.totalTransacoes;
+                $scope.total.sintetico.valorBrutoFiltrado = dados.Totais.valorBruto;
+                $scope.total.sintetico.valorDescontadoFiltrado = dados.Totais.valorDescontado;
+                $scope.total.sintetico.valorLiquidoFiltrado = dados.Totais.valorLiquida;
+                $scope.total.sintetico.valorParcelaFiltrado = dados.Totais.valorParcela;
+                
                 // Set valores de exibição
                 $scope.filtro.sintetico.total_registros = dados.TotalDeRegistros;
                 $scope.filtro.sintetico.total_paginas = Math.ceil($scope.filtro.sintetico.total_registros / $scope.filtro.itens_pagina);
@@ -471,15 +484,15 @@ angular.module("card-services-cash-flow-relatorios", [])
                  else $scope.showAlert('Houve uma falha ao obter relatório sintético (' + failData.status + ')', true, 'danger', true);
                  $scope.hideProgress(divPortletBodyFiltrosPos);
                  $scope.hideProgress(divPortletBodyRelatorioPos);
-              });   */    
+              });       
     }
     
     
     // ANALÍTICO
     
-     $scope.detalhar = function(idOperadora, bandeira){
+     $scope.detalhar = function(bandeira){
          // Procura a adquirente
-         var adquirente = $filter('filter')($scope.adquirentes, function(a){return a.id === idOperadora;})[0];
+         /*var adquirente = $filter('filter')($scope.adquirentes, function(a){return a.id === idOperadora;})[0];
          if(adquirente){ 
              // vai para Analítico
              $scope.setTab(1);
@@ -499,7 +512,8 @@ angular.module("card-services-cash-flow-relatorios", [])
                 buscaRelatorioAnalitico(true);
             // Carrega o conjunto de bandeiras associadas à nova adquirente selecionada
             if(adquirente === null) $scope.alterouAdquirente(bandeira.id, true);
-         }else $scope.filtro.adquirente = null;
+         }else $scope.filtro.adquirente = null;*/
+         console.log("DETALHAR");console.log(bandeira);
     };
     
     /**
@@ -523,6 +537,11 @@ angular.module("card-services-cash-flow-relatorios", [])
                 $scope.total.analitico.valorBruto = $scope.total.analitico.valorParcela = $scope.total.analitico.valorLiquido = $scope.total.analitico.valorDescontado = 0;
                 // Obtém os dados
                 $scope.relatorio.analitico = dados.Registros;
+                // Obtém os totais
+                $scope.total.analitico.valorParcelaFiltrado = dados.Totais.valorParcelaBruta;
+                $scope.total.analitico.valorBrutoFiltrado = dados.Totais.valorBruto;
+                $scope.total.analitico.valorDescontadoFiltrado = dados.Totais.valorDescontado;
+                $scope.total.analitico.valorLiquidoFiltrado = dados.Totais.valorParcelaLiquida;
            
                 // Set valores de exibição
                 $scope.filtro.analitico.total_registros = dados.TotalDeRegistros;

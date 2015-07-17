@@ -42,7 +42,9 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <input type="text" class="form-control" placeholder="Enter text"> 
+                                        <input type="text" class="form-control" 
+                                               placeholder="Digite o nome da empresa"
+                                               ng-model="modalEmpresa.nome"> 
                                     </div>
                                        
                                 </div>
@@ -50,19 +52,19 @@
                                     <div class="col-sm-12">
                                         <div class="row">
                                             <div class="col-sm-4">
-                                                <checkbox normal ng-model="input.checkbox" 
+                                                <checkbox normal ng-model="modalEmpresa.fl_cardservices" 
                                                             ng-change="">
-                                                </checkbox>
-                                                <label style="padding-left:3px">TAX SERVICES</label>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <checkbox normal ng-model="input.checkbox" 
-                                                          ng-change="">
                                                 </checkbox>
                                                 <label style="padding-left:3px">CARD SERVICES</label>
                                             </div>
                                             <div class="col-sm-4">
-                                                <checkbox normal ng-model="input.checkbox" 
+                                                <checkbox normal ng-model="modalEmpresa.fl_taxservices" 
+                                                          ng-change="">
+                                                </checkbox>
+                                                <label style="padding-left:3px">TAX SERVICES</label>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <checkbox normal ng-model="modalEmpresa.fl_proinfo" 
                                                           ng-change="">
                                                 </checkbox>
                                                 <label style="padding-left:3px">PROINFO</label>
@@ -70,15 +72,12 @@
                                         </div>
                                     </div>
                                 </div>
-                                
-                                
-                                
                                 <!-- BOTÕES -->
                                 <div class="modal-footer" style="text-align:center">
                                     <div class="col-md-6">
                                         <button type="button" 
                                                 class="btn btn-success"
-                                                ng-click="">
+                                                ng-click="modalEmpresa.salvar()">
                                             Salvar
                                         </button>
                                     </div>

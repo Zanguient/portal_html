@@ -104,10 +104,28 @@ angular.module('webapi', [ ])
         }
       },
       pos :{
+        adquirente : {
+            id : 100,
+            nome : 101,
+            descricao : 102,
+            status : 103,
+            hraExecucao : 104
+        },
         bandeirapos : {
             id : 100,
             desBandeira : 101,
             idOperadora : 102
+        },
+        loginoperadora : {
+            id : 100,
+            login : 101,
+            senha : 102,
+            data_alteracao : 103,
+            status : 104,
+            cnpj : 105,
+            idOperadora : 106,
+            idGrupo : 107,
+            estabelecimento : 108
         },
         operadora : {
             id : 100,
@@ -226,7 +244,9 @@ angular.module('webapi', [ ])
         grupoempresa : urlBase + '/cliente/grupoempresa/'
     },
     pos : {
+        adquirente : urlBase + '/pos/adquirente/',
         bandeirapos : urlBase + '/pos/bandeirapos/',
+        loginoperadora : urlBase + '/pos/loginoperadora/',
         operadora : urlBase + '/pos/operadora/',
         recebimento : urlBase + '/pos/recebimento/',
         recebimentoparcela: urlBase + '/pos/recebimentoparcela/',

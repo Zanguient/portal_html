@@ -41,9 +41,11 @@ angular.module("card-services-consolidacao-relatorios", [])
     // Relatórios
     $scope.relatorio = {terminal : [], sintetico : [], analitico : []};                                             
     // Totais
-    $scope.total = {terminal  : {totalTransacoes : 0, valorBruto : 0}, 
-                    sintetico : {totalTransacoes : 0, valorBruto : 0}, 
-                    analitico : {valorBruto : 0}};                                              
+    $scope.total = {terminal  : {totalTransacoes : 0, valorBruto : 0, 
+                                 totalTransacoesFiltrado : 0, valorBrutoFiltrado : 0}, 
+                    sintetico : {totalTransacoes : 0, valorBruto : 0,
+                                 totalTransacoesFiltrado : 0, valorBrutoFiltrado : 0}, 
+                    analitico : {valorBruto : 0, valorBrutoFiltrado : 0}};                                              
     // flag
     var ultimoFiltro = undefined;
                                                  
@@ -509,6 +511,9 @@ angular.module("card-services-consolidacao-relatorios", [])
                 $scope.total.terminal.totalTransacoes = $scope.total.terminal.valorBruto = 0;
                 // Obtém os dados
                 $scope.relatorio.terminal = dados.Registros;
+                // Obtém os totais
+                $scope.total.terminal.totalTransacoesFiltrado = dados.Totais.totalTransacoes;
+                $scope.total.terminal.valorBrutoFiltrado = dados.Totais.valorBruto;
            
                 // Set valores de exibição
                 $scope.filtro.terminal.total_registros = dados.TotalDeRegistros;
@@ -566,6 +571,9 @@ angular.module("card-services-consolidacao-relatorios", [])
                 $scope.total.sintetico.totalTransacoes = $scope.total.sintetico.valorBruto = 0;
                 // Obtém os dados
                 $scope.relatorio.sintetico = dados.Registros;
+                // Obtém os totais
+                $scope.total.sintetico.totalTransacoesFiltrado = dados.Totais.totalTransacoes;
+                $scope.total.sintetico.valorBrutoFiltrado = dados.Totais.valorBruto;
            
                 // Set valores de exibição
                 $scope.filtro.sintetico.total_registros = dados.TotalDeRegistros;
@@ -651,6 +659,8 @@ angular.module("card-services-consolidacao-relatorios", [])
                 $scope.total.analitico.valorBruto = 0;
                 // Obtém os dados
                 $scope.relatorio.analitico = dados.Registros;
+                // Obtém os totais
+                $scope.total.analitico.valorBrutoFiltrado = dados.Totais.valorVendaBruta;
            
                 // Set valores de exibição
                 $scope.filtro.analitico.total_registros = dados.TotalDeRegistros;

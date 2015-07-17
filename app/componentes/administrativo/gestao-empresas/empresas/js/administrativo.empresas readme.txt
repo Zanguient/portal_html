@@ -52,6 +52,19 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 			  }
 			]
 	- DELETE : deletar uma empresa
+	- POST : adiciona uma nova empresa
+			  { ds_nome : string,
+				fl_cardservices : boolean,
+				fl_taxservices : boolean,
+				fl_proinfo : boolean
+			  }
+	- UPDATE : altera uma empresa existente	
+			  { id_grupo : int,
+				ds_nome : string,
+				fl_cardservices : boolean,
+				fl_taxservices : boolean,
+				fl_proinfo : boolean
+			  }
  
    
 
