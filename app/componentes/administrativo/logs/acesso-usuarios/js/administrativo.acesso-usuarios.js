@@ -308,24 +308,11 @@ angular.module("administrativo-acesso-usuarios", [])
                for(var k = 1; k < controller.length; k++){ 
                    var ctrl = controller[k];
                    ctrl.selecionado = true;
-                   // Verifica se tem algum método selecionado do controller
-                   // Se não tiver => seleciona todos
-                   //if($filter('filter')(ctrl.methods, {selecionado:true}).length == 0)
+                   // Seleciona todos os métodos do controller
                    selecionaMetodosDoController(ctrl);
                }
-            }/*else{
-               // Avalia se deve desmarcar os pais 
-               for(var k = 1; k < controller.length; k++){
-                   var ctrl = controller[k];
-                   if($filter('filter')(ctrl.subcontrollers, {selecionado:true}).length == 0){
-                       ctrl.selecionado = false;
-                       selecionaMetodosDoController(ctrl);
-                   }
-                }
-            }*/
-        /*}else if(controller.id_controller === $scope.todos.id_controller){
-            // seleciona/desmarca tudo      
-        */}else{
+            }
+        }else{
             // Marca do controller para baixo
             selecionaController(controller);
         }
@@ -333,7 +320,7 @@ angular.module("administrativo-acesso-usuarios", [])
     $scope.handleCheckMethod = function(method, controller){
         if(!method.selecionado){
             // Verifica se ainda tem algum método selecionado
-            if($filter('filter')(controller.methods, {selecionado:true}).length == 0){
+            if($filter('filter')(controller.methods, function(m){return m.selecionado === true;}).length == 0){
                 // Não tem mais métodos selecionados => Desmarca o controller
                 controller.selecionado = false;
                 selecionaController(controller);
@@ -373,7 +360,7 @@ angular.module("administrativo-acesso-usuarios", [])
         for(var k = 0; k < controllers.length; k++){
             var controller = controllers[k];
             // Indica se ele está marcado
-            controller.selecionado = $filter('filter')(controller.methods, {selecionado:true}).length > 0;
+            controller.selecionado = $filter('filter')(controller.methods, function(m){return m.selecionado === true;}).length > 0;
             // Faz isso com os filhos
             if(controller.subControllers) determinaControllersSelecionados(controller.subControllers);
         }

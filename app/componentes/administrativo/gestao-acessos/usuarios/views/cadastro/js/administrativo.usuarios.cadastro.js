@@ -64,22 +64,11 @@ angular.module("administrativo-usuarios-cadastro", [])
         $scope.pessoa.nome = $scope.old.pessoa.nm_pessoa;
         if($scope.old.pessoa.dt_nascimento !== null){ 
             dataValida = true;
-            //$scope.pessoa.data_nasc = new Date($scope.old.pessoa.dt_nascimento.substr(0, 4) + '/' + $scope.old.pessoa.dt_nascimento.substr(5, 2) + '/' + $scope.old.pessoa.dt_nascimento.substr(8, 2));
-            $scope.pessoa.data_nasc = $scope.old.pessoa.dt_nascimento.substr(8, 2) + '/' + $scope.old.pessoa.dt_nascimento.substr(5, 2) + '/' + $scope.old.pessoa.dt_nascimento.substr(0, 4);
+            $scope.pessoa.data_nasc = $scope.getDataString($scope.old.pessoa.dt_nascimento);
         }
         $scope.old.pessoa.dt_nascimento = $scope.pessoa.data_nasc; // deixa no mesmo formato
-        if($scope.old.pessoa.nu_telefone !== null){ 
+        if($scope.old.pessoa.nu_telefone !== null) 
             $scope.pessoa.telefone = $scope.old.pessoa.nu_telefone;
-            /* formata telefone aqui
-            var regex = /[0-9]+/g;
-            if(regex.test($scope.pessoa.telefone.length)){ 
-                // Só tem números
-                if($scope.pessoa.telefone.length === 10 || $scope.pessoa.telefone.length === 11){
-                    $scope.pessoa.telefone = '(' + $scope.pessoa.telefone.substr(0, 2) + ')' + 
-                                             $scope.pessoa.telefone.substr(2);
-                }
-            }// else => verificar */
-        }
         $scope.old.pessoa.nu_telefone = $scope.pessoa.telefone; // deixa em string
         if($scope.old.pessoa.nu_ramal !== null) $scope.pessoa.ramal = $scope.old.pessoa.nu_ramal;
         else $scope.old.pessoa.nu_ramal = $scope.pessoa.ramal; // deixa em string
@@ -98,7 +87,7 @@ angular.module("administrativo-usuarios-cadastro", [])
                     if($scope.old.usuario !== null){
                         for(var k = 0; k < $scope.old.roles.length; k++){
                             var old = $scope.old.roles[k];
-                            var role = $filter('filter')($scope.roles, {RoleId:old.RoleId});
+                            var role = $filter('filter')($scope.roles, function(r){return r.RoleId === old.RoleId;});
                             if(role.length > 0){
                                 role[0].selecionado = true;
                                 if(old.RolePrincipal) $scope.rolePrincipal = role[0];
@@ -230,7 +219,6 @@ angular.module("administrativo-usuarios-cadastro", [])
         if($scope.pessoa.data_nasc /*!== null*/){ 
             var dt = $scope.pessoa.data_nasc.split('/');
             jsonPessoa.dt_nascimento = $filter('date')(new Date(dt[2], dt[1] - 1, dt[0], 1, 0, 0, 0), "yyyy-MM-dd HH:mm:ss");
-            //jsonPessoa.dt_nascimento = $filter('date')(new Date($scope.pessoa.data_nasc), "yyyy-MM-dd HH:mm:ss");
         }
         if($scope.pessoa.telefone) jsonPessoa.nu_telefone = $scope.pessoa.telefone;
         if($scope.pessoa.ramal) jsonPessoa.nu_ramal = $scope.pessoa.ramal;
@@ -327,7 +315,7 @@ angular.module("administrativo-usuarios-cadastro", [])
             return true;
         }
         for(var k = 0; k < $scope.old.roles.length; k++){
-           if($filter('filter')($scope.rolesSelecionadas, {RoleId:$scope.old.roles[k].RoleId}).length == 0){ 
+           if($filter('filter')($scope.rolesSelecionadas, function(r){return r.RoleId === $scope.old.roles[k].RoleId;}).length == 0){ 
                //console.log("HOUVE ALTERAÇÃO - ROLE");
                return true; 
            }
@@ -398,7 +386,7 @@ angular.module("administrativo-usuarios-cadastro", [])
         for(var k in $scope.rolesSelecionadas){ 
             var role = $scope.rolesSelecionadas[k];
             var principal = role.RoleId === $scope.rolePrincipal.RoleId; // essa é a "nova" role principal?
-            var old = $filter('filter')($scope.old.roles, {RoleId:role.RoleId}); // roles antigas
+            var old = $filter('filter')($scope.old.roles, function(r){return r.RoleId === role.RoleId;}); // roles antigas
             
             if(old.length == 0 ||  // nova associação 
                (old[0].RolePrincipal ^ principal) ) // não é mais ou passou a ser a página inicial
@@ -407,7 +395,7 @@ angular.module("administrativo-usuarios-cadastro", [])
         // Roles a serem desassociadas do usuário 
         for(var k = 0; k < $scope.old.roles.length; k++){
             var old = $scope.old.roles[k];
-            if($filter('filter')($scope.rolesSelecionadas, {RoleId:old.RoleId}).length == 0)
+            if($filter('filter')($scope.rolesSelecionadas, function(r){return r.RoleId === old.RoleId;}).length == 0)
                 r.push({UserId: -1, RoleId : old.RoleId, RolePrincipal : false});
         }        
         // Verifica se houve alterações
@@ -646,7 +634,7 @@ angular.module("administrativo-usuarios-cadastro", [])
     // ROLES
     $scope.handleRole = function(){
       // Obtém o array das roles que tem o campo 'selecionado' com valor true
-      $scope.rolesSelecionadas = $filter('filter')($scope.roles, {selecionado:true});
+      $scope.rolesSelecionadas = $filter('filter')($scope.roles, function(r){return r.selecionado === true;});
       if($scope.rolesSelecionadas.length > 0){
           // Remove as duplicatas
           $scope.rolesSelecionadas = $filter('unique')($scope.rolesSelecionadas, 'PaginaInicial');

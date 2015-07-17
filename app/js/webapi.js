@@ -112,7 +112,9 @@ angular.module('webapi', [ ])
         operadora : {
             id : 100,
             nmOperadora : 101,
-            idGrupoEmpresa : 102
+            idGrupoEmpresa : 102,
+            // Relacionamento
+            empresa : 300
         },
         recebimento : {
             id : 100,
@@ -133,6 +135,17 @@ angular.module('webapi', [ ])
             // Relacionamento
             operadora : 300,
             empresa : 400 // pode ser usado para buscar o id_grupo
+        },
+        recebimentoparcela : {
+            idRecebimento : 100,
+            numParcela : 101,
+            valorParcelaBruta : 102,
+            valorParcelaLiquida : 103,
+            dtaRecebimento : 104,
+            valorDescontado : 105,
+            // Relacionamento
+            empresa : 300,
+            operadora : 400
         },
         terminallogico : {
             idTerminalLogico: 100,
@@ -215,6 +228,7 @@ angular.module('webapi', [ ])
         bandeirapos : urlBase + '/pos/bandeirapos/',
         operadora : urlBase + '/pos/operadora/',
         recebimento : urlBase + '/pos/recebimento/',
+        recebimentoparcela: urlBase + '/pos/recebimentoparcela/',
         terminallogico : urlBase + '/pos/terminallogico/'
     }
   }
