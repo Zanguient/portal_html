@@ -51,12 +51,12 @@
                             <table class="table table-striped table-bordered table-hover dataTable no-footer" id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
                                 <thead>
                                     <tr role="row" class="heading">
-                                        <th width="15%" tabindex="0" 
+                                        <th width="10%" tabindex="0" 
                                             aria-controls="datatable_ajax" 
                                             rowspan="1" colspan="1">
                                              Data
                                         </th>
-                                        <th width="10%" tabindex="1" 
+                                        <th width="15%" tabindex="1" 
                                             aria-controls="datatable_ajax" 
                                             rowspan="1" colspan="1">
                                              Filial 
@@ -76,7 +76,7 @@
                                             rowspan="1" colspan="1">
                                              Terminal Lógico
                                         </th>
-                                        <th width="10%" tabindex="5" 
+                                        <th width="5%" tabindex="5" 
                                             aria-controls="datatable_ajax" 
                                             rowspan="1" colspan="1">
                                              Ações de filtro
@@ -200,7 +200,7 @@
                                                popover-trigger="mouseenter"></i>
                                         </td>
                                         <!-- AÇÕES -->
-                                        <td rowspan="1" colspan="1">
+                                        <td rowspan="1" colspan="1" style="text-align:center">
                                             <div class="margin-bottom-5">
                                                 <!-- BOTÃO BUSCAR -->
                                                 <button class="btn btn-sm red filter-submit margin-bottom" 
@@ -369,18 +369,18 @@
                                                             <tr role="row">
                                                                 <th tabindex="0"  
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 188px;">
+                                                                    style="width: 150px; text-align:left">
                                                                     Terminal
                                                                 </th>
                                                                 <th tabindex="1" 
                                                                     rowspan="1" 
                                                                     colspan="1" 
-                                                                    style="width: 237px;">
+                                                                    style="width: 237px; text-align:left">
                                                                     Bandeira
                                                                 </th>
                                                                 <th tabindex="2" 
                                                                     rowspan="1" colspan="1"
-                                                                    style="width: 237px;">
+                                                                    style="width: 200px;">
                                                                     Total de Transações
                                                                 </th>
                                                                 <th tabindex="3" 
@@ -399,19 +399,19 @@
                                                             <tr role="row" class="odd"
                                                                 ng-repeat="relterminal in relatorio.terminal">
                                                                 <!-- TERMINAL -->
-                                                                <td>
+                                                                <td style="text-align:left">
                                                                      {{relterminal.terminal.dsTerminalLogico}}
                                                                 </td>
                                                                 <!-- BANDEIRA -->
-                                                                <td>
+                                                                <td style="text-align:left">
                                                                      {{relterminal.bandeira.desBandeira}}
                                                                 </td>
                                                                 <!-- TOTAL DE TRANSAÇÕES -->
-                                                                <td ng-init="total.terminal.totalTransacoes = total.terminal.totalTransacoes + relterminal.totalTransacoes">
+                                                                <td ng-init="total.terminal.totalTransacoes = total.terminal.totalTransacoes + relterminal.totalTransacoes" style="text-align:center">
                                                                      {{relterminal.totalTransacoes}} 
                                                                 </td>
                                                                 <!-- VALOR BRUTO -->
-                                                                <td ng-init="total.terminal.valorBruto = total.terminal.valorBruto + relterminal.valorBruto">
+                                                                <td ng-init="total.terminal.valorBruto = total.terminal.valorBruto + relterminal.valorBruto" style="text-align:center">
                                                                      {{relterminal.valorBruto | currency:'R$'}}
                                                                 </td>
                                                                 <!-- BOTÃO DETALHAR -->
@@ -445,7 +445,44 @@
                                                             
                                                     </table>
                                                 </div>
-                                                    
+                                                
+                                                <!--EXIBIÇÃO E PAGINAÇÃO-->
+                                                <div class="row" style="margin: 10px 0 20px 0">
+                                                    <div class="col-md-4 col-sm-12">
+                                                        <div class="dataTables_info" id="sample_editable_1_info" role="status" aria-live="polite">
+                                                            <strong class="ng-binding">Exibindo os registros 1-10</strong>
+                                                        </div>
+                                                    </div>
+                                                    <!--PAGINAÇÃO-RODAPÉ-->
+                                                    <div class="pagination-panel centralizarPaginacao col-md-3 col-sm-12"> Página 
+                                                        <a href="javascript:;" ng-click="retrocedePagina()"
+                                                           class="btn btn-sm default prev" 
+                                                           ng-class="{disabled: (tabIs(0) && filtro.sintetico.pagina  <= 1) || (tabIs(1) && filtro.analitico.pagina <= 1)}" 
+                                                           title="Página anterior">
+                                                                <i class="fa fa-angle-left"></i>
+                                                        </a>
+                                                        <input type="text" 
+                                                               class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                                               maxlength="4" style="text-align:center; margin: 0 5px;"
+                                                               ng-model="paginaInformada" valid-integer-number
+                                                               ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                                                               ng-blur="atualizaPaginaDigitada()">
+                                                        <a href="javascript:;" ng-click="avancaPagina()"
+                                                           class="btn btn-sm default next"
+                                                           ng-class="{disabled: (tabIs(0) && filtro.sintetico.pagina >= filtro.sintetico.total_paginas) || (tabIs(1) && filtro.analitico.pagina >= filtro.analitico.total_paginas)}"
+                                                           title="Próxima página">
+                                                            <i class="fa fa-angle-right"></i>
+                                                        </a>
+                                                         de 
+                                                        <span class="pagination-panel-total" ng-show="tabIs(0)">
+                                                            {{filtro.sintetico.total_paginas}}
+                                                        </span>
+                                                        <span class="pagination-panel-total" ng-show="tabIs(1)">
+                                                            {{filtro.analitico.total_paginas}}
+                                                        </span>
+                                                    </div>
+                                                    <!-- FIM PAGINAÇÃO -->
+                                                </div>
                                             </div>
                                             <!--FIM CONTEÚDO DA NAVEGAÇÃO-->
                                             
@@ -461,12 +498,12 @@
                                                             <tr role="row">
                                                                 <th tabindex="0" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 188px;">
+                                                                    style="width: 188px; text-align:left">
                                                                     Bandeira
                                                                 </th>
                                                                 <th tabindex="1" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 237px;">
+                                                                    style="width: 200px; text-align:left">
                                                                     Total de Transações
                                                                 </th>
                                                                 <th tabindex="2" 
@@ -482,10 +519,12 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <tr role="row" class="odd"
-                                                                ng-repeat="relsintetico in relatorio.sintetico">
+                                                            <tr role="row" 
+                                                                class="odd"
+                                                                ng-repeat="relsintetico in relatorio.sintetico"
+                                                                style="text-align:left">
                                                                 <!-- BANDEIRA -->
-                                                                <td>
+                                                                <td style="text-align:left">
                                                                      {{relsintetico.bandeira.desBandeira}}
                                                                 </td>
                                                                 <!-- TOTAL DE TRANSAÇÕES -->
@@ -493,7 +532,7 @@
                                                                      {{relsintetico.totalTransacoes}} 
                                                                 </td>
                                                                 <!-- VALOR BRUTO -->
-                                                                <td ng-init="total.sintetico.valorBruto = total.sintetico.valorBruto + relsintetico.valorBruto">
+                                                                <td ng-init="total.sintetico.valorBruto = total.sintetico.valorBruto + relsintetico.valorBruto" style="text-align:center">
                                                                      {{relsintetico.valorBruto | currency:'R$'}}
                                                                 </td>
                                                                 <!-- BOTÃO DETALHAR -->
@@ -510,10 +549,10 @@
                                                             </tr>
                                                             <tr role="row" class="odd linhaTotalRelatorios" 
                                                                 style="font-weight:bolder">
-                                                                <td>
+                                                                <td style="text-align:left">
                                                                      Total Exibido
                                                                 </td>
-                                                                <td>
+                                                                <td style="text-align:left">
                                                                      {{total.sintetico.totalTransacoes}}
                                                                 </td>
                                                                 <td>
@@ -525,6 +564,44 @@
                                                             </tr>
                                                         </tbody>
                                                     </table>
+                                                </div>
+                                                
+                                                <!--EXIBIÇÃO E PAGINAÇÃO-->
+                                                <div class="row" style="margin: 10px 0 20px 0">
+                                                    <div class="col-md-4 col-sm-12">
+                                                        <div class="dataTables_info" id="sample_editable_1_info" role="status" aria-live="polite">
+                                                            <strong class="ng-binding">Exibindo os registros 1-10</strong>
+                                                        </div>
+                                                    </div>
+                                                    <!--PAGINAÇÃO-RODAPÉ-->
+                                                    <div class="pagination-panel centralizarPaginacao col-md-3 col-sm-12"> Página 
+                                                        <a href="javascript:;" ng-click="retrocedePagina()"
+                                                           class="btn btn-sm default prev" 
+                                                           ng-class="{disabled: (tabIs(0) && filtro.sintetico.pagina  <= 1) || (tabIs(1) && filtro.analitico.pagina <= 1)}" 
+                                                           title="Página anterior">
+                                                                <i class="fa fa-angle-left"></i>
+                                                        </a>
+                                                        <input type="text" 
+                                                               class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                                               maxlength="4" style="text-align:center; margin: 0 5px;"
+                                                               ng-model="paginaInformada" valid-integer-number
+                                                               ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                                                               ng-blur="atualizaPaginaDigitada()">
+                                                        <a href="javascript:;" ng-click="avancaPagina()"
+                                                           class="btn btn-sm default next"
+                                                           ng-class="{disabled: (tabIs(0) && filtro.sintetico.pagina >= filtro.sintetico.total_paginas) || (tabIs(1) && filtro.analitico.pagina >= filtro.analitico.total_paginas)}"
+                                                           title="Próxima página">
+                                                            <i class="fa fa-angle-right"></i>
+                                                        </a>
+                                                         de 
+                                                        <span class="pagination-panel-total" ng-show="tabIs(0)">
+                                                            {{filtro.sintetico.total_paginas}}
+                                                        </span>
+                                                        <span class="pagination-panel-total" ng-show="tabIs(1)">
+                                                            {{filtro.analitico.total_paginas}}
+                                                        </span>
+                                                    </div>
+                                                    <!-- FIM PAGINAÇÃO -->
                                                 </div>
                                             </div>
                                             <!--FIM CONTEÚDO DO RELATÓRIO SINTÉTICO-->
@@ -544,12 +621,12 @@
                                                                 </th-->
                                                                 <th tabindex="0" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 237px;">
+                                                                    style="width: 237px; text-align:left">
                                                                     Data da Venda
                                                                 </th>
                                                                 <th tabindex="1" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 237px;">
+                                                                    style="width: 237px; text-align:left">
                                                                     Bandeira
                                                                 </th>
                                                                 <th tabindex="2" 
@@ -584,15 +661,15 @@
                                                                      {{relanalitico.desBandeira}}
                                                                 </td>
                                                                 <!-- NSU -->
-                                                                <td>
+                                                                <td style="text-align:center">
                                                                      {{relanalitico.nsu}}
                                                                 </td>
                                                                 <!-- COD. AUTORIZADOR -->
-                                                                <td>
+                                                                <td style="text-align:center">
                                                                      {{relanalitico.cdAutorizador}} 
                                                                 </td>
                                                                 <!-- VALOR BRUTO -->
-                                                                <td ng-init="total.analitico.valorBruto = total.analitico.valorBruto + relanalitico.valorVendaBruta">
+                                                                <td ng-init="total.analitico.valorBruto = total.analitico.valorBruto + relanalitico.valorVendaBruta" style="text-align:center">
                                                                      {{relanalitico.valorVendaBruta | currency:'R$'}}
                                                                 </td>
                                                             </tr>
@@ -607,8 +684,45 @@
                                                         </tbody>    
                                                     </table>
                                                 </div>
+                                                <!--EXIBIÇÃO E PAGINAÇÃO-->
+                                                <div class="row" style="margin: 10px 0 20px 0">
+                                                    <div class="col-md-4 col-sm-12">
+                                                        <div class="dataTables_info" id="sample_editable_1_info" role="status" aria-live="polite">
+                                                            <strong class="ng-binding">Exibindo os registros 1-10</strong>
+                                                        </div>
+                                                    </div>
+                                                    <!--PAGINAÇÃO-RODAPÉ-->
+                                                    <div class="pagination-panel centralizarPaginacao col-md-3 col-sm-12"> Página 
+                                                        <a href="javascript:;" ng-click="retrocedePagina()"
+                                                           class="btn btn-sm default prev" 
+                                                           ng-class="{disabled: (tabIs(0) && filtro.sintetico.pagina  <= 1) || (tabIs(1) && filtro.analitico.pagina <= 1)}" 
+                                                           title="Página anterior">
+                                                                <i class="fa fa-angle-left"></i>
+                                                        </a>
+                                                        <input type="text" 
+                                                               class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                                               maxlength="4" style="text-align:center; margin: 0 5px;"
+                                                               ng-model="paginaInformada" valid-integer-number
+                                                               ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                                                               ng-blur="atualizaPaginaDigitada()">
+                                                        <a href="javascript:;" ng-click="avancaPagina()"
+                                                           class="btn btn-sm default next"
+                                                           ng-class="{disabled: (tabIs(0) && filtro.sintetico.pagina >= filtro.sintetico.total_paginas) || (tabIs(1) && filtro.analitico.pagina >= filtro.analitico.total_paginas)}"
+                                                           title="Próxima página">
+                                                            <i class="fa fa-angle-right"></i>
+                                                        </a>
+                                                         de 
+                                                        <span class="pagination-panel-total" ng-show="tabIs(0)">
+                                                            {{filtro.sintetico.total_paginas}}
+                                                        </span>
+                                                        <span class="pagination-panel-total" ng-show="tabIs(1)">
+                                                            {{filtro.analitico.total_paginas}}
+                                                        </span>
+                                                    </div>
+                                                    <!-- FIM PAGINAÇÃO -->
+                                                </div>
                                             </div>
-                                             <!--FIM CONTEÚDO DO RELATÓRIO ANALÍTICO-->
+                                            <!--FIM CONTEÚDO DO RELATÓRIO ANALÍTICO-->
                                         </div>
                                     </div>
                                     <!--FIM CONTEUDO DA NAVEGAÇÃO-->
