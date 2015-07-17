@@ -441,6 +441,20 @@
                                                                 <td>
                                                                 </td>
                                                             </tr>
+                                                            <tr role="row" class="odd linhaTotalRelatorios"
+                                                                style="font-weight : bolder">
+                                                                <td colspan="2">
+                                                                    Total Filtrado
+                                                                </td>
+                                                                <td>
+                                                                     {{total.terminal.totalTransacoesFiltrado}}
+                                                                </td>
+                                                                <td>
+                                                                     {{total.terminal.valorBrutoFiltrado | currency:'R$'}}
+                                                                </td>
+                                                                <td>
+                                                                </td>
+                                                            </tr>
                                                         </tbody>
                                                             
                                                     </table>
@@ -518,6 +532,21 @@
                                                                 </td>
                                                                 <td>
                                                                      {{total.sintetico.valorBruto | currency:'R$'}}
+                                                                </td>
+                                                                <!-- BOTÃO DETALHAR -->
+                                                                <td>
+                                                                </td>
+                                                            </tr>
+                                                            <tr role="row" class="odd linhaTotalRelatorios" 
+                                                                style="font-weight:bolder">
+                                                                <td>
+                                                                     Total Filtrado
+                                                                </td>
+                                                                <td>
+                                                                     {{total.sintetico.totalTransacoesFiltrado}}
+                                                                </td>
+                                                                <td>
+                                                                     {{total.sintetico.valorBrutoFiltrado | currency:'R$'}}
                                                                 </td>
                                                                 <!-- BOTÃO DETALHAR -->
                                                                 <td>
@@ -602,6 +631,14 @@
                                                                 </td>                                                     
                                                                 <td>
                                                                      {{total.analitico.valorBruto | currency:'R$'}}
+                                                                </td> 
+                                                            </tr>
+                                                            <tr role="row" class="odd linhaTotalRelatorios">
+                                                                <td colspan="4">
+                                                                     Total Filtrado
+                                                                </td>                                                     
+                                                                <td>
+                                                                     {{total.analitico.valorBrutoFiltrado | currency:'R$'}}
                                                                 </td> 
                                                             </tr>
                                                         </tbody>    

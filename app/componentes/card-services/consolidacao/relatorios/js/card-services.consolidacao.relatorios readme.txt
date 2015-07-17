@@ -92,43 +92,54 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 		   . Terminal Lógico : idLogicoTerminal
  		   
 		-> TERMINAL LÓGICO (coleção 3) : ordenado por dsTerminalLogico
-			 [
-			    {
-					terminal : { idTerminalLogico : int,
-								 dsTerminalLogico : string
-							   },
-					bandeira : { id : int
-								 desBandeira : string
-							   },
-					idOperadora : int,
-                    totalTransacoes	: total,
-					valorBruto : valor
-				}
-			 ]
+			 Registros = [
+							{
+								terminal : { idTerminalLogico : int,
+											 dsTerminalLogico : string
+										   },
+								bandeira : { id : int
+											 desBandeira : string
+										   },
+								idOperadora : int,
+								totalTransacoes	: int,
+								valorBruto : double
+							}
+				],
+			 Totais : {
+						totalTransacoes : int,
+						valorBruto : double
+					  }
 			 
 		-> SINTÉTICO (coleção 4) : ordenado por desBandeira
-			 [
-			    {
-					bandeira : { id : int
-								 desBandeira : string
-							   },
-					idOperadora : int,
-                    totalTransacoes	: total,
-					valorBruto : valor
-				}
-			 ]
+			 Regitros = [
+							{
+								bandeira : { id : int
+											 desBandeira : string
+										   },
+								idOperadora : int,
+								totalTransacoes	: total,
+								valorBruto : valor
+							}
+				],
+			Totais : {
+						totalTransacoes : int,
+						valorBruto : double
+					  }
 
        -> ANALÍTICO (coleção 5) : ordenado por dtVenda
-			 [
-			    {
-					cnpj : string,
-					dtaVenda : date,
-					desBandeira : string
-                    nsu	: string,
-					cdAutorizador : string,
-					valorVendaBruta : double
-				}
-			 ]			 
+			 Registros = [
+							{
+								cnpj : string,
+								dtaVenda : date,
+								desBandeira : string
+								nsu	: string,
+								cdAutorizador : string,
+								valorVendaBruta : double
+							}
+				 ],
+			 Totais : {
+						valorVendaBruta : double
+					  }
  
    
 

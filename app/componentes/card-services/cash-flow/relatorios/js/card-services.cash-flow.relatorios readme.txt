@@ -78,34 +78,50 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 		   . Adquirente : personalizado => 400 + código do campo id - 100
 		   . Bandeira : idBandeira
 			 
-		-> SINTÉTICO (coleção 9 ?) : ordenado por desBandeira
-			 [
+		-> SINTÉTICO (coleção 9) : ordenado por desBandeira
+			 Registros = [
 			    {
 					bandeira : { id : int
-								 desBandeira : string
+								 desBandeira : string,
+								 idOperadora : int
 							   },
-					idOperadora : int,
-                    totalTransacoes	: total,
-					valorBruto : valor
-				}
-			 ]
-
-       -> ANALÍTICO (coleção 8) : ordenado por dtaVenda
-			 [
-			    {
-					cnpj : string,
-					desBandeira : string,
-					dtaVenda : date,
-					dtaRecebimento : date,
-					codResumoVenda : string
-                    nsu	: string,
-					numParcela : string,
+                    totalTransacoes	: int,
 					valorBruto : double,
 					valorParcela : double,
-					valorLiquida" : double,
+					valorLiquida : double,
 					valorDescontado : double
 				}
-			 ]			 
+			 ],
+			 Totais : {
+			            totalTransacoes : int,
+						valorBruto : double,
+						valorParcela : double,
+						valorLiquida" : double,
+						valorDescontado : double
+					  }	
+
+       -> ANALÍTICO (coleção 8) : ordenado por dtaVenda
+			 Registros = [
+							{
+								cnpj: string,
+								desBandeira : string,
+								dtaVenda : date,
+								dtaRecebimento : date,
+								codResumoVenda : string,
+								nsu : string,
+								numParcela : string,
+								valorBruto : double,
+								valorParcela : double,
+								valorLiquida : double,
+								valorDescontado : double
+
+							}
+			 ],
+			Totais : {
+						valorParcelaBruta : double,
+						valorParcelaLiquida" : double,
+						valorDescontado : double
+					  }		
  
    
 
