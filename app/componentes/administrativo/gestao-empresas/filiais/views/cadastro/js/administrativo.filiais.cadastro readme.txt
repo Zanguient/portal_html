@@ -1,0 +1,62 @@
+# README #
+
+Módulo que:
+ - gerencia o layout da tela de cadastro/alteração de empresas da Gestão de empresas (app/componentes/administrativo/gestao-empresas/empresas/views/cadastro/index.html)
+ - permite cadastrar uma nova empresa
+ - permite alterar uma empresa existente
+ 
+
+### Pra Que Serve Este Módulo? ###
+
+Gerenciar o cadastro de uma nova empresa e a alteração de uma empresa existente.  
+
+
+
+### Diferenciação da ação Cadastro para ação Alteração ###
+
+Esse controller recebe como parâmetro ($stateParams) o id "empresa". Caso este seja null => CADASTRO. Caso contrário => ALTERAÇÃO.
+Esse parâmetro é enviado com o "$state.go('rota', {empresa: jsonEmpresa})"
+
+
+
+### O que é necessário para usar o módulo? ###
+
+Como esse é um controller filho do controller principal "appCtrl" (app.js), ele herda todos os módulos importados por ele.
+Não é necessário nenhum outro módulo externo.
+
+ 
+ ### Outras depêndencias ###
+
+  * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
+  * $scope.token do "appCtrl"
+  * Faz referência direta ao controller de usuários da Gestão de Acessos (gestao-acessos.usuarios.js)
+  * $stateParams para receber o usuário para alteração (quando não receber, significa que é um cadastro)
+  * APIS:
+    - cliente/grupoempresa (não permite criar uma empresa de nome de outra já existente na base de dados)
+
+
+ 
+ ### Interação com a WEB API ###
+ 
+   * api/cliente/grupoempresa  
+	 - GET : consulta nome para validação (coleção 0)
+	 - POST : cria nova empresa
+			{ 	ds_nome : string,
+				fl_cardservices : boolean,
+				fl_taxservices : boolean,
+				fl_proinfo : boolean
+			}
+			Obtem o id_grupo como resposta  
+	 - PUT : atualiza empresa existente	
+			{   id_grupo : int,
+				ds_nome : string,
+				fl_cardservices : boolean,
+				fl_taxservices : boolean,
+				fl_proinfo : boolean
+			  }
+   
+
+   
+### Desenvolvedores ###
+
+Deivid Marinho - deividgfmarinho@gmail.com

@@ -25,6 +25,64 @@
             <div class="row">                
             <!-- BEGIN TABLE PORTLET-->
             <div class="portlet light">
+                
+                 <!-- MODAL EMPRESA -->
+                <div class="modal fade ng-scope" id="modalEmpresa" tabindex="-1" 
+                     aria-hidden="true" style="display: none;">
+                    <div class="modal-dialog" style="min-width: 300px">
+                        <div class="modal-content">
+                            <div class="modal-header">                    
+                                <h4 class="modal-title modal-cabecalho">{{modalEmpresa.titulo}}</h4>
+                            </div>
+                            <div class="modal-body height-auto" style="min-width: 300px">
+                                <label>NOME:</label>
+                                <input type="text" class="form-control" placeholder="Enter text">
+                                
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        
+                                        <div class="col-sm-12">
+                                            <checkbox normal ng-model="input.checkbox" 
+                                                        ng-change="">
+                                            </checkbox>TAX SERVICES
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <checkbox normal ng-model="input.checkbox" 
+                                                      ng-change="">
+                                            </checkbox>CARD SERVICES
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <checkbox normal ng-model="input.checkbox" 
+                                                      ng-change="">
+                                            </checkbox>PROINFO
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                
+                                
+                                
+                                <!-- BOTÕES -->
+                                <div class="modal-footer">
+                                    <div class="col-md-3">
+                                        <button type="button" 
+                                                class="btn btn-success"
+                                                ng-click="">
+                                            Salvar
+                                        </button>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="button" data-dismiss="modal" class="btn default">Fechar</button> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>              
+                <!-- END MODAL EMPRESA -->
+                
+                
+                
                 <div class="portlet-title">
                     <div class="caption">                        
                         <span class="caption-subject font-green-sharp bold uppercase">Empresas</span>
@@ -63,8 +121,9 @@
                     <div class="row">
                         <div class="col-md-5">
                             <div class="btn-group">
-                                <a href="javascript:;" ng-click="goAdministrativoUsuariosCadastro()">
-                                    <button id="sample_editable_1_new" class="btn red">
+                                <a href="javascript:;" ng-click="cadastraNovaEmpresa()"
+                                   ng-class="{ 'element-hidden' : !usuarioPodeCadastrarEmpresas()}">
+                                    <button class="btn red">
                                     Nova Empresa <i class="fa fa-plus"></i>
                                 </button></a>
                             </div>
@@ -81,10 +140,10 @@
                                 <span class="seperator"></span>Exibindo 
                                 <select name="datatable_products_length" aria-controls="datatable_products" 
                                         class="form-control input-xsmall input-sm input-inline"
-                                        ng-model="usuario.itens_pagina"
+                                        ng-model="empresa.itens_pagina"
                                         ng-change="alterouItensPagina()"
                                         ng-options="item for item in itens_pagina">                                            
-                                </select> registros de {{usuario.total_registros}}
+                                </select> registros de {{empresa.total_registros}}
                             </label>
                         </div>
                     </div>
@@ -92,7 +151,7 @@
                     <div class="pagination-panel centralizarPaginacao col-md-3 col-sm-12"> Página 
                         <a href="javascript:;" ng-click="retrocedePagina()"
                            class="btn btn-sm default prev" 
-                           ng-class="{disabled: usuario.pagina <= 1}" 
+                           ng-class="{disabled: empresa.pagina <= 1}" 
                            title="Página anterior">
                                 <i class="fa fa-angle-left"></i>
                         </a>
@@ -103,29 +162,30 @@
                                ng-blur="atualizaPaginaDigitada()">
                         <a href="javascript:;" ng-click="avancaPagina()"
                            class="btn btn-sm default next"
-                           ng-class="{disabled: usuario.pagina >= usuario.total_paginas}"
+                           ng-class="{disabled: empresa.pagina >= empresa.total_paginas}"
                            title="Próxima página">
                             <i class="fa fa-angle-right"></i>
                         </a>
-                         de <span class="pagination-panel-total">{{usuario.total_paginas}}</span>
+                         de <span class="pagination-panel-total">{{empresa.total_paginas}}</span>
                     </div>
                     <!-- PESQUISA -->
                     <div class="col-md-5 col-sm-12">
-                        <div class="dataTables_filter">                            
+                        <div class="dataTables_filter"
+                             ng-class="{ 'element-hidden' : !usuarioPodeConsultarEmpresas()}">                            
                             <div class="col-sm-7 col-sm-offset-5" style="padding-right: 1px; padding-left: 1px;">
                                 <label>
                                     <div class="input-group input-icon right">
                                         <i class="fa fa-times" style="right:50px;cursor:pointer"
                                            ng-click="resetaBusca()"
-                                           ng-show="usuario.busca"></i>
+                                           ng-show="empresa.busca"></i>
                                         <input type="text" 
                                            class="form-control input-inline" 
                                            placeholder="Buscar" 
                                            ng-model="busca"
-                                           ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !busca)) && filtraUsuarios()">
+                                           ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !busca)) && filtraEmpresas()">
                                         <span class="input-group-addon">
                                             <i class="fa fa-search" style="cursor:pointer"
-                                                   ng-click="filtraUsuarios()"></i>
+                                                   ng-click="filtraEmpresas()"></i>
                                         </span>
                                     </div> 
                                 </label>
@@ -152,22 +212,24 @@
                     
                     <!--AÇÕES-->
                     <div class="col-sm-4" style="text-align:center">
-                        <label class="cabecalhoEmpresas">
-                            ---
+                        <label class="cabecalhoEmpresas"
+                               ng-class="{ 'element-hidden' : !usuarioPodeAlterarEmpresas() && !usuarioPodeExcluirEmpresas()}">
+                            Ações
                         </label>    
                     </div>
                 </div>
                 
                 <!--CONTEÚDO-->
-                <div class="row conteudoEmpresas">
+                <div class="row conteudoEmpresas" 
+                     ng-repeat="empresa in empresas">
                     <!--NOME DA EMPRESA-->
                     <div class="col-sm-4 dadosEmpresa">
-                        A Suprema
+                        {{empresa.ds_nome | uppercase}}
                     </div>
                     
                     <!--DATA DE CADASTRO-->
-                    <div class="col-sm-4 dadosEmpresa">
-                        25/04/2015    
+                    <div class="col-sm-4 dadosEmpresa"
+                         ng-bind="getDataString(empresa.dt_cadastro)">
                     </div>
                     
                     <!--BOTÃO AÇÕES-->
@@ -178,96 +240,31 @@
                             </a>
                             <ul class="dropdown-menu pull-right">
                                 <li>
-                                    <a href="javascript:;" ng-click="resetarSenhaDoUsuario(usuario)"> Resetar Senha</a>
+                                    <a href="javascript:;" ng-click="verFiliais(empresa)">Filiais</a>
                                 </li>
-                                <li>
-                                    <a href="javascript:;" ng-click="editarUsuario(usuario)">Editar</a>
+                                <li ng-show="usuarioPodeAlterarEmpresas()">
+                                    <a href="javascript:;" ng-click="editarEmpresa(empresa)">Editar</a>
                                 </li>
-                                <li>
-                                    <a href="javascript:;" ng-click="exluirUsuario(usuario)">Excluir</a>
+                                <li ng-show="usuarioPodeExcluirEmpresas()">
+                                    <a href="javascript:;" ng-click="excluirEmpresa(empresa)">Excluir</a>
                                 </li> 
                             </ul>
                         </div>         
                     </div>              
                 </div>
                 
-                <!--RÉPLICA CONTEÚDO-->
-                <div class="row conteudoEmpresas">
-                    <!--NOME DA EMPRESA-->
-                    <div class="col-sm-4 dadosEmpresa">
-                        Petróx
-                    </div>
-                    
-                    <!--DATA DE CADASTRO-->
-                    <div class="col-sm-4 dadosEmpresa">
-                        23/07/2015    
-                    </div>
-                    
-                    <!--BOTÃO AÇÕES-->
-                    <div class="col-sm-4 dadosEmpresa" style="text-align:center">
-                        <div class="btn-group">
-                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
-                                <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
-                            </a>
-                            <ul class="dropdown-menu pull-right">
-                                <li>
-                                    <a href="javascript:;" ng-click="resetarSenhaDoUsuario(usuario)"> Resetar Senha</a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;" ng-click="editarUsuario(usuario)">Editar</a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;" ng-click="exluirUsuario(usuario)">Excluir</a>
-                                </li> 
-                            </ul>
-                        </div>         
-                    </div>              
-                </div>
-                
-                <!--RÉPLICA CONTEÚDO-->
-                <div class="row conteudoEmpresas">
-                    <!--NOME DA EMPRESA-->
-                    <div class="col-sm-4 dadosEmpresa">
-                        Le Biscui
-                    </div>
-                    
-                    <!--DATA DE CADASTRO-->
-                    <div class="col-sm-4 dadosEmpresa">
-                        05/04/2015    
-                    </div>
-                    
-                    <!--BOTÃO AÇÕES-->
-                    <div class="col-sm-4 dadosEmpresa" style="text-align:center">
-                        <div class="btn-group">
-                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
-                                <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
-                            </a>
-                            <ul class="dropdown-menu pull-right">
-                                <li>
-                                    <a href="javascript:;" ng-click="resetarSenhaDoUsuario(usuario)"> Resetar Senha</a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;" ng-click="editarUsuario(usuario)">Editar</a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;" ng-click="exluirUsuario(usuario)">Excluir</a>
-                                </li> 
-                            </ul>
-                        </div>         
-                    </div>              
-                </div>
                 <!-- RODAPÉ : Exibição dos resultados e paginação -->
                 <div class="row" style="margin: 10px 0 20px 0">
                     <div class="col-md-4 col-sm-12">
                         <div class="dataTables_info" id="sample_editable_1_info" role="status" aria-live="polite">
-                            <strong>Exibindo os registros {{usuario.faixa_registros}}</strong>
+                            <strong>Exibindo os registros {{empresa.faixa_registros}}</strong>
                         </div>
                     </div>
                     <!--PAGINAÇÃO-RODAPÉ-->
                     <div class="pagination-panel centralizarPaginacao col-md-3 col-sm-12"> Página 
                         <a href="javascript:;" ng-click="retrocedePagina()"
                            class="btn btn-sm default prev" 
-                           ng-class="{disabled: usuario.pagina <= 1}" 
+                           ng-class="{disabled: empresa.pagina <= 1}" 
                            title="Página anterior">
                                 <i class="fa fa-angle-left"></i>
                         </a>
@@ -278,11 +275,11 @@
                                ng-blur="atualizaPaginaDigitada()">
                         <a href="javascript:;" ng-click="avancaPagina()"
                            class="btn btn-sm default next"
-                           ng-class="{disabled: usuario.pagina >= usuario.total_paginas}"
+                           ng-class="{disabled: empresa.pagina >= empresa.total_paginas}"
                            title="Próxima página">
                             <i class="fa fa-angle-right"></i>
                         </a>
-                         de <span class="pagination-panel-total">{{usuario.total_paginas}}</span>
+                         de <span class="pagination-panel-total">{{empresa.total_paginas}}</span>
                     </div>
                     <!-- FIM PAGINAÇÃO -->
                 </div>
