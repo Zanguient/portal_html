@@ -573,25 +573,30 @@
                                                                 </th-->
                                                                 <th tabindex="0" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 237px;">
+                                                                    style="width: 128px;">
                                                                     Data da Venda
                                                                 </th>
                                                                 <th tabindex="1" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 237px;">
-                                                                    Bandeira
+                                                                    style="width: 128px;">
+                                                                    Terminal Lógico
                                                                 </th>
                                                                 <th tabindex="2" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 128px;">
-                                                                    NSU
+                                                                    style="width: 237px;">
+                                                                    Bandeira
                                                                 </th>
                                                                 <th tabindex="3" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 88px;">
+                                                                    NSU
+                                                                </th>
+                                                                <th tabindex="4" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 128px;">
                                                                     Cod. Autorizador
                                                                 </th>
-                                                                <th tabindex="4" 
+                                                                <th tabindex="5" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 163px;">
                                                                     Valor Bruto
@@ -607,6 +612,10 @@
                                                                 </td>
                                                                 <!-- DATA DA VENDA -->
                                                                 <td ng-bind="getDataString(relanalitico.dtaVenda)">
+                                                                </td>
+                                                                <!-- TERMINAL LÓGICO -->
+                                                                <td>
+                                                                     {{relanalitico.dsTerminalLogico}}
                                                                 </td>
                                                                 <!-- BANDEIRA -->
                                                                 <td>
@@ -626,7 +635,7 @@
                                                                 </td>
                                                             </tr>
                                                             <tr role="row" class="odd linhaTotalRelatorios">
-                                                                <td colspan="4">
+                                                                <td colspan="5">
                                                                      Total Exibido
                                                                 </td>                                                     
                                                                 <td>
@@ -634,7 +643,7 @@
                                                                 </td> 
                                                             </tr>
                                                             <tr role="row" class="odd linhaTotalRelatorios">
-                                                                <td colspan="4">
+                                                                <td colspan="5">
                                                                      Total Filtrado
                                                                 </td>                                                     
                                                                 <td>

@@ -40,7 +40,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
  ### Interação com a WEB API ###
  
   * cliente/grupoempresa
-    - GET : listagem das empresas (coleção 1)
+    - GET : listagem das empresas (coleção 2)
 			[
 			  { id_grupo : int,
 				ds_nome : string,
@@ -48,7 +48,8 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				token : string,
 				fl_cardservices : boolean,
 				fl_taxservices : boolean,
-				fl_proinfo : boolean
+				fl_proinfo : boolean,
+				dt_ultimoAcesso : data
 			  }
 			]
 	- DELETE : deletar uma empresa

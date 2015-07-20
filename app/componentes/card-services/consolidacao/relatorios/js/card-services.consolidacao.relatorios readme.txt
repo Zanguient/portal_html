@@ -131,6 +131,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 							{
 								cnpj : string,
 								dtaVenda : date,
+								dsTerminalLogico : string,
 								desBandeira : string
 								nsu	: string,
 								cdAutorizador : string,

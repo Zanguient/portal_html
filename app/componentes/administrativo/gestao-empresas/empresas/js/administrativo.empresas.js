@@ -145,7 +145,7 @@ angular.module("administrativo-empresas", [])
                                                       valor: $scope.empresa.busca + '%'};        
         
        $webapi.get($apis.getUrl($apis.cliente.grupoempresa, 
-                                [$scope.token, 1, $campos.cliente.grupoempresa.ds_nome, 0, 
+                                [$scope.token, 2, $campos.cliente.grupoempresa.ds_nome, 0, 
                                  $scope.empresa.itens_pagina, $scope.empresa.pagina],
                                 filtros)) 
             .then(function(dados){
@@ -274,23 +274,62 @@ angular.module("administrativo-empresas", [])
       * Efetiva o cadastro do grupo empresa
       */
     var adicionaGrupoEmpresa = function(jsonEmpresa){
-        console.log("CADASTRA");console.log(jsonEmpresa); 
-        $scope.hideProgress();
-        $('#modalEmpresa').modal('hide');
+        $webapi.post($apis.getUrl($apis.cliente.grupoempresa, undefined, 
+                                  {id: 'token', valor: $scope.token}), jsonEmpresa)
+                .then(function(id_controller){
+                    $scope.showAlert('Empresa cadastrada com sucesso!', true, 'success', true);
+                    // Dismiss o progress
+                    $scope.hideProgress();
+                    // Remove o modal da visão
+                    $('#modalEmpresa').modal('hide');
+                    // Recarrega as empresas
+                    $scope.buscaEmpresas();
+                  },function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else $scope.showAlert('Houve uma falha ao cadastrar a empresa (' + failData.status + ')', true, 'danger', true);
+                     // Dismiss o progress
+                     $scope.hideProgress();
+                  }); 
     }
     /**
       * Efetiva a alteração do grupo empresa
       */
     var alteraGrupoEmpresa = function(jsonEmpresa){
-        console.log("ALTERA");console.log(jsonEmpresa); 
-        $scope.hideProgress();
-        $('#modalEmpresa').modal('hide');
+        $webapi.update($apis.getUrl($apis.cliente.grupoempresa, undefined, 
+                                    {id: 'token', valor: $scope.token}), jsonEmpresa)
+                .then(function(id_controller){
+                    $scope.showAlert('Empresa alterada com sucesso!', true, 'success', true);
+                    // Dismiss o progress
+                    $scope.hideProgress();
+                    // Remove o modal da visão
+                    $('#modalEmpresa').modal('hide');
+                    // Recarrega as empresas
+                    $scope.buscaEmpresas();
+                  },function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else $scope.showAlert('Houve uma falha ao cadastrar a empresa (' + failData.status + ')', true, 'danger', true);
+                     // Dismiss o progress
+                     $scope.hideProgress();
+                  }); 
     }                                            
     /**
-      * efetivamente a exclusão da empresa
+      * Efetivamente a exclusão da empresa
       */
-    var excluiEmpresa = function(id_grupo){
-        console.log("EXCLUIR " + id_grupo);    
+    var excluiEmpresa = function(id_grupo){ 
+        $scope.showProgress(divPortletBodyEmpresaPos);
+        $webapi.delete($apis.getUrl($apis.cliente.grupoempresa, undefined,
+                       [{id: 'token', valor: $scope.token},{id: 'id_grupo', valor: id_grupo}]))
+            .then(function(dados){
+                    $scope.showAlert('Empresa excluída com sucesso!', true, 'success', true);
+                    $scope.hideProgress(divPortletBodyEmpresaPos);
+                    // Recarrega os módulos
+                    $scope.buscaEmpresas();
+                  },function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 500) $scope.showAlert('Não foi possível excluir a empresa. Você pode desativar ela', true, 'danger', true);
+                     else $scope.showAlert('Houve uma falha ao excluir a empresa (' + failData.status + ')', true, 'danger', true);
+                     $scope.hideProgress(divPortletBodyEmpresaPos);
+                  }); 
     };                                         
                                                
                                                 
