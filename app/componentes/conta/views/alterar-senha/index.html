@@ -23,7 +23,69 @@
     </ul>
     <!-- END PAGE BREADCRUMB -->
     <!-- BEGIN PAGE CONTENT INNER -->
-    <div class="portlet light" style="min-height: 350px">                   
+    <div class="row">
+        <div class="col-md-12"  style="min-heigth: 1000px">
+            <div class="portlet light" style="min-height:400px">				 
+                <div class="portlet-title" style="margin-bottom:50px">
+                    <div class="caption">								
+                        <span class="caption-subject font-green-sharp bold uppercase">Alterar Senha</span>					
+                    </div>                    
+                </div>
+                
+                <!--DADOS PARA ALTERAÇÃO DA SENHA-->
+                <div class="row dadosAlterarSenha">
+                    <div class="col-sm-3 col-sm-offset-2">                        
+                        <label style="font-weight: bolder; vertical-align: middle;">Senha atual</label>
+                    </div> 
+                    <div class="col-sm-3 ">
+                        <input class="form-control input-inline" 
+                               placeholder="" type="password" 
+                               ng-model="oldPassword"/>
+                    </div>                    
+                </div>
+                <div class="row dadosAlterarSenha">
+                    <div class="col-sm-3  col-sm-offset-2">
+                        <label style="font-weight: bolder; vertical-align: middle">Nova senha</label>
+                    </div> 
+                    <div class="col-sm-3">                        
+                        <input class="form-control input-inline" 
+                               placeholder="" type="password" 
+                               ng-model="newPassword"/>
+                    </div>               
+                </div>
+                <div class="row dadosAlterarSenha">
+                    <div class="col-sm-3  col-sm-offset-2">
+                        <label style="font-weight: bolder; vertical-align: middle">Confirme a nova senha</label>
+                    </div> 
+                    <div class="col-sm-3">
+                        <input class="form-control input-inline" 
+                               placeholder="" type="password" 
+                               ng-model="confirmPassword"/>
+                    </div>
+                </div>
+                <div class="row dadosAlterarSenha">                    
+                    <div class="col-sm-3  col-sm-offset-2">
+                        <button class="btn grey" ng-click="cancela()">Cancelar</button>    
+                    </div>
+                    <div class="col-sm-3">
+                        <button class="btn btn-primary" ng-click="salvaSenha()">Salvar</button>
+                    </div>
+                </div>                                    
+            </div>            
+        </div>
+    </div>
+    
+    
+    
+    
+    <!--div class="portlet light"> 
+        <div class="portlet-title">
+            <div class="capition">
+                <div class="caption-subject font-green-sharp bold uppercase">Alterar Senha</div>
+            </div>
+        </div>
+        
+        
         <div class="row">
             <label style="font-weight: bolder; vertical-align: middle">Senha atual</label>
             <input class="form-control input-inline" 
@@ -47,6 +109,6 @@
             <button class="btn btn-primary" ng-click="salvaSenha()">Salvar</button>
             <button class="btn btn-default" ng-click="cancela()">Cancelar</button>
         </div>
-    </div>
+    </div-->
     <!-- END PAGE CONTENT INNER -->
 </div>
