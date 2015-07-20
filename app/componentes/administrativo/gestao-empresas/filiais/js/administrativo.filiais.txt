@@ -14,7 +14,7 @@ Gerenciar completamente a tela de filiais da Gestão de empresas.
 
 ### O que é necessário para usar o módulo? ###
 
-Como esse é um controller filho do controller principal "appCtrl" (app.js), ele herda todos os módulos importados por ele.
+Como esse é um controller filho do controller principal appCtrl (app.js), ele herda todos os módulos importados por ele.
 Além deles, é necessária a importação dos seguintes módulos externos.
 
  |----------------------------------------|---------------------------------------------------|-------------------------------------------|
@@ -26,10 +26,10 @@ Além deles, é necessária a importação dos seguintes módulos externos.
  
 ### Outras depêndencias ###
 
-  * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
-  * $scope.token do "appCtrl"
-  * $scope.grupoempresa, do "appCtrl" : grupo empresa informado pelo usuário na barra administrativa
-  * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
+  * Evento mudancaDeRota, proveniente do appCtrl, para de fato modificar a rota/estado
+  * $scope.token do appCtrl
+  * $scope.grupoempresa, do appCtrl : grupo empresa informado pelo usuário na barra administrativa
+  * Evento alterouGrupoEmpresa, emitido pelo controller appCtrl, para identificar a mudança do $scope.grupoempresa
   * APIS:
     - cliente/empresa
 	
@@ -40,15 +40,58 @@ Além deles, é necessária a importação dos seguintes módulos externos.
   * api/cliente/empresa
 	 - DELETE : deleta uma filial
 				  ?token=...&nu_cnpj=cnpj  OBS: remove tudo que tiver associado
-	 - GET  : listagem de todas as filiais da empresa gerenciada (coleção X)
+	 - GET  : listagem de todas as filiais da empresa gerenciada (coleção 1)
 	          [{ 
+				  nu_cnpj: string,
+				  ds_fantasia: string,
+				  ds_razaoSocial: string (ou null),
+				  ds_endereco: string (ou null),
+				  ds_cidade: string (ou null),
+				  sg_uf: string[2] (ou null),
+				  nu_cep: string[20] (ou null),
+				  nu_telefone: string[20] (ou null),
+				  ds_bairro: string (ou null),
+				  ds_email: string,
+				  dt_cadastro: date,
+				  fl_ativo: boolean,
+				  id_grupo: int,
+				  filial: string,
+				  nu_inscEstadual: int (ou null)
 			   }
 			  ]
 	- POST : nova filial
-				{	
+				{
+				  nu_cnpj: string,
+				  ds_fantasia: string,
+				  ds_razaoSocial: string (ou null),
+				  ds_endereco: string (ou null),
+				  ds_cidade: string (ou null),
+				  sg_uf: string[2] (ou null),
+				  nu_cep: string[20] (ou null),
+				  nu_telefone: string[20] (ou null),
+				  ds_bairro: string (ou null),
+				  ds_email: string,
+				  id_grupo: int,
+				  filial: string,
+				  nu_inscEstadual: int (ou null),
 				}
 	- PUT : altera os dados de uma filial
 				{ 
+				  nu_cnpj: string, (obrigatório!)
+				  ds_fantasia: string,
+				  ds_razaoSocial: string (ou null),
+				  ds_endereco: string (ou null),
+				  ds_cidade: string (ou null),
+				  sg_uf: string[2] (ou null),
+				  nu_cep: string[20] (ou null),
+				  nu_telefone: string[20] (ou null),
+				  ds_bairro: string (ou null),
+				  ds_email: string,
+				  dt_cadastro: date,
+				  fl_ativo: boolean, (obrigatório!)
+				  id_grupo: int, (obrigatório!)
+				  filial: string,
+				  nu_inscEstadual: int (ou null),
 				}
  
    

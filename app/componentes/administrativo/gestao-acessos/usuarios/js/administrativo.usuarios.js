@@ -275,7 +275,7 @@ angular.module("administrativo-usuarios", [])
         $scope.showProgress(divPortletBodyUsuarioPos);
         
         // json reseta senha
-        var jsonResetSenha = {UserId: id_users, Password: ''};
+        var jsonResetSenha = {userId: id_users, novaSenha: ''};
         
         $webapi.update($apis.getUrl($apis.administracao.webpagesmembership, undefined,
                        {id: 'token', valor: $scope.token}), jsonResetSenha)
@@ -320,7 +320,7 @@ angular.module("administrativo-usuarios", [])
                   },function(failData){
                      //console.log("FALHA AO DELETAR USUARIO: " + failData.status);
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
-                     else $scope.showAlert('Houve uma falha ao requisitar usuários (' + failData.status + ')', true, 'danger', true);
+                     else $scope.showAlert('Houve uma falha ao excluir o usuário (' + failData.status + ')', true, 'danger', true);
                      $scope.hideProgress(divPortletBodyUsuarioPos);
                   }); 
     };

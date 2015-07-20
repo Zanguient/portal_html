@@ -20,7 +20,7 @@
         </li>
     </ul>
     <!-- END PAGE BREADCRUMB -->
-    
+ 
     <div class="row">
         <div class="col-md-12">
             <!-- BEGIN TABLE PORTLET-->
@@ -62,7 +62,8 @@
                     <div class="row">
                         <div class="col-md-5">
                             <div class="btn-group">
-                                <a href="javascript:;" ng-click="goAdministrativoUsuariosCadastro()">
+                                <a href="javascript:;" ng-click=""
+                                   ng-class="{ 'element-hidden' : !usuarioPodeCadastrarFiliais()}">
                                     <button class="btn red">
                                     Nova Filial <i class="fa fa-plus"></i>
                                 </button></a>
@@ -80,10 +81,10 @@
                                 <span class="seperator"></span>Exibindo 
                                 <select name="datatable_products_length" aria-controls="datatable_products" 
                                         class="form-control input-xsmall input-sm input-inline"
-                                        ng-model="usuario.itens_pagina"
+                                        ng-model="filial.itens_pagina"
                                         ng-change="alterouItensPagina()"
                                         ng-options="item for item in itens_pagina">                                            
-                                </select> registros de {{usuario.total_registros}}
+                                </select> registros de {{filial.total_registros}}
                             </label>
                         </div>
                     </div>
@@ -91,7 +92,7 @@
                     <div class="pagination-panel centralizarPaginacao col-md-3 col-sm-12"> Página 
                         <a href="javascript:;" ng-click="retrocedePagina()"
                            class="btn btn-sm default prev" 
-                           ng-class="{disabled: usuario.pagina <= 1}" 
+                           ng-class="{disabled: filial.pagina <= 1}" 
                            title="Página anterior">
                                 <i class="fa fa-angle-left"></i>
                         </a>
@@ -102,11 +103,11 @@
                                ng-blur="atualizaPaginaDigitada()">
                         <a href="javascript:;" ng-click="avancaPagina()"
                            class="btn btn-sm default next"
-                           ng-class="{disabled: usuario.pagina >= usuario.total_paginas}"
+                           ng-class="{disabled: filial.pagina >= filial.total_paginas}"
                            title="Próxima página">
                             <i class="fa fa-angle-right"></i>
                         </a>
-                         de <span class="pagination-panel-total">{{usuario.total_paginas}}</span>
+                         de <span class="pagination-panel-total">{{filial.total_paginas}}</span>
                     </div>
                     <!-- PESQUISA -->
                     <div class="col-md-5 col-sm-12" style="margin-bottom:15px">
@@ -116,297 +117,15 @@
                                     <div class="input-group input-icon right">
                                         <i class="fa fa-times" style="right:50px;cursor:pointer"
                                            ng-click="resetaBusca()"
-                                           ng-show="usuario.busca"></i>
+                                           ng-show="filial.busca"></i>
                                         <input type="text" 
                                            class="form-control input-inline" 
                                            placeholder="Buscar" 
                                            ng-model="busca"
-                                           ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !busca)) && filtraUsuarios()">
+                                           ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !busca)) && filtraFiliais()">
                                         <span class="input-group-addon">
                                             <i class="fa fa-search" style="cursor:pointer"
-                                                   ng-click="filtraUsuarios()"></i>
-                                        </span>
-                                    </div> 
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="portlet-boddy">
-                    <div class="row dadosGetaoEmpresas">
-                        <div class="col-sm-12">
-                            
-                            <!--TITULO-->
-                            <div class="row tituloFilial">
-                                <div class="col-sm-12 titulo">
-                                    MARIA FLOR
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-10">
-                                    <!--CONTEÚDO-->
-                                    <!--PRIMEIRA LINHA-->
-                                    <div class="row">
-                                        <div class="col-sm-12">
-
-                                            <!--PRIMEIRA COLUNA-->
-                                            <div class="col-sm-6">
-                                                <!--CNPJ-->
-                                               <div class="row conteudoFiliais">
-                                                    <div class="col-sm-12">
-                                                        <label class="titulosconteudos">CNPJ:</label> 
-                                                        15.090.219/0001-04
-                                                    </div>
-                                                </div> 
-                                            </div> 
-
-                                            <!--SEGUNDA COLUNA-->
-                                            <div class="col-sm-4">
-
-                                                <!--FILIAL-->
-                                                <div class="row conteudoFiliais" style="margin-left:15px">
-                                                    <div class="col-sm-12">                                                
-                                                        Filial 07
-                                                    </div>
-                                                </div>
-                                            </div>                                     
-                                        </div>                           
-                                    </div>
-
-                                    <!--SEGUNDA LINHA-->
-                                    <div class="row">
-                                        <div class="col-sm-12">
-
-                                            <!--PRIMEIRA COLUNA-->
-                                            <div class="col-sm-6">
-                                               <div class="row conteudoFiliais">
-                                                    <div class="col-sm-12">
-                                                        <label class="titulosconteudos">ENDEREÇO:</label> 
-
-                                                        <!--ENDEREÇO-->
-                                                        <!--Rua-->
-                                                        <div class="row conteudoFiliais">
-                                                            <div class="col-sm-12">                                            
-                                                                Rua Exemplo
-                                                            </div>
-                                                        </div> 
-
-                                                        <!--BAIRRO/CIDADE/ESTADO-->
-                                                        <div class="row conteudoFiliais">
-                                                            <div class="col-sm-12">                                            
-                                                                Jardins-Aracaju/Sergipe
-                                                            </div>
-                                                        </div>
-
-                                                        <!--CEP-->
-                                                        <div class="row conteudoFiliais">
-                                                            <div class="col-sm-12">
-                                                                49020-300
-                                                            </div>
-                                                        </div>
-                                                    </div>                                                                               
-                                                </div>  
-                                            </div> 
-
-                                            <!--SEGUNDA COLUNA-->
-                                            <div class="col-sm-6">
-
-                                                <!--CONTATO-->                                        
-                                                <div class="row conteudoFiliais">
-                                                    <div class="col-sm-12">
-                                                        <label class="titulosconteudos">CONTATO:</label>  
-
-                                                        <!--EMAIL-->
-                                                        <div class="row conteudoFiliais">
-                                                            <div class="col-sm-12">
-                                                                maria@hotmail.com
-                                                            </div>
-                                                        </div>
-
-                                                        <!--TELEFONE-->
-                                                        <div class="row conteudoFiliais">
-                                                            <div class="col-sm-12">
-                                                                (79) 3204-6457
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>    
-                                        </div>                                
-                                    </div>
-                                </div>
-                                
-                                <!--COLUNA SEPARADA DAS DUAS ANTERIORES-->
-                                <!-- Botões-->
-                                <div class="col-sm-2" style="margin-top:40px;">
-                                    <div class="row" style=" text-align:right">
-                                        
-                                        <!--BOTÃO ALTERAR-->
-                                        <div class="col-sm-12" style="padding-bottom:15px;">
-                                            <a href="javascript:;" class="btn green">
-                                                <i class="fa fa-pencil"></i>
-                                            </a>
-                                        </div>
-                                        <!--BOTÃO CANCELAR-->
-                                        <div class="col-sm-12">
-                                            <a href="javascript:;" class="btn grey">
-                                                <i class="fa fa-times"></i>
-                                            </a>
-                                        </div>  
-                                    </div>    
-                                </div>
-                            </div>
-                            <!--RODAPÉ-->
-                            <!--DATA DE CADASTRO-->
-                            <div class="row rodapeConteudoFiliaias">
-                                <div class="col-sm-12">
-                                    Cadastrado em 21/06/2015
-                                </div>
-                            </div>                                                        
-                        </div>                        
-                    </div>    
-                    <!-- RODAPÉ : Exibição dos resultados e paginação -->
-                    <div class="row" style="margin: 10px 0 20px 0">
-                        <div class="col-md-4 col-sm-12">
-                            <div class="dataTables_info" id="sample_editable_1_info" role="status" aria-live="polite">
-                                <strong>Exibindo os registros {{usuario.faixa_registros}}</strong>
-                            </div>
-                        </div>
-                        <!--PAGINAÇÃO-RODAPÉ-->
-                        <div class="pagination-panel centralizarPaginacao col-md-3 col-sm-12"> Página 
-                            <a href="javascript:;" ng-click="retrocedePagina()"
-                               class="btn btn-sm default prev" 
-                               ng-class="{disabled: usuario.pagina <= 1}" 
-                               title="Página anterior">
-                                    <i class="fa fa-angle-left"></i>
-                            </a>
-                            <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
-                                   maxlength="4" style="text-align:center; margin: 0 5px;"
-                                   ng-model="paginaInformada" valid-integer-number
-                                   ng-keypress="($event.which === 13) ? alteraPagina() : 0"
-                                   ng-blur="atualizaPaginaDigitada()">
-                            <a href="javascript:;" ng-click="avancaPagina()"
-                               class="btn btn-sm default next"
-                               ng-class="{disabled: usuario.pagina >= usuario.total_paginas}"
-                               title="Próxima página">
-                                <i class="fa fa-angle-right"></i>
-                            </a>
-                             de <span class="pagination-panel-total">{{usuario.total_paginas}}</span>
-                        </div>
-                        <!-- FIM PAGINAÇÃO -->
-                    </div>
-                    <!-- FIM RODAPÉ -->
-                </div>                
-            </div>
-            <!-- END TABLE PORTLET-->
-        </div>
-    </div>
-    
-    
-    <div class="row">
-        <div class="col-md-12">
-            <!-- BEGIN TABLE PORTLET-->
-            <div class="portlet light">
-                <div class="portlet-title">
-                    <div class="caption">                        
-                        <span class="caption-subject font-green-sharp bold uppercase">Filiais</span>
-                    </div>
-                    <div class="actions">
-                        <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;" data-original-title="" title=""></a>
-                        <div class="btn-group">
-                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
-                            <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
-                            </a>
-                            <ul class="dropdown-menu pull-right">
-                                <li>
-                                    <a href="javascript:;">
-                                    Export to Excel </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                    Export to CSV </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                    Export to XML </a>
-                                </li>
-                                <li class="divider">
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                    Print Invoices </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="table-toolbar">
-                    <div class="row">
-                        <div class="col-md-5">
-                            <div class="btn-group">
-                                <a href="javascript:;" ng-click="goAdministrativoUsuariosCadastro()">
-                                    <button class="btn red">
-                                    Nova Filial <i class="fa fa-plus"></i>
-                                </button></a>
-                            </div>
-                        </div>                            
-                    </div>
-                </div>
-                
-                <!-- EXIBIÇÃO E PESQUISA -->
-                <div class="row" style="border-bottom:1px solid #EAEAEA">
-                    <!-- EXIBIÇÃO --> 
-                    <div class="col-md-4 col-sm-12">
-                        <div class="dataTables_length">
-                            <label>
-                                <span class="seperator"></span>Exibindo 
-                                <select name="datatable_products_length" aria-controls="datatable_products" 
-                                        class="form-control input-xsmall input-sm input-inline"
-                                        ng-model="usuario.itens_pagina"
-                                        ng-change="alterouItensPagina()"
-                                        ng-options="item for item in itens_pagina">                                            
-                                </select> registros de {{usuario.total_registros}}
-                            </label>
-                        </div>
-                    </div>
-                    <!--PAGINAÇÃO-TOPO-->
-                    <div class="pagination-panel centralizarPaginacao col-md-3 col-sm-12"> Página 
-                        <a href="javascript:;" ng-click="retrocedePagina()"
-                           class="btn btn-sm default prev" 
-                           ng-class="{disabled: usuario.pagina <= 1}" 
-                           title="Página anterior">
-                                <i class="fa fa-angle-left"></i>
-                        </a>
-                        <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
-                               maxlength="4" style="text-align:center; margin: 0 5px;"
-                               ng-model="paginaInformada" valid-integer-number
-                               ng-keypress="($event.which === 13) ? alteraPagina() : 0"
-                               ng-blur="atualizaPaginaDigitada()">
-                        <a href="javascript:;" ng-click="avancaPagina()"
-                           class="btn btn-sm default next"
-                           ng-class="{disabled: usuario.pagina >= usuario.total_paginas}"
-                           title="Próxima página">
-                            <i class="fa fa-angle-right"></i>
-                        </a>
-                         de <span class="pagination-panel-total">{{usuario.total_paginas}}</span>
-                    </div>
-                    <!-- PESQUISA -->
-                    <div class="col-md-5 col-sm-12" style="margin-bottom:15px">
-                        <div class="dataTables_filter">                            
-                            <div class="col-sm-7 col-sm-offset-5" style="padding-right: 1px; padding-left: 1px;">
-                                <label>
-                                    <div class="input-group input-icon right">
-                                        <i class="fa fa-times" style="right:50px;cursor:pointer"
-                                           ng-click="resetaBusca()"
-                                           ng-show="usuario.busca"></i>
-                                        <input type="text" 
-                                           class="form-control input-inline" 
-                                           placeholder="Buscar" 
-                                           ng-model="busca"
-                                           ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !busca)) && filtraUsuarios()">
-                                        <span class="input-group-addon">
-                                            <i class="fa fa-search" style="cursor:pointer"
-                                                   ng-click="filtraUsuarios()"></i>
+                                               ng-click="filtraFiliais()"></i>
                                         </span>
                                     </div> 
                                 </label>
@@ -418,177 +137,80 @@
                     <!--div class="row dadosGetaoEmpresas"></div-->
                     <div class="table-scrollable">
                         <table class="table table-striped table-hover table-bordered dataTable no-footer conteudoTabelas"
-                               id="sample_editable_1" 
-                               role="grid"
-                               aria-describedby="sample_editable_1_info">
+                               role="grid">
 							<thead>
 				                <tr role="row">
-                                    <th class="sorting_asc" 
-                                        tabindex="0" 
-                                        aria-controls="sample_editable_1" 
-                                        rowspan="1"
-                                        colspan="1" 
-                                        aria-sort="ascending"                                        
+                                    <th tabindex="0" rowspan="1" colspan="1"                                      
                                         style="width: 230px; text-align:left">
-									 Empresa
+                                        Empresa
 								    </th>
-                                    <th class="" 
-                                        tabindex="1" 
-                                        aria-controls="sample_editable_1" 
-                                        rowspan="1"
-                                        colspan="1" 
-                                        aria-sort="ascending"                                        
+                                    <th tabindex="1" rowspan="1" colspan="1"                                          
                                         style="width: 188px; text-align:left;">
-									 CNPJ
+									    CNPJ
 								    </th>
-                                    <th class=""
-                                        tabindex="2" 
-                                        aria-controls="sample_editable_1" 
-                                        rowspan="1" 
-                                        colspan="1"                                         
+                                    <th tabindex="2" rowspan="1" colspan="1"                                          
                                         style="width: 100px;">
                                          Filial
                                     </th>                                    
-                                    <th class=""
-                                        tabindex="3" 
-                                        aria-controls="sample_editable_1" 
-                                        rowspan="1" 
-                                        colspan="1"                                        
+                                    <th tabindex="3" rowspan="1" colspan="1"                                         
                                         style="width: 160px;">
                                          Email
                                     </th>
-                                    <th class="" 
-                                        tabindex="4"
-                                        aria-controls="sample_editable_1" 
-                                        rowspan="1" 
-                                        colspan="1"                                         
+                                    <th tabindex="4" rowspan="1" colspan="1"                                          
                                         style="width: 130px;">
-                                         Tel
+                                         Telefone
                                     </th>
-                                    <th class="" 
-                                        tabindex="5"
-                                        aria-controls="sample_editable_1" 
-                                        rowspan="1" 
-                                        colspan="1"                                         
+                                    <th tabindex="5" rowspan="1" colspan="1"                                        
                                         style="width: 100px;">
-                                         ---
+                                         Ações
                                     </th>
                                 </tr>
 							</thead>
 							<tbody>
-				                <tr role="row" class="odd">
-                                    <td class="sorting_1" style="text-align:left">
-                                         Maria Flor
+				                <tr role="row" class="odd" 
+                                    ng-repeat="filial in filiais">
+                                    <td style="text-align:center">
+                                         {{filial.ds_fantasia | uppercase}}
                                     </td>
-                                    <td style="text-align:left">
-                                         15.090.219/0001-04
+                                    <td style="text-align:center">
+                                         {{filial.nu_cnpj}}
                                     </td><td>
-                                         07
+                                         {{filial.filial  | uppercase}}
                                     </td>                                    
-                                    <td>
-                                        maria@hotmail.com
+                                    <td style="text-align:center">
+                                        {{filial.ds_email  | lowercase}}
                                     </td>
-                                    <td>
-                                       (79) 3204-6457
+                                    <td style="text-align:center">
+                                       {{filial.nu_telefone}}
                                     </td>
-                                    <td>
-                                       <div class="btn-group">
+                                    <td style="text-align:center">
+                                       <div class="btn-group"
+                                            ng-show="usuarioPodeDesativarFiliais() || usuarioPodeAlterarEmpresas() || usuarioPodeExcluirFiliais()">
                                             <a class="btn btn-default btn-circle" 
                                                href="javascript:;" 
                                                data-toggle="dropdown" 
                                                aria-expanded="false">
-                                            <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
+                                                <i class="fa fa-pencil"></i> 
+                                                Ações 
+                                                <i class="fa fa-angle-down"></i>
                                             </a>
                                             <ul class="dropdown-menu pull-right">
-                                                <li>
-                                                    <a href="javascript:;" ng-click="verFiliais(empresa)">Filiais</a>
+                                                <li ng-show="usuarioPodeDesativarFiliais()">
+                                                    <a ng-show="filial.fl_ativo"
+                                                       href="javascript:;" ng-click="desativar(filial)">Desativar</a>
+                                                    <a ng-show="!filial.fl_ativo"
+                                                       href="javascript:;" ng-click="ativar(filial)">Ativar</a>
                                                 </li>
                                                 <li ng-show="usuarioPodeAlterarEmpresas()" class="ng-hide">
-                                                    <a href="javascript:;" ng-click="editarEmpresa(empresa)">Editar</a>
+                                                    <a href="javascript:;" ng-click="editarFilial(filial)">Editar</a>
                                                 </li>
-                                                <li ng-show="usuarioPodeExcluirEmpresas()" class="ng-hide">
-                                                    <a href="javascript:;" ng-click="excluirEmpresa(empresa)">Excluir</a>
+                                                <li ng-show="usuarioPodeExcluirFiliais()">
+                                                    <a href="javascript:;" ng-click="excluirFilial(filial)">Excluir</a>
                                                 </li> 
                                             </ul>
                                         </div>
                                     </td>
                                 </tr>   
-                                <tr role="row" class="odd">
-                                    <td class="sorting_1" style="text-align:left">
-                                         Suprema
-                                    </td>
-                                    <td style="text-align:left">
-                                         15.670.219/0001-09
-                                    </td> <td>
-                                         17
-                                    </td>                                    
-                                    <td>
-                                        suprema@hotmail.com
-                                    </td>
-                                    <td>
-                                       (79) 3256-6876
-                                    </td>
-                                    <td>
-                                       <div class="btn-group">
-                                            <a class="btn btn-default btn-circle" 
-                                               href="javascript:;" 
-                                               data-toggle="dropdown" 
-                                               aria-expanded="false">
-                                            <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
-                                            </a>
-                                            <ul class="dropdown-menu pull-right">
-                                                <li>
-                                                    <a href="javascript:;" ng-click="verFiliais(empresa)">Filiais</a>
-                                                </li>
-                                                <li ng-show="usuarioPodeAlterarEmpresas()" class="ng-hide">
-                                                    <a href="javascript:;" ng-click="editarEmpresa(empresa)">Editar</a>
-                                                </li>
-                                                <li ng-show="usuarioPodeExcluirEmpresas()" class="ng-hide">
-                                                    <a href="javascript:;" ng-click="excluirEmpresa(empresa)">Excluir</a>
-                                                </li> 
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr> 
-                                <tr role="row" class="odd">
-                                    <td class="sorting_1" style="text-align:left">
-                                         Petrox
-                                    </td>
-                                    <td style="text-align:left">
-                                         14.230.219/0001-20
-                                    </td>
-                                    <td>
-                                         25
-                                    </td>                                    
-                                    <td>
-                                        petrox@hotmail.com
-                                    </td>
-                                    <td>
-                                       (79) 3267-9876
-                                    </td>
-                                    <td>
-                                       <div class="btn-group">
-                                            <a class="btn btn-default btn-circle" 
-                                               href="javascript:;" 
-                                               data-toggle="dropdown" 
-                                               aria-expanded="false">
-                                            <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
-                                            </a>
-                                            <ul class="dropdown-menu pull-right">
-                                                <li>
-                                                    <a href="javascript:;" ng-click="verFiliais(empresa)">Filiais</a>
-                                                </li>
-                                                <li ng-show="usuarioPodeAlterarEmpresas()" class="ng-hide">
-                                                    <a href="javascript:;" ng-click="editarEmpresa(empresa)">Editar</a>
-                                                </li>
-                                                <li ng-show="usuarioPodeExcluirEmpresas()" class="ng-hide">
-                                                    <a href="javascript:;" ng-click="excluirEmpresa(empresa)">Excluir</a>
-                                                </li> 
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>    
-                                
                             </tbody>
                         </table>
                     </div>
@@ -597,15 +219,15 @@
                     <!-- RODAPÉ : Exibição dos resultados e paginação -->
                     <div class="row" style="margin: 10px 0 20px 0">
                         <div class="col-md-4 col-sm-12">
-                            <div class="dataTables_info" id="sample_editable_1_info" role="status" aria-live="polite">
-                                <strong>Exibindo os registros {{usuario.faixa_registros}}</strong>
+                            <div class="dataTables_info" role="status" aria-live="polite">
+                                <strong>Exibindo os registros {{filial.faixa_registros}}</strong>
                             </div>
                         </div>
                         <!--PAGINAÇÃO-RODAPÉ-->
                         <div class="pagination-panel centralizarPaginacao col-md-3 col-sm-12"> Página 
                             <a href="javascript:;" ng-click="retrocedePagina()"
                                class="btn btn-sm default prev" 
-                               ng-class="{disabled: usuario.pagina <= 1}" 
+                               ng-class="{disabled: filial.pagina <= 1}" 
                                title="Página anterior">
                                     <i class="fa fa-angle-left"></i>
                             </a>
@@ -616,11 +238,11 @@
                                    ng-blur="atualizaPaginaDigitada()">
                             <a href="javascript:;" ng-click="avancaPagina()"
                                class="btn btn-sm default next"
-                               ng-class="{disabled: usuario.pagina >= usuario.total_paginas}"
+                               ng-class="{disabled: filial.pagina >= filial.total_paginas}"
                                title="Próxima página">
                                 <i class="fa fa-angle-right"></i>
                             </a>
-                             de <span class="pagination-panel-total">{{usuario.total_paginas}}</span>
+                             de <span class="pagination-panel-total">{{filial.total_paginas}}</span>
                         </div>
                         <!-- FIM PAGINAÇÃO -->
                     </div>

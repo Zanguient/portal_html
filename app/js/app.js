@@ -946,14 +946,23 @@ angular.module("AtosCapital", ['ui.router',
     /** 
       * Seleciona Grupo Empresa
       */
-    $scope.selecionaGrupoEmpresa = function(grupoempresa){
-        associaUsuarioAGrupoEmpresa(grupoempresa.id_grupo, function(dados){ $scope.grupoempresa = grupoempresa; });
+    $scope.selecionaGrupoEmpresa = function(grupoempresa, funcaoSucesso){
+        associaUsuarioAGrupoEmpresa(grupoempresa.id_grupo, 
+                                    function(dados){ 
+                                        $scope.grupoempresa = grupoempresa;
+                                        if(typeof funcaoSucesso === 'function') funcaoSucesso();
+                                     }
+                                   );
     };
     /** 
       * Limpar Grupo Empresa
       */
-    $scope.limpaGrupoEmpresa = function(){
-        associaUsuarioAGrupoEmpresa(-1, function(dados){ $scope.grupoempresa = undefined; });
+    $scope.limpaGrupoEmpresa = function(funcaoSucesso){
+        associaUsuarioAGrupoEmpresa(-1, function(dados){ 
+                                            $scope.grupoempresa = undefined;
+                                            if(typeof funcaoSucesso === 'function') funcaoSucesso();
+                                         }
+                                   );
     };
     var associaUsuarioAGrupoEmpresa = function(id_grupo, funcaoSucesso){
         //console.log(id_grupo);

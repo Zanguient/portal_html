@@ -40,7 +40,8 @@
             <label style="font-weight: bolder; vertical-align: middle">Confirme a nova senha</label>
             <input class="form-control input-inline" 
                    placeholder="" type="password" 
-                   ng-model="confirmPassword"/>
+                   ng-model="confirmPassword"
+                   ng-keypress="($event.which == 13) ? salvaSenha() : 0"/>
         </div>
         <div class="row">
             <button class="btn btn-primary" ng-click="salvaSenha()">Salvar</button>

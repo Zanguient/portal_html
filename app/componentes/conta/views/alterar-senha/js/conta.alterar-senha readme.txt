@@ -29,9 +29,11 @@ Não é necessário nenhum outro módulo externo.
  
   * api/administracao/webpagesmembership
      - PUT  : altera a senha 
-	          { senhaAtual: string,
+	          { userId : -1,  // => indica que é o usuário logado
+			    senhaAtual: string,
 			    novaSenha : '' } // password vazio => redefinir senha para a padrão
  
+   
    
 
    

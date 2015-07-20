@@ -174,7 +174,9 @@ angular.module("administrativo-empresas", [])
                                                 
     // AÇÕES
     $scope.verFiliais = function(empresa){
-        console.log("VER FILIAIS DE '" + empresa.ds_nome + "' (" + empresa.id_grupo + ")");     
+        //console.log("VER FILIAIS DE '" + empresa.ds_nome + "' (" + empresa.id_grupo + ")");
+        if(!$scope.grupoempresa) $scope.selecionaGrupoEmpresa(empresa, function(){ $scope.goAdministrativoFiliais(); });
+        else $scope.goAdministrativoFiliais();
     };
     /**
       * Valida o nome grupo empresa
