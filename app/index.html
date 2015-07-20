@@ -58,6 +58,7 @@
 <link href="css/layout.css" rel="stylesheet" type="text/css">
 <link href="css/default.css" rel="stylesheet" type="text/css" id="style_color">
 <link href="../css/custom.css" rel="stylesheet" type="text/css">
+<link href="../css/fontes.css" rel="stylesheet" type="text/css">
 <!-- END THEME STYLES -->
 <link rel="shortcut icon" href="../img/favicon.ico">  
     
@@ -223,8 +224,7 @@
                                        ng-show="PERMISSAO_FILTRO_EMPRESA && PERMISSAO_ADMINISTRATIVO && grupoempresa">
                                         <i class="fa fa-times-circle"></i>
                                     </a>
-                                    <a href="javascript:;" 
-                                       class="btn dropdown-toggle" 
+                                    <a href="javascript:;" class="btn dropdown-toggle" 
                                        data-toggle="dropdown"
                                        ng-show="PERMISSAO_FILTRO_EMPRESA && PERMISSAO_ADMINISTRATIVO && !grupoempresa">
                                         <i class="icon-settings" 
@@ -247,12 +247,12 @@
                                                       typeahead-wait-ms="500"
                                                       typeahead="gempresa as gempresa.ds_nome for gempresa in buscaGrupoEmpresas($viewValue)"/>
                                             </div>
-                                            <div style="width:100%; margin-top:15px" ng-show="grupoempresa">
+                                            <!--div style="width:100%; margin-top:15px" ng-show="grupoempresa">
                                                 <a href="javascript:;" ng-click="limpaGrupoEmpresa()" class="btn">
                                                     <i class="fa fa-times-circle"></i>
                                                 </a>
                                                 <strong>{{grupoempresa.ds_nome || ''}}</strong>
-                                            </div>
+                                            </div-->
                                         </form>
                                     </div>
                                 </td> 

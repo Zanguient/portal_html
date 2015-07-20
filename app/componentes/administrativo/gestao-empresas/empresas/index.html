@@ -29,12 +29,12 @@
                  <!-- MODAL EMPRESA -->
                 <div class="modal fade ng-scope" id="modalEmpresa" tabindex="-1" 
                      aria-hidden="true" style="display: none;">
-                    <div class="modal-dialog" style="width: 500px">
+                    <div class="modal-dialog" style="width: 600px">
                         <div class="modal-content">
                             <div class="modal-header">                    
                                 <h4 class="modal-title modal-cabecalho">{{modalEmpresa.titulo}}</h4>
                             </div>
-                            <div class="modal-body height-auto" style="width: 500px">
+                            <div class="modal-body height-auto" style="width: 100%">
                                 <div class="row">
                                     <div class="col-sm-12" style="margin-bottom:10px" >
                                         <label>NOME:</label>
@@ -55,19 +55,28 @@
                                                 <checkbox normal ng-model="modalEmpresa.fl_cardservices" 
                                                             ng-change="">
                                                 </checkbox>
+                                                <i class="fa icone-cardservices" title="Card Services"
+                                                   style="padding-left:3px; font-size: 25px; vertical-align: middle">
+                                                </i>
                                                 <label style="padding-left:3px">CARD SERVICES</label>
+                                            </div>                                            
+                                            <div class="col-sm-4">
+                                                <checkbox normal ng-model="modalEmpresa.fl_proinfo" 
+                                                          ng-change="">
+                                                </checkbox>
+                                                <i class="fa icone-proinfo" title="ProInfo"
+                                                   style="padding-left:3px; font-size: 25px; vertical-align: middle">
+                                                </i>
+                                                <label style="padding-left:3px">PROINFO</label>
                                             </div>
                                             <div class="col-sm-4">
                                                 <checkbox normal ng-model="modalEmpresa.fl_taxservices" 
                                                           ng-change="">
                                                 </checkbox>
+                                                <i class="fa icone-taxservices" title="Tax Services"
+                                                   style="padding-left:3px; font-size: 25px; vertical-align: middle">
+                                                </i>
                                                 <label style="padding-left:3px">TAX SERVICES</label>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <checkbox normal ng-model="modalEmpresa.fl_proinfo" 
-                                                          ng-change="">
-                                                </checkbox>
-                                                <label style="padding-left:3px">PROINFO</label>
                                             </div>
                                         </div>
                                     </div>
@@ -210,61 +219,109 @@
                 <!--CABEÇALHO-->
                 <div class="row tituloEmpresa">
                     
-                    <!--NOME DA EMPRESA-->
-                    <div class="col-sm-4">
-                        <label class="cabecalhoEmpresas">
-                            EMPRESA
-                        </label>    
-                    </div>
+                    <div class="col-sm-12">
                     
-                    <!--DATA DE CADASTRO-->
-                    <div class="col-sm-4" style="text-align:center">
-                        <label class="cabecalhoEmpresas">
-                            DATA DE CADASTRO
-                        </label>    
-                    </div>
-                    
-                    <!--AÇÕES-->
-                    <div class="col-sm-4" style="text-align:center">
-                        <label class="cabecalhoEmpresas"
-                               ng-class="{ 'element-hidden' : !usuarioPodeAlterarEmpresas() && !usuarioPodeExcluirEmpresas()}">
-                            Ações
-                        </label>    
+                        <!--NOME DA EMPRESA-->
+                        <div class="col-sm-4">
+                            <label class="cabecalhoEmpresas">
+                                EMPRESA
+                            </label>    
+                        </div>
+
+                        <!-- SERVIÇOS -->
+                        <div class="col-sm-2" style="text-align:center">
+                            <label class="cabecalhoEmpresas">
+                               SERVIÇOS
+                            </label>    
+                        </div>
+
+                        <!-- SITUAÇÃO -->
+                        <div class="col-sm-1" style="text-align:center">
+                            <label class="cabecalhoEmpresas">
+                               SITUAÇÃO
+                            </label>    
+                        </div>
+
+                        <!-- ÚLTIMO ACESSO -->
+                        <div class="col-sm-2" style="text-align:center">
+                            <label class="cabecalhoEmpresas">
+                               ÚLTIMO ACESSO
+                            </label>    
+                        </div>
+
+                        <!--DATA DE CADASTRO-->
+                        <div class="col-sm-2" style="text-align:center">
+                            <label class="cabecalhoEmpresas">
+                                DATA DE CADASTRO
+                            </label>    
+                        </div>
+
+                        <!--AÇÕES-->
+                        <div class="col-sm-1" style="text-align:center">
+                            <label class="cabecalhoEmpresas"
+                                   ng-class="{ 'element-hidden' : !usuarioPodeAlterarEmpresas() && !usuarioPodeExcluirEmpresas()}">
+                                AÇÕES
+                            </label>    
+                        </div>
                     </div>
                 </div>
                 
                 <!--CONTEÚDO-->
                 <div class="row conteudoEmpresas" 
                      ng-repeat="empresa in empresas">
-                    <!--NOME DA EMPRESA-->
-                    <div class="col-sm-4 dadosEmpresa">
-                        {{empresa.ds_nome | uppercase}}
-                    </div>
                     
-                    <!--DATA DE CADASTRO-->
-                    <div class="col-sm-4 dadosEmpresa"
-                         ng-bind="getDataString(empresa.dt_cadastro)" style="text-align:center">
-                    </div>
+                    <div class="col-sm-12">
                     
-                    <!--BOTÃO AÇÕES-->
-                    <div class="col-sm-4 dadosEmpresa" style="text-align:center">
-                        <div class="btn-group">
-                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
-                                <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
-                            </a>
-                            <ul class="dropdown-menu pull-right">
-                                <li>
-                                    <a href="javascript:;" ng-click="verFiliais(empresa)">Filiais</a>
-                                </li>
-                                <li ng-show="usuarioPodeAlterarEmpresas()">
-                                    <a href="javascript:;" ng-click="editarEmpresa(empresa)">Editar</a>
-                                </li>
-                                <li ng-show="usuarioPodeExcluirEmpresas()">
-                                    <a href="javascript:;" ng-click="excluirEmpresa(empresa)">Excluir</a>
-                                </li> 
-                            </ul>
-                        </div>         
-                    </div>              
+                        <!--NOME DA EMPRESA-->
+                        <div class="col-sm-4 dadosEmpresa">
+                            {{empresa.ds_nome | uppercase}}
+                        </div>
+
+                        <!-- SERVIÇOS -->
+                        <div class="col-sm-2 dadosEmpresa" style="text-align:center">
+                            <i class="fa icone-cardservices" title="Card Services"
+                               ng-show="empresa.fl_cardservices" style="font-size: 30px"></i>
+                            <i class="fa icone-proinfo" title="ProInfo"
+                                 ng-show="empresa.fl_proinfo" style="font-size: 30px"></i> 
+                            <i class="fa icone-taxservices" title="Tax Services"
+                                 ng-show="empresa.fl_taxservices" style="font-size: 30px"></i> 
+                        </div>
+
+                        <!-- SITUAÇÃO -->
+                        <div class="col-sm-1" style="text-align:center">
+                            ATIVO   
+                        </div>
+
+                        <!-- ÚLTIMO ACESSO -->
+                        <div class="col-sm-2 dadosEmpresa"
+                             ng-bind="getDataString(empresa.dt_ultimoAcesso) !== '01/01/0001' ? getDataString(empresa.dt_ultimoAcesso) : '-'" style="text-align:center">
+                        </div>
+
+                        <!--DATA DE CADASTRO-->
+                        <div class="col-sm-2 dadosEmpresa"
+                             ng-bind="getDataString(empresa.dt_cadastro)" style="text-align:center">
+                        </div>
+
+                        <!--BOTÃO AÇÕES-->
+                        <div class="col-sm-1 dadosEmpresa" style="text-align:center">
+                            <div class="btn-group">
+                                <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
+                                </a>
+                                <ul class="dropdown-menu pull-right">
+                                    <li>
+                                        <a href="javascript:;" ng-click="verFiliais(empresa)">Filiais</a>
+                                    </li>
+                                    <li ng-show="usuarioPodeAlterarEmpresas()">
+                                        <a href="javascript:;" ng-click="editarEmpresa(empresa)">Editar</a>
+                                    </li>
+                                    <li ng-show="usuarioPodeExcluirEmpresas()">
+                                        <a href="javascript:;" ng-click="excluirEmpresa(empresa)">Excluir</a>
+                                    </li> 
+                                </ul>
+                            </div>         
+                        </div>          
+                    </div>
                 </div>
                 
                 <!-- RODAPÉ : Exibição dos resultados e paginação -->
