@@ -13,10 +13,8 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
                                             '$http',
                                             '$campos',
                                             '$webapi',
-                                            '$apis',
-                                            '$autenticacao', 
-                                            function($scope,$state,$http,$campos,
-                                                     $webapi,$apis,$autenticacao){ 
+                                            '$apis', 
+                                            function($scope,$state,$http,$campos,$webapi,$apis){ 
    
     var divPortletBodyModuloFuncionalidadePos = 0; // posição da div que vai receber o loading progress
     $scope.paginaInformada = 1; // página digitada pelo usuário

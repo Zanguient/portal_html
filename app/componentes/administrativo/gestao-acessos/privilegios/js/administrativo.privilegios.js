@@ -14,10 +14,9 @@ angular.module("administrativo-privilegios", [])
                                             '$campos',
                                             '$webapi',
                                             '$apis',
-                                            '$filter',
-                                            '$autenticacao', 
+                                            '$filter', 
                                             function($scope,$state,$http,$campos,
-                                                     $webapi,$apis,$filter,$autenticacao){ 
+                                                     $webapi,$apis,$filter){ 
    
     var divPortletBodyPrivilegioPos = 0; // posição da div que vai receber o loading progress
     $scope.paginaInformada = 1; // página digitada pelo privilégio

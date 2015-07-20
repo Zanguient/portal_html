@@ -28,6 +28,8 @@ angular.module("AtosCapital", ['ui.router',
                                'card-services-conciliacao-vendas',
                                'card-services-dados-acesso',
                                'card-services-consolidacao-relatorios',
+                               'conta',
+                               'conta-alterar-senha',
                                'usuario-sem-link']) 
 
 
@@ -177,7 +179,27 @@ angular.module("AtosCapital", ['ui.router',
         data: {
             titulo: 'Card Services'
         }
-      })    
+      }) 
+    
+    
+      // CONTA
+      .state('minha-conta', {
+        url: prefixo + 'minha-conta',
+        templateUrl: 'componentes/conta/index.html',
+        controller: "contaCtrl",
+        data: {
+            titulo: 'Minha Conta'
+        }
+      }) 
+    
+      .state('minha-conta-alterar-senha', {
+        url: prefixo + 'minha-conta/alterar-senha',
+        templateUrl: 'componentes/conta/views/alterar-senha/index.html',
+        controller: "conta-alterar-senhaCtrl",
+        data: {
+            titulo: 'Minha Conta'
+        }
+      }) 
     
     
       .state('nao-autorizado', {
@@ -376,6 +398,21 @@ angular.module("AtosCapital", ['ui.router',
     $scope.goCardServicesConsolidacaoRelatorios = function(params){
         $scope.go('card-services-consolidacao-relatorios', params);
     }; 
+    /**
+      * Exibe a tela de perfil de conta
+      */
+    $scope.goMinhaConta = function(params){
+        $scope.go('minha-conta', params);    
+    };
+    /**
+      * Exibe a tela para alterar a senha do usuário
+      */
+    $scope.goMinhaContaAlterarSenha = function(params){
+        $scope.go('minha-conta-alterar-senha', params);    
+    };                        
+    /**
+      * Exibe que a tela informando que o usuário não possui acesso
+      */
     $scope.goUsuarioSemLinks = function(params){
         $scope.go('usuario-sem-link', params);
     };
@@ -778,6 +815,10 @@ angular.module("AtosCapital", ['ui.router',
                 $scope.goCardServicesDadosAcesso(); break;     
             case $state.get('card-services-consolidacao-relatorios').url : 
                 $scope.goCardServicesConsolidacaoRelatorios(); break;
+            case $state.get('minha-conta').url :
+                $scope.goMinhaConta(); break;
+            case $state.get('minha-conta-alterar-senha').url :
+                $scope.goMinhaContaAlterarSenha(); break;
             default : if(typeof $scope.goHome == 'function') $scope.goHome(); // Exibe tela inicial
         }
     };                        

@@ -80,7 +80,7 @@
             
 			<!-- BEGIN LOGO -->
 			<div class="page-logo">
-				<a href ng-click="goHome()"><img ng-src="../img/AtosCapital.jpg" title="{{empresa.nome}}" class="logo-default"></a>
+				<a href="javascript:;" ng-click="goHome()"><img ng-src="../img/AtosCapital.jpg" title="{{empresa.nome}}" class="logo-default"></a>
 			</div>
 			<!-- END LOGO -->
             
@@ -101,17 +101,19 @@
 						</a>
 						<ul class="dropdown-menu dropdown-menu-default">
 							<li>
-								<a href="">
-								<i class="icon-user"></i> Minha Conta </a>
+								<a href="javascript:;" ng-click="goMinhaConta()">
+								    <i class="icon-user"></i> 
+                                    Minha Conta 
+                                </a>
 							</li>
 							<li class="divider">
 							</li>
-							<li>
+							<!--li>
 								<a href="">
 								<i class="icon-lock"></i> Bloquear Tela </a>
-							</li>
+							</li-->
 							<li>
-								<a ng-click="voltarTelaLogin()">
+								<a href="javascript:;" ng-click="voltarTelaLogin()">
 								<i class="icon-key"></i> Desconectar </a>
 							</li>
 						</ul>
@@ -152,8 +154,8 @@
                            data-close-others="true" 
                            href="javascript:;" 
                            ng-click="item.link()" 
-                           data-toggle="dropdown" 
                            ng-class="{'dropdown-toggle' : item.subControllers && item.subControllers.length > 0}">
+                           <!--data-toggle="dropdown" -->    
                             {{item.ds_controller}} 
                             <i ng-show="item.subControllers && item.subControllers.length > 0" 
                                class="fa fa-angle-down"></i>
@@ -453,6 +455,8 @@
 <script src="componentes/card-services/consolidacao/dados-acesso/js/card-services.dados-acesso.js" type="text/javascript"></script>
 <script src="componentes/card-services/consolidacao/relatorios/js/card-services.consolidacao.relatorios.js" type="text/javascript"></script>
 <script src="componentes/usuario-sem-link/js/usuario-sem-link.js" type="text/javascript"></script>
+<script src="componentes/conta/js/conta.js" type="text/javascript"></script> 
+<script src="componentes/conta/views/alterar-senha/js/conta.alterar-senha.js" type="text/javascript"></script> 
 <script src="js/app.js" type="text/javascript"></script> <!-- INDEX -->
 <!-- END ANGULAR SCRIPTS -->
 <!-- END JAVASCRIPTS -->    

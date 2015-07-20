@@ -17,9 +17,8 @@ angular.module("administrativo-usuarios-cadastro", [])
                                                      '$webapi',
                                                      '$apis',
                                                      '$filter',
-                                                     '$autenticacao', 
                                                      function($scope,$state,$stateParams,$timeout,$http,$campos,
-                                                              $webapi,$apis,$filter,$autenticacao){ 
+                                                              $webapi,$apis,$filter){ 
     
     var divPortletBodyUsuarioCadPos = 0; // posição da div que vai receber o loading progress                                                               
     $scope.tela = {tipo:'Cadastro', acao:'Cadastrar'};

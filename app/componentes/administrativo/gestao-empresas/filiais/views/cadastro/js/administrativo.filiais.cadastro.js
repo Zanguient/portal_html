@@ -16,10 +16,9 @@ angular.module("administrativo-filiais-cadastro", [])
                                                      '$campos',
                                                      '$webapi',
                                                      '$apis',
-                                                     '$filter',
-                                                     '$autenticacao', 
+                                                     '$filter', 
                                                      function($scope,$state,$stateParams,$timeout,$http,$campos,
-                                                              $webapi,$apis,$filter,$autenticacao){ 
+                                                              $webapi,$apis,$filter){ 
     
     var divPortletBodyUsuarioCadPos = 0; // posição da div que vai receber o loading progress                                                               
     $scope.tela = {tipo:'Cadastro', acao:'Cadastrar'};

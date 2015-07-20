@@ -12,10 +12,8 @@ angular.module("administrativo-usuarios", [])
                                             '$state',
                                             '$campos',
                                             '$webapi',
-                                            '$apis',
-                                            '$autenticacao', 
-                                            function($scope,$state,$campos,
-                                                     $webapi,$apis,$autenticacao){ 
+                                            '$apis', 
+                                            function($scope,$state,$campos,$webapi,$apis){ 
    
     var divPortletBodyUsuarioPos = 0; // posição da div que vai receber o loading progress
     $scope.paginaInformada = 1; // página digitada pelo usuário
