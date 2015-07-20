@@ -301,4 +301,363 @@
             <!-- END TABLE PORTLET-->
         </div>
     </div>
+    
+    
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN TABLE PORTLET-->
+            <div class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">                        
+                        <span class="caption-subject font-green-sharp bold uppercase">Filiais</span>
+                    </div>
+                    <div class="actions">
+                        <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;" data-original-title="" title=""></a>
+                        <div class="btn-group">
+                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
+                            <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to Excel </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to CSV </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to XML </a>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Print Invoices </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-toolbar">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="btn-group">
+                                <a href="javascript:;" ng-click="goAdministrativoUsuariosCadastro()">
+                                    <button class="btn red">
+                                    Nova Filial <i class="fa fa-plus"></i>
+                                </button></a>
+                            </div>
+                        </div>                            
+                    </div>
+                </div>
+                
+                <!-- EXIBIÇÃO E PESQUISA -->
+                <div class="row" style="border-bottom:1px solid #EAEAEA">
+                    <!-- EXIBIÇÃO --> 
+                    <div class="col-md-4 col-sm-12">
+                        <div class="dataTables_length">
+                            <label>
+                                <span class="seperator"></span>Exibindo 
+                                <select name="datatable_products_length" aria-controls="datatable_products" 
+                                        class="form-control input-xsmall input-sm input-inline"
+                                        ng-model="usuario.itens_pagina"
+                                        ng-change="alterouItensPagina()"
+                                        ng-options="item for item in itens_pagina">                                            
+                                </select> registros de {{usuario.total_registros}}
+                            </label>
+                        </div>
+                    </div>
+                    <!--PAGINAÇÃO-TOPO-->
+                    <div class="pagination-panel centralizarPaginacao col-md-3 col-sm-12"> Página 
+                        <a href="javascript:;" ng-click="retrocedePagina()"
+                           class="btn btn-sm default prev" 
+                           ng-class="{disabled: usuario.pagina <= 1}" 
+                           title="Página anterior">
+                                <i class="fa fa-angle-left"></i>
+                        </a>
+                        <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                               maxlength="4" style="text-align:center; margin: 0 5px;"
+                               ng-model="paginaInformada" valid-integer-number
+                               ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                               ng-blur="atualizaPaginaDigitada()">
+                        <a href="javascript:;" ng-click="avancaPagina()"
+                           class="btn btn-sm default next"
+                           ng-class="{disabled: usuario.pagina >= usuario.total_paginas}"
+                           title="Próxima página">
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                         de <span class="pagination-panel-total">{{usuario.total_paginas}}</span>
+                    </div>
+                    <!-- PESQUISA -->
+                    <div class="col-md-5 col-sm-12" style="margin-bottom:15px">
+                        <div class="dataTables_filter">                            
+                            <div class="col-sm-7 col-sm-offset-5" style="padding-right: 1px; padding-left: 1px;">
+                                <label>
+                                    <div class="input-group input-icon right">
+                                        <i class="fa fa-times" style="right:50px;cursor:pointer"
+                                           ng-click="resetaBusca()"
+                                           ng-show="usuario.busca"></i>
+                                        <input type="text" 
+                                           class="form-control input-inline" 
+                                           placeholder="Buscar" 
+                                           ng-model="busca"
+                                           ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !busca)) && filtraUsuarios()">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-search" style="cursor:pointer"
+                                                   ng-click="filtraUsuarios()"></i>
+                                        </span>
+                                    </div> 
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-boddy">
+                    <!--div class="row dadosGetaoEmpresas"></div-->
+                    <div class="table-scrollable">
+                        <table class="table table-striped table-hover table-bordered dataTable no-footer conteudoTabelas"
+                               id="sample_editable_1" 
+                               role="grid"
+                               aria-describedby="sample_editable_1_info">
+							<thead>
+				                <tr role="row">
+                                    <th class="sorting_asc" 
+                                        tabindex="0" 
+                                        aria-controls="sample_editable_1" 
+                                        rowspan="1"
+                                        colspan="1" 
+                                        aria-sort="ascending"                                        
+                                        style="width: 188px;">
+									 Empresa
+								    </th>
+                                    <th class="sorting"
+                                        tabindex="0" 
+                                        aria-controls="sample_editable_1" 
+                                        rowspan="1" 
+                                        colspan="1"                                         
+                                        style="width: 100px;">
+                                         Filial
+                                    </th>
+                                    <th class=""
+                                        tabindex="0" 
+                                        aria-controls="sample_editable_1" 
+                                        rowspan="1" 
+                                        colspan="1"                                         
+                                        style="width: 235px;">
+                                         Endereço
+                                    </th>
+                                    <th class="" 
+                                        tabindex="0" 
+                                        aria-controls="sample_editable_1" 
+                                        rowspan="1" 
+                                        colspan="1"                                        
+                                        style="width: 133px;">
+                                         Cidade/Estado
+                                    </th>
+                                    <th class="" 
+                                        tabindex="0" 
+                                        aria-controls="sample_editable_1" 
+                                        rowspan="1" 
+                                        colspan="1"                                        
+                                        style="width: 130px;">
+                                         CEP
+                                    </th>
+                                    <th class=""
+                                        tabindex="0" 
+                                        aria-controls="sample_editable_1" 
+                                        rowspan="1" 
+                                        colspan="1"                                        
+                                        style="width: 130px;">
+                                         Email
+                                    </th>
+                                    <th class="" 
+                                        tabindex="0"
+                                        aria-controls="sample_editable_1" 
+                                        rowspan="1" 
+                                        colspan="1"                                         
+                                        style="width: 160px;">
+                                         Tel
+                                    </th>
+                                    <th>
+                                         ---
+                                    </th>
+                                </tr>
+							</thead>
+							<tbody>
+				                <tr role="row" class="odd">
+                                    <td class="sorting_1">
+                                         Maria Flor
+                                    </td>
+                                    <td>
+                                         07
+                                    </td>
+                                    <td>
+                                         Rua Exemplo
+                                    </td>
+                                    <td class="center">
+                                         Aracaju/Sergipe
+                                    </td>
+                                    <td>
+                                        49020-300
+                                    </td>
+                                    <td>
+                                        maria@hotmail.com
+                                    </td>
+                                    <td>
+                                       (79) 3204-6457
+                                    </td>
+                                    <td>
+                                       <div class="btn-group">
+                                            <a class="btn btn-default btn-circle" 
+                                               href="javascript:;" 
+                                               data-toggle="dropdown" 
+                                               aria-expanded="false">
+                                            <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
+                                            </a>
+                                            <ul class="dropdown-menu pull-right">
+                                                <li>
+                                                    <a href="javascript:;" ng-click="verFiliais(empresa)">Filiais</a>
+                                                </li>
+                                                <li ng-show="usuarioPodeAlterarEmpresas()" class="ng-hide">
+                                                    <a href="javascript:;" ng-click="editarEmpresa(empresa)">Editar</a>
+                                                </li>
+                                                <li ng-show="usuarioPodeExcluirEmpresas()" class="ng-hide">
+                                                    <a href="javascript:;" ng-click="excluirEmpresa(empresa)">Excluir</a>
+                                                </li> 
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>   
+                                <tr role="row" class="odd">
+                                    <td class="sorting_1">
+                                         Suprema
+                                    </td>
+                                    <td>
+                                         17
+                                    </td>
+                                    <td>
+                                         Rua Bahia
+                                    </td>
+                                    <td class="center">
+                                         Aracaju/Sergipe
+                                    </td>
+                                    <td>
+                                        49766-334
+                                    </td>
+                                    <td>
+                                        suprema@hotmail.com
+                                    </td>
+                                    <td>
+                                       (79) 3256-6876
+                                    </td>
+                                    <td>
+                                       <div class="btn-group">
+                                            <a class="btn btn-default btn-circle" 
+                                               href="javascript:;" 
+                                               data-toggle="dropdown" 
+                                               aria-expanded="false">
+                                            <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
+                                            </a>
+                                            <ul class="dropdown-menu pull-right">
+                                                <li>
+                                                    <a href="javascript:;" ng-click="verFiliais(empresa)">Filiais</a>
+                                                </li>
+                                                <li ng-show="usuarioPodeAlterarEmpresas()" class="ng-hide">
+                                                    <a href="javascript:;" ng-click="editarEmpresa(empresa)">Editar</a>
+                                                </li>
+                                                <li ng-show="usuarioPodeExcluirEmpresas()" class="ng-hide">
+                                                    <a href="javascript:;" ng-click="excluirEmpresa(empresa)">Excluir</a>
+                                                </li> 
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr> 
+                                <tr role="row" class="odd">
+                                    <td class="sorting_1">
+                                         Petrox
+                                    </td>
+                                    <td>
+                                         25
+                                    </td>
+                                    <td>
+                                         Rua Exemplo
+                                    </td>
+                                    <td class="center">
+                                         Aracaju/Sergipe
+                                    </td>
+                                    <td>
+                                        49356-367
+                                    </td>
+                                    <td>
+                                        petrox@hotmail.com
+                                    </td>
+                                    <td>
+                                       (79) 3267-9876
+                                    </td>
+                                    <td>
+                                       <div class="btn-group">
+                                            <a class="btn btn-default btn-circle" 
+                                               href="javascript:;" 
+                                               data-toggle="dropdown" 
+                                               aria-expanded="false">
+                                            <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
+                                            </a>
+                                            <ul class="dropdown-menu pull-right">
+                                                <li>
+                                                    <a href="javascript:;" ng-click="verFiliais(empresa)">Filiais</a>
+                                                </li>
+                                                <li ng-show="usuarioPodeAlterarEmpresas()" class="ng-hide">
+                                                    <a href="javascript:;" ng-click="editarEmpresa(empresa)">Editar</a>
+                                                </li>
+                                                <li ng-show="usuarioPodeExcluirEmpresas()" class="ng-hide">
+                                                    <a href="javascript:;" ng-click="excluirEmpresa(empresa)">Excluir</a>
+                                                </li> 
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>    
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                   
+                    
+                    <!-- RODAPÉ : Exibição dos resultados e paginação -->
+                    <div class="row" style="margin: 10px 0 20px 0">
+                        <div class="col-md-4 col-sm-12">
+                            <div class="dataTables_info" id="sample_editable_1_info" role="status" aria-live="polite">
+                                <strong>Exibindo os registros {{usuario.faixa_registros}}</strong>
+                            </div>
+                        </div>
+                        <!--PAGINAÇÃO-RODAPÉ-->
+                        <div class="pagination-panel centralizarPaginacao col-md-3 col-sm-12"> Página 
+                            <a href="javascript:;" ng-click="retrocedePagina()"
+                               class="btn btn-sm default prev" 
+                               ng-class="{disabled: usuario.pagina <= 1}" 
+                               title="Página anterior">
+                                    <i class="fa fa-angle-left"></i>
+                            </a>
+                            <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                   maxlength="4" style="text-align:center; margin: 0 5px;"
+                                   ng-model="paginaInformada" valid-integer-number
+                                   ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                                   ng-blur="atualizaPaginaDigitada()">
+                            <a href="javascript:;" ng-click="avancaPagina()"
+                               class="btn btn-sm default next"
+                               ng-class="{disabled: usuario.pagina >= usuario.total_paginas}"
+                               title="Próxima página">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                             de <span class="pagination-panel-total">{{usuario.total_paginas}}</span>
+                        </div>
+                        <!-- FIM PAGINAÇÃO -->
+                    </div>
+                    <!-- FIM RODAPÉ -->
+                </div>                
+            </div>
+            <!-- END TABLE PORTLET-->
+        </div>
+    </div>
 </div>

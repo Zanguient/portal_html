@@ -340,33 +340,33 @@
                                                             <tr role="row">
                                                                 <th tabindex="0" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 188px;">
+                                                                    style="width: 188px">
                                                                     Bandeira
                                                                 </th>
                                                                 <th tabindex="1" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 237px;">
-                                                                    Total de Transações
+                                                                    style="width: 237px">
+                                                                    Transações
                                                                 </th>
                                                                 <th tabindex="2" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 237px;">
-                                                                    Valor Parcela
+                                                                    VL Parcela
                                                                 </th>
                                                                 <th tabindex="3" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 237px;">
-                                                                    Valor Bruto
+                                                                    VL Bruto
                                                                 </th>
                                                                 <th tabindex="4" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 237px;">
-                                                                    Valor Descontado
+                                                                    VL Descontado
                                                                 </th>                                                        
                                                                 <th tabindex="5" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 237px;">
-                                                                    Valor Líquido
+                                                                    VL Líquido
                                                                 </th>                                                       
                                                                 <th tabindex="6" 
                                                                     rowspan="1" colspan="1" 
@@ -376,14 +376,14 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <tr role="row" class="odd"
+                                                            <tr role="row" class="odd conteudoTabelas"
                                                                 ng-repeat="relsintetico in relatorio.sintetico">
                                                                 <!-- BANDEIRA -->
                                                                 <td>
                                                                      {{relsintetico.bandeira.desBandeira}}
                                                                 </td>
                                                                 <!-- TOTAL DE TRANSAÇÕES -->
-                                                                <td ng-init="total.sintetico.totalTransacoes = total.sintetico.totalTransacoes + relsintetico.totalTransacoes">
+                                                                <td ng-init="total.sintetico.totalTransacoes = total.sintetico.totalTransacoes + relsintetico.totalTransacoes" >
                                                                      {{relsintetico.totalTransacoes}} 
                                                                 </td>  
                                                                 <!-- VALOR PARCELA -->
@@ -484,12 +484,12 @@
                                                                 <th tabindex="1" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 237px;">
-                                                                    Data da Venda
+                                                                    Venda
                                                                 </th>
                                                                 <th tabindex="2" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 128px;">
-                                                                    Data de Recebimento
+                                                                    Recebimento
                                                                 </th>
                                                                 <th tabindex="3" 
                                                                     rowspan="1" colspan="1" 
@@ -509,22 +509,22 @@
                                                                 <th tabindex="6" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 163px;">
-                                                                    Valor Parcela
+                                                                    VL Parcela
                                                                 </th>
                                                                 <th tabindex="7" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 163px;">
-                                                                    Valor Bruto
+                                                                    VL Bruto
                                                                 </th>
                                                                 <th tabindex="8" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 163px;">
-                                                                    Valor Descontado
+                                                                    VL Descontado
                                                                 </th>
                                                                 <th tabindex="9" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 163px;">
-                                                                    Valor Líquido
+                                                                    VL Líquido
                                                                 </th>
                                                             </tr>
                                                         </thead>
