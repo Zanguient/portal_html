@@ -67,8 +67,12 @@ angular.module("card-services-consolidacao-relatorios", [])
                 // Reseta seleção de filtro específico de empresa
                 $scope.filtro.filial = $scope.filtro.adquirente = $scope.filtro.bandeira = $scope.filtro.terminallogico = null;
                 buscaFiliais(true);
-            }else // reseta tudo e não faz buscas 
-                $scope.filiais = $scope.adquirentes = $scope.bandeiras =  $scope.terminais = []; 
+            }else{ // reseta tudo e não faz buscas 
+                $scope.filiais = []; 
+                $scope.adquirentes = [];
+                $scope.bandeiras = [];
+                $scope.terminais = [];
+            }
         }); 
         // Carrega filiais
         if($scope.grupoempresa) buscaFiliais(true);
@@ -95,8 +99,10 @@ angular.module("card-services-consolidacao-relatorios", [])
             buscaAdquirentes(false); 
         }
         // Limpa relatórios
-        $scope.relatorio.analitico = $scope.relatorio.sintetico = $scope.relatorio.terminal = [];
-        $scope.filtro.analitico.pagina = $scope.filtro.sintetico.pagina = $scope.filtro.terminal.pagina =1;
+        $scope.relatorio.analitico = [];
+        $scope.relatorio.sintetico = [];
+        $scope.relatorio.terminal = [];
+        $scope.filtro.analitico.pagina = $scope.filtro.sintetico.pagina = $scope.filtro.terminal.pagina = 1;
         $scope.filtro.analitico.total_registros = $scope.filtro.sintetico.total_registros = $scope.filtro.terminal.total_registros = 0;
         $scope.filtro.analitico.faixa_registros = $scope.filtro.sintetico.faixa_registros = $scope.filtro.terminal.faixa_registros = '0-0';
         $scope.filtro.analitico.total_paginas = $scope.filtro.sintetico.total_paginas = $scope.filtro.terminal.total_paginas = 0;
@@ -207,7 +213,8 @@ angular.module("card-services-consolidacao-relatorios", [])
       * Selecionou uma adquirente
       */
     $scope.alterouAdquirente = function(idBandeira, idTerminalLogico, progressEstaAberto){
-        $scope.bandeiras = $scope.terminais = []; 
+        $scope.bandeiras = []; 
+        $scope.terminais = [];
         $scope.filtro.bandeira = $scope.filtro.terminallogico = null;
         if($scope.filtro.adquirente !== null)
             buscaBandeiras(progressEstaAberto, true, idBandeira, idTerminalLogico);
@@ -529,7 +536,8 @@ angular.module("card-services-consolidacao-relatorios", [])
            
                 // Reseta os outros para forçar uma nova busca
                 if(resetaOutrosRelatorios){
-                    $scope.relatorio.analitico = $scope.relatorio.sintetico = [];
+                    $scope.relatorio.analitico = [];
+                    $scope.relatorio.sintetico = [];
                     $scope.filtro.analitico.pagina = $scope.filtro.sintetico.pagina = 1;
                     $scope.filtro.analitico.total_registros = $scope.filtro.sintetico.total_registros = 0;
                     $scope.filtro.analitico.faixa_registros = $scope.filtro.sintetico.faixa_registros = '0-0';
@@ -589,7 +597,8 @@ angular.module("card-services-consolidacao-relatorios", [])
            
                 // Reseta os outros para forçar uma nova busca
                 if(resetaOutrosRelatorios){
-                    $scope.relatorio.analitico = $scope.relatorio.terminal = [];
+                    $scope.relatorio.analitico = [];
+                    $scope.relatorio.terminal = [];
                     $scope.filtro.analitico.pagina = $scope.filtro.terminal.pagina = 1;
                     $scope.filtro.analitico.total_registros = $scope.filtro.terminal.total_registros = 0;
                     $scope.filtro.analitico.faixa_registros = $scope.filtro.terminal.faixa_registros = '0-0';

@@ -22,7 +22,9 @@ angular.module("card-services-cash-flow-relatorios", [])
     $scope.itens_pagina = [10, 20, 50, 100]; 
     $scope.paginaInformada = 1; // página digitada pelo usuário                                             
     // Filtros
-    $scope.filiais = $scope.adquirentes = $scope.bandeiras = [];                                          
+    $scope.filiais = [];  
+    $scope.adquirentes = [];
+    $scope.bandeiras = [];                                             
     $scope.filtro = {datamin : new Date(), datamax : '', 
                      filial : null, adquirente : null, bandeira : null,
                      itens_pagina : $scope.itens_pagina[0], order : 0,
@@ -67,8 +69,11 @@ angular.module("card-services-cash-flow-relatorios", [])
                 // Reseta seleção de filtro específico de empresa
                 $scope.filtro.filial = $scope.filtro.adquirente = $scope.filtro.bandeira = null;
                 buscaFiliais(true);
-            }else // reseta tudo e não faz buscas 
-                $scope.filiais = $scope.adquirentes = $scope.bandeiras = []; 
+            }else{ // reseta tudo e não faz buscas 
+                $scope.filiais = []; 
+                $scope.adquirentes = [];
+                $scope.bandeiras = [];
+            }
         }); 
         // Carrega filiais
         if($scope.grupoempresa) buscaFiliais(true);
@@ -95,7 +100,8 @@ angular.module("card-services-cash-flow-relatorios", [])
             buscaAdquirentes(false); 
         }
         // Limpa relatórios
-        $scope.relatorio.analitico = $scope.relatorio.sintetico = [];
+        $scope.relatorio.analitico = [];
+        $scope.relatorio.sintetico = [];
         $scope.filtro.analitico.pagina = $scope.filtro.sintetico.pagina = 1;
         $scope.filtro.analitico.total_registros = $scope.filtro.sintetico.total_registros = 0;
         $scope.filtro.analitico.faixa_registros = $scope.filtro.sintetico.faixa_registros = '0-0';

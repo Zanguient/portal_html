@@ -276,6 +276,13 @@ margin-top:170px;
   border-radius: .25em; 
 }
 
+#sticky.stick {
+    position: fixed;
+    top: 0;
+    z-index: 10000;
+    border-radius: 0 0 0.5em 0.5em;
+}
+
 .tableAcessoUsuarios{
   padding: 15px;   
 }

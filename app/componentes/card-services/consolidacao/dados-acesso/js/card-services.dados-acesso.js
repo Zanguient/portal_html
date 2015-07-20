@@ -22,7 +22,10 @@ angular.module("card-services-dados-acesso", [])
     $scope.itens_pagina = [10, 20, 50, 100]; 
     $scope.paginaInformada = 1; // página digitada pelo usuário                                             
     // Filtros
-    $scope.filiais = $scope.adquirentes = $scope.dadosAcesso = $scope.adquirentescadastro = [];
+    $scope.filiais = [];
+    $scope.adquirentes = [];
+    $scope.dadosAcesso = [];
+    $scope.adquirentescadastro = [];                                             
     $scope.statusSenha = [{status : true, nome : 'Válida'},
                           {status : false, nome : 'Inválida'}];
     
@@ -56,8 +59,11 @@ angular.module("card-services-dados-acesso", [])
                 // Reseta seleção de filtro específico de empresa
                 $scope.filtro.filial = $scope.filtro.adquirente = $scope.filtro.status = null;
                 buscaFiliais(true);
-            }else // reseta tudo e não faz buscas 
-                $scope.filiais = $scope.adquirentes = $scope.bandeiras = []; 
+            }else{ // reseta tudo e não faz buscas 
+                $scope.filiais = []; 
+                $scope.adquirentes = [];
+                $scope.bandeiras = [];
+            }
         }); 
         // Carrega filiais
         if($scope.grupoempresa) buscaFiliais(true);

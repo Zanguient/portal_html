@@ -304,27 +304,25 @@
                             <!-- PESQUISA -->
                             <div class="col-md-5 col-sm-12">
                                 <div class="dataTables_filter">
-                                    <label>
-                                        <input type="text" 
-                                               class="form-control input-inline" 
-                                               placeholder="Buscar" 
-                                               aria-controls="sample_editable_1"
-                                               ng-model="busca"
-                                               ng-init="busca=''"
-                                               ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !busca)) && filtraPrivilegios(busca)"
-                                               >                                            											
-                                    </label>
-                                    <label>
-                                        <select aria-controls="datatable_products" 
-                                                class="form-control input-sm input-inline"
-                                                ng-model="privilegio.campo_busca"
-                                                ng-options="campo as campo.nome for campo in camposBusca | filter:{ativo:true}">
-                                        </select> 
-                                    </label>
-                                    <label>
-                                        <span class="seperator"></span>Pesquisar 
-                                    </label>
-                                    
+                                    <div class="col-sm-2"></div>
+                                    <div class="col-sm-7" style="padding-right: 1px; padding-left: 1px;">
+                                        <label>
+                                            <div class="input-group input-icon right">
+                                                <i class="fa fa-times" style="right:50px;cursor:pointer"
+                                                   ng-click="resetaBusca()"
+                                                   ng-show="privilegio.busca"></i>
+                                                <input type="text" 
+                                                   class="form-control input-inline" 
+                                                   placeholder="Buscar" 
+                                                   ng-model="privilegio.busca"
+                                                   ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !privilegio.busca)) && buscaPrivilegios()">
+												<span class="input-group-addon">
+                                                    <i class="fa fa-search" style="cursor:pointer"
+                                                           ng-click="buscaPrivilegios()"></i>
+												</span>
+											</div> 
+                                        </label>
+                                    </div>                                    
                                 </div>
                             </div>
                         </div>

@@ -140,9 +140,9 @@ angular.module("administrativo-privilegios", [])
     };
      
     // BUSCA
-    $scope.filtraPrivilegios = function(filtro){
-        $scope.privilegio.busca = filtro;
-        $scope.buscaPrivilegios();
+    $scope.resetaBusca = function(){
+        $scope.privilegio.busca = '';
+        $scope.buscaPrivilegios(); 
     };
     $scope.buscaPrivilegios = function(){
        $scope.showProgress(divPortletBodyPrivilegioPos);    

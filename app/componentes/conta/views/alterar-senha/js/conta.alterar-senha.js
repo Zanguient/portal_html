@@ -6,15 +6,15 @@
  */
 
 // App
-angular.module("nao-encontrado", []) 
+angular.module("conta-alterar-senha", []) 
 
-.controller("nao-encontradoCtrl", ['$scope','$state', function($scope,$state){ 
+.controller("conta-alterar-senhaCtrl", ['$scope','$state', function($scope,$state){ 
                                                         
     // Inicialização do controller
-    $scope.naoEncontradoInit = function(){
+    $scope.contaAlterarSenhaInit = function(){
         // Título da página 
-        $scope.pagina.titulo = 'Página não encontrada';                          
-        $scope.pagina.subtitulo = '';
+        $scope.pagina.titulo = 'Minha Conta';                          
+        $scope.pagina.subtitulo = 'Alterar Senha';
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state){
             $state.go(state);

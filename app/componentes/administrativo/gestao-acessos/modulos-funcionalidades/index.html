@@ -72,17 +72,24 @@
                         <div class="row">
                             <div class="col-md-4 col-sm-12 barrapesquisa">
                                 <div class="dataTables_filter">
-                                    <label>
-                                        <input type="text" 
-                                               class="form-control input-inline ng-tree-search" 
-                                               placeholder="Buscar" 
-                                               ng-model="busca"
-                                               ng-init="busca=''"
-                                               ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !busca)) && buscaModuloJSTree(busca)">
-                                    </label>
-                                    <label>
-                                        <span class="seperator"></span>Pesquisar 
-                                    </label>
+                                    <div class="col-sm-12" style="padding-right: 1px; padding-left: 1px;">
+                                        <label>
+                                            <div class="input-group input-icon right">
+                                                <i class="fa fa-times" style="right:50px;cursor:pointer"
+                                                   ng-click="resetaBusca()"
+                                                   ng-show="busca"></i>
+                                                <input type="text" 
+                                                   class="form-control input-inline" 
+                                                   placeholder="Buscar" 
+                                                   ng-model="busca"
+                                                   ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !busca)) && buscaModuloJSTree()">
+												<span class="input-group-addon">
+                                                    <i class="fa fa-search" style="cursor:pointer"
+                                                           ng-click="buscaModuloJSTree()"></i>
+												</span>
+											</div> 
+                                        </label>
+                                    </div>
                                 </div>
                             </div>                            
                         </div>
@@ -95,7 +102,10 @@
                                  tree-contextmenu="contextMenu"
                                  tree-events="select_node:selecionaModulo"></js-tree>                            
                         </div>
-                        <div class="col-sm-6" ng-show="moduloSelecionado && moduloSelecionado.parent !== '#'">
+                        <!-- MANTER VISIVEL -->
+                        <div id="sticky-top" class="col-sm-6"></div>
+                        <div id="sticky" class="col-sm-6" 
+                             ng-class="{'element-hidden' : !moduloSelecionado || moduloSelecionado.parent === '#'}">
                             <!-- FIM - JS TREE -->
                             <div class="form-group">
                                 <div class="row">

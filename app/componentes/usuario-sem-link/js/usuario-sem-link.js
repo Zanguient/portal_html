@@ -6,14 +6,14 @@
  */
 
 // App
-angular.module("nao-encontrado", []) 
+angular.module("usuario-sem-link", []) 
 
-.controller("nao-encontradoCtrl", ['$scope','$state', function($scope,$state){ 
+.controller("usuario-sem-linkCtrl", ['$scope','$state', function($scope,$state){ 
                                                         
     // Inicialização do controller
-    $scope.naoEncontradoInit = function(){
+    $scope.usuarioSemLinkInit = function(){
         // Título da página 
-        $scope.pagina.titulo = 'Página não encontrada';                          
+        $scope.pagina.titulo = 'Usuário sem acesso';                          
         $scope.pagina.subtitulo = '';
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state){

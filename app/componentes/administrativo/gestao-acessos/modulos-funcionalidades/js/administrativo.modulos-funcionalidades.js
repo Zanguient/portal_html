@@ -24,6 +24,7 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
     $scope.moduloSelecionado = undefined; 
     $scope.funcionalidadeSelecionada = undefined;                                            
     $scope.novoModuloMenu = ''; // cadastro
+    $scope.busca = '';
     // flags
     $scope.cadastrarFuncionalidadesPadrao = true;                                            
           
@@ -79,9 +80,13 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
 
      
     // BUSCA
-    $scope.buscaModuloJSTree = function(busca){
+    $scope.resetaBusca = function(){
+        $scope.busca = '';
+        $scope.buscaModuloJSTree();
+    };
+    $scope.buscaModuloJSTree = function(){//busca){
         var jstree = $('#jstree');//angular.element(document.querySelector('#jstree'));     
-        if(jstree) jstree.jstree(true).search(busca);
+        if(jstree) jstree.jstree(true).search($scope.busca);
     };
    
     $scope.buscaModulos = function(){

@@ -27,7 +27,8 @@ angular.module("AtosCapital", ['ui.router',
                                'card-services-cash-flow-relatorios',
                                'card-services-conciliacao-vendas',
                                'card-services-dados-acesso',
-                               'card-services-consolidacao-relatorios']) 
+                               'card-services-consolidacao-relatorios',
+                               'usuario-sem-link']) 
 
 
 /**
@@ -189,6 +190,12 @@ angular.module("AtosCapital", ['ui.router',
         url: prefixo + 'nao-encontrado',
         templateUrl: 'componentes/nao-encontrado/index.html',
         controller: "nao-encontradoCtrl"
+      })
+             
+      .state('usuario-sem-link', {
+        url: prefixo + 'sem-acesso',
+        templateUrl: 'componentes/usuario-sem-link/index.html',
+        controller: "usuario-sem-linkCtrl"
       });       
              
     $urlRouterProvider.otherwise(prefixo + 'nao-encontrado');
@@ -226,12 +233,17 @@ angular.module("AtosCapital", ['ui.router',
     $scope.grupoempresa = undefined; // grupo empresa em uso
     $scope.gempresa = null;  // objeto que recebe temporariamente o grupo empresa da busca
     // URL da página de login
-    var telaLogin = '../';                      
+    var telaLogin = '../';   
+    // Menu                        
+    $scope.menu = [];
+    $scope.itensMenuLink = [];                        
+    $scope.buscaItemLink = undefined;                        
     // Flag
     $scope.exibeLayout = false; // true => carrega layout completo
-    var menuConstruido = false;
+    $scope.menuConstruido = false;
     $scope.carregandoGrupoEmpresas = false; // indica se está aguardando o objeto com os grupos empresa (para usuário administrativo)
     // Permissões
+    //$scope.usuarioTemAcesso = false;                      
     $scope.PERMISSAO_FILTRO_EMPRESA = false;                        
     $scope.PERMISSAO_ADMINISTRATIVO = false;
     $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS = false;
@@ -278,7 +290,7 @@ angular.module("AtosCapital", ['ui.router',
       * questiona se de fato ele deseja descarta-las antes de prosseguir
       */                         
     $scope.go = function(state, params){
-        if(menuConstruido){ 
+        if($scope.menuConstruido){ 
             removeDivFullscreen();
             if(!$state.current.name) $state.go(state, params); // estado inicial
             else $scope.$broadcast('mudancaDeRota', state, params);
@@ -363,7 +375,11 @@ angular.module("AtosCapital", ['ui.router',
       */
     $scope.goCardServicesConsolidacaoRelatorios = function(params){
         $scope.go('card-services-consolidacao-relatorios', params);
-    };    
+    }; 
+    $scope.goUsuarioSemLinks = function(params){
+        $scope.go('usuario-sem-link', params);
+    };
+                            
                             
     /** 
       * Valida o acesso a url, considerando as permissões
@@ -531,7 +547,9 @@ angular.module("AtosCapital", ['ui.router',
         }
     };
              
-    // LAYOUT
+                            
+                            
+    // MENU
     /**
       * Informa se o id_controller informado se refere ao menu que está ativo no momento
       */
@@ -576,11 +594,23 @@ angular.module("AtosCapital", ['ui.router',
         }        
     };
     /**
+      * Selecionou um item na busca de menus
+      */                        
+    $scope.selecionaItemMenuLink = function(item){
+        if(item && typeof item.link === 'function'){
+            item.link();
+            $scope.buscaItemLink = undefined;
+        }
+    };
+    /**
       * A partir do JSON recebido, obtem o JSON menu e as permissões do usuário
       */                        
     var constroiMenu = function(data){        
         // Constrói o menu
         $scope.menu = [];
+        $scope.itensMenuLink = [];
+        var temLink = false;
+        var setouPaginaInicial = false;
         for(var k = 0; k < data.controllers.length; k++){
             var controller = data.controllers[k];
             var menu = {};
@@ -619,8 +649,22 @@ angular.module("AtosCapital", ['ui.router',
                             
                             itemMenu.link = getLink(itemMenu.ds_controller, subMenu.ds_controller);//itemMenu.id_controller);
                             if(itemMenu.link === null) itemMenu.link = function(){};
-                            else itemMenu.temLink = subMenu.temLink = menu.temLink = true;
-                            if(subController2.home && !$scope.goHome) $scope.goHome = itemMenu.link;
+                            else{ 
+                                itemMenu.temLink = subMenu.temLink = menu.temLink = temLink = true;
+                                // Item de menu com link
+                                $scope.itensMenuLink.push({ path : menu.ds_controller + ' > ' + 
+                                                                   subMenu.ds_controller + ' > ' + 
+                                                                   itemMenu.ds_controller,
+                                                            link : itemMenu.link
+                                                          });
+                                // Página principal?
+                                if(subController2.home){ 
+                                    if(!setouPaginaInicial){
+                                        $scope.goHome = itemMenu.link;
+                                        setouPaginaInicial = true;
+                                    }
+                                }else if(!$scope.goHome) itemMenu.link;
+                            }
                             // Adiciona o módulo
                             subMenu.subControllers.push(itemMenu);
                         }
@@ -628,9 +672,21 @@ angular.module("AtosCapital", ['ui.router',
                         // Se não tem módulos, então deve ter um link
                         subMenu.link = getLink(subMenu.ds_controller, menu.ds_controller);//subMenu.id_controller); 
                         if(subMenu.link === null) subMenu.link = function(){};
-                        else subMenu.temLink = menu.temLink = true;
-                        // Página inicial é definido pelo primeiro 'home=true' encontrado        
-                        if(subController1.home && !$scope.goHome) $scope.goHome = subMenu.link;
+                        else{ 
+                            subMenu.temLink = menu.temLink = temLink = true;
+                            // Item de menu com link
+                            $scope.itensMenuLink.push({ path : menu.ds_controller + ' > ' + 
+                                                               subMenu.ds_controller,
+                                                        link : subMenu.link
+                                                      });
+                            // Página principal?       
+                            if(subController1.home){ 
+                                if(!setouPaginaInicial){
+                                    $scope.goHome = subMenu.link;
+                                    setouPaginaInicial = true;
+                                }
+                            }else if(!$scope.goHome) subMenu.link;
+                        }
                     }
                     
                     // Adiciona o subserviço
@@ -640,9 +696,20 @@ angular.module("AtosCapital", ['ui.router',
                 // Se não tem subserviços, então deve ter um link
                 menu.link = getLink(menu.ds_controller);//menu.id_controller); 
                 if(menu.link === null) menu.link = function(){};
-                else menu.temLink = true;
-                // Página inicial é definido pelo primeiro 'home=true' encontrado        
-                if(controller.home && !$scope.goHome) $scope.goHome = menu.link;
+                else{ 
+                    menu.temLink = temLink = true;
+                    // Item de menu com link
+                    $scope.itensMenuLink.push({ path : menu.ds_controller,
+                                                link : menu.link
+                                              });
+                    // Página principal?       
+                    if(controller.home){ 
+                        if(!setouPaginaInicial){
+                            $scope.goHome = menu.link;
+                            setouPaginaInicial = true;
+                        }
+                    }else if(!$scope.goHome) menu.link;
+                }
             }
             
             // Adiciona o menu
@@ -651,12 +718,20 @@ angular.module("AtosCapital", ['ui.router',
         
         if(data.filtro_empresa) $scope.PERMISSAO_FILTRO_EMPRESA = true;
         
+        //data.id_grupo = 12; // TEMP
+        
         // Verifica se estava administrando algum grupo empresa
         if(data.id_grupo && data.id_grupo !== -1) obtemGrupoEmpresa(data.id_grupo);
         
         // Seta o flag para true
-        menuConstruido = true;
+        $scope.menuConstruido = true;
+        
+        // Retorna se tem link para acessar
+        return temLink;
     };
+                            
+                            
+    // LAYOUT                         
     /**
       * Exibe o layout e inicializa seus handlers
       */
@@ -741,9 +816,10 @@ angular.module("AtosCapital", ['ui.router',
                 $scope.token = dados.token;
                 $autenticacao.atualizaToken($scope.token);
                 // Controi menu e obtem as permissões do usuário
-                constroiMenu(dados);
-                // Exibe a página atual
-                exibePaginaAtual();
+                if(constroiMenu(dados)){ 
+                    //$scope.usuarioTemAcesso = true;
+                    exibePaginaAtual(); // Exibe a página atual
+                }else $scope.goUsuarioSemLinks(); // exibe que o usuário não tem link
                 // Atualiza último datetime de autenticação
                 $autenticacao.atualizaDateTimeDeAutenticacao(new Date());
                 // Remove o loading da página
@@ -763,7 +839,8 @@ angular.module("AtosCapital", ['ui.router',
               $scope.hideProgress();
             });
     };
-     
+                            
+                            
                             
     // GRUPO EMPRESA
     /**

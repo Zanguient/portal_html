@@ -127,9 +127,14 @@
 	<div class="page-header-menu">
 		<div class="container">
 			<!-- BEGIN HEADER SEARCH BOX : Barra de Pesquisa -->
-			<form class="search-form" action="" method="GET"> <!-- REVER ISSO -->
+			<form class="search-form" ng-show="itensMenuLink.length > 0"> <!-- REVER ISSO -->
 				<div class="input-group">
-					<input type="text" class="form-control" placeholder="Pesquisar" name="query">
+					<input type="text" class="form-control" 
+                           placeholder="Pesquisar"
+                           ng-model="buscaItemLink"
+                           typeahead-focus-first=false
+                           typeahead-on-select="selecionaItemMenuLink($item)"
+                           typeahead="item as item.path for item in itensMenuLink | filter:$viewValue">
 					<span class="input-group-btn">
 					<a href="javascript:;" class="btn submit"><i class="icon-magnifier"></i></a>
 					</span>
@@ -213,10 +218,15 @@
                                     
                                 <td>
                                     <img ng-src="../img/loading-atos.gif" ng-show="carregandoGrupoEmpresas"/>
+                                    <a class="btn" href="javascript:;" 
+                                       ng-click="limpaGrupoEmpresa()"
+                                       ng-show="PERMISSAO_FILTRO_EMPRESA && PERMISSAO_ADMINISTRATIVO && grupoempresa">
+                                        <i class="fa fa-times-circle"></i>
+                                    </a>
                                     <a href="javascript:;" 
                                        class="btn dropdown-toggle" 
                                        data-toggle="dropdown"
-                                       ng-show="PERMISSAO_FILTRO_EMPRESA && PERMISSAO_ADMINISTRATIVO">
+                                       ng-show="PERMISSAO_FILTRO_EMPRESA && PERMISSAO_ADMINISTRATIVO && !grupoempresa">
                                         <i class="icon-settings" 
                                            ng-hide="carregandoGrupoEmpresas"></i>
                                     </a>
@@ -442,6 +452,7 @@
 <script src="componentes/card-services/conciliacao/conciliacao-vendas/js/card-services.conciliacao-vendas.js" type="text/javascript"></script>
 <script src="componentes/card-services/consolidacao/dados-acesso/js/card-services.dados-acesso.js" type="text/javascript"></script>
 <script src="componentes/card-services/consolidacao/relatorios/js/card-services.consolidacao.relatorios.js" type="text/javascript"></script>
+<script src="componentes/usuario-sem-link/js/usuario-sem-link.js" type="text/javascript"></script>
 <script src="js/app.js" type="text/javascript"></script> <!-- INDEX -->
 <!-- END ANGULAR SCRIPTS -->
 <!-- END JAVASCRIPTS -->    
