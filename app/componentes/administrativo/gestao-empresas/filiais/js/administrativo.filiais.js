@@ -37,7 +37,7 @@ angular.module("administrativo-filiais", [])
         // Quando houver alteração do grupo empresa na barra administrativa                                           
         $scope.$on('alterouGrupoEmpresa', function(event){ 
             // Refaz a busca
-            $scope.buscaFiliais();
+            $scope.buscaFiliais(true);
         }); 
         // Busca filiais
         $scope.buscaFiliais();
@@ -136,13 +136,17 @@ angular.module("administrativo-filiais", [])
         $scope.filial.busca = $scope.busca;
         $scope.buscaFiliais();
     };
-    $scope.buscaFiliais = function(){
+    $scope.buscaFiliais = function(showMessage){
         
        if(!$scope.grupoempresa){
            $scope.filiais = [];
-           $scope.showAlert('É necessário selecionar um grupo empresa!', true, 'warning', true);             
+           $scope.filial.total_registros = 0;
+           $scope.filial.total_paginas = 0;
+           $scope.filial.faixa_registros = '0-0';
+           $scope.paginaInformada = 1;
+           if(showMessage) $scope.showAlert('É necessário selecionar um grupo empresa!', true, 'warning', true);             
        }else{
-        
+
            $scope.showProgress(divPortletBodyFilialPos);    
 
            var filtros = [{id: $campos.cliente.empresa.id_grupo, 

@@ -228,7 +228,8 @@ Page Header
   color: #ffffff;
 }
 .page-header .page-header-menu .hor-menu .navbar-nav > li.active > a,
-.page-header .page-header-menu .hor-menu .navbar-nav > li.active > a:hover, .page-header .page-header-menu .hor-menu .navbar-nav > li.current > a,
+.page-header .page-header-menu .hor-menu .navbar-nav > li.active > a:hover, 
+.page-header .page-header-menu .hor-menu .navbar-nav > li.current > a,
 .page-header .page-header-menu .hor-menu .navbar-nav > li.current > a:hover {
   color: #ffffff;
   background: #b22629;/*#7e1416;*/

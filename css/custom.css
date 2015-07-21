@@ -32,9 +32,14 @@
 
 #loading {
     display:inline;
+    background: none;
     padding: 15px 34px !important;
     margin-top: 1px;
 }
+
+/*.btn-group:hover>.dropdown-menu {
+  display: block;
+}*/
 
 .element-hidden{
     visibility: hidden
@@ -292,6 +297,10 @@ text-align: center;
 
 .tableAcessoUsuarios{
   padding: 15px;   
+}
+
+.table-scrollable{
+    overflow: visible;
 }
 
 .titulosconteudos{

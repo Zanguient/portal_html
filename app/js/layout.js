@@ -3,9 +3,9 @@ Core script to handle the entire theme and core functions
 **/
 var Layout = function () {
 
-    var layoutImgPath = '/img/';
+    var layoutImgPath = '../img/';
 
-    var layoutCssPath = '/css/';
+    var layoutCssPath = '../css/';
 
     var resBreakpointMd = Metronic.getResponsiveBreakpoint('md');
 
@@ -50,7 +50,7 @@ var Layout = function () {
 
     // Handles main menu
     var handleMainMenu = function () {
-
+        
         // handle menu toggler icon click
         $(".page-header .menu-toggler").on("click", function(event) {
             if (Metronic.getViewPort().width < resBreakpointMd) {
@@ -99,7 +99,7 @@ var Layout = function () {
         });
 
         // hold mega menu content open on click/tap. 
-        $(document).on('click', '.mega-menu-dropdown .dropdown-menu, .classic-menu-dropdown .dropdown-menu', function (e) {
+        $(document).on('click', '.mega-menu-dropdown .dropdown-menu, .classic-menu-dropdown .dropdown-menu', function (e)         {   //console.log("click");
             e.stopPropagation();
         });
 

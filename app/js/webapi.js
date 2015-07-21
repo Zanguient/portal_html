@@ -179,7 +179,6 @@ angular.module('webapi', [ ])
 .factory('$apis', [function(){
   // Prefixos
   var urlBase = 'http://192.168.0.100/api'; 
-  //var urlBase = 'http://api.taxservices.com.br';
   //var urlBase = 'http://api.atoscapital.com.br';
       
   return {

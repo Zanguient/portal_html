@@ -94,7 +94,8 @@
 					
 					<!-- BEGIN USER LOGIN DROPDOWN -->
                     <li class="dropdown dropdown-user dropdown-dark">        
-						<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">                        
+						<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" 
+                           data-hover="dropdown" data-close-others="true">                        
 						<img alt="" class="img-circle" ng-src="../img/avatar.jpg">
                            
 						<span class="username username-hide-mobile">{{nome_usuario || 'Usuário'}}</span>
@@ -148,19 +149,28 @@
 			<!-- BEGIN MEGA MENU : Menu -->
 			<div class="hor-menu">
                 <!-- MENU DINÂMICO -->
-				<ul class="nav navbar-nav" ng-repeat="item in menu">
-                    <li ng-class="{ active : menuAtivo(item.ds_controller), 'menu-dropdown mega-menu-dropdown' : item.subControllers && item.subControllers.length > 0}" ng-show="item.temLink">
-                        <a data-hover="megamenu-dropdown" 
-                           data-close-others="true" 
-                           href="javascript:;" 
-                           ng-click="item.link()" 
-                           ng-class="{'dropdown-toggle' : item.subControllers && item.subControllers.length > 0}">
-                           <!--data-toggle="dropdown" -->    
+				<ul class="nav navbar-nav">
+                    <li ng-repeat="item in menu" ng-show="item.temLink"
+                        ng-class="{ active : menuAtivo(item.ds_controller), 'menu-dropdown mega-menu-dropdown' : item.subControllers && item.subControllers.length > 0}">
+                        <!-- MENU SEM SUBMENUS -->
+                        <a ng-show="!item.subControllers || item.subControllers.length == 0"
+                           href="javascript:;" ng-click="item.link()">
+                            {{item.ds_controller}}
+                        </a>
+                        <!-- MENU COM SUBMENUS -->   
+                        <a ng-show="item.subControllers && item.subControllers.length > 0"
+                           data-hover="megamenu-dropdown" 
+                           data-close-others="true"  
+                           href="javascript:;" class="dropdown-toggle"
+                           ng-click="item.expand = item.expand ? false : true"
+                           ng-mouseover="item.expand = true">
+                           <!--data-toggle="dropdown"-->    
                             {{item.ds_controller}} 
                             <i ng-show="item.subControllers && item.subControllers.length > 0" 
                                class="fa fa-angle-down"></i>
 						</a>
-                        <ul ng-show="item.subControllers && item.subControllers.length > 0" class="dropdown-menu">
+                        <ul ng-show="item.subControllers && item.subControllers.length > 0 && item.expand" 
+                            class="dropdown-menu">
                             <li>
 								<div class="mega-menu-content">
 									<div class="row">

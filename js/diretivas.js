@@ -262,4 +262,4 @@ angular.module('diretivas', ['ui.bootstrap'])
       };
     }
   };
-});;
+});

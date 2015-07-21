@@ -122,7 +122,7 @@ angular.module("AtosCapital", ['ui.router',
     
       .state('administrativo-gestao-empresas-filiais-cadastro', {
         url: prefixo + 'administrativo/cadastro-filiais',
-        params: {empresa: null},
+        params: {filial: null},
         templateUrl: 'componentes/administrativo/gestao-empresas/filiais/views/cadastro/index.html',
         controller: "administrativo-filiais-cadastroCtrl",
         data: {
@@ -768,7 +768,8 @@ angular.module("AtosCapital", ['ui.router',
     };
                             
                             
-    // LAYOUT                         
+    // LAYOUT  
+    $scope.status = { isopen: false };
     /**
       * Exibe o layout e inicializa seus handlers
       */
