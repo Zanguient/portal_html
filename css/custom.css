@@ -88,6 +88,11 @@ body.modal-open {
 margin-top:170px;
 }
 
+.botaoVoltar{
+    background-color: #606060;
+    color:#fff;    
+}
+
 .cabecalhoTableAcessoUsuarios{
   text-align: center;
   font-weight: bolder;       
