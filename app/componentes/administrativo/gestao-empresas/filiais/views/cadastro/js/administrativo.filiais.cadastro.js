@@ -84,6 +84,26 @@ angular.module("administrativo-filiais-cadastro", [])
     $scope.ehCadastro = function(){
         return $scope.old.filial === null;    
     };
+                                                         
+                                                         
+    // TAB
+    
+    // Vai para a tab anterior
+    $scope.setTabAnterior = function(){
+        if($scope.tabCadastro > 1) $scope.setTabCadastro($scope.tabCadastro - 1);
+    };
+    // Vai para a próxima tab
+    $scope.setProximaTab = function(){
+        if($scope.tabCadastro < 4) $scope.setTabCadastro($scope.tabCadastro + 1);
+    };
+    // Modifica a tab atual
+    $scope.setTabCadastro = function(tab) {
+        $scope.tabCadastro = tab;
+    };
+    // Retorna true se a tab informada é a selecionada
+    $scope.tabCadastroSelecionada = function(tab){
+        return $scope.tabCadastro === tab;
+    };                                                     
     
     
 }]);
