@@ -355,11 +355,11 @@
                             <div class="form-actions">
                                 <div class="row">
                                     <div class="col-md-offset-3 col-md-9">
-                                        <a href="javascript:;" ng-click="goAdministrativoUsuarios()" class="btn red button-previous">
+                                        <a href="javascript:;" ng-click="goAdministrativoUsuarios()" class="btn grey button-previous">
 										  <i class="fa fa-times" ng-disabled="cadastrando"></i> Cancelar 
                                         </a>
                                         <a href="javascript:;" ng-click="setTabAnterior()" 
-                                           class="btn default button-previous" 
+                                           class="btn botaoVoltar button-previous" 
                                            ng-class="{'element-hidden': tabCadastroSelecionada(1)}">
                                             <i class="m-icon-swapleft"></i> Voltar 
                                         </a>
@@ -369,7 +369,8 @@
                                             Continuar <i class="m-icon-swapright m-icon-white"></i>
                                         </a>
                                         <a href="javascript:;" ng-click="armazenaInformacoesDoUsuario()"
-                                           class="btn green button-submit" 
+                                           class="btn button-submit"
+                                           ng-class="{ 'red' : ehCadastro(), 'green': !ehCadastro()}"
                                            ng-show="tabCadastroSelecionada(4) && !cadastrando">
                                             {{tela.acao}} 
                                             <i class="fa" ng-class="{'fa-plus' : ehCadastro(), 'fa-edit' : !ehCadastro()}"></i>
