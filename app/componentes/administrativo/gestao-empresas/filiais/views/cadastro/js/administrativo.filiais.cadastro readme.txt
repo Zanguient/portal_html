@@ -41,8 +41,8 @@ Não é necessário nenhum outro módulo externo.
    * api/cliente/empresa  
 	 - POST : nova filial
 				{
-				  nu_cnpj: string,
-				  ds_fantasia: string,
+				  nu_cnpj: string, *
+				  ds_fantasia: string, *
 				  ds_razaoSocial: string (ou null),
 				  ds_endereco: string (ou null),
 				  ds_cidade: string (ou null),
@@ -50,8 +50,8 @@ Não é necessário nenhum outro módulo externo.
 				  nu_cep: string[20] (ou null),
 				  nu_telefone: string[20] (ou null),
 				  ds_bairro: string (ou null),
-				  ds_email: string,
-				  id_grupo: int,
+				  ds_email: string, *
+				  id_grupo: int,  *
 				  filial: string,
 				  nu_inscEstadual: int (ou null),
 				}
@@ -71,7 +71,7 @@ Não é necessário nenhum outro módulo externo.
 				  fl_ativo: boolean, (obrigatório!)
 				  id_grupo: int, (obrigatório!)
 				  filial: string,
-				  nu_inscEstadual: int (ou null),
+				  nu_inscEstadual: int (ou null)
 				}
    
 

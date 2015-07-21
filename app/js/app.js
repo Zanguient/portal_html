@@ -1176,6 +1176,13 @@ angular.module("AtosCapital", ['ui.router',
             return data.substr(8, 2) + '/' + data.substr(5, 2) + '/' + data.substr(0, 4);
         return '';
    };
+   $scope.getDataTimeString = function(data){
+        // 2015-07-21T10:51:15.917  
+        if(typeof data !== 'undefined' && data !== null) 
+            return data.substr(8, 2) + '/' + data.substr(5, 2) + '/' + data.substr(0, 4) + 
+                   ' ' + data.substr(11,5);
+        return '';
+   };
    /**
       * Retorna a string aceita para filtro de data
       */

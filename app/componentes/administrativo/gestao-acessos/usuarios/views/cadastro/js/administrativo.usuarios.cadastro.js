@@ -225,7 +225,7 @@ angular.module("administrativo-usuarios-cadastro", [])
         var jsonUsuario = {};
         // Obrigatórios
         jsonUsuario.ds_login = $scope.usuario.login;
-        jsonUsuario.ds_email = $scope.usuario.email;
+        jsonUsuario.ds_email = $scope.usuario.email.toLowerCase();
         // Não-Obrigatórios
         if($scope.usuario.grupoempresa.ds_nome) jsonUsuario.id_grupo = $scope.usuario.grupoempresa.id_grupo;
         if($scope.usuario.empresa.ds_fantasia) jsonUsuario.nu_cnpjEmpresa = $scope.usuario.empresa.nu_cnpj;
@@ -288,7 +288,7 @@ angular.module("administrativo-usuarios-cadastro", [])
             return true;
         }
            // USUÁRIO
-        if($scope.old.usuario.ds_email !== $scope.usuario.email){
+        if($scope.old.usuario.ds_email.toLowerCase() !== $scope.usuario.email.toLowerCase()){
            //console.log("HOUVE ALTERAÇÃO - USUÁRIO - EMAIL"); 
            return true; 
         }
@@ -359,8 +359,8 @@ angular.module("administrativo-usuarios-cadastro", [])
         
         var jsonUsuario = {id_users : $scope.old.usuario.id_users};
         var alterouUsuario = false;        
-        if($scope.old.usuario.ds_email !== $scope.usuario.email){
-            jsonUsuario.ds_email = $scope.usuario.email; 
+        if($scope.old.usuario.ds_email.toLowerCase() !== $scope.usuario.email.toLowerCase()){
+            jsonUsuario.ds_email = $scope.usuario.email.toLowerCase(); 
             alterouUsuario = true; 
         }
         if($scope.old.usuario.ds_login !== $scope.usuario.login){
@@ -559,7 +559,8 @@ angular.module("administrativo-usuarios-cadastro", [])
     //Valida e-mail
     $scope.validaEmail = function(){
         if($scope.usuario.email){
-            if($scope.old.usuario !== null && $scope.old.usuario.ds_email === $scope.usuario.email){ 
+            if($scope.old.usuario !== null && 
+               $scope.old.usuario.ds_email.toLowerCase() === $scope.usuario.email.toLowerCase()){ 
                 // Não alterou o e-mail
                 $('#labelEmailEmUso').hide();
                 emailValido = true;
@@ -568,7 +569,8 @@ angular.module("administrativo-usuarios-cadastro", [])
             }
             $scope.validandoEmail = true;
             $webapi.get($apis.getUrl($apis.administracao.webpagesusers, [$scope.token, 0], 
-                                     {id:$campos.administracao.webpagesusers.ds_email, valor:$scope.usuario.email}))
+                                     {id:$campos.administracao.webpagesusers.ds_email, 
+                                      valor:$scope.usuario.email.toLowerCase()}))
             // Verifica se a requisição foi respondida com sucesso
                 .then(function(dados){
                             if(!dados) console.log("DADOS NÃO FORAM RECEBIDOS!");

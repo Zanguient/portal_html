@@ -580,13 +580,13 @@ angular.module("administrativo-privilegios", [])
         var permissoes = {id_roles : $scope.roleSelecionada.RoleId,
                           inserir : [],
                           deletar : [],
-                          id_controller_principal : controllerPrincipal ? controllerPrincipal.id_controller : 0,
+                          id_controller_principal : controllerPrincipal ? controllerPrincipal.id_controller : null,
                          };
         
-        if(typeof controllerPrincipal == 'undefined'){
+        /*if(typeof controllerPrincipal == 'undefined'){
             $scope.showModalAlerta('Selecione uma página principal!'); 
             return;    
-        }
+        }*/
         
         // Armazena somente as que tiveram alterações
         obtemPermissoesModificadas($scope.controllers, $scope.originalControllers, permissoes);

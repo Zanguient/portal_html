@@ -202,7 +202,8 @@
                                                            placeholder="email@email.com" 
                                                            class="form-control" 
                                                            ng-model="usuario.email" 
-                                                           ng-blur="validaEmail()" 
+                                                           ng-blur="validaEmail()"
+                                                           style="text-transform: lowercase;"
                                                            name="usuarioEmail" required/>
                                                     <span style="color:red" ng-show="formCadastroUsuario.usuarioEmail.$dirty && formCadastroUsuario.usuarioEmail.$invalid">
                                                     <span ng-show="formCadastroUsuario.usuarioEmail.$error.required">E-mail é obrigatório!</span>
