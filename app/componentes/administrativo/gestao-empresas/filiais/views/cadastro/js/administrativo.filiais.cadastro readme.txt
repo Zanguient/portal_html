@@ -38,22 +38,41 @@ Não é necessário nenhum outro módulo externo.
  
  ### Interação com a WEB API ###
  
-   * api/cliente/grupoempresa  
-	 - GET : consulta nome para validação (coleção 0)
-	 - POST : cria nova empresa
-			{ 	ds_nome : string,
-				fl_cardservices : boolean,
-				fl_taxservices : boolean,
-				fl_proinfo : boolean
-			}
-			Obtem o id_grupo como resposta  
-	 - PUT : atualiza empresa existente	
-			{   id_grupo : int,
-				ds_nome : string,
-				fl_cardservices : boolean,
-				fl_taxservices : boolean,
-				fl_proinfo : boolean
-			  }
+   * api/cliente/empresa  
+	 - POST : nova filial
+				{
+				  nu_cnpj: string,
+				  ds_fantasia: string,
+				  ds_razaoSocial: string (ou null),
+				  ds_endereco: string (ou null),
+				  ds_cidade: string (ou null),
+				  sg_uf: string[2] (ou null),
+				  nu_cep: string[20] (ou null),
+				  nu_telefone: string[20] (ou null),
+				  ds_bairro: string (ou null),
+				  ds_email: string,
+				  id_grupo: int,
+				  filial: string,
+				  nu_inscEstadual: int (ou null),
+				}
+	- PUT : altera os dados de uma filial
+				{ 
+				  nu_cnpj: string, (obrigatório!)
+				  ds_fantasia: string,
+				  ds_razaoSocial: string (ou null),
+				  ds_endereco: string (ou null),
+				  ds_cidade: string (ou null),
+				  sg_uf: string[2] (ou null),
+				  nu_cep: string[20] (ou null),
+				  nu_telefone: string[20] (ou null),
+				  ds_bairro: string (ou null),
+				  ds_email: string,
+				  dt_cadastro: date,
+				  fl_ativo: boolean, (obrigatório!)
+				  id_grupo: int, (obrigatório!)
+				  filial: string,
+				  nu_inscEstadual: int (ou null),
+				}
    
 
    

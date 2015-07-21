@@ -39,7 +39,7 @@ angular.module("administrativo-usuarios", [])
                          ];
     $scope.itens_pagina = [10, 20, 50, 100];
     $scope.busca = ''; // model do input de busca                                            
-    $scope.usuario = {busca:'', campo_busca : $scope.camposBusca[0], 
+    $scope.usuario = {busca:'', campo_busca : $scope.camposBusca[1], 
                       itens_pagina : $scope.itens_pagina[0], pagina : 1,
                       total_registros : 0, faixa_registros : '0-0', total_paginas : 0, 
                       campo_ordenacao : {id: $campos.administracao.webpagesusers.ds_email, order : 0}};

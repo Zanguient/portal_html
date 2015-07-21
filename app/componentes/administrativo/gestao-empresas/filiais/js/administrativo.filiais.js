@@ -183,6 +183,57 @@ angular.module("administrativo-filiais", [])
                     $scope.hideProgress(divPortletBodyFilialPos);
                   }); 
        }
-    };                                             
+    }; 
+                                               
+                                               
+    // AÇÕES
+    /**
+      * Solicita confirmação para desativar a filial
+      */                                           
+    $scope.desativar = function(filial){
+        var json = { nu_cnpj : filial.nu_cnpj, 
+                     id_grupo : filial.id_grupo,
+                     fl_ativo : 0 };
+        $scope.showModalConfirmacao('Confirmação', 
+                                    'Tem certeza que deseja desativar ' + filial.ds_fantasia.toUpperCase() + ' ?',
+                                     ativaFilial, json, 'Sim', 'Não');    
+    };
+    /**
+      * Solicita confirmação para ativar a filial
+      */
+    $scope.ativar = function(filial){
+        var json = { nu_cnpj : filial.nu_cnpj, 
+                     id_grupo : filial.id_grupo,
+                     fl_ativo : 1 };
+        $scope.showModalConfirmacao('Confirmação', 
+                                    'Tem certeza que deseja ativar ' + filial.ds_fantasia.toUpperCase() + ' ?',
+                                     ativaFilial, json, 'Sim', 'Não');
+    };
+    /**
+      * Efetiva a ativação/desativação da filial
+      */
+    var ativaFilial = function(json){
+        console.log(json);
+    };
+    /**
+      * Vai para a tela de alteração
+      */                                           
+    $scope.editarFilial = function(filial){
+        $scope.goAdministrativoFiliaisCadastro({filial:filial});        
+    };
+    /**
+      * Solicita confirmação para excluir a filial
+      */
+    $scope.excluirFilial = function(filial){
+        $scope.showModalConfirmacao('Confirmação', 
+                                    'Tem certeza que deseja excluir ' + filial.ds_fantasia.toUpperCase() + ' ?',
+                                     excluiFilial, filial.nu_cnpj, 'Sim', 'Não');
+    }; 
+    /**
+      * Efetiva a exclusão da filial
+      */
+    var excluiFilial = function(nu_cnpj){
+        console.log(nu_cnpj);
+    };                                           
                                                
 }]);

@@ -587,6 +587,16 @@ angular.module("AtosCapital", ['ui.router',
                             
                             
     // MENU
+    var itemExpand = 0;                        
+    $scope.itemExpandIs = function(id){
+        return itemExpand === id; 
+    };
+    $scope.expandItem = function(item){
+        if(item){
+            itemExpand = item.id_controller;
+            item.expand = true;
+        }else itemExpand = 0;
+    };
     /**
       * Informa se o id_controller informado se refere ao menu que está ativo no momento
       */
@@ -650,6 +660,12 @@ angular.module("AtosCapital", ['ui.router',
         var setouPaginaInicial = false;
         for(var k = 0; k < data.controllers.length; k++){
             var controller = data.controllers[k];
+            
+            if(controller.ds_controller.trim().toUpperCase().indexOf('[MOBILE]') == 0){
+                // Controller de mobile
+                continue;
+            }
+                
             var menu = {};
             menu.ds_controller = controller.ds_controller;
             menu.id_controller = controller.id_controller;
@@ -775,9 +791,7 @@ angular.module("AtosCapital", ['ui.router',
       */
     var exibeLayout = function(){
         // Inicializa todos os handlers de layout 
-        angular.element(document).ready(function(){ // SÓ chama um vez
-        //$scope.$on('$viewContentLoaded', function() { // chama duas vezes. why??
-           //console.log("CONTENT LOADED");
+        angular.element(document).ready(function(){ 
            $scope.exibeLayout = true;  // só exibe após carregamento completo da página    
            Metronic.init(); // init metronic core componets
            Layout.init(); // init layout  

@@ -59,40 +59,6 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				  nu_inscEstadual: int (ou null)
 			   }
 			  ]
-	- POST : nova filial
-				{
-				  nu_cnpj: string,
-				  ds_fantasia: string,
-				  ds_razaoSocial: string (ou null),
-				  ds_endereco: string (ou null),
-				  ds_cidade: string (ou null),
-				  sg_uf: string[2] (ou null),
-				  nu_cep: string[20] (ou null),
-				  nu_telefone: string[20] (ou null),
-				  ds_bairro: string (ou null),
-				  ds_email: string,
-				  id_grupo: int,
-				  filial: string,
-				  nu_inscEstadual: int (ou null),
-				}
-	- PUT : altera os dados de uma filial
-				{ 
-				  nu_cnpj: string, (obrigatório!)
-				  ds_fantasia: string,
-				  ds_razaoSocial: string (ou null),
-				  ds_endereco: string (ou null),
-				  ds_cidade: string (ou null),
-				  sg_uf: string[2] (ou null),
-				  nu_cep: string[20] (ou null),
-				  nu_telefone: string[20] (ou null),
-				  ds_bairro: string (ou null),
-				  ds_email: string,
-				  dt_cadastro: date,
-				  fl_ativo: boolean, (obrigatório!)
-				  id_grupo: int, (obrigatório!)
-				  filial: string,
-				  nu_inscEstadual: int (ou null),
-				}
  
    
 

@@ -141,23 +141,23 @@
 							<thead>
 				                <tr role="row">
                                     <th tabindex="0" rowspan="1" colspan="1"                                      
-                                        style="width: 230px; text-align:left">
+                                        style="width: 350px; text-align:left">
                                         Empresa
 								    </th>
                                     <th tabindex="1" rowspan="1" colspan="1"                                          
-                                        style="width: 188px; text-align:left;">
+                                        style="width: 105px;">
 									    CNPJ
 								    </th>
                                     <th tabindex="2" rowspan="1" colspan="1"                                          
-                                        style="width: 100px;">
+                                        style="width: 35px;">
                                          Filial
                                     </th>                                    
                                     <th tabindex="3" rowspan="1" colspan="1"                                         
-                                        style="width: 160px;">
+                                        style="width: 200px;">
                                          Email
                                     </th>
                                     <th tabindex="4" rowspan="1" colspan="1"                                          
-                                        style="width: 130px;">
+                                        style="width: 90px;">
                                          Telefone
                                     </th>
                                     <th tabindex="5" rowspan="1" colspan="1"                                        
@@ -169,7 +169,7 @@
 							<tbody>
 				                <tr role="row" class="odd" 
                                     ng-repeat="filial in filiais">
-                                    <td style="text-align:center">
+                                    <td style="text-align:left">
                                          {{filial.ds_fantasia | uppercase}}
                                     </td>
                                     <td style="text-align:center">
@@ -201,7 +201,7 @@
                                                     <a ng-show="!filial.fl_ativo"
                                                        href="javascript:;" ng-click="ativar(filial)">Ativar</a>
                                                 </li>
-                                                <li ng-show="usuarioPodeAlterarEmpresas()" class="ng-hide">
+                                                <li ng-show="usuarioPodeAlterarFiliais()" class="ng-hide">
                                                     <a href="javascript:;" ng-click="editarFilial(filial)">Editar</a>
                                                 </li>
                                                 <li ng-show="usuarioPodeExcluirFiliais()">

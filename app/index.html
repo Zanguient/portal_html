@@ -17,24 +17,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta content="width=device-width, initial-scale=1" name="viewport">
 <meta content="" name="description">
-<meta content="" name="author">
-
-<!-- JQUERY -->
-<script src="../lib/jquery.min.js" type="text/javascript"></script>
-<script src="../lib/jquery-migrate.min.js" type="text/javascript"></script>
-<script src="../lib/jquery-ui.min.js" type="text/javascript"></script>
-<!-- END JQUERY -->
-<!-- ANGULAR -->
-<style> <!-- ANTES DE CARREGAR O ANGULAR, CARREGA O CSS DO NGCLOAK -->
-    [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-      display: none !important;
-    }
-</style>
-<script src="../lib/angularjs/angular.min.js" type="text/javascript"></script>
-<script src="../lib/angularjs/angular-locale_pt-br.js" type="text/javascript"></script>
-<script src="../lib/bootstrap/ui-bootstrap-tpls-0.13.0.min.js" type="text/javascript"></script>  
-<script src="../lib/angularjs/plugins/angular-ui-router.min.js" type="text/javascript"></script>  
-<!-- END - ANGULAR -->      
+<meta content="" name="author">    
     
 <!-- BEGIN GLOBAL MANDATORY STYLES -->
 <!--link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css"-->
@@ -147,57 +130,54 @@
 			<!-- END HEADER SEARCH BOX -->
             
 			<!-- BEGIN MEGA MENU : Menu -->
-			<div class="hor-menu">
-                <!-- MENU DINÂMICO -->
-				<ul class="nav navbar-nav">
-                    <li ng-repeat="item in menu" ng-show="item.temLink"
-                        ng-class="{ active : menuAtivo(item.ds_controller), 'menu-dropdown mega-menu-dropdown' : item.subControllers && item.subControllers.length > 0}">
-                        <!-- MENU SEM SUBMENUS -->
-                        <a ng-show="!item.subControllers || item.subControllers.length == 0"
-                           href="javascript:;" ng-click="item.link()">
-                            {{item.ds_controller}}
-                        </a>
-                        <!-- MENU COM SUBMENUS -->   
-                        <a ng-show="item.subControllers && item.subControllers.length > 0"
-                           data-hover="megamenu-dropdown" 
-                           data-close-others="true"  
-                           href="javascript:;" class="dropdown-toggle"
-                           ng-click="item.expand = item.expand ? false : true"
-                           ng-mouseover="item.expand = true">
-                           <!--data-toggle="dropdown"-->    
-                            {{item.ds_controller}} 
-                            <i ng-show="item.subControllers && item.subControllers.length > 0" 
-                               class="fa fa-angle-down"></i>
-						</a>
-                        <ul ng-show="item.subControllers && item.subControllers.length > 0 && item.expand" 
-                            class="dropdown-menu">
-                            <li>
-								<div class="mega-menu-content">
-									<div class="row">
-										<div class="col-xs-1" 
-                                             style="width: inherit !important" 
-                                             ng-repeat="subController1 in item.subControllers">
-											<ul class="mega-menu-submenu" ng-show="subController1.temLink">
-												<li>
-													<h3>{{subController1.ds_controller}}</h3>
-												</li>
-												<li ng-repeat="subController2 in subController1.subControllers"
-                                                    ng-class="{ active : moduloAtivo(subController2.ds_controller, subController1.ds_controller) }">
-													<a href="javascript:;" ng-click="subController2.link()"
-                                                       ng-show="subController2.temLink">
-													   <i class="fa fa-angle-right"></i>
-													   {{subController2.ds_controller}}
-                                                    </a>
-												</li>												
-											</ul>
-										</div>
+			
+		<div class="hor-menu">
+			<ul class="nav navbar-nav">
+				<li ng-repeat="item in menu" 
+                    ng-show="item.temLink"
+                    ng-class=" { active : menuAtivo(item.ds_controller), 'menu-dropdown mega-menu-dropdown' : item.subControllers && item.subControllers.length > 0, open : itemExpandIs(item.id_controller) }">
+                    <!-- SEM SUBMENU -->
+					<a ng-show="!item.subControllers || item.subControllers.length == 0"
+                       href="javascript:;" ng-click="item.link()"
+                       ng-mouseover="expandItem()">
+                        {{item.ds_controller}}
+                    </a>
+                    <!-- COM SUBMENU -->
+                    <a ng-show="item.subControllers && item.subControllers.length > 0"
+                       data-hover="megamenu-dropdown" data-close-others="true" 
+                       data-toggle="dropdown" href="javascript:;"
+                       ng-mouseover="expandItem(item)">
+                        {{item.ds_controller}}<i class="fa fa-angle-down"></i>
+                    </a>
+					<ul ng-show="item.subControllers && item.subControllers.length > 0" 
+                        class="dropdown-menu">
+                        <li>
+                            <div class="mega-menu-content">
+                                <div class="row">
+                                    <div class="col-xs-1" 
+                                         style="width: inherit !important" 
+                                         ng-repeat="subController1 in item.subControllers">
+                                        <ul class="mega-menu-submenu" ng-show="subController1.temLink">
+                                            <li>
+                                                <h3>{{subController1.ds_controller}}</h3>
+                                            </li>
+                                            <li ng-repeat="subController2 in subController1.subControllers"
+                                                ng-class="{ active : moduloAtivo(subController2.ds_controller, subController1.ds_controller) }">
+                                                <a href="javascript:;" ng-click="subController2.link(); expandItem()"
+                                                   ng-show="subController2.temLink">
+                                                   <i class="fa fa-angle-right"></i>
+                                                   {{subController2.ds_controller}}
+                                                </a>
+                                            </li>												
+                                        </ul>
                                     </div>
                                 </div>
-							</li>
-                        </ul>
-                    </li>
-				</ul>
-			</div>
+                            </div>
+                        </li>
+                    </ul>
+				</li>
+			</ul>
+		</div>
 			<!-- END MEGA MENU -->
 		</div>
 	</div>
@@ -423,6 +403,11 @@
     
     
 <!-- BEGIN JAVASCRIPTS (Load javascripts at bottom, this will reduce page load time) -->
+<!-- JQUERY -->
+<script src="../lib/jquery.min.js" type="text/javascript"></script>
+<script src="../lib/jquery-migrate.min.js" type="text/javascript"></script>
+<script src="../lib/jquery-ui.min.js" type="text/javascript"></script>
+<!-- END JQUERY --> 
 <!-- BEGIN CORE PLUGINS -->
 <script src="../lib/bootstrap/bootstrap.min.js" type="text/javascript"></script>
 <script src="../lib/bootstrap/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
@@ -432,6 +417,12 @@
 <script src="../lib/jquery.cokie.min.js" type="text/javascript"></script>
 <script src="../lib/uniform/jquery.uniform.min.js" type="text/javascript"></script>
 <!-- END CORE PLUGINS --> 
+<!-- ANGULAR -->
+<script src="../lib/angularjs/angular.min.js" type="text/javascript"></script>
+<script src="../lib/angularjs/angular-locale_pt-br.js" type="text/javascript"></script>
+<script src="../lib/bootstrap/ui-bootstrap-tpls-0.13.0.min.js" type="text/javascript"></script>  
+<script src="../lib/angularjs/plugins/angular-ui-router.min.js" type="text/javascript"></script>  
+<!-- END - ANGULAR --> 
 <!-- BEGIN PAGE LEVEL PLUGINS -->
 <script src="../lib/jstree/jstree.min.js" type="text/javascript"></script>
 <script src="../lib/jstree/jsTree.directive.js" type="text/javascript"></script> 
