@@ -213,7 +213,22 @@ angular.module("administrativo-filiais", [])
       * Efetiva a ativação/desativação da filial
       */
     var ativaFilial = function(json){
-        console.log(json);
+         // Atualiza
+         $webapi.update($apis.getUrl($apis.cliente.empresa, undefined,
+                                  {id: 'token', valor: $scope.token}), json)
+                .then(function(dados){
+                     // Exibe a mensagem de sucesso
+                    $scope.showAlert('Filial alterada com sucesso!', true, 'success', true);
+                    // Hide progress
+                    $scope.hideProgress(divPortletBodyFilialPos);
+                    // Refaz a busca
+                    $scope.buscaFiliais();
+                  },function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else $scope.showAlert('Houve uma falha ao alterar o status ativo da filial (' + failData.status + ')', true, 'danger', true);
+                     // Hide progress
+                     $scope.hideProgress(divPortletBodyFilialPos);
+                  });    
     };
     /**
       * Vai para a tela de alteração
@@ -233,7 +248,24 @@ angular.module("administrativo-filiais", [])
       * Efetiva a exclusão da filial
       */
     var excluiFilial = function(nu_cnpj){
-        console.log(nu_cnpj);
+         // Exclui
+         $webapi.delete($apis.getUrl($apis.cliente.empresa, undefined,
+                                     [{id: 'token', valor: $scope.token},
+                                      {id: 'nu_cnpj', valor: nu_cnpj}]))
+                .then(function(dados){
+                    // Exibe a mensagem de sucesso
+                    $scope.showAlert('Filial excluída com sucesso!', true, 'success', true);
+                    // Hide progress
+                    $scope.hideProgress(divPortletBodyFilialPos);
+                    // Refaz a busca
+                    $scope.buscaFiliais(true);
+                  },function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 500) $scope.showModalAlerta('Não é possível excluir a filial. O que pode ser feito é a desativação da mesma');
+                     else $scope.showAlert('Houve uma falha ao excluir a filial (' + failData.status + ')', true, 'danger', true);
+                     // Hide progress
+                     $scope.hideProgress(divPortletBodyFilialPos);
+                  });    
     };                                           
                                                
 }]);

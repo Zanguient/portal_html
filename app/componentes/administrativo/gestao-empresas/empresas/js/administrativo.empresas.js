@@ -326,7 +326,7 @@ angular.module("administrativo-empresas", [])
                     $scope.buscaEmpresas();
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
-                     else if(failData.status === 500) $scope.showAlert('Não foi possível excluir a empresa. Você pode desativar ela', true, 'danger', true);
+                     else if(failData.status === 500) $scope.showModalAlerta('Não é possível excluir a empresa. O que pode ser feito é a desativação da mesma');
                      else $scope.showAlert('Houve uma falha ao excluir a empresa (' + failData.status + ')', true, 'danger', true);
                      $scope.hideProgress(divPortletBodyEmpresaPos);
                   }); 

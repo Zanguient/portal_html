@@ -184,17 +184,15 @@
                                        {{filial.nu_telefone}}
                                     </td>
                                     <td style="text-align:center">
-                                       <div class="btn-group"
+                                       <div class="btn-group" dropdown dropdown-append-to-body
                                             ng-show="usuarioPodeDesativarFiliais() || usuarioPodeAlterarEmpresas() || usuarioPodeExcluirFiliais()">
                                             <a class="btn btn-default btn-circle" 
-                                               href="javascript:;" 
-                                               data-toggle="dropdown" 
-                                               aria-expanded="false">
+                                               href="javascript:;" dropdown-toggle>
                                                 <i class="fa fa-pencil"></i> 
                                                 Ações 
                                                 <i class="fa fa-angle-down"></i>
                                             </a>
-                                            <ul class="dropdown-menu pull-right">
+                                            <ul class="dropdown-menu" style="max-width: 40px">
                                                 <li ng-show="usuarioPodeDesativarFiliais()">
                                                     <a ng-show="filial.fl_ativo"
                                                        href="javascript:;" ng-click="desativar(filial)">Desativar</a>

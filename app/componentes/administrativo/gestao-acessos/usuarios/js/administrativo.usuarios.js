@@ -320,6 +320,7 @@ angular.module("administrativo-usuarios", [])
                   },function(failData){
                      //console.log("FALHA AO DELETAR USUARIO: " + failData.status);
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 500) $scope.showModalAlerta('Não é possível excluir o usuário. O que pode ser feito é a desativação do mesmo');
                      else $scope.showAlert('Houve uma falha ao excluir o usuário (' + failData.status + ')', true, 'danger', true);
                      $scope.hideProgress(divPortletBodyUsuarioPos);
                   }); 

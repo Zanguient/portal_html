@@ -44,7 +44,8 @@ angular.module("administrativo-usuarios-cadastro", [])
     $scope.pesquisandoGruposEmpresas = false;  
     $scope.pesquisandoEmpresas = false;
     $scope.cadastrando = false;
-    
+                                                         
+                                                         
     // Usuário da alteração
     /**
       * Obtém e atualiza informações do formulário do usuário
@@ -233,7 +234,8 @@ angular.module("administrativo-usuarios-cadastro", [])
         var r = [];
         for(var k in $scope.rolesSelecionadas){ 
             var role = $scope.rolesSelecionadas[k];
-            r.push({RoleId : role.RoleId, RolePrincipal: role.RoleId === $scope.rolePrincipal.RoleId});
+            r.push({RoleId : role.RoleId, 
+                    RolePrincipal: $scope.rolePrincipal ? role.RoleId === $scope.rolePrincipal.RoleId : false});
         }
         // JSON DE ENVIO
         var json = { 
@@ -246,14 +248,15 @@ angular.module("administrativo-usuarios-cadastro", [])
                                   {id: 'token', valor: $scope.token}), json)
                 .then(function(dados){
                     progressoCadastro(false);
-                    $scope.showAlert('Usuário cadastrado com sucesso!', true, 'success', true);
                     // Reseta os dados
                     resetaVariaveis();
                     // Hide progress
                     progressoCadastro(false);
                     $scope.hideProgress(divPortletBodyUsuarioCadPos);
                     // Volta para a tela de Usuários
-                    $scope.goAdministrativoUsuarios();
+                    $scope.goAdministrativoUsuarios()
+                    // Exibe a mensagem de sucesso
+                    $timeout(function(){$scope.showAlert('Usuário cadastrado com sucesso!', true, 'success', true)}, 500);
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
                      else $scope.showAlert('Houve uma falha ao cadastrar o usuário (' + failData.status + ')', true, 'danger', true);
@@ -299,13 +302,13 @@ angular.module("administrativo-usuarios-cadastro", [])
         if(($scope.old.usuario.id_grupo === null ^ typeof $scope.usuario.grupoempresa.id_grupo === 'undefined') ||
             ($scope.old.usuario.id_grupo !== null && typeof $scope.usuario.grupoempresa.id_grupo === 'number' && 
              $scope.old.usuario.id_grupo !== $scope.usuario.grupoempresa.id_grupo)){
-           console.log("HOUVE ALTERAÇÃO - USUÁRIO - GRUPO EMPRESA");
+           //console.log("HOUVE ALTERAÇÃO - USUÁRIO - GRUPO EMPRESA");
            return true; 
         } 
         if(($scope.old.usuario.nu_cnpjEmpresa === null ^ typeof $scope.usuario.empresa.nu_cnpj === 'undefined') ||
             ($scope.old.usuario.nu_cnpjEmpresa !== null && $scope.usuario.empresa.nu_cnpj && 
              $scope.old.usuario.nu_cnpjEmpresa !== $scope.usuario.empresa.nu_cnpj)){ 
-            console.log("HOUVE ALTERAÇÃO - USUÁRIO - EMPRESA"); 
+            //console.log("HOUVE ALTERAÇÃO - USUÁRIO - EMPRESA"); 
             return true;
         }
         // ROLES
@@ -384,7 +387,7 @@ angular.module("administrativo-usuarios-cadastro", [])
         // Novas roles
         for(var k in $scope.rolesSelecionadas){ 
             var role = $scope.rolesSelecionadas[k];
-            var principal = role.RoleId === $scope.rolePrincipal.RoleId; // essa é a "nova" role principal?
+            var principal = $scope.rolePrincipal ? role.RoleId === $scope.rolePrincipal.RoleId : false; // essa é a "nova" role principal?
             var old = $filter('filter')($scope.old.roles, function(r){return r.RoleId === role.RoleId;}); // roles antigas
             
             if(old.length == 0 ||  // nova associação 
@@ -413,13 +416,14 @@ angular.module("administrativo-usuarios-cadastro", [])
         $webapi.update($apis.getUrl($apis.administracao.webpagesusers, undefined, {id: 'token', valor: $scope.token}), json)
             .then(function(dados){
                      progressoCadastro(false);
-                     $scope.showAlert('Usuário alterado com sucesso!', true, 'success', true);
                      // Reseta os dados
                      resetaVariaveis();
                      // Hide progress
                      $scope.hideProgress(divPortletBodyUsuarioCadPos);
                      // Volta para a tela de Usuários
-                     $scope.goAdministrativoUsuarios();
+                      $scope.goAdministrativoUsuarios()
+                     // Exibe a mensagem de sucesso
+                     $timeout(function(){$scope.showAlert('Usuário alterado com sucesso!', true, 'success', true)}, 500);  
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
                      else $scope.showAlert('Houve uma falha ao alterar o usuário (' + failData.status + ')', true, 'danger', true);
@@ -434,7 +438,7 @@ angular.module("administrativo-usuarios-cadastro", [])
       * Armazena as informações
       */
     $scope.armazenaInformacoesDoUsuario = function(){
-        if($scope.formCadastroUsuario.$valid && $scope.dataValida() && $scope.loginValido() && $scope.emailValido() && $scope.temRoleSelecionada && $scope.rolePrincipal) {
+        if($scope.formCadastroUsuario.$valid && $scope.dataValida() && $scope.loginValido() && $scope.emailValido() && $scope.temRoleSelecionada){// && $scope.rolePrincipal) {
             if($scope.ehCadastro()) cadastraUsuario();
             else alteraUsuario();
         }else{
@@ -460,10 +464,10 @@ angular.module("administrativo-usuarios-cadastro", [])
             }else if(!$scope.temRoleSelecionada){
                 $scope.showModalAlerta("Selecione pelo menos um privilégio!");
                 $scope.setTabCadastro(3);
-            }else if(!$scope.rolePrincipal){
+            }/*else if(!$scope.rolePrincipal){
                 $scope.showModalAlerta("Selecione a página inicial!");
                 $scope.setTabCadastro(3);
-            }else $scope.showModalAlerta("Por favor, verifique novamente se os dados preenchidos são válidos");
+            }*/else $scope.showModalAlerta("Por favor, verifique novamente se os dados preenchidos são válidos");
         }
     };
                                                          

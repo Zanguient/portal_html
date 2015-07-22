@@ -263,9 +263,12 @@
                                             <div class="col-md-3">
                                                 <div class="checkbox-list" ng-repeat="role in roles">
                                                     <label class="checkbox">
-                                                        <input type="checkbox" 
+                                                        <!--input type="checkbox" 
                                                                ng-change="handleRole()"
-                                                               ng-model="role.selecionado"/>&nbsp;{{role.RoleName}}
+                                                               ng-model="role.selecionado"/-->
+                                                        <checkbox normal ng-change="handleRole()"
+                                                               ng-model="role.selecionado">
+                                                        </checkbox>&nbsp;{{role.RoleName}}
                                                     </label>
                                                 </div>
                                                 <span style="color:red" ng-show="!temRoleSelecionada">

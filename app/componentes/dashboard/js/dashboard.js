@@ -8,8 +8,8 @@
 // App
 angular.module("dashboard", []) 
 
-.controller("dashboardCtrl", ['$scope','$state',
-                            function($scope,$state){ 
+.controller("dashboardCtrl", ['$scope','$state','$timeout',
+                            function($scope,$state,$timeout){ 
                                                         
     // Inicialização do controller
     $scope.dashboardInit = function(){
@@ -20,6 +20,10 @@ angular.module("dashboard", [])
         $scope.$on('mudancaDeRota', function(event, state){
             $state.go(state);
         });
+         // Focus
+         /*$timeout(function() {
+             jQuery('body').trigger('click');
+          }, 500);*/
     };
     
 }]);

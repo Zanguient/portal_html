@@ -74,13 +74,21 @@
                                                      </ul>
                                                      <div class="btn-group"
                                                          ng-show="!controller.subControllers || controller.subControllers.length == 0">
-                                                        <a href="javascript:;" 
-                                                            ng-click="definirPaginaInicial(controller)">
-                                                            
-                                                            <i class="fa fa-home"></i> 
+                                                         <i class="fa fa-home"></i>
+                                                         <a ng-show="!ehPaginaPrincipal(controller)"
+                                                            href="javascript:;" 
+                                                            ng-click="definirPaginaInicial(controller)"> 
                                                             <button class="btn btn-link"
                                                                     style="color: black !important">
                                                                 Definir como página inicial 
+                                                            </button>
+                                                         </a>
+                                                         <a ng-show="ehPaginaPrincipal(controller)"
+                                                            href="javascript:;" 
+                                                            ng-click="definirPaginaInicial()"> 
+                                                            <button class="btn btn-link"
+                                                                    style="color: black !important">
+                                                                Desmarcar página inicial 
                                                             </button>
                                                          </a>
                                                      </div>
@@ -117,13 +125,21 @@
                                                              </ul>
                                                              <div class="btn-group"
                                                                  ng-show="!controller1.subControllers || controller1.subControllers.length == 0">
-                                                                <a href="javascript:;" 
-                                                                    ng-click="definirPaginaInicial(controller1)">
-
-                                                                    <i class="fa fa-home"></i> 
+                                                                 <i class="fa fa-home"></i>
+                                                                 <a ng-show="!ehPaginaPrincipal(controller1)"
+                                                                    href="javascript:;" 
+                                                                    ng-click="definirPaginaInicial(controller1)"> 
                                                                     <button class="btn btn-link"
                                                                             style="color: black !important">
                                                                         Definir como página inicial 
+                                                                    </button>
+                                                                 </a>
+                                                                 <a ng-show="ehPaginaPrincipal(controller1)"
+                                                                    href="javascript:;" 
+                                                                    ng-click="definirPaginaInicial()"> 
+                                                                    <button class="btn btn-link"
+                                                                            style="color: black !important">
+                                                                        Desmarcar página inicial 
                                                                     </button>
                                                                  </a>
                                                              </div>
@@ -160,13 +176,21 @@
                                                                      </ul>
                                                                      <div class="btn-group"
                                                                          ng-show="!controller2.subControllers || controller2.subControllers.length == 0">
-                                                                        <a href="javascript:;" 
-                                                                            ng-click="definirPaginaInicial(controller2)">
-
-                                                                            <i class="fa fa-home"></i> 
+                                                                         <i class="fa fa-home"></i>
+                                                                         <a ng-show="!ehPaginaPrincipal(controller2)"
+                                                                            href="javascript:;" 
+                                                                            ng-click="definirPaginaInicial(controller2)"> 
                                                                             <button class="btn btn-link"
                                                                                     style="color: black !important">
-                                                                            Definir como página inicial 
+                                                                                Definir como página inicial 
+                                                                            </button>
+                                                                         </a>
+                                                                         <a ng-show="ehPaginaPrincipal(controller2)"
+                                                                            href="javascript:;" 
+                                                                            ng-click="definirPaginaInicial()"> 
+                                                                            <button class="btn btn-link"
+                                                                                    style="color: black !important">
+                                                                                Desmarcar página inicial 
                                                                             </button>
                                                                          </a>
                                                                      </div>
@@ -354,11 +378,14 @@
                                                      {{privilegio.RoleName}}
                                                 </td>
                                                 <td class="center btnacoes">
-                                                    <div class="btn-group">
-                                                        <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
-                                                            <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
+                                                    <div class="btn-group" dropdown dropdown-append-to-body>
+                                                        <a class="btn btn-default btn-circle" 
+                                                           href="javascript:;" dropdown-toggle>
+                                                            <i class="fa fa-pencil"></i> 
+                                                            Ações 
+                                                            <i class="fa fa-angle-down"></i>
                                                         </a>
-                                                        <ul class="dropdown-menu pull-right">
+                                                        <ul class="dropdown-menu" style="max-width: 40px">
                                                             <li>
                                                                 <a data-toggle="modal"
                                                                    ng-click="alteraPrivilegio(privilegio)">

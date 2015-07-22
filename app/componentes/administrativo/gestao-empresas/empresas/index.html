@@ -301,11 +301,14 @@
                                 </td>
                                 <td>
                                     <div class="dadosEmpresa" style="text-align:center">
-                                        <div class="btn-group">
-                                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
-                                                <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
+                                        <div class="btn-group" dropdown dropdown-append-to-body>
+                                            <a class="btn btn-default btn-circle" 
+                                               href="javascript:;" dropdown-toggle>
+                                                <i class="fa fa-pencil"></i> 
+                                                Ações 
+                                                <i class="fa fa-angle-down"></i>
                                             </a>
-                                            <ul class="dropdown-menu pull-right">
+                                            <ul class="dropdown-menu" style="max-width: 40px">
                                                 <li>
                                                     <a href="javascript:;" ng-click="verFiliais(empresa)">Filiais</a>
                                                 </li>

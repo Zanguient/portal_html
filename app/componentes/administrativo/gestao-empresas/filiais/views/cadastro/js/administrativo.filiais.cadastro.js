@@ -374,22 +374,23 @@ angular.module("administrativo-filiais-cadastro", [])
 
         // Envia
         console.log(jsonFilial);
-        /*$webapi.post($apis.getUrl($apis.cliente.empresa, undefined,
+        $webapi.post($apis.getUrl($apis.cliente.empresa, undefined,
                                   {id: 'token', valor: $scope.token}), jsonFilial)
                 .then(function(dados){
-                    $scope.showAlert('Filial cadastrada com sucesso!', true, 'success', true);
                     // Reseta os dados
                     resetaVariaveis();
                     // Hide progress
                     $scope.hideProgress(divPortletBodyFilialCadPos);
                     // Volta para a tela de Usuários
                     $scope.goAdministrativoFiliais();
+                    // Exibe a mensagem de sucesso
+                    $timeout(function(){$scope.showAlert('Filial cadastrada com sucesso!', true, 'success', true)}, 500);
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
                      else $scope.showAlert('Houve uma falha ao cadastrar a filial (' + failData.status + ')', true, 'danger', true);
                      // Hide progress
                      $scope.hideProgress(divPortletBodyFilialCadPos);
-                  });  */
+                  }); 
    };
    
    // ALTERAÇÃO                                                      
@@ -432,23 +433,25 @@ angular.module("administrativo-filiais-cadastro", [])
             jsonFilial.nu_telefone = $scope.filial.nu_telefone;
 
         console.log(jsonFilial);
+        //$scope.hideProgress(divPortletBodyFilialCadPos);
         // Envia
-        /*$webapi.update($apis.getUrl($apis.cliente.empresa, undefined,
+        $webapi.update($apis.getUrl($apis.cliente.empresa, undefined,
                                   {id: 'token', valor: $scope.token}), jsonFilial)
                 .then(function(dados){
-                    $scope.showAlert('Filial alterada com sucesso!', true, 'success', true);
                     // Reseta os dados
                     resetaVariaveis();
                     // Hide progress
                     $scope.hideProgress(divPortletBodyFilialCadPos);
                     // Volta para a tela de Usuários
                     $scope.goAdministrativoFiliais();
+                    // Exibe a mensagem de sucesso
+                    $timeout(function(){$scope.showAlert('Filial alterada com sucesso!', true, 'success', true)}, 500);
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
                      else $scope.showAlert('Houve uma falha ao alterar a filial (' + failData.status + ')', true, 'danger', true);
                      // Hide progress
                      $scope.hideProgress(divPortletBodyFilialCadPos);
-                  });  */   
+                  });    
    };                                                      
     
     

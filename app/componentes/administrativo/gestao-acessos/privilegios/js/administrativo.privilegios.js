@@ -351,15 +351,23 @@ angular.module("administrativo-privilegios", [])
     
     // CONTROLLERS E METHODS
     /**
+      * Retorna true se o controller é a página inicial
+      */
+    $scope.ehPaginaPrincipal = function(controller){
+        if(!controller || !controllerPrincipal) return false;
+        return controllerPrincipal.id_controller === controller.id_controller;    
+    };
+    /**
       * Define o controller como página inicial
       */
     $scope.definirPaginaInicial = function(controller){
-        //console.log("DEFINIR " + controller.ds_controller + " COMO PÁGINA INICIAL");
-        if(!controllerPrincipal || controllerPrincipal.id_controller !== controller.id_controller){
+        if(!controller){
+            if(controllerPrincipal) controllerPrincipal.principal = false;
+            controllerPrincipal = undefined;
+        }else if(!$scope.ehPaginaPrincipal()){
             if(controllerPrincipal) controllerPrincipal.principal = false;
             controller.principal = true;
             controllerPrincipal = controller; // aponta para o novo controller principal
-            //$timeout(function(){$scope.$apply();}, 0); // if(!$scope.$$phase) $scope.$apply();
         }
     };
     /**

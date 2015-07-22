@@ -53,13 +53,13 @@ Não é necessário nenhum outro módulo externo.
 			{
 				"pessoa" : json_pessoa, 
 				"webpagesusers" : json_usuario,
-				"webpagesusersinroles" : [{RoleId: roleid}]
+				"webpagesusersinroles" : [{RoleId: roleid, RolePrincipal: boolean}]
 			}
 	 - PUT : atualiza usuário existente	
 			{
 				"pessoa" : json_pessoa, 
 				"webpagesusers" : json_usuario,
-				"webpagesusersinroles" : [{RoleId: roleid}]
+				"webpagesusersinroles" : [{RoleId: roleid, RolePrincipal: boolean}]
 			}
 			OBS 1: Independente se atualizou ou não dados da conta (login, e-mail, grupo empresa ou empresa), toda atualização 
 			       tem que enviar o json "webpagesusers", pois ele inclui o id_users
