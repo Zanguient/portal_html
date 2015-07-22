@@ -160,7 +160,11 @@
                                         style="width: 90px;">
                                          Telefone
                                     </th>
-                                    <th tabindex="5" rowspan="1" colspan="1"                                        
+                                    <th tabindex="5" rowspan="1" colspan="1"                                          
+                                        style="width: 60px;">
+                                         Situação
+                                    </th>
+                                    <th tabindex="6" rowspan="1" colspan="1"                                        
                                         style="width: 100px;">
                                          Ações
                                     </th>
@@ -182,6 +186,10 @@
                                     </td>
                                     <td style="text-align:center">
                                        {{filial.nu_telefone}}
+                                    </td>
+                                    <td style="text-align:center"
+                                        ng-class="{ 'StatusSenhaValida': filial.fl_ativo, 'StatusSenhaInvalida': !filial.fl_ativo}"
+                                        ng-bind="filial.fl_ativo ? 'ATIVO' : 'INATIVO'">
                                     </td>
                                     <td style="text-align:center">
                                        <div class="btn-group" dropdown dropdown-append-to-body

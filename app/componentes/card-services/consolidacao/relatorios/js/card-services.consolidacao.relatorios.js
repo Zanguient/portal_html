@@ -57,8 +57,8 @@ angular.module("card-services-consolidacao-relatorios", [])
         $scope.pagina.titulo = 'Card Services';                          
         $scope.pagina.subtitulo = 'Consolicação - Relatórios';
         // Quando houver uma mudança de rota => modificar estado
-        $scope.$on('mudancaDeRota', function(event, state){
-            $state.go(state);
+        $scope.$on('mudancaDeRota', function(event, state, params){
+            $state.go(state, params);
         });
         // Quando houver alteração do grupo empresa na barra administrativa                                           
         $scope.$on('alterouGrupoEmpresa', function(event){ 

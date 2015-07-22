@@ -16,8 +16,8 @@ angular.module("usuario-sem-link", [])
         $scope.pagina.titulo = 'Usuário sem acesso';                          
         $scope.pagina.subtitulo = '';
         // Quando houver uma mudança de rota => modificar estado
-        $scope.$on('mudancaDeRota', function(event, state){
-            $state.go(state);
+        $scope.$on('mudancaDeRota', function(event, state, params){
+            $state.go(state, params);
         });
     };    
 }]);

@@ -432,7 +432,6 @@ angular.module("administrativo-filiais-cadastro", [])
         if($scope.filial.nu_telefone !== $scope.old.nu_telefone) 
             jsonFilial.nu_telefone = $scope.filial.nu_telefone;
 
-        console.log(jsonFilial);
         //$scope.hideProgress(divPortletBodyFilialCadPos);
         // Envia
         $webapi.update($apis.getUrl($apis.cliente.empresa, undefined,

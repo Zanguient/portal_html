@@ -22,8 +22,8 @@ angular.module("card-services-conciliacao-vendas", [])
         $scope.pagina.titulo = 'Card Services';                          
         $scope.pagina.subtitulo = 'Conciliação de Vendas';
         // Quando houver uma mudança de rota => modificar estado
-        $scope.$on('mudancaDeRota', function(event, state){
-            $state.go(state);
+        $scope.$on('mudancaDeRota', function(event, state, params){
+            $state.go(state, params);
         });
     };
     

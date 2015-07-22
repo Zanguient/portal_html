@@ -144,6 +144,7 @@ angular.module('utils', [ ])
   const HORAS_NOVO_LOGIN = 2;
     
   return {
+    getUrlBase : function(){ return urlBase },
     // URL + keys da local storage  
     autenticacao: { 
       login: urlBase + '/login/autenticacao/',
