@@ -323,6 +323,49 @@
                                     {{filtro.analitico.total_paginas}}
                                 </span>
                             </div>
+                            <div class="col-md-5 col-sm-12">
+                                <div class="dataTables_filter">  
+                                    <div class="col-sm-5" style="padding-right: 1px;padding-left: 1px;">
+                                        <label>
+                                            <select aria-controls="datatable_products" 
+                                                    class="form-control input-sm input-inline ng-pristine ng-valid ng-touched" 
+                                                    ng-model="usuario.campo_busca" 
+                                                    ng-options="campo as campo.nome for campo in camposBusca | filter:{ativo:true}">
+                                                <option value="0" 
+                                                        selected="selected"
+                                                        label="E-mail">E-mail
+                                                </option>
+                                                <option value="1" label="Login">Login
+                                                </option>
+                                                <option value="2" label="Filial">Filial
+                                                </option>
+                                            </select>
+                                        </label>
+                                        
+                                        <label>
+                                                <span class="seperator"></span>Pesquisar 
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-7" style="padding-right: 1px; padding-left: 1px;">
+                                        <label>
+                                            <div class="input-group input-icon right">
+                                                <i class="fa fa-times ng-hide" 
+                                                   style="right:50px;cursor:pointer" 
+                                                   ng-click="resetaBusca()" 
+                                                   ng-show="usuario.busca"></i>
+                                                <input type="text" 
+                                                       class="form-control input-inline ng-pristine ng-valid ng-touched" 
+                                                       placeholder="Buscar"
+                                                       ng-model="busca"
+                                                       ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 &amp;&amp; !busca)) &amp;&amp; filtraUsuarios()">
+												<span class="input-group-addon">
+                                                    <i class="fa fa-search" style="cursor:pointer" ng-click="filtraUsuarios()"></i>
+												</span>
+											</div> 
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="row">                            
                             <!--NAVEGAÇÃO-->  
@@ -409,19 +452,19 @@
                                                                 </td>  
                                                                 <!-- VALOR PARCELA -->
                                                                 <td ng-init="total.sintetico.valorParcela = total.sintetico.valorParcela + relsintetico.valorParcela">
-                                                                     {{relsintetico.valorParcela}}
+                                                                     {{relsintetico.valorParcela | currency:'R$ '}}
                                                                 </td>
                                                                 <!-- VALOR BRUTO -->
                                                                 <td ng-init="total.sintetico.valorBruto = total.sintetico.valorBruto + relsintetico.valorBruto">
-                                                                     {{relsintetico.valorBruto}}
+                                                                     {{relsintetico.valorBruto | currency:'R$ '}}
                                                                 </td>
                                                                 <!-- VALOR DESCONTADO -->
                                                                 <td ng-init="total.sintetico.valorDescontado = total.sintetico.valorDescontado + relsintetico.valorDescontado">
-                                                                     {{relsintetico.valorDescontado}}
+                                                                     {{relsintetico.valorDescontado | currency:'R$ '}}
                                                                 </td>
                                                                 <!-- VALOR LÍQUIDO -->
                                                                 <td ng-init="total.sintetico.valorLiquido = total.sintetico.valorLiquido + relsintetico.valorLiquida">
-                                                                     {{relsintetico.valorLiquida}}
+                                                                     {{relsintetico.valorLiquida | currency:'R$ '}}
                                                                 </td>                                                   
                                                                 <!-- BOTÃO DETALHAR -->
                                                                 <td class="center btnacoes">
@@ -444,16 +487,16 @@
                                                                      {{total.sintetico.totalTransacoes}}
                                                                 </td>
                                                                 <td>  
-                                                                     {{total.sintetico.valorParcela | currency:'R$'}}
+                                                                     {{total.sintetico.valorParcela | currency:'R$ '}}
                                                                 </td>
                                                                 <td>
-                                                                     {{total.sintetico.valorBruto | currency:'R$'}}
+                                                                     {{total.sintetico.valorBruto | currency:'R$ '}}
                                                                 </td>
                                                                 <td>
-                                                                     {{total.sintetico.valorDescontado | currency:'R$'}}
+                                                                     {{total.sintetico.valorDescontado | currency:'R$ '}}
                                                                 </td>
                                                                 <td>
-                                                                     {{total.sintetico.valorLiquido | currency:'R$'}}
+                                                                     {{total.sintetico.valorLiquido | currency:'R$ '}}
                                                                 </td>
                                                                 <!-- BOTÃO DETALHAR -->
                                                                 <td>
@@ -468,16 +511,16 @@
                                                                      {{total.sintetico.totalTransacoesFiltrado}}
                                                                 </td>
                                                                 <td>
-                                                                     {{total.sintetico.valorParcelaFiltrado | currency:'R$'}}
+                                                                     {{total.sintetico.valorParcelaFiltrado | currency:'R$ '}}
                                                                 </td>
                                                                 <td>
-                                                                     {{total.sintetico.valorBrutoFiltrado | currency:'R$'}}
+                                                                     {{total.sintetico.valorBrutoFiltrado | currency:'R$ '}}
                                                                 </td>
                                                                 <td>
-                                                                     {{total.sintetico.valorDescontadoFiltrado | currency:'R$'}}
+                                                                     {{total.sintetico.valorDescontadoFiltrado | currency:'R$ '}}
                                                                 </td>
                                                                 <td>
-                                                                     {{total.sintetico.valorLiquidoFiltrado | currency:'R$'}}
+                                                                     {{total.sintetico.valorLiquidoFiltrado | currency:'R$ '}}
                                                                 </td>
                                                                 <!-- BOTÃO DETALHAR -->
                                                                 <td>
@@ -576,19 +619,19 @@
                                                                 </td>
                                                                 <!-- VALOR PARCELA -->
                                                                 <td ng-init="total.analitico.valorParcela = total.analitico.valorParcela + relanalitico.valorParcela">
-                                                                    {{relanalitico.valorParcela | currency:'R$'}}
+                                                                    {{relanalitico.valorParcela | currency:'R$ '}}
                                                                 </td>
                                                                 <!-- VALOR BRUTO -->
                                                                 <td ng-init="total.analitico.valorBruto = total.analitico.valorBruto + relanalitico.valorBruto">
-                                                                     {{relanalitico.valorBruto | currency:'R$'}}
+                                                                     {{relanalitico.valorBruto | currency:'R$ '}}
                                                                 </td>
                                                                 <!-- VALOR DESCONTADO -->
                                                                 <td ng-init="total.analitico.valorDescontado = total.analitico.valorDescontado + relanalitico.valorDescontado">
-                                                                    {{relanalitico.valorDescontado | currency:'R$'}}
+                                                                    {{relanalitico.valorDescontado | currency:'R$ '}}
                                                                 </td>
                                                                 <!-- VALOR LÍQUIDO -->
                                                                 <td ng-init="total.analitico.valorLiquido = total.analitico.valorLiquido + relanalitico.valorLiquida">
-                                                                     {{relanalitico.valorLiquida | currency:'R$'}}
+                                                                     {{relanalitico.valorLiquida | currency:'R$ '}}
                                                                 </td>
                                                             </tr>
                                                             <tr role="row" class="odd linhaTotalRelatorios">
@@ -596,16 +639,16 @@
                                                                     Total Exibido
                                                                 </td>  
                                                                 <td>
-                                                                    {{total.analitico.valorParcela  | currency:'R$'}}  
+                                                                    {{total.analitico.valorParcela  | currency:'R$ '}}  
                                                                 </td>
                                                                 <td>
-                                                                    {{total.analitico.valorBruto | currency:'R$'}}    
+                                                                    {{total.analitico.valorBruto | currency:'R$ '}}    
                                                                 </td>
                                                                 <td>
-                                                                    {{total.analitico.valorDescontado | currency:'R$'}} 
+                                                                    {{total.analitico.valorDescontado | currency:'R$ '}} 
                                                                 </td>
                                                                 <td>
-                                                                    {{total.analitico.valorLiquido | currency:'R$'}} 
+                                                                    {{total.analitico.valorLiquido | currency:'R$ '}} 
                                                                 </td>                                                    
                                                             </tr>
                                                             <tr role="row" class="odd linhaTotalRelatorios">
@@ -613,16 +656,16 @@
                                                                     Total Filtrado
                                                                 </td>  
                                                                 <td>
-                                                                    {{total.analitico.valorParcelaFiltrado  | currency:'R$'}}  
+                                                                    {{total.analitico.valorParcelaFiltrado  | currency:'R$ '}}  
                                                                 </td>
                                                                 <td>
-                                                                    {{total.analitico.valorBrutoFiltrado | currency:'R$'}}    
+                                                                    {{total.analitico.valorBrutoFiltrado | currency:'R$ '}}    
                                                                 </td>
                                                                 <td>
-                                                                    {{total.analitico.valorDescontadoFiltrado | currency:'R$'}} 
+                                                                    {{total.analitico.valorDescontadoFiltrado | currency:'R$ '}} 
                                                                 </td>
                                                                 <td>
-                                                                    {{total.analitico.valorLiquidoFiltrado | currency:'R$'}} 
+                                                                    {{total.analitico.valorLiquidoFiltrado | currency:'R$ '}} 
                                                                 </td>                                                    
                                                             </tr>
                                                         </tbody>    
