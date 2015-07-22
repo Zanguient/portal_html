@@ -29,7 +29,7 @@
                 <div class="portlet-title">
                     <div class="caption">
                         <span class="caption-subject font-green-sharp bold uppercase">
-                        {{tela.tipo}} de Filiais - <span class="step-title">Etapa {{tabCadastro}} de 4 </span>
+                        {{tela.tipo}} de Filial - <span class="step-title">Etapa {{tabCadastro}} de 4 </span>
                         </span>
                     </div>
                 </div>
@@ -510,7 +510,8 @@
                                             Continuar <i class="m-icon-swapright m-icon-white"></i>
                                         </a>
                                         <a href="javascript:;" ng-click="armazenaInformacoesDaFilial()"
-                                           class="btn red button-submit" 
+                                           class="btn button-submit"
+                                           ng-class="{ 'red' : ehCadastro(), 'green': !ehCadastro()}" 
                                            ng-show="tabCadastroSelecionada(4) && !cadastrando">
                                             {{tela.acao}} 
                                             <i class="fa" 

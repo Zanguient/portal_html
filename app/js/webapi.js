@@ -5,7 +5,7 @@
  *
  */
 
-angular.module('webapi', [ ])
+angular.module('webapi', ['utils'])
 
 // CONSTANTES
 .factory('$campos', [function(){
@@ -176,11 +176,8 @@ angular.module('webapi', [ ])
 }])
 
 
-.factory('$apis', [function(){
-  // Prefixos
-  //var urlBase = 'http://192.168.0.100/api'; 
-  var urlBase = 'http://api.atoscapital.com.br';
-      
+.factory('$apis', ['$autenticacao', function($autenticacao){
+
   return {
     /**
       * Obtem a url completa, considerando os parâmetros e os filtros.  
@@ -229,27 +226,27 @@ angular.module('webapi', [ ])
     },  
       
     administracao : {
-        pessoa : urlBase + '/administracao/pessoa/',
-        webpagescontrollers : urlBase + '/administracao/webpagescontrollers/',
-        webpagesmembership : urlBase + '/administracao/webpagesmembership/',
-        webpagesmethods : urlBase + '/administracao/webpagesmethods/',
-        webpagespermissions : urlBase + '/administracao/webpagespermissions/',
-        webpagesroles : urlBase + '/administracao/webpagesroles/',
-        webpagesusers : urlBase + '/administracao/webpagesusers/', 
-        webpagesusersinroles : urlBase + '/administracao/webpagesusersinroles/'
+        pessoa : $autenticacao.getUrlBase() + '/administracao/pessoa/',
+        webpagescontrollers : $autenticacao.getUrlBase() + '/administracao/webpagescontrollers/',
+        webpagesmembership : $autenticacao.getUrlBase() + '/administracao/webpagesmembership/',
+        webpagesmethods : $autenticacao.getUrlBase() + '/administracao/webpagesmethods/',
+        webpagespermissions : $autenticacao.getUrlBase() + '/administracao/webpagespermissions/',
+        webpagesroles : $autenticacao.getUrlBase() + '/administracao/webpagesroles/',
+        webpagesusers : $autenticacao.getUrlBase() + '/administracao/webpagesusers/', 
+        webpagesusersinroles : $autenticacao.getUrlBase() + '/administracao/webpagesusersinroles/'
     },
     cliente: {
-        empresa : urlBase + '/cliente/empresa/',
-        grupoempresa : urlBase + '/cliente/grupoempresa/'
+        empresa : $autenticacao.getUrlBase() + '/cliente/empresa/',
+        grupoempresa : $autenticacao.getUrlBase() + '/cliente/grupoempresa/'
     },
     pos : {
-        adquirente : urlBase + '/pos/adquirente/',
-        bandeirapos : urlBase + '/pos/bandeirapos/',
-        loginoperadora : urlBase + '/pos/loginoperadora/',
-        operadora : urlBase + '/pos/operadora/',
-        recebimento : urlBase + '/pos/recebimento/',
-        recebimentoparcela: urlBase + '/pos/recebimentoparcela/',
-        terminallogico : urlBase + '/pos/terminallogico/'
+        adquirente : $autenticacao.getUrlBase() + '/pos/adquirente/',
+        bandeirapos : $autenticacao.getUrlBase() + '/pos/bandeirapos/',
+        loginoperadora : $autenticacao.getUrlBase() + '/pos/loginoperadora/',
+        operadora : $autenticacao.getUrlBase() + '/pos/operadora/',
+        recebimento : $autenticacao.getUrlBase() + '/pos/recebimento/',
+        recebimentoparcela: $autenticacao.getUrlBase() + '/pos/recebimentoparcela/',
+        terminallogico : $autenticacao.getUrlBase() + '/pos/terminallogico/'
     }
   }
 }])

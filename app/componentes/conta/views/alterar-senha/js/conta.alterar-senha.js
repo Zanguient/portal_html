@@ -24,8 +24,8 @@ angular.module("conta-alterar-senha", [])
         $scope.pagina.titulo = 'Minha Conta';                          
         $scope.pagina.subtitulo = 'Alterar Senha';
         // Quando houver uma mudança de rota => modificar estado
-        $scope.$on('mudancaDeRota', function(event, state){
-            $state.go(state);
+        $scope.$on('mudancaDeRota', function(event, state, params){
+            $state.go(state, params);
         });
     };  
     

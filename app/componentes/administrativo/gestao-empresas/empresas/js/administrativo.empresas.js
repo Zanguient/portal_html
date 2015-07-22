@@ -37,7 +37,7 @@ angular.module("administrativo-empresas", [])
         $scope.pagina.titulo = 'Administrativo';                          
         $scope.pagina.subtitulo = 'Empresas';
         // Quando houver uma mudança de rota => modificar estado
-        $scope.$on('mudancaDeRota', function(event, state){
+        $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state);
         });
         // Quando houver alteração do grupo empresa na barra administrativa                                           
