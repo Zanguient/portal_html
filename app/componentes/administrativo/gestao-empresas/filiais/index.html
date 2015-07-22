@@ -187,9 +187,10 @@
                                     <td style="text-align:center">
                                        {{filial.nu_telefone}}
                                     </td>
-                                    <td style="text-align:center"
-                                        ng-class="{ 'StatusSenhaValida': filial.fl_ativo, 'StatusSenhaInvalida': !filial.fl_ativo}"
-                                        ng-bind="filial.fl_ativo ? 'ATIVO' : 'INATIVO'">
+                                    <td>
+                                        <span style="text-align:center"
+                                        ng-class="{ 'statusSituacaoFiliaisAtivo': filial.fl_ativo, 'statusSituacaoFiliaisInativo': !filial.fl_ativo}"
+                                              ng-bind="filial.fl_ativo ? 'ATIVO' : 'INATIVO'"></span>
                                     </td>
                                     <td style="text-align:center">
                                        <div class="btn-group" dropdown dropdown-append-to-body
@@ -200,7 +201,7 @@
                                                 Ações 
                                                 <i class="fa fa-angle-down"></i>
                                             </a>
-                                            <ul class="dropdown-menu" style="max-width: 40px">
+                                            <ul class="dropdown-menu dropDownAtos">
                                                 <li ng-show="usuarioPodeDesativarFiliais()">
                                                     <a ng-show="filial.fl_ativo"
                                                        href="javascript:;" ng-click="desativar(filial)">Desativar</a>
