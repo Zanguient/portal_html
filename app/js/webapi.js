@@ -150,7 +150,9 @@ angular.module('webapi', ['utils'])
             numParcelaTotal : 114,
             // Relacionamento
             operadora : 300,
-            empresa : 400 // pode ser usado para buscar o id_grupo
+            empresa : 400, // pode ser usado para buscar o id_grupo
+            bandeira : 500,
+            terminallogico : 600
         },
         recebimentoparcela : {
             idRecebimento : 100,
@@ -162,7 +164,8 @@ angular.module('webapi', ['utils'])
             // Relacionamento
             empresa : 300,
             operadora : 400,
-            bandeira : 500
+            bandeira : 500,
+            recebimento : 600
         },
         terminallogico : {
             idTerminalLogico: 100,
