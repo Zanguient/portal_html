@@ -66,7 +66,7 @@
                                     <tr role="row" class="filter">   
                                         <!-- FILIAIS -->
                                         <td rowspan="1" colspan="1" style="text-align: center">
-                                            <select class="form-control form-filter input-sm"
+                                            <select class="form-control form-filter input-sm filtros"
                                                     ng-disabled="filiais.length == 0"
                                                     ng-model="filtro.filial"
                                                     ng-change="alterouFilial()"
@@ -81,7 +81,7 @@
                                         </td>
                                         <!-- ADQUIRENTES -->
                                         <td rowspan="1" colspan="1" style="text-align: center">
-                                            <select class="form-control form-filter input-sm"
+                                            <select class="form-control form-filter input-sm filtros"
                                                     ng-disabled="filtro.filial === null"
                                                     ng-model="filtro.adquirente"
                                                     ng-change="alterouAdquirente()"
@@ -103,6 +103,7 @@
                                                 <option value="">TODAS</option>
                                             </select>
                                         </td>
+                                        <!--BUSCAR E LIMPAR-->
                                         <td rowspan="1" colspan="1">
                                             <div class="margin-bottom-5">
                                                 <button class="btn btn-sm red filter-submit margin-bottom" 
@@ -181,7 +182,7 @@
                     <!-- TOPO DA TABELA COM BOTÃO 'Novo Usuário' -->
                     <div class="table-toolbar">
                         <div class="row">
-                            <div class="col-md-5">
+                            <div class="col-md-5" style="margin-left:20px">
                                 <div class="btn-group">
                                     <a href="javascript:;" ng-click="novoDadoDeAcesso()"
                                        ng-class="{'element-hidden' : !usuarioPodeCadastrarDadosAcesso()}">
@@ -248,7 +249,7 @@
                                                     <th tabindex="0" 
                                                         rowspan="1" colspan="1" 
                                                         style="width: 188px; text-align:center">
-                                                        Aquirente
+                                                        Adquirente
                                                     </th>
                                                     <th tabindex="1" 
                                                         rowspan="1" colspan="1" 
