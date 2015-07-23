@@ -323,6 +323,30 @@
                                     {{filtro.analitico.total_paginas}}
                                 </span>
                             </div>
+                            <div class="col-md-5 col-sm-12">
+                                <div class="dataTables_filter">  
+                                    <div class="col-sm-5" style="padding-right: 1px;padding-left: 1px;">
+                                        <label>
+                                                <select aria-controls="datatable_products" class="form-control input-sm input-inline ng-pristine ng-untouched ng-valid" ng-model="usuario.campo_busca" ng-options="campo as campo.nome for campo in camposBusca | filter:{ativo:true}"><option value="0" label="E-mail">E-mail</option><option value="1" selected="selected" label="Login">Login</option><option value="2" label="Filial">Filial</option></select>
+                                        </label>
+                                        
+                                        <label>
+                                                <span class="seperator"></span>Pesquisar 
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-7" style="padding-right: 1px; padding-left: 1px;">
+                                        <label>
+                                            <div class="input-group input-icon right">
+                                                <i class="fa fa-times ng-hide" style="right:50px;cursor:pointer" ng-click="resetaBusca()" ng-show="usuario.busca"></i>
+                                                <input type="text" class="form-control input-inline ng-pristine ng-valid ng-touched" placeholder="Buscar" ng-model="busca" ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 &amp;&amp; !busca)) &amp;&amp; filtraUsuarios()">
+												<span class="input-group-addon">
+                                                    <i class="fa fa-search" style="cursor:pointer" ng-click="filtraUsuarios()"></i>
+												</span>
+											</div> 
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="row">                            
                             <!--NAVEGAÇÃO-->  
@@ -400,7 +424,7 @@
                                                             <tr role="row" class="odd conteudoTabelas"
                                                                 ng-repeat="relsintetico in relatorio.sintetico">
                                                                 <!-- BANDEIRA -->
-                                                                <td>
+                                                                <td style="text-align:left">
                                                                      {{relsintetico.bandeira.desBandeira}}
                                                                 </td>
                                                                 <!-- TOTAL DE TRANSAÇÕES -->
@@ -553,7 +577,7 @@
                                                             <tr role="row" class="odd"
                                                                 ng-repeat="relanalitico in relatorio.analitico">
                                                                 <!-- BANDEIRA -->
-                                                                <td>
+                                                                <td style="text-align:left">
                                                                      {{relanalitico.desBandeira}}
                                                                 </td>
                                                                 <!-- DATA DA VENDA -->
