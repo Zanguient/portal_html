@@ -517,7 +517,7 @@ angular.module("card-services-cash-flow-relatorios", [])
             if(typeof ultimoFiltro === 'undefined' || !$scope.arraysAreEqual(ultimoFiltro, obtemFiltroDeBusca())) 
                 buscaRelatorioAnalitico(true);
             // Carrega o conjunto de bandeiras associadas à nova adquirente selecionada
-            if(adquirente === null) $scope.alterouAdquirente(bandeira.id, true);
+            if(adquirente === null) $timeout(function(){$scope.alterouAdquirente(bandeira.id, true)}, 500);
          }else $scope.filtro.adquirente = null;
          //console.log("DETALHAR");console.log(bandeira);
     };

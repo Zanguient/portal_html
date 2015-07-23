@@ -461,7 +461,7 @@
                                                             </tr>
                                                             <tr role="row" class="odd linhaTotalRelatorios" 
                                                                 style="font-weight:bolder">
-                                                                <td>
+                                                                <td style="text-align:right">
                                                                      Total Exibido
                                                                 </td>
                                                                 <td>
@@ -485,7 +485,7 @@
                                                             </tr>
                                                             <tr role="row" class="odd linhaTotalRelatorios" 
                                                                 style="font-weight:bolder">
-                                                                <td>
+                                                                <td style="text-align:right">
                                                                      Total Filtrado
                                                                 </td>
                                                                 <td>
@@ -523,52 +523,52 @@
                                                             <tr role="row">
                                                                 <th tabindex="0" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 237px;">
+                                                                    style="width: 237px; vertical-align: middle;">
                                                                     Bandeira
                                                                 </th>
                                                                 <th tabindex="1" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 237px;">
+                                                                    style="width: 237px; vertical-align: middle;">
                                                                     Venda
                                                                 </th>
                                                                 <th tabindex="2" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 128px;">
+                                                                    style="width: 128px; vertical-align: middle;">
                                                                     Recebimento
                                                                 </th>
                                                                 <th tabindex="3" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 128px;">
-                                                                   Resumo Vendas
+                                                                    style="width: 128px; vertical-align: middle;">
+                                                                   Resumo<br>Vendas
                                                                 </th>
                                                                 <th tabindex="4" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 163px;">
+                                                                    style="width: 163px; vertical-align: middle;">
                                                                     NSU
                                                                 </th> 
                                                                 <th tabindex="5" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 163px;">
-                                                                    VL Bruto
+                                                                    style="width: 163px; vertical-align: middle;">
+                                                                    Parcela
                                                                 </th>
                                                                 <th tabindex="6" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 163px;">
-                                                                    Parcela
+                                                                    style="width: 163px; vertical-align: middle;">
+                                                                    VL Bruto
                                                                 </th>
                                                                 <th tabindex="7" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 163px;">
+                                                                    style="width: 163px; vertical-align: middle;">
                                                                     VL Parcela
                                                                 </th>
                                                                 <th tabindex="8" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 163px;">
+                                                                    style="width: 163px; vertical-align: middle;">
                                                                     VL Descontado
                                                                 </th>
                                                                 <th tabindex="9" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 163px;">
+                                                                    style="width: 163px; vertical-align: middle;">
                                                                     VL Líquido
                                                                 </th>
                                                             </tr>
@@ -581,7 +581,7 @@
                                                                      {{relanalitico.desBandeira}}
                                                                 </td>
                                                                 <!-- DATA DA VENDA -->
-                                                                <td ng-bind="getDataString(relanalitico.dtaVenda)">
+                                                                <td ng-bind="getDataTimeString(relanalitico.dtaVenda)">
                                                                 </td>
                                                                 <!-- DATA DE RECEBIMENTO -->
                                                                 <td ng-bind="getDataString(relanalitico.dtaRecebimento)">
@@ -594,13 +594,13 @@
                                                                 <td>
                                                                      {{relanalitico.nsu}}
                                                                 </td>
-                                                                <!-- VALOR BRUTO -->
-                                                                <td ng-init="total.analitico.valorBruto = total.analitico.valorBruto + relanalitico.valorBruto">
-                                                                     {{relanalitico.valorBruto | currency:'R$'}}
-                                                                </td>
                                                                 <!-- PARCELA -->
                                                                 <td>
                                                                     {{relanalitico.numParcela}}
+                                                                </td>
+                                                                <!-- VALOR BRUTO -->
+                                                                <td ng-init="total.analitico.valorBruto = total.analitico.valorBruto + relanalitico.valorBruto">
+                                                                     {{relanalitico.valorBruto | currency:'R$'}}
                                                                 </td>
                                                                 <!-- VALOR PARCELA -->
                                                                 <td ng-init="total.analitico.valorParcela = total.analitico.valorParcela + relanalitico.valorParcela">
@@ -616,13 +616,12 @@
                                                                 </td>
                                                             </tr>
                                                             <tr role="row" class="odd linhaTotalRelatorios">
-                                                                <td colspan="5">
+                                                                <td colspan="6" style="text-align:right">
                                                                     Total Exibido
                                                                 </td> 
                                                                 <td>
                                                                     {{total.analitico.valorBruto | currency:'R$'}}    
                                                                 </td>
-                                                                <td><!-- PARCELA --></td>
                                                                 <td>
                                                                     {{total.analitico.valorParcela  | currency:'R$'}}  
                                                                 </td>
@@ -634,13 +633,12 @@
                                                                 </td>                                                    
                                                             </tr>
                                                             <tr role="row" class="odd linhaTotalRelatorios">
-                                                                <td colspan="5">
+                                                                <td colspan="6" style="text-align:right">
                                                                     Total Filtrado
                                                                 </td>  
                                                                 <td>
                                                                     {{total.analitico.valorBrutoFiltrado | currency:'R$'}}    
                                                                 </td>
-                                                                <td><!-- PARCELA --></td>
                                                                 <td>
                                                                     {{total.analitico.valorParcelaFiltrado  | currency:'R$'}}  
                                                                 </td>

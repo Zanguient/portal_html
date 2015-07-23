@@ -55,7 +55,7 @@ angular.module("card-services-consolidacao-relatorios", [])
     $scope.cardServices_consolidacao_relatoriosInit = function(){
         // Título da página 
         $scope.pagina.titulo = 'Card Services';                          
-        $scope.pagina.subtitulo = 'Consolicação - Relatórios';
+        $scope.pagina.subtitulo = 'Consolidação - Relatórios';
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
@@ -200,6 +200,7 @@ angular.module("card-services-consolidacao-relatorios", [])
                 $scope.adquirentes = dados.Registros;
                 // Reseta
                 $scope.filtro.adquirente = null;
+                $scope.alterouAdquirente();
                 // Busca bandeiras
                 $scope.hideProgress(divPortletBodyFiltrosPos);
               },
@@ -643,7 +644,8 @@ angular.module("card-services-consolidacao-relatorios", [])
             if(typeof ultimoFiltro === 'undefined' || !$scope.arraysAreEqual(ultimoFiltro, obtemFiltroDeBusca())) 
                 buscaRelatorioAnalitico(true, true);//resetaTerminal, !resetaTerminal);
             // Carrega o conjunto de bandeiras e de terminais lógicos associados à nova adquirente selecionada
-            if(adquirente === null) $scope.alterouAdquirente(bandeira.id, terminal ? terminal.idTerminalLogico : undefined, true);
+            if(adquirente === null) 
+                $timeout(function(){$scope.alterouAdquirente(bandeira.id, terminal ? terminal.idTerminalLogico : undefined, true)}, 500);
          }else $scope.filtro.adquirente = null;
     };
     
