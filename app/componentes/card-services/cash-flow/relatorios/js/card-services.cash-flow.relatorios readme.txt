@@ -100,7 +100,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 						valorDescontado : double
 					  }	
 
-       -> ANALÍTICO (coleção 8) : ordenado por dtaVenda
+       -> ANALÍTICO (coleção 8) : sempre ordenado pela data de recebimento, seguido do desBandeira
 			 Registros = [
 							{
 								cnpj: string,
