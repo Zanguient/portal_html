@@ -57,6 +57,11 @@
                                             rowspan="1" colspan="1">
                                              Data de Recebimento
                                         </th>
+                                        <th width="8%" tabindex="0" 
+                                            aria-controls="datatable_ajax" 
+                                            rowspan="1" colspan="1">
+                                             Data da Venda
+                                        </th>
                                         <th width="11%" tabindex="1" 
                                             aria-controls="datatable_ajax" 
                                             rowspan="1" colspan="1">
@@ -81,6 +86,59 @@
                                     <!-- CONTEUDO DO FILTRO -->
                                     <tr role="row" class="filter">
                                         <!-- DATA -->
+                                        <td rowspan="1" colspan="1">                                    
+                                            <div class="input-group date date-picker margin-bottom-5"
+                                                 data-date-format="dd/mm/yyyy">
+                                                <input type="text" 
+                                                       class="form-control form-filter input-sm" 
+                                                       readonly="" 
+                                                       style="cursor: pointer" 
+                                                       ng-click="exibeCalendarioDataMin($event)" 
+                                                       placeholder="Início" 
+                                                       ng-model="filtro.datamin" 
+                                                       ng-change="alterouDataMin()" 
+                                                       datepicker-append-to-body="true" 
+                                                       datepicker-popup="dd MMMM yyyy" 
+                                                       is-open="abrirCalendarioDataMin" 
+                                                       ng-required="true" 
+                                                       show-button-bar="false" 
+                                                       show-weeks="false" 
+                                                       required="required">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-sm default" 
+                                                        type="button" 
+                                                        ng-click="exibeCalendarioDataMin($event)">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                            <div class="input-group"> <!--  date date-picker margin-bottom-5" -->
+                                                <input type="text" 
+                                                       class="form-control form-filter input-sm" 
+                                                       readonly="" 
+                                                       style="cursor: pointer" 
+                                                       ng-click="exibeCalendarioDataMax($event)" 
+                                                       placeholder="Fim" 
+                                                       ng-model="filtro.datamax" 
+                                                       ng-change="alterouDataMax()" 
+                                                       datepicker-popup="dd MMMM yyyy" 
+                                                       is-open="abrirCalendarioDataMax" 
+                                                       datepicker-append-to-body="true"
+                                                       ng-required="false" 
+                                                       current-text="Hoje" 
+                                                       clear-text="Limpar" 
+                                                       close-text="Fechar" 
+                                                       show-button-bar="true" 
+                                                       show-weeks="false">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-sm default" 
+                                                            type="button" 
+                                                            ng-click="exibeCalendarioDataMax($event)">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </button>
+                                                </span>
+                                            </div>                                            
+                                        </td>
                                         <td rowspan="1" colspan="1">                                    
                                             <div class="input-group date date-picker margin-bottom-5"
                                                  data-date-format="dd/mm/yyyy">
