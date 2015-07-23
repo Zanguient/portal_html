@@ -162,7 +162,7 @@ angular.module("administrativo-usuarios-cadastro", [])
             $scope.atualizaProgressoDoCadastro();
         });
         
-        if(!$scope.methods || $scope.methods.length == 0){
+        if(!$scope.methodsDoControllerCorrente || $scope.methodsDoControllerCorrente.length == 0){
             // Sem permissão nenhuma ?
             $scope.goUsuarioSemPrivilegios();
             return;
@@ -173,7 +173,7 @@ angular.module("administrativo-usuarios-cadastro", [])
         // Verifica se tem parâmetros
         if($stateParams.usuario !== null){
             // Verifica se tem permissão para alterar
-            if($filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'ATUALIZAÇÃO' }).length == 0){
+            if($filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'ATUALIZAÇÃO' }).length == 0){
                // Não pode alterar
                 $scope.hideProgress(divPortletBodyUsuarioCadPos);
                 $scope.goUsuarioSemPrivilegios();
@@ -199,7 +199,7 @@ angular.module("administrativo-usuarios-cadastro", [])
                                           ds_fantasia: $stateParams.usuario.empresa};
             }
         }else // Verifica se tem permissão para alterar
-            if($filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'CADASTRO' }).length == 0){
+            if($filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'CADASTRO' }).length == 0){
             // Não pode cadastrar
             $scope.hideProgress(divPortletBodyUsuarioCadPos);
             $scope.goUsuarioSemPrivilegios();
