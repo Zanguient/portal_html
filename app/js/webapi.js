@@ -43,9 +43,7 @@ angular.module('webapi', ['utils'])
             id_method : 101,
             fl_principal : 102,
             // Relacionamentos
-            role : 200,
-            method : 300,
-            controller : 400
+            controller : 200
         },
         webpagesroles : {
             RoleId : 100,

@@ -42,20 +42,52 @@ angular.module("administrativo-privilegios", [])
     $scope.controllers = [];
     // flags
     $scope.cadastraNovoPrivilegio = false; // faz exibir a linha para adicionar um novo privilégio
-           
+    // Permissões                                           
+    var permissaoAlteracao = false;
+    var permissaoCadastro = false;
+    var permissaoRemocao = false;
+                                                
                                                 
     // Inicialização do controller
     $scope.administrativoPrivilegiosInit = function(){
         // Título da página 
         $scope.pagina.titulo = 'Gestão de Acessos';                          
         $scope.pagina.subtitulo = 'Privilégios';
-        // Busca Privilégios
-        $scope.buscaPrivilegios();
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
-        });  
+        });
+        // Obtém as permissões
+        if($scope.methods && $scope.methods.length > 0){
+            permissaoAlteracao = $filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'ATUALIZAÇÃO' }).length > 0;   
+            permissaoCadastro = $filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'CADASTRO' }).length > 0;
+            permissaoRemocao = $filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'REMOÇÃO' }).length > 0;
+        }
+        // Busca Privilégios
+        $scope.buscaPrivilegios();
     }; 
+                                                
+                                                
+    // PERMISSÕES                                          
+    /**
+      * Retorna true se o usuário pode cadastrar privilégios
+      */
+    $scope.usuarioPodeCadastrarPrivilegios = function(){
+        return permissaoCadastro;   
+    }
+    /**
+      * Retorna true se o usuário pode alterar privilégios
+      */
+    $scope.usuarioPodeAlterarPrivilegios = function(){
+        return permissaoAlteracao;
+    }
+    /**
+      * Retorna true se o usuário pode excluir privilégios
+      */
+    $scope.usuarioPodeExcluirPrivilegios = function(){
+        return permissaoRemocao;
+    }                                            
+                                                
                                             
     // ORDENAÇÃO
     /**

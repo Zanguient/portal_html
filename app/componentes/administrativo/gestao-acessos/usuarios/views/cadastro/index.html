@@ -7,7 +7,9 @@
  */
 -->
 
-<div class="container" ng-controller="administrativo-usuarios-cadastroCtrl" ng-init="administrativoUsuariosCadastroInit()">
+<div class="container" ng-controller="administrativo-usuarios-cadastroCtrl" 
+     ng-init="administrativoUsuariosCadastroInit()"
+     ng-show="temPermissao" ng-cloak>
     <!-- BEGIN PAGE BREADCRUMB -->
     <ul class="page-breadcrumb breadcrumb">
         <li>
@@ -218,6 +220,7 @@
                                             <div class="col-md-4">
                                                 <input type="text" class="form-control" 
                                                        placeholder="Digite o nome da empresa" 
+                                                       ng-disabled="grupoempresa"
                                                        ng-model="usuario.grupoempresa"
                                                        ng-blur="atualizaProgressoDoCadastro()"
                                                        ng-keydown="($event.which == 8) ? usuario.empresa = '' : 0"

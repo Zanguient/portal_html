@@ -498,7 +498,7 @@ angular.module("card-services-cash-flow-relatorios", [])
     
      $scope.detalhar = function(bandeira){
          // Procura a adquirente
-         /*var adquirente = $filter('filter')($scope.adquirentes, function(a){return a.id === idOperadora;})[0];
+         var adquirente = $filter('filter')($scope.adquirentes, function(a){return a.id === bandeira.idOperadora;})[0];
          if(adquirente){ 
              // vai para Analítico
              $scope.setTab(1);
@@ -518,8 +518,8 @@ angular.module("card-services-cash-flow-relatorios", [])
                 buscaRelatorioAnalitico(true);
             // Carrega o conjunto de bandeiras associadas à nova adquirente selecionada
             if(adquirente === null) $scope.alterouAdquirente(bandeira.id, true);
-         }else $scope.filtro.adquirente = null;*/
-         console.log("DETALHAR");console.log(bandeira);
+         }else $scope.filtro.adquirente = null;
+         //console.log("DETALHAR");console.log(bandeira);
     };
     
     /**

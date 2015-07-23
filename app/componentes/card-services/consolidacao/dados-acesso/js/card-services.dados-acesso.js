@@ -41,6 +41,12 @@ angular.module("card-services-dados-acesso", [])
     $scope.alteracao = {id : 0, login : '', estabelecimento : '', senha : ''};                                             
     // flag
     $scope.exibePrimeiraLinha = false;                                             
+    // Permissões                                           
+    var permissaoAlteracao = false;
+    var permissaoCadastro = false;
+    //var permissaoRemocao = false;
+                                                 
+                                                 
                                                  
     
     // Inicialização do controller
@@ -58,16 +64,44 @@ angular.module("card-services-dados-acesso", [])
             if($scope.grupoempresa){ 
                 // Reseta seleção de filtro específico de empresa
                 $scope.filtro.filial = $scope.filtro.adquirente = $scope.filtro.status = null;
-                buscaFiliais(true);
+                buscaFiliais();
             }else{ // reseta tudo e não faz buscas 
                 $scope.filiais = []; 
                 $scope.adquirentes = [];
                 $scope.bandeiras = [];
             }
-        }); 
+        });
+        // Obtém as permissões
+        if($scope.methods && $scope.methods.length > 0){
+            permissaoAlteracao = $filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'ATUALIZAÇÃO' }).length > 0;   
+            permissaoCadastro = $filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'CADASTRO' }).length > 0;
+            //permissaoRemocao = $filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'REMOÇÃO' }).length > 0;
+        }
         // Carrega filiais
-        if($scope.grupoempresa) buscaFiliais(true);
+        if($scope.grupoempresa) buscaFiliais();
     };
+                                                 
+                                                 
+    // PERMISSÕES                                          
+    /**
+      * Retorna true se o usuário pode cadastrar dados de acesso
+      */
+    $scope.usuarioPodeCadastrarDadosAcesso = function(){
+        return permissaoCadastro;   
+    }
+    /**
+      * Retorna true se o usuário pode alterar info de dados de acesso
+      */
+    $scope.usuarioPodeAlterarDadosAcesso = function(){
+        return permissaoAlteracao;
+    }
+    /**
+      * Retorna true se o usuário pode excluir dados de acesso
+      * /
+    $scope.usuarioPodeExcluirDadosAcesso = function(){
+        return permissaoRemocao;
+    } */                                             
+                                                 
     
     
                                                  
@@ -125,8 +159,9 @@ angular.module("card-services-dados-acesso", [])
       * Selecionou uma filial
       */
     $scope.alterouFilial = function(){
-        //console.log($scope.filtro.filial); 
-        buscaAdquirentes(false);
+        $scope.filtro.adquirente = null;
+        buscaDadosDeAcesso();
+        buscaAdquirentes(true);
     };
     
                                                                                          

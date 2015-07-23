@@ -40,7 +40,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
  ### Interação com a WEB API ###
  
   * cliente/grupoempresa
-    - GET : listagem das empresas (coleção 2)
+    - GET : listagem das empresas (coleção 3)
 			[
 			  { id_grupo : int,
 				ds_nome : string,

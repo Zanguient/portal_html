@@ -35,10 +35,10 @@
                     </div>
                     <div class="actions">
                         <!-- FULLSCREEN -->
-                        <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;" 
-                           data-original-title="" title=""></a>
+                        <a class="btn btn-circle btn-icon-only btn-default fullscreen element-hidden" 
+                           href="javascript:;" data-original-title="" title=""></a>
                         <!-- OPÇÕES -->
-                        <div class="btn-group">
+                        <div class="btn-group element-hidden"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -->
                             <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
                             <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
                             </a>
@@ -111,7 +111,8 @@
                                 <div class="row">
                                     <div class="col-sm-1">
                                         <button type="submit" class="btn btn-icon-only red fa fa-plus botoesAdicionar"
-                                                ng-click="cadastraNovoMetodo()">
+                                                ng-click="cadastraNovoMetodo()"
+                                                ng-class="{'element-hidden' : !usuarioPodeCadastrarModulosFuncionalidades() }">
                                             
                                         </button>
                                     </div>    
@@ -138,16 +139,20 @@
                                 <div class="row">
                                     <div class="col-sm-3 col-sm-offset-2">
                                         <button type="button" class="btn default"
-                                        ng-show="funcionalidadeSelecionada"
-                                        ng-click="alteraNomeMetodo()">Alterar
-                                        <i class="fa fa-pencil"></i>    
+                                                ng-show="funcionalidadeSelecionada"
+                                                ng-click="alteraNomeMetodo()"
+                                                ng-class="{'element-hidden' : !usuarioPodeAlterarModulosFuncionalidades() }">
+                                            Alterar
+                                            <i class="fa fa-pencil"></i>    
                                         </button>
                                     </div>
                                     <div class="col-sm-3">
                                         <button type="button" class="btn green"
-                                        ng-show="funcionalidadeSelecionada"
-                                        ng-click="excluirMetodo()">Remover
-                                        <i class="fa fa-times"></i>    
+                                                ng-show="funcionalidadeSelecionada"
+                                                ng-click="excluirMetodo()"
+                                                ng-class="{'element-hidden' : !usuarioPodeExcluirModulosFuncionalidades() }">
+                                            Remover
+                                            <i class="fa fa-times"></i>    
                                         </button>
                                     </div>
                                 </div>

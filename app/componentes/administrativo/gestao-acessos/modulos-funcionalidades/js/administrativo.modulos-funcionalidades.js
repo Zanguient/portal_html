@@ -25,42 +25,55 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
     $scope.busca = '';
     // flags
     $scope.cadastrarFuncionalidadesPadrao = true;                                            
-          
+    // Permissões                                           
+    var permissaoAlteracao = false;
+    var permissaoCadastro = false;
+    var permissaoRemocao = false;      
                                                 
     // Context Menu
-    $scope.contextMenu = {
-          "novo": {
-            "label": "Novo submódulo",
-            "_disabled" : function(obj) {return $scope.moduloSelecionado.parents.length >= 4;}, // sub módulo só pode ser criado até o nível 3  
-            "action": function(obj) {
-                // Cadastra submódulo
-                cadastraNovoModulo($scope.moduloSelecionado);
-            }
-          },
-          "alterar": {
-            "label": "Alterar",
-            "_disabled" : function(obj) {return $scope.moduloSelecionado.parents.length == 1;},
-            "action": function(obj) {
-                alteraNomeModulo($scope.moduloSelecionado);
-            }
-          },
-          "excluir": {
-            "label": "Excluir",
-            "_disabled" : function(obj) {return $scope.moduloSelecionado.parents.length == 1;},  
-            "action": function(obj) {
-                // Solicitação confirmação para excluir o módulo
-                text = "Tem certeza que deseja excluir " + $scope.moduloSelecionado.text;
-                if($scope.moduloSelecionado.parents.length < 4 && $scope.moduloSelecionado.children.length > 0){
-                    // Alerta sobre a exclusão dos módulos filhos
-                    text += "\n\r(OBS: A exclusão deste módulo também excluirá todos os submódulos dele)";
-                }
-                $scope.showModalConfirmacao('Confirmação', text,
-                         exluirModulo, parseInt($scope.moduloSelecionado.id),
-                         'Sim', 'Não');
-            }
-          }
-    };                                            
+    $scope.contextMenu = {};                                     
     
+                                                
+                                                
+    var obtemContextMenu = function(){
+        if($scope.usuarioPodeCadastrarModulosFuncionalidades()){ 
+            $scope.contextMenu.novo = {
+                "label": "Novo submódulo",
+                "_disabled" : function(obj) {return $scope.moduloSelecionado.parents.length >= 4;},
+                                                    // sub módulo só pode ser criado até o nível 3  
+                "action": function(obj) {
+                    // Cadastra submódulo
+                    cadastraNovoModulo($scope.moduloSelecionado);
+                }
+              }
+        }
+        if($scope.usuarioPodeAlterarModulosFuncionalidades()){
+            $scope.contextMenu.alterar = {
+                "label": "Alterar",
+                "_disabled" : function(obj) {return $scope.moduloSelecionado.parents.length == 1;},
+                "action": function(obj) {
+                    alteraNomeModulo($scope.moduloSelecionado);
+                }
+              }    
+        }
+        if($scope.usuarioPodeExcluirModulosFuncionalidades()){
+            $scope.contextMenu.excluir = {
+                "label": "Excluir",
+                "_disabled" : function(obj) {return $scope.moduloSelecionado.parents.length == 1;},  
+                "action": function(obj) {
+                    // Solicitação confirmação para excluir o módulo
+                    text = "Tem certeza que deseja excluir " + $scope.moduloSelecionado.text;
+                    if($scope.moduloSelecionado.parents.length < 4 && $scope.moduloSelecionado.children.length > 0){
+                        // Alerta sobre a exclusão dos módulos filhos
+                        text += "\n\r(OBS: A exclusão deste módulo também excluirá todos os submódulos dele)";
+                    }
+                    $scope.showModalConfirmacao('Confirmação', text,
+                             exluirModulo, parseInt($scope.moduloSelecionado.id),
+                             'Sim', 'Não');
+                }
+              }
+        }    
+    };
                                                 
                                                 
     // Inicialização do controller
@@ -68,13 +81,44 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
         // Título da página 
         $scope.pagina.titulo = 'Gestão de Acessos';                          
         $scope.pagina.subtitulo = 'Módulos e Funcionalidades';
-        // Busca módulos
-        $scope.buscaModulos();
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
         });  
-    }; 
+        // Obtém as permissões
+        if($scope.methods && $scope.methods.length > 0){
+            permissaoAlteracao = $filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'ATUALIZAÇÃO' }).length > 0;   
+            permissaoCadastro = $filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'CADASTRO' }).length > 0;
+            permissaoRemocao = $filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'REMOÇÃO' }).length > 0;
+        }
+        // Obtem Context Menu a partir das permissões
+        obtemContextMenu();
+        // Busca módulos
+        $scope.buscaModulos();
+    };
+                                                
+                                                
+    // PERMISSÕES                                           
+    /**
+      * Retorna true se o usuário pode cadastrar módulos e funcionalidades
+      */
+    $scope.usuarioPodeCadastrarModulosFuncionalidades = function(){
+        return permissaoCadastro;   
+    }
+    /**
+      * Retorna true se o usuário pode alterar módulos e funcionalidades
+      */
+    $scope.usuarioPodeAlterarModulosFuncionalidades = function(){
+        return permissaoAlteracao;
+    }
+    /**
+      * Retorna true se o usuário pode excluir módulos e funcionalidades
+      */
+    $scope.usuarioPodeExcluirModulosFuncionalidades = function(){
+        return permissaoRemocao;
+    }                                           
+                                                
+                                                
 
      
     // BUSCA

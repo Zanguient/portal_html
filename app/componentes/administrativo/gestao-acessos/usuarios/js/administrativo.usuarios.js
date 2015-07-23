@@ -43,14 +43,17 @@ angular.module("administrativo-usuarios", [])
                       itens_pagina : $scope.itens_pagina[0], pagina : 1,
                       total_registros : 0, faixa_registros : '0-0', total_paginas : 0, 
                       campo_ordenacao : {id: $campos.administracao.webpagesusers.ds_email, order : 0}};
+    // Permissões                                           
+    var permissaoAlteracao = false;
+    var permissaoCadastro = false;
+    var permissaoRemocao = false;
+                                                
                                                 
     // Inicialização do controller
     $scope.administrativoUsuariosInit = function(){
         // Título da página 
         $scope.pagina.titulo = 'Gestão de Acessos';                          
         $scope.pagina.subtitulo = 'Usuários';
-        // Busca Usuários
-        $scope.buscaUsuarios();
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
@@ -61,8 +64,44 @@ angular.module("administrativo-usuarios", [])
             $scope.camposBusca[2].ativo = !$scope.grupoempresa;   
             // Refaz a busca
             $scope.buscaUsuarios();
-        });   
-    }; 
+        }); 
+        // Obtém as permissões
+        if($scope.methods && $scope.methods.length > 0){
+            permissaoAlteracao = $filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'ATUALIZAÇÃO' }).length > 0;   
+            permissaoCadastro = $filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'CADASTRO' }).length > 0;
+            permissaoRemocao = $filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'REMOÇÃO' }).length > 0;
+        }
+        // Busca Usuários
+        $scope.buscaUsuarios();
+    };
+                                                
+                                                
+    // PERMISSÕES                                           
+    /**
+      * Retorna true se o usuário pode cadastrar usuários
+      */
+    $scope.usuarioPodeCadastrarUsuarios = function(){
+        return permissaoCadastro;   
+    }
+    /**
+      * Retorna true se o usuário pode alterar info de usuários
+      */
+    $scope.usuarioPodeAlterarUsuarios = function(){
+        return permissaoAlteracao;
+    }
+    /**
+      * Retorna true se o usuário pode excluir usuários
+      */
+    $scope.usuarioPodeExcluirUsuarios = function(){
+        return permissaoRemocao;
+    } 
+    /**
+      * Retorna true se o usuário pode ativar/desativar usuários
+      */
+    $scope.usuarioPodeDesativarUsuarios = function(){
+        return permissaoRemocao; // pode ter uma permissão exclusiva (funcionalidade)
+    };                                            
+                                                
                                             
     // ORDENAÇÃO
     /**

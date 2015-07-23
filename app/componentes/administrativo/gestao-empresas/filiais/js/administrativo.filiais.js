@@ -10,10 +10,11 @@ angular.module("administrativo-filiais", [])
 
 .controller("administrativo-filiaisCtrl", ['$scope',
                                            '$state',
+                                           '$filter',
                                            '$campos',
                                            '$webapi',
                                            '$apis', 
-                                           function($scope,$state,$campos,$webapi,$apis){ 
+                                           function($scope,$state,$filter,$campos,$webapi,$apis){ 
 
     var divPortletBodyFilialPos = 0; // posição da div que vai receber o loading progress
     $scope.paginaInformada = 1; // página digitada pelo usuário
@@ -22,8 +23,11 @@ angular.module("administrativo-filiais", [])
     $scope.busca = ''; // model do input de busca                                            
     $scope.filial = {busca:'', itens_pagina : $scope.itens_pagina[0], pagina : 1,
                      total_registros : 0, faixa_registros : '0-0', total_paginas : 0
-                     };                                            
-                                               
+                     };   
+    // Permissões                                           
+    var permissaoAlteracao = false;
+    var permissaoCadastro = false;
+    var permissaoRemocao = false;
                                                
     // Inicialização do controller
     $scope.administrativo_filiaisInit = function(){
@@ -39,6 +43,12 @@ angular.module("administrativo-filiais", [])
             // Refaz a busca
             $scope.buscaFiliais(true);
         }); 
+        // Obtém as permissões
+        if($scope.methods && $scope.methods.length > 0){
+            permissaoAlteracao = $filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'ATUALIZAÇÃO' }).length > 0;   
+            permissaoCadastro = $filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'CADASTRO' }).length > 0;
+            permissaoRemocao = $filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'REMOÇÃO' }).length > 0;
+        }
         // Busca filiais
         $scope.buscaFiliais();
     };
@@ -46,38 +56,34 @@ angular.module("administrativo-filiais", [])
                                                
     // PERMISSÕES
     /**
-      * Retorna true se o usuário pode consultar outras filiais
+      * Retorna true se o usuário pode consultar as filiais
       */
     $scope.usuarioPodeConsultarFiliais = function(){
-        return $scope.PERMISSAO_ADMINISTRATIVO && $scope.grupoempresa;    
+        return typeof $scope.grupoempresa !== 'undefined';    
     }                                            
     /**
       * Retorna true se o usuário pode cadastrar filiais
       */
     $scope.usuarioPodeCadastrarFiliais = function(){
-        return $scope.usuarioPodeConsultarFiliais();  
-               // && TEM PERMISSAO DO METODO POST    
+        return $scope.usuarioPodeConsultarFiliais() && permissaoCadastro;   
     }
     /**
       * Retorna true se o usuário pode alterar info de filiais
       */
     $scope.usuarioPodeAlterarFiliais = function(){
-        return $scope.usuarioPodeConsultarFiliais(); 
-               // && TEM PERMISSAO DO METODO UPDATE
+        return $scope.usuarioPodeConsultarFiliais() && permissaoAlteracao;
     }
     /**
       * Retorna true se o usuário pode excluir filiais
       */
     $scope.usuarioPodeExcluirFiliais = function(){
-        return $scope.usuarioPodeConsultarFiliais();
-               // && TEM PERMISSAO DO METODO DELETE
+        return $scope.usuarioPodeConsultarFiliais() && permissaoRemocao;
     } 
     /**
       * Retorna true se o usuário pode ativar/desativar filiais
       */
     $scope.usuarioPodeDesativarFiliais = function(){
-        return $scope.usuarioPodeConsultarFiliais();
-               // && TEM PERMISSAO DO METODO DELETE ou OUTRO ESPECÍFICO DE ATIVAÇÃO/DESATIVAÇÃO
+        return $scope.usuarioPodeConsultarFiliais() && permissaoRemocao
     };
     
     

@@ -138,7 +138,7 @@
                     ng-class=" { active : menuAtivo(item.ds_controller), 'menu-dropdown mega-menu-dropdown' : item.subControllers && item.subControllers.length > 0, open : itemExpandIs(item.id_controller) }">
                     <!-- SEM SUBMENU -->
 					<a ng-show="!item.subControllers || item.subControllers.length == 0"
-                       href="javascript:;" ng-click="item.link()"
+                       href="javascript:;" ng-click="goLinkController(item)"
                        ng-mouseover="expandItem()">
                         {{item.ds_controller}}
                     </a>
@@ -163,7 +163,7 @@
                                             </li>
                                             <li ng-repeat="subController2 in subController1.subControllers"
                                                 ng-class="{ active : moduloAtivo(subController2.ds_controller, subController1.ds_controller) }">
-                                                <a href="javascript:;" ng-click="subController2.link(); expandItem()"
+                                                <a href="javascript:;" ng-click="goLinkController(subController2); expandItem()"
                                                    ng-show="subController2.temLink">
                                                    <i class="fa fa-angle-right"></i>
                                                    {{subController2.ds_controller}}

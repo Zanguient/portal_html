@@ -31,7 +31,7 @@
                     </div>
                     <div class="actions">
                         <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;" data-original-title="" title=""></a>
-                        <div class="btn-group">
+                        <div class="btn-group element-hidden"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -->
                             <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
                             <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
                             </a>
@@ -193,7 +193,7 @@
                                     </td>
                                     <td style="text-align:center">
                                        <div class="btn-group" dropdown dropdown-append-to-body
-                                            ng-show="usuarioPodeDesativarFiliais() || usuarioPodeAlterarEmpresas() || usuarioPodeExcluirFiliais()">
+                                            ng-show="usuarioPodeDesativarFiliais() || usuarioPodeAlterarFiliais() || usuarioPodeExcluirFiliais()">
                                             <a class="btn btn-default btn-circle" 
                                                href="javascript:;" dropdown-toggle>
                                                 <i class="fa fa-pencil"></i> 

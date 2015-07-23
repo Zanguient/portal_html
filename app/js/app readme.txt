@@ -84,6 +84,7 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
  O estado só é de fato modificado depois da execução do "$state.go(state, params);" interno à função de escuta citado.
  Isso foi feito visando telas que possuem informações preenchidas pelo usuário e questiona se de fato ele deseja descartá-las antes de prosseguir.
  
+  Cada controller filho deve, no init, obter os métodos permitidos para o controller corrente através de $scope.methodsDoControllerCorrente
  
  
  ### Interação com a local storage ###
@@ -123,10 +124,12 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
  - controllers (OP) : array que contém os serviços o usuário tem acesso
    * ds_controller (OB) : titulo do controller ('Card Services', 'Tax Services', 'Administrativo', ...)
    * id_controller (OB) : id do controller
+   * methods (OB) : lista com os métodos permitidos
    * home (OP) : se o controller não possui subControllers, indica que ele deve ser exibido na tela inicial
    * subControllers (OP) : array que contém os subControllers associados ao controller
      ** ds_controller
 	 ** id_controller
+	 ** methods
 	 ** ...
  
  LEGENDA: OB : Obrigatório  

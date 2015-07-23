@@ -20,7 +20,8 @@ angular.module("administrativo-filiais-cadastro", [])
                                                      function($scope,$state,$stateParams,$timeout,$http,$campos,
                                                               $webapi,$apis,$filter){ 
     
-    var divPortletBodyFilialCadPos = 0; // posição da div que vai receber o loading progress                                                               
+    var divPortletBodyFilialCadPos = 0; // posição da div que vai receber o loading progress
+    $scope.temPermissao = false;  // indica se tem permissão para acessar esta página                            
     $scope.tela = {tipo:'Cadastro', acao:'Cadastrar'};
     // Tab
     $scope.tabCadastro = 1;
@@ -70,18 +71,6 @@ angular.module("administrativo-filiais-cadastro", [])
       * Inicialização do controller
       */
     $scope.administrativoFiliaisCadastroInit = function(){
-        // Verifica se tem parâmetros
-        if($stateParams.filial !== null){
-            $scope.tela.tipo = 'Alteração'; 
-            $scope.tela.acao = 'Alterar';
-            $scope.old = $stateParams.filial;
-            // atualiza info
-            atualizaDadosDaFilial();
-        } 
-        // Título da página
-        $scope.pagina.titulo = 'Gestão de Empresas';                          
-        $scope.pagina.subtitulo = $scope.tela.tipo + ' de Filial';
-                                                  
         $scope.$on('mudancaDeRota', function(event, state, params){
             // Obtem o JSON de mudança
             var jsonMudanca = {state: state, params : params};            
@@ -115,6 +104,36 @@ angular.module("administrativo-filiais-cadastro", [])
             // Modifica a visibilidade do campo de busca para o grupo empresa
             $scope.atualizaProgressoDoCadastro();
         }); 
+        
+        if(!$scope.methods || $scope.methods.length == 0){
+            // Sem permissão nenhuma ?
+            $scope.goUsuarioSemPrivilegios();
+            return;
+        }
+        // Verifica se tem parâmetros
+        if($stateParams.filial !== null){
+            // Verifica se tem permissão para alterar
+            if($filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'ATUALIZAÇÃO' }).length == 0){
+               // Não pode alterar
+                $scope.goUsuarioSemPrivilegios();
+                return;  
+            }
+            $scope.tela.tipo = 'Alteração'; 
+            $scope.tela.acao = 'Alterar';
+            $scope.old = $stateParams.filial;
+            // atualiza info
+            atualizaDadosDaFilial();
+        }else // Verifica se tem permissão para cadastrar
+            if($filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'CADASTRO' }).length == 0){
+            // Não pode cadastrar
+            $scope.goUsuarioSemPrivilegios();
+            return;  
+        }
+        $scope.temPermissao = true; 
+        // Título da página
+        $scope.pagina.titulo = 'Gestão de Empresas';                          
+        $scope.pagina.subtitulo = $scope.tela.tipo + ' de Filial';
+                                                  
         $scope.atualizaProgressoDoCadastro();
     };
     /**

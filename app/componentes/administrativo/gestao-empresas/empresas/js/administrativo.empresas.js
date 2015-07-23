@@ -30,7 +30,12 @@ angular.module("administrativo-empresas", [])
                            fl_proinfo : false,
                            salvar : function(){}
                           }                                            
-                                                
+    // Permissões                                           
+    var permissaoAlteracao = false;
+    var permissaoCadastro = false;
+    var permissaoRemocao = false; 
+    
+    
     // Inicialização do controller
     $scope.administrativo_empresasInit = function(){
         // Título da página 
@@ -45,37 +50,41 @@ angular.module("administrativo-empresas", [])
             // Refaz a busca
             $scope.buscaEmpresas();
         }); 
+        // Obtém as permissões
+        if($scope.methods && $scope.methods.length > 0){
+            permissaoAlteracao = $filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'ATUALIZAÇÃO' }).length > 0;   
+            permissaoCadastro = $filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'CADASTRO' }).length > 0;
+            permissaoRemocao = $filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'REMOÇÃO' }).length > 0;
+        }
         // Busca empresas
         $scope.buscaEmpresas();
     };
     
+                                                
     // PERMISSÕES
     /**
       * Retorna true se o usuário pode consultar outras empresas
       */
     $scope.usuarioPodeConsultarEmpresas = function(){
-        return $scope.PERMISSAO_ADMINISTRATIVO && !$scope.grupoempresa;    
+        return typeof $scope.grupoempresa === 'undefined';    
     }                                            
     /**
       * Retorna true se o usuário pode cadastrar empresas
       */
     $scope.usuarioPodeCadastrarEmpresas = function(){
-        return $scope.usuarioPodeConsultarEmpresas();  
-               // && TEM PERMISSAO DO METODO POST    
+        return $scope.usuarioPodeConsultarEmpresas() && permissaoCadastro;    
     }
     /**
       * Retorna true se o usuário pode alterar info de empresas
       */
     $scope.usuarioPodeAlterarEmpresas = function(){
-        return $scope.usuarioPodeConsultarEmpresas(); 
-               // && TEM PERMISSAO DO METODO UPDATE
+        return $scope.usuarioPodeConsultarEmpresas() && permissaoAlteracao;
     }
     /**
       * Retorna true se o usuário pode excluir empresas
       */
     $scope.usuarioPodeExcluirEmpresas = function(){
-        return $scope.usuarioPodeConsultarEmpresas();
-               // && TEM PERMISSAO DO METODO DELETE
+        return $scope.usuarioPodeConsultarEmpresas() && permissaoRemocao;
     }
     
     

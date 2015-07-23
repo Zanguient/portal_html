@@ -37,7 +37,7 @@
                         <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;" 
                            data-original-title="" title=""></a>
                         <!-- OPÇÕES -->
-                        <div class="btn-group">
+                        <div class="btn-group element-hidden"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -->
                             <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
                             <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
                             </a>
@@ -71,7 +71,8 @@
                         <div class="row">
                             <div class="col-md-5">
                                 <div class="btn-group">
-                                    <a href="javascript:;" ng-click="goAdministrativoUsuariosCadastro()">
+                                    <a href="javascript:;" ng-click="goAdministrativoUsuariosCadastro()"
+                                       ng-class="{ 'element-hidden' : !usuarioPodeCadastrarUsuarios()}">
                                         <button class="btn red">
                                         Novo Usuário <i class="fa fa-plus"></i>
                                     </button></a>
@@ -177,10 +178,6 @@
                                             ng-class="{'sorting_asc' : estaOrdenadoCrescentePorGrupoEmpresa(), 'sorting_desc' : estaOrdenadoDecrescentePorGrupoEmpresa()}">
                                              Empresa
                                         </th>
-                                        <!--th class="sorting" tabindex="0" aria-controls="sample_editable_1" 
-                                            rowspan="1" colspan="1" style="width: 129px;">
-                                             CNPJ Base Empresa
-                                        </th-->
                                         <th class="sorting" tabindex="3" rowspan="1" colspan="1" style="width: 60px;"
                                             ng-click="ordenaPorEmpresa()"
                                             ng-class="{'sorting_asc' : estaOrdenadoCrescentePorEmpresa(), 'sorting_desc' : estaOrdenadoDecrescentePorEmpresa()}">
@@ -199,19 +196,17 @@
                                              {{usuario.webpagesusers.ds_login}}
                                         </td>
                                         <td>
-                                             {{usuario.webpagesusers.ds_email}}
+                                             {{usuario.webpagesusers.ds_email | lowercase}}
                                         </td>
                                         <td>
-                                             {{usuario.grupoempresa}}
+                                             {{usuario.grupoempresa | uppercase}}
                                         </td>
-                                        <!--td class="center">
-                                             CNPJ Base Empresa
-                                        </td-->
                                         <td class="center">
-                                             {{usuario.empresa}}
+                                             {{usuario.empresa | uppercase}}
                                         </td>
                                         <td class="center btnacoes">
-                                            <div class="btn-group" dropdown dropdown-append-to-body>
+                                            <div class="btn-group" dropdown dropdown-append-to-body
+                                                 ng-show="usuarioPodeDesativarUsuarios() || usuarioPodeAlterarUsuarios() || usuarioPodeExcluirUsuarios()">
                                                 <a class="btn btn-default btn-circle" 
                                                    href="javascript:;" dropdown-toggle>
                                                     <i class="fa fa-pencil"></i> 
@@ -219,15 +214,31 @@
                                                     <i class="fa fa-angle-down"></i>
                                                 </a>
                                             <ul class="dropdown-menu" style="max-width: 40px">
-                                                <li>
-                                                    <a href="javascript:;" ng-click="resetarSenhaDoUsuario(usuario)"> Resetar Senha</a>
+                                                <!--li ng-show="usuarioPodeDesativarUsuarios()">
+                                                    <a ng-show="usuario.fl_ativo"
+                                                       href="javascript:;" ng-click="desativar(usuario)">
+                                                        Desativar
+                                                    </a>
+                                                    <a ng-show="!usuario.fl_ativo"
+                                                       href="javascript:;" ng-click="ativar(usuario)">
+                                                        Ativar
+                                                    </a>
+                                                </li-->
+                                                <li ng-show="usuarioPodeAlterarUsuarios()">
+                                                    <a href="javascript:;" ng-click="editarUsuario(usuario)">
+                                                        Editar
+                                                    </a>
                                                 </li>
-                                                <li>
-                                                    <a href="javascript:;" ng-click="editarUsuario(usuario)">Editar</a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript:;" ng-click="exluirUsuario(usuario)">Excluir</a>
+                                                <li ng-show="usuarioPodeExcluirUsuarios()">
+                                                    <a href="javascript:;" ng-click="exluirUsuario(usuario)">
+                                                        Excluir
+                                                    </a>
                                                 </li> 
+                                                <li ng-show="usuarioPodeAlterarUsuarios()">
+                                                    <a href="javascript:;" ng-click="resetarSenhaDoUsuario(usuario)"> 
+                                                        Resetar Senha
+                                                    </a>
+                                                </li>
                                             </ul>
                                             </div>
                                         </td>

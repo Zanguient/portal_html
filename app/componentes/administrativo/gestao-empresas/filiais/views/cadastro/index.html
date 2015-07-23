@@ -7,7 +7,9 @@
  */
 -->
 
-<div class="container" ng-controller="administrativo-filiais-cadastroCtrl" ng-init="administrativoFiliaisCadastroInit()">
+<div class="container" ng-controller="administrativo-filiais-cadastroCtrl" 
+     ng-init="administrativoFiliaisCadastroInit()"
+     ng-show="temPermissao" ng-cloak>
     <!-- BEGIN PAGE BREADCRUMB -->
     <ul class="page-breadcrumb breadcrumb">
         <li>

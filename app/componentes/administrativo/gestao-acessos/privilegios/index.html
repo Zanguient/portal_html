@@ -244,7 +244,7 @@
                         <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;" 
                            data-original-title="" title=""></a>
                         <!-- OPÇÕES -->
-                        <div class="btn-group">
+                        <div class="btn-group element-hidden"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -->
                             <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
                             <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
                             </a>
@@ -278,7 +278,8 @@
                         <div class="row">
                             <div class="col-md-5">
                                 <div class="btn-group">
-                                    <a href="javascript:;" ng-click="exibeCadastroNovoPrivilegio()">
+                                    <a href="javascript:;" ng-click="exibeCadastroNovoPrivilegio()"
+                                       ng-show="usuarioPodeCadastrarPrivilegios()">
                                         <button class="btn red" ng-class="{ active : cadastraNovoPrivilegio }">
                                         Novo Privilégio <i class="fa fa-plus"></i>
                                     </button></a>
@@ -378,7 +379,8 @@
                                                      {{privilegio.RoleName}}
                                                 </td>
                                                 <td class="center btnacoes">
-                                                    <div class="btn-group" dropdown dropdown-append-to-body>
+                                                    <div class="btn-group" dropdown dropdown-append-to-body
+                                                         ng-show="usuarioPodeAlterarPrivilegios() || usuarioPodeExcluirPrivilegios()">
                                                         <a class="btn btn-default btn-circle" 
                                                            href="javascript:;" dropdown-toggle>
                                                             <i class="fa fa-pencil"></i> 
@@ -386,19 +388,19 @@
                                                             <i class="fa fa-angle-down"></i>
                                                         </a>
                                                         <ul class="dropdown-menu" style="max-width: 40px">
-                                                            <li>
+                                                            <li ng-show="usuarioPodeAlterarPrivilegios()">
                                                                 <a data-toggle="modal"
                                                                    ng-click="alteraPrivilegio(privilegio)">
                                                                     Alterar
                                                                 </a>
                                                             </li>
-                                                            <li>
+                                                            <li ng-show="usuarioPodeAlterarPrivilegios()">
                                                                 <a data-toggle="modal" 
                                                                    ng-click="exibeFuncionalidades(privilegio)">
                                                                     Funcionalidades
                                                                 </a>
                                                             </li>
-                                                            <li>
+                                                            <li ng-show="usuarioPodeExcluirPrivilegios()">
                                                                 <a href="javascript:;" 
                                                                    ng-click="exluirPrivilegio(privilegio)">
                                                                     Excluir

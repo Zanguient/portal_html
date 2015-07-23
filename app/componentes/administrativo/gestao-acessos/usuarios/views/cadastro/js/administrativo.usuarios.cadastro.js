@@ -20,7 +20,8 @@ angular.module("administrativo-usuarios-cadastro", [])
                                                      function($scope,$state,$stateParams,$timeout,$http,$campos,
                                                               $webapi,$apis,$filter){ 
     
-    var divPortletBodyUsuarioCadPos = 0; // posição da div que vai receber o loading progress                                                               
+    var divPortletBodyUsuarioCadPos = 0; // posição da div que vai receber o loading progress
+    $scope.temPermissao = false;  // indica se tem permissão para acessar esta página                               
     $scope.tela = {tipo:'Cadastro', acao:'Cadastrar'};
     // Tab
     $scope.tabCadastro = 1;
@@ -122,38 +123,8 @@ angular.module("administrativo-usuarios-cadastro", [])
       * Inicialização do controller
       */
     $scope.administrativoUsuariosCadastroInit = function(){
-        // Exibe o alert de progress
-        $scope.showProgress(divPortletBodyUsuarioCadPos);
-        // Verifica se tem parâmetros
-        if($stateParams.usuario !== null){
-            $scope.tela.tipo = 'Alteração'; 
-            $scope.tela.acao = 'Alterar';
-            $scope.old.usuario = $stateParams.usuario.webpagesusers;
-            $scope.old.pessoa = $stateParams.usuario.pessoa;
-            $scope.old.roles = $stateParams.usuario.webpagesusersinroles;
-            //console.log($stateParams.usuario);
-            // Atualiza demais dados
-            atualizaDadosDoUsuario();
-            // Grupo Empresa
-            if($scope.old.usuario.id_grupo && $scope.old.usuario.id_grupo !== null){
-                $scope.usuario.grupoempresa = {id_grupo: $scope.old.usuario.id_grupo, 
-                                               ds_nome: $stateParams.usuario.grupoempresa};
-                $scope.buscaEmpresas(); // busca filiais 
-            }
-            // Empresa
-            if($scope.old.usuario.nu_cnpjEmpresa && $scope.old.usuario.nu_cnpjEmpresa !== null){
-                $scope.usuario.empresa = {nu_cnpj: $scope.old.usuario.nu_cnpjEmpresa, 
-                                          ds_fantasia: $stateParams.usuario.empresa};
-            }
-        } 
-        // Obtém Roles
-        obtemRoles(); 
-        // Título da página
-        $scope.pagina.titulo = 'Gestão de Acessos';                          
-        $scope.pagina.subtitulo = $scope.tela.tipo + ' de Usuário';
-        $scope.setTabCadastro(1);
         // Quando houver uma mudança de rota => Avalia se tem informações preenchidas e 
-        // solicita confirmação de descarte das mesmas. Se confirmado => muda estado                                              
+        // solicita confirmação de descarte das mesmas. Se confirmado => muda estado                                     
         $scope.$on('mudancaDeRota', function(event, state, params){
             // Obtem o JSON de mudança
             var jsonMudanca = {state: state, params : params};            
@@ -180,6 +151,67 @@ angular.module("administrativo-usuarios-cadastro", [])
                }
             }
         });
+        
+        $scope.$on('alterouGrupoEmpresa', function(event){
+            if($scope.grupoempresa){
+                // Exibe a tab onde o grupo empresa aparece
+                $scope.setTabCadastro(2);
+                $scope.usuario.grupoempresa = $scope.grupoempresa; 
+                $scope.selecionouGrupoEmpresa();
+            }else $scope.usuario.empresa = $scope.usuario.grupoempresa = '';
+            $scope.atualizaProgressoDoCadastro();
+        });
+        
+        if(!$scope.methods || $scope.methods.length == 0){
+            // Sem permissão nenhuma ?
+            $scope.goUsuarioSemPrivilegios();
+            return;
+        }
+        
+        // Exibe o alert de progress
+        $scope.showProgress(divPortletBodyUsuarioCadPos);
+        // Verifica se tem parâmetros
+        if($stateParams.usuario !== null){
+            // Verifica se tem permissão para alterar
+            if($filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'ATUALIZAÇÃO' }).length == 0){
+               // Não pode alterar
+                $scope.hideProgress(divPortletBodyUsuarioCadPos);
+                $scope.goUsuarioSemPrivilegios();
+                return;  
+            }
+            $scope.tela.tipo = 'Alteração'; 
+            $scope.tela.acao = 'Alterar';
+            $scope.old.usuario = $stateParams.usuario.webpagesusers;
+            $scope.old.pessoa = $stateParams.usuario.pessoa;
+            $scope.old.roles = $stateParams.usuario.webpagesusersinroles;
+            //console.log($stateParams.usuario);
+            // Atualiza demais dados
+            atualizaDadosDoUsuario();
+            // Grupo Empresa
+            if($scope.old.usuario.id_grupo && $scope.old.usuario.id_grupo !== null){
+                $scope.usuario.grupoempresa = {id_grupo: $scope.old.usuario.id_grupo, 
+                                               ds_nome: $stateParams.usuario.grupoempresa};
+                $scope.buscaEmpresas(); // busca filiais 
+            }
+            // Empresa
+            if($scope.old.usuario.nu_cnpjEmpresa && $scope.old.usuario.nu_cnpjEmpresa !== null){
+                $scope.usuario.empresa = {nu_cnpj: $scope.old.usuario.nu_cnpjEmpresa, 
+                                          ds_fantasia: $stateParams.usuario.empresa};
+            }
+        }else // Verifica se tem permissão para alterar
+            if($filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'CADASTRO' }).length == 0){
+            // Não pode cadastrar
+            $scope.hideProgress(divPortletBodyUsuarioCadPos);
+            $scope.goUsuarioSemPrivilegios();
+            return;  
+        }
+        $scope.temPermissao = true;
+        // Obtém Roles
+        obtemRoles(); 
+        // Título da página
+        $scope.pagina.titulo = 'Gestão de Acessos';                          
+        $scope.pagina.subtitulo = $scope.tela.tipo + ' de Usuário';
+        $scope.setTabCadastro(1);
     };
     /**
       * Altera o estado, enviado pelo json => usado no modal de confirmação

@@ -54,7 +54,7 @@
                                         <th width="8%" tabindex="0" 
                                             aria-controls="datatable_ajax" 
                                             rowspan="1" colspan="1">
-                                             Data
+                                             Data da Venda
                                         </th>
                                         <th width="12%" tabindex="1" 
                                             aria-controls="datatable_ajax" 
@@ -246,7 +246,7 @@
                         <!-- FULLSCREEN -->
                         <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;" data-original-title="" title=""></a>
                         <!-- OPÇÕES -->
-                        <div class="btn-group">
+                        <div class="btn-group element-hidden"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -->
                             <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
                             <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
                             </a>
@@ -369,13 +369,13 @@
                                                             <tr role="row">
                                                                 <th tabindex="0"  
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 188px; text-align:left;">
+                                                                    style="width: 188px;">
                                                                     Terminal
                                                                 </th>
                                                                 <th tabindex="1" 
                                                                     rowspan="1" 
                                                                     colspan="1" 
-                                                                    style="width: 237px;text-align:left;">
+                                                                    style="width: 237px;">
                                                                     Bandeira
                                                                 </th>
                                                                 <th tabindex="2" 
@@ -399,7 +399,7 @@
                                                             <tr role="row" class="odd"
                                                                 ng-repeat="relterminal in relatorio.terminal">
                                                                 <!-- TERMINAL -->
-                                                                <td style="text-align:left;">
+                                                                <td>
                                                                      {{relterminal.terminal.dsTerminalLogico}}
                                                                 </td>
                                                                 <!-- BANDEIRA -->
@@ -429,7 +429,7 @@
                                                             
                                                             <tr role="row" class="odd linhaTotalRelatorios"
                                                                 style="font-weight : bolder">
-                                                                <td colspan="2">
+                                                                <td colspan="2" style="text-align:right;">
                                                                     Total Exibido
                                                                 </td>
                                                                 <td>
@@ -443,7 +443,7 @@
                                                             </tr>
                                                             <tr role="row" class="odd linhaTotalRelatorios"
                                                                 style="font-weight : bolder">
-                                                                <td colspan="2">
+                                                                <td colspan="2" style="text-align:right;">
                                                                     Total Filtrado
                                                                 </td>
                                                                 <td>
@@ -475,12 +475,12 @@
                                                             <tr role="row">
                                                                 <th tabindex="0" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 188px;´text-align:left;">
+                                                                    style="width: 188px;">
                                                                     Bandeira
                                                                 </th>
                                                                 <th tabindex="1" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 237px; text-align:left;">
+                                                                    style="width: 237px">
                                                                     Total de Transações
                                                                 </th>
                                                                 <th tabindex="2" 
@@ -503,7 +503,7 @@
                                                                      {{relsintetico.bandeira.desBandeira}}
                                                                 </td>
                                                                 <!-- TOTAL DE TRANSAÇÕES -->
-                                                                <td ng-init="total.sintetico.totalTransacoes = total.sintetico.totalTransacoes + relsintetico.totalTransacoes" style="text-align:left;">
+                                                                <td ng-init="total.sintetico.totalTransacoes = total.sintetico.totalTransacoes + relsintetico.totalTransacoes">
                                                                      {{relsintetico.totalTransacoes}} 
                                                                 </td>
                                                                 <!-- VALOR BRUTO -->
@@ -524,10 +524,10 @@
                                                             </tr>
                                                             <tr role="row" class="odd linhaTotalRelatorios" 
                                                                 style="font-weight:bolder">
-                                                                <td style="text-align:left;">
+                                                                <td style="text-align:right;">
                                                                      Total Exibido
                                                                 </td>
-                                                                <td style="text-align:left;">
+                                                                <td>
                                                                      {{total.sintetico.totalTransacoes}}
                                                                 </td>
                                                                 <td>
@@ -539,10 +539,10 @@
                                                             </tr>
                                                             <tr role="row" class="odd linhaTotalRelatorios" 
                                                                 style="font-weight:bolder">
-                                                                <td style="text-align:left;">
+                                                                <td style="text-align:right;">
                                                                      Total Filtrado
                                                                 </td>
-                                                                <td style="text-align:left;">
+                                                                <td>
                                                                      {{total.sintetico.totalTransacoesFiltrado}}
                                                                 </td>
                                                                 <td>
@@ -573,18 +573,18 @@
                                                                 </th-->
                                                                 <th tabindex="0" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 128px; text-align:left;">
+                                                                    style="width: 128px;">
                                                                     Data da Venda
                                                                 </th>
                                                                 <th tabindex="1" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 128px; text-align:left;">
-                                                                    Terminal Lógico
+                                                                    style="width: 237px;">
+                                                                    Bandeira
                                                                 </th>
                                                                 <th tabindex="2" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 237px;">
-                                                                    Bandeira
+                                                                    style="width: 128px;">
+                                                                    Terminal Lógico
                                                                 </th>
                                                                 <th tabindex="3" 
                                                                     rowspan="1" colspan="1" 
@@ -611,16 +611,15 @@
                                                                      {{relanalitico.cnpj}}
                                                                 </td>
                                                                 <!-- DATA DA VENDA -->
-                                                                <td ng-bind="getDataString(relanalitico.dtaVenda)" 
-                                                                    style="text-align:left;">
-                                                                </td>
-                                                                <!-- TERMINAL LÓGICO -->
-                                                                <td style="text-align:left;">
-                                                                     {{relanalitico.dsTerminalLogico}}
+                                                                <td ng-bind="getDataString(relanalitico.dtaVenda)">
                                                                 </td>
                                                                 <!-- BANDEIRA -->
-                                                                <td>
+                                                                <td style="text-align:left;">
                                                                      {{relanalitico.desBandeira}}
+                                                                </td>
+                                                                <!-- TERMINAL LÓGICO -->
+                                                                <td>
+                                                                     {{relanalitico.dsTerminalLogico}}
                                                                 </td>
                                                                 <!-- NSU -->
                                                                 <td>
