@@ -329,8 +329,8 @@ angular.module("AtosCapital", ['ui.router',
         if(!controller) return;
         controllerAtual = controller;
         $scope.methodsDoControllerCorrente = controller.methods;
-        console.log(controller);
-        console.log($scope.methodsDoControllerCorrente);
+        //console.log(controller);
+        //console.log($scope.methodsDoControllerCorrente);
         controller.link();
     };
     /**

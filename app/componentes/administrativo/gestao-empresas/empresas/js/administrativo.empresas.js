@@ -10,10 +10,11 @@ angular.module("administrativo-empresas", [])
 
 .controller("administrativo-empresasCtrl", ['$scope',
                                             '$state',
+                                            '$filter',
                                             '$campos',
                                             '$webapi',
                                             '$apis', 
-                                            function($scope,$state,$campos,$webapi,$apis){ 
+                                            function($scope,$state,$filter,$campos,$webapi,$apis){ 
 
     var divPortletBodyEmpresaPos = 0; // posição da div que vai receber o loading progress
     $scope.paginaInformada = 1; // página digitada pelo usuário
@@ -51,10 +52,10 @@ angular.module("administrativo-empresas", [])
             $scope.buscaEmpresas();
         }); 
         // Obtém as permissões
-        if($scope.methods && $scope.methods.length > 0){
-            permissaoAlteracao = $filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'ATUALIZAÇÃO' }).length > 0;   
-            permissaoCadastro = $filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'CADASTRO' }).length > 0;
-            permissaoRemocao = $filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'REMOÇÃO' }).length > 0;
+        if($scope.methodsDoControllerCorrente && $scope.methodsDoControllerCorrente.length > 0){
+            permissaoAlteracao = $filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'ATUALIZAÇÃO' }).length > 0;   
+            permissaoCadastro = $filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'CADASTRO' }).length > 0;
+            permissaoRemocao = $filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'REMOÇÃO' }).length > 0;
         }
         // Busca empresas
         $scope.buscaEmpresas();

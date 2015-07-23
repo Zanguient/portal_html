@@ -10,11 +10,12 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
 
 .controller("administrativo-modulos-funcionalidadesCtrl", ['$scope',
                                             '$state',
+                                            '$filter',
                                             '$http',
                                             '$campos',
                                             '$webapi',
                                             '$apis', 
-                                            function($scope,$state,$http,$campos,$webapi,$apis){ 
+                                            function($scope,$state,$filter,$http,$campos,$webapi,$apis){ 
    
     var divPortletBodyModuloFuncionalidadePos = 0; // posição da div que vai receber o loading progress
     $scope.paginaInformada = 1; // página digitada pelo usuário
@@ -86,10 +87,10 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
             $state.go(state, params);
         });  
         // Obtém as permissões
-        if($scope.methods && $scope.methods.length > 0){
-            permissaoAlteracao = $filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'ATUALIZAÇÃO' }).length > 0;   
-            permissaoCadastro = $filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'CADASTRO' }).length > 0;
-            permissaoRemocao = $filter('filter')($scope.methods, function(m){ return m.ds_method.toUpperCase() === 'REMOÇÃO' }).length > 0;
+        if($scope.methodsDoControllerCorrente && $scope.methodsDoControllerCorrente.length > 0){
+            permissaoAlteracao = $filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'ATUALIZAÇÃO' }).length > 0;   
+            permissaoCadastro = $filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'CADASTRO' }).length > 0;
+            permissaoRemocao = $filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'REMOÇÃO' }).length > 0;
         }
         // Obtem Context Menu a partir das permissões
         obtemContextMenu();
