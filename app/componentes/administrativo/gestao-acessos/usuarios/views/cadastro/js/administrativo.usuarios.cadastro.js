@@ -212,6 +212,10 @@ angular.module("administrativo-usuarios-cadastro", [])
         $scope.pagina.titulo = 'Gestão de Acessos';                          
         $scope.pagina.subtitulo = $scope.tela.tipo + ' de Usuário';
         $scope.setTabCadastro(1);
+        if($scope.grupoempresa){
+            $scope.usuario.grupoempresa = $scope.grupoempresa; 
+            $scope.selecionouGrupoEmpresa();
+        }
     };
     /**
       * Altera o estado, enviado pelo json => usado no modal de confirmação

@@ -22,11 +22,20 @@ angular.module("card-services-consolidacao-relatorios", [])
     $scope.itens_pagina = [10, 20, 50, 100]; 
     $scope.paginaInformada = 1; // página digitada pelo usuário                                             
     // Filtros
-    $scope.filiais = $scope.adquirentes = $scope.bandeiras =  $scope.terminais = [];                                          
+    $scope.filiais = $scope.adquirentes = $scope.bandeiras =  $scope.terminais = [];                                         $scope.camposBusca = [
+                          {
+                            id: $campos.pos.recebimento.cdAutorizador, 
+                            nome: "Código Autorizador"
+                          },{
+                            id: $campos.pos.recebimento.nsu,
+                            nome: "NSU"
+                          }
+                         ]; 
     $scope.filtro = {datamin : new Date(), datamax : '', 
                      filial : null, adquirente : null,
                      bandeira : null, terminallogico : null,
                      itens_pagina : $scope.itens_pagina[0], order : 0,
+                     busca : '', campo_busca : $scope.camposBusca[1],
                      terminal :  { pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0},
                      sintetico : { pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0},
                      analitico : { pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0},
@@ -78,6 +87,14 @@ angular.module("card-services-consolidacao-relatorios", [])
         if($scope.grupoempresa) buscaFiliais(true);
     };
     
+                                                 
+                                                 
+    // BUSCA
+    $scope.resetaBusca = function(){
+        $scope.filtro.busca = '';
+        $scope.buscaRelatorio();
+    };                                             
+                                                 
     
     /* FILTRO */
     
@@ -160,7 +177,7 @@ angular.module("card-services-consolidacao-relatorios", [])
             .then(function(dados){
                 $scope.filiais = dados.Registros;
                 // Reseta
-                $scope.filtro.filial = $scope.filiais[0];
+                $scope.filtro.filial = $scope.filiais.length > 0 ? $scope.filiais[0] : null;
                 // Busca adquirentes
                 buscaAdquirentes(true);
               },
@@ -184,7 +201,12 @@ angular.module("card-services-consolidacao-relatorios", [])
       * Busca as adquirentes
       */
     var buscaAdquirentes = function(progressEstaAberto){
- 
+       
+       if($scope.filtro.filial === null){
+           $scope.filtro.adquirente = $scope.filtro.bandeira = $scope.filtro.terminallogico = null;
+           return;
+       }    
+        
        if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos);    
         
        var filtros = undefined;
@@ -228,12 +250,18 @@ angular.module("card-services-consolidacao-relatorios", [])
       */                                             
     var buscaBandeiras = function(progressEstaAberto, buscarTerminaisLogicos, idBandeira, idTerminalLogico){
        
+       if($scope.filtro.adquirente === null){
+           $scope.filtro.bandeira = null;
+           return;
+       }    
+        
        if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos);    
         
        var filtros = undefined;
 
        // Filtro de adquirente
-       if($scope.filtro.adquirente !== null) filtros = {id: $campos.pos.bandeirapos.idOperadora, valor: $scope.filtro.adquirente.id};
+       if($scope.filtro.adquirente !== null) filtros = {id: $campos.pos.bandeirapos.idOperadora, 
+                                                        valor: $scope.filtro.adquirente.id};
        
        $webapi.get($apis.getUrl($apis.pos.bandeirapos, 
                                 [$scope.token, 0, $campos.pos.bandeirapos.desBandeira],
@@ -269,12 +297,18 @@ angular.module("card-services-consolidacao-relatorios", [])
       */                                             
     var buscaTerminaisLogicos = function(progressEstaAberto, idTerminalLogico){
 
+       if($scope.filtro.adquirente === null){
+           $scope.filtro.terminallogico = null;
+           return;
+       }    
+        
        if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos);
         
        var filtros = undefined;
 
        // Filtro de adquirente
-       if($scope.filtro.adquirente !== null) filtros = {id: $campos.pos.terminallogico.idOperadora, valor: $scope.filtro.adquirente.id};
+       if($scope.filtro.adquirente !== null) filtros = {id: $campos.pos.terminallogico.idOperadora, 
+                                                        valor: $scope.filtro.adquirente.id};
        
        $webapi.get($apis.getUrl($apis.pos.terminallogico, 
                                 [$scope.token, 2, $campos.pos.terminallogico.dsTerminalLogico],
@@ -445,6 +479,10 @@ angular.module("card-services-consolidacao-relatorios", [])
                                  valor: $scope.filtro.terminallogico.idTerminalLogico};
            filtros.push(filtroTerminal);
        }  
+        
+       // Verifica se tem algum valor para ser filtrado (NSU ou Cod. Autorizador)   
+       if($scope.filtro.busca.length > 0) 
+           filtros.push({id: $scope.filtro.campo_busca.id, valor: $scope.filtro.busca + '%'});   
        
        // Retorna    
        return filtros;
@@ -475,6 +513,10 @@ angular.module("card-services-consolidacao-relatorios", [])
                                   );
             return;   
         }
+        if($scope.filtro.filial === null){
+           $scope.showModalAlerta('É necessário selecionar uma filial!');
+           return;
+       }
         // Intervalo de data
         if($scope.filtro.datamax){
             var timeDiff = Math.abs($scope.filtro.datamax.getTime() - $scope.filtro.datamin.getTime());

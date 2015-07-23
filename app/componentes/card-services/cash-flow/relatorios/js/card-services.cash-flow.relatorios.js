@@ -24,15 +24,26 @@ angular.module("card-services-cash-flow-relatorios", [])
     // Filtros
     $scope.filiais = [];  
     $scope.adquirentes = [];
-    $scope.bandeiras = [];                                             
+    $scope.bandeiras = [];   
+    $scope.camposBusca = [
+                          {
+                            id: $campos.pos.recebimentoparcela.recebimento + $campos.pos.recebimento.nsu - 100,
+                            nome: "NSU"
+                          },{
+                            id: $campos.pos.recebimentoparcela.recebimento + $campos.pos.recebimento.codResumoVenda - 100, 
+                            nome: "Resumo Vendas"
+                          },
+                         ];                                             
     $scope.filtro = {datamin : new Date(), datamax : '', 
+                     dataVendaMin : '', dataVendaMax : '', 
                      filial : null, adquirente : null, bandeira : null,
                      itens_pagina : $scope.itens_pagina[0], order : 0,
+                     busca : '', campo_busca : $scope.camposBusca[0],
                      sintetico : { pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0},
                      analitico : { pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0},
                     };
-    $scope.abrirCalendarioDataMin = false;
-    $scope.abrirCalendarioDataMax = false;                                           
+    $scope.abrirCalendarioDataMin = $scope.abrirCalendarioDataVendaMin = false;
+    $scope.abrirCalendarioDataMax = $scope.abrirCalendarioDataVendaMax = false;                                           
                                                  
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyRelatorioPos = 1; // posição da div que vai receber o loading progress
@@ -79,6 +90,12 @@ angular.module("card-services-cash-flow-relatorios", [])
         if($scope.grupoempresa) buscaFiliais(true);
     };
     
+                                                 
+    // BUSCA
+    $scope.resetaBusca = function(){
+        $scope.filtro.busca = '';
+        $scope.buscaRelatorio();
+    };                                              
     
     /* FILTRO */
     
@@ -108,36 +125,55 @@ angular.module("card-services-cash-flow-relatorios", [])
         $scope.filtro.analitico.total_paginas = $scope.filtro.sintetico.total_paginas = 0;
     }
     
-    // DATA
-    var ajustaIntervaloDeData = function(){
+    // DATA RECEBIMENTO
+    var ajustaIntervaloDeData = function(datavenda){
       // Verifica se é necessário reajustar a data max para ser no mínimo igual a data min
-      if($scope.filtro.datamax && $scope.filtro.datamax < $scope.filtro.datamin) $scope.filtro.datamax = $scope.filtro.datamin;
+      if(datavenda){
+        if($scope.filtro.dataVendaMax && $scope.filtro.dataVendaMax < $scope.filtro.dataVendaMin) $scope.filtro.dataVendaMax = $scope.filtro.dataVendaMin;  
+      }else{
+        if($scope.filtro.datamax && $scope.filtro.datamax < $scope.filtro.datamin) $scope.filtro.datamax = $scope.filtro.datamin;
+      }
       if(!$scope.$$phase) $scope.$apply();
     };
     // Data MIN
-    $scope.exibeCalendarioDataMin = function($event) {
+    $scope.exibeCalendarioDataMin = function($event, datavenda) {
         if($event){
             $event.preventDefault();
             $event.stopPropagation();
         }
-        $scope.abrirCalendarioDataMin = !$scope.abrirCalendarioDataMin;
-        $scope.abrirCalendarioDataMax = false;
+        if(datavenda){
+            $scope.abrirCalendarioDataVendaMin = !$scope.abrirCalendarioDataVendaMin;
+            $scope.abrirCalendarioDataVendaMax = false;
+        }else{
+            $scope.abrirCalendarioDataMin = !$scope.abrirCalendarioDataMin;
+            $scope.abrirCalendarioDataMax = false;
+        }
       };
-    $scope.alterouDataMin = function(){
-      ajustaIntervaloDeData();
+    $scope.alterouDataMin = function(datavenda){
+      ajustaIntervaloDeData(datavenda);
     };
     // Data MAX
-    $scope.exibeCalendarioDataMax = function($event) {
+    $scope.exibeCalendarioDataMax = function($event, datavenda) {
         if($event){
             $event.preventDefault();
             $event.stopPropagation();
         }
-        $scope.abrirCalendarioDataMax = !$scope.abrirCalendarioDataMax;
-        $scope.abrirCalendarioDataMin = false;
+        if(datavenda){
+            $scope.abrirCalendarioDataVendaMax = !$scope.abrirCalendarioDataVendaMax;
+            $scope.abrirCalendarioDataVendaMin = false;
+        }else{
+            $scope.abrirCalendarioDataMax = !$scope.abrirCalendarioDataMax;
+            $scope.abrirCalendarioDataMin = false;
+        }
       };
-    $scope.alterouDataMax = function(){
-       if($scope.filtro.datamax === null) $scope.filtro.datamax = '';
-       else ajustaIntervaloDeData();
+    $scope.alterouDataMax = function(datavenda){
+        if(datavenda){
+           if($scope.filtro.dataVendaMax === null) $scope.filtro.dataVendaMax = '';
+           else ajustaIntervaloDeData(datavenda);
+        }else{
+           if($scope.filtro.datamax === null) $scope.filtro.datamax = '';
+           else ajustaIntervaloDeData(); 
+        }
     };
                                                  
     
@@ -160,7 +196,7 @@ angular.module("card-services-cash-flow-relatorios", [])
             .then(function(dados){
                 $scope.filiais = dados.Registros;
                 // Reseta
-                $scope.filtro.filial = $scope.filiais[0];
+                $scope.filtro.filial = $scope.filiais.length > 0 ? $scope.filiais[0] : null;
                 // Busca adquirentes
                 buscaAdquirentes(true);
               },
@@ -185,6 +221,11 @@ angular.module("card-services-cash-flow-relatorios", [])
       */
     var buscaAdquirentes = function(progressEstaAberto){
  
+       if($scope.filtro.filial === null){
+           $scope.filtro.adquirente = $scope.filtro.bandeira = null;
+           return;
+       }    
+        
        if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos);    
         
        var filtros = undefined;
@@ -225,6 +266,11 @@ angular.module("card-services-cash-flow-relatorios", [])
       */                                             
     var buscaBandeiras = function(progressEstaAberto, idBandeira){
        
+       if($scope.filtro.adquirente === null){
+           $scope.filtro.bandeira = null;
+           return;
+       }    
+        
        if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos);    
         
        var filtros = undefined;
@@ -382,6 +428,10 @@ angular.module("card-services-cash-flow-relatorios", [])
                                  valor: $scope.filtro.bandeira.id};
            filtros.push(filtroBandeira);
        }
+        
+       // Verifica se tem algum valor para ser filtrado (NSU ou Cod. Autorizador)   
+       if($scope.filtro.busca.length > 0) 
+           filtros.push({id: $scope.filtro.campo_busca.id, valor: $scope.filtro.busca + '%'});     
        
        // Retorna    
        return filtros;
@@ -410,6 +460,10 @@ angular.module("card-services-cash-flow-relatorios", [])
                                   );
             return;   
         }
+        if($scope.filtro.filial === null){
+           $scope.showModalAlerta('É necessário selecionar uma filial!');
+           return;
+        }
         // Intervalo de data
         if($scope.filtro.datamax){
             var timeDiff = Math.abs($scope.filtro.datamax.getTime() - $scope.filtro.datamin.getTime());
@@ -435,6 +489,12 @@ angular.module("card-services-cash-flow-relatorios", [])
       * Busca o relatório agrupado por bandeira
       */
     var buscaRelatorioSintetico = function(resetaRelatorioAnalitico){
+       
+       if($scope.filtro.filial === null){
+           $scope.showModalAlerta('É necessário selecionar uma filial!');
+           return;
+       }
+        
        $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen    
        $scope.showProgress(divPortletBodyRelatorioPos);
         
@@ -526,6 +586,12 @@ angular.module("card-services-cash-flow-relatorios", [])
       * Busca o relatório agrupado por bandeira
       */
     var buscaRelatorioAnalitico = function(resetaRelatorioSintetico){
+       
+       if($scope.filtro.filial === null){
+           $scope.showModalAlerta('É necessário selecionar uma filial!');
+           return;
+       }    
+        
        $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen    
        $scope.showProgress(divPortletBodyRelatorioPos);
         

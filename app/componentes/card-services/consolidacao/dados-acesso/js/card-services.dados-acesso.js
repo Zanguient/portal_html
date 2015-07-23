@@ -142,7 +142,7 @@ angular.module("card-services-dados-acesso", [])
             .then(function(dados){
                 $scope.filiais = dados.Registros;
                 // Reseta
-                $scope.filtro.filial = $scope.filiais[0];
+                $scope.filtro.filial = $scope.filiais.length > 0 ? $scope.filiais[0] : null;
                 // Busca adquirentes
                 $scope.filtro.adquirente = null;
                 buscaDadosDeAcesso();
@@ -170,7 +170,12 @@ angular.module("card-services-dados-acesso", [])
       * Busca as adquirentes
       */
     var buscaAdquirentes = function(progressEstaAberto){
- 
+     
+       if($scope.filtro.filial === null){
+           $scope.filtro.adquirente = null;
+           return;
+       }    
+        
        if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos);    
         
        var filtros = undefined;
@@ -281,6 +286,10 @@ angular.module("card-services-dados-acesso", [])
                                   );
             return;   
         }
+        if($scope.filtro.filial === null){
+           $scope.showModalAlerta('É necessário selecionar uma filial!');
+           return;
+       }
         // Nova busca
         buscaDadosDeAcesso();
     };                                             
@@ -318,6 +327,12 @@ angular.module("card-services-dados-acesso", [])
       * Efetiva a busca
       */
     var buscaDadosDeAcesso = function(progressoemexecucao){
+        
+        if($scope.filtro.filial === null){
+           $scope.showModalAlerta('É necessário selecionar uma filial!');
+           return;
+        }
+        
         if(!progressoemexecucao){
            $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen    
            $scope.showProgress(divPortletBodyDadosPos);

@@ -422,7 +422,8 @@ angular.module("administrativo-filiais-cadastro", [])
        
         // Obrigatórios
         var jsonFilial = { nu_cnpj: $scope.filial.nu_cnpj,
-                           id_grupo: $scope.grupoempresa.id_grupo
+                           id_grupo: $scope.grupoempresa.id_grupo,
+                           fl_ativo : $scope.old.fl_ativo
                          };
        
         // Só envia no json os dados que de fato alteraram
