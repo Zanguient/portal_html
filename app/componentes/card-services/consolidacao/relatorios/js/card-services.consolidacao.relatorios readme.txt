@@ -83,14 +83,18 @@ Além deles, é necessária a importação dos seguintes módulos externos.
  
   
    * pos/recebimento
-    - GET : listagem do conteúdo do relatório
+    - GET : listagem do conteúdo do relatório e obtenção dos NSUs e Cod Autorizador do filtro
 	    -> FILTROS 
            . Data : 'yyyyMMdd' (ano com 4 dígitos seguido de mês com dois dígitos seguido de dia com 2 dígitos)
            . Filial : cnpj
 		   . Adquirente : personalizado => 300 + código do campo id - 100
 		   . Bandeira : idBandeira
 		   . Terminal Lógico : idLogicoTerminal
- 		   
+ 		
+		-> NSU (coleção 11) = [nsu1,nsu2,...]
+		
+		-> Cod. Autorizador (coleção 12) = [cdAutorizador1,cdAutorizador2,...]
+		
 		-> TERMINAL LÓGICO (coleção 3) : ordenado por dsTerminalLogico
 			 Registros = [
 							{
