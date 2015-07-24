@@ -140,7 +140,7 @@
                                         </td>
                                         <!-- FILIAIS -->
                                         <td rowspan="1" colspan="1" style="text-align: center">
-                                            <select class="form-control form-filter input-sm"
+                                            <select class="form-control form-filter input-sm comboBoxFiltros"
                                                     ng-disabled="filiais.length == 0"
                                                     ng-model="filtro.filial"
                                                     ng-change="alterouFilial()"
@@ -155,7 +155,7 @@
                                         </td>
                                         <!-- ADQUIRENTES -->
                                         <td rowspan="1" colspan="1" style="text-align: center">
-                                            <select class="form-control form-filter input-sm"
+                                            <select class="form-control form-filter input-sm comboBoxFiltros"
                                                     ng-disabled="filtro.filial === null"
                                                     ng-model="filtro.adquirente"
                                                     ng-change="alterouAdquirente()"
@@ -170,7 +170,7 @@
                                         </td>
                                         <!-- BANDEIRAS -->
                                         <td rowspan="1" colspan="1" style="text-align: center">
-                                            <select class="form-control form-filter input-sm"
+                                            <select class="form-control form-filter input-sm comboBoxFiltros"
                                                     ng-disabled="filtro.adquirente === null"
                                                     ng-model="filtro.bandeira"
                                                     ng-change="alterouBandeira()"
@@ -185,7 +185,7 @@
                                         </td>
                                         <!-- TERMINAL LÓGICO -->
                                         <td rowspan="1" colspan="1" style="text-align: center">
-                                            <select class="form-control form-filter input-sm"
+                                            <select class="form-control form-filter input-sm comboBoxFiltros"
                                                 ng-hide="buscandoTerminaisLogicos"
                                                 ng-disabled="filtro.adquirente === null"
                                                 ng-model="filtro.terminallogico"
