@@ -34,7 +34,7 @@ angular.module("card-services-cash-flow-relatorios", [])
                             nome: "Resumo Vendas"
                           },
                          ];                                             
-    $scope.filtro = {datamin : new Date(), datamax : '', data : 'recebimento',
+    $scope.filtro = {datamin : new Date(), datamax : '', data : 'Recebimento',
                      filial : null, adquirente : null, bandeira : null,
                      itens_pagina : $scope.itens_pagina[0], order : 0,
                      busca : '', campo_busca : $scope.camposBusca[0],
@@ -384,7 +384,7 @@ angular.module("card-services-cash-flow-relatorios", [])
        // Data
        var filtroData;
         
-       if(filtro.data === 'venda') filtroData = {id: $campos.pos.recebimentoparcela.recebimento + $campos.pos.recebimento.dtaVenda - 100,
+       if($scope.filtro.data === 'Venda') filtroData = {id: $campos.pos.recebimentoparcela.recebimento + $campos.pos.recebimento.dtaVenda - 100,
                           valor: $scope.getFiltroData($scope.filtro.datamin)};  
        else filtroData = {id: $campos.pos.recebimentoparcela.dtaRecebimento,
                           valor: $scope.getFiltroData($scope.filtro.datamin)};

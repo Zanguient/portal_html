@@ -55,7 +55,7 @@
                                         <th width="8%" tabindex="0" 
                                             aria-controls="datatable_ajax" 
                                             rowspan="1" colspan="1">
-                                             Data 
+                                             Data {{filtro.data}}
                                         </th>
                                         <th width="11%" tabindex="1" 
                                             aria-controls="datatable_ajax" 
@@ -82,25 +82,24 @@
                                     <tr role="row" class="filter">
                                         <!-- DATA DE RECEBIMENTO -->
                                         <td rowspan="1" colspan="1">  
-                                            <!--div class="row" style="margin-bottom:10px">                                                
-                                                <div class="col-sm-6 col-sm-offset-1">
-                                                    <input type="radio" value="recebimento">&nbsp;Recebimento                                                    
+                                            <div class="row" style="margin-bottom:10px">
+                                                <div class="col-sm-1"></div>
+                                                <div class="btn-group col-sm-10">
+                                                    <label class="btn" 
+                                                           ng-class="{ 'red': filtro.data === 'Recebimento', 'grey': filtro.data !== 'Recebimento'}"
+                                                           ng-model="filtro.data" 
+                                                           btn-radio="'Recebimento'">
+                                                        Recebimento
+                                                    </label>
+                                                    <label class="btn" 
+                                                           ng-class="{ 'red': filtro.data === 'Venda', 'grey': filtro.data !== 'Venda'}"
+                                                           ng-model="filtro.data" 
+                                                           btn-radio="'Venda'"
+                                                           style="margin-left: -5px">
+                                                        Venda
+                                                    </label>                                                            
                                                 </div>
-                                                <div class="col-sm-4">
-                                                    <input type="radio" value="venda">&nbsp;Venda 
-                                                </div>                                                
-                                            </div-->
-                                            <div class="btn-group">
-                                                <label class="btn btn-primari" 
-                                                       ng-model="filtro.data" 
-                                                       btn-radio="'recebimento'">
-                                                    Recebimento
-                                                </label>
-                                                <label class="btn btn-primari" 
-                                                       ng-model="filtro.data" 
-                                                       btn-radio="'venda'">
-                                                    Venda
-                                                </label>                                                                               
+                                                <div class="col-sm-1"></div>
                                             </div>
                                                                            
                                             <div class="input-group date date-picker margin-bottom-5"
