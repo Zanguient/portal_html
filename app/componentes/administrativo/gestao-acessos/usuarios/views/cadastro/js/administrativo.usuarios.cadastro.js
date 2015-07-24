@@ -30,9 +30,10 @@ angular.module("administrativo-usuarios-cadastro", [])
     $scope.old = {pessoa:null,usuario:null,roles:[]};
     $scope.pessoa = {id:0, nome:'', data_nasc:''/*null*/, telefone:'', ramal:''};
     $scope.usuario = {login:'', email:'', grupoempresa:'', empresa:''};
-    $scope.rolePrincipal = undefined;
-    $scope.roles = [];  
-    $scope.rolesSelecionadas = []; 
+    $scope.roleSelecionada = undefined;
+    //$scope.rolePrincipal = undefined;
+    //$scope.roles = [];  
+    //$scope.rolesSelecionadas = []; 
     // Flags
     $scope.abrirCalendarioDataNasc = false;
     var dataValida = false;
@@ -41,11 +42,12 @@ angular.module("administrativo-usuarios-cadastro", [])
     $scope.validandoLogin = false;
     $scope.validandoEmail = false;
     $scope.obtendoRoles = false; 
-    $scope.temRoleSelecionada = false;
+    //$scope.temRoleSelecionada = false;
     $scope.pesquisandoGruposEmpresas = false;  
     $scope.pesquisandoEmpresas = false;
     $scope.cadastrando = false;
                                                          
+
                                                          
     // Usuário da alteração
     /**
@@ -80,20 +82,23 @@ angular.module("administrativo-usuarios-cadastro", [])
     var obtemRoles = function(){
         $scope.obtendoRoles = true;  
         $webapi.get($apis.getUrl($apis.administracao.webpagesroles, 
-                                 [$scope.token, 2, $campos.administracao.webpagesroles.RoleName])) // ordenado pelo nome
+                                 [$scope.token, 3, $campos.administracao.webpagesroles.RoleName])) // ordenado pelo nome
             .then(function(dados){
                     $scope.obtendoRoles = false;
                     $scope.roles = dados.Registros;
                     // Atualiza informações
-                    if($scope.old.usuario !== null){
-                        for(var k = 0; k < $scope.old.roles.length; k++){
+                    if($scope.old.roles !== null && $scope.old.roles.length > 0){
+                        var old = $scope.old.roles[0];
+                        var r = $filter('filter')($scope.roles, function(r){return r.RoleId === old.RoleId;});
+                        if(r && r.length > 0) $scope.roleSelecionada = r[0];
+                        /*for(var k = 0; k < $scope.old.roles.length; k++){
                             var old = $scope.old.roles[k];
                             var role = $filter('filter')($scope.roles, function(r){return r.RoleId === old.RoleId;});
                             if(role.length > 0){
                                 role[0].selecionado = true;
                                 if(old.RolePrincipal) $scope.rolePrincipal = role[0];
                             }
-                        }
+                        }*/
                         $scope.handleRole();
                     }
                     $scope.hideProgress(divPortletBodyUsuarioCadPos);
@@ -113,7 +118,8 @@ angular.module("administrativo-usuarios-cadastro", [])
       * Reseta as variáveis
       */
     var resetaVariaveis = function(){
-        $scope.temRoleSelecionada = false;
+        //$scope.temRoleSelecionada = false;
+        $scope.roleSelecionada = undefined;
         $scope.old = {pessoa:null,usuario:null,roles:[]};
         $scope.pessoa = {id:0, nome:'', data_nasc:''/*null*/, telefone:'', ramal:''};
         $scope.usuario = {login:'', email:'', grupoempresa:'', empresa:''};    
@@ -132,7 +138,7 @@ angular.module("administrativo-usuarios-cadastro", [])
             if($scope.ehCadastro()){
                 if($scope.pessoa.nome || $scope.pessoa.data_nasc/* !== null*/ || $scope.pessoa.telefone || $scope.pessoa.ramal || 
                    $scope.usuario.email || $scope.usuario.empresa || $scope.usuario.grupoempresa || $scope.usuario.login ||
-                   $scope.temRoleSelecionada){
+                   $scope.roleSelecionada){//$scope.temRoleSelecionada){
                     // Exibe um modal de confirmação
                     $scope.showModalConfirmacao('Confirmação', 
                          'Tem certeza que deseja descartar as informações preenchidas?',
@@ -268,11 +274,13 @@ angular.module("administrativo-usuarios-cadastro", [])
         if($scope.usuario.empresa.ds_fantasia) jsonUsuario.nu_cnpjEmpresa = $scope.usuario.empresa.nu_cnpj;
         // ROLES DO USUÁRIO
         var r = [];
-        for(var k in $scope.rolesSelecionadas){ 
+        if($scope.roleSelecionada) r.push({RoleId : $scope.roleSelecionada.RoleId, 
+                                           RolePrincipal: true});
+        /*for(var k in $scope.rolesSelecionadas){ 
             var role = $scope.rolesSelecionadas[k];
             r.push({RoleId : role.RoleId, 
                     RolePrincipal: $scope.rolePrincipal ? role.RoleId === $scope.rolePrincipal.RoleId : false});
-        }
+        }*/
         // JSON DE ENVIO
         var json = { 
                 "pessoa" : jsonPessoa,
@@ -348,7 +356,10 @@ angular.module("administrativo-usuarios-cadastro", [])
             return true;
         }
         // ROLES
-        if($scope.rolesSelecionadas.length !== $scope.old.roles.length){ 
+        if($scope.old.roles.length === 0 || 
+           $scope.roleSelecionada.RoleId !== scope.old.roles[0].RoleId)
+            return true;
+        /*if($scope.rolesSelecionadas.length !== $scope.old.roles.length){ 
             //console.log("HOUVE ALTERAÇÃO - ROLE - LENGTH");
             return true;
         }
@@ -357,7 +368,7 @@ angular.module("administrativo-usuarios-cadastro", [])
                //console.log("HOUVE ALTERAÇÃO - ROLE");
                return true; 
            }
-        }
+        }*/
         return false;
     }; 
     /**
@@ -420,8 +431,14 @@ angular.module("administrativo-usuarios-cadastro", [])
         }
         // ROLES DO USUÁRIO
         var r = [];
+        if($scope.old.roles.length > 0){ 
+            if($scope.old.roles[0].RoleId !== $scope.roleSelecionada.RoleId){
+                r.push({RoleId : $scope.roleSelecionada.RoleId, RolePrincipal: true});  // adiciona a nova
+                r.push({UserId: -1, RoleId : $scope.old.roles[0].RoleId, RolePrincipal : false}); // remove a anterior
+            }
+        }else r.push({RoleId : $scope.roleSelecionada.RoleId, RolePrincipal: true}); // adiciona a nova
         // Novas roles
-        for(var k in $scope.rolesSelecionadas){ 
+        /*for(var k in $scope.rolesSelecionadas){ 
             var role = $scope.rolesSelecionadas[k];
             var principal = $scope.rolePrincipal ? role.RoleId === $scope.rolePrincipal.RoleId : false; // essa é a "nova" role principal?
             var old = $filter('filter')($scope.old.roles, function(r){return r.RoleId === role.RoleId;}); // roles antigas
@@ -435,7 +452,7 @@ angular.module("administrativo-usuarios-cadastro", [])
             var old = $scope.old.roles[k];
             if($filter('filter')($scope.rolesSelecionadas, function(r){return r.RoleId === old.RoleId;}).length == 0)
                 r.push({UserId: -1, RoleId : old.RoleId, RolePrincipal : false});
-        }        
+        }    */    
         // Verifica se houve alterações
         if(!alterouPessoa && !alterouUsuario && r.length == 0){
             $scope.goAdministrativoUsuarios();
@@ -474,7 +491,7 @@ angular.module("administrativo-usuarios-cadastro", [])
       * Armazena as informações
       */
     $scope.armazenaInformacoesDoUsuario = function(){
-        if($scope.formCadastroUsuario.$valid && $scope.dataValida() && $scope.loginValido() && $scope.emailValido() && $scope.temRoleSelecionada){// && $scope.rolePrincipal) {
+        if($scope.formCadastroUsuario.$valid && $scope.dataValida() && $scope.loginValido() && $scope.emailValido() && $scope.roleSelecionada){//$scope.temRoleSelecionada){
             if($scope.ehCadastro()) cadastraUsuario();
             else alteraUsuario();
         }else{
@@ -497,13 +514,10 @@ angular.module("administrativo-usuarios-cadastro", [])
             }else if($scope.formCadastroUsuario.usuarioEmail.$invalid || !$scope.emailValido()){
                 $scope.showModalAlerta("Informe um e-mail válido!");
                 $scope.setTabCadastro(2);
-            }else if(!$scope.temRoleSelecionada){
-                $scope.showModalAlerta("Selecione pelo menos um privilégio!");
+            }else if(!$scope.roleSelecionada){//$scope.temRoleSelecionada){
+                $scope.showModalAlerta("Selecione um privilégio!");
                 $scope.setTabCadastro(3);
-            }/*else if(!$scope.rolePrincipal){
-                $scope.showModalAlerta("Selecione a página inicial!");
-                $scope.setTabCadastro(3);
-            }*/else $scope.showModalAlerta("Por favor, verifique novamente se os dados preenchidos são válidos");
+            }else $scope.showModalAlerta("Por favor, verifique novamente se os dados preenchidos são válidos");
         }
     };
                                                          
@@ -675,7 +689,7 @@ angular.module("administrativo-usuarios-cadastro", [])
     // ROLES
     $scope.handleRole = function(){
       // Obtém o array das roles que tem o campo 'selecionado' com valor true
-      $scope.rolesSelecionadas = $filter('filter')($scope.roles, function(r){return r.selecionado === true;});
+      /*$scope.rolesSelecionadas = $filter('filter')($scope.roles, function(r){return r.selecionado === true;});
       if($scope.rolesSelecionadas.length > 0){
           // Remove as duplicatas
           $scope.rolesSelecionadas = $filter('unique')($scope.rolesSelecionadas, 'PaginaInicial');
@@ -690,7 +704,7 @@ angular.module("administrativo-usuarios-cadastro", [])
       }else{ 
           $scope.temRoleSelecionada = false;
           $scope.rolePrincipal = undefined;
-      }
+      }*/
       // Atualiza o progresso do cadastro
       $scope.atualizaProgressoDoCadastro();
     };
@@ -736,7 +750,7 @@ angular.module("administrativo-usuarios-cadastro", [])
     };
     // Form Roles
     var getPercentualFormRoles = function(){
-        return $scope.temRoleSelecionada ? 100 : 0 ; 
+        return /*$scope.temRoleSelecionada*/ $scope.roleSelecionada ? 100 : 0 ; 
     };
     // Progresso                                                     
     $scope.atualizaProgressoDoCadastro = function(){

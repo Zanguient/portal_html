@@ -266,30 +266,106 @@
                                             * </span>
                                             </label>
                                             <div class="col-md-3">
-                                                <div class="checkbox-list" ng-repeat="role in roles">
+                                                <!--div class="checkbox-list" ng-repeat="role in roles">
                                                     <label class="checkbox">
-                                                        <!--input type="checkbox" 
-                                                               ng-change="handleRole()"
-                                                               ng-model="role.selecionado"/-->
                                                         <checkbox normal ng-change="handleRole()"
                                                                ng-model="role.selecionado">
                                                         </checkbox>&nbsp;{{role.RoleName}}
                                                     </label>
+                                                </div-->
+                                                <div class="radio-list" ng-repeat="role in roles">
+                                                    <label class="radio">
+                                                        <input type="radio" ng-value="role"
+                                                               ng-model="$parent.roleSelecionada"
+                                                               ng-change="handleRole()">
+                                                        &nbsp;{{role.RoleName}}
+                                                    </label>
                                                 </div>
-                                                <span style="color:red" ng-show="!temRoleSelecionada">
-                                                    <strong>Selecione pelo menos um privilégio</strong>
+                                                <span style="color:red" ng-show="!roleSelecionada">
+                                                    <strong>Selecione um privilégio</strong>
                                                 </span>
                                             </div>
                                             <div class="col-md-6">
                                                 <label style="text-align : center; font-weight: bolder">
-                                                    Página inicial
+                                                    Módulos
                                                 </label>
-                                                <select class="form-control" size="6"
-                                                        ng-model="rolePrincipal"
-                                                        ng-change="handleRolePrincipal()"
-                                                        ng-options="role as role.PaginaInicial for role in rolesSelecionadas">
+                                                <div>
+                                                    <ul ng-repeat="controller in roleSelecionada.Controllers"
+                                                        class="list-unstyled">
+                                                        <li>
+                                                            <button class="btn btn-link" 
+                                                                    style="color: black !important"
+                                                                    popover-animation="true"
+                                                                    popover-placement="right"
+                                                                    popover-trigger="click"
+                                                                    popover-title="Permissões de {{controller.ds_controller}}"
+                                                                    popover-template="'methodsController.html'"> 
+                                                                {{subcontroller.ds_controller}}
+                                                            </button>
+                                                            <script type="text/ng-template" id="methodsController.html">
+                                                                <ul class="list-unstyled" 
+                                                                     ng-repeat="method in controller.methods">
+                                                                    <li>
+                                                                        {{method.ds_method}}
+                                                                    </li>
+                                                                    <li class="divider"></li> 
+                                                                 </ul>
+                                                            </script>
+                                                            <ul ng-repeat="subcontroller in controller.subControllers"
+                                                                class="list-unstyled">
+                                                                <li>
+                                                                    <button class="btn btn-link" 
+                                                                            style="color: black !important"
+                                                                            popover-animation="true"
+                                                                            popover-placement="right"
+                                                                            popover-trigger="click"
+                                                                            popover-title="Permissões de {{subcontroller.ds_controller}}"
+                                                                            popover-template="'methodsSubcontroller.html'"> 
+                                                                        {{subcontroller.ds_controller}}
+                                                                    </button>
+                                                                    <script type="text/ng-template" id="methodsSubcontroller.html">
+                                                                        <ul class="list-unstyled" 
+                                                                             ng-repeat="method in subcontroller.methods">
+                                                                            <li>
+                                                                                {{method.ds_method}}
+                                                                            </li>
+                                                                            <li class="divider"></li> 
+                                                                         </ul>
+                                                                    </script>
+                                                                    <ul ng-repeat="subcontroller2 in subcontroller.subControllers"
+                                                                        class="list-unstyled">
+                                                                        <li>
+                                                                            <button class="btn btn-link" 
+                                                                                    style="color: black !important"
+                                                                                    popover-animation="true"
+                                                                                    popover-placement="right"
+                                                                                    popover-trigger="click"
+                                                                                    popover-title="Permissões de {{subcontroller2.ds_controller}}"
+                                                                                    popover-template="'methodsSubcontroller2.html'"> 
+                                                                                {{subcontroller2.ds_controller}}
+                                                                            </button>
+                                                                            <script type="text/ng-template" id="methodsSubcontroller.html">
+                                                                                <ul class="list-unstyled" 
+                                                                                     ng-repeat="method in subcontroller2.methods">
+                                                                                    <li>
+                                                                                        {{method.ds_method}}
+                                                                                    </li>
+                                                                                    <li class="divider"></li> 
+                                                                                 </ul>
+                                                                            </script>
+                                                                        </li>
+                                                                    </ul>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <!--select class="form-control" size="6"
+                                                        ng-model="modulo"
+                                                        ng-change=""
+                                                        ng-options="controller as controller.ds_controller for controller in roleSelecionada.Controllers">
                                                     <option style="display:none" value="">Página inicial</option>
-                                                </select> 
+                                                </select--> 
                                             </div>
                                         </div>
                                     </div>

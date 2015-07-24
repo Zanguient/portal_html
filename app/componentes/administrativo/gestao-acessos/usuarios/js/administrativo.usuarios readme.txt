@@ -42,7 +42,7 @@ Não é necessário nenhum outro módulo externo.
 			{
 				"pessoa" : json_pessoa, 
 				"webpagesusers" : json_usuario,
-				"webpagesusersinroles" : [roleids]
+				"webpagesusersinroles" : [{RoleId : int, RolePrincipal : boolean}]
 				"grupoempresa" : ds_nome
 				"empresa" : ds_fantasia
 			}

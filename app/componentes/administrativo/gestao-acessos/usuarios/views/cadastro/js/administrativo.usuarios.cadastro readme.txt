@@ -46,7 +46,20 @@ Não é necessário nenhum outro módulo externo.
 
   * api/cliente/empresa 
 	 - GET : consulta nome fantasia da empresa (coleção 0)
-	 
+	
+  * api/administracao/webpagesroles
+     - GET : lista de roles (coleção 3) 
+		{ RoleId : int, 
+		  RoleName : string, 
+		  Controllers : [   id_controller : int,
+							ds_controller: string,	
+							principal : boolean, // true se é o controller que deve ser exibido inicialmente
+							methods : [{ id_method : int,
+										 ds_method : string
+										}] // ORDER BY DS_METHOD
+							subControllers : [ ]
+		                ]}
+	
   * api/administracao/webpagesusers
 	 - GET : consulta e-mail e login, para validação (coleção 0)
 	 - POST : cria novo usuário
