@@ -55,12 +55,7 @@
                                         <th width="8%" tabindex="0" 
                                             aria-controls="datatable_ajax" 
                                             rowspan="1" colspan="1">
-                                             Data de Recebimento
-                                        </th>
-                                        <th width="8%" tabindex="0" 
-                                            aria-controls="datatable_ajax" 
-                                            rowspan="1" colspan="1">
-                                             Data da Venda
+                                             Data 
                                         </th>
                                         <th width="11%" tabindex="1" 
                                             aria-controls="datatable_ajax" 
@@ -86,7 +81,28 @@
                                     <!-- CONTEUDO DO FILTRO -->
                                     <tr role="row" class="filter">
                                         <!-- DATA DE RECEBIMENTO -->
-                                        <td rowspan="1" colspan="1">                                    
+                                        <td rowspan="1" colspan="1">  
+                                            <!--div class="row" style="margin-bottom:10px">                                                
+                                                <div class="col-sm-6 col-sm-offset-1">
+                                                    <input type="radio" value="recebimento">&nbsp;Recebimento                                                    
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <input type="radio" value="venda">&nbsp;Venda 
+                                                </div>                                                
+                                            </div-->
+                                            <div class="btn-group">
+                                                <label class="btn btn-primari" 
+                                                       ng-model="filtro.data" 
+                                                       btn-radio="'recebimento'">
+                                                    Recebimento
+                                                </label>
+                                                <label class="btn btn-primari" 
+                                                       ng-model="filtro.data" 
+                                                       btn-radio="'venda'">
+                                                    Venda
+                                                </label>                                                                               
+                                            </div>
+                                                                           
                                             <div class="input-group date date-picker margin-bottom-5"
                                                  data-date-format="dd/mm/yyyy">
                                                 <input type="text" 
@@ -139,69 +155,14 @@
                                                 </span>
                                             </div>                                            
                                         </td>
-                                        <!-- DATA DA VENDA -->
-                                        <td rowspan="1" colspan="1">                                    
-                                            <div class="input-group date date-picker margin-bottom-5"
-                                                 data-date-format="dd/mm/yyyy">
-                                                <input type="text" 
-                                                       class="form-control form-filter input-sm" 
-                                                       readonly="" 
-                                                       style="cursor: pointer" 
-                                                       ng-click="exibeCalendarioDataMin($event, true)" 
-                                                       placeholder="Início" 
-                                                       ng-model="filtro.dataVendaMin" 
-                                                       ng-change="alterouDataMin(true)" 
-                                                       datepicker-append-to-body="true" 
-                                                       datepicker-popup="dd MMMM yyyy" 
-                                                       is-open="abrirCalendarioDataVendaMin"  
-                                                       ng-required="false" 
-                                                       current-text="Hoje" 
-                                                       clear-text="Limpar" 
-                                                       close-text="Fechar" 
-                                                       show-button-bar="true" 
-                                                       show-weeks="false">
-                                                <span class="input-group-btn">
-                                                    <button class="btn btn-sm default" 
-                                                        type="button" 
-                                                        ng-click="exibeCalendarioDataMin($event, true)">
-                                                        <i class="fa fa-calendar"></i>
-                                                    </button>
-                                                </span>
-                                            </div>
-                                            <div class="input-group">
-                                                <input type="text" 
-                                                       class="form-control form-filter input-sm" 
-                                                       readonly="" 
-                                                       style="cursor: pointer" 
-                                                       ng-click="exibeCalendarioDataMax($event, true)" 
-                                                       placeholder="Fim" 
-                                                       ng-model="filtro.dataVendaMax" 
-                                                       ng-change="alterouDataMax(true)" 
-                                                       datepicker-popup="dd MMMM yyyy" 
-                                                       is-open="abrirCalendarioDataVendaMax" 
-                                                       datepicker-append-to-body="true"
-                                                       ng-required="false" 
-                                                       current-text="Hoje" 
-                                                       clear-text="Limpar" 
-                                                       close-text="Fechar" 
-                                                       show-button-bar="true" 
-                                                       show-weeks="false">
-                                                <span class="input-group-btn">
-                                                    <button class="btn btn-sm default" 
-                                                            type="button" 
-                                                            ng-click="exibeCalendarioDataMax($event, true)">
-                                                        <i class="fa fa-calendar"></i>
-                                                    </button>
-                                                </span>
-                                            </div>                                            
-                                        </td>
                                         <!-- FILIAIS -->
                                         <td rowspan="1" colspan="1" style="text-align: center;">
                                             <select class="form-control form-filter input-sm"
                                                     ng-disabled="filiais.length == 0"
                                                     ng-model="filtro.filial"
                                                     ng-change="alterouFilial()"
-                                                    ng-options="filial as (filial.ds_fantasia | uppercase) for filial in filiais" >
+                                                    ng-options="filial as (filial.ds_fantasia | uppercase) for filial in filiais" 
+                                                    style="width:90%; display:inline; margin-right:5px">
                                             <!--option value="">Todas</option-->
                                             </select>
                                             <i class="fa fa-question-circle"
@@ -217,7 +178,8 @@
                                                     ng-disabled="filtro.filial === null"
                                                     ng-model="filtro.adquirente"
                                                     ng-change="alterouAdquirente()"
-                                                    ng-options="adquirente as (adquirente.nmOperadora | uppercase) for adquirente in adquirentes">
+                                                    ng-options="adquirente as (adquirente.nmOperadora | uppercase) for adquirente in adquirentes"
+                                                    style="width:85%; display:inline; margin-right:4px">
                                                 <option value="">TODAS</option>
                                             </select>
                                             <i class="fa fa-question-circle"
@@ -232,7 +194,8 @@
                                                     ng-disabled="filtro.adquirente === null"
                                                     ng-model="filtro.bandeira"
                                                     ng-change="alterouBandeira()"
-                                                    ng-options="bandeira as (bandeira.desBandeira | uppercase) for bandeira in bandeiras">
+                                                    ng-options="bandeira as (bandeira.desBandeira | uppercase) for bandeira in bandeiras"
+                                                    style="width:90%; display:inline;margin-right:5px">
                                                 <option value="">TODAS</option>
                                             </select>
                                             <i class="fa fa-question-circle"
