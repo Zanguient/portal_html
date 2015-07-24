@@ -34,8 +34,7 @@ angular.module("card-services-cash-flow-relatorios", [])
                             nome: "Resumo Vendas"
                           },
                          ];                                             
-    $scope.filtro = {datamin : new Date(), datamax : '', 
-                     dataVendaMin : '', dataVendaMax : '', 
+    $scope.filtro = {datamin : new Date(), datamax : '', data : 'Recebimento',
                      filial : null, adquirente : null, bandeira : null,
                      itens_pagina : $scope.itens_pagina[0], order : 0,
                      busca : '', campo_busca : $scope.camposBusca[0],
@@ -126,54 +125,35 @@ angular.module("card-services-cash-flow-relatorios", [])
     }
     
     // DATA RECEBIMENTO
-    var ajustaIntervaloDeData = function(datavenda){
+    var ajustaIntervaloDeData = function(){
       // Verifica se é necessário reajustar a data max para ser no mínimo igual a data min
-      if(datavenda){
-        if($scope.filtro.dataVendaMax && $scope.filtro.dataVendaMax < $scope.filtro.dataVendaMin) $scope.filtro.dataVendaMax = $scope.filtro.dataVendaMin;  
-      }else{
-        if($scope.filtro.datamax && $scope.filtro.datamax < $scope.filtro.datamin) $scope.filtro.datamax = $scope.filtro.datamin;
-      }
+      if($scope.filtro.datamax && $scope.filtro.datamax < $scope.filtro.datamin) $scope.filtro.datamax = $scope.filtro.datamin;
       if(!$scope.$$phase) $scope.$apply();
     };
     // Data MIN
-    $scope.exibeCalendarioDataMin = function($event, datavenda) {
+    $scope.exibeCalendarioDataMin = function($event) {
         if($event){
             $event.preventDefault();
             $event.stopPropagation();
         }
-        if(datavenda){
-            $scope.abrirCalendarioDataVendaMin = !$scope.abrirCalendarioDataVendaMin;
-            $scope.abrirCalendarioDataVendaMax = false;
-        }else{
-            $scope.abrirCalendarioDataMin = !$scope.abrirCalendarioDataMin;
-            $scope.abrirCalendarioDataMax = false;
-        }
+        $scope.abrirCalendarioDataMin = !$scope.abrirCalendarioDataMin;
+        $scope.abrirCalendarioDataMax = false;
       };
-    $scope.alterouDataMin = function(datavenda){
-      ajustaIntervaloDeData(datavenda);
+    $scope.alterouDataMin = function(){
+         ajustaIntervaloDeData(); 
     };
     // Data MAX
-    $scope.exibeCalendarioDataMax = function($event, datavenda) {
+    $scope.exibeCalendarioDataMax = function($event) {
         if($event){
             $event.preventDefault();
             $event.stopPropagation();
         }
-        if(datavenda){
-            $scope.abrirCalendarioDataVendaMax = !$scope.abrirCalendarioDataVendaMax;
-            $scope.abrirCalendarioDataVendaMin = false;
-        }else{
-            $scope.abrirCalendarioDataMax = !$scope.abrirCalendarioDataMax;
-            $scope.abrirCalendarioDataMin = false;
-        }
-      };
-    $scope.alterouDataMax = function(datavenda){
-        if(datavenda){
-           if($scope.filtro.dataVendaMax === null) $scope.filtro.dataVendaMax = '';
-           else ajustaIntervaloDeData(datavenda);
-        }else{
-           if($scope.filtro.datamax === null) $scope.filtro.datamax = '';
-           else ajustaIntervaloDeData(); 
-        }
+        $scope.abrirCalendarioDataMax = !$scope.abrirCalendarioDataMax;
+        $scope.abrirCalendarioDataMin = false;
+    };
+    $scope.alterouDataMax = function(){
+        if($scope.filtro.datamax === null) $scope.filtro.datamax = '';
+        else ajustaIntervaloDeData(); 
     };
                                                  
     
@@ -402,8 +382,13 @@ angular.module("card-services-cash-flow-relatorios", [])
     var obtemFiltroDeBusca = function(){
        var filtros = undefined;
        // Data
-       var filtroData = {id: $campos.pos.recebimentoparcela.dtaRecebimento,
-                         valor: $scope.getFiltroData($scope.filtro.datamin)}; 
+       var filtroData;
+        
+       if($scope.filtro.data === 'Venda') filtroData = {id: $campos.pos.recebimentoparcela.recebimento + $campos.pos.recebimento.dtaVenda - 100,
+                          valor: $scope.getFiltroData($scope.filtro.datamin)};  
+       else filtroData = {id: $campos.pos.recebimentoparcela.dtaRecebimento,
+                          valor: $scope.getFiltroData($scope.filtro.datamin)};
+           
        if($scope.filtro.datamax)
            filtroData.valor = filtroData.valor + '|' + $scope.getFiltroData($scope.filtro.datamax);
        filtros = [filtroData];
