@@ -65,9 +65,8 @@ Não é necessário nenhum outro módulo externo.
 			       tem que enviar o json "webpagesusers", pois ele inclui o id_users
 			OBS 2: Para deletar uma associação de role a um usuário, enviar o json  "{UserId: -1, RoleId: roleid}" no array 
 				   (UserId tem que ser igual a -1)
-			OBS 3: ds_login não é alterado
-			OBS 4: Para remover a associação de um grupo empresa, id_grupo = -1
-			OBS 5: Para remover a associação de uma empresa, nu_cnpjEmpresa = ''
+			OBS 3: Para remover a associação de um grupo empresa, id_grupo = -1
+			OBS 4: Para remover a associação de uma empresa, nu_cnpjEmpresa = ''
    
 
    
