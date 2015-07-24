@@ -294,11 +294,19 @@ angular.module("AtosCapital", ['ui.router',
                             
     
     // Fullscreen 
+    var estaEmFullScreen = false;
+    $scope.fullScreenClick = function(){
+        // Espera o efeito de add ou remove do fullscreen acontecer
+        $timeout(function(){estaEmFullScreen = $('body').hasClass('page-portlet-fullscreen')}, 500); 
+    };
     $scope.telaEstaEmFullScreen = function(){
-        return $('body').hasClass('page-portlet-fullscreen');    
+        return estaEmFullScreen;    
     }
     var removeDivFullscreen = function(){
-        if($scope.telaEstaEmFullScreen()) $('body').removeClass('page-portlet-fullscreen');
+        if($scope.telaEstaEmFullScreen()){ 
+            $('body').removeClass('page-portlet-fullscreen');
+            estaEmFullScreen = false;
+        }
     }   
     
     /**

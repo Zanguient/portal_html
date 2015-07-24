@@ -5,7 +5,7 @@
  *
  */
 
-var app = angular.module("Login", ['utils']);
+var app = angular.module("Login", ['diretivas', 'utils']);
 
 app.controller("loginCtrl", ['$scope',
                               '$window',

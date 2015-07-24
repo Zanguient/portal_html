@@ -45,6 +45,10 @@
     display: none !important;
 }
 
+.dropdown-menu{
+    z-index : 30000;
+}
+
 .element-hidden{
     visibility: hidden
 }

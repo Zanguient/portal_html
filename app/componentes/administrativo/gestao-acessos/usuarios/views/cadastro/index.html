@@ -175,13 +175,15 @@
                                             </label>
                                             <div class="col-md-4">
                                                 <div class="input-icon right">
-                                                    <i id="icon-login" class="fa" ng-class="{'fa-check': loginValido(), 'fa-warning': !loginValido()}" style="display:none" ng-hide="validandoLogin"></i>
+                                                    <i id="icon-login" class="fa" 
+                                                       ng-class="{'fa-check': loginValido(), 'fa-warning': !loginValido()}" 
+                                                       style="display:none" ng-hide="validandoLogin"></i>
                                                     <input type="text" 
                                                            placeholder="login" 
                                                            class="form-control" 
                                                            ng-model="usuario.login" 
                                                            ng-blur="validaLogin()" 
-                                                           name="usuarioLogin" 
+                                                           name="usuarioLogin" valid-username
                                                            ng-minlength="3" ng-maxlength="20" required/>
                                                     <span style="color:red" ng-show="formCadastroUsuario.usuarioLogin.$dirty && formCadastroUsuario.usuarioLogin.$invalid">
                                                     <span ng-show="formCadastroUsuario.usuarioLogin.$error.required">Login é obrigatório!</span>

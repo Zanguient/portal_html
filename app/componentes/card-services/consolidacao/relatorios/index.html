@@ -244,7 +244,9 @@
                     </div>
                     <div class="actions">
                         <!-- FULLSCREEN -->
-                        <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;" data-original-title="" title=""></a>
+                        <a class="btn btn-circle btn-icon-only btn-default fullscreen" 
+                           href="javascript:;" ng-click="fullScreenClick()"
+                           title="{{telaEstaEmFullScreen() ? 'Tela Normal' : 'Tela Cheia'}}"></a>
                         <!-- OPÇÕES -->
                         <div class="btn-group element-hidden"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -->
                             <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">

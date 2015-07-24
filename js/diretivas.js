@@ -163,11 +163,11 @@ angular.module('diretivas', ['ui.bootstrap'])
                 }
                 // Remove os ')' dos locais indevidos
                 idx = clean.lastIndexOf(')');
-                if(idx === 3) clean.indexOf(')');
+                //if(idx === 3) clean.indexOf(')');
                 while(idx > -1 && idx !== 3){
                     clean = idx < clean.length ? clean.substr(0, idx) + clean.substr(idx + 1) : clean.substr(0, idx);   
                     idx = clean.lastIndexOf(')');
-                    if(idx === 3) clean.indexOf(')');
+                    //if(idx === 3) clean.indexOf(')');
                     render = true;
                 }
             }
@@ -260,6 +260,61 @@ angular.module('diretivas', ['ui.bootstrap'])
           //return actual.indexOf(expected) > -1;
           return (''+actual).toLowerCase().indexOf((''+expected).toLowerCase()) > -1
       };
+    }
+  };
+})
+
+
+// Username válido
+.directive('validUsername', function() {
+  return {
+    require: '?ngModel',
+    link: function(scope, element, attrs, ngModelCtrl) { 
+      
+        if(!ngModelCtrl) return; 
+
+        var avaliaUsername = function(val){
+            //console.log("VAL: " + val);      
+
+            var clean = val.replace(/[^a-z0-9\.\-\_\@]/g, '');
+            var render = false;
+            var regex = /[a-z]/g;
+            if (val !== clean) render = true;
+            else if(clean.length > 0){
+                // Na primeira posição só pode existir letra minúscula
+                if(!regex.test(clean.charAt(0))){
+                    if(clean.length > 1) clean = clean.substr(1);
+                    else clean = '';
+                    render = true;
+                }
+            }
+            
+            // Altera o valor do input?
+            if(render){
+                ngModelCtrl.$setViewValue(clean);
+                ngModelCtrl.$render(); 
+            }
+
+            // Retorna o valor utilizado
+            // Se tiver definido maxlength, impede de entrar com um número maior
+            if(element[0].maxLength && clean.length > element[0].maxLength)
+                return clean.substring(0, element[0].maxLength);
+            return clean;   
+          };
+        
+          // Mudança direta do ng-model
+          ngModelCtrl.$formatters.push(function(val) {
+              return avaliaUsername(val);
+          });
+          // Mudança direta no input text
+          ngModelCtrl.$parsers.push(function(val) {
+              return avaliaUsername(val);
+          });
+        
+          element.bind('keypress', function(event) {
+            if(event.keyCode === 32) event.preventDefault(); // espaço
+          });
+
     }
   };
 });
