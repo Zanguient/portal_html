@@ -143,7 +143,10 @@ margin-top:170px;
 }
 
 .comboBoxFiltros{
-  width: 
+  vertical-align: middle;
+  width: 85%;
+  display: inline;
+  margin-right: 5px;
 }
 .componentesTableAcessoUsuarios{
   text-align: center; 

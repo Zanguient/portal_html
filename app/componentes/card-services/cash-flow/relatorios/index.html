@@ -156,29 +156,29 @@
                                         </td>
                                         <!-- FILIAIS -->
                                         <td rowspan="1" colspan="1" style="text-align: center;">
-                                            <select class="form-control form-filter input-sm"
+                                            <select class="form-control form-filter input-sm comboBoxFiltros"
                                                     ng-disabled="filiais.length == 0"
                                                     ng-model="filtro.filial"
                                                     ng-change="alterouFilial()"
                                                     ng-options="filial as (filial.ds_fantasia | uppercase) for filial in filiais" 
-                                                    style="width:90%; display:inline; margin-right:5px">
+                                                    >
                                             <!--option value="">Todas</option-->
                                             </select>
                                             <i class="fa fa-question-circle"
                                             ng-show="!grupoempresa"
-                                            popover-placement="left"
+                                            popover-placement="bottom"
                                             popover="É necessário selecionar uma empresa"
                                             popover-trigger="mouseenter"
                                             ></i> 
                                         </td>
                                         <!-- ADQUIRENTES -->
                                         <td rowspan="1" colspan="1" style="text-align: center">
-                                            <select class="form-control form-filter input-sm"
+                                            <select class="form-control form-filter input-sm comboBoxFiltros"
                                                     ng-disabled="filtro.filial === null"
                                                     ng-model="filtro.adquirente"
                                                     ng-change="alterouAdquirente()"
                                                     ng-options="adquirente as (adquirente.nmOperadora | uppercase) for adquirente in adquirentes"
-                                                    style="width:85%; display:inline; margin-right:4px">
+                                                    >
                                                 <option value="">TODAS</option>
                                             </select>
                                             <i class="fa fa-question-circle"
@@ -189,12 +189,12 @@
                                         </td>
                                         <!-- BANDEIRAS -->
                                         <td rowspan="1" colspan="1" style="text-align: center">
-                                            <select class="form-control form-filter input-sm"
+                                            <select class="form-control form-filter input-sm comboBoxFiltros"
                                                     ng-disabled="filtro.adquirente === null"
                                                     ng-model="filtro.bandeira"
                                                     ng-change="alterouBandeira()"
                                                     ng-options="bandeira as (bandeira.desBandeira | uppercase) for bandeira in bandeiras"
-                                                    style="width:90%; display:inline;margin-right:5px">
+                                                    >
                                                 <option value="">TODAS</option>
                                             </select>
                                             <i class="fa fa-question-circle"
@@ -586,6 +586,11 @@
                                                                 <th tabindex="9" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 163px; vertical-align: middle;">
+                                                                    Taxa Cashflow
+                                                                </th>
+                                                                <th tabindex="10" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 163px; vertical-align: middle;">
                                                                     VL Líquido
                                                                 </th>
                                                             </tr>
@@ -627,13 +632,17 @@
                                                                 <td ng-init="total.analitico.valorDescontado = total.analitico.valorDescontado + relanalitico.valorDescontado">
                                                                     {{relanalitico.valorDescontado | currency:'R$'}}
                                                                 </td>
+                                                                <!-- TAXA CASH FLOW -->
+                                                                <td ng-init="">
+                                                                    {{}}
+                                                                </td>
                                                                 <!-- VALOR LÍQUIDO -->
                                                                 <td ng-init="total.analitico.valorLiquido = total.analitico.valorLiquido + relanalitico.valorLiquida">
                                                                      {{relanalitico.valorLiquida | currency:'R$'}}
                                                                 </td>
                                                             </tr>
                                                             <tr role="row" class="odd linhaTotalRelatorios">
-                                                                <td colspan="6" style="text-align:right">
+                                                                <td colspan="7" style="text-align:right">
                                                                     Total Exibido
                                                                 </td> 
                                                                 <td>
@@ -650,7 +659,7 @@
                                                                 </td>                                                    
                                                             </tr>
                                                             <tr role="row" class="odd linhaTotalRelatorios">
-                                                                <td colspan="6" style="text-align:right">
+                                                                <td colspan="7" style="text-align:right">
                                                                     Total Filtrado
                                                                 </td>  
                                                                 <td>
