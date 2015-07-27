@@ -69,7 +69,7 @@
 </div>
 <!-- END LOGO -->
 <!-- BEGIN LOGIN -->
-<div class="content" ng-show="exibeLayout" ng-cloak>
+<div class="content hidden-xs" ng-show="exibeLayout" ng-cloak>
 	
     <!-- BEGIN LOGIN FORM -->
 	<form class="login-form" name="formLogin" novalidate ng-show="formExibidoEhLogin()">
@@ -235,6 +235,23 @@
 	</form>
 	<!-- END CADASTRO -->
 </div>
+<div class="content visible-xs">
+    <div class="row">
+        <div class="col-xs-12">
+            <h3 class="form-title">Baixe o nosso aplicativo gratuito.</h3>
+        </div>
+        <div class="col-xs-12" style="text-align:center">
+            <a href="https://play.google.com/store/apps/details?id=br.com.atoscapital.app">
+                <img src="img/android.png" />
+            </a>
+        </div>
+        <div class="col-xs-12" style="text-align:center">
+            <a href="">
+                <img src="img/IOS.png" />
+            </a>
+        </div>
+    </div>
+</div> 
 <div class="copyright" ng-show="exibeLayout" ng-cloak>
 	 {{empresa.copyright}}
 </div>
