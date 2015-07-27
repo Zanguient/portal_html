@@ -357,7 +357,7 @@ angular.module("administrativo-usuarios-cadastro", [])
         }
         // ROLES
         if($scope.old.roles.length === 0 || 
-           $scope.roleSelecionada.RoleId !== scope.old.roles[0].RoleId)
+           $scope.roleSelecionada.RoleId !== $scope.old.roles[0].RoleId)
             return true;
         /*if($scope.rolesSelecionadas.length !== $scope.old.roles.length){ 
             //console.log("HOUVE ALTERAÇÃO - ROLE - LENGTH");

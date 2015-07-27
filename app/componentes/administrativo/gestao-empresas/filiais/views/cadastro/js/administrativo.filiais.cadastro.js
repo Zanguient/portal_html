@@ -346,7 +346,7 @@ angular.module("administrativo-filiais-cadastro", [])
             else alteraFilial();
         }else{
             if(!$scope.grupoempresa){
-                $scope.showModalAlerta('Por favor, selecione um grupo empresa', 'Atos Capital', 'OK', 
+                $scope.showModalAlerta('Por favor, selecione uma empresa', 'Atos Capital', 'OK', 
                                    function(){
                                          $timeout(function(){$scope.setVisibilidadeBoxGrupoEmpresa(true);}, 300);
                                     }

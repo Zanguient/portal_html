@@ -87,19 +87,19 @@ angular.module("card-services-dados-acesso", [])
       * Retorna true se o usuário pode cadastrar dados de acesso
       */
     $scope.usuarioPodeCadastrarDadosAcesso = function(){
-        return permissaoCadastro;   
+        return $scope.grupo_empresa && $scope.filtro.filial !== null && permissaoCadastro;   
     }
     /**
       * Retorna true se o usuário pode alterar info de dados de acesso
       */
     $scope.usuarioPodeAlterarDadosAcesso = function(){
-        return permissaoAlteracao;
+        return $scope.grupo_empresa && $scope.filtro.filial !== null && permissaoAlteracao;
     }
     /**
       * Retorna true se o usuário pode excluir dados de acesso
       * /
     $scope.usuarioPodeExcluirDadosAcesso = function(){
-        return permissaoRemocao;
+        return $scope.grupo_empresa && $scope.filtro.filial !== null && permissaoRemocao;
     } */                                             
                                                  
     
@@ -267,7 +267,7 @@ angular.module("card-services-dados-acesso", [])
       * Notifica que o total de itens por página foi alterado
       */                                            
     $scope.alterouItensPagina = function(){
-        alteraFiltroDeBusca();
+        $scope.buscaDadosAcesso();
     }; 
                                                  
                                                  
@@ -279,7 +279,7 @@ angular.module("card-services-dados-acesso", [])
     $scope.buscaDadosAcesso = function(){
         // Avalia se há um grupo empresa selecionado
         if(!$scope.grupoempresa){
-            $scope.showModalAlerta('Por favor, selecione um grupo empresa', 'Atos Capital', 'OK', 
+            $scope.showModalAlerta('Por favor, selecione uma empresa', 'Atos Capital', 'OK', 
                                    function(){
                                          $timeout(function(){$scope.setVisibilidadeBoxGrupoEmpresa(true);}, 300);
                                     }

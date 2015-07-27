@@ -586,7 +586,7 @@
                                                                 <th tabindex="9" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 163px; vertical-align: middle;">
-                                                                    Taxa Cashflow
+                                                                    Taxa <br> Cashflow
                                                                 </th>
                                                                 <th tabindex="10" 
                                                                     rowspan="1" colspan="1" 
@@ -633,8 +633,8 @@
                                                                     {{relanalitico.valorDescontado | currency:'R$'}}
                                                                 </td>
                                                                 <!-- TAXA CASH FLOW -->
-                                                                <td ng-init="">
-                                                                    {{}}
+                                                                <td>
+                                                        {{(relanalitico.valorDescontado*100)/relanalitico.valorParcela | number:2}}%
                                                                 </td>
                                                                 <!-- VALOR LÍQUIDO -->
                                                                 <td ng-init="total.analitico.valorLiquido = total.analitico.valorLiquido + relanalitico.valorLiquida">
@@ -642,7 +642,7 @@
                                                                 </td>
                                                             </tr>
                                                             <tr role="row" class="odd linhaTotalRelatorios">
-                                                                <td colspan="7" style="text-align:right">
+                                                                <td colspan="6" style="text-align:right">
                                                                     Total Exibido
                                                                 </td> 
                                                                 <td>
@@ -651,15 +651,19 @@
                                                                 <td>
                                                                     {{total.analitico.valorParcela  | currency:'R$'}}  
                                                                 </td>
+                                                                </td>
                                                                 <td>
                                                                     {{total.analitico.valorDescontado | currency:'R$'}} 
+                                                                </td>
+                                                                <td>
+                                                        {{(total.analitico.valorDescontado*100)/total.analitico.valorParcela | number:2}}%
                                                                 </td>
                                                                 <td>
                                                                     {{total.analitico.valorLiquido | currency:'R$'}} 
                                                                 </td>                                                    
                                                             </tr>
                                                             <tr role="row" class="odd linhaTotalRelatorios">
-                                                                <td colspan="7" style="text-align:right">
+                                                                <td colspan="6" style="text-align:right">
                                                                     Total Filtrado
                                                                 </td>  
                                                                 <td>
@@ -670,6 +674,9 @@
                                                                 </td>
                                                                 <td>
                                                                     {{total.analitico.valorDescontadoFiltrado | currency:'R$'}} 
+                                                                </td>
+                                                                <td>
+                                                        {{(total.analitico.valorDescontadoFiltrado*100)/total.analitico.valorParcelaFiltrado | number:2}}%
                                                                 </td>
                                                                 <td>
                                                                     {{total.analitico.valorLiquidoFiltrado | currency:'R$'}} 

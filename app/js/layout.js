@@ -29,7 +29,7 @@ var Layout = function () {
         $('.page-header').on('keypress', '.hor-menu .search-form .form-control', function (e) {
             if (e.which == 13) {
                 $(this).closest('.search-form').submit();
-                console.log("SEARCH!");
+                //console.log("SEARCH!");
                 return false;
             }
         });
@@ -39,7 +39,7 @@ var Layout = function () {
             e.preventDefault();
             e.stopPropagation();
             $(this).closest('.search-form').submit();
-            console.log("SEARCH!");
+            //console.log("SEARCH!");
         });
 
         // handle scrolling to top on responsive menu toggler click when header is fixed for mobile view

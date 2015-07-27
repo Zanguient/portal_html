@@ -81,13 +81,13 @@ Login page
   padding-right: 9px;
 }
 
-.login .content .forget-form {
+/*.login .content .forget-form {
   display: none;
 }
 
 .login .content .register-form {
   display: none;
-}
+}*/
 
 .login .content .form-title {
   font-weight: 300;
@@ -193,7 +193,7 @@ Login page
   border-radius: 0 0 7px 7px;
 }
 
-.login .content .create-account p a {
+.login .content .create-account p button {
   font-weight: 600;
   font-size: 14px;
   color: #ffffff;
@@ -204,7 +204,7 @@ color: #fff;
   border-color: #7e1416;
 }
 
-.login .content .create-account a {
+.login .content .create-account button {
   display: inline-block;
   margin-top: 5px;
 }

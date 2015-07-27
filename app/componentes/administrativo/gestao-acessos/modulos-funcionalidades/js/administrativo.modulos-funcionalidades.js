@@ -32,8 +32,47 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
     var permissaoRemocao = false;      
                                                 
     // Context Menu
-    $scope.contextMenu = {};                                     
-    
+    $scope.contextMenu = {}; 
+                                                
+    // DRAG AND DROP
+    $scope.core = { check_callback : function (operation, node, node_parent, node_position, more){
+                            // Avalia a operação mover
+                            if(!permissaoAlteracao) return false; // Sem permissão de alteração => Nada faz!
+                            if (operation === "move_node" && more && more.core){ 
+                                if(node_parent.parent === null){ 
+                                    // Não pode mover para o nível de 'Módulos'
+                                    $scope.showModalAlerta("Não é possível mover um módulo para esse nível!");
+                                    return false;
+                                }
+                                // Verifica se tem irmão com mesmo nome
+                                var jstree = $('#jstree');
+                                var pai = jstree.jstree(true)._model.data[node_parent.id];
+                                var no = jstree.jstree(true)._model.data[node.id];
+                                var irmaos = pai.children;
+                                for(var k = 0; k < irmaos.length; k++){
+                                    var irmao = jstree.jstree(true)._model.data[irmaos[k]];
+                                    if(no.text.toUpperCase() === irmao.text.toUpperCase()){
+                                        $scope.showModalAlerta("Já existe um módulo com o nome '" + 
+                                                               no.text.toUpperCase() + "' em '" + 
+                                                               pai.text.toUpperCase() +  "'");
+                                        return false;    
+                                    }
+                                }
+                                // Confirma mudança
+                                $scope.showModalConfirmacao('Confirmação', 
+                                    "Tem certeza que mover '" + no.text.toUpperCase() + "' para '" + 
+                                    pai.text.toUpperCase() +  "'?",
+                                    atualizaModulo, { id_controller : parseInt(no.id),
+                                                      ds_controller : no.text, // verificar se é realmente necessário!
+                                                      id_subController : pai.parent !== '#' ? parseInt(pai.id) : null
+                                                    },
+                                    'Sim', 'Não');  
+                                // Não muda na estrutura! A mudança vai para o banco e uma nova requisição é feita
+                                return false;
+                            }
+                            return true;  //allow all other operations
+                        }
+                  };
                                                 
                                                 
     var obtemContextMenu = function(){
@@ -326,7 +365,9 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
                                 // Fecha o modal input
                                 $scope.fechaModalInput();
                                 // Atualiza
-                                atualizaNomeModulo(node, text);
+                                atualizaModulo({ id_controller : parseInt(node.id), 
+                                                 ds_controller : text
+                                               });
                                 return true;
                               }, node.text); 
     };                                            
@@ -372,12 +413,8 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
     /**
       * Atualiza efetivamente o nome do módulo
       */
-    var atualizaNomeModulo = function(nodeController, novoNome){
+    var atualizaModulo = function(jsonModulo){
         $scope.showProgress(divPortletBodyModuloFuncionalidadePos);
-        
-        var jsonModulo = {id_controller : parseInt(nodeController.id), 
-                          ds_controller : novoNome
-                         };
         
         $webapi.update($apis.getUrl($apis.administracao.webpagescontrollers, undefined,
                        {id: 'token', valor: $scope.token}), jsonModulo)

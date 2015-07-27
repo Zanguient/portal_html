@@ -260,7 +260,7 @@
                                     </div>
                                     <!-- PRIVILÉGIOS -->
                                     <div class="tab-pane" ng-class="{ active:tabCadastroSelecionada(3) }">
-                                        <h3 class="block">Forneça os privilégios</h3>
+                                        <h3 class="block">Forneça o privilégio</h3>
                                         <div class="form-group" name="formRoles" >
                                             <label class="control-label col-md-3">Privilégios <span class="required">
                                             * </span>
@@ -285,72 +285,85 @@
                                                     <strong>Selecione um privilégio</strong>
                                                 </span>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-6" ng-show="roleSelecionada">
                                                 <label style="text-align : center; font-weight: bolder">
                                                     Módulos
                                                 </label>
+                                                <!--select class="form-control" size="6"
+                                                        ng-model="modulo"
+                                                        ng-change=""
+                                                        ng-options="controller as controller.ds_controller for controller in roleSelecionada.Controllers">
+                                                    <option style="display:none" value="">Página inicial</option>
+                                                </select--> 
+                                                <!-- MODULOS -->
                                                 <div>
-                                                    <ul ng-repeat="controller in roleSelecionada.Controllers"
-                                                        class="list-unstyled">
-                                                        <li>
+                                                    <ul class="list-unstyled">
+                                                        <li ng-repeat="controller in roleSelecionada.Controllers">
                                                             <button class="btn btn-link" 
                                                                     style="color: black !important"
+                                                                    title="{{{true: 'Página Inicial', false: ''}[controller.principal]}}"
                                                                     popover-animation="true"
                                                                     popover-placement="right"
                                                                     popover-trigger="click"
                                                                     popover-title="Permissões de {{controller.ds_controller}}"
                                                                     popover-template="'methodsController.html'"> 
-                                                                {{subcontroller.ds_controller}}
+                                                                {{controller.ds_controller}}
+                                                                <i class="fa fa-home"
+                                                                    ng-show="controller.principal">
+                                                                </i>
                                                             </button>
                                                             <script type="text/ng-template" id="methodsController.html">
-                                                                <ul class="list-unstyled" 
-                                                                     ng-repeat="method in controller.methods">
-                                                                    <li>
+                                                                <ul class="list-unstyled">
+                                                                    <li ng-repeat-start="method in controller.methods">
                                                                         {{method.ds_method}}
                                                                     </li>
-                                                                    <li class="divider"></li> 
+                                                                    <li class="divider" ng-repeat-end></li> 
                                                                  </ul>
                                                             </script>
-                                                            <ul ng-repeat="subcontroller in controller.subControllers"
-                                                                class="list-unstyled">
-                                                                <li>
+                                                            <ul class="list-unstyled">
+                                                                <li ng-repeat="subcontroller in controller.subControllers">
                                                                     <button class="btn btn-link" 
                                                                             style="color: black !important"
+                                                                            title="{{{true: 'Página Inicial', false: ''}[subcontroller.principal]}}"
                                                                             popover-animation="true"
                                                                             popover-placement="right"
                                                                             popover-trigger="click"
                                                                             popover-title="Permissões de {{subcontroller.ds_controller}}"
                                                                             popover-template="'methodsSubcontroller.html'"> 
                                                                         {{subcontroller.ds_controller}}
+                                                                        <i class="fa fa-home"
+                                                                           ng-show="subcontroller.principal">
+                                                                        </i>
                                                                     </button>
                                                                     <script type="text/ng-template" id="methodsSubcontroller.html">
-                                                                        <ul class="list-unstyled" 
-                                                                             ng-repeat="method in subcontroller.methods">
-                                                                            <li>
+                                                                        <ul class="list-unstyled">
+                                                                            <li ng-repeat-start="method in subcontroller.methods">
                                                                                 {{method.ds_method}}
                                                                             </li>
-                                                                            <li class="divider"></li> 
+                                                                            <li class="divider" ng-repeat-end></li> 
                                                                          </ul>
                                                                     </script>
-                                                                    <ul ng-repeat="subcontroller2 in subcontroller.subControllers"
-                                                                        class="list-unstyled">
-                                                                        <li>
+                                                                    <ul class="list-unstyled">
+                                                                        <li ng-repeat="subcontroller2 in subcontroller.subControllers">
                                                                             <button class="btn btn-link" 
                                                                                     style="color: black !important"
+                                                                                    title="{{{true: 'Página Inicial', false: ''}[subcontroller2.principal]}}"
                                                                                     popover-animation="true"
                                                                                     popover-placement="right"
                                                                                     popover-trigger="click"
                                                                                     popover-title="Permissões de {{subcontroller2.ds_controller}}"
                                                                                     popover-template="'methodsSubcontroller2.html'"> 
                                                                                 {{subcontroller2.ds_controller}}
+                                                                                <i class="fa fa-home"
+                                                                                   ng-show="subcontroller2.principal">
+                                                                                </i>
                                                                             </button>
-                                                                            <script type="text/ng-template" id="methodsSubcontroller.html">
-                                                                                <ul class="list-unstyled" 
-                                                                                     ng-repeat="method in subcontroller2.methods">
-                                                                                    <li>
+                                                                            <script type="text/ng-template" id="methodsSubcontroller2.html">
+                                                                                <ul class="list-unstyled">
+                                                                                    <li ng-repeat-start="method in subcontroller2.methods">
                                                                                         {{method.ds_method}}
                                                                                     </li>
-                                                                                    <li class="divider"></li> 
+                                                                                    <li class="divider" ng-repeat-end></li> 
                                                                                  </ul>
                                                                             </script>
                                                                         </li>
@@ -360,12 +373,7 @@
                                                         </li>
                                                     </ul>
                                                 </div>
-                                                <!--select class="form-control" size="6"
-                                                        ng-model="modulo"
-                                                        ng-change=""
-                                                        ng-options="controller as controller.ds_controller for controller in roleSelecionada.Controllers">
-                                                    <option style="display:none" value="">Página inicial</option>
-                                                </select--> 
+                                                <!-- FIM MÓDULOS -->
                                             </div>
                                         </div>
                                     </div>
@@ -376,61 +384,80 @@
                                         <div class="form-group">
                                             <label class="control-label col-md-3">Nome:</label>
                                             <div class="col-md-4">
-                                                <p class="form-control-static"><strong>{{pessoa.nome}}</strong></p>
+                                                <p class="form-control-static">
+                                                    <strong>{{pessoa.nome}}</strong>
+                                                </p>
                                             </div>
                                         </div>                                    
                                         <div class="form-group">
                                             <label class="control-label col-md-3">Data de Nascimento:</label>
                                             <div class="col-md-4">
-                                                <p class="form-control-static"><strong>{{getDataDeNascimento()}}</strong></p>
+                                                <p class="form-control-static">
+                                                    <strong>{{getDataDeNascimento()}}</strong>
+                                                </p>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label col-md-3">Telefone:</label>
                                             <div class="col-md-4">
-                                                <p class="form-control-static"><strong>{{pessoa.telefone}}</strong></p>
+                                                <p class="form-control-static">
+                                                    <strong>{{pessoa.telefone}}</strong>
+                                                </p>
                                             </div>
                                         </div>                                    
                                         <div class="form-group">
                                             <label class="control-label col-md-3">Ramal:</label>
                                             <div class="col-md-4">
-                                                <p class="form-control-static"><strong>{{pessoa.ramal}}</strong></p>
+                                                <p class="form-control-static">
+                                                    <strong>{{pessoa.ramal}}</strong>
+                                                </p>
                                             </div>
                                         </div>
                                         <h4 class="form-section">Dados da conta</h4>
                                         <div class="form-group">
                                             <label class="control-label col-md-3">Login:</label>
                                             <div class="col-md-4">
-                                                <p class="form-control-static"><strong>{{usuario.login}}</strong></p>
+                                                <p class="form-control-static">
+                                                    <strong>{{usuario.login}}</strong>
+                                                </p>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label col-md-3">E-mail:</label>
                                             <div class="col-md-4">
-                                                <p class="form-control-static"><strong>{{usuario.email}}</strong></p>
+                                                <p class="form-control-static">
+                                                    <strong>{{usuario.email}}</strong>
+                                                </p>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label col-md-3">Empresa:</label>
                                             <div class="col-md-4">
-                                                <p class="form-control-static"><strong>{{usuario.grupoempresa.ds_nome || ''}}</strong></p>
+                                                <p class="form-control-static">
+                                                    <strong>{{usuario.grupoempresa.ds_nome || ''}}</strong>
+                                                </p>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label col-md-3">Filial:</label>
                                             <div class="col-md-4">
-                                                <p class="form-control-static"><strong>{{usuario.empresa.ds_fantasia || ''}}</strong></p>
+                                                <p class="form-control-static">
+                                                    <strong>{{usuario.empresa.ds_fantasia || ''}}</strong>
+                                                </p>
                                             </div>
                                         </div>
                                         <h4 class="form-section">Privilégios</h4>
                                         <div class="form-group">
-                                            <label class="control-label col-md-3">Privilégios:</label>
+                                            <label class="control-label col-md-3">Privilégio:</label>
                                             <div class="col-md-4">
-                                                <div ng-repeat="role in roles | filter:{selecionado:true}">
+                                                <!--div ng-repeat="role in roles | filter:{selecionado:true}">
                                                     <strong>{{role.RoleName}}</strong>
                                                     <i class="fa fa-home"
                                                        ng-show="rolePrincipal.RoleId === role.RoleId"></i>
-                                                </div>
+                                                </div-->
+                                                <p class="form-control-static">
+                                                    <strong>{{roleSelecionada.RoleName || ''}}</strong>
+                                                </p>
                                             </div>
                                         </div>
                                     </div>

@@ -506,7 +506,7 @@ angular.module("card-services-consolidacao-relatorios", [])
     $scope.buscaRelatorio = function(){
         // Avalia se há um grupo empresa selecionado
         if(!$scope.grupoempresa){
-            $scope.showModalAlerta('Por favor, selecione um grupo empresa', 'Atos Capital', 'OK', 
+            $scope.showModalAlerta('Por favor, selecione uma empresa', 'Atos Capital', 'OK', 
                                    function(){
                                          $timeout(function(){$scope.setVisibilidadeBoxGrupoEmpresa(true);}, 300);
                                     }

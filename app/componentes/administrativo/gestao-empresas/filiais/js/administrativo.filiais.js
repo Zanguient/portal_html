@@ -163,7 +163,7 @@ angular.module("administrativo-filiais", [])
                                                             valor: $scope.filial.busca + '%'});        
 
            $webapi.get($apis.getUrl($apis.cliente.empresa, 
-                                    [$scope.token, 2, $campos.cliente.empresa.ds_fantasia, 1, 
+                                    [$scope.token, 2, $campos.cliente.empresa.ds_fantasia, 0, 
                                      $scope.filial.itens_pagina, $scope.filial.pagina],
                                     filtros)) 
                 .then(function(dados){
