@@ -162,6 +162,13 @@ margin-top:170px;
     color: #6f6e6e;
 }
 
+.conteudoEmpresas1{
+  vertical-align:middle;
+  text-align: center;  
+  /*margin:0 4px 10px 4px;
+  border-bottom: 1px solid #EAEAEA;*/  
+}
+
 .conteudoFiltros{
   text-align: center;
 }
@@ -170,13 +177,6 @@ margin-top:170px;
   width: 90%;
   display: inline;
   margin-right: 7px;
-}
-
-.conteudoEmpresas{
-    text-align: center;
-    margin:0 4px 10px 4px;
-    border-bottom: 1px solid #EAEAEA;
-    
 }
 
 .conteudoNavegacao{
