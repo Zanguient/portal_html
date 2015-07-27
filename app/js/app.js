@@ -28,6 +28,7 @@ angular.module("AtosCapital", ['ui.router',
                                'card-services-conciliacao-vendas',
                                'card-services-dados-acesso',
                                'card-services-consolidacao-relatorios',
+                               'card-services-senhas-invalidas',
                                'conta',
                                'conta-alterar-senha',
                                'usuario-sem-link']) 
@@ -179,7 +180,16 @@ angular.module("AtosCapital", ['ui.router',
         data: {
             titulo: 'Card Services'
         }
-      }) 
+      })
+    
+      .state('card-services-consolidacao-senhas-invalidas', {
+        url: prefixo + 'card-services/senhas-invalidas',
+        templateUrl: 'componentes/card-services/consolidacao/senhas-invalidas/index.html',
+        controller: "card-services-senhas-invalidasCtrl",
+        data: {
+            titulo: 'Card Services'
+        }
+      })
     
     
       // CONTA
@@ -290,6 +300,7 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO = false;
     $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_RELATORIOS = false;                        
     $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_DADOS_ACESSO = false; 
+    $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_SENHAS_INVALIDAS = false;                         
                             
                             
     
@@ -426,6 +437,12 @@ angular.module("AtosCapital", ['ui.router',
         go('card-services-consolidacao-relatorios', params);
     }; 
     /**
+      * Exibe como conteúdo a Consolidação Senhas Inválidas, de Card Services
+      */
+    $scope.goCardServicesSenhasInvalidas = function(params){
+        go('card-services-consolidacao-senhas-invalidas', params);
+    };                         
+    /**
       * Exibe a tela de perfil de conta
       */
     $scope.goMinhaConta = function(params){
@@ -555,6 +572,13 @@ angular.module("AtosCapital", ['ui.router',
                 $scope.goUsuarioSemPrivilegios();
             }else if(!controllerAtual || controllerAtual.ds_controller.toUpperCase() !== 'RELATÓRIOS') // problem!
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
+        }else if(url === $state.get('card-services-consolidacao-senhas-invalidas').url){ 
+            if(!$scope.PERMISSAO_CARD_SERVICES || !$scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO || !$scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_SENHAS_INVALIDAS){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.goUsuarioSemPrivilegios();
+            }else if(!controllerAtual || controllerAtual.ds_controller.toUpperCase() !== 'SENHAS INVÁLIDAS')
+                $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual  
         }
         //else event.preventDefault();//console.log("VAI PARA ONDE?");
      });
@@ -612,6 +636,10 @@ angular.module("AtosCapital", ['ui.router',
                 if($location.path() === $state.get('card-services-consolidacao-dados-acesso').url) 
                     controllerAtual = controller;
                 return $scope.goCardServicesDadosAcesso;
+            case 'SENHAS INVÁLIDAS':
+                 if($location.path() === $state.get('card-services-consolidacao-senhas-invalidas').url) 
+                    controllerAtual = controller;
+                return $scope.goCardServicesSenhasInvalidas;
                 
             // AMBÍGUOS    
             case 'RELATÓRIOS': 
@@ -654,6 +682,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'CONCILIAÇÃO DE VENDAS': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_VENDAS = true; break;
             case 'CONSOLIDAÇÃO': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO = true; break;   
             case 'DADOS DE ACESSO': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_DADOS_ACESSO = true; break; 
+            case 'SENHAS INVÁLIDAS': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_SENHAS_INVALIDAS = true; break;    
             // Dashboard
             case 'DASHBOARD ATOS': $scope.PERMISSAO_DASHBOARD = true; break;
                 
@@ -714,7 +743,7 @@ angular.module("AtosCapital", ['ui.router',
             // Card Services
             case 'CONCILIAÇÃO DE VENDAS': return state == 'conciliacao-vendas';
             case 'DADOS DE ACESSO': return state == 'dados-acesso';
-                
+            case 'SENHAS INVÁLIDAS': return state == 'senhas-invalidas';    
                 
             // AMBÍGUOS    
             case 'RELATÓRIOS': return titulopai.toUpperCase() === 'CASH FLOW' ? 
@@ -897,32 +926,6 @@ angular.module("AtosCapital", ['ui.router',
             return;
         }
         switch($location.path()){
-            /*case $state.get('dashboard').url : 
-                $scope.goDashboard(); break;
-            case $state.get('administrativo-gestao-acessos-usuarios').url : 
-                 $scope.goAdministrativoUsuarios(); break;
-            case $state.get('administrativo-gestao-acessos-usuarios-cadastro').url : 
-                $scope.goAdministrativoUsuariosCadastro(); break;
-            case $state.get('administrativo-gestao-acessos-privilegios').url : 
-                 $scope.goAdministrativoPrivilegios(); break;    
-            case $state.get('administrativo-gestao-acessos-modulos-funcionalidades').url : 
-                 $scope.goAdministrativoModulosFuncionalidades(); break; 
-            case $state.get('administrativo-gestao-empresas-empresas').url : 
-                 $scope.goAdministrativoEmpresas(); break;   
-            case $state.get('administrativo-gestao-empresas-filiais').url : 
-                 $scope.goAdministrativoFiliais(); break;   
-            case $state.get('administrativo-gestao-empresas-filiais-cadastro').url : 
-                $scope.goAdministrativoFiliaisCadastro(); break;    
-            case $state.get('administrativo-logs-acesso-usuarios').url :
-                 $scope.goAdministrativoAcessoUsuarios(); break;
-            case $state.get('card-services-cash-flow-relatorios').url : 
-                $scope.goCardServicesCashFlowRelatorios(); break;
-            case $state.get('card-services-conciliacao-conciliacao-vendas').url : 
-                $scope.goCardServicesConciliacaoVendas(); break;
-            case $state.get('card-services-consolidacao-dados-acesso').url : 
-                $scope.goCardServicesDadosAcesso(); break;     
-            case $state.get('card-services-consolidacao-relatorios').url : 
-                $scope.goCardServicesConsolidacaoRelatorios(); break;*/
             case $state.get('minha-conta').url :
                 $scope.goMinhaConta(); break;
             case $state.get('minha-conta-alterar-senha').url :

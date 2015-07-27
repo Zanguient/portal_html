@@ -87,19 +87,19 @@ angular.module("card-services-dados-acesso", [])
       * Retorna true se o usuário pode cadastrar dados de acesso
       */
     $scope.usuarioPodeCadastrarDadosAcesso = function(){
-        return $scope.grupo_empresa && $scope.filtro.filial !== null && permissaoCadastro;   
+        return $scope.grupoempresa && $scope.filtro.filial !== null && permissaoCadastro;   
     }
     /**
       * Retorna true se o usuário pode alterar info de dados de acesso
       */
     $scope.usuarioPodeAlterarDadosAcesso = function(){
-        return $scope.grupo_empresa && $scope.filtro.filial !== null && permissaoAlteracao;
+        return $scope.grupoempresa && $scope.filtro.filial !== null && permissaoAlteracao;
     }
     /**
       * Retorna true se o usuário pode excluir dados de acesso
       * /
     $scope.usuarioPodeExcluirDadosAcesso = function(){
-        return $scope.grupo_empresa && $scope.filtro.filial !== null && permissaoRemocao;
+        return $scope.grupoempresa && $scope.filtro.filial !== null && permissaoRemocao;
     } */                                             
                                                  
     
