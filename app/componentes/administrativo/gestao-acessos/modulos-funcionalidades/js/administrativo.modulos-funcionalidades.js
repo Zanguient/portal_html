@@ -63,8 +63,7 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
                                     "Tem certeza que mover '" + no.text.toUpperCase() + "' para '" + 
                                     pai.text.toUpperCase() +  "'?",
                                     atualizaModulo, { id_controller : parseInt(no.id),
-                                                      ds_controller : no.text, // verificar se é realmente necessário!
-                                                      id_subController : pai.parent !== '#' ? parseInt(pai.id) : null
+                                                      id_subController : pai.parent !== '#' ? parseInt(pai.id) : -1
                                                     },
                                     'Sim', 'Não');  
                                 // Não muda na estrutura! A mudança vai para o banco e uma nova requisição é feita
@@ -102,7 +101,7 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
                 "_disabled" : function(obj) {return $scope.moduloSelecionado.parents.length == 1;},  
                 "action": function(obj) {
                     // Solicitação confirmação para excluir o módulo
-                    text = "Tem certeza que deseja excluir " + $scope.moduloSelecionado.text;
+                    text = "Tem certeza que deseja excluir '" + $scope.moduloSelecionado.text.toUpperCase() + "'?";
                     if($scope.moduloSelecionado.parents.length < 4 && $scope.moduloSelecionado.children.length > 0){
                         // Alerta sobre a exclusão dos módulos filhos
                         text += "\n\r(OBS: A exclusão deste módulo também excluirá todos os submódulos dele)";
@@ -415,7 +414,7 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
       */
     var atualizaModulo = function(jsonModulo){
         $scope.showProgress(divPortletBodyModuloFuncionalidadePos);
-        
+
         $webapi.update($apis.getUrl($apis.administracao.webpagescontrollers, undefined,
                        {id: 'token', valor: $scope.token}), jsonModulo)
             .then(function(dados){
