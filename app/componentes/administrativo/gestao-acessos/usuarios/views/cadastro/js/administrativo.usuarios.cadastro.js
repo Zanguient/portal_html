@@ -190,7 +190,6 @@ angular.module("administrativo-usuarios-cadastro", [])
             $scope.old.usuario = $stateParams.usuario.webpagesusers;
             $scope.old.pessoa = $stateParams.usuario.pessoa;
             $scope.old.roles = $stateParams.usuario.webpagesusersinroles;
-            //console.log($stateParams.usuario);
             // Atualiza demais dados
             atualizaDadosDoUsuario();
             // Grupo Empresa
@@ -204,7 +203,9 @@ angular.module("administrativo-usuarios-cadastro", [])
                 $scope.usuario.empresa = {nu_cnpj: $scope.old.usuario.nu_cnpjEmpresa, 
                                           ds_fantasia: $stateParams.usuario.empresa};
             }
-        }else // Verifica se tem permissão para alterar
+            //console.log($stateParams.usuario);
+            //console.log($scope.old);
+        }else // Verifica se tem permissão para cadastrar
             if($filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'CADASTRO' }).length == 0){
             // Não pode cadastrar
             $scope.hideProgress(divPortletBodyUsuarioCadPos);
@@ -407,7 +408,7 @@ angular.module("administrativo-usuarios-cadastro", [])
         }
         // USUÁRIO
         
-        var jsonUsuario = {id_users : $scope.old.usuario.id_users};
+        var jsonUsuario = {id_users : $scope.old.usuario.id_users, fl_ativo : $scope.old.usuario.fl_ativo};
         var alterouUsuario = false;        
         if($scope.old.usuario.ds_email.toLowerCase() !== $scope.usuario.email.toLowerCase()){
             jsonUsuario.ds_email = $scope.usuario.email.toLowerCase(); 
@@ -416,7 +417,7 @@ angular.module("administrativo-usuarios-cadastro", [])
         if($scope.old.usuario.ds_login !== $scope.usuario.login){
             jsonUsuario.ds_login = $scope.usuario.login;
             alterouUsuario = true; 
-        } 
+        }
         if(($scope.old.usuario.id_grupo === null ^ $scope.usuario.grupoempresa.ds_nome === null) ||
             $scope.old.usuario.id_grupo !== $scope.usuario.grupoempresa.id_grupo){ 
             if(!$scope.usuario.grupoempresa.ds_nome) jsonUsuario.id_grupo = -1; // seta para null no banco
@@ -466,6 +467,7 @@ angular.module("administrativo-usuarios-cadastro", [])
         if(r.length > 0) json.webpagesusersinroles = r;
 
         // Envia
+        console.log(json);
         $webapi.update($apis.getUrl($apis.administracao.webpagesusers, undefined, {id: 'token', valor: $scope.token}), json)
             .then(function(dados){
                      progressoCadastro(false);

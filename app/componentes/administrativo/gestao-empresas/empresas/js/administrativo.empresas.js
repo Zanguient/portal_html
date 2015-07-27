@@ -221,6 +221,7 @@ angular.module("administrativo-empresas", [])
         if(empresa && empresa.ds_nome.toUpperCase() === $scope.modalEmpresa.nome.toUpperCase()){
             // Salva no banco
             jsonEmpresa.id_grupo = empresa.id_grupo;
+            jsonEmpresa.fl_ativo = empresa.fl_ativo;
             alteraGrupoEmpresa(jsonEmpresa);
         }else{
             // Busca no servidor
@@ -236,6 +237,7 @@ angular.module("administrativo-empresas", [])
                     }
                     if(empresa){
                         jsonEmpresa.id_grupo = empresa.id_grupo;
+                        jsonEmpresa.fl_ativo = empresa.fl_ativo;
                         alteraGrupoEmpresa(jsonEmpresa);
                     }else adicionaGrupoEmpresa(jsonEmpresa);
                         

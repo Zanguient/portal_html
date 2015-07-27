@@ -49,6 +49,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				fl_cardservices : boolean,
 				fl_taxservices : boolean,
 				fl_proinfo : boolean,
+				fl_ativo : boolean,
 				dt_ultimoAcesso : data
 			  }
 			]
@@ -62,6 +63,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 	- UPDATE : altera uma empresa existente	
 			  { id_grupo : int,
 				ds_nome : string,
+				fl_ativo : boolean,
 				fl_cardservices : boolean,
 				fl_taxservices : boolean,
 				fl_proinfo : boolean
