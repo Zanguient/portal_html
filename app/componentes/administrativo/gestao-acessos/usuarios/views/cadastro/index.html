@@ -28,6 +28,94 @@
         <div class="col-md-12">
             <div class="portlet light" id="form_wizard_1">
                 
+                <!-- MODAL GRUPO EMPRESA VENDEDOR -->
+                <div class="modal fade ng-scope" id="modalFuncionalidades" tabindex="-1" 
+                     aria-hidden="true" style="display: none;">
+                    <div class="modal-dialog" style="min-width: 700px">
+                        <div class="modal-content">
+                            <div class="modal-header">                    
+                                <h4 class="modal-title modal-cabecalho">Titulo</h4>
+                            </div>
+                            <div class="modal-body height-auto" style="min-width: 500px">                                
+                                <!-- CONTEÚDO -->
+                                 <div class="skin skin-square scroller caption-subject font-green-sharp bold" 
+                                     style="min-height: 300px" 
+                                     data-always-visible="1" data-rail-visible1="1">
+                                    
+                                    <!--BUSCAR EMPRESA-->
+                                    <div class="col-sm-6" style="padding-right: 1px; padding-left: 1px; text-align: center;">
+                                        <label style="text-align:center"><strong>Buscar Empresa</strong></label>
+                                        <label>
+                                            <div class="input-group input-icon right">
+                                                <i class="fa fa-times" style="right:50px;cursor:pointer"
+                                                   ng-click="resetaBusca()"
+                                                   ng-show="privilegio.busca"></i>
+                                                <input type="text" 
+                                                   class="form-control input-inline" 
+                                                   placeholder="Buscar" 
+                                                   ng-model="privilegio.busca"
+                                                   ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !privilegio.busca)) && buscaPrivilegios()">
+												<span class="input-group-addon">
+                                                    <i class="fa fa-search" style="cursor:pointer"
+                                                           ng-click="buscaPrivilegios()"></i>
+												</span>
+											</div> 
+                                        </label>
+                                        <label>
+                                            <button class="btn red">Associar
+                                            <i class="fa fa-mail-forward"></i>
+                                            </button>
+                                        </label>
+                                    </div>
+                                    <!--EMPRESAS ASSOCIADAS-->                                    
+                                    <div class="col-md-6" style="text-align:center">
+                                        <label style="text-align:center"><strong>Empresas Associadas</strong>
+                                        </label>
+                                        <select class="form-control" 
+                                                size="12" 
+                                                ng-model="" 
+                                                ng-options=""
+                                                style="width:100%">            
+                                        </select>
+                                        <label style="margin-top:10px">
+                                            <button class="btn grey">desassociar
+                                            <i class="fa fa-times"></i>
+                                            </button>
+                                        </label>
+                                    </div>
+                                </div> 
+                                <!--FIM CONTEÚDO-->
+                                
+                                <!-- BOTÕES -->
+                                <div class="modal-footer">
+                                    <div class="col-md-3">
+                                        <button type="button" 
+                                                class="btn btn-success"
+                                                ng-click="salvaPermissoes()">
+                                            Salvar
+                                        </button>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="button" class="btn green"
+                                                popover-placement="top"
+                                                popover="Retoma as permissões previamente salvas, sem alterações"
+                                                popover-trigger="mouseenter"
+                                                ng-click="resetaPermissoes()">
+                                            Resetar
+                                        </button>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="button" data-dismiss="modal" class="btn default">Fechar</button> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>              
+                <!-- END MODAL GRUPO EMPRESA VENDEDOR-->
+                
+                
+                
                 <div class="portlet-title">
                     <div class="caption">
                         <span class="caption-subject font-green-sharp bold uppercase">

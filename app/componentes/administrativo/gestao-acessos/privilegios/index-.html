@@ -29,213 +29,64 @@
                 
                <!-- MODAIS -->
                 
-                <!-- MODAL INPUT -->
-               <div class="modal fade bs-modal-sm modal-input" id="modalInput" role="dialog"
-                    data-backdrop="static" data-keyboard="false">
-                   <div class="modal-dialog modal-sm">
-                       <div class="modal-content">
-                           <div class="modal-header">
-                               <h4 class="modal-title modal-cabecalho">{{input.titulo}}</h4>
-                           </div>
-                           <div class="modal-body modal-corpo" style="text-align: center">
-                                {{input.mensagem}}
-                                <input class="form-control modalConfig" type="text" ng-model="input.text"
-                                       ng-keypress="($event.which === 13) ? input.funcaoConfirma(input.text) : 0">
-                                <label>Nível</label>
-                               <select></select>
-                           </div>
-                           <div class="modal-footer">
-                               <div class="col-sm-4 col-sm-offset-1">
-                                   <button type="button" class="btn default" data-dismiss="modal">
-                                       {{input.textoCancela}}
-                                   </button>
-                               </div>                           
-                               <div class="col-sm-4 col-sm-offset-1">
-                                   <button type="button" class="btn blue"
-                                           ng-click="input.funcaoConfirma(input.text)">
-                                       {{input.textoConfirma}}
-                                   </button>                                
-                               </div>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-               <!-- END MODAL INPUT -->
-                
-                <!-- MODAL MÓDULOS E FUNCIONALIDADES -->
+                <!-- MODAL GRUPO EMPRESA VENDEDOR -->
                 <div class="modal fade ng-scope" id="modalFuncionalidades" tabindex="-1" 
                      aria-hidden="true" style="display: none;">
                     <div class="modal-dialog" style="min-width: 700px">
                         <div class="modal-content">
                             <div class="modal-header">                    
-                                <h4 class="modal-title modal-cabecalho">{{roleSelecionada.RoleName}}</h4>
+                                <h4 class="modal-title modal-cabecalho">Titulo</h4>
                             </div>
-                            <div class="modal-body height-auto" style="min-width: 500px">
-                                <div class="skin skin-square scroller caption-subject font-green-sharp bold" 
+                            <div class="modal-body height-auto" style="min-width: 500px">                                
+                                <!-- CONTEÚDO -->
+                                 <div class="skin skin-square scroller caption-subject font-green-sharp bold" 
                                      style="min-height: 300px" 
                                      data-always-visible="1" data-rail-visible1="1">
-                                    <center><label><strong>Módulos e Funcionalidades</strong></label></center>                           
-                                    <ul class="list-unstyled">
-                                        <li ng-repeat="controller in controllers">
-                                            <checkbox normal ng-model="controller.selecionado" 
-                                                             ng-change="handleCheckController(controller)">
-                                            </checkbox>
-                                            <label>
-                                                <button class="btn btn-link" 
-                                                   style="color: black !important"
-                                                   ng-disabled="!controller.selecionado"
-                                                   popover-animation="true"
-                                                   popover-placement="right"
-                                                   popover-trigger="click"
-                                                   popover-title="Permissões de {{controller.ds_controller}}"
-                                                   popover-template="'methodsController.html'">          
-                                                    {{controller.ds_controller}}
-                                                    <i class="fa fa-home"
-                                                       ng-show="controller.principal"></i>
-                                                </button> 
-                                                <script type="text/ng-template" id="methodsController.html">
-                                                    <ul class="list-unstyled" 
-                                                         ng-repeat="method in controller.methods">
-                                                        <li>
-                                                            <checkbox normal 
-                                                                ng-model="method.selecionado" 
-                                                                ng-change="handleCheckMethod(method, controller)">
-                                                            </checkbox>
-                                                            {{method.ds_method}}
-                                                        </li>
-                                                        <li class="divider"></li> 
-                                                     </ul>
-                                                     <div class="btn-group"
-                                                         ng-show="!controller.subControllers || controller.subControllers.length == 0">
-                                                         <i class="fa fa-home"></i>
-                                                         <a ng-show="!ehPaginaPrincipal(controller)"
-                                                            href="javascript:;" 
-                                                            ng-click="definirPaginaInicial(controller)"> 
-                                                            <button class="btn btn-link"
-                                                                    style="color: black !important">
-                                                                Definir como página inicial 
-                                                            </button>
-                                                         </a>
-                                                         <a ng-show="ehPaginaPrincipal(controller)"
-                                                            href="javascript:;" 
-                                                            ng-click="definirPaginaInicial()"> 
-                                                            <button class="btn btn-link"
-                                                                    style="color: black !important">
-                                                                Desmarcar página inicial 
-                                                            </button>
-                                                         </a>
-                                                     </div>
-                                                </script>
-                                            </label>
-                                            <ul class="list-unstyled">
-                                                <li ng-repeat="controller1 in controller.subControllers">
-                                                    <checkbox normal ng-model="controller1.selecionado" 
-                                                               ng-change="handleCheckController([controller1, controller])">
-                                                    </checkbox>
-                                                    <label>
-                                                        <button class="btn btn-link" 
-                                                           style="color: black !important"
-                                                           ng-disabled="!controller1.selecionado"
-                                                           popover-animation="true"
-                                                           popover-placement="right"
-                                                           popover-title="Permissões de {{controller1.ds_controller}}"
-                                                           popover-template="'methodsController1.html'">          
-                                                            {{controller1.ds_controller}}
-                                                            <i class="fa fa-home"
-                                                               ng-show="controller1.principal"></i>
-                                                        </button> 
-                                                        <script type="text/ng-template" id="methodsController1.html">
-                                                            <ul class="list-unstyled" 
-                                                                 ng-repeat="method1 in controller1.methods">
-                                                                <li>
-                                                                    <checkbox normal 
-                                                                        ng-model="method1.selecionado" 
-                                                                        ng-change="handleCheckMethod(method1, controller1)">
-                                                                    </checkbox>
-                                                                    {{method1.ds_method}}
-                                                                </li>
-                                                                <li class="divider"></li> 
-                                                             </ul>
-                                                             <div class="btn-group"
-                                                                 ng-show="!controller1.subControllers || controller1.subControllers.length == 0">
-                                                                 <i class="fa fa-home"></i>
-                                                                 <a ng-show="!ehPaginaPrincipal(controller1)"
-                                                                    href="javascript:;" 
-                                                                    ng-click="definirPaginaInicial(controller1)"> 
-                                                                    <button class="btn btn-link"
-                                                                            style="color: black !important">
-                                                                        Definir como página inicial 
-                                                                    </button>
-                                                                 </a>
-                                                                 <a ng-show="ehPaginaPrincipal(controller1)"
-                                                                    href="javascript:;" 
-                                                                    ng-click="definirPaginaInicial()"> 
-                                                                    <button class="btn btn-link"
-                                                                            style="color: black !important">
-                                                                        Desmarcar página inicial 
-                                                                    </button>
-                                                                 </a>
-                                                             </div>
-                                                        </script>
-                                                    </label>
-                                                    <ul class="list-unstyled">
-                                                        <li ng-repeat="controller2 in controller1.subControllers">
-                                                            <checkbox normal ng-model="controller2.selecionado" 
-                                                               ng-change="handleCheckController([controller2, controller1, controller])">
-                                                            </checkbox>
-                                                            <label>
-                                                                <button class="btn btn-link" 
-                                                                   style="color: black !important"
-                                                                   ng-disabled="!controller2.selecionado"
-                                                                   popover-animation="true"
-                                                                   popover-placement="right"
-                                                                   popover-title="Permissões de {{controller2.ds_controller}}"
-                                                                   popover-template="'methodsController2.html'">          
-                                                                    {{controller2.ds_controller}}
-                                                                    <i class="fa fa-home"
-                                                                       ng-show="controller2.principal"></i>
-                                                                </button> 
-                                                                <script type="text/ng-template" id="methodsController2.html" >
-                                                                    <ul class="list-unstyled" 
-                                                                         ng-repeat="method2 in controller2.methods">
-                                                                        <li>
-                                                                            <checkbox normal 
-                                                                                ng-model="method2.selecionado" 
-                                                                                ng-change="handleCheckMethod(method2, controller2)">
-                                                                            </checkbox>
-                                                                            {{method2.ds_method}}
-                                                                        </li>
-                                                                        <li class="divider"></li> 
-                                                                     </ul>
-                                                                     <div class="btn-group"
-                                                                         ng-show="!controller2.subControllers || controller2.subControllers.length == 0">
-                                                                         <i class="fa fa-home"></i>
-                                                                         <a ng-show="!ehPaginaPrincipal(controller2)"
-                                                                            href="javascript:;" 
-                                                                            ng-click="definirPaginaInicial(controller2)"> 
-                                                                            <button class="btn btn-link"
-                                                                                    style="color: black !important">
-                                                                                Definir como página inicial 
-                                                                            </button>
-                                                                         </a>
-                                                                         <a ng-show="ehPaginaPrincipal(controller2)"
-                                                                            href="javascript:;" 
-                                                                            ng-click="definirPaginaInicial()"> 
-                                                                            <button class="btn btn-link"
-                                                                                    style="color: black !important">
-                                                                                Desmarcar página inicial 
-                                                                            </button>
-                                                                         </a>
-                                                                     </div>
-                                                                </script>
-                                                            </label>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                            </ul> 
-                                        </li>
-                                    </ul>                           
-                                </div>
+                                    
+                                    <!--BUSCAR EMPRESA-->
+                                    <div class="col-sm-6" style="padding-right: 1px; padding-left: 1px; text-align: center;">
+                                        <label style="text-align:center"><strong>Buscar Empresa</strong></label>
+                                        <label>
+                                            <div class="input-group input-icon right">
+                                                <i class="fa fa-times" style="right:50px;cursor:pointer"
+                                                   ng-click="resetaBusca()"
+                                                   ng-show="privilegio.busca"></i>
+                                                <input type="text" 
+                                                   class="form-control input-inline" 
+                                                   placeholder="Buscar" 
+                                                   ng-model="privilegio.busca"
+                                                   ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !privilegio.busca)) && buscaPrivilegios()">
+												<span class="input-group-addon">
+                                                    <i class="fa fa-search" style="cursor:pointer"
+                                                           ng-click="buscaPrivilegios()"></i>
+												</span>
+											</div> 
+                                        </label>
+                                        <label>
+                                            <button class="btn red">Associar
+                                            <i class="fa fa-mail-forward"></i>
+                                            </button>
+                                        </label>
+                                    </div>
+                                    <!--EMPRESAS ASSOCIADAS-->                                    
+                                    <div class="col-md-6" style="text-align:center">
+                                        <label style="text-align:center"><strong>Empresas Associadas</strong>
+                                        </label>
+                                        <select class="form-control" 
+                                                size="12" 
+                                                ng-model="" 
+                                                ng-options=""
+                                                style="width:100%">            
+                                        </select>
+                                        <label style="margin-top:10px">
+                                            <button class="btn grey">desassociar
+                                            <i class="fa fa-times"></i>
+                                            </button>
+                                        </label>
+                                    </div>
+                                </div> 
+                                <!--FIM CONTEÚDO-->
+                                
                                 <!-- BOTÕES -->
                                 <div class="modal-footer">
                                     <div class="col-md-3">
@@ -262,7 +113,7 @@
                         </div>
                     </div>
                 </div>              
-                <!-- END MODAL MÓDULOS E FUNCIONALIDADES -->
+                <!-- END MODAL GRUPO EMPRESA VENDEDOR-->
                 
                <!-- END MODAIS -->
                 
