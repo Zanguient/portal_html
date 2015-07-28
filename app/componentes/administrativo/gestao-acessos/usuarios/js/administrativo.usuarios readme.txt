@@ -43,8 +43,9 @@ Não é necessário nenhum outro módulo externo.
 				"pessoa" : json_pessoa, 
 				"webpagesusers" : json_usuario,
 				"webpagesusersinroles" : [{RoleId : int, RolePrincipal : boolean}]
-				"grupoempresa" : ds_nome
-				"empresa" : ds_fantasia
+				"grupoempresa" : ds_nome,
+				"empresa" : ds_fantasia,
+				"gruposempresasvendedor" : { id_grupo : int, ds_nome : string }
 			}
 	 - DELETE : deletar um determinado usuário (?token=...&id_users=id_usuario)
  

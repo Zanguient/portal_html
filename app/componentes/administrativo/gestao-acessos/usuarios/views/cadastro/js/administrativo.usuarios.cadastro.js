@@ -358,7 +358,7 @@ angular.module("administrativo-usuarios-cadastro", [])
         }
         // ROLES
         if($scope.old.roles.length === 0 || 
-           $scope.roleSelecionada.RoleId !== $scope.old.roles[0].RoleId)
+           (typeof $scope.old.roles[0].RoleId === 'number' && typeof $scope.roleSelecionada.RoleId === 'number' && $scope.roleSelecionada.RoleId !== $scope.old.roles[0].RoleId))
             return true;
         /*if($scope.rolesSelecionadas.length !== $scope.old.roles.length){ 
             //console.log("HOUVE ALTERAÇÃO - ROLE - LENGTH");
@@ -467,7 +467,7 @@ angular.module("administrativo-usuarios-cadastro", [])
         if(r.length > 0) json.webpagesusersinroles = r;
 
         // Envia
-        console.log(json);
+        //console.log(json);
         $webapi.update($apis.getUrl($apis.administracao.webpagesusers, undefined, {id: 'token', valor: $scope.token}), json)
             .then(function(dados){
                      progressoCadastro(false);

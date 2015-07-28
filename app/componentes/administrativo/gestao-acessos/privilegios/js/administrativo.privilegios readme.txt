@@ -71,8 +71,8 @@ Não é necessário nenhum outro módulo externo.
 			  }				
   * api/administracao/webpagesroles
      - DELETE : deletar uma determinada role    url/?token=...&RoleId=idRole
-	 - GET : listagem dos usuários na tabela (coleção 0)
-			{ RoleId: id, RoleName : name }
+	 - GET : listagem dos privilégios na tabela (coleção 1)
+			{ RoleId: int, RoleName : string, RoleLevels : {LevelId : int, LevelName: string} }
 	 - PUT : altera o nome da role 
 			{ RoleId : id, RoleName : name }
 	 - POST : adiciona uma nova role

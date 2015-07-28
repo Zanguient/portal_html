@@ -61,7 +61,7 @@ Não é necessário nenhum outro módulo externo.
 		                ]}
 	
   * api/administracao/webpagesusers
-	 - GET : consulta e-mail e login, para validação (coleção 0)
+	 - GET : Consulta e-mail e login, para validação (coleção 0)
 	 - POST : cria novo usuário
 			{
 				"pessoa" : json_pessoa, 
@@ -72,7 +72,9 @@ Não é necessário nenhum outro módulo externo.
 			{
 				"pessoa" : json_pessoa, 
 				"webpagesusers" : json_usuario,
-				"webpagesusersinroles" : [{RoleId: roleid, RolePrincipal: boolean}]
+				"webpagesusersinroles" : [{RoleId: roleid, RolePrincipal: boolean}],
+				"addidsgrupoempresavendedor" : [ids], // associa grupos empresas ao vendedor
+				"removeidsgrupoempresavendedor" : [ids], // desassocia grupos empresas ao vendedor
 			}
 			OBS 1: Independente se atualizou ou não dados da conta (login, e-mail, grupo empresa ou empresa), toda atualização 
 			       tem que enviar o json "webpagesusers", pois ele inclui o id_users

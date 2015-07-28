@@ -951,7 +951,7 @@ angular.module("AtosCapital", ['ui.router',
             $scope.voltarTelaLogin(); // what?! FATAL ERROR!
             return;
         }
-        //console.log($scope.token);
+        console.log($scope.token);
         
         // Exibe o layout
         exibeLayout();
@@ -1080,7 +1080,8 @@ angular.module("AtosCapital", ['ui.router',
         // Envia 
         $scope.showProgress();
         $webapi.update($apis.getUrl($apis.administracao.webpagesusers, undefined, 
-                                    [{id:'token', valor: $scope.token},{id:'id_grupo', valor: id_grupo}]), null)
+                                    //[{id:'token', valor: $scope.token},{id:'id_grupo', valor: id_grupo}]), null)
+                                    {id:'token', valor: $scope.token}), {id:'id_grupo', valor: id_grupo})
             .then(function(dados){  
                 if(typeof funcaoSucesso === 'function') funcaoSucesso(dados);
                 // Reinicia o valor do model

@@ -191,7 +191,7 @@ angular.module("administrativo-privilegios", [])
        }
         
        $scope.obtendoPrivilegios = true;
-       $webapi.get($apis.getUrl($apis.administracao.webpagesroles, [$scope.token, 0, $scope.privilegio.campo_ordenacao.id, 
+       $webapi.get($apis.getUrl($apis.administracao.webpagesroles, [$scope.token, 1, $scope.privilegio.campo_ordenacao.id, 
                                                        $scope.privilegio.campo_ordenacao.order, 
                                                        $scope.privilegio.itens_pagina, $scope.privilegio.pagina],
                    filtros)) 
@@ -229,39 +229,50 @@ angular.module("administrativo-privilegios", [])
         // Exibe o modal
         $scope.showModalInput('Informe o nome do privilégio', 
                         'Cadastro de privilégio', 'Cancelar', 'Salvar',
-                         function(){ 
-                                if(!$scope.input.text){
+                         function(text){ 
+                                if(!text){
                                     $scope.showModalAlerta('Informe um nome');
                                     return false;
                                 }
-                                if($scope.input.text.length < 3){
+                                if(text.length < 3){
                                     //alert('Nome muito curto!');
                                     $scope.showModalAlerta('Nome muito curto!');
                                     return false;    
                                 }
-                                // Verifica se o nome é único
-                                for(var k = 0; k < $scope.privilegios.length; k++){
-                                    var p = $scope.privilegios[k];
-                                    if(p.RoleName.toUpperCase() === $scope.input.text.toUpperCase()){
-                                        $scope.showModalAlerta('Já existe um privilégio com esse nome!');
-                                        return false;    
-                                    }
-                                }   
-                                // Fecha o modal input
-                                $scope.fechaModalInput();
-                                // Atualiza
-                                addPrivilegio($scope.input.text);
+                                $scope.showProgress();
+                                $webapi.get($apis.getUrl($apis.administracao.webpagesroles, 
+                                                         [$scope.token], 
+                                                         {id: $campos.administracao.webpagesroles.RoleName,
+                                                          valor: text})) 
+                                    .then(function(dados){
+                                        if(dados.Registros.length > 0){
+                                            $scope.showModalAlerta('Já existe um privilégio com esse nome!');
+                                            $scope.hideProgress();
+                                            return;     
+                                        }
+                                        // Fecha o modal input
+                                        $scope.hideProgress();
+                                        $scope.fechaModalInput();
+                                        // Atualiza
+                                        addPrivilegio(text, 4); // RoleLevel!
+                                      },
+                                      function(failData){
+                                         if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                                         else $scope.showAlert('Houve uma falha ao consultar privilégio (' + failData.status + ')', true, 'danger', true);
+                                         $scope.hideProgress();
+                                      }); 
                                 return true;
                               }); 
     }
     /**
       * Adiciona privilégio
       */
-    var addPrivilegio = function(novoPrivilegio){
+    var addPrivilegio = function(novoPrivilegio, roleLevel){
         // Envia para o banco
         $scope.showProgress(divPortletBodyPrivilegioPos);
         $webapi.post($apis.getUrl($apis.administracao.webpagesroles, undefined, 
-                                  {id: 'token', valor: $scope.token}), {RoleName : novoPrivilegio})
+                                  {id: 'token', valor: $scope.token}), {RoleName : novoPrivilegio,
+                                                                        RoleLevel : roleLevel})
                 .then(function(dados){
                     $scope.showAlert('Privilégio cadastrado com sucesso!', true, 'success', true);
                     // Reseta o campo
@@ -273,6 +284,7 @@ angular.module("administrativo-privilegios", [])
                     $scope.buscaPrivilegios();
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 401) $scope.showModalAlerta('Você não possui privilégios para criar um privilégio com esse nível');
                      else $scope.showAlert('Houve uma falha ao cadastrar o privilégio (' + failData.status + ')', true, 'danger', true);
                      $scope.hideProgress(divPortletBodyPrivilegioPos);
                   }); 
@@ -284,35 +296,51 @@ angular.module("administrativo-privilegios", [])
         // Exibe o modal
         $scope.showModalInput('Informe o novo nome do privilégio ' + privilegio.RoleName, 
                         'Alteração de privilégio', 'Cancelar', 'Salvar',
-                         function(){ 
+                         function(text){ 
                                 // Verifica se houve alteração
-                                if($scope.input.text === privilegio.RoleName){
+                                if(text === privilegio.RoleName){
                                     // Não alterou => Nada faz
                                     $scope.fechaModalInput();
                                     return true;
                                 }
-                                if(!$scope.input.text){
+                                if(!text){
                                     $scope.showModalAlerta('Informe um nome');
                                     return false;
                                 }
-                                if($scope.input.text.length < 3){
+                                if(text.length < 3){
                                     //alert('Nome muito curto!');
                                     $scope.showModalAlerta('Nome muito curto!');
                                     return false;    
                                 }
                                 // Verifica se o nome é único
-                                for(var k = 0; k < $scope.privilegios.length; k++){
-                                    var p = $scope.privilegios[k];
-                                    if(p.RoleName.toUpperCase() === $scope.input.text.toUpperCase() && 
-                                       p.RoleName !== privilegio.RoleName){
-                                        $scope.showModalAlerta('Já existe um privilégio com esse nome!');
-                                        return false;    
-                                    }
-                                }   
-                                // Fecha o modal input
-                                $scope.fechaModalInput();
-                                // Atualiza
-                                atualizaNomePrivilegio(privilegio, $scope.input.text);
+                                if(text.toUpperCase() === privilegio.RoleName.toUpperCase()){
+                                    $scope.fechaModalInput();
+                                    // Atualiza
+                                    atualizaNomePrivilegio(privilegio, text);
+                                }else{
+                                    $scope.showProgress();
+                                    $webapi.get($apis.getUrl($apis.administracao.webpagesroles, 
+                                                             [$scope.token], 
+                                                             {id: $campos.administracao.webpagesroles.RoleName,
+                                                              valor: text})) 
+                                        .then(function(dados){
+                                            if(dados.Registros.length > 0){
+                                                $scope.showModalAlerta('Já existe um privilégio com esse nome!');
+                                                $scope.hideProgress();
+                                                return;     
+                                            }
+                                            // Fecha o modal input
+                                            $scope.hideProgress();
+                                            $scope.fechaModalInput();
+                                            // Atualiza
+                                            atualizaNomePrivilegio(privilegio, text);
+                                          },
+                                          function(failData){
+                                             if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                                             else $scope.showAlert('Houve uma falha ao consultar privilégio (' + failData.status + ')', true, 'danger', true);
+                                             $scope.hideProgress();
+                                          }); 
+                                }
                                 return true;
                               }, privilegio.RoleName); 
     };
@@ -332,6 +360,8 @@ angular.module("administrativo-privilegios", [])
                     $scope.buscaPrivilegios();
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 401) $scope.showModalAlerta('Você não possui privilégios para criar um privilégio com esse nível');
+                         
                      else $scope.showAlert('Houve uma falha ao alterar o privilégio (' + failData.status + ')', true, 'danger', true); 
                      $scope.hideProgress(divPortletBodyPrivilegioPos);
                   });  
