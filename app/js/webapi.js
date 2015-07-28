@@ -45,11 +45,16 @@ angular.module('webapi', ['utils'])
             // Relacionamentos
             controller : 200
         },
+        webpagesrolelevels : {
+            LevelId : 100,
+            LevelNome : 101
+        },   
         webpagesroles : {
             RoleId : 100,
             RoleName : 101,
-            RolePrincipal : 102
-        },
+            RolePrincipal : 102,
+            RoleLevel : 103
+        }, 
         webpagesusers : {
             id_users : 100,
             ds_login : 101,
@@ -232,6 +237,7 @@ angular.module('webapi', ['utils'])
         webpagesmembership : $autenticacao.getUrlBase() + '/administracao/webpagesmembership/',
         webpagesmethods : $autenticacao.getUrlBase() + '/administracao/webpagesmethods/',
         webpagespermissions : $autenticacao.getUrlBase() + '/administracao/webpagespermissions/',
+        webpagesrolelevels : $autenticacao.getUrlBase() + '/administracao/webpagesroleleves/',
         webpagesroles : $autenticacao.getUrlBase() + '/administracao/webpagesroles/',
         webpagesusers : $autenticacao.getUrlBase() + '/administracao/webpagesusers/', 
         webpagesusersinroles : $autenticacao.getUrlBase() + '/administracao/webpagesusersinroles/'

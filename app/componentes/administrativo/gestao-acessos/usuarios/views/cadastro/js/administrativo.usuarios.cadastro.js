@@ -27,13 +27,15 @@ angular.module("administrativo-usuarios-cadastro", [])
     $scope.tabCadastro = 1;
     // Dados
     $scope.empresas = [];
-    $scope.old = {pessoa:null,usuario:null,roles:[]};
+    $scope.old = {pessoa:null,usuario:null,roles:[],gruposempresasvendedor:[]};
     $scope.pessoa = {id:0, nome:'', data_nasc:''/*null*/, telefone:'', ramal:''};
     $scope.usuario = {login:'', email:'', grupoempresa:'', empresa:''};
     $scope.roleSelecionada = undefined;
-    //$scope.rolePrincipal = undefined;
-    //$scope.roles = [];  
-    //$scope.rolesSelecionadas = []; 
+    var addidsgrupoempresavendedor = [];
+    var removeidsgrupoempresavendedor = [];                                                     
+    // Vendedor
+    $scope.grupoempresavendedor = { busca : '', selecionado : undefined };
+    $scope.gruposempresasvendedor = [];                                                    
     // Flags
     $scope.abrirCalendarioDataNasc = false;
     var dataValida = false;
@@ -46,8 +48,10 @@ angular.module("administrativo-usuarios-cadastro", [])
     $scope.pesquisandoGruposEmpresas = false;  
     $scope.pesquisandoEmpresas = false;
     $scope.cadastrando = false;
+                                                                                                              
                                                          
-
+                                                         
+                                                         
                                                          
     // Usuário da alteração
     /**
@@ -58,10 +62,6 @@ angular.module("administrativo-usuarios-cadastro", [])
         loginValido = emailValido = true;
         $scope.usuario.email = $scope.old.usuario.ds_email;
         $scope.usuario.login = $scope.old.usuario.ds_login;
-        // Grupo empresa
-        //$scope.usuario.grupoempresa = $scope.old.usuario.grupoempresa;
-        // Empresa
-        //$scope.usuario.empresa = $scope.old.usuario.empresa;
         
         // PESSOA
         $scope.pessoa.nome = $scope.old.pessoa.nm_pessoa;
@@ -190,6 +190,10 @@ angular.module("administrativo-usuarios-cadastro", [])
             $scope.old.usuario = $stateParams.usuario.webpagesusers;
             $scope.old.pessoa = $stateParams.usuario.pessoa;
             $scope.old.roles = $stateParams.usuario.webpagesusersinroles;
+            $scope.old.gruposempresasvendedor = $stateParams.usuario.gruposempresasvendedor;
+            if($scope.old.gruposempresasvendedor && angular.isArray($scope.old.gruposempresasvendedor)) 
+                angular.copy($scope.gruposempresasvendedor, $scope.old.gruposempresasvendedor);
+            else $scope.old.gruposempresasvendedor = [];
             // Atualiza demais dados
             atualizaDadosDoUsuario();
             // Grupo Empresa
@@ -284,12 +288,18 @@ angular.module("administrativo-usuarios-cadastro", [])
         }*/
         // JSON DE ENVIO
         var json = { 
-                "pessoa" : jsonPessoa,
-                "webpagesusers" : jsonUsuario,
-                "webpagesusersinroles" : r
+                pessoa : jsonPessoa,
+                webpagesusers : jsonUsuario,
+                webpagesusersinroles : r
             };
+        // Perfil Comercial pode ter grupos empresas associados
+        if($scope.ehComercial($scope.roleSelecionada)) json.addidsgrupoempresavendedor = addidsgrupoempresavendedor;
+        
         // Envia
-        $webapi.post($apis.getUrl($apis.administracao.webpagesusers, undefined,
+        console.log(json);
+        progressoCadastro(false);
+        $scope.hideProgress(divPortletBodyUsuarioCadPos);
+        /*$webapi.post($apis.getUrl($apis.administracao.webpagesusers, undefined,
                                   {id: 'token', valor: $scope.token}), json)
                 .then(function(dados){
                     progressoCadastro(false);
@@ -308,7 +318,7 @@ angular.module("administrativo-usuarios-cadastro", [])
                      progressoCadastro(false);
                      // Hide progress
                      $scope.hideProgress(divPortletBodyUsuarioCadPos);
-                  });  
+                  });  */
     };
      
                                                          
@@ -438,24 +448,17 @@ angular.module("administrativo-usuarios-cadastro", [])
                 r.push({UserId: -1, RoleId : $scope.old.roles[0].RoleId, RolePrincipal : false}); // remove a anterior
             }
         }else r.push({RoleId : $scope.roleSelecionada.RoleId, RolePrincipal: true}); // adiciona a nova
-        // Novas roles
-        /*for(var k in $scope.rolesSelecionadas){ 
-            var role = $scope.rolesSelecionadas[k];
-            var principal = $scope.rolePrincipal ? role.RoleId === $scope.rolePrincipal.RoleId : false; // essa é a "nova" role principal?
-            var old = $filter('filter')($scope.old.roles, function(r){return r.RoleId === role.RoleId;}); // roles antigas
-            
-            if(old.length == 0 ||  // nova associação 
-               (old[0].RolePrincipal ^ principal) ) // não é mais ou passou a ser a página inicial
-                r.push({RoleId : role.RoleId, RolePrincipal: principal});
+        
+        // VENDEDOR
+        if(!$scope.ehComercial($scope.roleSelecionada)){
+            // Perfil selecionado não é o comercial => Só pode existir desassociações de grupos empresas
+            addidsgrupoempresavendedor = [];
+            angular.copy($scope.old.gruposempresasvendedor, removeidsgrupoempresavendedor);
         }
-        // Roles a serem desassociadas do usuário 
-        for(var k = 0; k < $scope.old.roles.length; k++){
-            var old = $scope.old.roles[k];
-            if($filter('filter')($scope.rolesSelecionadas, function(r){return r.RoleId === old.RoleId;}).length == 0)
-                r.push({UserId: -1, RoleId : old.RoleId, RolePrincipal : false});
-        }    */    
+        
         // Verifica se houve alterações
-        if(!alterouPessoa && !alterouUsuario && r.length == 0){
+        if(!alterouPessoa && !alterouUsuario && r.length == 0 && 
+           addidsgrupoempresavendedor.length == 0 && removeidsgrupoempresavendedor.length == 0){
             $scope.goAdministrativoUsuarios();
             return;
         }
@@ -465,10 +468,14 @@ angular.module("administrativo-usuarios-cadastro", [])
         if(alterouPessoa) json.pessoa = jsonPessoa;
         json.webpagesusers = jsonUsuario;
         if(r.length > 0) json.webpagesusersinroles = r;
+        if(addidsgrupoempresavendedor.length > 0) json.addidsgrupoempresavendedor = addidsgrupoempresavendedor;
+        if(removeidsgrupoempresavendedor.length > 0) json.removeidsgrupoempresavendedor = removeidsgrupoempresavendedor;
 
         // Envia
-        //console.log(json);
-        $webapi.update($apis.getUrl($apis.administracao.webpagesusers, undefined, {id: 'token', valor: $scope.token}), json)
+        console.log(json);
+        progressoCadastro(false);
+        $scope.hideProgress(divPortletBodyUsuarioCadPos);
+        /*$webapi.update($apis.getUrl($apis.administracao.webpagesusers, undefined, {id: 'token', valor: $scope.token}), json)
             .then(function(dados){
                      progressoCadastro(false);
                      // Reseta os dados
@@ -484,7 +491,7 @@ angular.module("administrativo-usuarios-cadastro", [])
                      else $scope.showAlert('Houve uma falha ao alterar o usuário (' + failData.status + ')', true, 'danger', true);
                      progressoCadastro(false);
                      $scope.hideProgress(divPortletBodyUsuarioCadPos);
-                  }); 
+                  }); */
         
     };
      
@@ -792,5 +799,84 @@ angular.module("administrativo-usuarios-cadastro", [])
         return '';*/
         return dataValida ? $scope.pessoa.data_nasc : '';
     };
-    
+                                                         
+                                                         
+                                                         
+                                                         
+    // VENDEDOR
+    /**
+      * Retorna true se a role é comercial
+      */
+    $scope.ehComercial = function(role){
+        if(!role) return false;
+        return role.RoleName.toUpperCase() === 'COMERCIAL';
+    }
+    /**
+      * Filtra para não exibir os grupos empresas que já estão na lista de associados 
+      */
+    $scope.filtraGrupoEmpresaVendedor = function(grupoempresa){
+        return $filter('filter')($scope.gruposempresasvendedor, function(g){return g.id_grupo === grupoempresa.id_grupo;}).length === 0;    
+    };
+    /**
+      * Exibe o modal de associação de grupos empresas com vendedor
+      */
+    $scope.exibeModalGrupoEmpresaVendedor = function(){
+        $('#modalGrupoEmpresaVendedor').modal('show'); 
+    };
+    /**
+      * Fecha o modal de associação de grupos empresas com vendedor
+      */
+    $scope.fechaModalGrupoEmpresaVendedor = function(){
+        $('#modalGrupoEmpresaVendedor').modal('hide'); 
+    };                                                     
+    /**
+      * Associa o grupo empresa buscado ao vendedor
+      */                                                     
+    $scope.adicionaGrupoEmpresaVendedor = function(){
+        $scope.gruposempresasvendedor.push($scope.grupoempresavendedor.busca);
+        $scope.grupoempresavendedor.busca = '';
+    };
+    /**
+      * Desassocia o grupo empresa buscado ao vendedor
+      */                                                     
+    $scope.desassociaGrupoEmpresaVendedor = function(){
+        // Remove do array
+        var index =  $scope.gruposempresasvendedor.indexOf($scope.grupoempresavendedor.selecionado);
+        $scope.gruposempresasvendedor.splice(index,1);
+        $scope.grupoempresavendedor.selecionado = undefined;
+    };
+    /**
+      * Retoma as associações previamente salvas no banco
+      */                                                     
+    $scope.resetaGrupoEmpresaVendedor = function(){
+        angular.copy($scope.old.gruposempresasvendedor, $scope.gruposempresasvendedor);    
+    };
+    /**
+      * Armazena em memória as associações que devem ser criadas e desfeitas
+      */                                                     
+    $scope.salvaGrupoEmpresaVendedor = function(){
+        // Progress
+        $scope.showProgress();
+        // Inicia com arrays vazios
+        addidsgrupoempresavendedor = [];
+        removeidsgrupoempresavendedor = [];
+        // Novas associações
+        for(var k = 0; k < $scope.gruposempresasvendedor.length; k++){    
+            var gp = $scope.gruposempresasvendedor[k];
+            var old = $filter('filter')($scope.old.gruposempresasvendedor, function(g){return g.id_grupo === gp.id_grupo;});
+            // Nova associação
+            if(old.length == 0) addidsgrupoempresavendedor.push(gp.id_grupo);
+        }
+        // Desassociações 
+        for(var k = 0; k < $scope.old.gruposempresasvendedor.length; k++){
+            var old = $scope.old.gruposempresasvendedor[k];
+            if($filter('filter')($scope.gruposempresasvendedor, function(g){return g.id_grupo === old.id_grupo;}).length == 0)
+                removeidsgrupoempresavendedor.push(old.id_grupo);
+        }
+        // Fecha o modal
+        $scope.fechaModalGrupoEmpresaVendedor();
+        // Remove o progress da tela
+        $scope.hideProgress();
+    };
+                                                         
 }]);

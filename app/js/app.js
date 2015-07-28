@@ -951,7 +951,7 @@ angular.module("AtosCapital", ['ui.router',
             $scope.voltarTelaLogin(); // what?! FATAL ERROR!
             return;
         }
-        console.log($scope.token);
+        //console.log($scope.token);
         
         // Exibe o layout
         exibeLayout();

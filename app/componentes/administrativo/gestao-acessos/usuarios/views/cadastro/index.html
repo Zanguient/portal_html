@@ -28,6 +28,100 @@
         <div class="col-md-12">
             <div class="portlet light" id="form_wizard_1">
                 
+                <!-- MODAL GRUPO EMPRESA VENDEDOR -->
+                <div class="modal fade ng-scope" id="modalGrupoEmpresaVendedor" tabindex="-1" 
+                     aria-hidden="true" style="display: none;">
+                    <div class="modal-dialog" style="min-width: 700px">
+                        <div class="modal-content">
+                            <div class="modal-header">                    
+                                <h4 class="modal-title modal-cabecalho">
+                                    Associação de grupos empresas
+                                </h4>
+                            </div>
+                            <div class="modal-body height-auto" style="min-width: 500px">                                
+                                <!-- CONTEÚDO -->
+                                 <div class="skin skin-square scroller caption-subject font-green-sharp bold" 
+                                     style="min-height: 300px" 
+                                     data-always-visible="1" data-rail-visible1="1">
+                                    
+                                    <!--BUSCAR EMPRESA-->
+                                    <div class="col-sm-6" style="padding-right: 1px; padding-left: 1px; text-align: center;">
+                                        <label style="text-align:center"><strong>Buscar Empresa</strong></label>
+                                        <label>
+                                            <input type="text" class="form-control" 
+                                                   placeholder="Digite o nome da empresa" 
+                                                   ng-disabled="grupoempresa"
+                                                   ng-model="grupoempresavendedor.busca"
+                                                   onfocus="this.select();" 
+                                                   onmouseup="return false;"
+                                                   typeahead-on-select="adicionaGrupoEmpresaVendedor()"
+                                                   typeahead-focus-first=false
+                                                   typeahead-min-length='3'
+                                                   typeahead-wait-ms="500"
+                                                   typeahead="grupoempresa as (grupoempresa.ds_nome | uppercase) for grupoempresa in buscaGrupoEmpresas($viewValue) | filter: filtraGrupoEmpresaVendedor" />
+                                        </label>
+                                        <label>
+                                            <button class="btn red"
+                                                    ng-show="grupoempresavendedor.busca.ds_nome"
+                                                    ng-click="adicionaGrupoEmpresaVendedor()">
+                                                Associar
+                                                <i class="fa fa-mail-forward"></i>
+                                            </button>
+                                        </label>
+                                    </div>
+                                    <!--EMPRESAS ASSOCIADAS-->                                    
+                                    <div class="col-md-6" style="text-align:center">
+                                        <label style="text-align:center"><strong>Empresas Associadas</strong>
+                                        </label>
+                                        <select class="form-control" 
+                                                size="12" 
+                                                ng-model="grupoempresavendedor.selecionado"
+                                                ng-options="grupoempresa as (grupoempresa.ds_nome | uppercase) for grupoempresa in gruposempresasvendedor  | orderBy:'ds_nome'"
+                                                style="width:100%">  
+                                            <option style="display:none" value="">Empresa</option>
+                                        </select>
+                                        <label style="margin-top:10px">
+                                            <button class="btn grey" 
+                                                    ng-class="{'element-hidden' : !grupoempresavendedor.selecionado}"
+                                                    ng-click="desassociaGrupoEmpresaVendedor()">
+                                                desassociar
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        </label>
+                                    </div>
+                                </div> 
+                                <!--FIM CONTEÚDO-->
+                                
+                                <!-- BOTÕES -->
+                                <div class="modal-footer">
+                                    <div class="col-md-3">
+                                        <button type="button" 
+                                                class="btn btn-success"
+                                                ng-click="salvaGrupoEmpresaVendedor()">
+                                            Salvar
+                                        </button>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="button" class="btn green"
+                                                popover-placement="top"
+                                                popover="Retoma as associação previamente salvas, sem alterações"
+                                                popover-trigger="mouseenter"
+                                                ng-click="resetaGrupoEmpresaVendedor()">
+                                            Resetar
+                                        </button>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="button" data-dismiss="modal" class="btn default">Fechar</button> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>              
+                <!-- END MODAL GRUPO EMPRESA VENDEDOR-->
+                
+                
+                
                 <div class="portlet-title">
                     <div class="caption">
                         <span class="caption-subject font-green-sharp bold uppercase">
@@ -266,19 +360,17 @@
                                             * </span>
                                             </label>
                                             <div class="col-md-3">
-                                                <!--div class="checkbox-list" ng-repeat="role in roles">
-                                                    <label class="checkbox">
-                                                        <checkbox normal ng-change="handleRole()"
-                                                               ng-model="role.selecionado">
-                                                        </checkbox>&nbsp;{{role.RoleName}}
-                                                    </label>
-                                                </div-->
                                                 <div class="radio-list" ng-repeat="role in roles">
                                                     <label class="radio">
                                                         <input type="radio" ng-value="role"
                                                                ng-model="$parent.roleSelecionada"
                                                                ng-change="handleRole()">
                                                         &nbsp;{{role.RoleName}}
+                                                        <button class="btn red"
+                                                                ng-show="roleSelecionada === role && ehComercial(role)"
+                                                                ng-click="exibeModalGrupoEmpresaVendedor()">
+                                                            <i class="fa fa-plus"></i>
+                                                        </button>
                                                     </label>
                                                 </div>
                                                 <span style="color:red" ng-show="!roleSelecionada">

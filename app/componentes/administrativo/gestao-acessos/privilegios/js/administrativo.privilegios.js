@@ -25,9 +25,14 @@ angular.module("administrativo-privilegios", [])
                             id: $campos.administracao.webpagesroles.RoleName,
                             ativo: true,  
                             nome: "Privilégio"
+                          },
+                          {
+                            id: $campos.administracao.webpagesroles.RoleLevel,
+                            ativo: true,  
+                            nome: "Nível"
                           }];
     $scope.itens_pagina = [10, 20, 50, 100];
-    $scope.privilegio = {busca:'', campo_busca : $scope.camposBusca[0], 
+    $scope.privilegio = {busca:'', campo_busca : $scope.camposBusca[1], 
                       itens_pagina : $scope.itens_pagina[0], pagina : 1,
                       total_registros : 0, faixa_registros : '0-0', total_paginas : 0, 
                       campo_ordenacao : {id: $campos.administracao.webpagesroles.RoleName, order : 0}};    
@@ -35,11 +40,10 @@ angular.module("administrativo-privilegios", [])
     $scope.roleSelecionada = undefined; 
     var controllerPrincipal = undefined;
     var oldControllerPrincipal = undefined;
-    //$scope.novoPrivilegio = ''; // cadastro
-    // Controllers e Methods
-    //$scope.todos = {id_controller : 0, ds_controller : 'Todos', selecionado : false};
+    $scope.inputCadastro = {titulo : '', nome: '', level : '', funcao : function(){}};
     $scope.originalControllers = [];                                          
     $scope.controllers = [];
+    $scope.levels = [];                                            
     // flags
     $scope.cadastraNovoPrivilegio = false; // faz exibir a linha para adicionar um novo privilégio
     // Permissões                                           
@@ -100,7 +104,7 @@ angular.module("administrativo-privilegios", [])
                 $scope.privilegio.campo_ordenacao.order = 0; // começa descendente                                 
             }else
                 // Inverte a ordenação: ASCENDENTE => DESCENDENTE e vice-versa                                
-                $scope.privilegio.campo_ordenacao.order = $scope.privilegio.campo_ordenacao.order === 0 ? 1 : 0;                                
+                $scope.privilegio.campo_ordenacao.order = $scope.privilegio.campo_ordenacao.order === 0 ? 1 : 0;               
             $scope.buscaPrivilegios(); 
         }
     };
@@ -109,7 +113,13 @@ angular.module("administrativo-privilegios", [])
       */
     $scope.ordena = function(){
         ordena(0);    
-    }
+    };
+    /**
+      * Ordena por level
+      */
+    $scope.ordenaPorNivel = function(){
+        ordena(1);    
+    }                                            
     /**
       * Retorna true se a ordenação está sendo feito por nome de forma crescente
       */
@@ -123,7 +133,21 @@ angular.module("administrativo-privilegios", [])
     $scope.estaOrdenadoDecrescente = function(){
         return $scope.privilegio.campo_ordenacao.id === $scope.camposBusca[0].id && 
                $scope.privilegio.campo_ordenacao.order === 1;    
-    };                          
+    }; 
+    /**
+      * Retorna true se a ordenação está sendo feito por nível de forma crescente
+      */
+    $scope.estaOrdenadoCrescentePorNivel = function(){
+        return $scope.privilegio.campo_ordenacao.id === $scope.camposBusca[1].id && 
+               $scope.privilegio.campo_ordenacao.order === 0;    
+    };
+    /**
+      * Retorna true se a ordenação está sendo feito por nível de forma decrescente
+      */
+    $scope.estaOrdenadoDecrescentePorNivel = function(){
+        return $scope.privilegio.campo_ordenacao.id === $scope.camposBusca[1].id && 
+               $scope.privilegio.campo_ordenacao.order === 1;    
+    };                                              
                                             
                                             
                                                 
@@ -220,50 +244,83 @@ angular.module("administrativo-privilegios", [])
                                                                                        
                                                 
     // AÇÕES
+    var obtemLevels = function(funcao){
+        $scope.showProgress(divPortletBodyPrivilegioPos);
+        $webapi.get($apis.getUrl($apis.administracao.webpagesrolelevels, 
+                                 [$scope.token, 0,$campos.administracao.webpagesrolelevels.LevelId])) 
+            .then(function(dados){
+                $scope.levels = dados.Registros;
+                if(typeof funcao === 'function') funcao();
+                $scope.hideProgress(divPortletBodyPrivilegioPos);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else $scope.showAlert('Houve uma falha ao requisitar níveis de privilégios (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress(divPortletBodyPrivilegioPos);
+              });     
+    };
+    var exibeModalInputPrivilegio = function(){
+        $('#modalInputPrivilegio').modal('show');    
+    };
+    var fechaModalInputPrivilegio = function(){
+        $('#modalInputPrivilegio').modal('hide');    
+    };                                            
     /**
       * Exibe cadastro novo privilégio
       */
     $scope.exibeCadastroNovoPrivilegio = function(exibe){
-        //$scope.cadastraNovoPrivilegio = exibe === undefined || exibe ? true : false;
-        //$scope.novoPrivilegio = '';
+        $scope.inputCadastro.titulo = 'Cadastro de privilégio';
+        $scope.inputCadastro.nome = '';
+        $scope.inputCadastro.level = '';
+        $scope.funcao = $scope.addPrivilegio;
         // Exibe o modal
-        $scope.showModalInput('Informe o nome do privilégio', 
-                        'Cadastro de privilégio', 'Cancelar', 'Salvar',
-                         function(text){ 
-                                if(!text){
-                                    $scope.showModalAlerta('Informe um nome');
-                                    return false;
-                                }
-                                if(text.length < 3){
-                                    //alert('Nome muito curto!');
-                                    $scope.showModalAlerta('Nome muito curto!');
-                                    return false;    
-                                }
-                                $scope.showProgress();
-                                $webapi.get($apis.getUrl($apis.administracao.webpagesroles, 
-                                                         [$scope.token], 
-                                                         {id: $campos.administracao.webpagesroles.RoleName,
-                                                          valor: text})) 
-                                    .then(function(dados){
-                                        if(dados.Registros.length > 0){
-                                            $scope.showModalAlerta('Já existe um privilégio com esse nome!');
-                                            $scope.hideProgress();
-                                            return;     
-                                        }
-                                        // Fecha o modal input
-                                        $scope.hideProgress();
-                                        $scope.fechaModalInput();
-                                        // Atualiza
-                                        addPrivilegio(text, 4); // RoleLevel!
-                                      },
-                                      function(failData){
-                                         if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
-                                         else $scope.showAlert('Houve uma falha ao consultar privilégio (' + failData.status + ')', true, 'danger', true);
-                                         $scope.hideProgress();
-                                      }); 
-                                return true;
-                              }); 
+        if($scope.levels.length > 0)
+            exibeModalInputPrivilegio();
+        else{
+            // Obtém levels
+            obtemLevels(function(){ exibeModalInputPrivilegio()});
+        }
     }
+    /**
+      * Valida dados informados para cadastro de novo privilégio e cadastra, se válido
+      */
+    $scope.addPrivilegio = function(){
+        if(!$scope.inputCadastro.level || typeof $scope.inputCadastro.level.LevelId !== 'number'){
+            $scope.showModalAlerta('Selecione um nível');
+            return;
+        };
+        if(!$scope.inputCadastro.nome){
+            $scope.showModalAlerta('Informe um nome');
+            return;
+        }
+        if($scope.inputCadastro.nome.length < 3){
+            //alert('Nome muito curto!');
+            $scope.showModalAlerta('Nome muito curto!');
+            return;    
+        }
+        $scope.showProgress();
+        $webapi.get($apis.getUrl($apis.administracao.webpagesroles, 
+                                 [$scope.token], 
+                                 {id: $campos.administracao.webpagesroles.RoleName,
+                                  valor: $scope.inputCadastro.nome})) 
+            .then(function(dados){
+                if(dados.Registros.length > 0){
+                    $scope.showModalAlerta('Já existe um privilégio com esse nome!');
+                    $scope.hideProgress();
+                    return;     
+                }
+                // Fecha o modal input
+                $scope.hideProgress();
+                $scope.fechaModalInput();
+                // Atualiza
+                addPrivilegio($scope.inputCadastro.nome, $scope.inputCadastro.level.LevelId);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else $scope.showAlert('Houve uma falha ao consultar privilégio (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress();
+              });     
+    };
     /**
       * Adiciona privilégio
       */
@@ -293,63 +350,87 @@ angular.module("administrativo-privilegios", [])
       * Altera o nome do privilégio
       */
     $scope.alteraPrivilegio = function(privilegio){
+        $scope.inputCadastro.titulo = 'Alteração de privilégio';
+        $scope.inputCadastro.nome = privilegio.RoleName;
+        $scope.inputCadastro.level = privilegio.RoleLevels;
+        $scope.funcao = alteraPrivilegio;
         // Exibe o modal
-        $scope.showModalInput('Informe o novo nome do privilégio ' + privilegio.RoleName, 
-                        'Alteração de privilégio', 'Cancelar', 'Salvar',
-                         function(text){ 
-                                // Verifica se houve alteração
-                                if(text === privilegio.RoleName){
-                                    // Não alterou => Nada faz
-                                    $scope.fechaModalInput();
-                                    return true;
-                                }
-                                if(!text){
-                                    $scope.showModalAlerta('Informe um nome');
-                                    return false;
-                                }
-                                if(text.length < 3){
-                                    //alert('Nome muito curto!');
-                                    $scope.showModalAlerta('Nome muito curto!');
-                                    return false;    
-                                }
-                                // Verifica se o nome é único
-                                if(text.toUpperCase() === privilegio.RoleName.toUpperCase()){
-                                    $scope.fechaModalInput();
-                                    // Atualiza
-                                    atualizaNomePrivilegio(privilegio, text);
-                                }else{
-                                    $scope.showProgress();
-                                    $webapi.get($apis.getUrl($apis.administracao.webpagesroles, 
-                                                             [$scope.token], 
-                                                             {id: $campos.administracao.webpagesroles.RoleName,
-                                                              valor: text})) 
-                                        .then(function(dados){
-                                            if(dados.Registros.length > 0){
-                                                $scope.showModalAlerta('Já existe um privilégio com esse nome!');
-                                                $scope.hideProgress();
-                                                return;     
-                                            }
-                                            // Fecha o modal input
-                                            $scope.hideProgress();
-                                            $scope.fechaModalInput();
-                                            // Atualiza
-                                            atualizaNomePrivilegio(privilegio, text);
-                                          },
-                                          function(failData){
-                                             if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
-                                             else $scope.showAlert('Houve uma falha ao consultar privilégio (' + failData.status + ')', true, 'danger', true);
-                                             $scope.hideProgress();
-                                          }); 
-                                }
-                                return true;
-                              }, privilegio.RoleName); 
+        if($scope.levels.length > 0){
+            if(privilegio.RoleLevels){ 
+                var l = $filter('filter')($scope.levels, function(l){ return l.LevelId === privilegio.RoleLevels.LevelId });   
+                if(l.length > 0) $scope.inputCadastro.level = l[0];
+            }
+            exibeModalInputPrivilegio();
+        }else{
+            // Obtém levels
+            obtemLevels(function(){ 
+                                    if(privilegio.RoleLevels){ 
+                                        var l = $filter('filter')($scope.levels, function(l){ return l.LevelId === privilegio.RoleLevels.LevelId });   
+                                        if(l.length > 0) $scope.inputCadastro.level = l[0];
+                                    }
+                                    exibeModalInputPrivilegio()
+                        });
+        }
+    };
+    /**
+      * Valida dados informados para alteração do privilégio e altera, se válido
+      */
+    var alteraPrivilegio = function(){
+        // Verifica se houve alteração
+        if($scope.inputCadastro.nome === privilegio.RoleName && 
+           $scope.inputCadastro.level.LevelId === privilegio.RoleLevels.LevelId){
+            // Não alterou => Nada faz
+            $scope.fechaModalInput();
+            return;
+        }
+        if(!$scope.inputCadastro.level || typeof $scope.inputCadastro.level.LevelId !== 'number'){
+            $scope.showModalAlerta('Selecione um nível');
+            return;
+        };
+        if(!$scope.inputCadastro.nome){
+            $scope.showModalAlerta('Informe um nome');
+            return;
+        }
+        if($scope.inputCadastro.nome.length < 3){
+            $scope.showModalAlerta('Nome muito curto!');
+            return;    
+        }
+        // Verifica se o nome é único
+        if($scope.inputCadastro.nome.toUpperCase() === privilegio.RoleName.toUpperCase()){
+            $scope.fechaModalInput();
+            // Atualiza
+            atualizaNomePrivilegio(privilegio, text);
+        }else{
+            $scope.showProgress();
+            $webapi.get($apis.getUrl($apis.administracao.webpagesroles, 
+                                     [$scope.token], 
+                                     {id: $campos.administracao.webpagesroles.RoleName,
+                                      valor: $scope.inputCadastro.nome})) 
+                .then(function(dados){
+                    if(dados.Registros.length > 0){
+                        $scope.showModalAlerta('Já existe um privilégio com esse nome!');
+                        $scope.hideProgress();
+                        return;     
+                    }
+                    // Fecha o modal input
+                    $scope.hideProgress();
+                    $scope.fechaModalInput();
+                    // Atualiza
+                    atualizaNomePrivilegio(privilegio, $scope.inputCadastro.nome, $scope.inputCadastro.level.LevelId);
+                  },
+                  function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                     else $scope.showAlert('Houve uma falha ao consultar privilégio (' + failData.status + ')', true, 'danger', true);
+                     $scope.hideProgress();
+                  }); 
+        }    
     };
     /**
       * Atualiza efetivamente o nome do privilégio
       */
-    var atualizaNomePrivilegio = function(privilegio, novoNome){
+    var atualizaNomePrivilegio = function(privilegio, novoNome, level){
         $scope.showProgress(divPortletBodyPrivilegioPos);
-        var jsonPrivilegio = {RoleId : privilegio.RoleId, RoleName : novoNome};
+        var jsonPrivilegio = {RoleId : privilegio.RoleId, RoleName : novoNome, RoleLevel : level};
         console.log(jsonPrivilegio);
         $webapi.update($apis.getUrl($apis.administracao.webpagesroles, undefined,
                        {id: 'token', valor: $scope.token}), jsonPrivilegio)

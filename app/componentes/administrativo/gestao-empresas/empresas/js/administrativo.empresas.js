@@ -286,6 +286,7 @@ angular.module("administrativo-empresas", [])
       * Efetiva o cadastro do grupo empresa
       */
     var adicionaGrupoEmpresa = function(jsonEmpresa){
+        //console.log(jsonEmpresa);
         $webapi.post($apis.getUrl($apis.cliente.grupoempresa, undefined, 
                                   {id: 'token', valor: $scope.token}), jsonEmpresa)
                 .then(function(id_controller){

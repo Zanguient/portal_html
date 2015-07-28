@@ -26,6 +26,7 @@ Não é necessário nenhum outro módulo externo.
   * APIS:
     - administracao/webpagescontrollers
     - administracao/webpagespermissions
+	- administracao/webpagesrolelevels
 	- administracao/webpagesroles
 	
  
@@ -68,7 +69,10 @@ Não é necessário nenhum outro módulo externo.
 			    inserir : [ id_method ],
 				deletar : [ id_method ],
 				id_controller_principal : id_controller
-			  }				
+				}
+  * api/administracao/webpagesrolelevels
+     - GET : obtém os níveis (coleção 0)
+              { LevelId: int, LevelNome: string }	 
   * api/administracao/webpagesroles
      - DELETE : deletar uma determinada role    url/?token=...&RoleId=idRole
 	 - GET : listagem dos privilégios na tabela (coleção 1)

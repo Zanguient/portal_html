@@ -29,6 +29,45 @@
                 
                <!-- MODAIS -->
                 
+               <!-- MODAL INPUT -->
+               <div class="modal fade bs-modal-sm modal-input" id="modalInputPrivilegio" role="dialog"
+                    data-backdrop="static" data-keyboard="false">
+                   <div class="modal-dialog modal-sm">
+                       <div class="modal-content">
+                           <div class="modal-header">
+                               <h4 class="modal-title modal-cabecalho">{{inputCadastro.titulo}}</h4>
+                           </div>
+                           <div class="modal-body modal-corpo" style="text-align: center">
+                                Nome do Privilégio
+                                <input class="form-control modalConfig" type="text" ng-model="inputCadastro.nome"
+                                       ng-keypress="($event.which === 13) ? inputCadastro.funcao() : 0">
+                               
+                                Nível
+                                <select class="form-control"
+                                        ng-model="inputCadastro.level"
+                                        ng-options="level as (level.LevelNome | uppercase) for level in gruposempresasvendedor  | orderBy:'ds_nome'"
+                                        style="width:100%">  
+                                    <option style="display:none" value="">Empresa</option>
+                                </select>
+                           </div>
+                           <div class="modal-footer">
+                               <div class="col-sm-4 col-sm-offset-1">
+                                   <button type="button" class="btn default" data-dismiss="modal">
+                                       {{input.textoCancela}}
+                                   </button>
+                               </div>                           
+                               <div class="col-sm-4 col-sm-offset-1">
+                                   <button type="button" class="btn blue"
+                                           ng-click="inputCadastro.funcao()">
+                                       {{input.textoConfirma}}
+                                   </button>                                
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <!-- END MODAL INPUT -->
+                
                 <!-- MODAL MÓDULOS E FUNCIONALIDADES -->
                 <div class="modal fade ng-scope" id="modalFuncionalidades" tabindex="-1" 
                      aria-hidden="true" style="display: none;">
@@ -367,6 +406,13 @@
                                                     ng-class="{'sorting_asc' : estaOrdenadoCrescente(), 'sorting_desc' : estaOrdenadoDecrescente()}">
                                                      Privilégio
                                                 </th>
+                                                <th class="sorting" 
+                                                    tabindex="0" rowspan="1" colspan="1" 
+                                                    style="width: 120px"
+                                                    ng-click="ordenaPorNivel()"
+                                                    ng-class="{'sorting_asc' : estaOrdenadoCrescentePorNivel(), 'sorting_desc' : estaOrdenadoDecrescentePorNivel()}">
+                                                     Nível
+                                                </th>
                                                 <th class="sorting_disabled" tabindex="4" 
                                                     rowspan="1" colspan="1" style="width: 48px;text-aling:center;">
                                                      Opções
@@ -378,6 +424,9 @@
                                             <tr role="row" class="odd" ng-repeat="privilegio in privilegios">
                                                 <td>
                                                      {{privilegio.RoleName}}
+                                                </td>
+                                                <td>
+                                                     {{privilegio.RoleLevels.LevelName}}
                                                 </td>
                                                 <td class="center btnacoes">
                                                     <div class="btn-group" dropdown dropdown-append-to-body
