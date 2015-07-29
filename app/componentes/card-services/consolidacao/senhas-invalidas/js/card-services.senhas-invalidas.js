@@ -63,9 +63,9 @@ angular.module("card-services-senhas-invalidas", [])
             $scope.buscaSenhasInvalidas();
         });
         // Obtém as permissões
-        if($scope.methodsDoControllerCorrente && $scope.methodsDoControllerCorrente.length > 0){
-            permissaoAlteracao = $filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'ATUALIZAÇÃO' }).length > 0;  
-            //permissaoRemocao = $filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'REMOÇÃO' }).length > 0;
+        if($scope.methodsDoControllerCorrente){// && $scope.methodsDoControllerCorrente.length > 0){
+            permissaoAlteracao = $scope.methodsDoControllerCorrente['atualização'] ? true : false;//$filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'ATUALIZAÇÃO' }).length > 0;   
+            //permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;
         }
         // Carrega dados de acesso com senha inválida
         $scope.buscaSenhasInvalidas();

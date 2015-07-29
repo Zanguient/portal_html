@@ -782,7 +782,12 @@ angular.module("AtosCapital", ['ui.router',
             var menu = {};
             menu.ds_controller = controller.ds_controller;
             menu.id_controller = controller.id_controller;
-            menu.methods = controller.methods;
+            // Métodos
+            //menu.methods = controller.methods;
+            menu.methods = {};
+            for(var m = 0; m < controller.methods.length; m++)
+                menu.methods[controller.methods[m].ds_method.toLowerCase()] = true;
+            //console.log("METHODS OF " + menu.ds_controller);console.log(menu.methods);
             // Atribui permissão
             atribuiPermissao(menu);
             // A priori não tem premissão
@@ -795,7 +800,12 @@ angular.module("AtosCapital", ['ui.router',
                     var subMenu = {};
                     subMenu.ds_controller = subController1.ds_controller;
                     subMenu.id_controller = subController1.id_controller;
-                    subMenu.methods = subController1.methods;
+                    // Métodos
+                    //subMenu.methods = subController1.methods;
+                    subMenu.methods = {};
+                    for(var m = 0; m < subController1.methods.length; m++)
+                        subMenu.methods[subController1.methods[m].ds_method.toLowerCase()] = true;
+                    //console.log("METHODS OF " + subMenu.ds_controller);console.log(subMenu.methods);
                     // Atribui permissão
                     atribuiPermissao(subMenu, menu);
                     // A priori não tem premissão
@@ -809,7 +819,12 @@ angular.module("AtosCapital", ['ui.router',
                             var itemMenu = {};
                             itemMenu.ds_controller = subController2.ds_controller;
                             itemMenu.id_controller = subController2.id_controller;
-                            itemMenu.methods = subController2.methods;
+                            // Métodos
+                            //itemMenu.methods = subController2.methods;
+                            itemMenu.methods = {};
+                            for(var m = 0; m < subController2.methods.length; m++)
+                                itemMenu.methods[subController2.methods[m].ds_method.toLowerCase()] = true;
+                            //console.log("METHODS OF " + itemMenu.ds_controller);console.log(itemMenu.methods);
                             // Atribui permissão
                             atribuiPermissao(itemMenu, subMenu);
                             // A priori não tem premissão

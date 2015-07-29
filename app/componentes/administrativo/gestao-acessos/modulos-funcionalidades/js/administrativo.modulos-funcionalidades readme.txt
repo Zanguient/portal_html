@@ -69,9 +69,10 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 					methodspadrao : bool // indica se é para cadastrar os métodos padrão (Atualização / Cadastro / Leitura / Remoção)
 				}
 			 // obtém como resposta o id_controller
-	- PUT : altera o nome de exibição de um módulo e/ou se ele é a página inicial ou não (controller)
+	- PUT : altera o nome de exibição de um módulo ou o pai ao qual ele é filho
 				{ id_controller : int,
-				  ds_controller : string
+				  ds_controller : string,
+				  id_subController : int ou null
 				}
 				
 	OBSERVAÇÕES : Cadastrar ou Alterar um controller implica em: 

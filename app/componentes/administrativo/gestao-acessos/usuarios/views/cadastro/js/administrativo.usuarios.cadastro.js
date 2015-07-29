@@ -168,7 +168,7 @@ angular.module("administrativo-usuarios-cadastro", [])
             $scope.atualizaProgressoDoCadastro();
         });
         
-        if(!$scope.methodsDoControllerCorrente || $scope.methodsDoControllerCorrente.length == 0){
+        if(!$scope.methodsDoControllerCorrente){// || $scope.methodsDoControllerCorrente.length == 0){
             // Sem permissão nenhuma ?
             $scope.goUsuarioSemPrivilegios();
             return;
@@ -179,7 +179,7 @@ angular.module("administrativo-usuarios-cadastro", [])
         // Verifica se tem parâmetros
         if($stateParams.usuario !== null){
             // Verifica se tem permissão para alterar
-            if($filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'ATUALIZAÇÃO' }).length == 0){
+            if(!$scope.methodsDoControllerCorrente['atualização']){//$filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'ATUALIZAÇÃO' }).length == 0){
                // Não pode alterar
                 $scope.hideProgress(divPortletBodyUsuarioCadPos);
                 $scope.goUsuarioSemPrivilegios();
@@ -210,12 +210,12 @@ angular.module("administrativo-usuarios-cadastro", [])
             //console.log($stateParams.usuario);
             //console.log($scope.old);
         }else // Verifica se tem permissão para cadastrar
-            if($filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'CADASTRO' }).length == 0){
+            if(!$scope.methodsDoControllerCorrente['cadastro']){//$filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'CADASTRO' }).length == 0){
             // Não pode cadastrar
             $scope.hideProgress(divPortletBodyUsuarioCadPos);
             $scope.goUsuarioSemPrivilegios();
             return;  
-        }
+        }        
         $scope.temPermissao = true;
         // Obtém Roles
         obtemRoles(); 
@@ -537,7 +537,10 @@ angular.module("administrativo-usuarios-cadastro", [])
         $scope.usuario.empresa = '';
         $scope.buscaEmpresas();    
     };
-    $scope.buscaGrupoEmpresas = function(texto){
+    /**
+      * Busca Grupos empresas a partir do texto parcial
+      */
+    $scope.buscaGrupoEmpresas = function(texto, restrictList){
        $scope.pesquisandoGruposEmpresas = true;
        // Obtém a URL                                                      
        var url = $apis.getUrl($apis.cliente.grupoempresa, 
@@ -545,8 +548,18 @@ angular.module("administrativo-usuarios-cadastro", [])
                                   {id:$campos.cliente.grupoempresa.ds_nome, valor: texto + '%'});
        // Requisita e obtém os dados
        return $http.get(url).then(function(dados){
+           var list = dados.data.Registros;
+           // Verifica se tem uma lista para restringir a lista obtida via http get
+           if(restrictList && angular.isArray(restrictList)){
+               for(var k = 0; k < restrictList.length; k++){
+                   var rl = restrictList[k];
+                   // Busca o elemento da lista restrita na lista completa
+                   var el = $filter('filter')(list, function(e){ return e.id_grupo === rl.id_grupo})[0];
+                   if(el) list.splice(list.indexOf(el), 1); // Remove o elemento
+               }       
+           }
            $scope.pesquisandoGruposEmpresas = false;
-           return dados.data.Registros;
+           return list;
         },function(failData){
              if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
              else $scope.showAlert('Houve uma falha ao requisitar o filtro de empresas (' + failData.status + ')', true, 'danger', true);
@@ -554,7 +567,10 @@ angular.module("administrativo-usuarios-cadastro", [])
              return [];
           });
     };
-    $scope.buscaEmpresas = function(texto){
+    /**
+      * Busca filiais a partir do grupo empresa selecionado
+      */                                                     
+    $scope.buscaEmpresas = function(){
        $scope.pesquisandoEmpresas = true;
        // filtro
        var filtro = {id:$campos.cliente.empresa.id_grupo, valor: $scope.usuario.grupoempresa.id_grupo};
@@ -812,10 +828,10 @@ angular.module("administrativo-usuarios-cadastro", [])
         return role.RoleName.toUpperCase() === 'COMERCIAL';
     }
     /**
-      * Filtra para não exibir os grupos empresas que já estão na lista de associados 
+      * Retorna true se o modal de associação de grupos empresas com vendedor estiver sendo exibido
       */
-    $scope.filtraGrupoEmpresaVendedor = function(grupoempresa){
-        return $filter('filter')($scope.gruposempresasvendedor, function(g){return g.id_grupo === grupoempresa.id_grupo;}).length === 0;    
+    $scope.estaExibindoModalGrupoEmpresaVendedor = function(){
+        return $('#modalGrupoEmpresaVendedor').hasClass('in');    
     };
     /**
       * Exibe o modal de associação de grupos empresas com vendedor
@@ -849,7 +865,9 @@ angular.module("administrativo-usuarios-cadastro", [])
       * Retoma as associações previamente salvas no banco
       */                                                     
     $scope.resetaGrupoEmpresaVendedor = function(){
-        angular.copy($scope.old.gruposempresasvendedor, $scope.gruposempresasvendedor);    
+        angular.copy($scope.old.gruposempresasvendedor, $scope.gruposempresasvendedor); 
+        addidsgrupoempresavendedor = [];
+        removeidsgrupoempresavendedor = [];
     };
     /**
       * Armazena em memória as associações que devem ser criadas e desfeitas

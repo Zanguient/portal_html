@@ -46,9 +46,13 @@
                                     
                                     <!--BUSCAR EMPRESA-->
                                     <div class="col-sm-6" style="padding-right: 1px; padding-left: 1px; text-align: center;">
-                                        <label style="text-align:center"><strong>Buscar Empresa</strong></label>
+                                        <label style="text-align:center">
+                                            <strong>Buscar Empresa</strong>
+                                        </label>
                                         <label>
-                                            <input type="text" class="form-control" 
+                                            <input type="text" class="form-control"
+                                                   style="width:100%"
+                                                   ng-class="{'spinner' : pesquisandoGruposEmpresas}"
                                                    placeholder="Digite o nome da empresa" 
                                                    ng-disabled="grupoempresa"
                                                    ng-model="grupoempresavendedor.busca"
@@ -58,7 +62,7 @@
                                                    typeahead-focus-first=false
                                                    typeahead-min-length='3'
                                                    typeahead-wait-ms="500"
-                                                   typeahead="grupoempresa as (grupoempresa.ds_nome | uppercase) for grupoempresa in buscaGrupoEmpresas($viewValue) | filter: filtraGrupoEmpresaVendedor" />
+                                                   typeahead="grupoempresa as (grupoempresa.ds_nome | uppercase) for grupoempresa in buscaGrupoEmpresas($viewValue, gruposempresasvendedor)" />
                                         </label>
                                         <label>
                                             <button class="btn red"
@@ -71,12 +75,13 @@
                                     </div>
                                     <!--EMPRESAS ASSOCIADAS-->                                    
                                     <div class="col-md-6" style="text-align:center">
-                                        <label style="text-align:center"><strong>Empresas Associadas</strong>
+                                        <label style="text-align:center">
+                                            <strong>Empresas Associadas</strong>
                                         </label>
                                         <select class="form-control" 
                                                 size="12" 
                                                 ng-model="grupoempresavendedor.selecionado"
-                                                ng-options="grupoempresa as (grupoempresa.ds_nome | uppercase) for grupoempresa in gruposempresasvendedor  | orderBy:'ds_nome'"
+                                                ng-options="grupoempresa as (grupoempresa.ds_nome | uppercase) for grupoempresa in gruposempresasvendedor | orderBy:'ds_nome'"
                                                 style="width:100%">  
                                             <option style="display:none" value="">Empresa</option>
                                         </select>
@@ -104,7 +109,7 @@
                                     <div class="col-md-4">
                                         <button type="button" class="btn green"
                                                 popover-placement="top"
-                                                popover="Retoma as associação previamente salvas, sem alterações"
+                                                popover="Retoma as associações previamente salvas, sem alterações"
                                                 popover-trigger="mouseenter"
                                                 ng-click="resetaGrupoEmpresaVendedor()">
                                             Resetar
@@ -275,18 +280,24 @@
                                                     <input type="text" 
                                                            placeholder="login" 
                                                            class="form-control" 
+                                                           ng-class="{'spinner' : validandoLogin}"
                                                            ng-model="usuario.login" 
                                                            ng-blur="validaLogin()" 
                                                            name="usuarioLogin" valid-username
                                                            ng-minlength="3" ng-maxlength="20" required/>
                                                     <span style="color:red" ng-show="formCadastroUsuario.usuarioLogin.$dirty && formCadastroUsuario.usuarioLogin.$invalid">
-                                                    <span ng-show="formCadastroUsuario.usuarioLogin.$error.required">Login é obrigatório!</span>
-                                                    <span ng-show="formCadastroUsuario.usuarioLogin.$error.minlength">Login deve conter no mínimo três caracteres!</span>
-                                                    <span ng-show="formCadastroUsuario.usuarioLogin.$error.maxlength">Login deve conter no máximo vinte caracteres!</span>    
+                                                        <span ng-show="formCadastroUsuario.usuarioLogin.$error.required">Login é obrigatório!</span>
+                                                        <span ng-show="formCadastroUsuario.usuarioLogin.$error.minlength">Login deve conter no mínimo três caracteres!</span>
+                                                        <span ng-show="formCadastroUsuario.usuarioLogin.$error.maxlength">Login deve conter no máximo vinte caracteres!</span>    
                                                     </span>
                                                 </div>
                                             </div>
-                                            <img ng-src="../img/loading-atos.gif" style="margin-top: 10px" ng-show="validandoLogin"/><label id="labelLoginEmUso" class="control-label" hidden><strong>Login já está em uso!</strong></label>
+                                            <!--img ng-src="../img/loading-atos.gif" 
+                                                 style="margin-top: 10px" 
+                                                 ng-show="validandoLogin"/-->
+                                            <label id="labelLoginEmUso" class="control-label" hidden>
+                                                <strong>Login já está em uso!</strong>
+                                            </label>
                                         </div>
                                         <!-- E-MAIL -->
                                         <div class="form-group" ng-class="{ 'has-error' : formCadastroUsuario.usuarioEmail.$invalid && !formCadastroUsuario.usuarioEmail.$pristine }">
@@ -299,22 +310,30 @@
                                                     <input type="email" 
                                                            placeholder="email@email.com" 
                                                            class="form-control" 
+                                                           ng-class="{'spinner' : validandoEmail}"
                                                            ng-model="usuario.email" 
                                                            ng-blur="validaEmail()"
                                                            style="text-transform: lowercase;"
                                                            name="usuarioEmail" required/>
                                                     <span style="color:red" ng-show="formCadastroUsuario.usuarioEmail.$dirty && formCadastroUsuario.usuarioEmail.$invalid">
-                                                    <span ng-show="formCadastroUsuario.usuarioEmail.$error.required">E-mail é obrigatório!</span>
-                                                    <span ng-show="formCadastroUsuario.usuarioEmail.$error.email">Endereço de e-mail é inválido!                                                       </span>
+                                                        <span ng-show="formCadastroUsuario.usuarioEmail.$error.required">E-mail é obrigatório!</span>
+                                                        <span ng-show="formCadastroUsuario.usuarioEmail.$error.email">Endereço de e-mail é inválido!</span>
+                                                    </span>
                                                 </div>
                                             </div>
-                                            <img ng-src="../img/loading-atos.gif" style="margin-top: 10px" ng-show="validandoEmail"/><label id="labelEmailEmUso" class="control-label" hidden><strong>E-mail já está em uso!</strong></label>
+                                            <!--img ng-src="../img/loading-atos.gif" 
+                                                 style="margin-top: 10px" 
+                                                 ng-show="validandoEmail"/-->
+                                            <label id="labelEmailEmUso" class="control-label" hidden>
+                                                <strong>E-mail já está em uso!</strong>
+                                            </label>
                                         </div>
                                         <!-- GRUPO EMPRESA -->
                                         <div class="form-group">
                                             <label class="control-label col-md-3">Empresa </label>
                                             <div class="col-md-4">
                                                 <input type="text" class="form-control" 
+                                                       ng-class="{'spinner' : pesquisandoGruposEmpresas && !estaExibindoModalGrupoEmpresaVendedor()}"
                                                        placeholder="Digite o nome da empresa" 
                                                        ng-disabled="grupoempresa"
                                                        ng-model="usuario.grupoempresa"
@@ -328,13 +347,16 @@
                                                        typeahead-wait-ms="500"
                                                        typeahead="grupoempresa as grupoempresa.ds_nome for grupoempresa in buscaGrupoEmpresas($viewValue)" />
                                             </div>
-                                            <img ng-src="../img/loading-atos.gif" style="margin-top: 10px" ng-show="pesquisandoGruposEmpresas"/>
+                                            <!--img ng-src="../img/loading-atos.gif" 
+                                                 style="margin-top: 10px" 
+                                                 ng-show="pesquisandoGruposEmpresas && !estaExibindoModalGrupoEmpresaVendedor"/-->
                                         </div>
                                         <!-- EMPRESA -->
                                         <div class="form-group">
                                             <label class="control-label col-md-3">Filial </label>
                                             <div class="col-md-4">
                                                 <input type="text" class="form-control" 
+                                                       ng-class="{'spinner' : pesquisandoEmpresas}"
                                                        ng-disabled="!usuario.grupoempresa.ds_nome || empresas.length == 0" 
                                                        placeholder="Digite o nome da filial" 
                                                        ng-model="usuario.empresa"
@@ -349,7 +371,7 @@
                                                        typeahead-focus-first=true
                                                        typeahead="empresa as empresa.ds_fantasia for empresa in empresas  | filter:$viewValue:emptyOrMatch" />
                                             </div>
-                                            <img ng-src="../img/loading-atos.gif" style="margin-top: 10px" ng-show="pesquisandoEmpresas"/>
+                                            <!--img ng-src="../img/loading-atos.gif" style="margin-top: 10px" ng-show="pesquisandoEmpresas"/-->
                                         </div>
                                     </div>
                                     <!-- PRIVILÉGIOS -->
@@ -367,7 +389,7 @@
                                                                ng-change="handleRole()">
                                                         &nbsp;{{role.RoleName}}
                                                         <button class="btn red"
-                                                                ng-show="roleSelecionada === role && ehComercial(role)"
+                                                                ng-class="{'element-hidden' : roleSelecionada !== role || !ehComercial(role)}"
                                                                 ng-click="exibeModalGrupoEmpresaVendedor()">
                                                             <i class="fa fa-plus"></i>
                                                         </button>

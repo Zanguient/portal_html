@@ -114,6 +114,7 @@
                                                     <input type="text" 
                                                        placeholder="Nome Fantasia" 
                                                        class="form-control" 
+                                                       ng-class="{'spinner' : validandoNomeFantasia}"    
                                                        ng-model="filial.ds_fantasia" 
                                                        ng-blur="validaNomeFantasia()"
                                                        name="filialEmpresa" required/>
@@ -125,8 +126,8 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            <img ng-src="../img/loading-atos.gif" style="margin-top: 10px" 
-                                                 ng-show="validandoNomeFantasia"/>
+                                            <!--img ng-src="../img/loading-atos.gif" style="margin-top: 10px" 
+                                                 ng-show="validandoNomeFantasia"/-->
                                             <label id="labelNomeFantasiaEmUso" class="control-label" hidden>
                                                 <strong>Nome fantasia já está em uso!</strong>
                                             </label>
@@ -146,6 +147,7 @@
                                                     <input type="text" 
                                                        placeholder="CNPJ" 
                                                        class="form-control"
+                                                       ng-class="{'spinner' : validandoCNPJ}"
                                                        ng-disabled="!ehCadastro()"
                                                        ng-model="filial.nu_cnpj" 
                                                        ng-blur="validaCNPJ()"
@@ -163,8 +165,8 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            <img ng-src="../img/loading-atos.gif" style="margin-top: 10px" 
-                                                 ng-show="validandoCNPJ"/>
+                                            <!--img ng-src="../img/loading-atos.gif" style="margin-top: 10px" 
+                                                 ng-show="validandoCNPJ"/-->
                                             <label id="labelCNPJEmUso" class="control-label" hidden>
                                                 <strong>CNPJ já está em uso!</strong>
                                             </label>

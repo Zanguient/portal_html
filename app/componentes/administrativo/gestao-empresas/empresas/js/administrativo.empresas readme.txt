@@ -46,6 +46,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				ds_nome : string,
 				dt_cadastro : date,
 				token : string,
+				fl_ativo : boolean,
 				fl_cardservices : boolean,
 				fl_taxservices : boolean,
 				fl_proinfo : boolean,
