@@ -92,6 +92,18 @@ body.modal-open {
   font-weight: bolder;
 }
 
+.botaoGrupoVendendor{
+  color: #7e1416;
+  font-size:20px; 
+  cursor: pointer;
+}
+
+.botaoGrupoVendendor:hover{
+  color: #c22629;
+}
+
+
+
 .botaoCheckCociliacaoVendas{
 margin-top:170px;
 }
@@ -187,6 +199,10 @@ margin-top:170px;
   text-align: center;
 }
 
+.conteudoColunas{
+  text-align: center;
+}
+
 .conteudoRelatorioAnaliticoCash{
     margin-top: 20px;
     border-bottom: 1px solid #EAEAEA;    
@@ -227,10 +243,8 @@ margin-top:170px;
     text-align:right;
 }
 
-.dadosEmpresa{
-    margin-bottom: 10px;
-    text-align: left;
-    
+.dadosEmpresa{   
+    text-align: left;    
 }
 
 
@@ -385,3 +399,6 @@ margin-top:170px;
  background: red;
 }*/
 
+tbody.centralizarVertical > tr > td {
+   vertical-align: middle;
+}

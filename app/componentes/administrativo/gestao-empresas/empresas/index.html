@@ -219,7 +219,8 @@
                 </div>         
                 <div class="table-scrollable">
                     <table class="table table-striped table-hover table-bordered dataTable no-footer conteudoTabelas" 
-                           role="grid" >
+                           role="grid">
+                           
                         <thead>
                             <tr class="" role="row">
                                 <th class="" 
@@ -267,15 +268,15 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr role="row" class="odd" ng-repeat="empresa in empresas">
+                        <tbody class="centralizarVertical">
+                            <tr role="row" class="odd" ng-repeat="empresa in empresas" style="max-heigt:30px">
                                 <td class="sorting_1"
                                     style="text-align:left;">
                                         <div class="dadosEmpresa">
                                             {{empresa.ds_nome | uppercase}}
                                         </div>
                                 </td>
-                                <td style="text-align:left;">
+                                <td>
                                     <div class="dadosEmpresa" style="text-align:center">
                                         <i class="fa icone-cardservices" title="Card Services"
                                            ng-show="empresa.fl_cardservices" style="font-size: 30px"></i>

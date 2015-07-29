@@ -46,24 +46,31 @@
                                     
                                     <!--BUSCAR EMPRESA-->
                                     <div class="col-sm-6" style="padding-right: 1px; padding-left: 1px; text-align: center;">
-                                        <label style="text-align:center">
-                                            <strong>Buscar Empresa</strong>
-                                        </label>
-                                        <label>
-                                            <input type="text" class="form-control"
-                                                   style="width:100%"
-                                                   ng-class="{'spinner' : pesquisandoGruposEmpresas}"
-                                                   placeholder="Digite o nome da empresa" 
-                                                   ng-disabled="grupoempresa"
-                                                   ng-model="grupoempresavendedor.busca"
-                                                   onfocus="this.select();" 
-                                                   onmouseup="return false;"
-                                                   typeahead-on-select="adicionaGrupoEmpresaVendedor()"
-                                                   typeahead-focus-first=false
-                                                   typeahead-min-length='3'
-                                                   typeahead-wait-ms="500"
-                                                   typeahead="grupoempresa as (grupoempresa.ds_nome | uppercase) for grupoempresa in buscaGrupoEmpresas($viewValue, gruposempresasvendedor)" />
-                                        </label>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <label style="text-align:center">
+                                                    <strong>Buscar Empresa</strong>
+                                                </label>
+                                            </div>
+                                            
+                                            <div class="col-sm-12">
+                                                <label style="width:100%">
+                                                    <input type="text" class="form-control"
+                                                           style="width:100%"
+                                                           ng-class="{'spinner' : pesquisandoGruposEmpresas}"
+                                                           placeholder="Digite o nome da empresa" 
+                                                           ng-disabled="grupoempresa"
+                                                           ng-model="grupoempresavendedor.busca"
+                                                           onfocus="this.select();" 
+                                                           onmouseup="return false;"
+                                                           typeahead-on-select="adicionaGrupoEmpresaVendedor()"
+                                                           typeahead-focus-first=false
+                                                           typeahead-min-length='3'
+                                                           typeahead-wait-ms="500"
+                                                           typeahead="grupoempresa as (grupoempresa.ds_nome | uppercase) for grupoempresa in buscaGrupoEmpresas($viewValue, gruposempresasvendedor)" />
+                                                </label>
+                                            </div>
+                                        </div>
                                         <label>
                                             <button class="btn red"
                                                     ng-show="grupoempresavendedor.busca.ds_nome"
@@ -89,7 +96,7 @@
                                             <button class="btn grey" 
                                                     ng-class="{'element-hidden' : !grupoempresavendedor.selecionado}"
                                                     ng-click="desassociaGrupoEmpresaVendedor()">
-                                                desassociar
+                                                Desassociar
                                                 <i class="fa fa-times"></i>
                                             </button>
                                         </label>
@@ -386,13 +393,14 @@
                                                     <label class="radio">
                                                         <input type="radio" ng-value="role"
                                                                ng-model="$parent.roleSelecionada"
-                                                               ng-change="handleRole()">
+                                                               ng-change="handleRole()"
+                                                              >
                                                         &nbsp;{{role.RoleName}}
-                                                        <button class="btn red"
+                                                        <i class="fa fa-plus-circle botaoGrupoVendendor"
                                                                 ng-class="{'element-hidden' : roleSelecionada !== role || !ehComercial(role)}"
-                                                                ng-click="exibeModalGrupoEmpresaVendedor()">
-                                                            <i class="fa fa-plus"></i>
-                                                        </button>
+                                                                ng-click="exibeModalGrupoEmpresaVendedor()"
+                                                                style="margin-left:10px" >
+                                                        </i>
                                                     </label>
                                                 </div>
                                                 <span style="color:red" ng-show="!roleSelecionada">

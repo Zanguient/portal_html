@@ -164,32 +164,32 @@
                                 <!-- TÍTULOS -->
                                 <thead>
                                     <tr role="row">
-                                        <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 120px"
+                                        <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 21%"
                                             ng-click="ordenaPorLogin()"
                                             ng-class="{'sorting_asc' : estaOrdenadoCrescentePorLogin(), 'sorting_desc' : estaOrdenadoDecrescentePorLogin()}">
                                              Login
                                         </th>
-                                        <th class="sorting" tabindex="1" rowspan="1" colspan="1" style="width: 189px"
+                                        <th class="sorting" tabindex="1" rowspan="1" colspan="1" style="width: 10%"
                                             ng-click="ordenaPorEmail()"
                                             ng-class="{'sorting_asc' : estaOrdenadoCrescentePorEmail(), 'sorting_desc' : estaOrdenadoDecrescentePorEmail()}">
                                              Email
                                         </th>
-                                        <th class="sorting" tabindex="2" rowspan="1" colspan="1" style="width: 100px"
+                                        <th class="sorting" tabindex="2" rowspan="1" colspan="1" style="10%"
                                             ng-click="ordenaPorGrupoEmpresa()"
                                             ng-class="{'sorting_asc' : estaOrdenadoCrescentePorGrupoEmpresa(), 'sorting_desc' : estaOrdenadoDecrescentePorGrupoEmpresa()}">
                                              Empresa
                                         </th>
-                                        <th class="sorting" tabindex="3" rowspan="1" colspan="1" style="width: 60px;"
+                                        <th class="sorting" tabindex="3" rowspan="1" colspan="1" style="width: 15%;"
                                             ng-click="ordenaPorEmpresa()"
                                             ng-class="{'sorting_asc' : estaOrdenadoCrescentePorEmpresa(), 'sorting_desc' : estaOrdenadoDecrescentePorEmpresa()}">
                                              Filial
                                         </th>
                                         <th class="sorting_disabled" tabindex="4" 
-                                            style="width: 40px;">
+                                            style="width: 8%;">
                                              Status
                                         </th>
                                         <th class="sorting_disabled" tabindex="5" 
-                                            rowspan="1" colspan="1" style="width: 48px;text-aling:center;">
+                                            rowspan="1" colspan="1" style="width: 5%;text-aling:center;">
                                              Opções
                                         </th>
                                     </tr>
@@ -209,7 +209,7 @@
                                         <td class="center">
                                              {{usuario.empresa | uppercase}}
                                         </td>
-                                        <td class="center">
+                                        <td class="conteudoColunas" >
                                              <span ng-class="{ 'StatusSenhaValida' : usuario.webpagesusers.fl_ativo, 
                                                                'StatusSenhaInvalida' : !usuario.webpagesusers.fl_ativo}"
                                                    ng-bind="usuario.webpagesusers.fl_ativo ? 'Ativo' : 'Inativo'">

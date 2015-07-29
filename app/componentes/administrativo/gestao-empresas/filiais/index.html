@@ -172,7 +172,7 @@
                                     </th>
                                 </tr>
 							</thead>
-							<tbody>
+							<tbody class="centralizarVertical">
 				                <tr role="row" class="odd" 
                                     ng-repeat="filial in filiais">
                                     <td style="text-align:left">
@@ -192,7 +192,7 @@
                                     <td>
                                         <span style="text-align:center"
                                         ng-class="{ 'statusSituacaoFiliaisAtivo': filial.fl_ativo, 'statusSituacaoFiliaisInativo': !filial.fl_ativo}"
-                                              ng-bind="filial.fl_ativo ? 'ATIVO' : 'INATIVO'"></span>
+                                              ng-bind="filial.fl_ativo ? 'Ativo' : 'Inativo'"></span>
                                     </td>
                                     <td style="text-align:center">
                                        <div class="btn-group" dropdown dropdown-append-to-body
