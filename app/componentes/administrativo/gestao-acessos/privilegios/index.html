@@ -39,15 +39,16 @@
                            </div>
                            <div class="modal-body modal-corpo" style="text-align: center">
                                 Nome do Privilégio
-                                <input class="form-control modalConfig" type="text" ng-model="inputCadastro.nome"
+                                <input class="form-control modalConfig" type="text" 
+                                       ng-model="inputCadastro.nome"
                                        ng-keypress="($event.which === 13) ? inputCadastro.funcao() : 0">
                                
                                 Nível
                                 <select class="form-control"
                                         ng-model="inputCadastro.level"
-                                        ng-options="level as (level.LevelNome | uppercase) for level in gruposempresasvendedor  | orderBy:'ds_nome'"
+                                        ng-options="level as (level.LevelName | uppercase) for level in levels"
                                         style="width:100%">  
-                                    <option style="display:none" value="">Empresa</option>
+                                    <option style="display:none" value=""></option>
                                 </select>
                            </div>
                            <div class="modal-footer">

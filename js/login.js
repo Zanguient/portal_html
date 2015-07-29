@@ -165,7 +165,7 @@ app.controller("loginCtrl", ['$scope',
                   if(failData.status === 0)
                       $scope.mensagemErro = 'Falha de comunicação com o servidor.';
                   else if(failData.status === 401)
-                      $scope.mensagemErro = 'Usuário está desativado.';
+                      $scope.mensagemErro = 'Sua conta está desativada. Por favor, entre em contato para mais informações através do ' + $empresa.telefone + '  ou ' + $empresa.email;
                   else if(failData.status === 500)
                       $scope.mensagemErro = 'Usuário e/ou senha inválido(s).';
                   // Exibe a mensagem de erro

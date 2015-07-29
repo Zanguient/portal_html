@@ -241,7 +241,7 @@
                                     rowspan="1" 
                                     colspan="1"                                        
                                     style="width: 10%;">
-                                     Situação
+                                     Status
                                 </th>
                                 <th class="" 
                                     tabindex="3"                                        
@@ -285,10 +285,11 @@
                                              ng-show="empresa.fl_taxservices" style="font-size: 30px"></i> 
                                     </div> 
                                 </td>
-                                <td>
-                                    <div class="" style="text-align:center">
-                                        ATIVO   
-                                    </div> 
+                                <td class="center">
+                                     <span ng-class="{ 'StatusSenhaValida' : empresa.fl_ativo, 
+                                                       'StatusSenhaInvalida' : !empresa.fl_ativo}"
+                                           ng-bind="empresa.fl_ativo ? 'Ativo' : 'Inativo'">
+                                    </span>
                                 </td>
                                 <td>
                                     <div class="dadosEmpresa"
@@ -313,6 +314,16 @@
                                                 <li>
                                                     <a href="javascript:;" ng-click="verFiliais(empresa)">
                                                         Filiais
+                                                    </a>
+                                                </li>
+                                                <li ng-show="usuarioPodeDesativarEmpresas()">
+                                                    <a ng-show="empresa.fl_ativo"
+                                                       href="javascript:;" ng-click="desativar(empresa)">
+                                                        Desativar
+                                                    </a>
+                                                    <a ng-show="!empresa.fl_ativo"
+                                                       href="javascript:;" ng-click="ativar(empresa)">
+                                                        Ativar
                                                     </a>
                                                 </li>
                                                 <li ng-show="usuarioPodeAlterarEmpresas()">

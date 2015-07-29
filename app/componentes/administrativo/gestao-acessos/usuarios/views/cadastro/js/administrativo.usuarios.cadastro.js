@@ -190,10 +190,14 @@ angular.module("administrativo-usuarios-cadastro", [])
             $scope.old.usuario = $stateParams.usuario.webpagesusers;
             $scope.old.pessoa = $stateParams.usuario.pessoa;
             $scope.old.roles = $stateParams.usuario.webpagesusersinroles;
-            $scope.old.gruposempresasvendedor = $stateParams.usuario.gruposempresasvendedor;
-            if($scope.old.gruposempresasvendedor && angular.isArray($scope.old.gruposempresasvendedor)) 
-                angular.copy($scope.gruposempresasvendedor, $scope.old.gruposempresasvendedor);
-            else $scope.old.gruposempresasvendedor = [];
+            $scope.old.gruposempresasvendedor = $stateParams.usuario.gruposvendedor;
+            if($scope.old.gruposempresasvendedor && angular.isArray($scope.old.gruposempresasvendedor)){ 
+                /*for(var k = 0; k < $scope.old.gruposempresasvendedor.length; k++)
+                    $scope.gruposempresasvendedor.push($scope.old.gruposempresasvendedor[k]);
+                $scope.old.gruposempresasvendedor = [];
+                angular.copy($scope.gruposempresasvendedor, $scope.old.gruposempresasvendedor);*/
+                angular.copy($scope.old.gruposempresasvendedor, $scope.gruposempresasvendedor);
+            }else $scope.old.gruposempresasvendedor = [];
             // Atualiza demais dados
             atualizaDadosDoUsuario();
             // Grupo Empresa
@@ -296,10 +300,10 @@ angular.module("administrativo-usuarios-cadastro", [])
         if($scope.ehComercial($scope.roleSelecionada)) json.addidsgrupoempresavendedor = addidsgrupoempresavendedor;
         
         // Envia
-        console.log(json);
-        progressoCadastro(false);
-        $scope.hideProgress(divPortletBodyUsuarioCadPos);
-        /*$webapi.post($apis.getUrl($apis.administracao.webpagesusers, undefined,
+        //console.log(json);
+        //progressoCadastro(false);
+        //$scope.hideProgress(divPortletBodyUsuarioCadPos);
+        $webapi.post($apis.getUrl($apis.administracao.webpagesusers, undefined,
                                   {id: 'token', valor: $scope.token}), json)
                 .then(function(dados){
                     progressoCadastro(false);
@@ -318,7 +322,7 @@ angular.module("administrativo-usuarios-cadastro", [])
                      progressoCadastro(false);
                      // Hide progress
                      $scope.hideProgress(divPortletBodyUsuarioCadPos);
-                  });  */
+                  });
     };
      
                                                          
@@ -453,12 +457,13 @@ angular.module("administrativo-usuarios-cadastro", [])
         if(!$scope.ehComercial($scope.roleSelecionada)){
             // Perfil selecionado não é o comercial => Só pode existir desassociações de grupos empresas
             addidsgrupoempresavendedor = [];
-            angular.copy($scope.old.gruposempresasvendedor, removeidsgrupoempresavendedor);
+            for(var k = 0; k < $scope.old.gruposempresasvendedor.length; k++)
+                removeidsgrupoempresavendedor.push($scope.old.gruposempresasvendedor[k].id_grupo);
         }
         
         // Verifica se houve alterações
         if(!alterouPessoa && !alterouUsuario && r.length == 0 && 
-           addidsgrupoempresavendedor.length == 0 && removeidsgrupoempresavendedor.length == 0){
+            addidsgrupoempresavendedor.length == 0 && removeidsgrupoempresavendedor.length == 0){
             $scope.goAdministrativoUsuarios();
             return;
         }
@@ -472,10 +477,10 @@ angular.module("administrativo-usuarios-cadastro", [])
         if(removeidsgrupoempresavendedor.length > 0) json.removeidsgrupoempresavendedor = removeidsgrupoempresavendedor;
 
         // Envia
-        console.log(json);
-        progressoCadastro(false);
-        $scope.hideProgress(divPortletBodyUsuarioCadPos);
-        /*$webapi.update($apis.getUrl($apis.administracao.webpagesusers, undefined, {id: 'token', valor: $scope.token}), json)
+        //console.log(json);
+        //progressoCadastro(false);
+        //$scope.hideProgress(divPortletBodyUsuarioCadPos);
+        $webapi.update($apis.getUrl($apis.administracao.webpagesusers, undefined, {id: 'token', valor: $scope.token}), json)
             .then(function(dados){
                      progressoCadastro(false);
                      // Reseta os dados
@@ -491,7 +496,7 @@ angular.module("administrativo-usuarios-cadastro", [])
                      else $scope.showAlert('Houve uma falha ao alterar o usuário (' + failData.status + ')', true, 'danger', true);
                      progressoCadastro(false);
                      $scope.hideProgress(divPortletBodyUsuarioCadPos);
-                  }); */
+                  });
         
     };
      

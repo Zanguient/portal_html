@@ -185,6 +185,10 @@
                                              Filial
                                         </th>
                                         <th class="sorting_disabled" tabindex="4" 
+                                            style="width: 40px;">
+                                             Status
+                                        </th>
+                                        <th class="sorting_disabled" tabindex="5" 
                                             rowspan="1" colspan="1" style="width: 48px;text-aling:center;">
                                              Opções
                                         </th>
@@ -205,6 +209,12 @@
                                         <td class="center">
                                              {{usuario.empresa | uppercase}}
                                         </td>
+                                        <td class="center">
+                                             <span ng-class="{ 'StatusSenhaValida' : usuario.webpagesusers.fl_ativo, 
+                                                               'StatusSenhaInvalida' : !usuario.webpagesusers.fl_ativo}"
+                                                   ng-bind="usuario.webpagesusers.fl_ativo ? 'Ativo' : 'Inativo'">
+                                            </span>
+                                        </td>
                                         <td class="center btnacoes">
                                             <div class="btn-group" dropdown dropdown-append-to-body
                                                  ng-show="usuarioPodeDesativarUsuarios() || usuarioPodeAlterarUsuarios() || usuarioPodeExcluirUsuarios()">
@@ -215,16 +225,16 @@
                                                     <i class="fa fa-angle-down"></i>
                                                 </a>
                                             <ul class="dropdown-menu" style="max-width: 40px">
-                                                <!--li ng-show="usuarioPodeDesativarUsuarios()">
-                                                    <a ng-show="usuario.fl_ativo"
+                                                <li ng-show="usuarioPodeDesativarUsuarios()">
+                                                    <a ng-show="usuario.webpagesusers.fl_ativo"
                                                        href="javascript:;" ng-click="desativar(usuario)">
                                                         Desativar
                                                     </a>
-                                                    <a ng-show="!usuario.fl_ativo"
+                                                    <a ng-show="!usuario.webpagesusers.fl_ativo"
                                                        href="javascript:;" ng-click="ativar(usuario)">
                                                         Ativar
                                                     </a>
-                                                </li-->
+                                                </li>
                                                 <li ng-show="usuarioPodeAlterarUsuarios()">
                                                     <a href="javascript:;" ng-click="editarUsuario(usuario)">
                                                         Editar

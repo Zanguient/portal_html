@@ -35,7 +35,7 @@ angular.module("administrativo-privilegios", [])
     $scope.privilegio = {busca:'', campo_busca : $scope.camposBusca[1], 
                       itens_pagina : $scope.itens_pagina[0], pagina : 1,
                       total_registros : 0, faixa_registros : '0-0', total_paginas : 0, 
-                      campo_ordenacao : {id: $campos.administracao.webpagesroles.RoleName, order : 0}};    
+                      campo_ordenacao : {id: $campos.administracao.webpagesroles.RoleLevel, order : 0}};    
     
     $scope.roleSelecionada = undefined; 
     var controllerPrincipal = undefined;
@@ -215,10 +215,12 @@ angular.module("administrativo-privilegios", [])
        }
         
        $scope.obtendoPrivilegios = true;
-       $webapi.get($apis.getUrl($apis.administracao.webpagesroles, [$scope.token, 1, $scope.privilegio.campo_ordenacao.id, 
-                                                       $scope.privilegio.campo_ordenacao.order, 
-                                                       $scope.privilegio.itens_pagina, $scope.privilegio.pagina],
-                   filtros)) 
+       $webapi.get($apis.getUrl($apis.administracao.webpagesroles, [$scope.token, 1, 
+                                                                    $scope.privilegio.campo_ordenacao.id, 
+                                                                    $scope.privilegio.campo_ordenacao.order, 
+                                                                    $scope.privilegio.itens_pagina,
+                                                                    $scope.privilegio.pagina],
+                                filtros)) 
             .then(function(dados){
                 $scope.privilegios = dados.Registros;
                 $scope.privilegio.total_registros = dados.TotalDeRegistros;
@@ -272,7 +274,7 @@ angular.module("administrativo-privilegios", [])
         $scope.inputCadastro.titulo = 'Cadastro de privilégio';
         $scope.inputCadastro.nome = '';
         $scope.inputCadastro.level = '';
-        $scope.funcao = $scope.addPrivilegio;
+        $scope.inputCadastro.funcao = $scope.addPrivilegio;
         // Exibe o modal
         if($scope.levels.length > 0)
             exibeModalInputPrivilegio();
@@ -311,7 +313,8 @@ angular.module("administrativo-privilegios", [])
                 }
                 // Fecha o modal input
                 $scope.hideProgress();
-                $scope.fechaModalInput();
+                // Fecha o modal
+                fechaModalInputPrivilegio();
                 // Atualiza
                 addPrivilegio($scope.inputCadastro.nome, $scope.inputCadastro.level.LevelId);
               },
@@ -332,11 +335,8 @@ angular.module("administrativo-privilegios", [])
                                                                         RoleLevel : roleLevel})
                 .then(function(dados){
                     $scope.showAlert('Privilégio cadastrado com sucesso!', true, 'success', true);
-                    // Reseta o campo
-                    //$scope.novoPrivilegio = '';
+                    // Esconde o progress
                     $scope.hideProgress(divPortletBodyPrivilegioPos);
-                    // Não aparece mais a linha de cadastro
-                    //$scope.exibeCadastroNovoPrivilegio(false);
                     // Relista os privilégios
                     $scope.buscaPrivilegios();
                   },function(failData){
@@ -353,7 +353,7 @@ angular.module("administrativo-privilegios", [])
         $scope.inputCadastro.titulo = 'Alteração de privilégio';
         $scope.inputCadastro.nome = privilegio.RoleName;
         $scope.inputCadastro.level = privilegio.RoleLevels;
-        $scope.funcao = alteraPrivilegio;
+        $scope.inputCadastro.funcao = function(){alteraPrivilegio(privilegio)};
         // Exibe o modal
         if($scope.levels.length > 0){
             if(privilegio.RoleLevels){ 
@@ -375,7 +375,7 @@ angular.module("administrativo-privilegios", [])
     /**
       * Valida dados informados para alteração do privilégio e altera, se válido
       */
-    var alteraPrivilegio = function(){
+    var alteraPrivilegio = function(privilegio){
         // Verifica se houve alteração
         if($scope.inputCadastro.nome === privilegio.RoleName && 
            $scope.inputCadastro.level.LevelId === privilegio.RoleLevels.LevelId){
@@ -399,7 +399,7 @@ angular.module("administrativo-privilegios", [])
         if($scope.inputCadastro.nome.toUpperCase() === privilegio.RoleName.toUpperCase()){
             $scope.fechaModalInput();
             // Atualiza
-            atualizaNomePrivilegio(privilegio, text);
+            atualizaNomePrivilegio(privilegio, $scope.inputCadastro.nome);
         }else{
             $scope.showProgress();
             $webapi.get($apis.getUrl($apis.administracao.webpagesroles, 
@@ -412,9 +412,10 @@ angular.module("administrativo-privilegios", [])
                         $scope.hideProgress();
                         return;     
                     }
-                    // Fecha o modal input
+                    // Esconde o progress
                     $scope.hideProgress();
-                    $scope.fechaModalInput();
+                    // Fecha o modal input
+                    fechaModalInputPrivilegio();
                     // Atualiza
                     atualizaNomePrivilegio(privilegio, $scope.inputCadastro.nome, $scope.inputCadastro.level.LevelId);
                   },
@@ -431,11 +432,12 @@ angular.module("administrativo-privilegios", [])
     var atualizaNomePrivilegio = function(privilegio, novoNome, level){
         $scope.showProgress(divPortletBodyPrivilegioPos);
         var jsonPrivilegio = {RoleId : privilegio.RoleId, RoleName : novoNome, RoleLevel : level};
-        console.log(jsonPrivilegio);
+        //console.log(jsonPrivilegio);
         $webapi.update($apis.getUrl($apis.administracao.webpagesroles, undefined,
                        {id: 'token', valor: $scope.token}), jsonPrivilegio)
             .then(function(dados){
                     $scope.showAlert('Privilégio alterado com sucesso!', true, 'success', true);
+                    // Esconde o progress
                     $scope.hideProgress(divPortletBodyPrivilegioPos);
                     // Relista os privilégios
                     $scope.buscaPrivilegios();

@@ -87,6 +87,12 @@ angular.module("administrativo-empresas", [])
     $scope.usuarioPodeExcluirEmpresas = function(){
         return $scope.usuarioPodeConsultarEmpresas() && permissaoRemocao;
     }
+    /**
+      * Retorna true se o usuário pode ativar/desativar empresas
+      */
+    $scope.usuarioPodeDesativarEmpresas = function(){
+        return $scope.usuarioPodeConsultarEmpresas() && permissaoRemocao;
+    }
     
     
     // PAGINAÇÃO
@@ -183,6 +189,61 @@ angular.module("administrativo-empresas", [])
                                                 
                                                 
     // AÇÕES
+    /**
+      * Solicita confirmação para desativar a empresa
+      */                                           
+    $scope.desativar = function(empresa){
+        var json = { id_grupo : empresa.id_grupo, 
+                     fl_ativo : false,
+                     fl_cardservices : empresa.fl_cardservices,
+                     fl_proinfo : empresa.fl_proinfo,
+                     fl_taxservices : empresa.fl_taxservices
+                   };
+        $scope.showModalConfirmacao('Confirmação', 
+                                    'Tem certeza que deseja desativar ' + empresa.ds_nome.toUpperCase() + ' ?',
+                                     ativaEmpresa, json, 'Sim', 'Não');    
+    };
+    /**
+      * Solicita confirmação para ativar a empresa
+      */
+    $scope.ativar = function(empresa){
+        var json = { id_grupo : empresa.id_grupo, 
+                     fl_ativo : true,
+                     fl_cardservices : empresa.fl_cardservices,
+                     fl_proinfo : empresa.fl_proinfo,
+                     fl_taxservices : empresa.fl_taxservices
+                   };
+        $scope.showModalConfirmacao('Confirmação', 
+                                    'Tem certeza que deseja desativar ' + empresa.ds_nome.toUpperCase() + ' ?',
+                                     ativaEmpresa, json, 'Sim', 'Não');
+    };
+    /**
+      * Efetiva a ativação/desativação da empresa
+      */
+    var ativaEmpresa = function(json){
+         $scope.showProgress(divPortletBodyEmpresaPos);
+         // Atualiza
+         $webapi.update($apis.getUrl($apis.cliente.grupoempresa, undefined,
+                                  {id: 'token', valor: $scope.token}), json)
+                .then(function(dados){
+                     // Exibe a mensagem de sucesso
+                    $scope.showAlert('Status ativo da empresa alterado com sucesso!', true, 'success', true);
+                    // Hide progress
+                    $scope.hideProgress(divPortletBodyEmpresaPos);
+                    // Refaz a busca
+                    $scope.buscaEmpresas();
+                  },function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', 
+                                                                true, 'warning', true);
+                     else $scope.showAlert('Houve uma falha ao alterar o status ativo da empresa (' + 
+                                           failData.status + ')', true, 'danger', true);
+                     // Hide progress
+                     $scope.hideProgress(divPortletBodyEmpresaPos);
+                  });    
+    };                                            
+    /**
+      * Vai para a tela de filiais, setando a empresa associada ao usuário logado como a selecionada
+      */
     $scope.verFiliais = function(empresa){
         //console.log("VER FILIAIS DE '" + empresa.ds_nome + "' (" + empresa.id_grupo + ")");
         if(!$scope.grupoempresa) $scope.selecionaGrupoEmpresa(empresa, function(){ $scope.goAdministrativoFiliais(); });

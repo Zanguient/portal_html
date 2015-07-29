@@ -998,7 +998,10 @@ angular.module("AtosCapital", ['ui.router',
                   // Código 500 => Token já não é mais válido
                   $scope.voltarTelaLogin();
               else{ 
-                  console.log("FALHA AO VALIDAR TOKEN: " + failData.status);
+                  if(failData.status === 401){
+                      // Volta para a tela de login
+                      $scope.voltarTelaLogin();
+                  }else console.log("FALHA AO VALIDAR TOKEN: " + failData.status);
                   // o que fazer? exibir uma tela indicando falha de comunicação?
                   // Status 0: sem resposta
               }
@@ -1095,8 +1098,7 @@ angular.module("AtosCapital", ['ui.router',
         // Envia 
         $scope.showProgress();
         $webapi.update($apis.getUrl($apis.administracao.webpagesusers, undefined, 
-                                    //[{id:'token', valor: $scope.token},{id:'id_grupo', valor: id_grupo}]), null)
-                                    {id:'token', valor: $scope.token}), {id:'id_grupo', valor: id_grupo})
+                                    {id:'token', valor: $scope.token}), {id_grupo: id_grupo})
             .then(function(dados){  
                 if(typeof funcaoSucesso === 'function') funcaoSucesso(dados);
                 // Reinicia o valor do model

@@ -237,7 +237,7 @@ angular.module('webapi', ['utils'])
         webpagesmembership : $autenticacao.getUrlBase() + '/administracao/webpagesmembership/',
         webpagesmethods : $autenticacao.getUrlBase() + '/administracao/webpagesmethods/',
         webpagespermissions : $autenticacao.getUrlBase() + '/administracao/webpagespermissions/',
-        webpagesrolelevels : $autenticacao.getUrlBase() + '/administracao/webpagesroleleves/',
+        webpagesrolelevels : $autenticacao.getUrlBase() + '/administracao/webpagesrolelevels/',
         webpagesroles : $autenticacao.getUrlBase() + '/administracao/webpagesroles/',
         webpagesusers : $autenticacao.getUrlBase() + '/administracao/webpagesusers/', 
         webpagesusersinroles : $autenticacao.getUrlBase() + '/administracao/webpagesusersinroles/'

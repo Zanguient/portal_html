@@ -307,6 +307,54 @@ angular.module("administrativo-usuarios", [])
                                                 
     // AÇÕES
     /**
+      * Solicita confirmação para desativar o usuário
+      */                                           
+    $scope.desativar = function(usuario){
+        var json = { webpagesusers: { id_users : usuario.webpagesusers.id_users, 
+                                      fl_ativo : false
+                                    }
+                   };
+        $scope.showModalConfirmacao('Confirmação', 
+                                    'Tem certeza que deseja desativar ' + usuario.webpagesusers.ds_login + ' ?',
+                                     ativaUsuario, json, 'Sim', 'Não');    
+    };
+    /**
+      * Solicita confirmação para ativar o usuário
+      */
+    $scope.ativar = function(usuario){
+        var json = { webpagesusers: { id_users : usuario.webpagesusers.id_users, 
+                                      fl_ativo : true
+                                    }
+                   };
+        $scope.showModalConfirmacao('Confirmação', 
+                                    'Tem certeza que deseja ativar ' + usuario.webpagesusers.ds_login + ' ?',
+                                     ativaUsuario, json, 'Sim', 'Não');
+    };
+    /**
+      * Efetiva a ativação/desativação do usuário
+      */
+    var ativaUsuario = function(json){
+         $scope.showProgress(divPortletBodyUsuarioPos);
+         // Atualiza
+         $webapi.update($apis.getUrl($apis.administracao.webpagesusers, undefined,
+                                  {id: 'token', valor: $scope.token}), json)
+                .then(function(dados){
+                     // Exibe a mensagem de sucesso
+                    $scope.showAlert('Status ativo do usuário alterado com sucesso!', true, 'success', true);
+                    // Hide progress
+                    $scope.hideProgress(divPortletBodyUsuarioPos);
+                    // Refaz a busca
+                    $scope.buscaUsuarios();
+                  },function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', 
+                                                                true, 'warning', true);
+                     else $scope.showAlert('Houve uma falha ao alterar o status ativo do usuário (' + 
+                                           failData.status + ')', true, 'danger', true);
+                     // Hide progress
+                     $scope.hideProgress(divPortletBodyUsuarioPos);
+                  });    
+    };                                            
+    /**
       * Redefinir senha
       */                                            
     var resetaSenhaDoUsuario = function(id_users){
