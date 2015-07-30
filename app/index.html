@@ -85,7 +85,9 @@
 						</a>
 						<ul class="dropdown-menu dropdown-menu-default">
 							<li>
-								<a href="javascript:;" ng-click="goMinhaConta()">
+								<a href="javascript:;" 
+                                   ng-click="goMinhaContaAlterarSenha()"> <!-- TEMP -->
+                                   <!--ng-click="goMinhaConta()"-->
 								    <i class="icon-user"></i> 
                                     Minha Conta 
                                 </a>
@@ -205,7 +207,7 @@
                             <tr>
                                 <td>
                                     <div  style="margin-top:-5px">
-                                    <strong>{{grupoempresa.ds_nome || ''}}</strong>  
+                                    <strong>{{(grupoempresa.ds_nome | uppercase) || ''}}</strong>  
 									</div>
                                 </td>
                                     
@@ -237,7 +239,7 @@
                                                       typeahead-on-select="selecionaGrupoEmpresa($item)"
                                                       typeahead-min-length='3'
                                                       typeahead-wait-ms="500"
-                                                      typeahead="gempresa as gempresa.ds_nome for gempresa in buscaGrupoEmpresas($viewValue)"/>
+                                                      typeahead="gempresa as (gempresa.ds_nome | uppercase) for gempresa in buscaGrupoEmpresas($viewValue)"/>
                                             </div>
                                             <!--div style="width:100%; margin-top:15px" ng-show="grupoempresa">
                                                 <a href="javascript:;" ng-click="limpaGrupoEmpresa()" class="btn">

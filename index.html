@@ -71,8 +71,13 @@
 <!-- BEGIN LOGIN -->
 <div class="content hidden-xs" ng-show="exibeLayout" ng-cloak>
 	
+    <!-- MANUTENÇÃO -->
+    <form ng-show="manutencao">
+        SISTEMA EM MANUTENÇÃO
+    </form>
+    
     <!-- BEGIN LOGIN FORM -->
-	<form class="login-form" name="formLogin" novalidate ng-show="formExibidoEhLogin()">
+	<form class="login-form" name="formLogin" novalidate ng-show="!manutencao && formExibidoEhLogin()">
 		<h3 class="form-title">Login</h3>
         
         <!-- MENSAGEM DE ERRO -->
@@ -124,7 +129,7 @@
 	<!-- END LOGIN FORM -->
     
 	<!-- ESQUECI A SENHA -->
-	<form class="forget-form" name="formEsqueciSenha" novalidate ng-show="formExibidoEhEsqueciSenha()">
+	<form class="forget-form" name="formEsqueciSenha" novalidate ng-show="!manutencao && formExibidoEhEsqueciSenha()">
 		<h3>Esqueceu a senha ?</h3>
 		<p>
 			 Entre com o endereço de e-mail abaixo para resetar sua senha.
@@ -147,7 +152,7 @@
 	<!-- END ESQUECI A SENHA -->
     
 	<!-- BEGIN CADASTRO -->
-	<form class="register-form" ng-show="formExibidoEhCadastro()">
+	<form class="register-form" ng-show="!manutencao && formExibidoEhCadastro()">
 		<h3>Login</h3>
 		<p class="hint">
 			 Entre com seus dados pessoais:
@@ -235,6 +240,7 @@
 	</form>
 	<!-- END CADASTRO -->
 </div>
+    
 <div class="content visible-xs">
     <div class="row">
         <div class="col-xs-12">

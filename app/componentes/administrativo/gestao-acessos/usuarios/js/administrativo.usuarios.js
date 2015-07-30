@@ -301,6 +301,7 @@ angular.module("administrativo-usuarios", [])
                  //console.log("FALHA AO OBTER USUARIOS: " + failData.status);
                  $scope.obtendoUsuarios = false;
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else $scope.showAlert('Houve uma falha ao requisitar usuários (' + failData.status + ')', true, 'danger', true);
                  $scope.hideProgress(divPortletBodyUsuarioPos);
               }); 
@@ -351,6 +352,7 @@ angular.module("administrativo-usuarios", [])
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', 
                                                                 true, 'warning', true);
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao alterar o status ativo do usuário (' + 
                                            failData.status + ')', true, 'danger', true);
                      // Hide progress
@@ -375,6 +377,7 @@ angular.module("administrativo-usuarios", [])
                     $scope.hideProgress(divPortletBodyUsuarioPos);
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao redefinir a senha do usuário (' + failData.status + ')', true, 'danger', true); 
                      $scope.hideProgress(divPortletBodyUsuarioPos);
                   }); 
@@ -412,6 +415,7 @@ angular.module("administrativo-usuarios", [])
                      //console.log("FALHA AO DELETAR USUARIO: " + failData.status);
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
                      else if(failData.status === 500) $scope.showModalAlerta('Não é possível excluir o usuário. O que pode ser feito é a desativação do mesmo');
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao excluir o usuário (' + failData.status + ')', true, 'danger', true);
                      $scope.hideProgress(divPortletBodyUsuarioPos);
                   }); 

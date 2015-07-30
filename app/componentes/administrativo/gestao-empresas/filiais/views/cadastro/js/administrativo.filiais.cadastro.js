@@ -289,7 +289,7 @@ angular.module("administrativo-filiais-cadastro", [])
                         },
                         function(failData){
                             if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
-                 else $scope.showAlert('Houve uma falha ao consultar o CEP (' + failData.status + ')', true, 'danger', true);
+                            else $scope.showAlert('Houve uma falha ao consultar o CEP (' + failData.status + ')', true, 'danger', true);
                             $scope.hideProgress(divPortletBodyFilialCadPos);
                         });
         }else $scope.showModalAlerta('CEP deve conter 8 dígitos!');    
@@ -406,6 +406,7 @@ angular.module("administrativo-filiais-cadastro", [])
                     $timeout(function(){$scope.showAlert('Filial cadastrada com sucesso!', true, 'success', true)}, 500);
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao cadastrar a filial (' + failData.status + ')', true, 'danger', true);
                      // Hide progress
                      $scope.hideProgress(divPortletBodyFilialCadPos);
@@ -467,6 +468,7 @@ angular.module("administrativo-filiais-cadastro", [])
                     $timeout(function(){$scope.showAlert('Filial alterada com sucesso!', true, 'success', true)}, 500);
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao alterar a filial (' + failData.status + ')', true, 'danger', true);
                      // Hide progress
                      $scope.hideProgress(divPortletBodyFilialCadPos);

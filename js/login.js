@@ -33,6 +33,7 @@ app.controller("loginCtrl", ['$scope',
     // flags
     $scope.exibeLayout = false; // flag para indicar se o layout pode ser exibido completamente
     $scope.efetuandoLogin = false;
+    $scope.manutencao = false;
                                  
     /**
       * Acessa a página principal
@@ -73,12 +74,24 @@ app.controller("loginCtrl", ['$scope',
                           // Código 500 => Token já não é mais válido
                           $autenticacao.removeDadosDeAutenticacao();
                           exibeLayout();
-                      }else{ 
+                      }else if(failData.status === 503 || failData.status === 404) $scope.manutencao = true;
+                      else{ 
                           console.log("FALHA AO VALIDAR TOKEN: " + failData.status);
                           // o que fazer? exibir uma tela indicando falha de comunicação?
                       }
                     });
-        }else exibeLayout();
+        }else{ 
+            $webapi.get($autenticacao.autenticacao.login + 'a')
+            // Verifica se a requisição foi respondida com sucesso
+                .then(function(dados){
+                      exibeLayout();
+                    },
+                    function(failData){
+                      // Avaliar código de erro
+                      if(failData.status === 503 || failData.status === 404) $scope.manutencao = true;
+                      exibeLayout();
+                    });
+        }
     };
                                   
                                   
@@ -168,6 +181,7 @@ app.controller("loginCtrl", ['$scope',
                       $scope.mensagemErro = 'Sua conta está desativada. Por favor, entre em contato para mais informações através do ' + $empresa.telefone + '  ou ' + $empresa.email;
                   else if(failData.status === 500)
                       $scope.mensagemErro = 'Usuário e/ou senha inválido(s).';
+                  else if(failData.status === 503 || failData.status === 404) $scope.manutencao = true;
                   // Exibe a mensagem de erro
                   $scope.exibeMensagemErro = true;
                   // Esconde Progress

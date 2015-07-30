@@ -352,7 +352,7 @@
                                                        typeahead-focus-first=false
                                                        typeahead-min-length='3'
                                                        typeahead-wait-ms="500"
-                                                       typeahead="grupoempresa as grupoempresa.ds_nome for grupoempresa in buscaGrupoEmpresas($viewValue)" />
+                                                       typeahead="grupoempresa as (grupoempresa.ds_nome | uppercase) for grupoempresa in buscaGrupoEmpresas($viewValue)" />
                                             </div>
                                             <!--img ng-src="../img/loading-atos.gif" 
                                                  style="margin-top: 10px" 
@@ -376,7 +376,7 @@
                                                        popover-append-to-body="true"
                                                        typeahead-focus ng-trim="false"
                                                        typeahead-focus-first=true
-                                                       typeahead="empresa as empresa.ds_fantasia for empresa in empresas  | filter:$viewValue:emptyOrMatch" />
+                                                       typeahead="empresa as (empresa.ds_fantasia | uppercase) for empresa in empresas  | filter:$viewValue:emptyOrMatch" />
                                             </div>
                                             <!--img ng-src="../img/loading-atos.gif" style="margin-top: 10px" ng-show="pesquisandoEmpresas"/-->
                                         </div>

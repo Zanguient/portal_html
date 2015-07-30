@@ -184,6 +184,7 @@ angular.module("administrativo-acesso-usuarios", [])
               function(failData){
                  $scope.obtendoPrivilegios = false;
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else $scope.showAlert('Houve uma falha ao requisitar privilégios (' + failData.status + ')', true, 'danger', true);
                  $scope.hideProgress(divPortletBodyPrivilegioPos);
               }); 
@@ -218,6 +219,7 @@ angular.module("administrativo-acesso-usuarios", [])
                     $scope.hideProgress(divPortletBodyPrivilegioPos);
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao cadastrar o privilégio (' + failData.status + ')', true, 'danger', true);
                      $scope.hideProgress(divPortletBodyPrivilegioPos);
                   }); 
@@ -250,6 +252,7 @@ angular.module("administrativo-acesso-usuarios", [])
                     $scope.buscaPrivilegios();
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao excluir o privilégio (' + failData.status + ')', true, 'danger', true);
                      $scope.hideProgress(divPortletBodyPrivilegioPos);
                   }); 
@@ -350,6 +353,7 @@ angular.module("administrativo-acesso-usuarios", [])
               function(failData){
                  //$scope.obtendoModulosEFuncionalidades = false;
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else $scope.showAlert('Houve uma falha ao requisitar módulos e funcionalidades (' + failData.status + ')', true, 'danger', true);
                  $scope.hideProgress();
               }); 
