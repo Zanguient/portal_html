@@ -19,32 +19,62 @@
     </ul>
     <!-- END PAGE BREADCRUMB -->
     <!-- BEGIN PAGE CONTENT INNER -->
-    <div class="portlet light" style="min-height: 350px">
+    <div class="portlet light" style="min-height: 350px">        
         <div class="portlet-title">
             <div class="caption">
-                <span class="caption-subject font-green-sharp bold uppercase"> Pessoal</span>
+                <span class="caption-subject font-green-sharp bold uppercase">Minha Conta</span>
             </div>            
+        </div>   
+        
+        <div class="left-panel">
+            <ul class="nav nav-pills nav-stacked">
+                <li ng-class="{ active: tabIs(1) }"> 
+                    <a href ng-click=" setTab(1)">                        
+                             Pessoal
+                    </a> 
+                </li>
+                <li ng-class="{ active: tabIs(2) }"> 
+                    <a href ng-click=" setTab(2)">
+                        
+                        <font align="right">Contato</font>
+                    </a>
+                </li>                
+            </ul>
         </div>
-        <div class="row">
-            <div class="col-sm-6 col-lg-12 col-lg-offset-0 col-sm-offset-4">
+        <div class="right-panel">
+            <div class="panel" ng-show=" tabIs(1)">
                 <div class="row">
-                    <div class="col-sm-12">
-                        <label>Nome: Jonatas Esdras</label>            
-                    </div> 
-                    <div class="col-sm-12">
-                        <label>Data de Nascimento: 25/04/1995</label>            
+                    <div class="col-sm-6 col-sm-offset-4">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label>Nome: Jonatas Esdras</label>             
+                            </div> 
+                            <div class="col-sm-12">
+                                <label>Data de Nascimento: 25/04/1995</label>            
+                            </div>
+                            <div class="col-sm-12">
+                                <label>Telefone: (79) 9999-9999</label>            
+                            </div>
+                            <div class="col-sm-12">
+                                <label>Ramal: 0908</label>            
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>        
-        <div class="btn-group">
-            <a class="btn btn-default btn-circle" 
-               href="javascript:;"
-               ng-click="goMinhaContaAlterarSenha()">
-                <i class="fa fa-edit"></i> 
-                Alterar Senha
-            </a>
+            <div class="panel" ng-show="tabIs(2)">
+                <div class="btn-group">
+                    <a class="btn btn-default btn-circle" 
+                       href="javascript:;"
+                       ng-click="goMinhaContaAlterarSenha()">
+                        <i class="fa fa-edit"></i> 
+                        Alterar Senha
+                    </a>
+                </div>
+            </div>
         </div>
+
+        
     </div>
     <!-- END PAGE CONTENT INNER -->
 </div>
