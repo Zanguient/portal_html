@@ -185,6 +185,11 @@ margin-top:170px;
   text-align: center;
 }
 
+
+.conteudoMinhaConta label{
+  font-size: 20px;  
+}
+
 .filtros{
   width: 90%;
   display: inline;
