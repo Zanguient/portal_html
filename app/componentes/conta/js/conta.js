@@ -9,7 +9,9 @@
 angular.module("conta", []) 
 
 .controller("contaCtrl", ['$scope','$state', function($scope,$state){ 
-                                                        
+    
+    $scope.tab = 1;
+    
     // Inicialização do controller
     $scope.contaInit = function(){
         // Título da página 
@@ -19,5 +21,14 @@ angular.module("conta", [])
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
         });
-    };    
+    }; 
+    
+    //TAB
+    $scope.tabIs = function (tab){
+        return $scope.tab === tab;
+    }
+    $scope.setTab = function (tab){
+        if (tab >= 1 && tab <= 2) $scope.tab = tab;        
+    }
+    
 }]);
