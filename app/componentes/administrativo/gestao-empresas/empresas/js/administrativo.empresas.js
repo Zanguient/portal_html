@@ -182,6 +182,7 @@ angular.module("administrativo-empresas", [])
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else $scope.showAlert('Houve uma falha ao requisitar empresas (' + failData.status + ')', true, 'danger', true);
                  // Esconde o progress
                 $scope.hideProgress(divPortletBodyEmpresaPos);
@@ -237,6 +238,7 @@ angular.module("administrativo-empresas", [])
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', 
                                                                 true, 'warning', true);
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao alterar o status ativo da empresa (' + 
                                            failData.status + ')', true, 'danger', true);
                      // Hide progress
@@ -307,6 +309,7 @@ angular.module("administrativo-empresas", [])
                   },
                   function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao validar a empresa informada (' + failData.status + ')', true, 'danger', true);
                      // Esconde o progress
                     $scope.hideProgress();
@@ -362,6 +365,7 @@ angular.module("administrativo-empresas", [])
                     $scope.buscaEmpresas();
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao cadastrar a empresa (' + failData.status + ')', true, 'danger', true);
                      // Dismiss o progress
                      $scope.hideProgress();
@@ -383,6 +387,7 @@ angular.module("administrativo-empresas", [])
                     $scope.buscaEmpresas();
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao cadastrar a empresa (' + failData.status + ')', true, 'danger', true);
                      // Dismiss o progress
                      $scope.hideProgress();
@@ -402,6 +407,7 @@ angular.module("administrativo-empresas", [])
                     $scope.buscaEmpresas();
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else if(failData.status === 500) $scope.showModalAlerta('Não é possível excluir a empresa. O que pode ser feito é a desativação da mesma');
                      else $scope.showAlert('Houve uma falha ao excluir a empresa (' + failData.status + ')', true, 'danger', true);
                      $scope.hideProgress(divPortletBodyEmpresaPos);

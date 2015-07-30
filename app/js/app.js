@@ -997,14 +997,11 @@ angular.module("AtosCapital", ['ui.router',
               if(failData.status === 500)
                   // Código 500 => Token já não é mais válido
                   $scope.voltarTelaLogin();
-              else{ 
-                  if(failData.status === 401){
-                      // Volta para a tela de login
-                      $scope.voltarTelaLogin();
-                  }else console.log("FALHA AO VALIDAR TOKEN: " + failData.status);
+              else if(failData.status === 401 || failData.status === 503 || failData.status === 404)
+                  $scope.voltarTelaLogin(); // Volta para a tela de login
+              else console.log("FALHA AO VALIDAR TOKEN: " + failData.status);
                   // o que fazer? exibir uma tela indicando falha de comunicação?
                   // Status 0: sem resposta
-              }
               // Remove o loading da página
               $scope.hideProgress();
             });
@@ -1048,6 +1045,7 @@ angular.module("AtosCapital", ['ui.router',
              },
              function(failData){
                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                 else $scope.showAlert('Houve uma falha ao se associar ao grupo empresa (' + failData.status + ')', true, 'danger', true);
                 progressoGrupoEmpresas(false);
              });    
@@ -1112,6 +1110,7 @@ angular.module("AtosCapital", ['ui.router',
              },
              function(failData){
                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                 else $scope.showAlert('Houve uma falha ao se associar ao grupo empresa (' + failData.status + ')', true, 'danger', true);
                 // Reinicia o valor do model
                 $scope.gempresa = null; 

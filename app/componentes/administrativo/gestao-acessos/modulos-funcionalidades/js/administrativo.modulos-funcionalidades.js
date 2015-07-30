@@ -185,6 +185,7 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
               function(failData){
                  $scope.obtendoModulos = false;
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else $scope.showAlert('Houve uma falha ao requisitar módulos (' + failData.status + ')', true, 'danger', true);
                  $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
               });
@@ -404,6 +405,7 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
                     $scope.buscaModulos();
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao cadastrar o módulo (' + failData.status + ')', true, 'danger', true);
                      // Dismiss o progress
                      $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
@@ -424,6 +426,7 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
                     $scope.buscaModulos();
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao alterar o módulo (' + failData.status + ')', true, 'danger', true); 
                      $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
                   });  
@@ -443,6 +446,7 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
                     $scope.buscaModulos();
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao excluir o módulo (' + failData.status + ')', true, 'danger', true);
                      $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
                   }); 
@@ -572,6 +576,7 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
                         $scope.moduloSelecionado.data.methods.splice(k, 0, newMethod);
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao cadastrar o método (' + failData.status + ')', true, 'danger', true);
                      // Dismiss o progress
                      $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
@@ -594,6 +599,7 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
                     method.ds_method = novoNome;
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao alterar o método (' + failData.status + ')', true, 'danger', true); 
                      $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
                   });  
@@ -616,6 +622,7 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
                     $scope.funcionalidadeSelecionada = undefined;
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao excluir o método (' + failData.status + ')', true, 'danger', true);
                      $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
                   });  

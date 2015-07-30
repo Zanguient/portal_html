@@ -108,6 +108,7 @@ angular.module("administrativo-usuarios-cadastro", [])
                      //console.log("FALHA AO OBTER ROLES: " + failData.status);
                      $scope.obtendoRoles = false;
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao requisitar informações (' + failData.status + ')', true, 'danger', true);
                      $scope.hideProgress(divPortletBodyUsuarioCadPos); 
                      $scope.atualizaProgressoDoCadastro();
@@ -318,6 +319,7 @@ angular.module("administrativo-usuarios-cadastro", [])
                     $timeout(function(){$scope.showAlert('Usuário cadastrado com sucesso!', true, 'success', true)}, 500);
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao cadastrar o usuário (' + failData.status + ')', true, 'danger', true);
                      progressoCadastro(false);
                      // Hide progress
@@ -493,6 +495,7 @@ angular.module("administrativo-usuarios-cadastro", [])
                      $timeout(function(){$scope.showAlert('Usuário alterado com sucesso!', true, 'success', true)}, 500);  
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao alterar o usuário (' + failData.status + ')', true, 'danger', true);
                      progressoCadastro(false);
                      $scope.hideProgress(divPortletBodyUsuarioCadPos);
@@ -567,6 +570,7 @@ angular.module("administrativo-usuarios-cadastro", [])
            return list;
         },function(failData){
              if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+             else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
              else $scope.showAlert('Houve uma falha ao requisitar o filtro de empresas (' + failData.status + ')', true, 'danger', true);
              $scope.pesquisandoGruposEmpresas = false;
              return [];
@@ -593,6 +597,7 @@ angular.module("administrativo-usuarios-cadastro", [])
            //return dados.data.Registros;
         },function(failData){
              if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+             else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
              else $scope.showAlert('Houve uma falha ao requisitar o filtro de filiais (' + failData.status + ')', true, 'danger', true);
              $scope.pesquisandoEmpresas = false;
              //return [];

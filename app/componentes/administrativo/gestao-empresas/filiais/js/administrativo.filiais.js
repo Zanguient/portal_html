@@ -186,6 +186,7 @@ angular.module("administrativo-filiais", [])
                   },
                   function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao requisitar filiais (' + failData.status + ')', true, 'danger', true);
                      // Esconde o progress
                     $scope.hideProgress(divPortletBodyFilialPos);
@@ -233,6 +234,7 @@ angular.module("administrativo-filiais", [])
                     $scope.buscaFiliais();
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao alterar o status ativo da filial (' + failData.status + ')', true, 'danger', true);
                      // Hide progress
                      $scope.hideProgress(divPortletBodyFilialPos);
@@ -270,6 +272,7 @@ angular.module("administrativo-filiais", [])
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
                      else if(failData.status === 500) $scope.showModalAlerta('Não é possível excluir a filial. O que pode ser feito é a desativação da mesma');
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao excluir a filial (' + failData.status + ')', true, 'danger', true);
                      // Hide progress
                      $scope.hideProgress(divPortletBodyFilialPos);
