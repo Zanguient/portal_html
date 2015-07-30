@@ -26,8 +26,8 @@
             </div>            
         </div>   
         
-        <div class="left-panel">
-            <ul class="nav nav-pills nav-stacked">
+        <div style="float:left;">
+            <ul class="nav nav-tabs nav-stacked">
                 <li ng-class="{ active: tabIs(1) }"> 
                     <a href ng-click=" setTab(1)">                        
                              Pessoal
@@ -35,13 +35,13 @@
                 </li>
                 <li ng-class="{ active: tabIs(2) }"> 
                     <a href ng-click=" setTab(2)">
-                        
+
                         <font align="right">Contato</font>
                     </a>
                 </li>                
             </ul>
         </div>
-        <div class="right-panel">
+        <div style="float:left;">
             <div class="panel" ng-show=" tabIs(1)">
                 <div class="row">
                     <div class="col-sm-6 col-sm-offset-4">
@@ -73,7 +73,6 @@
                 </div>
             </div>
         </div>
-
         
     </div>
     <!-- END PAGE CONTENT INNER -->
