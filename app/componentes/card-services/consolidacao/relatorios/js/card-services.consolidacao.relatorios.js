@@ -72,7 +72,7 @@ angular.module("card-services-consolidacao-relatorios", [])
         // Quando houver alteração do grupo empresa na barra administrativa                                           
         $scope.$on('alterouGrupoEmpresa', function(event){ 
             // Avalia grupo empresa
-            if($scope.grupoempresa){ 
+            if($scope.usuariologado.grupoempresa){ 
                 // Reseta seleção de filtro específico de empresa
                 $scope.filtro.filial = $scope.filtro.adquirente = $scope.filtro.bandeira = $scope.filtro.terminallogico = null;
                 buscaFiliais(true);
@@ -84,7 +84,7 @@ angular.module("card-services-consolidacao-relatorios", [])
             }
         }); 
         // Carrega filiais
-        if($scope.grupoempresa) buscaFiliais(true);
+        if($scope.usuariologado.grupoempresa) buscaFiliais(true);
     };
     
                                                  
@@ -169,7 +169,11 @@ angular.module("card-services-consolidacao-relatorios", [])
        var filtros = undefined;
 
        // Filtro do grupo empresa => barra administrativa
-       if($scope.grupoempresa) filtros = {id: $campos.cliente.empresa.id_grupo, valor: $scope.grupoempresa.id_grupo};
+       if($scope.usuariologado.grupoempresa){ 
+           filtros = [{id: $campos.cliente.empresa.id_grupo, valor: $scope.usuariologado.grupoempresa.id_grupo}];
+           if($scope.usuariologado.empresa) filtros.push({id: $campos.cliente.empresa.nu_cnpj, 
+                                                          valor: $scope.usuariologado.empresa.nu_cnpj});
+       }
        
        $webapi.get($apis.getUrl($apis.cliente.empresa, 
                                 [$scope.token, 0, $campos.cliente.empresa.ds_fantasia],
@@ -493,7 +497,7 @@ angular.module("card-services-consolidacao-relatorios", [])
     };
     
     var alteraFiltroDeBusca = function(){
-        if($scope.grupoempresa){
+        if($scope.usuariologado.grupoempresa){
             if($scope.tabIs(0)){
                 if($scope.relatorio.terminal.length > 0) buscaRelatorioTerminal(true);
             }else if($scope.tabIs(1)){
@@ -509,7 +513,7 @@ angular.module("card-services-consolidacao-relatorios", [])
       */
     $scope.buscaRelatorio = function(){
         // Avalia se há um grupo empresa selecionado
-        if(!$scope.grupoempresa){
+        if(!$scope.usuariologado.grupoempresa){
             $scope.showModalAlerta('Por favor, selecione uma empresa', 'Atos Capital', 'OK', 
                                    function(){
                                          $timeout(function(){$scope.setVisibilidadeBoxGrupoEmpresa(true);}, 300);

@@ -189,8 +189,8 @@ angular.module("administrativo-filiais-cadastro", [])
             $scope.validandoCNPJ = true;
             
             var filtro = [{id:$campos.cliente.empresa.nu_cnpj, valor:$scope.filial.nu_cnpj}];
-            if($scope.grupoempresa) filtro.push({id:$campos.cliente.empresa.id_grupo, 
-                                                 valor:$scope.grupoempresa.id_grupo});
+            if($scope.usuariologado.grupoempresa) filtro.push({id:$campos.cliente.empresa.id_grupo, 
+                                                 valor:$scope.usuariologado.grupoempresa.id_grupo});
             
 
             $webapi.get($apis.getUrl($apis.cliente.empresa, [$scope.token, 0], filtro))
@@ -240,8 +240,8 @@ angular.module("administrativo-filiais-cadastro", [])
             $scope.validandoNomeFantasia = true;
             
             var filtro = [{id:$campos.cliente.empresa.ds_fantasia, valor:$scope.filial.ds_fantasia}];
-            if($scope.grupoempresa) filtro.push({id:$campos.cliente.empresa.id_grupo, 
-                                                 valor:$scope.grupoempresa.id_grupo});
+            if($scope.usuariologado.grupoempresa) filtro.push({id:$campos.cliente.empresa.id_grupo, 
+                                                 valor:$scope.usuariologado.grupoempresa.id_grupo});
                 
             $webapi.get($apis.getUrl($apis.cliente.empresa, [$scope.token, 0], filtro))
             // Verifica se a requisição foi respondida com sucesso
@@ -302,7 +302,7 @@ angular.module("administrativo-filiais-cadastro", [])
     // Progresso  
     // Form Filial                                                    
     var getPercentualFormFilial = function(){
-        var percentual = $scope.grupoempresa ? 50 : 0;
+        var percentual = $scope.usuariologado.grupoempresa ? 50 : 0;
         percentual += $scope.cnpjValido() ? 25 : 0; 
         percentual += $scope.nomeFantasiaValido() ? 25 : 0;
         return percentual;    
@@ -340,12 +340,12 @@ angular.module("administrativo-filiais-cadastro", [])
       * Armazena as informações
       */
     $scope.armazenaInformacoesDaFilial = function(){
-        if($scope.grupoempresa && $scope.formCadastroFilial.$valid && $scope.cnpjValido() && 
+        if($scope.usuariologado.grupoempresa && $scope.formCadastroFilial.$valid && $scope.cnpjValido() && 
            $scope.nomeFantasiaValido()){
             if($scope.ehCadastro()) cadastraFilial();
             else alteraFilial();
         }else{
-            if(!$scope.grupoempresa){
+            if(!$scope.usuariologado.grupoempresa){
                 $scope.showModalAlerta('Por favor, selecione uma empresa', 'Atos Capital', 'OK', 
                                    function(){
                                          $timeout(function(){$scope.setVisibilidadeBoxGrupoEmpresa(true);}, 300);
@@ -378,7 +378,7 @@ angular.module("administrativo-filiais-cadastro", [])
         var jsonFilial = { nu_cnpj: $scope.filial.nu_cnpj,
                            ds_fantasia: $scope.filial.ds_fantasia,
                            ds_email: $scope.filial.ds_email.toLowerCase(),
-                           id_grupo: $scope.grupoempresa.id_grupo
+                           id_grupo: $scope.usuariologado.grupoempresa.id_grupo
                          };
         // Não obrigatórios
         if($scope.filial.ds_razaoSocial) jsonFilial.ds_razaoSocial = $scope.filial.ds_razaoSocial;
@@ -423,7 +423,7 @@ angular.module("administrativo-filiais-cadastro", [])
        
         // Obrigatórios
         var jsonFilial = { nu_cnpj: $scope.filial.nu_cnpj,
-                           id_grupo: $scope.grupoempresa.id_grupo,
+                           id_grupo: $scope.usuariologado.grupoempresa.id_grupo,
                            fl_ativo : $scope.old.fl_ativo
                          };
        

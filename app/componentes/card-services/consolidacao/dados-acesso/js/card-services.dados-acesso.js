@@ -61,7 +61,7 @@ angular.module("card-services-dados-acesso", [])
         // Quando houver alteração do grupo empresa na barra administrativa                                           
         $scope.$on('alterouGrupoEmpresa', function(event){ 
             // Avalia grupo empresa
-            if($scope.grupoempresa){ 
+            if($scope.usuariologado.grupoempresa){ 
                 // Reseta seleção de filtro específico de empresa
                 $scope.filtro.filial = $scope.filtro.adquirente = $scope.filtro.status = null;
                 buscaFiliais();
@@ -78,7 +78,7 @@ angular.module("card-services-dados-acesso", [])
             //permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;
         }
         // Carrega filiais
-        if($scope.grupoempresa) buscaFiliais();
+        if($scope.usuariologado.grupoempresa) buscaFiliais();
     };
                                                  
                                                  
@@ -87,19 +87,19 @@ angular.module("card-services-dados-acesso", [])
       * Retorna true se o usuário pode cadastrar dados de acesso
       */
     $scope.usuarioPodeCadastrarDadosAcesso = function(){
-        return $scope.grupoempresa && $scope.filtro.filial !== null && permissaoCadastro;   
+        return $scope.usuariologado.grupoempresa && $scope.filtro.filial !== null && permissaoCadastro;   
     }
     /**
       * Retorna true se o usuário pode alterar info de dados de acesso
       */
     $scope.usuarioPodeAlterarDadosAcesso = function(){
-        return $scope.grupoempresa && $scope.filtro.filial !== null && permissaoAlteracao;
+        return $scope.usuariologado.grupoempresa && $scope.filtro.filial !== null && permissaoAlteracao;
     }
     /**
       * Retorna true se o usuário pode excluir dados de acesso
       * /
     $scope.usuarioPodeExcluirDadosAcesso = function(){
-        return $scope.grupoempresa && $scope.filtro.filial !== null && permissaoRemocao;
+        return $scope.usuariologado.grupoempresa && $scope.filtro.filial !== null && permissaoRemocao;
     } */                                             
                                                  
     
@@ -134,7 +134,11 @@ angular.module("card-services-dados-acesso", [])
        var filtros = undefined;
 
        // Filtro do grupo empresa => barra administrativa
-       if($scope.grupoempresa) filtros = {id: $campos.cliente.empresa.id_grupo, valor: $scope.grupoempresa.id_grupo};
+       if($scope.usuariologado.grupoempresa){ 
+           filtros = [{id: $campos.cliente.empresa.id_grupo, valor: $scope.usuariologado.grupoempresa.id_grupo}];
+           if($scope.usuariologado.empresa) filtros.push({id: $campos.cliente.empresa.nu_cnpj, 
+                                                          valor: $scope.usuariologado.empresa.nu_cnpj});
+       }
        
        $webapi.get($apis.getUrl($apis.cliente.empresa, 
                                 [$scope.token, 0, $campos.cliente.empresa.ds_fantasia],
@@ -281,7 +285,7 @@ angular.module("card-services-dados-acesso", [])
       */
     $scope.buscaDadosAcesso = function(){
         // Avalia se há um grupo empresa selecionado
-        if(!$scope.grupoempresa){
+        if(!$scope.usuariologado.grupoempresa){
             $scope.showModalAlerta('Por favor, selecione uma empresa', 'Atos Capital', 'OK', 
                                    function(){
                                          $timeout(function(){$scope.setVisibilidadeBoxGrupoEmpresa(true);}, 300);
@@ -435,7 +439,7 @@ angular.module("card-services-dados-acesso", [])
            login : $scope.cadastro.login,
            senha : $scope.cadastro.senha,
            cnpj : $scope.filtro.filial.nu_cnpj,
-           idGrupo : $scope.grupoempresa.id_grupo,
+           idGrupo : $scope.usuariologado.grupoempresa.id_grupo,
            estabelecimento : $scope.cadastro.estabelecimento ? $scope.cadastro.estabelecimento : null, 
            operadora : { nmOperadora : $scope.cadastro.adquirente.descricao }
        };

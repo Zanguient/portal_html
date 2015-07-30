@@ -67,7 +67,7 @@ angular.module("administrativo-empresas", [])
       * Retorna true se o usuário pode consultar outras empresas
       */
     $scope.usuarioPodeConsultarEmpresas = function(){
-        return typeof $scope.grupoempresa === 'undefined';    
+        return typeof $scope.usuariologado.grupoempresa === 'undefined';    
     }                                            
     /**
       * Retorna true se o usuário pode cadastrar empresas
@@ -250,7 +250,7 @@ angular.module("administrativo-empresas", [])
       */
     $scope.verFiliais = function(empresa){
         //console.log("VER FILIAIS DE '" + empresa.ds_nome + "' (" + empresa.id_grupo + ")");
-        if(!$scope.grupoempresa) $scope.selecionaGrupoEmpresa(empresa, function(){ $scope.goAdministrativoFiliais(); });
+        if(!$scope.usuariologado.grupoempresa) $scope.selecionaGrupoEmpresa(empresa, function(){ $scope.goAdministrativoFiliais(); });
         else $scope.goAdministrativoFiliais();
     };
     /**

@@ -207,7 +207,16 @@
                             <tr>
                                 <td>
                                     <div  style="margin-top:-5px">
-                                    <strong>{{(grupoempresa.ds_nome | uppercase) || ''}}</strong>  
+                                        <label>
+                                            <strong>
+                                                {{(usuariologado.grupoempresa.ds_nome | uppercase) || ''}}
+                                            </strong>
+                                        </label>
+                                        <label>
+                                            <strong>
+                                                {{(usuariologado.empresa.ds_fantasia | uppercase) || ''}}
+                                            </strong>
+                                        </label>
 									</div>
                                 </td>
                                     
@@ -215,12 +224,12 @@
                                     <img ng-src="../img/loading-atos.gif" ng-show="carregandoGrupoEmpresas"/>
                                     <a class="btn" href="javascript:;" 
                                        ng-click="limpaGrupoEmpresa()"
-                                       ng-show="PERMISSAO_FILTRO_EMPRESA && PERMISSAO_ADMINISTRATIVO && grupoempresa">
+                                       ng-show="PERMISSAO_FILTRO_EMPRESA && PERMISSAO_ADMINISTRATIVO && usuariologado.grupoempresa">
                                         <i class="fa fa-times-circle"></i>
                                     </a>
                                     <a href="javascript:;" class="btn dropdown-toggle" 
                                        data-toggle="dropdown"
-                                       ng-show="PERMISSAO_FILTRO_EMPRESA && PERMISSAO_ADMINISTRATIVO && !grupoempresa">
+                                       ng-show="PERMISSAO_FILTRO_EMPRESA && PERMISSAO_ADMINISTRATIVO && !usuariologado.grupoempresa">
                                         <i class="icon-settings" 
                                            ng-hide="carregandoGrupoEmpresas"></i>
                                     </a>
@@ -241,11 +250,11 @@
                                                       typeahead-wait-ms="500"
                                                       typeahead="gempresa as (gempresa.ds_nome | uppercase) for gempresa in buscaGrupoEmpresas($viewValue)"/>
                                             </div>
-                                            <!--div style="width:100%; margin-top:15px" ng-show="grupoempresa">
+                                            <!--div style="width:100%; margin-top:15px" ng-show="usuariologado.grupoempresa">
                                                 <a href="javascript:;" ng-click="limpaGrupoEmpresa()" class="btn">
                                                     <i class="fa fa-times-circle"></i>
                                                 </a>
-                                                <strong>{{grupoempresa.ds_nome || ''}}</strong>
+                                                <strong>{{usuariologado.grupoempresa.ds_nome || ''}}</strong>
                                             </div-->
                                         </form>
                                     </div>

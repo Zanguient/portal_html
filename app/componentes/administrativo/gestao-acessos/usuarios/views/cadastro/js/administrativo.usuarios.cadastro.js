@@ -160,11 +160,12 @@ angular.module("administrativo-usuarios-cadastro", [])
         });
         
         $scope.$on('alterouGrupoEmpresa', function(event){
-            if($scope.grupoempresa){
+            if($scope.usuariologado.grupoempresa){
                 // Exibe a tab onde o grupo empresa aparece
                 $scope.setTabCadastro(2);
-                $scope.usuario.grupoempresa = $scope.grupoempresa; 
-                $scope.selecionouGrupoEmpresa();
+                $scope.usuario.grupoempresa = $scope.usuariologado.grupoempresa; 
+                if($scope.usuariologado.empresa) $scope.usuario.empresa = $scope.usuariologado.empresa;
+                else $scope.selecionouGrupoEmpresa();
             }else $scope.usuario.empresa = $scope.usuario.grupoempresa = '';
             $scope.atualizaProgressoDoCadastro();
         });
@@ -228,8 +229,8 @@ angular.module("administrativo-usuarios-cadastro", [])
         $scope.pagina.titulo = 'Gestão de Acessos';                          
         $scope.pagina.subtitulo = $scope.tela.tipo + ' de Usuário';
         $scope.setTabCadastro(1);
-        if($scope.grupoempresa){
-            $scope.usuario.grupoempresa = $scope.grupoempresa; 
+        if($scope.usuariologado.grupoempresa){
+            $scope.usuario.grupoempresa = $scope.usuariologado.grupoempresa; 
             $scope.selecionouGrupoEmpresa();
         }
     };
@@ -541,6 +542,9 @@ angular.module("administrativo-usuarios-cadastro", [])
                                                          
                                                          
     // Filtro
+    /*$scope.selecionouEmpresa = function(){
+        console.log($scope.usuario.empresa);   
+    }; */                                                     
     $scope.selecionouGrupoEmpresa = function(){
         $scope.usuario.empresa = '';
         $scope.buscaEmpresas();    

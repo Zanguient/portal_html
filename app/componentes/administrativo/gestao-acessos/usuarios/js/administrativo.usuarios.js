@@ -30,7 +30,7 @@ angular.module("administrativo-usuarios", [])
                             nome: "Login"
                           },{
                             id: $campos.administracao.webpagesusers.grupo_empresa + ($campos.cliente.grupoempresa.ds_nome - 100), 
-                            ativo : !$scope.grupoempresa, // é desativado quando o $scope.grupoempresa !== undefined
+                            ativo : !$scope.usuariologado.grupoempresa, // é desativado quando o $scope.usuariologado.grupoempresa !== undefined
                             nome: "Empresa"
                           },{
                             id: $campos.administracao.webpagesusers.empresa + ($campos.cliente.empresa.ds_fantasia - 100), 
@@ -62,7 +62,7 @@ angular.module("administrativo-usuarios", [])
         // Quando houver alteração do grupo empresa na barra administrativa                                           
         $scope.$on('alterouGrupoEmpresa', function(event){
             // Modifica a visibilidade do campo de busca para o grupo empresa
-            $scope.camposBusca[2].ativo = !$scope.grupoempresa;   
+            $scope.camposBusca[2].ativo = !$scope.usuariologado.grupoempresa;   
             // Refaz a busca
             $scope.buscaUsuarios();
         }); 
@@ -267,8 +267,8 @@ angular.module("administrativo-usuarios", [])
        // Verifica se tem algum valor para ser filtrado    
        if($scope.usuario.busca.length > 0) filtros = {id: $scope.usuario.campo_busca.id, valor: $scope.usuario.busca + '%'};        
        // Filtro do grupo empresa => barra administrativa
-       if($scope.grupoempresa){
-            var filtroGrupoEmpresa = {id: $campos.administracao.webpagesusers.id_grupo, valor: $scope.grupoempresa.id_grupo};
+       if($scope.usuariologado.grupoempresa){
+            var filtroGrupoEmpresa = {id: $campos.administracao.webpagesusers.id_grupo, valor: $scope.usuariologado.grupoempresa.id_grupo};
             if(filtros) filtros = [filtros, filtroGrupoEmpresa];
             else filtros = filtroGrupoEmpresa;
        }

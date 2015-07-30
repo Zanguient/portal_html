@@ -148,7 +148,7 @@
                                                 <!--option value="">Todas</option-->
                                             </select>
                                             <i class="fa fa-question-circle"
-                                               ng-show="!grupoempresa"
+                                               ng-show="!usuariologado.grupoempresa"
                                                popover-placement="bottom"
                                                popover="É necessário selecionar uma empresa"
                                                popover-trigger="mouseenter"></i>
@@ -163,7 +163,7 @@
                                                 <option value="">TODAS</option>
                                             </select>
                                             <i class="fa fa-question-circle"
-                                               ng-show="!grupoempresa"
+                                               ng-show="!usuariologado.grupoempresa"
                                                popover-placement="bottom"
                                                popover="É necessário selecionar uma empresa"
                                                popover-trigger="mouseenter"></i>
@@ -178,7 +178,7 @@
                                                 <option value="">TODAS</option>
                                             </select>
                                             <i class="fa fa-question-circle"
-                                               ng-show="grupoempresa && filtro.adquirente === null"
+                                               ng-show="usuariologado.grupoempresa && filtro.adquirente === null"
                                                popover-placement="bottom"
                                                popover="É necessário selecionar uma adquirente"
                                                popover-trigger="mouseenter"></i>
@@ -194,7 +194,7 @@
                                                 <option value="">TODOS</option>
                                             </select>
                                             <i class="fa fa-question-circle"
-                                               ng-show="grupoempresa && filtro.adquirente === null"
+                                               ng-show="usuariologado.grupoempresa && filtro.adquirente === null"
                                                popover-placement="bottom"
                                                popover="É necessário selecionar uma adquirente"
                                                popover-trigger="mouseenter"></i>

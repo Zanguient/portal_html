@@ -208,8 +208,8 @@ angular.module("administrativo-privilegios", [])
        if($scope.privilegio.busca.length > 0) filtros = {id: $scope.privilegio.campo_busca.id, 
                                                          valor: $scope.privilegio.busca + '%'};        
        // Filtro do grupo empresa => barra administrativa
-       if($scope.grupoempresa){
-            var filtroGrupoEmpresa = {id: $campos.administracao.webpagesusers.id_grupo, valor: $scope.grupoempresa.id_grupo};
+       if($scope.usuariologado.grupoempresa){
+            var filtroGrupoEmpresa = {id: $campos.administracao.webpagesusers.id_grupo, valor: $scope.usuariologado.grupoempresa.id_grupo};
             if(filtros) filtros = [filtros, filtroGrupoEmpresa];
             else filtros = filtroGrupoEmpresa;
        }

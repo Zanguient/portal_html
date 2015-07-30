@@ -96,7 +96,7 @@
                                                 <input type="text" disabled 
                                                        placeholder="Empresa" 
                                                        class="form-control" 
-                                                       ng-model="grupoempresa.ds_nome" required/>
+                                                       ng-model="usuariologado.grupoempresa.ds_nome" required/>
                                             </div>
                                         </div>
                                         <!-- NOME DA EMPRESA -->
@@ -388,7 +388,7 @@
                                             <label class="control-label col-md-3">Empresa:</label>
                                             <div class="col-md-4">
                                                 <p class="form-control-static">
-                                                    <strong>{{grupoempresa.ds_nome || ''}}</strong>
+                                                    <strong>{{usuariologado.grupoempresa.ds_nome || ''}}</strong>
                                                 </p>
                                             </div>
                                         </div>

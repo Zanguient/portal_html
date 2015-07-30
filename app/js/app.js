@@ -262,7 +262,7 @@ angular.module("AtosCapital", ['ui.router',
     $scope.empresa = $empresa;
     // Grupo empresa selecionado
     var empresaId = -1; // se > 0 indica que já estava associado a um grupo empresa
-    $scope.grupoempresa = undefined; // grupo empresa em uso
+    $scope.usuariologado = { grupoempresa : undefined, empresa : undefined } ; // grupo empresa em uso
     $scope.gempresa = null;  // objeto que recebe temporariamente o grupo empresa da busca
     // Controller selecionado
     $scope.methodsDoControllerCorrente = []; 
@@ -907,7 +907,7 @@ angular.module("AtosCapital", ['ui.router',
         //data.id_grupo = 12; // TEMP
         
         // Verifica se estava administrando algum grupo empresa
-        if(data.id_grupo && data.id_grupo !== -1) obtemGrupoEmpresa(data.id_grupo);
+        if(data.id_grupo && data.id_grupo !== -1) obtemGrupoEmpresa(data.id_grupo, data.nu_cnpj);
         
         // Seta o flag para true
         $scope.menuConstruido = true;
@@ -1032,24 +1032,46 @@ angular.module("AtosCapital", ['ui.router',
     /**
       * Obtém um único grupo empresa, a partir do empresaId
       */
-    var obtemGrupoEmpresa = function(empresaId){
+    var obtemGrupoEmpresa = function(empresaId, nu_cnpj){
          // Obtém os dados da empresa
          progressoGrupoEmpresas(true);
          // Obtém a URL                                                      
          $webapi.get($apis.getUrl($apis.cliente.grupoempresa, [$scope.token, 0], 
                                   {id:$campos.cliente.grupoempresa.id_grupo, valor: empresaId}))
             .then(function(dados){  
-                $scope.grupoempresa = dados.Registros[0];
+                $scope.usuariologado.grupoempresa = dados.Registros[0];
+                $scope.$broadcast("alterouGrupoEmpresa");
+                progressoGrupoEmpresas(false);
+                if(nu_cnpj) obtemEmpresa(nu_cnpj);
+             },
+             function(failData){
+                if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                else $scope.showAlert('Houve uma falha ao se associar a empresa (' + failData.status + ')', true, 'danger', true);
+                progressoGrupoEmpresas(false);
+             });    
+    };
+    /**
+      * Obtém uma única empresa, a partir do nu_cnpj
+      */
+    var obtemEmpresa = function(nu_cnpj){
+         // Obtém os dados da empresa
+         progressoGrupoEmpresas(true);
+         // Obtém a URL                                                      
+         $webapi.get($apis.getUrl($apis.cliente.empresa, [$scope.token, 0], 
+                                  {id:$campos.cliente.empresa.nu_cnpj, valor: nu_cnpj}))
+            .then(function(dados){  
+                $scope.usuariologado.empresa = dados.Registros[0];
                 $scope.$broadcast("alterouGrupoEmpresa");
                 progressoGrupoEmpresas(false);
              },
              function(failData){
                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                else $scope.showAlert('Houve uma falha ao se associar ao grupo empresa (' + failData.status + ')', true, 'danger', true);
+                else $scope.showAlert('Houve uma falha ao se associar a filial (' + failData.status + ')', true, 'danger', true);
                 progressoGrupoEmpresas(false);
              });    
-    };
+    };                        
     /** 
       *  Requisita a lista filtrada dos grupo empresas registrados no servidor   
       */
@@ -1076,7 +1098,7 @@ angular.module("AtosCapital", ['ui.router',
     $scope.selecionaGrupoEmpresa = function(grupoempresa, funcaoSucesso){
         associaUsuarioAGrupoEmpresa(grupoempresa.id_grupo, 
                                     function(dados){ 
-                                        $scope.grupoempresa = grupoempresa;
+                                        $scope.usuariologado.grupoempresa = grupoempresa;
                                         if(typeof funcaoSucesso === 'function') funcaoSucesso();
                                      }
                                    );
@@ -1086,7 +1108,7 @@ angular.module("AtosCapital", ['ui.router',
       */
     $scope.limpaGrupoEmpresa = function(funcaoSucesso){
         associaUsuarioAGrupoEmpresa(-1, function(dados){ 
-                                            $scope.grupoempresa = undefined;
+                                            $scope.usuariologado.grupoempresa = undefined;
                                             if(typeof funcaoSucesso === 'function') funcaoSucesso();
                                          }
                                    );

@@ -143,8 +143,8 @@ angular.module("card-services-senhas-invalidas", [])
       * Retorna os filtros para ser usado junto a url para requisição via webapi
       */
     var obtemFiltroDeBusca = function(){
-        if($scope.grupoempresa) return {id: $campos.pos.loginoperadora.idGrupo, 
-                                        valor: $scope.grupoempresa.id_grupo};
+        if($scope.usuariologado.grupoempresa) return {id: $campos.pos.loginoperadora.idGrupo, 
+                                        valor: $scope.usuariologado.grupoempresa.id_grupo};
        
         return undefined;
     };  

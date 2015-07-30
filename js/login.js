@@ -81,8 +81,8 @@ app.controller("loginCtrl", ['$scope',
                       }
                     });
         }else{ 
+            // Verifica se tem conexão com o servidor
             $webapi.get($autenticacao.autenticacao.login + 'a')
-            // Verifica se a requisição foi respondida com sucesso
                 .then(function(dados){
                       exibeLayout();
                     },

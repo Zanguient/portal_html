@@ -238,7 +238,7 @@ angular.module('diretivas', ['ui.bootstrap'])
 
       //trigger the popup on 'click' because 'focus'
       //is also triggered after the item selection
-      element.bind('focus', function () {
+      element.bind('click', function () {
 
         var viewValue = ngModel.$viewValue;
 

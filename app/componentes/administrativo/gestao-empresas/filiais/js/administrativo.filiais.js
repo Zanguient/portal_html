@@ -59,7 +59,7 @@ angular.module("administrativo-filiais", [])
       * Retorna true se o usuário pode consultar as filiais
       */
     $scope.usuarioPodeConsultarFiliais = function(){
-        return typeof $scope.grupoempresa !== 'undefined';    
+        return typeof $scope.usuariologado.grupoempresa !== 'undefined';    
     }                                            
     /**
       * Retorna true se o usuário pode cadastrar filiais
@@ -144,7 +144,7 @@ angular.module("administrativo-filiais", [])
     };
     $scope.buscaFiliais = function(showMessage){
         
-       if(!$scope.grupoempresa){
+       if(!$scope.usuariologado.grupoempresa){
            $scope.filiais = [];
            $scope.filial.total_registros = 0;
            $scope.filial.total_paginas = 0;
@@ -156,12 +156,15 @@ angular.module("administrativo-filiais", [])
            $scope.showProgress(divPortletBodyFilialPos);    
 
            var filtros = [{id: $campos.cliente.empresa.id_grupo, 
-                           valor: $scope.grupoempresa.id_grupo}];
+                           valor: $scope.usuariologado.grupoempresa.id_grupo}];
 
            // Verifica se tem algum valor para ser filtrado    
            if($scope.filial.busca.length > 0) filtros.push({id: $campos.cliente.empresa.ds_fantasia, 
                                                             valor: $scope.filial.busca + '%'});        
 
+           if($scope.usuariologado.empresa) filtros.push({id: $campos.cliente.empresa.nu_cnpj, 
+                                                          valor: $scope.usuariologado.empresa.nu_cnpj});
+           
            $webapi.get($apis.getUrl($apis.cliente.empresa, 
                                     [$scope.token, 2, $campos.cliente.empresa.ds_fantasia, 0, 
                                      $scope.filial.itens_pagina, $scope.filial.pagina],
