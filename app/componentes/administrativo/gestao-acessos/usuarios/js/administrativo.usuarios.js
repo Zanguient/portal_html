@@ -283,10 +283,13 @@ angular.module("administrativo-usuarios", [])
                 $scope.usuarios = dados.Registros;
                 $scope.usuario.total_registros = dados.TotalDeRegistros;
                 $scope.usuario.total_paginas = Math.ceil($scope.usuario.total_registros / $scope.usuario.itens_pagina);
-                var registroInicial = ($scope.usuario.pagina - 1)*$scope.usuario.itens_pagina + 1;
-                var registroFinal = registroInicial - 1 + $scope.usuario.itens_pagina;
-                if(registroFinal > $scope.usuario.total_registros) registroFinal = $scope.usuario.total_registros;
-                $scope.usuario.faixa_registros =  registroInicial + '-' + registroFinal;
+                if($scope.usuarios.length === 0) $scope.usuario.faixa_registros = '0-0';
+                else{
+                    var registroInicial = ($scope.usuario.pagina - 1)*$scope.usuario.itens_pagina + 1;
+                    var registroFinal = registroInicial - 1 + $scope.usuario.itens_pagina;
+                    if(registroFinal > $scope.usuario.total_registros) registroFinal = $scope.usuario.total_registros;
+                    $scope.usuario.faixa_registros =  registroInicial + '-' + registroFinal;
+                }
                 $scope.obtendoUsuarios = false;
                 //$scope.hideAlert(); // fecha o alert
                 $scope.hideProgress(divPortletBodyUsuarioPos);

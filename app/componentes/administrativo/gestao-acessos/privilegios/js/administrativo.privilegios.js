@@ -225,10 +225,13 @@ angular.module("administrativo-privilegios", [])
                 $scope.privilegios = dados.Registros;
                 $scope.privilegio.total_registros = dados.TotalDeRegistros;
                 $scope.privilegio.total_paginas = Math.ceil($scope.privilegio.total_registros / $scope.privilegio.itens_pagina);
-                var registroInicial = ($scope.privilegio.pagina - 1)*$scope.privilegio.itens_pagina + 1;
-                var registroFinal = registroInicial - 1 + $scope.privilegio.itens_pagina;
-                if(registroFinal > $scope.privilegio.total_registros) registroFinal = $scope.privilegio.total_registros;
-                $scope.privilegio.faixa_registros =  registroInicial + '-' + registroFinal;
+                if($scope.privilegios.length === 0) $scope.privilegio.faixa_registros = '0-0';
+                else{
+                    var registroInicial = ($scope.privilegio.pagina - 1)*$scope.privilegio.itens_pagina + 1;
+                    var registroFinal = registroInicial - 1 + $scope.privilegio.itens_pagina;
+                    if(registroFinal > $scope.privilegio.total_registros) registroFinal = $scope.privilegio.total_registros;
+                    $scope.privilegio.faixa_registros =  registroInicial + '-' + registroFinal;
+                }
                 $scope.obtendoPrivilegios = false;
                 $scope.hideProgress(divPortletBodyPrivilegioPos);
                 // Verifica se a página atual é maior que o total de páginas

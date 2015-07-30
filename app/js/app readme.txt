@@ -114,12 +114,15 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
  Na inicialização do controller, é feita a validação do token armazenado na local storage, enviando ao servidor via WEB API.
   => GET(URL_API_LOGIN + '/' + token)
  - Se ocorrer o erro de código 500, significa que o token não é (mais) válido, portanto, um novo login é requisitado.
+ - Se ocorrer o erro de código 401, significa que o usuário está inativo ou, caso não seja perfil atos, o grupo e/ou filial 
+   ao qual está associado está inativo => Volta para a tela de login
  - Outro código de erro é avaliado (sem resposta do servidor => nada acontece)
  
  Em caso de sucesso da validação do token, é esperado um objeto JSON do server com a seguinte estrutura:
  - nome (OB) : nome do usuário
  - token (OB) : token validado => atualiza valor na local storage
  - id_grupo (OB) : indica qual grupo empresa o usuário está associado
+ - nu_cnpj (OB) : indica qual filial o usuário está associado
  - filtro_empresa (OP_A) : indica se o usuário pode usar o filtro de empresa ("catraca")
  - controllers (OP) : array que contém os serviços o usuário tem acesso
    * ds_controller (OB) : titulo do controller ('Card Services', 'Tax Services', 'Administrativo', ...)

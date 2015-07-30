@@ -508,10 +508,13 @@ angular.module("card-services-cash-flow-relatorios", [])
                 // Set valores de exibição
                 $scope.filtro.sintetico.total_registros = dados.TotalDeRegistros;
                 $scope.filtro.sintetico.total_paginas = Math.ceil($scope.filtro.sintetico.total_registros / $scope.filtro.itens_pagina);
-                var registroInicial = ($scope.filtro.sintetico.pagina - 1)*$scope.filtro.itens_pagina + 1;
-                var registroFinal = registroInicial - 1 + $scope.filtro.itens_pagina;
-                if(registroFinal > $scope.filtro.sintetico.total_registros) registroFinal = $scope.filtro.sintetico.total_registros;
-                $scope.filtro.sintetico.faixa_registros =  registroInicial + '-' + registroFinal;
+                if($scope.relatorio.sintetico.length === 0) $scope.filtro.sintetico.faixa_registros = '0-0';
+                else{
+                    var registroInicial = ($scope.filtro.sintetico.pagina - 1)*$scope.filtro.itens_pagina + 1;
+                    var registroFinal = registroInicial - 1 + $scope.filtro.itens_pagina;
+                    if(registroFinal > $scope.filtro.sintetico.total_registros) registroFinal = $scope.filtro.sintetico.total_registros;
+                    $scope.filtro.sintetico.faixa_registros =  registroInicial + '-' + registroFinal;
+                }
                 $scope.obtendoUsuarios = false;
                 // Verifica se a página atual é maior que o total de páginas
                 if($scope.filtro.sintetico.pagina > $scope.filtro.sintetico.total_paginas)
@@ -603,10 +606,13 @@ angular.module("card-services-cash-flow-relatorios", [])
                 // Set valores de exibição
                 $scope.filtro.analitico.total_registros = dados.TotalDeRegistros;
                 $scope.filtro.analitico.total_paginas = Math.ceil($scope.filtro.analitico.total_registros / $scope.filtro.itens_pagina);
-                var registroInicial = ($scope.filtro.analitico.pagina - 1)*$scope.filtro.itens_pagina + 1;
-                var registroFinal = registroInicial - 1 + $scope.filtro.itens_pagina;
-                if(registroFinal > $scope.filtro.analitico.total_registros) registroFinal = $scope.filtro.analitico.total_registros;
-                $scope.filtro.analitico.faixa_registros =  registroInicial + '-' + registroFinal;
+                if($scope.relatorio.analitico.length === 0) $scope.filtro.analitico.faixa_registros = '0-0';
+                else{
+                    var registroInicial = ($scope.filtro.analitico.pagina - 1)*$scope.filtro.itens_pagina + 1;
+                    var registroFinal = registroInicial - 1 + $scope.filtro.itens_pagina;
+                    if(registroFinal > $scope.filtro.analitico.total_registros) registroFinal = $scope.filtro.analitico.total_registros;
+                    $scope.filtro.analitico.faixa_registros =  registroInicial + '-' + registroFinal;
+                }
                 // Verifica se a página atual é maior que o total de páginas
                 if($scope.filtro.analitico.pagina > $scope.filtro.analitico.total_paginas)
                     setPagina(1); // volta para a primeira página e refaz a busca

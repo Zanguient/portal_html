@@ -170,11 +170,13 @@ angular.module("administrativo-filiais", [])
                     $scope.filiais = dados.Registros;
                     $scope.filial.total_registros = dados.TotalDeRegistros;
                     $scope.filial.total_paginas = Math.ceil($scope.filial.total_registros / $scope.filial.itens_pagina);
-                    var registroInicial = ($scope.filial.pagina - 1)*$scope.filial.itens_pagina + 1;
-                    var registroFinal = registroInicial - 1 + $scope.filial.itens_pagina;
-                    if(registroFinal > $scope.filial.total_registros) registroFinal = $scope.filial.total_registros;
-                    $scope.filial.faixa_registros =  registroInicial + '-' + registroFinal;
-
+                    if($scope.filiais.length === 0) $scope.filial.faixa_registros = '0-0';
+                    else{
+                        var registroInicial = ($scope.filial.pagina - 1)*$scope.filial.itens_pagina + 1;
+                        var registroFinal = registroInicial - 1 + $scope.filial.itens_pagina;
+                        if(registroFinal > $scope.filial.total_registros) registroFinal = $scope.filial.total_registros;
+                        $scope.filial.faixa_registros =  registroInicial + '-' + registroFinal;
+                    }
                     // Verifica se a página atual é maior que o total de páginas
                     if($scope.filial.pagina > $scope.filial.total_paginas)
                         setPagina(1); // volta para a primeira página e refaz a busca

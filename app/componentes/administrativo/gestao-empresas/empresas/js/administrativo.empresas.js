@@ -166,11 +166,13 @@ angular.module("administrativo-empresas", [])
                 $scope.empresas = dados.Registros;
                 $scope.empresa.total_registros = dados.TotalDeRegistros;
                 $scope.empresa.total_paginas = Math.ceil($scope.empresa.total_registros / $scope.empresa.itens_pagina);
-                var registroInicial = ($scope.empresa.pagina - 1)*$scope.empresa.itens_pagina + 1;
-                var registroFinal = registroInicial - 1 + $scope.empresa.itens_pagina;
-                if(registroFinal > $scope.empresa.total_registros) registroFinal = $scope.empresa.total_registros;
-                $scope.empresa.faixa_registros =  registroInicial + '-' + registroFinal;
-                
+                if($scope.empresas.length === 0) $scope.empresa.faixa_registros = '0-0';
+                else{
+                    var registroInicial = ($scope.empresa.pagina - 1)*$scope.empresa.itens_pagina + 1;
+                    var registroFinal = registroInicial - 1 + $scope.empresa.itens_pagina;
+                    if(registroFinal > $scope.empresa.total_registros) registroFinal = $scope.empresa.total_registros;
+                    $scope.empresa.faixa_registros =  registroInicial + '-' + registroFinal;
+                }
                 // Verifica se a página atual é maior que o total de páginas
                 if($scope.empresa.pagina > $scope.empresa.total_paginas)
                     setPagina(1); // volta para a primeira página e refaz a busca

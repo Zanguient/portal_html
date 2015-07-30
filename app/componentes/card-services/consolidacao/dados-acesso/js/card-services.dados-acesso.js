@@ -354,10 +354,13 @@ angular.module("card-services-dados-acesso", [])
                 // Set valores de exibição
                 $scope.filtro.total_registros = dados.TotalDeRegistros;
                 $scope.filtro.total_paginas = Math.ceil($scope.filtro.total_registros / $scope.filtro.itens_pagina);
-                var registroInicial = ($scope.filtro.pagina - 1)*$scope.filtro.itens_pagina + 1;
-                var registroFinal = registroInicial - 1 + $scope.filtro.itens_pagina;
-                if(registroFinal > $scope.filtro.total_registros) registroFinal = $scope.filtro.total_registros;
-                $scope.filtro.faixa_registros =  registroInicial + '-' + registroFinal;
+                if($scope.dadosAcesso.length === 0) $scope.filtro.faixa_registros = '0-0';
+                else{
+                    var registroInicial = ($scope.filtro.pagina - 1)*$scope.filtro.itens_pagina + 1;
+                    var registroFinal = registroInicial - 1 + $scope.filtro.itens_pagina;
+                    if(registroFinal > $scope.filtro.total_registros) registroFinal = $scope.filtro.total_registros;
+                    $scope.filtro.faixa_registros =  registroInicial + '-' + registroFinal;
+                }
                 $scope.obtendoUsuarios = false;
                 // Verifica se a página atual é maior que o total de páginas
                 if($scope.filtro.pagina > $scope.filtro.total_paginas)
