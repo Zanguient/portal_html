@@ -185,6 +185,11 @@ margin-top:170px;
   text-align: center;
 }
 
+
+.conteudoMinhaConta label{
+  font-size: 20px;  
+}
+
 .filtros{
   width: 90%;
   display: inline;
@@ -367,6 +372,15 @@ margin-top:170px;
 /*.table-scrollable{
     overflow: visible;
 }*/
+
+.telaManuntencao{
+  text-align:center; 
+  padding-bottom: 20px;
+  padding-top: 20px; 
+  font-size:20px; 
+  color:#7e1415; 
+  font-weight:bold;
+}
 
 .titulosconteudos{
     font-weight: bolder; 
