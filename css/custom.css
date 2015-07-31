@@ -382,6 +382,12 @@ margin-top:170px;
   font-weight:bold;
 }
 
+.telaDeManuntencao{
+  background-color: #eaeaea;
+  text-align: center;
+    
+}
+
 .titulosconteudos{
     font-weight: bolder; 
     margin-bottom:10px
