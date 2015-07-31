@@ -276,9 +276,9 @@ angular.module('diretivas', ['ui.bootstrap'])
         var avaliaUsername = function(val){
             //console.log("VAL: " + val);      
 
-            var clean = val.replace(/[^a-z0-9\.\-\_\@]/g, '');
+            var clean = val.replace(/[^a-zA-Z0-9\.\-\_\@]/g, '');
             var render = false;
-            var regex = /[a-z]/g;
+            var regex = /[a-zA-Z]/g;
             if (val !== clean) render = true;
             else if(clean.length > 0){
                 // Na primeira posição só pode existir letra minúscula
@@ -287,6 +287,12 @@ angular.module('diretivas', ['ui.bootstrap'])
                     else clean = '';
                     render = true;
                 }
+            }
+            
+            var cleanLower = angular.lowercase(clean);
+            if(cleanLower !== clean){
+                clean = cleanLower;
+                render = true;
             }
             
             // Altera o valor do input?

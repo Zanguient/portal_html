@@ -65,8 +65,8 @@ angular.module("conta-alterar-senha", [])
                     $scope.showAlert('Senha alterada com sucesso!', true, 'success', true);
                     $scope.hideProgress(divPortletBodyAlteraSenhaPos);
                     // Volta para a tela anterior
-                    //$scope.goMinhaConta();
-                    $scope.goHome();
+                    $scope.goMinhaConta();
+                    //$scope.goHome();
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
                      else if(failData.status === 500) $scope.showModalAlerta('Senha atual incorreta!');    

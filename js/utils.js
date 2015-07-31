@@ -126,7 +126,10 @@ angular.module('utils', [ ])
     email: 'atendimento@atoscapital.com.br',
     telefone: '(79) 3042-4048',
     facebook: 'http://www.facebook.com.br/atoscapital',
-    linkedin: 'http://br.linkedin.com/company/atos-capital'
+    linkedin: 'http://br.linkedin.com/company/atos-capital',
+    aplicativo : { android: 'https://play.google.com/store/apps/details?id=br.com.atoscapital.app',
+                   ios: ''
+                 }
   }
 })
 
@@ -147,6 +150,7 @@ angular.module('utils', [ ])
     
   return {
     getUrlBase : function(){ return urlBase },
+    apiStatus: urlBase + '/login/status/',
     // URL + keys da local storage  
     autenticacao: { 
       login: urlBase + '/login/autenticacao/',

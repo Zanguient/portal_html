@@ -242,24 +242,26 @@
 	</form>
 	<!-- END CADASTRO -->
 </div>
-    
+
+<!-- EXIBIDO PARA DISPOSITIVOS MÓVEIS -->
 <div class="content visible-xs">
     <div class="row">
         <div class="col-xs-12">
             <h3 class="form-title">Baixe o nosso aplicativo gratuito.</h3>
         </div>
         <div class="col-xs-12" style="text-align:center">
-            <a href="https://play.google.com/store/apps/details?id=br.com.atoscapital.app">
+            <a ng-href="{{empresa.aplicativo.android}}">
                 <img src="img/android.png" />
             </a>
         </div>
         <div class="col-xs-12" style="text-align:center">
-            <a href="">
+            <a ng-href="{{empresa.aplicativo.ios}}">
                 <img src="img/IOS.png" />
             </a>
         </div>
     </div>
-</div> 
+</div>
+    
 <div class="copyright" ng-show="exibeLayout" ng-cloak>
 	 {{empresa.copyright}}
 </div>

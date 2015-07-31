@@ -1,15 +1,14 @@
 # README #
 
 Módulo que:
- - gerencia o layout da tela de usuários da Gestão de acessos (app/componentes/administrativo/gestao-acessos/usuarios/index.html);
- - exibe os usuários do sistema, permitindo filtros e ordenação distintas
- - permite criação de um novo usuário ou a alteração de um existente (direcionando para a tela de cadastro, em views/cadastro/index.html)
- - permite também a exclusão e a redefinição de senha de um determinado usuário
+ - gerencia o layout da tela Minha Conta (app/componentes/conta/index.html);
+ - exibe as informações do usuário logado
+ - permite editar informações pessoais e da conta
  
 
 ### Pra Que Serve Este Módulo? ###
 
-Gerenciar completamente a tela de usuários da Gestão de acessos.  
+Gerenciar completamente a tela Minha Conta.  
 
 
 
@@ -25,20 +24,15 @@ Não é necessário nenhum outro módulo externo.
   * $scope.token do "appCtrl"
   * $scope.grupoempresa, do "appCtrl" : grupo empresa informado pelo usuário na barra administrativa
   * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
-  * Faz referência direta ao controller de cadastro de usuários da Gestão de Acessos (gestao-acessos.usuarios.cadastro.js)
-  * Quando for para alterar um usuário, envia como parâmetro no $state.go o JSON associado ao usuário
+  * Faz referência direta ao controller de alteração de senha, de conta (conta.alterar-senha.js)
   * APIS:
-    - administracao/webpagesmembership
 	- administracao/webpagesusers
 
  
  ### Interação com a WEB API ###
  
-  * api/administracao/webpagesmembership
-     - PUT  : redefinir senha 
-	          { userId : idUsuario, novaSenha : '' } // novaSenha vazio => redefinir senha para a padrão
   * api/administracao/webpagesusers
-	 - GET : listagem dos usuários na tabela (coleção 2)
+	 - GET : obtém as informações do usuário logado (coleção 3)
 			{
 				"pessoa" : {dt_nascimento: string, 
 							nm_pessoa: string, 
@@ -57,10 +51,9 @@ Não é necessário nenhum outro módulo externo.
 										   RolePrincipal : boolean}]
 				"grupoempresa" : ds_nome,
 				"empresa" : ds_fantasia,
-				"gruposvendedor" : { id_grupo : int, 
-									 ds_nome : string }
+				"gruposvendedor" : [{ id_grupo : int, 
+									  ds_nome : string }]
 			}
-	 - DELETE : deletar um determinado usuário (?token=...&id_users=id_usuario)
  
    
 

@@ -82,7 +82,7 @@ app.controller("loginCtrl", ['$scope',
                     });
         }else{ 
             // Verifica se tem conexão com o servidor
-            $webapi.get($autenticacao.autenticacao.login + 'a')
+            $webapi.get($autenticacao.apiStatus)
                 .then(function(dados){
                       exibeLayout();
                     },
