@@ -52,34 +52,36 @@
 <link href="lib/css/components-rounded.css" id="style_components" rel="stylesheet" type="text/css"/>
 <link href="lib/css/plugins.css" rel="stylesheet" type="text/css"/>
 <link href="css/custom.css" rel="stylesheet" type="text/css">
+<link href="manuntencao/css/estilo.css" rel="stylesheet" type="text/css">
 <!-- END THEME STYLES -->
 <link rel="shortcut icon" href="img/favicon.ico"/>
 </head>
 <!-- END HEAD -->
     
 <!-- BEGIN BODY -->
-<body class="login" ng-controller="loginCtrl" ng-init="init()">
+<body class="login" ng-class="{'manutencao' : manutencao }" ng-controller="loginCtrl" ng-init="init()">
+
+<!-- MANUTENÇÃO -->
+<div class="centro hidden-xs" ng-show="manutencao">
+    <div class="conteudo">        
+        Desculpe-nos pelo transtorno<br><br>
+        Estamos trabalhando para que o sistema volte a funcionar o mais breve possível.
+    </div>    
+</div>    
     
 <!-- PRE-LOADER IMAGE -->
 <img class="imgPreloader" ng-src="img/preloader.gif" ng-hide="exibeLayout" style="background: none;">
     
 <!-- BEGIN LOGO -->
-<div class="logo" ng-show="exibeLayout" ng-cloak>
+<div class="logo" ng-show="exibeLayout && !manutencao" ng-cloak>
 	<img ng-src="img/AtosCapital.jpg" title="{{empresa.nome}}"/>
 </div>
 <!-- END LOGO -->
 <!-- BEGIN LOGIN -->
-<div class="content hidden-xs" ng-show="exibeLayout" ng-cloak>
-	
-    <!-- MANUTENÇÃO -->
-    <form ng-show="manutencao">
-        <div class="telaManuntencao">            
-            SISTEMA EM MANUTENÇÃO.<br>POR FAVOR, TENTE NOVAMENTE MAIS TARDE.                               
-        </div>
-    </form>
+<div class="content hidden-xs" ng-show="exibeLayout && !manutencao" ng-cloak>
     
     <!-- BEGIN LOGIN FORM -->
-	<form class="login-form" name="formLogin" novalidate ng-show="!manutencao && formExibidoEhLogin()">
+	<form class="login-form" name="formLogin" novalidate ng-show="formExibidoEhLogin()">
 		<h3 class="form-title">Login</h3>
         
         <!-- MENSAGEM DE ERRO -->
@@ -131,7 +133,7 @@
 	<!-- END LOGIN FORM -->
     
 	<!-- ESQUECI A SENHA -->
-	<form class="forget-form" name="formEsqueciSenha" novalidate ng-show="!manutencao && formExibidoEhEsqueciSenha()">
+	<form class="forget-form" name="formEsqueciSenha" novalidate ng-show="formExibidoEhEsqueciSenha()">
 		<h3>Esqueceu a senha ?</h3>
 		<p>
 			 Entre com o endereço de e-mail abaixo para resetar sua senha.
@@ -154,7 +156,7 @@
 	<!-- END ESQUECI A SENHA -->
     
 	<!-- BEGIN CADASTRO -->
-	<form class="register-form" ng-show="!manutencao && formExibidoEhCadastro()">
+	<form class="register-form" ng-show="formExibidoEhCadastro()">
 		<h3>Login</h3>
 		<p class="hint">
 			 Entre com seus dados pessoais:
@@ -262,7 +264,7 @@
     </div>
 </div>
     
-<div class="copyright" ng-show="exibeLayout" ng-cloak>
+<div class="copyright" ng-show="exibeLayout && !manutencao" ng-cloak>
 	 {{empresa.copyright}}
 </div>
 <!-- END LOGIN -->
