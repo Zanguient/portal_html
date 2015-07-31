@@ -40,13 +40,13 @@
             <!-- PESSOAL -->
             <div class="panel" ng-show="tabIs(1)">
                 <div class="row conteudoMinhaConta">
-                    <div class="col-sm-6">
+                    <div class="col-sm-2">
                         <div class="row" style="text-align:right;">
                             <div class="col-sm-12">
                                 <label>Nome:</label>             
                             </div> 
                             <div class="col-sm-12">
-                                <label>Data de Nascimento:</label>            
+                                <label>Nascimento:</label>            
                             </div>
                             <div class="col-sm-12">
                                 <label>Telefone:</label>            
@@ -56,7 +56,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-10">
                         <div class="row">
                             <!-- NOME -->
                             <div class="col-sm-12">
@@ -110,16 +110,15 @@
                     </div>   
                 </div> 
                 <div class="row" style="margin-top:20px">
-                    <div class="col-sm-6 col-offset-3">
-                        <button class="btn red" 
-                                ng-hide="editandoDadosPessoais"
+                    <div class="col-sm-6 col-sm-offset-2"  
+                         ng-hide="editandoDadosPessoais">
+                        <button class="btn red"
                                 ng-click="editaInformacoesPessoais()">
                             Alterar informações
                         </button>
                     </div>
-                    <div class="col-sm-3">
-                        <button class="btn red" 
-                                ng-show="editandoDadosPessoais"
+                    <div class="col-sm-3 col-sm-offset-1" ng-show="editandoDadosPessoais">
+                        <button class="btn red"
                                 ng-click="alteraInformacoesPessoais()">
                             Salvar
                         </button>
@@ -139,10 +138,10 @@
                             <div class="col-sm-12">
                                 <label>Login:</label>             
                             </div> 
-                            <div class="col-sm-12">
+                            <div class="col-sm-12 minhaConta">
                                 <label>E-mail:</label>            
                             </div>
-                            <div class="col-sm-12">
+                            <div class="col-sm-12 minhaConta">
                                 <label>Status:</label>            
                             </div>
                         </div>
@@ -153,9 +152,9 @@
                                 <label ng-hide="editandoDadosConta">
                                     {{usuario.webpagesusers.ds_login || ''}}
                                 </label>
-                                <div class="col-sm-6 col-offset-0">
-                                    <div class="input-icon right"
-                                         ng-show="editandoDadosConta">
+                                <div class="col-sm-6 col-offset-0"
+                                     ng-show="editandoDadosConta">
+                                    <div class="input-icon right">
                                         <i id="icon-login" class="fa" 
                                            ng-class="{'fa-check': loginValido(), 'fa-warning': !loginValido()}" 
                                            style="display:none" ng-hide="validandoLogin"></i>
@@ -168,19 +167,20 @@
                                                ng-minlength="3" ng-maxlength="20" required/>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-6"
+                                     ng-show="editandoDadosConta">
                                     <label id="labelLoginEmUso" class="control-label" hidden>
                                         <strong>Login já está em uso!</strong>
                                     </label>
                                 </div>
                             </div> 
-                            <div class="col-sm-12">
+                            <div class="col-sm-12 minhaConta">
                                 <label ng-hide="editandoDadosConta">
                                     {{usuario.webpagesusers.ds_email || ''}}
                                 </label>
-                                <div class="col-sm-6 col-offset-0">
-                                    <div class="input-icon right"
-                                         ng-show="editandoDadosConta">
+                                <div class="col-sm-6 col-offset-0"
+                                     ng-show="editandoDadosConta">
+                                    <div class="input-icon right">
                                         <i id="icon-email" class="fa" 
                                            ng-class="{'fa-check': emailValido(), 'fa-warning': !emailValido()}" 
                                            style="display:none" ng-hide="validandoEmail"></i>
@@ -192,14 +192,15 @@
                                                ng-blur="validaEmail()"
                                                style="text-transform: lowercase;" required/>
                                     </div>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-6"
+                                         ng-show="editandoDadosConta">
                                         <label id="labelEmailEmUso" class="control-label" hidden>
                                             <strong>E-mail já está em uso!</strong>
                                         </label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-12">
+                            <div class="col-sm-12" style="margin-left:15px; margin-top:5px">
                                 <label ng-class="{ 'StatusSenhaValida' : usuario.webpagesusers.fl_ativo, 'StatusSenhaInvalida' : !usuario.webpagesusers.fl_ativo}"
                                        ng-bind="usuario.webpagesusers.fl_ativo ? 'Ativo' : 'Inativo'">
                                 </label>
@@ -208,32 +209,28 @@
                     </div>  
                 </div>
                 <div class="row" style="margin-top:20px">
-                    <div class="col-sm-2 col-offset-4">
-                        <button class="btn grey" 
-                                ng-hide="editandoDadosConta"
+                    <div class="col-sm-2 col-offset-4" ng-hide="editandoDadosConta">
+                        <button class="btn grey"                                
                                 ng-click="desativarConta()"
                                 ng-bind="usuario.webpagesusers.fl_ativo ? 'Desativar conta' : 'Ativar conta'">
                         </button>
                     </div>
-                    <div class="col-sm-2 btn-group">
+                    <div class="col-sm-2 btn-group" ng-hide="editandoDadosConta">
                         <a class="btn btn-default btn-circle" 
-                           href="javascript:;"
-                           ng-hide="editandoDadosConta"
+                           href="javascript:;"                           
                            ng-click="goMinhaContaAlterarSenha()">
                             <i class="fa fa-edit"></i> 
                             Alterar Senha
                         </a>
                     </div>
-                    <div class="col-sm-2">
-                        <button class="btn red" 
-                                ng-hide="editandoDadosConta"
+                    <div class="col-sm-2"  ng-hide="editandoDadosConta">
+                        <button class="btn red"                                
                                 ng-click="editaInformacoesConta()">
                             Alterar informações
                         </button>
                     </div>
-                    <div class="col-sm-3">
-                        <button class="btn red" 
-                                ng-show="editandoDadosConta"
+                    <div class="col-sm-3 col-sm-offset-2" ng-show="editandoDadosConta">
+                        <button class="btn red"                                 
                                 ng-click="alteraInformacoesConta()">
                             Salvar
                         </button>
@@ -244,7 +241,7 @@
                         <button class="btn grey">Cancelar</button>                        
                     </div>          
                 </div>
-            </div>
+            </div>        
             <!-- PERFIL -->
             <div class="panel" ng-show="tabIs(3)">
                 <div class="row conteudoMinhaConta">
