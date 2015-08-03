@@ -59,3 +59,15 @@
 
 mudar o formulário buscar
 >
+
+
+----------------TELA MINHA CONTA-------------
+
+-Alterar os imputs da aba pessoal.
+> custon.css > imputsPessoal (285) 
+
+-Alterar as "LABEL'S" da aba pessoal.
+> custom.css > labelPessoal (289)
+
+-Alterar as "LABEL'S" da aba conta.
+> custom.css > labelConta (293)
