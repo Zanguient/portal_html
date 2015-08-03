@@ -52,7 +52,7 @@
 <link href="lib/css/components-rounded.css" id="style_components" rel="stylesheet" type="text/css"/>
 <link href="lib/css/plugins.css" rel="stylesheet" type="text/css"/>
 <link href="css/custom.css" rel="stylesheet" type="text/css">
-<link href="manuntencao/css/estilo.css" rel="stylesheet" type="text/css">
+<link href="manutencao/css/estilo.css" rel="stylesheet" type="text/css">
 <!-- END THEME STYLES -->
 <link rel="shortcut icon" href="img/favicon.ico"/>
 </head>
@@ -62,10 +62,11 @@
 <body class="login" ng-class="{'manutencao' : manutencao }" ng-controller="loginCtrl" ng-init="init()">
 
 <!-- MANUTENÇÃO -->
-<div class="centro hidden-xs" ng-show="manutencao">
+<div class="centro" ng-show="manutencao" ng-cloak>
     <div class="conteudo">        
         Desculpe-nos pelo transtorno<br><br>
-        Estamos trabalhando para que o sistema volte a funcionar o mais breve possível.
+        Estamos trabalhando para que o sistema <br><br>
+        volte a funcionar o mais breve possível.
     </div>    
 </div>    
     
@@ -93,10 +94,14 @@
 		<div class="form-group" ng-class="{ 'has-error' : formLogin.nome.$invalid && !formLogin.nome.$pristine }">
 			<!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
 			<label class="control-label visible-ie8 visible-ie9">Usuário</label>
-			<input class="form-control" 
-                   type="text" autocomplete="off" placeholder="Usuário" 
-                   name="nome" ng-model="usuario.nome" valid-username
-                   ng-keyup="$event.keyCode == 13 && efetuaLogin()" required/>
+			<!--input class="form-control" 
+                   type="text" placeholder="Usuário" 
+                   autocomplete="off" name="nome" 
+                   ng-init="$parent.usuario.nome = usuario.nome"
+                   ng-model="$parent.usuario.nome" valid-username
+                   ng-keyup="$event.keyCode == 13 && efetuaLogin()" required/-->
+            <input-username autocomplete="off" name="nome" model="usuario.nome" placeholder="Login"
+                            ng-keyup="$event.keyCode == 13 && efetuaLogin()" required></input-username>
 		</div>
 		<div class="form-group" ng-class="{ 'has-error' : formLogin.senha.$invalid && !formLogin.senha.$pristine }">
 			<label class="control-label visible-ie8 visible-ie9">Senha</label>
@@ -246,7 +251,7 @@
 </div>
 
 <!-- EXIBIDO PARA DISPOSITIVOS MÓVEIS -->
-<div class="content visible-xs">
+<div class="content visible-xs" ng-show="exibeLayout" ng-cloak>
     <div class="row">
         <div class="col-xs-12">
             <h3 class="form-title">Baixe o nosso aplicativo gratuito.</h3>

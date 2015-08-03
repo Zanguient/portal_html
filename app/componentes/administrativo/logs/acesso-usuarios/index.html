@@ -68,19 +68,6 @@
                 </div>
                 <!-- CORPO : Botão 'Novo Privilégio' e Tabela -->
                 <div class="portlet-body">
-                    <!-- TOPO DA TABELA COM BOTÃO 'Novo Privilégio' -- >
-                    <div class="table-toolbar">
-                        <div class="row">
-                            <div class="col-md-5">
-                                <div class="btn-group">
-                                    <a href="javascript:;" ng-click="exibeCadastroNovoPrivilegio()">
-                                        <button class="btn red" ng-class="{ active : cadastraNovoPrivilegio }">
-                                        Novo Privilégio <i class="fa fa-plus"></i>
-                                    </button></a>
-                                </div>
-                            </div>                            
-                        </div>
-                    </div-->
                     <!-- TABELA -->
                     <div class="dataTables_wrapper no-footer">
                         <!-- EXIBIÇÃO E PESQUISA -->
@@ -92,10 +79,10 @@
                                         <span class="seperator"></span>Exibindo 
                                         <select name="datatable_products_length" aria-controls="datatable_products" 
                                                 class="form-control input-xsmall input-sm input-inline"
-                                                ng-model="usuario.itens_pagina"
+                                                ng-model="filtroitens_pagina"
                                                 ng-change="alterouItensPagina()"
                                                 ng-options="item for item in itens_pagina">                                            
-                                        </select> registros de {{usuario.total_registros}}
+                                        </select> registros de {{filtrototal_registros}}
                                     </label>
                                 </div>
                             </div>
@@ -103,7 +90,7 @@
                             <div class="pagination-panel centralizarPaginacao col-md-3 col-sm-12"> Página 
                                 <a href="javascript:;" ng-click="retrocedePagina()"
                                    class="btn btn-sm default prev" 
-                                   ng-class="{disabled: usuario.pagina <= 1}" 
+                                   ng-class="{disabled: filtropagina <= 1}" 
                                    title="Página anterior">
                                         <i class="fa fa-angle-left"></i>
                                 </a>
@@ -114,11 +101,11 @@
                                        ng-blur="atualizaPaginaDigitada()">
                                 <a href="javascript:;" ng-click="avancaPagina()"
                                    class="btn btn-sm default next"
-                                   ng-class="{disabled: usuario.pagina >= usuario.total_paginas}"
+                                   ng-class="{disabled: filtropagina >= filtrototal_paginas}"
                                    title="Próxima página">
                                     <i class="fa fa-angle-right"></i>
                                 </a>
-                                 de <span class="pagination-panel-total">{{usuario.total_paginas}}</span>
+                                 de <span class="pagination-panel-total">{{filtrototal_paginas}}</span>
                             </div>
                             <!-- PESQUISA -->
                             <div class="col-md-5 col-sm-12">
@@ -129,15 +116,16 @@
                                             <span class="seperator"></span>Pesquisar 
                                             <select aria-controls="datatable_products" 
                                                     class="form-control input-sm input-inline"
-                                                    ng-model="usuario.campo_busca"
+                                                    ng-model="filtro.campo_busca"
                                                     ng-options="campo as campo.nome for campo in camposBusca | filter:{ativo:true}">
+                                                <option style="display: none" value=""></option>
                                             </select>
                                         </div>
                                         <div class="col-sm-7" style="padding-right: 1px; padding-left: 1px;">
                                             <div class="input-group input-icon right">
                                                 <i class="fa fa-times" style="right:50px;cursor:pointer"
                                                    ng-click="resetaBusca()"
-                                                   ng-show="usuario.busca"></i>
+                                                   ng-show="filtrobusca"></i>
                                                 <input type="text" 
                                                    class="form-control input-inline" 
                                                    placeholder="Buscar" 
@@ -162,24 +150,30 @@
                                         Login/Nome
                                         </div>    
                                     </div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-2">
                                         <div class="cabecalhoTableAcessoUsuarios">
                                         Data do Último Acesso
                                         </div>    
                                     </div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-1">
                                         <div class="cabecalhoTableAcessoUsuarios">
-                                        Permissões
+                                        Aplicação
                                         </div>    
                                     </div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-5">
+                                        <div class="cabecalhoTableAcessoUsuarios">
+                                        Módulo
+                                        </div>    
+                                    </div>
+                                    <div class="col-sm-1">
                                         <div class="cabecalhoTableAcessoUsuarios">
                                         Opções
                                         </div>    
                                     </div>
                                </div>
                             </div>
-                        </div>    
+                        </div>   
+                        <!-- CONTEUDO -->
                         <div class="row">    
                             <div class="col-sm-12">
                                 <div class="row tableAcessoUsuarios">
@@ -192,28 +186,35 @@
                                     </div>
                                     
                                     <!--DATA DO ULTIMO ACESSO-->
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-2">
                                         <div class="componentesTableAcessoUsuarios">
                                         09/07/2015 09:40
                                         </div>    
                                     </div>
                                     
-                                    <!--PERMISSÕES-->
-                                    <div class="col-sm-3">
+                                    <!--APLICAÇÃO-->
+                                    <div class="col-sm-1">
                                         <div class="componentesTableAcessoUsuarios">
-                                        p
+                                        PORTAL
+                                        </div>    
+                                    </div>
+                                    
+                                    <!--FUNCIONALIDADE-->
+                                    <div class="col-sm-5">
+                                        <div class="componentesTableAcessoUsuarios">
+                                        ADMINISTRAÇÃO > GESTÃO DE ACESSOS > USUÁRIOS
                                         </div>    
                                     </div>
                                     
                                     <!--BOTÃO DE VISUALIZAÇÃO-->
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-1">
                                         <div class="componentesTableAcessoUsuarios">
                                             <button class="btn btn-icon-only default" 
                                                     type="button" 
-                                                    data-toggle="collapse"                                                                                                     data-target="#collapseExample" 
+                                                    data-toggle="collapse"                                                                                                     data-target="#collapseLine0" 
                                                     aria-expanded="false" 
                                                     aria-controls="collapseExample"
-                                                    style="margin-top: -3px;">
+                                                    style="margin-top: -3px;"> <!-- #collapseLine{{$index}}-->
                                             <i  class="fa fa-eye" ></i>
                                             </button>                                            
                                         </div>    
@@ -222,48 +223,167 @@
                             </div>
                         </div>  
                         <!--Visualização-->
-                        <div class="collapse" id="collapseExample">
+                        <div class="collapse" id="collapseLine0"> <!--collpaseLine{{$index}}-->
                             <!--div class="well"-->
                                 <div class="portlet-body portlet-empty" style="display: block;">
                                     <div class="row">
                                         <div class="col-sm-12" style="margin-top: -8px;">
                                             <div class="row tableAcessoUsuarios">
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-1">
                                                     <div class="cabecalhoVisualizacaoTableAcessoUsuarios">
-                                                    Módulo
+                                                    Ação
+                                                    </div>    
+                                                </div>
+                                                <div class="col-sm-1">
+                                                    <div class="cabecalhoVisualizacaoTableAcessoUsuarios">
+                                                    Resultado
                                                     </div>    
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <div class="cabecalhoVisualizacaoTableAcessoUsuarios">
-                                                    Funcionalidade
-                                                    </div>    
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <div class="cabecalhoVisualizacaoTableAcessoUsuarios">
-                                                    Parâmetros
+                                                    Erro
                                                     </div>                                                      
-                                                </div>                                    
+                                                </div> 
+                                                <div class="col-sm-6">
+                                                    <div class="cabecalhoVisualizacaoTableAcessoUsuarios">
+                                                    URL
+                                                    </div>                                                      
+                                                </div> 
                                            </div>
                                         </div>
                                     </div>
                                     <div class="row" class="portlet-body portlet-empty" style="display: block;">    
                                         <div class="col-sm-12">
                                             <div class="row tableAcessoUsuarios">
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-1">
                                                     <div class="componentesTableAcessoUsuarios">
-                                                    Exemplo=Card Service
+                                                    CADASTRO
+                                                    </div>    
+                                                </div>
+                                                <div class="col-sm-1">
+                                                    <div class="componentesTableAcessoUsuarios">
+                                                    200
                                                     </div>    
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <div class="componentesTableAcessoUsuarios">
-                                                    Exemplo=Consolidação
+                                                    
+                                                    </div>    
+                                                </div> 
+                                                <div class="col-sm-6">
+                                                    <div class="componentesTableAcessoUsuarios">
+                                                        <!--i class="fa fa-eye" style="cursor:pointer" ></i-->
+                                                        /administracao/webpagesusers/?token=oqewhoiewhqiIWOIEQWIQ131
+                                                    </div>    
+                                                </div>  
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <!--/div-->
+                        </div>
+                        
+                        <div class="row">    
+                            <div class="col-sm-12">
+                                <div class="row tableAcessoUsuarios">
+                                    
+                                    <!--LOGIN USUÁRIO-->
+                                    <div class="col-sm-3">
+                                        <div class="componentesTableAcessoUsuarios">
+                                        Usuário
+                                        </div>    
+                                    </div>
+                                    
+                                    <!--DATA DO ULTIMO ACESSO-->
+                                    <div class="col-sm-2">
+                                        <div class="componentesTableAcessoUsuarios">
+                                        09/07/2015 09:40
+                                        </div>    
+                                    </div>
+                                    
+                                    <!--APLICAÇÃO-->
+                                    <div class="col-sm-1">
+                                        <div class="componentesTableAcessoUsuarios">
+                                        PORTAL
+                                        </div>    
+                                    </div>
+                                    
+                                    <!--FUNCIONALIDADE-->
+                                    <div class="col-sm-5">
+                                        <div class="componentesTableAcessoUsuarios">
+                                        ADMINISTRAÇÃO > GESTÃO DE ACESSOS > USUÁRIOS
+                                        </div>    
+                                    </div>
+                                    
+                                    <!--BOTÃO DE VISUALIZAÇÃO-->
+                                    <div class="col-sm-1">
+                                        <div class="componentesTableAcessoUsuarios">
+                                            <button class="btn btn-icon-only default" 
+                                                    type="button" 
+                                                    data-toggle="collapse"                                                                                                     data-target="#collapseLine1" 
+                                                    aria-expanded="false" 
+                                                    style="margin-top: -3px;"> <!-- #collapseLine{{$index}}-->
+                                            <i  class="fa fa-eye" ></i>
+                                            </button>                                            
+                                        </div>    
+                                    </div>
+                               </div>
+                            </div>
+                        </div>  
+                        <!--Visualização-->
+                        <div class="collapse" id="collapseLine1"> <!--collpaseLine{{$index}}-->
+                            <!--div class="well"-->
+                                <div class="portlet-body portlet-empty" style="display: block;">
+                                    <div class="row">
+                                        <div class="col-sm-12" style="margin-top: -8px;">
+                                            <div class="row tableAcessoUsuarios">
+                                                <div class="col-sm-1">
+                                                    <div class="cabecalhoVisualizacaoTableAcessoUsuarios">
+                                                    Ação
+                                                    </div>    
+                                                </div>
+                                                <div class="col-sm-1">
+                                                    <div class="cabecalhoVisualizacaoTableAcessoUsuarios">
+                                                    Resultado
+                                                    </div>    
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="cabecalhoVisualizacaoTableAcessoUsuarios">
+                                                    Erro
+                                                    </div>                                                      
+                                                </div> 
+                                                <div class="col-sm-6">
+                                                    <div class="cabecalhoVisualizacaoTableAcessoUsuarios">
+                                                    URL
+                                                    </div>                                                      
+                                                </div> 
+                                           </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" class="portlet-body portlet-empty" style="display: block;">    
+                                        <div class="col-sm-12">
+                                            <div class="row tableAcessoUsuarios">
+                                                <div class="col-sm-1">
+                                                    <div class="componentesTableAcessoUsuarios">
+                                                    LEITURA
+                                                    </div>    
+                                                </div>
+                                                <div class="col-sm-1">
+                                                    <div class="componentesTableAcessoUsuarios">
+                                                    200
                                                     </div>    
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <div class="componentesTableAcessoUsuarios">
-                                                        <i class="fa fa-eye" style="cursor:pointer" ></i>
+                                                    
                                                     </div>    
-                                                </div>                                    
+                                                </div> 
+                                                <div class="col-sm-6">
+                                                    <div class="componentesTableAcessoUsuarios">
+                                                        <!--i class="fa fa-eye" style="cursor:pointer" ></i-->
+                                                        /administracao/webpagesusers/?token=oqewhoiewhqiIWOIEQWIQ131
+                                                    </div>    
+                                                </div>  
                                             </div>
                                         </div>
                                     </div>

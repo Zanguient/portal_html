@@ -407,7 +407,7 @@ angular.module("administrativo-usuarios", [])
         $webapi.delete($apis.getUrl($apis.administracao.webpagesusers, undefined,
                        [{id: 'token', valor: $scope.token},{id: 'id_users', valor: id_users}]))
             .then(function(dados){
-                    $scope.showAlert('Usuário deletado com sucesso!', true, 'success', true);
+                    $scope.showAlert('Usuário excluído com sucesso!', true, 'success', true);
                     $scope.hideProgress(divPortletBodyUsuarioPos);
                     // atualiza tela de usuários
                     $scope.buscaUsuarios();

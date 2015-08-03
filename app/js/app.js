@@ -278,6 +278,21 @@ angular.module("AtosCapital", ['ui.router',
     $scope.exibeLayout = false; // true => carrega layout completo
     $scope.menuConstruido = false;
     $scope.carregandoGrupoEmpresas = false; // indica se está aguardando o objeto com os grupos empresa (para usuário administrativo)
+    // Controllers
+    var controllerAdministrativoUsuarios = undefined;
+    //var controllerAdministrativoUsuariosCadastro = undefined;
+    var controllerAdministrativoPrivilegios = undefined;
+    var controllerAdministrativoModulosFuncionalidades = undefined;
+    var controllerAdministrativoEmpresas = undefined;
+    var controllerAdministrativoFiliais = undefined;
+    //var controllerAdministrativoFiliaisCadastro = undefined;
+    var controllerAdministrativoAcessoUsuarios = undefined;
+    var controllerDashboard = undefined;
+    var controllerCardServicesCashFlowRelatorios = undefined;
+    var controllerCardServicesConciliacaoVendas = undefined;
+    var controllerCardServicesDadosAcesso = undefined;
+    var controllerCardServicesSenhasInvalidas = undefined;
+    var controllerCardServicesConsolidacaoRelatorios = undefined;
     // Permissões
     //$scope.usuarioTemAcesso = false;                      
     $scope.PERMISSAO_FILTRO_EMPRESA = false;                        
@@ -346,7 +361,7 @@ angular.module("AtosCapital", ['ui.router',
       */                         
     $scope.goLinkController = function(controller){
         if(!controller) return;
-        controllerAtual = controller;
+        //controllerAtual = controller;
         $scope.methodsDoControllerCorrente = controller.methods;
         //console.log(controller);
         //console.log($scope.methodsDoControllerCorrente);
@@ -362,84 +377,98 @@ angular.module("AtosCapital", ['ui.router',
       * Exibe como conteúdo a Gestão de Acessos Usuários, de Administrativo
       */                     
     $scope.goAdministrativoUsuarios = function(params){
+        controllerAtual = controllerAdministrativoUsuarios;
         go('administrativo-gestao-acessos-usuarios', params); 
     };
     /**
       * Exibe como conteúdo de cadastro de usuário da Gestão de Acessos, de Administrativo
       */                        
     $scope.goAdministrativoUsuariosCadastro = function(params){
+        controllerAtual = controllerAdministrativoUsuarios;//Cadastro;
         go('administrativo-gestao-acessos-usuarios-cadastro', params);
     };
     /**
       * Exibe como conteúdo a Gestão de Acessos Privilégios, de Administrativo
       */                        
     $scope.goAdministrativoPrivilegios = function(params){
+        controllerAtual = controllerAdministrativoPrivilegios;
         go('administrativo-gestao-acessos-privilegios', params);
     };
     /**
       * Exibe como conteúdo a Gestão de Acessos Módulos e Funcionalidades, de Administrativo
       */                        
     $scope.goAdministrativoModulosFuncionalidades = function(params){
+        controllerAtual = controllerAdministrativoModulosFuncionalidades;
         go('administrativo-gestao-acessos-modulos-funcionalidades', params);
     }; 
     /**
       * Exibe como conteúdo a Empresas Gestão de Empresas, de Administrativo
       */                        
     $scope.goAdministrativoEmpresas = function(params){
+        controllerAtual = controllerAdministrativoEmpresas;
         go('administrativo-gestao-empresas-empresas', params);
     };                    
     /**
       * Exibe como conteúdo a Filiais Gestão de Empresas, de Administrativo
       */                        
     $scope.goAdministrativoFiliais = function(params){
+        controllerAtual = controllerAdministrativoFiliais;
         go('administrativo-gestao-empresas-filiais', params);
     };  
     /**
       * Exibe como conteúdo de cadastro de Filiais Gestão de Empresas, de Administrativo
       */                        
     $scope.goAdministrativoFiliaisCadastro = function(params){
+        controllerAtual = controllerAdministrativoFiliais;//Cadastro;
         go('administrativo-gestao-empresas-filiais-cadastro', params);
     };                           
     /**
       * Exibe como conteúdo a Logs Acesso de Usuários, de Administrativo
       */                        
     $scope.goAdministrativoAcessoUsuarios = function(params){
+        controllerAtual = controllerAdministrativoAcessoUsuarios;
         go('administrativo-logs-acesso-usuarios', params);
     };                         
     /**
       * Exibe como conteúdo o Dashboard
       */                        
     $scope.goDashboard = function(params){
+        controllerAtual = controllerDashboard;
         go('dashboard', params);
     };
     /**
       * Exibe como conteúdo a Cash Flow Relatórios, de Card Services
       */
     $scope.goCardServicesCashFlowRelatorios = function(params){
+        controllerAtual = controllerCardServicesCashFlowRelatorios;
         go('card-services-cash-flow-relatorios', params);
     };                         
     /**
       * Exibe como conteúdo a Conciliação Conciliação de Vendas, de Card Services
       */
     $scope.goCardServicesConciliacaoVendas = function(params){
+        controllerAtual = controllerCardServicesConciliacaoVendas;
         go('card-services-conciliacao-conciliacao-vendas', params);
     };
     /**
       * Exibe como conteúdo a Consolidação Dados Acesso, de Card Services
       */
     $scope.goCardServicesDadosAcesso = function(params){
+        controllerAtual = controllerCardServicesDadosAcesso;
         go('card-services-consolidacao-dados-acesso', params);
     }; 
     /**
       * Exibe como conteúdo a Consolidação Relatórios, de Card Services
       */
     $scope.goCardServicesConsolidacaoRelatorios = function(params){
+        controllerAtual = controllerCardServicesConsolidacaoRelatorios;
         go('card-services-consolidacao-relatorios', params);
     }; 
     /**
       * Exibe como conteúdo a Consolidação Senhas Inválidas, de Card Services
       */
     $scope.goCardServicesSenhasInvalidas = function(params){
+        controllerAtual = controllerCardServicesSenhasInvalidas;
         go('card-services-consolidacao-senhas-invalidas', params);
     };                         
     /**
@@ -601,44 +630,54 @@ angular.module("AtosCapital", ['ui.router',
                 if($location.path() === $state.get('administrativo-gestao-acessos-usuarios').url ||
                    $location.path() === $state.get('administrativo-gestao-acessos-usuarios-cadastro').url) 
                     controllerAtual = controller;
+                controllerAdministrativoUsuarios = controller;
                 return $scope.goAdministrativoUsuarios;
             case 'PRIVILÉGIOS' : 
                 if($location.path() === $state.get('administrativo-gestao-acessos-privilegios').url) 
                     controllerAtual = controller;
+                controllerAdministrativoPrivilegios = controller;
                 return $scope.goAdministrativoPrivilegios; 
             case 'MÓDULOS E FUNCIONALIDADES' :
                 if($location.path() === $state.get('administrativo-gestao-acessos-modulos-funcionalidades').url) 
                     controllerAtual = controller;
+                controllerAdministrativoModulosFuncionalidades = controller;
                 return $scope.goAdministrativoModulosFuncionalidades;
             case 'EMPRESAS' : 
                 if($location.path() === $state.get('administrativo-gestao-empresas-empresas').url) 
                     controllerAtual = controller;
+                controllerAdministrativoEmpresas = controller;
                 return $scope.goAdministrativoEmpresas;  
             case 'FILIAIS' : 
                 if($location.path() === $state.get('administrativo-gestao-empresas-filiais').url || 
                    $location.path() === $state.get('administrativo-gestao-empresas-filiais-cadastro').url) 
                     controllerAtual = controller;
+                controllerAdministrativoFiliais = controller;
                 return $scope.goAdministrativoFiliais;     
             case 'ACESSO DE USUÁRIOS' : 
                 if($location.path() === $state.get('administrativo-logs-acesso-usuarios').url) 
                     controllerAtual = controller;
+                controllerAdministrativoAcessoUsuarios = controller;
                 return $scope.goAdministrativoAcessoUsuarios;    
             // Dashboard
             case 'DASHBOARD ATOS': 
                 if($location.path() === $state.get('dashboard').url) controllerAtual = controller;
+                controllerDashboard = controller;
                 return $scope.goDashboard;  
             // Card Services
             case 'CONCILIAÇÃO DE VENDAS': 
                 if($location.path() === $state.get('card-services-conciliacao-conciliacao-vendas').url) 
                     controllerAtual = controller;
+                controllerCardServicesConciliacaoVendas = controller;
                 return $scope.goCardServicesConciliacaoVendas;
             case 'DADOS DE ACESSO': 
                 if($location.path() === $state.get('card-services-consolidacao-dados-acesso').url) 
                     controllerAtual = controller;
+                controllerCardServicesDadosAcesso = controller;
                 return $scope.goCardServicesDadosAcesso;
             case 'SENHAS INVÁLIDAS':
                  if($location.path() === $state.get('card-services-consolidacao-senhas-invalidas').url) 
                     controllerAtual = controller;
+                controllerCardServicesSenhasInvalidas = controller;
                 return $scope.goCardServicesSenhasInvalidas;
                 
             // AMBÍGUOS    
@@ -646,10 +685,12 @@ angular.module("AtosCapital", ['ui.router',
                 if(controllerpai.ds_controller.toUpperCase() === 'CASH FLOW'){
                     if($location.path() === $state.get('card-services-cash-flow-relatorios').url) 
                         controllerAtual = controller;
+                    controllerCardServicesCashFlowRelatorios = controller;
                     return $scope.goCardServicesCashFlowRelatorios; 
                 }
                 if($location.path() === $state.get('card-services-consolidacao-relatorios').url) 
                     controllerAtual = controller;
+                controllerCardServicesConsolidacaoRelatorios = controller;
                 return $scope.goCardServicesConsolidacaoRelatorios; 
             // ...
             default : return null;        
@@ -994,10 +1035,10 @@ angular.module("AtosCapital", ['ui.router',
             },
             function(failData){
               // Avaliar código de erro
-              if(failData.status === 500)
-                  // Código 500 => Token já não é mais válido
-                  $scope.voltarTelaLogin();
-              else if(failData.status === 401 || failData.status === 503 || failData.status === 404)
+              if(failData.status === 500 || // Código 500 => Token já não é mais válido
+                 failData.status === 401 || // Não autorizado
+                 failData.status === 0 || // time out 
+                 failData.status === 503 || failData.status === 404) // serviço indisponível
                   $scope.voltarTelaLogin(); // Volta para a tela de login
               else console.log("FALHA AO VALIDAR TOKEN: " + failData.status);
                   // o que fazer? exibir uma tela indicando falha de comunicação?
@@ -1120,6 +1161,7 @@ angular.module("AtosCapital", ['ui.router',
         $webapi.update($apis.getUrl($apis.administracao.webpagesusers, undefined, 
                                     {id:'token', valor: $scope.token}), {id_grupo: id_grupo})
             .then(function(dados){  
+                // Executa a função
                 if(typeof funcaoSucesso === 'function') funcaoSucesso(dados);
                 // Reinicia o valor do model
                 $scope.gempresa = null; 

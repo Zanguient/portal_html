@@ -88,9 +88,9 @@
                                         <select class="form-control" 
                                                 size="12" 
                                                 ng-model="grupoempresavendedor.selecionado"
-                                                ng-options="grupoempresa as (grupoempresa.ds_nome | uppercase) for grupoempresa in gruposempresasvendedor | orderBy:'ds_nome'"
+                                                ng-options="grupoempresa as (grupoempresa.ds_nome | uppercase) for grupoempresa in gruposempresasvendedor"
                                                 style="width:100%">  
-                                            <option style="display:none" value="">Empresa</option>
+                                            <option style="display:none" value=""></option>
                                         </select>
                                         <label style="margin-top:10px">
                                             <button class="btn grey" 
@@ -213,32 +213,12 @@
                                                <input type="text" placeholder="DD/MM/YYYY" maxlength="10" class="form-control" 
                                                       ng-model="pessoa.data_nasc" ng-change="validaData()" name="pessoaDataNasc" 
                                                       ng-pattern='/^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[012])\/\d{4}$/'
-                                                      input-data
+                                                      valid-data
                                                       ng-blur="atualizaProgressoDoCadastro()"
                                                       onDrag="return false" 
                                                       onDrop="return false" 
                                                       onPaste="return false" 
-                                                      autocomplete=off/>
-                                                <!--div class="input-group margin-bottom-5">
-                                                    <input type="text" readonly style="cursor: pointer"
-                                                           ng-click="exibeCalendarioDataNasc($event)"
-                                                           class="form-control form-filter input-sm" 
-                                                           placeholder="Data de Nascimento" 
-                                                           ng-model="pessoa.data_nasc"
-                                                           ng-change="alterouDataNasc()"
-                                                           datepicker-popup="dd MMMM yyyy"
-                                                           is-open="abrirCalendarioDataNasc" 
-                                                           show-button-bar="false"
-                                                           show-weeks="false" >
-                                                    <span class="input-group-btn">
-                                                        <button class="btn btn-sm default" 
-                                                                type="button" 
-                                                                ng-click="exibeCalendarioDataNasc($event)">
-                                                            <i class="fa fa-calendar"></i>
-                                                        </button>
-                                                    </span>
-                                                </div-->
-                                                
+                                                      autocomplete=off/>                                                
                                                 <span style="color:red" ng-show='formCadastroUsuario.pessoaDataNasc.$dirty && (formCadastroUsuario.pessoaDataNasc.$error.pattern || !dataValida())'>Data de Nascimento informada é inválida!</span>
                                             </div>
                                         </div>
@@ -263,7 +243,7 @@
                                                 <input type="text" class="form-control" ng-model="pessoa.ramal"
                                                        maxlength="4" ng-minlength="2" valid-integer-number
                                                        name="pessoaRamal" placeholder="1234"
-                                                       ng-blur="atualizaProgressoDoCadastro()"/>
+                                                       ng-blur="atualizaProgressoDoCadastro()"></input-number>
                                                 <span style="color:red" ng-show="formCadastroUsuario.pessoaRamal.$dirty && formCadastroUsuario.pessoaRamal.$invalid">
                                                     <span ng-show="formCadastroUsuario.pessoaRamal.$error.minlength">Ramal deve conter no mínimo 2 dígitos!</span>
                                                     <span ng-show="formCadastroUsuario.pessoaRamal.$error.pattern">Ramal deve ser composto apenas de números!</span>    
@@ -284,14 +264,21 @@
                                                     <i id="icon-login" class="fa" 
                                                        ng-class="{'fa-check': loginValido(), 'fa-warning': !loginValido()}" 
                                                        style="display:none" ng-hide="validandoLogin"></i>
-                                                    <input type="text" 
+                                                    <!--input type="text" 
                                                            placeholder="login" 
                                                            class="form-control" 
                                                            ng-class="{'spinner' : validandoLogin}"
                                                            ng-model="usuario.login" 
                                                            ng-blur="validaLogin()" 
                                                            name="usuarioLogin" valid-username
-                                                           ng-minlength="3" ng-maxlength="20" required/>
+                                                           ng-minlength="3" ng-maxlength="20" required/-->
+                                                    <input-username ng-class="{'spinner' : validandoLogin}"
+                                                                    autocomplete="off" placeholder="Login"
+                                                                    model="usuario.login" 
+                                                                    ng-blur="validaLogin()" 
+                                                                    name="usuarioLogin"
+                                                                    ng-minlength="3" ng-maxlength="20" required>
+                                                    </input-username>
                                                     <span style="color:red" ng-show="formCadastroUsuario.usuarioLogin.$dirty && formCadastroUsuario.usuarioLogin.$invalid">
                                                         <span ng-show="formCadastroUsuario.usuarioLogin.$error.required">Login é obrigatório!</span>
                                                         <span ng-show="formCadastroUsuario.usuarioLogin.$error.minlength">Login deve conter no mínimo três caracteres!</span>
@@ -416,7 +403,7 @@
                                                         ng-model="modulo"
                                                         ng-change=""
                                                         ng-options="controller as controller.ds_controller for controller in roleSelecionada.Controllers">
-                                                    <option style="display:none" value="">Página inicial</option>
+                                                    <option style="display:none" value=""></option>
                                                 </select--> 
                                                 <!-- MODULOS -->
                                                 <div>

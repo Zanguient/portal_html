@@ -88,7 +88,7 @@ angular.module("conta", [])
       * Faz o update
       */
     var atualizaUsuarioLogado = function(json, funcaoSucesso){
-        console.log(json);
+        //console.log(json);
         $scope.showProgress(divPortletBodyContaPos);
         $webapi.update($apis.getUrl($apis.administracao.webpagesusers, undefined, 
                                     {id: 'token', valor: $scope.token}), json)

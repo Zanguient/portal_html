@@ -71,6 +71,7 @@ angular.module("administrativo-filiais-cadastro", [])
       * Inicialização do controller
       */
     $scope.administrativoFiliaisCadastroInit = function(){
+        
         $scope.$on('mudancaDeRota', function(event, state, params){
             // Obtem o JSON de mudança
             var jsonMudanca = {state: state, params : params};            
@@ -88,17 +89,24 @@ angular.module("administrativo-filiais-cadastro", [])
                 }else $state.go(state, params);
             }else{
                // Verifica se teve alterações
-               //if(!houveAlteracoes()) 
-                $state.go(state, params); // não houve alterações  
-               /*else{ 
+               if(!houveAlteracoes()) 
+                    $state.go(state, params); // não houve alterações  
+               else{ 
                    // Houve alterações!
                    $scope.showModalConfirmacao('Confirmação', 
                          'Tem certeza que deseja descartar as informações alteradas?',
                          mudaEstado, {state: state, params : params},
                          'Sim', 'Não');
-               }*/
+               }
             }
         });
+        
+        // Verifica se tem grupo empresa
+        if(!$scope.usuariologado.grupoempresa){
+            // Sem grupo empresa não pode acessar esta tela!
+            $scope.goAdministrativoFiliais();
+            return;
+        }
         
         $scope.$on('alterouGrupoEmpresa', function(event){
             // Modifica a visibilidade do campo de busca para o grupo empresa
@@ -413,13 +421,53 @@ angular.module("administrativo-filiais-cadastro", [])
                   }); 
    };
    
-   // ALTERAÇÃO                                                      
+                                                         
+   // ALTERAÇÃO  
+   /**
+      * Retorna true se houve alterações no formulário
+      */
+    var houveAlteracoes = function(){
+        if($scope.old === null) return false;
+        if($scope.filial.ds_fantasia !== $scope.old.ds_fantasia) 
+            return true;
+        if($scope.filial.ds_email.toLowerCase() !== $scope.old.ds_email.toLowerCase()) 
+            return true;
+        if($scope.filial.ds_razaoSocial !== $scope.old.ds_razaoSocial) 
+            return true;
+        if($scope.filial.filial !== $scope.old.filial) 
+            return true;
+        if($scope.filial.nu_inscEstadual !== $scope.old.nu_inscEstadual) 
+            return true;
+        if($scope.filial.nu_cep !== $scope.old.nu_cep) 
+            return true;
+        if($scope.filial.ds_endereco !== $scope.old.ds_endereco) 
+            return true;
+        if($scope.filial.ds_bairro !== $scope.old.ds_bairro) 
+            return true;
+        if($scope.filial.ds_cidade !== $scope.old.ds_cidade) 
+            return true;
+        if($scope.filial.sg_uf !== $scope.old.sg_uf) 
+            return true;
+        if($scope.filial.nu_telefone !== $scope.old.nu_telefone) 
+            return true;
+        return false;
+    };                                                       
+                                                         
+   /**
+     * Envia o json com as alterações
+     */
    var alteraFilial = function(){
         
-        if($scope.old === null){ 
+       if($scope.old === null){ 
             console.log("NÃO HÁ DADOS ANTERIORES!");
             return;
-        }
+       }
+       
+       // Houve alterações?
+       if(!!houveAlteracoes()){
+            $scope.goAdministrativoFiliais();
+            return;    
+       }
        
         // Obrigatórios
         var jsonFilial = { nu_cnpj: $scope.filial.nu_cnpj,
@@ -453,7 +501,6 @@ angular.module("administrativo-filiais-cadastro", [])
         if($scope.filial.nu_telefone !== $scope.old.nu_telefone) 
             jsonFilial.nu_telefone = $scope.filial.nu_telefone;
 
-        //$scope.hideProgress(divPortletBodyFilialCadPos);
         // Envia
         $webapi.update($apis.getUrl($apis.cliente.empresa, undefined,
                                   {id: 'token', valor: $scope.token}), jsonFilial)
