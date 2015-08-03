@@ -187,7 +187,7 @@ margin-top:170px;
 
 
 .conteudoMinhaConta label{
-  font-size: 20px;  
+  font-size: 17px;  
 }
 
 .filtros{
@@ -282,6 +282,27 @@ margin-top:170px;
   z-index: 15000;
 }
 
+.imputsPessoal{
+  margin-bottom:5px; 
+}
+
+.imputConta{
+  margin-left: -15px;
+}
+
+.labelContaDados{
+  margin-left: 15px;
+}
+
+.labelConta{
+  margin
+}
+
+.labelPessoal{
+  margin-bottom: 12px;
+}
+
+
 .linhaTotalRelatorios{
   text-align: center;
   font-weight:bolder;    
@@ -289,6 +310,10 @@ margin-top:170px;
 
 .minhaConta{
   margin-top: 5px
+}
+
+.minhaContaPessoal{
+  
 }
 
 .modalConfig{
