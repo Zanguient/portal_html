@@ -18,6 +18,22 @@ angular.module('webapi', ['utils'])
             nu_telefone : 103,
             nu_ramal : 104
         },
+        tblogacessousuario : {
+            idLogAcessoUsuario : 100,
+            idUser : 101,
+            dsUrl : 102,
+            idController : 103,
+            idMethod : 104,
+            dsParametros : 105,
+            dsFiltros : 106,
+            dtAcesso : 107,
+            dsAplicacao : 108,
+            codResposta : 109,
+            msgErro : 110,
+            dsJson : 111,
+            // Relacionamentos
+            webpagesusers : 200
+        },
         webpagescontrollers : {
             id_controller : 100,
             ds_controller: 101,
@@ -231,8 +247,10 @@ angular.module('webapi', ['utils'])
       return api;      
     },  
       
+ 
     administracao : {
         pessoa : $autenticacao.getUrlBase() + '/administracao/pessoa/',
+        tblogacessousuario : $autenticacao.getUrlBase() + '/administracao/tblogacessousuario/',
         webpagescontrollers : $autenticacao.getUrlBase() + '/administracao/webpagescontrollers/',
         webpagesmembership : $autenticacao.getUrlBase() + '/administracao/webpagesmembership/',
         webpagesmethods : $autenticacao.getUrlBase() + '/administracao/webpagesmethods/',
@@ -241,6 +259,9 @@ angular.module('webapi', ['utils'])
         webpagesroles : $autenticacao.getUrlBase() + '/administracao/webpagesroles/',
         webpagesusers : $autenticacao.getUrlBase() + '/administracao/webpagesusers/', 
         webpagesusersinroles : $autenticacao.getUrlBase() + '/administracao/webpagesusersinroles/'
+    },
+    card : {
+        uploadextrato : $autenticacao.getUrlBase() + '/card/testeupload/',    
     },
     cliente: {
         empresa : $autenticacao.getUrlBase() + '/cliente/empresa/',

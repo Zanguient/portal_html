@@ -27,6 +27,40 @@
             <!-- BEGIN TABLE PORTLET-->
             <div class="portlet light">  
                 
+                <!-- MODAL INPUT -->
+               <div class="modal fade bs-modal-sm modal-input" id="modalLog" role="dialog"
+                    data-backdrop="static" data-keyboard="false">
+                   <div class="modal-dialog modal-sm">
+                       <div class="modal-content">
+                           <div class="modal-header">
+                               <h4 class="modal-title modal-cabecalho">{{log.login}}</h4>
+                           </div>
+                           <div class="modal-body modal-corpo" style="text-align: left">
+                                HTTP: {{log.codResposta}}
+                                URL: {{log.dsUrl}}
+                                PARAMETROS: {{log.dsParametros}}
+                                FILTROS: {{log.dsFiltros}}
+                                JSON: {{log.dsJson}}
+                                MENSAGEM DE ERRO: {{log.msgErro}}
+                           </div>
+                           <!--div class="modal-footer">
+                               <div class="col-sm-4 col-sm-offset-1">
+                                   <button type="button" class="btn default" data-dismiss="modal">
+                                       {{input.textoCancela}}
+                                   </button>
+                               </div>                           
+                               <div class="col-sm-4 col-sm-offset-1">
+                                   <button type="button" class="btn blue"
+                                           ng-click="inputCadastro.funcao()">
+                                       {{input.textoConfirma}}
+                                   </button>                                
+                               </div>
+                           </div-->
+                       </div>
+                   </div>
+               </div>
+               <!-- END MODAL INPUT -->
+                
                 <!-- TOPO : Nome 'Privilégios' e botões de 'Opções' e FullScreen -->
                 <div class="portlet-title">
                     <div class="caption">
@@ -145,14 +179,14 @@
                         <div class="row">
                            <div class="col-sm-12">
                                 <div class="row tableAcessoUsuarios">
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-2">
                                         <div class="cabecalhoTableAcessoUsuarios">
                                         Login/Nome
                                         </div>    
                                     </div>
-                                    <div class="col-sm-2">
+                                    <div class="col-sm-1">
                                         <div class="cabecalhoTableAcessoUsuarios">
-                                        Data do Último Acesso
+                                        Último <br>Acesso
                                         </div>    
                                     </div>
                                     <div class="col-sm-1">
@@ -165,233 +199,124 @@
                                         Módulo
                                         </div>    
                                     </div>
+                                    <div class="col-sm-2">
+                                        <div class="cabecalhoTableAcessoUsuarios">
+                                        Ação
+                                        </div>    
+                                    </div>
                                     <div class="col-sm-1">
                                         <div class="cabecalhoTableAcessoUsuarios">
-                                        Opções
+                                        Status <br> Resposta
                                         </div>    
                                     </div>
                                </div>
                             </div>
                         </div>   
                         <!-- CONTEUDO -->
-                        <div class="row">    
+                        <div class="row" ng-repeat="log in logs">    
                             <div class="col-sm-12">
                                 <div class="row tableAcessoUsuarios">
                                     
                                     <!--LOGIN USUÁRIO-->
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-2">
                                         <div class="componentesTableAcessoUsuarios">
-                                        Usuário
+                                        {{log.login}}
                                         </div>    
                                     </div>
                                     
                                     <!--DATA DO ULTIMO ACESSO-->
-                                    <div class="col-sm-2">
-                                        <div class="componentesTableAcessoUsuarios">
-                                        09/07/2015 09:40
+                                    <div class="col-sm-1">
+                                        <div class="componentesTableAcessoUsuarios"
+                                             ng-bind="getDataTimeString(log.dtAcesso)">
                                         </div>    
                                     </div>
                                     
                                     <!--APLICAÇÃO-->
                                     <div class="col-sm-1">
                                         <div class="componentesTableAcessoUsuarios">
-                                        PORTAL
+                                        {{log.dsAplicacao | uppercase}}
                                         </div>    
                                     </div>
                                     
                                     <!--FUNCIONALIDADE-->
                                     <div class="col-sm-5">
                                         <div class="componentesTableAcessoUsuarios">
-                                        ADMINISTRAÇÃO > GESTÃO DE ACESSOS > USUÁRIOS
+                                        {{log.pathController | uppercase}}
+                                        </div>    
+                                    </div>
+                                    
+                                    <!-- AÇÃO -->
+                                    <div class="col-sm-2">
+                                        <div class="componentesTableAcessoUsuarios">
+                                        {{log.dsMethod | uppercase}}
                                         </div>    
                                     </div>
                                     
                                     <!--BOTÃO DE VISUALIZAÇÃO-->
                                     <div class="col-sm-1">
                                         <div class="componentesTableAcessoUsuarios">
-                                            <button class="btn btn-icon-only default" 
-                                                    type="button" 
+                                            <!--<button class="btn btn-icon-only default" 
                                                     data-toggle="collapse"                                                                                                     data-target="#collapseLine0" 
                                                     aria-expanded="false" 
                                                     aria-controls="collapseExample"
                                                     style="margin-top: -3px;"> <!-- #collapseLine{{$index}}-->
-                                            <i  class="fa fa-eye" ></i>
+                                            <button class="btn btn-icon-only default"
+                                                    ng-click="detalhaLog(log)">
+                                                <i class="fa" 
+                                                   ng-class="'fa-check-circle' : logSucesso(log); 'fa-times-circle': !logSucesso(log)"></i>
                                             </button>                                            
                                         </div>    
                                     </div>
                                </div>
                             </div>
                         </div>  
-                        <!--Visualização-->
-                        <div class="collapse" id="collapseLine0"> <!--collpaseLine{{$index}}-->
-                            <!--div class="well"-->
-                                <div class="portlet-body portlet-empty" style="display: block;">
-                                    <div class="row">
-                                        <div class="col-sm-12" style="margin-top: -8px;">
-                                            <div class="row tableAcessoUsuarios">
-                                                <div class="col-sm-1">
-                                                    <div class="cabecalhoVisualizacaoTableAcessoUsuarios">
-                                                    Ação
-                                                    </div>    
-                                                </div>
-                                                <div class="col-sm-1">
-                                                    <div class="cabecalhoVisualizacaoTableAcessoUsuarios">
-                                                    Resultado
-                                                    </div>    
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <div class="cabecalhoVisualizacaoTableAcessoUsuarios">
-                                                    Erro
-                                                    </div>                                                      
-                                                </div> 
-                                                <div class="col-sm-6">
-                                                    <div class="cabecalhoVisualizacaoTableAcessoUsuarios">
-                                                    URL
-                                                    </div>                                                      
-                                                </div> 
-                                           </div>
-                                        </div>
-                                    </div>
-                                    <div class="row" class="portlet-body portlet-empty" style="display: block;">    
-                                        <div class="col-sm-12">
-                                            <div class="row tableAcessoUsuarios">
-                                                <div class="col-sm-1">
-                                                    <div class="componentesTableAcessoUsuarios">
-                                                    CADASTRO
-                                                    </div>    
-                                                </div>
-                                                <div class="col-sm-1">
-                                                    <div class="componentesTableAcessoUsuarios">
-                                                    200
-                                                    </div>    
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <div class="componentesTableAcessoUsuarios">
-                                                    
-                                                    </div>    
-                                                </div> 
-                                                <div class="col-sm-6">
-                                                    <div class="componentesTableAcessoUsuarios">
-                                                        <!--i class="fa fa-eye" style="cursor:pointer" ></i-->
-                                                        /administracao/webpagesusers/?token=oqewhoiewhqiIWOIEQWIQ131
-                                                    </div>    
-                                                </div>  
+                        <!--Visualização-- >
+                        <div class="collapse" id="collapseLine0"> <!--collpaseLine{{$index}}-- >
+                            <div class="portlet-body portlet-empty" style="display: block;">
+                                <div class="row">
+                                    <div class="col-sm-12" style="margin-top: -8px;">
+                                        <div class="row tableAcessoUsuarios">
+                                            <div class="col-sm-1">
+                                                <div class="cabecalhoVisualizacaoTableAcessoUsuarios">
+                                                Resultado
+                                                </div>    
                                             </div>
+                                            <div class="col-sm-5">
+                                                <div class="cabecalhoVisualizacaoTableAcessoUsuarios">
+                                                Erro
+                                                </div>                                                      
+                                            </div> 
+                                            <div class="col-sm-6">
+                                                <div class="cabecalhoVisualizacaoTableAcessoUsuarios">
+                                                URL
+                                                </div>                                                      
+                                            </div> 
+                                       </div>
+                                    </div>
+                                </div>
+                                <div class="row" class="portlet-body portlet-empty" style="display: block;">    
+                                    <div class="col-sm-12">
+                                        <div class="row tableAcessoUsuarios">
+                                            <div class="col-sm-1">
+                                                <div class="componentesTableAcessoUsuarios">
+                                                200
+                                                </div>    
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <div class="componentesTableAcessoUsuarios">
+
+                                                </div>    
+                                            </div> 
+                                            <div class="col-sm-6">
+                                                <div class="componentesTableAcessoUsuarios">
+                                                    /administracao/webpagesusers/?token=oqewhoiewhqiIWOIEQWIQ131
+                                                </div>    
+                                            </div>  
                                         </div>
                                     </div>
                                 </div>
-                            <!--/div-->
-                        </div>
-                        
-                        <div class="row">    
-                            <div class="col-sm-12">
-                                <div class="row tableAcessoUsuarios">
-                                    
-                                    <!--LOGIN USUÁRIO-->
-                                    <div class="col-sm-3">
-                                        <div class="componentesTableAcessoUsuarios">
-                                        Usuário
-                                        </div>    
-                                    </div>
-                                    
-                                    <!--DATA DO ULTIMO ACESSO-->
-                                    <div class="col-sm-2">
-                                        <div class="componentesTableAcessoUsuarios">
-                                        09/07/2015 09:40
-                                        </div>    
-                                    </div>
-                                    
-                                    <!--APLICAÇÃO-->
-                                    <div class="col-sm-1">
-                                        <div class="componentesTableAcessoUsuarios">
-                                        PORTAL
-                                        </div>    
-                                    </div>
-                                    
-                                    <!--FUNCIONALIDADE-->
-                                    <div class="col-sm-5">
-                                        <div class="componentesTableAcessoUsuarios">
-                                        ADMINISTRAÇÃO > GESTÃO DE ACESSOS > USUÁRIOS
-                                        </div>    
-                                    </div>
-                                    
-                                    <!--BOTÃO DE VISUALIZAÇÃO-->
-                                    <div class="col-sm-1">
-                                        <div class="componentesTableAcessoUsuarios">
-                                            <button class="btn btn-icon-only default" 
-                                                    type="button" 
-                                                    data-toggle="collapse"                                                                                                     data-target="#collapseLine1" 
-                                                    aria-expanded="false" 
-                                                    style="margin-top: -3px;"> <!-- #collapseLine{{$index}}-->
-                                            <i  class="fa fa-eye" ></i>
-                                            </button>                                            
-                                        </div>    
-                                    </div>
-                               </div>
                             </div>
-                        </div>  
-                        <!--Visualização-->
-                        <div class="collapse" id="collapseLine1"> <!--collpaseLine{{$index}}-->
-                            <!--div class="well"-->
-                                <div class="portlet-body portlet-empty" style="display: block;">
-                                    <div class="row">
-                                        <div class="col-sm-12" style="margin-top: -8px;">
-                                            <div class="row tableAcessoUsuarios">
-                                                <div class="col-sm-1">
-                                                    <div class="cabecalhoVisualizacaoTableAcessoUsuarios">
-                                                    Ação
-                                                    </div>    
-                                                </div>
-                                                <div class="col-sm-1">
-                                                    <div class="cabecalhoVisualizacaoTableAcessoUsuarios">
-                                                    Resultado
-                                                    </div>    
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <div class="cabecalhoVisualizacaoTableAcessoUsuarios">
-                                                    Erro
-                                                    </div>                                                      
-                                                </div> 
-                                                <div class="col-sm-6">
-                                                    <div class="cabecalhoVisualizacaoTableAcessoUsuarios">
-                                                    URL
-                                                    </div>                                                      
-                                                </div> 
-                                           </div>
-                                        </div>
-                                    </div>
-                                    <div class="row" class="portlet-body portlet-empty" style="display: block;">    
-                                        <div class="col-sm-12">
-                                            <div class="row tableAcessoUsuarios">
-                                                <div class="col-sm-1">
-                                                    <div class="componentesTableAcessoUsuarios">
-                                                    LEITURA
-                                                    </div>    
-                                                </div>
-                                                <div class="col-sm-1">
-                                                    <div class="componentesTableAcessoUsuarios">
-                                                    200
-                                                    </div>    
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <div class="componentesTableAcessoUsuarios">
-                                                    
-                                                    </div>    
-                                                </div> 
-                                                <div class="col-sm-6">
-                                                    <div class="componentesTableAcessoUsuarios">
-                                                        <!--i class="fa fa-eye" style="cursor:pointer" ></i-->
-                                                        /administracao/webpagesusers/?token=oqewhoiewhqiIWOIEQWIQ131
-                                                    </div>    
-                                                </div>  
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            <!--/div-->
-                        </div>
-                                    
-                                    
+                        </div-->           
                         
                         
                         <!-- FIM VISUALIZAÇÃO-->
