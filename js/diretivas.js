@@ -10,7 +10,7 @@ angular.module('diretivas', ['ui.bootstrap'])
 // Número inteiro válido
 .directive('validIntegerNumber', function() {
   return {
-    require: '?ngModel',
+    require: 'ngModel',
     link: function(scope, element, attrs, ngModelCtrl) { 
       
       if(!ngModelCtrl) return; 
@@ -35,10 +35,50 @@ angular.module('diretivas', ['ui.bootstrap'])
   };
 })
 
-// Data em um input text
-.directive('inputData', function() {
+/*.directive('inputNumber', function() {
   return {
-    require: '?ngModel',
+    restrict: 'AE', //attribute or element
+      scope: {
+          model: '=',
+        },
+      template: '<input class="form-control" type="text" ng-model="model"/>', 
+      replace: true,
+      link: function($scope, element, attrs, ngModelCtrl) { 
+          
+        var onlyDigits = function(val){
+            if(typeof val === 'undefined') return '';    
+
+            var clean = val.replace( /[^0-9]+/g, '');
+
+            // Retorna o valor utilizado
+            // Se tiver definido maxlength, impede de entrar com um número maior
+            if(typeof element[0].maxLength === 'number' && 
+               element[0].maxLength > 0 && 
+               clean.length > element[0].maxLength)
+                return clean.substring(0, element[0].maxLength);
+
+            return clean;   
+          };
+        
+          element.bind('propertychange keyup change paste', function (event) {
+                // Altera o valor
+                var old = element.val();
+                var fix = onlyDigits(old);
+                while(old !== fix){
+                    element.val(fix); 
+                    old = fix;
+                    fix = onlyDigits(old);
+                }
+          });
+      }
+      
+  };
+})*/
+
+// Data em um input text
+.directive('validData', function() {
+  return {
+    require: 'ngModel',
     link: function(scope, element, attrs, ngModelCtrl) { 
       
           if(!ngModelCtrl) return; 
@@ -103,7 +143,7 @@ angular.module('diretivas', ['ui.bootstrap'])
 // Telefone em um input text
 .directive('validTelefone', function() {
   return {
-    require: '?ngModel',
+    require: 'ngModel',
     link: function(scope, element, attrs, ngModelCtrl) { 
       
           if(!ngModelCtrl) return; 
@@ -266,15 +306,15 @@ angular.module('diretivas', ['ui.bootstrap'])
 
 
 // Username válido
-.directive('validUsername', function() {
+/*.directive('validUsername', function() {
   return {
-    require: '?ngModel',
+    require: 'ngModel',
     link: function(scope, element, attrs, ngModelCtrl) { 
-      
-        if(!ngModelCtrl) return; 
 
+        console.log(ngModelCtrl);
+        
         var avaliaUsername = function(val){
-            //console.log("VAL: " + val);      
+            if(typeof val === 'undefined') return '';      
 
             var clean = val.replace(/[^a-zA-Z0-9\.\-\_\@]/g, '');
             var render = false;
@@ -323,4 +363,71 @@ angular.module('diretivas', ['ui.bootstrap'])
 
     }
   };
-});
+})*/
+
+// Username válido
+.directive('inputUsername', function() {
+  return {
+      restrict: 'AE', //attribute or element
+      scope: {
+          model: '=',
+        },
+      template: '<input class="form-control" type="text" ng-model="model"/>', 
+      replace: true,
+      link: function($scope, element, attrs, ngModelCtrl) { 
+          
+        var avaliaUsername = function(val){
+            if(typeof val === 'undefined') return '';    
+
+            var clean = val.replace(/[^a-zA-Z0-9\.\-\_\@]/g, '');
+            var regex = /[a-zA-Z]/g;
+            if (val === clean && clean.length > 0 && !regex.test(clean.charAt(0))){
+                if(clean.length > 1) clean = clean.substr(1);
+                else clean = '';
+            }
+            
+            var cleanLower = angular.lowercase(clean);
+            if(cleanLower !== clean) clean = cleanLower;
+
+            // Retorna o valor utilizado
+            // Se tiver definido maxlength, impede de entrar com um número maior
+            if(typeof element[0].maxLength === 'number' && 
+               element[0].maxLength > 0 && 
+               clean.length > element[0].maxLength)
+                return clean.substring(0, element[0].maxLength);
+
+            return clean;   
+          };
+        
+          element.bind('propertychange keyup change paste', function (event) {
+                // Altera o valor
+                var old = element.val();
+                var fix = avaliaUsername(old);
+                while(old !== fix){
+                    element.val(fix); 
+                    old = fix;
+                    fix = avaliaUsername(old);
+                }
+          });
+    }
+  };
+})
+
+
+// Email lowercase
+/*.directive('inputEmail', function() {
+  return {
+      restrict: 'AE', //attribute or element
+      scope: {
+          model: '=',
+        },
+      template: '<input class="form-control" type="email" ng-model="model" placeholder="email@email.com"/>', 
+      replace: true,
+      link: function($scope, element, attrs, ngModelCtrl) { 
+          element.bind('propertychange keyup change paste', function (event) {
+                // Lowercase
+                element.val(angular.lowercase(element.val())); 
+          });
+      }
+  };
+})*/;

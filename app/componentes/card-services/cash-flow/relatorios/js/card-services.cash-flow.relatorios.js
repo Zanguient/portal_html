@@ -593,9 +593,12 @@ angular.module("card-services-cash-flow-relatorios", [])
         
        // Filtros    
        var filtros = obtemFiltroDeBusca();
-           
+    
+       var order = $scope.filtro.data === 'Recebimento' ? $campos.pos.recebimentoparcela.dtaRecebimento :
+                   $campos.pos.recebimentoparcela.recebimento + $campos.pos.recebimento.dtaVenda - 100;    
+        
        $webapi.get($apis.getUrl($apis.pos.recebimentoparcela, 
-                                [$scope.token, 8, $campos.pos.recebimentoparcela.dtaRecebimento, 0, 
+                                [$scope.token, 8, order, 0, 
                                  $scope.filtro.itens_pagina, $scope.filtro.analitico.pagina],
                                 filtros)) 
             .then(function(dados){

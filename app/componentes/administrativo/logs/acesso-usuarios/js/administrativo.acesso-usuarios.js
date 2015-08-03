@@ -18,29 +18,21 @@ angular.module("administrativo-acesso-usuarios", [])
                                             function($scope,$state,$http,$campos,
                                                      $webapi,$apis,$filter){ 
    
-    var divPortletBodyPrivilegioPos = 0; // posição da div que vai receber o loading progress
+    var divPortletBodyLogsPos = 0; // posição da div que vai receber o loading progress
     $scope.paginaInformada = 1; // página digitada pelo privilégio
-    $scope.privilegios = [];
+    $scope.logs = [];
     $scope.camposBusca = [{
                             id: $campos.administracao.webpagesroles.RoleName,
                             ativo: true,  
                             nome: "Privilégio"
                           }];
     $scope.itens_pagina = [10, 20, 50, 100];
-    $scope.privilegio = {busca:'', campo_busca : $scope.camposBusca[0], 
+    $scope.filtro = {busca:'', campo_busca : $scope.camposBusca[0], 
                       itens_pagina : $scope.itens_pagina[0], pagina : 1,
                       total_registros : 0, faixa_registros : '0-0', total_paginas : 0, 
-                      campo_ordenacao : {id: $campos.administracao.webpagesroles.RoleName, order : 0}};    
+                      campo_ordenacao : {id: 100, order : 0}};    
     
-    $scope.roleSelecionada = undefined;     
-    $scope.novoPrivilegio = ''; // cadastro
-    // Controllers e Methods
-    //$scope.todos = {id_controller : 0, ds_controller : 'Todos', selecionado : false};
-    $scope.originalControllers = [];                                          
-    $scope.controllers = [];
-    // flags
-    $scope.cadastraNovoPrivilegio = false; // faz exibir a linha para adicionar um novo privilégio
-           
+ 
                                                 
     // Inicialização do controller
     $scope.administrativoAcessoUsuariosInit = function(){
@@ -48,7 +40,7 @@ angular.module("administrativo-acesso-usuarios", [])
         $scope.pagina.titulo = 'Logs';                          
         $scope.pagina.subtitulo = 'Acesso de Usuários';
         // Busca Privilégios
-        $scope.buscaPrivilegios();
+        //$scope.buscaPrivilegios();
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
@@ -61,12 +53,12 @@ angular.module("administrativo-acesso-usuarios", [])
       */
     var ordena = function(posCampo){
         if(posCampo >= 0 && posCampo < $scope.camposBusca.length){
-            if($scope.privilegio.campo_ordenacao.id !== $scope.camposBusca[posCampo].id){ 
-                $scope.privilegio.campo_ordenacao.id = $scope.camposBusca[posCampo].id;
-                $scope.privilegio.campo_ordenacao.order = 0; // começa descendente                                 
+            if($scope.filtro.campo_ordenacao.id !== $scope.camposBusca[posCampo].id){ 
+                $scope.filtro.campo_ordenacao.id = $scope.camposBusca[posCampo].id;
+                $scope.filtro.campo_ordenacao.order = 0; // começa descendente                                 
             }else
                 // Inverte a ordenação: ASCENDENTE => DESCENDENTE e vice-versa                                
-                $scope.privilegio.campo_ordenacao.order = $scope.privilegio.campo_ordenacao.order === 0 ? 1 : 0;                                
+                $scope.filtro.campo_ordenacao.order = $scope.filtro.campo_ordenacao.order === 0 ? 1 : 0;                                
             $scope.buscaPrivilegios(); 
         }
     };
@@ -80,15 +72,15 @@ angular.module("administrativo-acesso-usuarios", [])
       * Retorna true se a ordenação está sendo feito por nome de forma crescente
       */
     $scope.estaOrdenadoCrescente = function(){
-        return $scope.privilegio.campo_ordenacao.id === $scope.camposBusca[0].id && 
-               $scope.privilegio.campo_ordenacao.order === 0;    
+        return $scope.filtro.campo_ordenacao.id === $scope.camposBusca[0].id && 
+               $scope.filtro.campo_ordenacao.order === 0;    
     };
     /**
       * Retorna true se a ordenação está sendo feito por nome de forma decrescente
       */
     $scope.estaOrdenadoDecrescente = function(){
-        return $scope.privilegio.campo_ordenacao.id === $scope.camposBusca[0].id && 
-               $scope.privilegio.campo_ordenacao.order === 1;    
+        return $scope.filtro.campo_ordenacao.id === $scope.camposBusca[0].id && 
+               $scope.filtro.campo_ordenacao.order === 1;    
     };                          
                                             
                                             
@@ -98,8 +90,8 @@ angular.module("administrativo-acesso-usuarios", [])
       * Altera efetivamente a página exibida
       */                                            
     var setPagina = function(pagina){
-       if(pagina >= 1 && pagina <= $scope.privilegio.total_paginas){ 
-           $scope.privilegio.pagina = pagina;
+       if(pagina >= 1 && pagina <= $scope.filtro.total_paginas){ 
+           $scope.filtro.pagina = pagina;
            $scope.buscaPrivilegios(); 
        }
        $scope.atualizaPaginaDigitada();    
@@ -108,13 +100,13 @@ angular.module("administrativo-acesso-usuarios", [])
       * Vai para a página anterior
       */
     $scope.retrocedePagina = function(){
-        setPagina($scope.privilegio.pagina - 1); 
+        setPagina($scope.filtro.pagina - 1); 
     };
     /**
       * Vai para a página seguinte
       */                                            
     $scope.avancaPagina = function(){
-        setPagina($scope.privilegio.pagina + 1); 
+        setPagina($scope.filtro.pagina + 1); 
     };
     /**
       * Foi informada pelo usuário uma página para ser exibida
@@ -127,7 +119,7 @@ angular.module("administrativo-acesso-usuarios", [])
       * Sincroniza a página digitada com a que efetivamente está sendo exibida
       */                                            
     $scope.atualizaPaginaDigitada = function(){
-        $scope.paginaInformada = $scope.privilegio.pagina; 
+        $scope.paginaInformada = $scope.filtro.pagina; 
     };                                             
     /**
       * Notifica que o total de itens por página foi alterado
@@ -138,16 +130,16 @@ angular.module("administrativo-acesso-usuarios", [])
      
     // BUSCA
     $scope.filtraPrivilegios = function(filtro){
-        $scope.privilegio.busca = filtro;
+        $scope.filtro.busca = filtro;
         $scope.buscaPrivilegios();
     };
     $scope.buscaPrivilegios = function(){
-       $scope.showProgress(divPortletBodyPrivilegioPos);    
+       $scope.showProgress(divPortletBodyLogsPos);    
         
        var filtros = undefined;
        
        // Só considera busca de filtro a partir de três caracteres    
-       if($scope.privilegio.busca.length > 0) filtros = {id: $scope.privilegio.campo_busca.id, valor: $scope.privilegio.busca + '%'};        
+       if($scope.filtro.busca.length > 0) filtros = {id: $scope.filtro.campo_busca.id, valor: $scope.filtro.busca + '%'};        
        // Filtro do grupo empresa => barra administrativa
        if($scope.usuariologado.grupoempresa){
             var filtroGrupoEmpresa = {id: $campos.administracao.webpagesusers.id_grupo, valor: $scope.usuariologado.grupoempresa.id_grupo};
@@ -157,28 +149,28 @@ angular.module("administrativo-acesso-usuarios", [])
         
        $scope.obtendoPrivilegios = true;
        // TEMP
-       //$scope.privilegios = [{ RoleId: 1, RoleName: 'Admin'}];
+       //$scope.filtros = [{ RoleId: 1, RoleName: 'Admin'}];
        //$scope.obtendoPrivilegios = false;
-       //$scope.hideProgress(divPortletBodyPrivilegioPos);
-       $webapi.get($apis.getUrl($apis.administracao.webpagesroles, [$scope.token, 0, $scope.privilegio.campo_ordenacao.id, 
-                                                       $scope.privilegio.campo_ordenacao.order, 
-                                                       $scope.privilegio.itens_pagina, $scope.privilegio.pagina],
+       //$scope.hideProgress(divPortletBodyLogsPos);
+       $webapi.get($apis.getUrl($apis.administracao.webpagesroles, [$scope.token, 0, $scope.filtro.campo_ordenacao.id, 
+                                                       $scope.filtro.campo_ordenacao.order, 
+                                                       $scope.filtro.itens_pagina, $scope.filtro.pagina],
                    filtros)) 
             .then(function(dados){
-                $scope.privilegios = dados.Registros;
-                $scope.privilegio.total_registros = dados.TotalDeRegistros;
-                $scope.privilegio.total_paginas = Math.ceil($scope.privilegio.total_registros / $scope.privilegio.itens_pagina);
-                if($scope.privilegios.length === 0) $scope.privilegio.faixa_registros = '0-0';
+                $scope.filtros = dados.Registros;
+                $scope.filtro.total_registros = dados.TotalDeRegistros;
+                $scope.filtro.total_paginas = Math.ceil($scope.filtro.total_registros / $scope.filtro.itens_pagina);
+                if($scope.filtros.length === 0) $scope.filtro.faixa_registros = '0-0';
                 else{
-                    var registroInicial = ($scope.privilegio.pagina - 1)*$scope.privilegio.itens_pagina + 1;
-                    var registroFinal = registroInicial - 1 + $scope.privilegio.itens_pagina;
-                    if(registroFinal > $scope.privilegio.total_registros) registroFinal = $scope.privilegio.total_registros;
-                    $scope.privilegio.faixa_registros =  registroInicial + '-' + registroFinal;
+                    var registroInicial = ($scope.filtro.pagina - 1)*$scope.filtro.itens_pagina + 1;
+                    var registroFinal = registroInicial - 1 + $scope.filtro.itens_pagina;
+                    if(registroFinal > $scope.filtro.total_registros) registroFinal = $scope.filtro.total_registros;
+                    $scope.filtro.faixa_registros =  registroInicial + '-' + registroFinal;
                 }
                 $scope.obtendoPrivilegios = false;
-                $scope.hideProgress(divPortletBodyPrivilegioPos);
+                $scope.hideProgress(divPortletBodyLogsPos);
                 // Verifica se a página atual é maior que o total de páginas
-                if($scope.privilegio.pagina > $scope.privilegio.total_paginas)
+                if($scope.filtro.pagina > $scope.filtro.total_paginas)
                     setPagina(1); // volta para a primeira página e refaz a busca
               },
               function(failData){
@@ -186,7 +178,7 @@ angular.module("administrativo-acesso-usuarios", [])
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else $scope.showAlert('Houve uma falha ao requisitar privilégios (' + failData.status + ')', true, 'danger', true);
-                 $scope.hideProgress(divPortletBodyPrivilegioPos);
+                 $scope.hideProgress(divPortletBodyLogsPos);
               }); 
     };
         
@@ -209,28 +201,28 @@ angular.module("administrativo-acesso-usuarios", [])
            return;   
         }
         // Envia para o banco
-        $scope.showProgress(divPortletBodyPrivilegioPos);
+        $scope.showProgress(divPortletBodyLogsPos);
         $webapi.post($apis.getUrl($apis.administracao.webpagesroles, undefined, 
                                   {id: 'token', valor: $scope.token}), {RoleName : $scope.novoPrivilegio})
                 .then(function(dados){
                     $scope.showAlert('Privilégio cadastrado com sucesso!', true, 'success', true);
                     // Reseta o campo
                     $scope.novoPrivilegio = '';
-                    $scope.hideProgress(divPortletBodyPrivilegioPos);
+                    $scope.hideProgress(divPortletBodyLogsPos);
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
                      else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao cadastrar o privilégio (' + failData.status + ')', true, 'danger', true);
-                     $scope.hideProgress(divPortletBodyPrivilegioPos);
+                     $scope.hideProgress(divPortletBodyLogsPos);
                   }); 
     }
     /**
       * Exibe as funcionalidades associadas ao privilégio
       */
-    $scope.exibeFuncionalidades = function(privilegio){
+    $scope.exibeFuncionalidades = function(filtro){
         // Reseta permissões
         $scope.permissoes = [];
-        $scope.roleSelecionada = privilegio;
+        $scope.roleSelecionada = filtro;
         // Exibe o modal
         $('#modalFuncionalidades').modal('show');
         // Carrega as permissões
@@ -242,29 +234,29 @@ angular.module("administrativo-acesso-usuarios", [])
       */                                            
     var exluirPrivilegio = function(RoleId){
         // Deleta
-        $scope.showProgress(divPortletBodyPrivilegioPos);
+        $scope.showProgress(divPortletBodyLogsPos);
         $webapi.delete($apis.getUrl($apis.administracao.webpagesroles, undefined,
                        [{id: 'token', valor: $scope.token},{id: 'RoleId', valor: RoleId}]))
             .then(function(dados){
-                    $scope.showAlert('Privilégio deletado com sucesso!', true, 'success', true);
-                    $scope.hideProgress(divPortletBodyPrivilegioPos);
+                    $scope.showAlert('Privilégio excluído com sucesso!', true, 'success', true);
+                    $scope.hideProgress(divPortletBodyLogsPos);
                     // atualiza tela de privilégios
                     $scope.buscaPrivilegios();
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
                      else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao excluir o privilégio (' + failData.status + ')', true, 'danger', true);
-                     $scope.hideProgress(divPortletBodyPrivilegioPos);
+                     $scope.hideProgress(divPortletBodyLogsPos);
                   }); 
     };
     /**
       * Solicitação confirmação para excluir o privilégio
       */                                                                              
-    $scope.exluirPrivilegio = function(privilegio){
+    $scope.exluirPrivilegio = function(filtro){
         // Envia post para deletar
         $scope.showModalConfirmacao('Confirmação', 
-                         'Tem certeza que deseja excluir ' + privilegio.RoleName,
-                         exluirPrivilegio, privilegio.RoleId,
+                         'Tem certeza que deseja excluir ' + filtro.RoleName,
+                         exluirPrivilegio, filtro.RoleId,
                          'Sim', 'Não');
     };    
                                                 
@@ -348,7 +340,7 @@ angular.module("administrativo-acesso-usuarios", [])
                 // Faz uma cópia (por valor) do controller proveniente da base de dados
                 angular.copy($scope.controllers, $scope.originalControllers);
                 //$scope.obtendoModulosEFuncionalidades = false;
-                $scope.hideProgress(divPortletBodyPrivilegioPos);
+                $scope.hideProgress(divPortletBodyLogsPos);
               },
               function(failData){
                  //$scope.obtendoModulosEFuncionalidades = false;

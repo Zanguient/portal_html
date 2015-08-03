@@ -851,6 +851,7 @@ angular.module("administrativo-usuarios-cadastro", [])
       * Exibe o modal de associação de grupos empresas com vendedor
       */
     $scope.exibeModalGrupoEmpresaVendedor = function(){
+        $scope.grupoempresavendedor.selecionado = $scope.gruposempresasvendedor[0];
         $('#modalGrupoEmpresaVendedor').modal('show'); 
     };
     /**
@@ -864,6 +865,11 @@ angular.module("administrativo-usuarios-cadastro", [])
       */                                                     
     $scope.adicionaGrupoEmpresaVendedor = function(){
         $scope.gruposempresasvendedor.push($scope.grupoempresavendedor.busca);
+        // Ordena
+        $scope.gruposempresasvendedor = $filter('orderBy')($scope.gruposempresasvendedor, 'ds_nome');
+        // Tem elemento selecionado?
+        if(!$scope.grupoempresavendedor.selecionado) 
+            $scope.grupoempresavendedor.selecionado = $scope.gruposempresasvendedor[0]; // Seleciona o primeiro 
         $scope.grupoempresavendedor.busca = '';
     };
     /**
@@ -873,7 +879,9 @@ angular.module("administrativo-usuarios-cadastro", [])
         // Remove do array
         var index =  $scope.gruposempresasvendedor.indexOf($scope.grupoempresavendedor.selecionado);
         $scope.gruposempresasvendedor.splice(index,1);
-        $scope.grupoempresavendedor.selecionado = undefined;
+        if(index < $scope.gruposempresasvendedor.length)
+            $scope.grupoempresavendedor.selecionado = $scope.gruposempresasvendedor[index];  
+        else $scope.grupoempresavendedor.selecionado = $scope.gruposempresasvendedor[index - 1];
     };
     /**
       * Retoma as associações previamente salvas no banco

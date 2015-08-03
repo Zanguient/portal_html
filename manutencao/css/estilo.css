@@ -1,14 +1,9 @@
 body.manutencao {
-    /*background: url('../img/fundo.jpg') no-repeat center center fixed;*/
+    background: url('../img/fundo.jpg') no-repeat center center fixed;
     background-size: cover;
     -webkit-background-size: cover;
     -moz-background-size: cover; 
     -o-background-size: cover; 
-    
-    background-image: url('../img/fundo.jpg');
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-attachment: fixed;
 }
 
 .centro{

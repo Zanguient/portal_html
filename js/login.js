@@ -17,7 +17,7 @@ app.controller("loginCtrl", ['$scope',
     // Dados da empresa
     $scope.empresa = $empresa;
     // Usuário
-    $scope.usuario = { 'nome':'', 'senha':'' };
+    $scope.usuario = { nome: '', senha: '' };
     $scope.lembrar = false;
     // Mensagem de erro
     $scope.mensagemErro = 'Entre com o usuário e a senha.';   
@@ -73,12 +73,14 @@ app.controller("loginCtrl", ['$scope',
                       if(failData.status == 500){
                           // Código 500 => Token já não é mais válido
                           $autenticacao.removeDadosDeAutenticacao();
-                          exibeLayout();
-                      }else if(failData.status === 503 || failData.status === 404) $scope.manutencao = true;
-                      else{ 
+                      }else if(failData.status === 0 || 
+                               failData.status === 503 || 
+                               failData.status === 404) 
+                          $scope.manutencao = true;
+                      else 
                           console.log("FALHA AO VALIDAR TOKEN: " + failData.status);
                           // o que fazer? exibir uma tela indicando falha de comunicação?
-                      }
+                      exibeLayout();
                     });
         }else{ 
             // Verifica se tem conexão com o servidor
@@ -88,7 +90,11 @@ app.controller("loginCtrl", ['$scope',
                     },
                     function(failData){
                       // Avaliar código de erro
-                      if(failData.status === 503 || failData.status === 404) $scope.manutencao = true;
+                      if(failData.status === 0 || 
+                         failData.status === 503 || 
+                         failData.status === 404) 
+                          $scope.manutencao = true;
+                      else console.log("ERRO AO AVALIAR STATUS DA API: " + failData.status);
                       exibeLayout();
                     });
         }
@@ -160,7 +166,7 @@ app.controller("loginCtrl", ['$scope',
         
         progressoLogin(true);
         // VALIDA LOGIN
-        var jsonAutenticacao = { 'usuario': $scope.usuario.nome, 'senha': $scope.usuario.senha };
+        var jsonAutenticacao = { usuario: $scope.usuario.nome, senha: $scope.usuario.senha };
         // Envia os dados para autenticação
         //$.post($autenticacao.autenticacao.login, jsonAutenticacao)
         $webapi.post($autenticacao.autenticacao.login, jsonAutenticacao)

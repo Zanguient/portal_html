@@ -382,7 +382,7 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
       */
     $scope.selecionaModulo = function(event,object){
         $scope.moduloSelecionado = object.node;
-        $scope.funcionalidadeSelecionada = undefined;
+        $scope.funcionalidadeSelecionada = $scope.moduloSelecionado.data.methods[0];
         if(!$scope.$$phase) $scope.$apply();
     };                                             
     /**
@@ -440,7 +440,7 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
         $webapi.delete($apis.getUrl($apis.administracao.webpagescontrollers, undefined,
                        [{id: 'token', valor: $scope.token},{id: 'id_controller', valor: id_controller}]))
             .then(function(dados){
-                    $scope.showAlert('Módulo deletado com sucesso!', true, 'success', true);
+                    $scope.showAlert('Módulo excluído com sucesso!', true, 'success', true);
                     $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
                     // Recarrega os módulos
                     $scope.buscaModulos();
@@ -613,7 +613,7 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
         $webapi.delete($apis.getUrl($apis.administracao.webpagesmethods, undefined,
                        [{id: 'token', valor: $scope.token},{id: 'id_method', valor: id_method}]))
             .then(function(dados){
-                    $scope.showAlert('Método deletado com sucesso!', true, 'success', true);
+                    $scope.showAlert('Método excluído com sucesso!', true, 'success', true);
                     $scope.hideProgress(divPortletBodyModuloFuncionalidadePos);
                     // Remove do array
                     var index = $scope.moduloSelecionado.data.methods.indexOf($scope.funcionalidadeSelecionada);

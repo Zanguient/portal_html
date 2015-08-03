@@ -479,7 +479,7 @@ angular.module("administrativo-privilegios", [])
         $webapi.delete($apis.getUrl($apis.administracao.webpagesroles, undefined,
                        [{id: 'token', valor: $scope.token},{id: 'RoleId', valor: RoleId}]))
             .then(function(dados){
-                    $scope.showAlert('Privilégio deletado com sucesso!', true, 'success', true);
+                    $scope.showAlert('Privilégio excluído com sucesso!', true, 'success', true);
                     $scope.hideProgress(divPortletBodyPrivilegioPos);
                     // atualiza tela de privilégios
                     $scope.buscaPrivilegios();

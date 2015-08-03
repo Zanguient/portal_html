@@ -143,7 +143,7 @@ angular.module("administrativo-filiais", [])
         $scope.buscaFiliais();
     };
     $scope.buscaFiliais = function(showMessage){
-        
+   
        if(!$scope.usuariologado.grupoempresa){
            $scope.filiais = [];
            $scope.filial.total_registros = 0;
