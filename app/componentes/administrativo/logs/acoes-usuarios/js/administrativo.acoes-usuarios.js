@@ -6,9 +6,9 @@
  */
 
 // App
-angular.module("administrativo-acesso-usuarios", []) 
+angular.module("administrativo-acoes-usuarios", []) 
 
-.controller("administrativo-acesso-usuariosCtrl", ['$scope',
+.controller("administrativo-acoes-usuariosCtrl", ['$scope',
                                             '$state',
                                             '$http',
                                             '$campos',
@@ -28,10 +28,9 @@ angular.module("administrativo-acesso-usuarios", [])
                             nome: "Login"
                           },
                           {
-                            id: $campos.administracao.tblogacessousuario.webpagescontrollers + 
-                                $campos.administracao.webpagescontrollers.ds_controller - 100,
+                            id: $campos.administracao.tblogacessousuario.dsUrl,
                             ativo: true,  
-                            nome: "Módulo"
+                            nome: "URL"
                           }];
     $scope.itens_pagina = [10, 20, 50, 100];
     $scope.filtro = {busca:'', campo_busca : $scope.camposBusca[0], 
@@ -42,10 +41,10 @@ angular.module("administrativo-acesso-usuarios", [])
  
                                                 
     // Inicialização do controller
-    $scope.administrativoAcessoUsuariosInit = function(){
+    $scope.administrativoAcoesUsuariosInit = function(){
         // Título da página 
         $scope.pagina.titulo = 'Logs';                          
-        $scope.pagina.subtitulo = 'Acesso de Usuários';
+        $scope.pagina.subtitulo = 'Ações de Usuários';
         // Busca Logs
         $scope.buscaLogs();
         // Quando houver uma mudança de rota => modificar estado
@@ -158,7 +157,7 @@ angular.module("administrativo-acesso-usuarios", [])
        }
         
        $webapi.get($apis.getUrl($apis.administracao.tblogacessousuario, 
-                                [$scope.token, 3, $scope.filtro.campo_ordenacao.id, 
+                                [$scope.token, 2, $scope.filtro.campo_ordenacao.id, 
                                  $scope.filtro.campo_ordenacao.order, 
                                  $scope.filtro.itens_pagina, $scope.filtro.pagina],
                    filtros)) 
@@ -188,15 +187,20 @@ angular.module("administrativo-acesso-usuarios", [])
         
                                                                                        
                                                 
-    // RESPOSTA
-    $scope.getResposta = function(log){
-        if(!log) return '';
-        
-        if(log.codResposta === 200) return 'OK';
-        
-        var erro = 'Falha de acesso ' + log.codResposta;
-        if(log.msgErro) erro += '  (' + log.msgErro + ')';
-        return erro;
+    // AÇÕES
+    $scope.logSucesso = function(log){
+        if(!log) return false;
+        return log.codResposta === 200;
     }
+    /**
+      * Exibe as funcionalidades associadas ao privilégio
+      */
+    $scope.detalhaLog = function(log){
+        // Reseta permissões
+        $scope.log = log;
+        // Exibe o modal
+        $('#modalLog').modal('show');
+        
+    }; 
 
 }])

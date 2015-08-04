@@ -32,7 +32,8 @@ angular.module('webapi', ['utils'])
             msgErro : 110,
             dsJson : 111,
             // Relacionamentos
-            webpagesusers : 200
+            webpagesusers : 200,
+            webpagescontrollers : 300
         },
         webpagescontrollers : {
             id_controller : 100,

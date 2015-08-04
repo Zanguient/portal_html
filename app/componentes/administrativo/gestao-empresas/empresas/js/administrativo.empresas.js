@@ -159,7 +159,7 @@ angular.module("administrativo-empresas", [])
                                                       valor: $scope.empresa.busca + '%'};        
         
        $webapi.get($apis.getUrl($apis.cliente.grupoempresa, 
-                                [$scope.token, 2, $campos.cliente.grupoempresa.ds_nome, 0, 
+                                [$scope.token, 3, $campos.cliente.grupoempresa.ds_nome, 0, 
                                  $scope.empresa.itens_pagina, $scope.empresa.pagina],
                                 filtros)) 
             .then(function(dados){

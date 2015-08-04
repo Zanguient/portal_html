@@ -197,8 +197,9 @@ angular.module("administrativo-filiais-cadastro", [])
             $scope.validandoCNPJ = true;
             
             var filtro = [{id:$campos.cliente.empresa.nu_cnpj, valor:$scope.filial.nu_cnpj}];
-            if($scope.usuariologado.grupoempresa) filtro.push({id:$campos.cliente.empresa.id_grupo, 
-                                                 valor:$scope.usuariologado.grupoempresa.id_grupo});
+            // O CNPJ é validada em relação a toda as filiais de todos os grupos, não só do grupo associado
+            //if($scope.usuariologado.grupoempresa) filtro.push({id:$campos.cliente.empresa.id_grupo, 
+            //                                     valor:$scope.usuariologado.grupoempresa.id_grupo});
             
 
             $webapi.get($apis.getUrl($apis.cliente.empresa, [$scope.token, 0], filtro))
@@ -206,11 +207,11 @@ angular.module("administrativo-filiais-cadastro", [])
                 .then(function(dados){
                             if(!dados) console.log("DADOS NÃO FORAM RECEBIDOS!");
                             else if(dados.Registros && dados.Registros.length > 0){ 
-                                $('#labelCnpjEmUso').show();
+                                $('#labelCNPJEmUso').show();
                                 cnpjValido = false;
                                 $('#icon-cnpj').show();
                             }else{
-                                $('#labelCnpjEmUso').hide();
+                                $('#labelCNPJEmUso').hide();
                                 cnpjValido = true;
                                 $('#icon-cnpj').show();
                             }
@@ -248,6 +249,8 @@ angular.module("administrativo-filiais-cadastro", [])
             $scope.validandoNomeFantasia = true;
             
             var filtro = [{id:$campos.cliente.empresa.ds_fantasia, valor:$scope.filial.ds_fantasia}];
+            // Nome fantasia é validadao apenas no domínio do grupo associado
+            // Isto é, podem existir nomes fantasia iguais, porém de filiais associadas a grupos distintos
             if($scope.usuariologado.grupoempresa) filtro.push({id:$campos.cliente.empresa.id_grupo, 
                                                  valor:$scope.usuariologado.grupoempresa.id_grupo});
                 

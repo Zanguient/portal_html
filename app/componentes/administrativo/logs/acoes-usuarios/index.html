@@ -7,7 +7,7 @@
  */
 -->
 
-<div class="container" ng-controller="administrativo-acesso-usuariosCtrl" ng-init="administrativoAcessoUsuariosInit()">   
+<div class="container" ng-controller="administrativo-acoes-usuariosCtrl" ng-init="administrativoAcoesUsuariosInit()">   
     
     <!-- BEGIN PAGE BREADCRUMB -->
     <ul class="page-breadcrumb breadcrumb">
@@ -17,7 +17,7 @@
         <li class="active">
              Administrativo<i class="fa fa-caret-right"></i>
              Logs<i class="fa fa-caret-right"></i>
-             Acesso de Usuários
+             Ações de Usuários
         </li>
     </ul>
     <!-- END PAGE BREADCRUMB -->
@@ -61,11 +61,11 @@
                </div>
                <!-- END MODAL INPUT -->
                 
-                <!-- TOPO : Nome 'Privilégios' e botões de 'Opções' e FullScreen -->
+                <!-- TOPO : Nome 'Ações de Usuários' e botões de 'Opções' e FullScreen -->
                 <div class="portlet-title">
                     <div class="caption">
                         <!--i class="fa fa-cogs font-green-sharp"></i-->
-                        <span class="caption-subject font-green-sharp bold uppercase">Acesso de Usuários</span>
+                        <span class="caption-subject font-green-sharp bold uppercase">Ações de Usuários</span>
                     </div>                    
                     <div class="actions">
                         <!-- FULLSCREEN -->
@@ -194,14 +194,19 @@
                                         Aplicação
                                         </div>    
                                     </div>
-                                    <div class="col-sm-5">
+                                    <div class="col-sm-4">
                                         <div class="cabecalhoTableAcessoUsuarios">
-                                        Módulo
+                                        URL
                                         </div>    
                                     </div>
                                     <div class="col-sm-2">
                                         <div class="cabecalhoTableAcessoUsuarios">
-                                        Resposta
+                                        Ação
+                                        </div>    
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <div class="cabecalhoTableAcessoUsuarios">
+                                        Status
                                         </div>    
                                     </div>
                                </div>
@@ -233,23 +238,34 @@
                                         </div>    
                                     </div>
                                     
-                                    <!--MÓDULO-->
-                                    <div class="col-sm-5">
+                                    <!--URL-->
+                                    <div class="col-sm-4">
                                         <div class="componentesTableAcessoUsuarios">
-                                        {{log.controller.path | lowercase}}
+                                        {{log.dsUrl | lowercase}}
                                         </div>    
                                     </div>
                                     
-                                    <!-- RESPOSTA -->
+                                    <!-- AÇÃO -->
                                     <div class="col-sm-2">
-                                        <div class="componentesTableAcessoUsuarios"
-                                             ng-bind="getResposta(log)">
+                                        <div class="componentesTableAcessoUsuarios">
+                                        {{log.method.ds_method | uppercase}}
+                                        </div>    
+                                    </div>
+                                    
+                                    <!--BOTÃO DE VISUALIZAÇÃO-->
+                                    <div class="col-sm-1">
+                                        <div class="componentesTableAcessoUsuarios">
+                                            <button class="btn btn-icon-only default"
+                                                    ng-click="detalhaLog(log)">
+                                                <i class="fa" 
+                                                   ng-class="'fa-check-circle' : logSucesso(log); 'fa-times-circle': !logSucesso(log)"></i>
+                                            </button>                                            
                                         </div>    
                                     </div>
                                </div>
                             </div>
                         </div>  
-                       
+
                         <!-- RODAPÉ : Exibição dos resultados e paginação -->
                         <div class="row" style="margin: 10px 0 20px 0">
                             <div class="col-md-4 col-sm-12">
