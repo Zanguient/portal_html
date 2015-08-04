@@ -27,19 +27,23 @@ Não é necessário nenhum outro módulo externo.
  
  ### Interação com a WEB API ###
  
-  * GET : obtém a lista de usuários baseado no log de acesso aos controllers (coleção 3)
-			{
+  * GET : obtém a lista de usuários baseado no log de post, put e delete (coleção 2)
+			 {
 				idLogAcessoUsuario : int,
 				user : { idUser : int,
 						 ds_login : string,
 					   },
-				controller : { idController : int,
-							   path : string,
-							 },
+				method : { idMethod : int,
+						   ds_method : string
+						 },
+				dsUrl : string,
+				dsParametros : string,
+				dsFiltros : string,
 				dtAcesso : datetime,
 				dsAplicacao : string,
 				codResposta : int,
 				msgErro : string,
+				dsJson = string,
 			 }
  
    

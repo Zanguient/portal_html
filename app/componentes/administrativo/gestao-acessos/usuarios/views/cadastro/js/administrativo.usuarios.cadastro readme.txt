@@ -84,16 +84,28 @@ Não é necessário nenhum outro módulo externo.
 	 - GET : Consulta e-mail e login, para validação (coleção 0)
 	 - POST : cria novo usuário
 			{
-				"pessoa" : json_pessoa, 
-				"webpagesusers" : json_usuario,
+				"pessoa" : {dt_nascimento: string, 
+							nm_pessoa: string,  *
+							nu_ramal: string, 
+							nu_telefone: string},
+				"webpagesusers" : {ds_email: string, *
+								   ds_login: string, *
+								   id_grupo: int ou null,
+								   nu_cnpjEmpresa : string ou null },
 				"webpagesusersinroles" : [{RoleId: roleid, RolePrincipal: boolean}],
 				"addidsgrupoempresavendedor" : [ids], // associa grupos empresas ao vendedor (OPCIONAL)
 				"removeidsgrupoempresavendedor" : [ids], // desassocia grupos empresas ao vendedor (OPCIONAL)
 			}
 	 - PUT : atualiza usuário existente	
 			{
-				"pessoa" : json_pessoa, 
-				"webpagesusers" : json_usuario,
+				"pessoa" : { dt_nascimento: string, 
+							 nm_pessoa: string,  *
+							 nu_ramal: string, 
+							 nu_telefone: string}, 
+				"webpagesusers" : { ds_email: string, *
+								    ds_login: string, *
+								    id_grupo: int ou null,
+								    nu_cnpjEmpresa : string ou null },
 				"webpagesusersinroles" : [{RoleId: roleid, RolePrincipal: boolean}],
 				"addidsgrupoempresavendedor" : [ids], // associa grupos empresas ao vendedor
 				"removeidsgrupoempresavendedor" : [ids], // desassocia grupos empresas ao vendedor
