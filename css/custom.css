@@ -196,6 +196,10 @@ margin-top:170px;
   margin-right: 7px;
 }
 
+.conteudoConta{
+  margin-left: -15px;
+}
+
 .conteudoNavegacao{
   margin-top: -30px;
 }
@@ -282,13 +286,15 @@ margin-top:170px;
   z-index: 15000;
 }
 
+.imputsConta{
+  margin-top: -7px;
+}
+
 .imputsPessoal{
   margin-bottom:5px; 
 }
 
-.imputConta{
-  margin-left: -15px;
-}
+
 
 .labelContaDados{
   margin-left: 15px;
@@ -300,6 +306,10 @@ margin-top:170px;
 
 .labelPessoal{
   margin-bottom: 12px;
+}
+
+.labelPessoalDados{
+  margin-bottom: 17px;
 }
 
 

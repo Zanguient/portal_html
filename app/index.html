@@ -195,12 +195,75 @@
 			<div class="page-title">
 				<h1>{{pagina.titulo || 'Home'}} <small>{{pagina.subtitulo || ''}}</small></h1>
 			</div>
-			<!-- END PAGE TITLE -->
+			<!-- END PAGE TITLE --> 
             
-			<!-- BEGIN PAGE TOOLBAR : Busca de grupo empresa para administrar -->
-			<div class="page-toolbar">
+            <!-- TESTE-->
+            <div class="page-toolbar">
 				<!-- BEGIN THEME PANEL -->
-				<div class="btn-group btn-theme-panel">
+				<div class="btn-group btn-theme-panel" style="width:200px;margin-top:17px">
+                    <div class="row">
+                        <div class="col-sm-9">
+                            <label>
+                                <strong>
+                                    {{(usuariologado.grupoempresa.ds_nome | uppercase) || ''}}
+                                </strong>
+                            </label>    
+                        </div>    
+                        <div class="col-sm-1">
+                            <img ng-src="../img/loading-atos.gif" ng-show="carregandoGrupoEmpresas"/>
+                            <a class="btn" href="javascript:;" 
+                               ng-click="limpaGrupoEmpresa()"
+                               ng-show="PERMISSAO_FILTRO_EMPRESA && PERMISSAO_ADMINISTRATIVO && usuariologado.grupoempresa">
+                                <i class="fa fa-times-circle"></i>
+                            </a>
+                            <a href="javascript:;" class="btn dropdown-toggle" 
+                               data-toggle="dropdown"
+                               ng-show="PERMISSAO_FILTRO_EMPRESA && PERMISSAO_ADMINISTRATIVO && !usuariologado.grupoempresa">
+                                <i class="icon-settings" 
+                                   ng-hide="carregandoGrupoEmpresas"></i>
+                            </a>
+                            <!-- LAYOUT DE BUSCA DO GRUPO EMPRESA -->
+                            <div id="admBuscaGrupoEmpresa" 
+                                 class="dropdown-menu theme-panel pull-right hold-on-click" 
+                                 ng-click="$event.stopPropagation()" style="min-width: 400px">	
+                                <h3>Empresa</h3>
+                                <form class="search-form">
+                                    <div class="input-group" style="width:100%">
+                                       <input type="text" class="form-control" 
+                                              placeholder="Buscar" 
+                                              ng-model="gempresa"
+                                              ng-keyup="$event.keyCode == 13"
+                                              typeahead-focus-first=false
+                                              typeahead-on-select="selecionaGrupoEmpresa($item)"
+                                              typeahead-min-length='3'
+                                              typeahead-wait-ms="500"
+                                              typeahead="gempresa as (gempresa.ds_nome | uppercase) for gempresa in buscaGrupoEmpresas($viewValue)"/>
+                                    </div>
+                                    <!--div style="width:100%; margin-top:15px" ng-show="usuariologado.grupoempresa">
+                                        <a href="javascript:;" ng-click="limpaGrupoEmpresa()" class="btn">
+                                            <i class="fa fa-times-circle"></i>
+                                        </a>
+                                        <strong>{{usuariologado.grupoempresa.ds_nome || ''}}</strong>
+                                    </div-->
+                                </form>
+                            </div>    
+                        </div>    
+                    </div>  
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>
+                                <strong>
+                                    {{(usuariologado.empresa.ds_fantasia | uppercase) || ''}}
+                                </strong>
+                            </label>    
+                        </div>
+                    </div>
+                </div>
+            </div>
+			<!-- BEGIN PAGE TOOLBAR : Busca de grupo empresa para administrar -->
+			<!-- div class="page-toolbar">
+				<!-- BEGIN THEME PANEL -- >
+				<div class="btn-group btn-theme-panel">                  
                     <table>
                         <thead>
                             <tr>
@@ -232,7 +295,7 @@
                                         <i class="icon-settings" 
                                            ng-hide="carregandoGrupoEmpresas"></i>
                                     </a>
-                                    <!-- LAYOUT DE BUSCA DO GRUPO EMPRESA -->
+                                    <!-- LAYOUT DE BUSCA DO GRUPO EMPRESA -- >
                                     <div id="admBuscaGrupoEmpresa" 
                                          class="dropdown-menu theme-panel pull-right hold-on-click" 
                                          ng-click="$event.stopPropagation()" style="min-width: 400px">	
@@ -254,13 +317,13 @@
                                                     <i class="fa fa-times-circle"></i>
                                                 </a>
                                                 <strong>{{usuariologado.grupoempresa.ds_nome || ''}}</strong>
-                                            </div-->
+                                            </div-- >
                                         </form>
                                     </div>
                                 </td> 
                             </tr>
                         </thead>
-                    </table>
+                    </table -->
                 </div>
                 <!-- END THEME PANEL -->
             </div>

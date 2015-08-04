@@ -59,9 +59,9 @@
                     <div class="col-sm-10">
                         <div class="row">
                             <!-- NOME -->
-                            <div class="col-sm-12 ">
+                            <div class="col-sm-12">
                                 <label ng-hide="editandoDadosPessoais"
-                                       class="margin-bottom:15px">
+                                       class="labelPessoalDados">
                                     {{usuario.pessoa.nm_pessoa || ''}}
                                 </label>
                                 <input type="text" 
@@ -73,7 +73,8 @@
                             <!-- DATA DE NASCIMENTO -->
                             <div class="col-sm-12">
                                 <label ng-bind="getDataString(usuario.pessoa.dt_nascimento)"
-                                       ng-hide="editandoDadosPessoais">
+                                       ng-hide="editandoDadosPessoais"
+                                       class="labelPessoalDados">
                                 </label>
                                 <input type="text" 
                                        ng-show="editandoDadosPessoais"
@@ -85,7 +86,8 @@
                             </div>
                             <!-- TELEFONE -->
                             <div class="col-sm-12">
-                                <label ng-hide="editandoDadosPessoais">
+                                <label ng-hide="editandoDadosPessoais"
+                                       class="labelPessoalDados">
                                     {{usuario.pessoa.nu_telefone || ''}}
                                 </label>
                                 <input type="text" 
@@ -155,7 +157,7 @@
                                 </label>
                                 <div class="col-sm-6 col-offset-0"
                                      ng-show="editandoDadosConta">
-                                    <div class="input-icon right imputConta">
+                                    <div class="input-icon right conteudoConta">
                                         <i id="icon-login" class="fa" 
                                            ng-class="{'fa-check': loginValido(), 'fa-warning': !loginValido()}" 
                                            style="display:none" ng-hide="validandoLogin"></i>
@@ -170,7 +172,8 @@
                                                         autocomplete="off" placeholder="Login"
                                                         model="newconta.ds_login"  
                                                         ng-blur="validaLogin()" 
-                                                        ng-minlength="3" ng-maxlength="20" required>
+                                                        ng-minlength="3" ng-maxlength="20" required
+                                                        class="imputsConta">
                                         </input-username>
                                     </div>
                                 </div>
@@ -187,7 +190,7 @@
                                 </label>
                                 <div class="col-sm-6 col-offset-0"
                                      ng-show="editandoDadosConta">
-                                    <div class="input-icon right imputConta">
+                                    <div class="input-icon right conteudoConta">
                                         <i id="icon-email" class="fa" 
                                            ng-class="{'fa-check': emailValido(), 'fa-warning': !emailValido()}" 
                                            style="display:none" ng-hide="validandoEmail"></i>
@@ -207,7 +210,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-12" style="margin-left:15px; margin-top:5px">
+                            <div class="col-sm-12" style="margin-left:15px; margin-top:3px">
                                 <label ng-class="{ 'StatusSenhaValida' : usuario.webpagesusers.fl_ativo, 'StatusSenhaInvalida' : !usuario.webpagesusers.fl_ativo}"
                                        ng-bind="usuario.webpagesusers.fl_ativo ? 'Ativo' : 'Inativo'">
                                 </label>
