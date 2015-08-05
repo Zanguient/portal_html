@@ -258,7 +258,7 @@
                                     </tr>
 							    </thead>
                                 <tbody>
-                                    <tr role="row" class="odd" ng-repeat="log in logs">
+                                    <tr role="row" class="odd conteudoAcoesUsuarios" ng-repeat="log in logs">
                                         <td class="">                                            
                                             <div class="col-sm-2">
                                                 <div class="">
@@ -266,12 +266,11 @@
                                                 </div>    
                                             </div>                                            
                                         </td>
-                                        <td>
-                                            <div class=""
-                                                 ng-bind="getDataTimeString(log.dtAcesso)">
+                                        <td class="">
+                                            <div ng-bind="getDataTimeString(log.dtAcesso)">
                                             </div> 
                                         </td>
-                                        <td>
+                                        <td class="">
                                             <div class="">
                                                 {{log.dsAplicacao | uppercase}}
                                             </div>
@@ -281,15 +280,16 @@
                                                 {{log.dsUrl | lowercase}}
                                             </div>
                                         </td>
-                                        <td>
+                                        <td class="">
                                             <div class="">
                                                 {{log.method.ds_method | uppercase}}
                                             </div>
                                         </td>
-                                        <td>
+                                        <td class="">
                                             <div class="">
-                                                <button class="btn btn-icon-only default"
-                                                        ng-click="detalhaLog(log)">
+                                                <button class="btn"
+                                                        ng-click="detalhaLog(log)"
+                                                        ng-class="{'btn btn-icon-only green' : logSucesso(log), 'btn btn-icon-only red': !logSucesso(log)}">
                                                     <i class="fa" 
                                                        ng-class="{'fa-check-circle' : logSucesso(log), 'fa-times-circle': !logSucesso(log)}"></i>
                                                 </button>                                            

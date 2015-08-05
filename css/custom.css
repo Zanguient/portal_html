@@ -169,6 +169,11 @@ margin-top:170px;
   padding-top: 5px;  
 }
 
+.conteudoAcoesUsuarios td{
+  vertical-align: middle;
+  text-align: center;  
+}
+
 .conteudoFiliais{
     margin:8px 10px 0 0;
     color: #6f6e6e;
@@ -337,6 +342,23 @@ margin-top:170px;
   margin-top: 15px;    
 }
 
+.modalFilialDetalhes{
+  border-bottom: 1px solid #eaeaea;
+  margin: 10px 10px;    
+}
+
+.modalFilialDetalhesFim label{
+  font-weight: bold;
+  margin-bottom:10px;  
+}
+
+
+
+.modalFilialDetalhes label{
+  font-weight: bold;
+  margin-bottom:10px;
+}
+
 .modal-input{
   z-index:13000 !important;   
 }
@@ -451,6 +473,13 @@ margin-top:170px;
     font-size: 20px;
     font-weight: bolder;
     text-align: center;
+}
+
+.titulosModalFilial h4{
+  text-align:center; 
+  margin-top:1px;
+  margin-bottom:15px;    
+  color:dimgray;
 }
 
 .vakata-context { 
