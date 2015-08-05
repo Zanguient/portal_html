@@ -91,6 +91,16 @@ angular.module('webapi', ['utils'])
             RoleId : 101
         }
       },
+      card : {
+        tbcontacorrente: {
+            idContaCorrente : 100,
+            cdGrupo : 101,
+            nrCnpj : 102,
+            cdBanco : 103, 
+            nrAgencia : 104
+            nrConta : 105
+        },
+      },
       cliente : {
         empresa : {
             nu_cnpj : 100,
@@ -194,6 +204,13 @@ angular.module('webapi', ['utils'])
             dsTerminalLogico : 101,
             idOperadora : 102    
         }
+      },
+      util : {
+        bancos : {
+            Codigo : 100,
+            NomeReduzido : 101,
+            NomeExtenso : 102
+        }
       }
    }
 }])*/
@@ -262,6 +279,7 @@ angular.module('webapi', ['utils'])
         webpagesusersinroles : $autenticacao.getUrlBase() + '/administracao/webpagesusersinroles/'
     },
     card : {
+        tbcontacorrente: $autenticacao.getUrlBase() + '/card/tbcontacorrente/',  
         uploadextrato : $autenticacao.getUrlBase() + '/card/testeupload/',    
     },
     cliente: {
@@ -276,6 +294,9 @@ angular.module('webapi', ['utils'])
         recebimento : $autenticacao.getUrlBase() + '/pos/recebimento/',
         recebimentoparcela: $autenticacao.getUrlBase() + '/pos/recebimentoparcela/',
         terminallogico : $autenticacao.getUrlBase() + '/pos/terminallogico/'
+    },
+    utils : {
+        bancos : $autenticacao.getUrlBase() + '/utils/bancos/',    
     }
   }
 }])

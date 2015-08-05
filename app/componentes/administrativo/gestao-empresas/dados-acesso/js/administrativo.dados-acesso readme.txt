@@ -1,13 +1,13 @@
 # README #
 
 Módulo que:
- - gerencia o layout da tela de relatórios da Consolidação (app/componentes/card-services/consolidacao/relatorios/index.html);
- - permite a visualização de relatórios sintéticos, analítico e terminal lógico a partir de filtros
+ - gerencia o layout da tela de dados de acesso de Gestão de Empresas (app/componentes/administracao/gestao-empresas/dados-acesso/index.html);
+ - permite a visualização dos dados de acesso
  
 
 ### Pra Que Serve Este Módulo? ###
 
-Gerenciar completamente a tela de relatórios da Consolidação (Card Services).  
+Gerenciar completamente a tela de dados de acesso de Gestão de Empresas (Administrativo).  
 
 
 

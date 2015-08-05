@@ -26,6 +26,7 @@ angular.module("AtosCapital", ['ui.router',
                                'administrativo-filiais-cadastro',
                                'administrativo-dados-acesso',
                                'administrativo-senhas-invalidas',
+                               'administrativo-contas-correntes',
                                'dashboard', 
                                'card-services-cash-flow-relatorios',
                                'card-services-conciliacao-vendas',
@@ -154,6 +155,15 @@ angular.module("AtosCapital", ['ui.router',
         url: prefixo + 'administrativo/senhas-invalidas',
         templateUrl: 'componentes/administrativo/gestao-empresas/senhas-invalidas/index.html',
         controller: "administrativo-senhas-invalidasCtrl",
+        data: {
+            titulo: 'Administrativo'
+        }
+      })
+    
+      .state('administrativo-gestao-empresas-contas-correntes', {
+        url: prefixo + 'administrativo/contas-correntes',
+        templateUrl: 'componentes/administrativo/gestao-empresas/contas-correntes/index.html',
+        controller: "administrativo-contas-correntesCtrl",
         data: {
             titulo: 'Administrativo'
         }
@@ -298,6 +308,7 @@ angular.module("AtosCapital", ['ui.router',
     //var controllerAdministrativoFiliaisCadastro = undefined;
     var controllerAdministrativoDadosAcesso = undefined;
     var controllerAdministrativoSenhasInvalidas = undefined;
+    var controllerAdministrativoContasCorrentes = undefined;                        
     var controllerAdministrativoAcessoUsuarios = undefined;
     var controllerAdministrativoAcoesUsuarios = undefined;
     var controllerDashboard = undefined;
@@ -317,6 +328,7 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_FILIAIS = false;
     $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_DADOS_ACESSO = false; 
     $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_SENHAS_INVALIDAS = false; 
+    $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_CONTAS_CORRENTES = false;                        
     $scope.PERMISSAO_ADMINISTRATIVO_LOGS = false;
     $scope.PERMISSAO_ADMINISTRATIVO_LOGS_ACESSO_USUARIOS = false;     
     $scope.PERMISSAO_ADMINISTRATIVO_LOGS_ACOES_USUARIOS = false;                           
@@ -447,6 +459,13 @@ angular.module("AtosCapital", ['ui.router',
     $scope.goAdministrativoSenhasInvalidas = function(params){
         controllerAtual = controllerAdministrativoSenhasInvalidas;
         go('administrativo-gestao-empresas-senhas-invalidas', params);
+    };
+    /**
+      * Exibe como conteúdo a Contas Correntes Gestão de Empresas, de Administrativo
+      */
+    $scope.goAdministrativoContasCorrentes = function(params){
+        controllerAtual = controllerAdministrativoContasCorrentes;
+        go('administrativo-gestao-empresas-contas-correntes', params);
     };                          
     /**
       * Exibe como conteúdo a Logs Acesso de Usuários, de Administrativo
@@ -587,6 +606,13 @@ angular.module("AtosCapital", ['ui.router',
                 $scope.goUsuarioSemPrivilegios();
             }else if(!controllerAtual || controllerAtual.ds_controller.toUpperCase() !== 'SENHAS INVÁLIDAS')
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual  
+        }else if(url === $state.get('administrativo-gestao-empresas-contas-correntes').url){ 
+            if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_CONTAS_CORRENTES){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.goUsuarioSemPrivilegios();
+            }else if(!controllerAtual || controllerAtual.ds_controller.toUpperCase() !== 'CONTAS CORRENTES')
+                $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual  
         }else if(url === $state.get('administrativo-logs-acesso-usuarios').url){ 
             // Logs > Acesso de usuários
             if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_LOGS || !$scope.PERMISSAO_ADMINISTRATIVO_LOGS_ACESSO_USUARIOS){
@@ -690,6 +716,11 @@ angular.module("AtosCapital", ['ui.router',
                     controllerAtual = controller;
                 controllerAdministrativoSenhasInvalidas = controller;
                 return $scope.goAdministrativoSenhasInvalidas;
+            case 'CONTAS CORRENTES':
+                 if($location.path() === $state.get('administrativo-gestao-empresas-contas-correntes').url) 
+                    controllerAtual = controller;
+                controllerAdministrativoContasCorrentes = controller;
+                return $scope.goAdministrativoContasCorrentes;
             case 'ACESSO DE USUÁRIOS' : 
                 if($location.path() === $state.get('administrativo-logs-acesso-usuarios').url) 
                     controllerAtual = controller;
@@ -747,7 +778,8 @@ angular.module("AtosCapital", ['ui.router',
             case 'EMPRESAS' : $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_EMPRESAS = true; break; 
             case 'FILIAIS' : $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_FILIAIS = true; break;  
             case 'DADOS DE ACESSO': $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_DADOS_ACESSO = true; break; 
-            case 'SENHAS INVÁLIDAS': $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_SENHAS_INVALIDAS = true; break;    
+            case 'SENHAS INVÁLIDAS': $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_SENHAS_INVALIDAS = true; break; 
+            case 'CONTAS CORRENTES': $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_CONTAS_CORRENTES = true; break; 
             case 'LOGS' : $scope.PERMISSAO_ADMINISTRATIVO_LOGS = true; break;
             case 'ACESSO DE USUÁRIOS' : $scope.PERMISSAO_ADMINISTRATIVO_LOGS_ACESSO_USUARIOS = true; break;
             case 'AÇÕES DE USUÁRIOS': $scope.PERMISSAO_ADMINISTRATIVO_LOGS_ACOES_USUARIOS = true; break;
@@ -812,13 +844,14 @@ angular.module("AtosCapital", ['ui.router',
             case 'PRIVILÉGIOS' : return state == 'privilegios';
             case 'MÓDULOS E FUNCIONALIDADES' : return state == 'modulos-funcionalidades';
             case 'EMPRESAS' : return state == 'empresas';
-            case 'FILIAIS' :  return state == 'filiais' || state == 'cadastro-filiais';  
+            case 'FILIAIS' :  return state == 'filiais' || state == 'cadastro-filiais';
+            case 'DADOS DE ACESSO': return state == 'dados-acesso';
+            case 'SENHAS INVÁLIDAS': return state == 'senhas-invalidas';
+            case 'CONTAS CORRENTES': return state == 'contas-correntes';
             case 'ACESSO DE USUÁRIOS' : return state == 'acesso-usuarios';  
             case 'AÇÕES DE USUÁRIOS': return state == 'acoes-usuarios';
             // Card Services
             case 'CONCILIAÇÃO DE VENDAS': return state == 'conciliacao-vendas';
-            case 'DADOS DE ACESSO': return state == 'dados-acesso';
-            case 'SENHAS INVÁLIDAS': return state == 'senhas-invalidas';    
                 
             // AMBÍGUOS    
             case 'RELATÓRIOS': return titulopai.toUpperCase() === 'CASH FLOW' ? 
@@ -980,6 +1013,8 @@ angular.module("AtosCapital", ['ui.router',
         if(data.filtro_empresa) $scope.PERMISSAO_FILTRO_EMPRESA = true;
         
         //data.id_grupo = 12; // TEMP
+        
+        console.log(data.id_grupo);
         
         // Verifica se estava administrando algum grupo empresa
         if(data.id_grupo && data.id_grupo !== -1) obtemGrupoEmpresa(data.id_grupo, data.nu_cnpj);

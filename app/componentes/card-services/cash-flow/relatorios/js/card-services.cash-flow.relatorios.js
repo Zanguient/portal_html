@@ -525,7 +525,6 @@ angular.module("card-services-cash-flow-relatorios", [])
                     if(registroFinal > $scope.filtro.sintetico.total_registros) registroFinal = $scope.filtro.sintetico.total_registros;
                     $scope.filtro.sintetico.faixa_registros =  registroInicial + '-' + registroFinal;
                 }
-                $scope.obtendoUsuarios = false;
                 // Verifica se a página atual é maior que o total de páginas
                 if($scope.filtro.sintetico.pagina > $scope.filtro.sintetico.total_paginas)
                     setPagina(1); // volta para a primeira página e refaz a busca

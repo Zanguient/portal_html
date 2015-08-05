@@ -584,7 +584,6 @@ angular.module("card-services-consolidacao-relatorios", [])
                     if(registroFinal > $scope.filtro.terminal.total_registros) registroFinal = $scope.filtro.terminal.total_registros;
                     $scope.filtro.terminal.faixa_registros =  registroInicial + '-' + registroFinal;
                 }
-                $scope.obtendoUsuarios = false;
                 // Verifica se a página atual é maior que o total de páginas
                 if($scope.filtro.terminal.pagina > $scope.filtro.terminal.total_paginas)
                     setPagina(1); // volta para a primeira página e refaz a busca
@@ -649,7 +648,6 @@ angular.module("card-services-consolidacao-relatorios", [])
                     if(registroFinal > $scope.filtro.sintetico.total_registros) registroFinal = $scope.filtro.sintetico.total_registros;
                     $scope.filtro.sintetico.faixa_registros =  registroInicial + '-' + registroFinal;
                 }
-                $scope.obtendoUsuarios = false;
                 // Verifica se a página atual é maior que o total de páginas
                 if($scope.filtro.sintetico.pagina > $scope.filtro.sintetico.total_paginas)
                     setPagina(1); // volta para a primeira página e refaz a busca

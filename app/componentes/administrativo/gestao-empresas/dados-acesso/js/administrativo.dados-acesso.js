@@ -369,7 +369,6 @@ angular.module("administrativo-dados-acesso", [])
                     if(registroFinal > $scope.filtro.total_registros) registroFinal = $scope.filtro.total_registros;
                     $scope.filtro.faixa_registros =  registroInicial + '-' + registroFinal;
                 }
-                $scope.obtendoUsuarios = false;
                 // Verifica se a página atual é maior que o total de páginas
                 if($scope.filtro.pagina > $scope.filtro.total_paginas)
                     setPagina(1); // volta para a primeira página e refaz a busca
