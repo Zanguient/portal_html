@@ -28,34 +28,50 @@
             <div class="portlet light">  
                 
                 <!-- MODAL INPUT -->
-               <div class="modal fade bs-modal-sm modal-input" id="modalLog" role="dialog"
-                    data-backdrop="static" data-keyboard="false">
-                   <div class="modal-dialog modal-sm">
+               <div class="modal fade bs-modal-sm modal-input" 
+                    id="modalLog" 
+                    aria-hidden="true"
+                    >
+                   <div class="modal-dialog modal-sm" style="width:400px">
                        <div class="modal-content">
                            <div class="modal-header">
-                               <h4 class="modal-title modal-cabecalho">{{log.login}}</h4>
+                               <h4 class="modal-title modal-cabecalho">{{log.user.ds_login}}</h4>
                            </div>
-                           <div class="modal-body modal-corpo" style="text-align: left">
-                                HTTP: {{log.codResposta}}
-                                URL: {{log.dsUrl}}
-                                PARAMETROS: {{log.dsParametros}}
-                                FILTROS: {{log.dsFiltros}}
-                                JSON: {{log.dsJson}}
-                                MENSAGEM DE ERRO: {{log.msgErro}}
-                           </div>
-                           <!--div class="modal-footer">
-                               <div class="col-sm-4 col-sm-offset-1">
+                           <div class="modal-body modal-corpo modalAcessoDeUsuarios" style="text-align: left">
+                               <div class="row">
+                                    <div class="col-sm-12">
+                                        <label>HTTP:</label>{{log.codResposta}}    
+                                   </div>
+                                   <div class="col-sm-12">
+                                        <label>URL:</label>{{log.dsUrl}}    
+                                   </div>
+                                   <div class="col-sm-12">
+                                        <label>PARAMETROS:</label>{{log.dsParametros}}    
+                                   </div>
+                                   <div class="col-sm-12">
+                                        <label>FILTROS:</label>{{log.dsFiltros}}    
+                                   </div>
+                                   <div class="col-sm-12">
+                                        <label>JSON:</label>{{log.dsJson}}    
+                                   </div>
+                                   <div class="col-sm-12">
+                                        <label>MENSAGEM DE ERRO:</label>{{log.msgErro}}    
+                                   </div>
+                               </div>
+                            </div>
+                           <div class="modal-footer">
+                               <div class="col-sm-6 col-sm-offset-2">
                                    <button type="button" class="btn default" data-dismiss="modal">
-                                       {{input.textoCancela}}
+                                       Fechar
                                    </button>
                                </div>                           
-                               <div class="col-sm-4 col-sm-offset-1">
+                               <!--div class="col-sm-4 col-sm-offset-1">
                                    <button type="button" class="btn blue"
                                            ng-click="inputCadastro.funcao()">
                                        {{input.textoConfirma}}
                                    </button>                                
-                               </div>
-                           </div-->
+                               </div-->
+                           </div>
                        </div>
                    </div>
                </div>
@@ -175,7 +191,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- TABELA -->
+                        <!-- TABELA -->                        
                         <div class="row">
                            <div class="col-sm-12">
                                 <div class="row tableAcessoUsuarios">
@@ -258,7 +274,7 @@
                                             <button class="btn btn-icon-only default"
                                                     ng-click="detalhaLog(log)">
                                                 <i class="fa" 
-                                                   ng-class="'fa-check-circle' : logSucesso(log); 'fa-times-circle': !logSucesso(log)"></i>
+                                                   ng-class="{'fa-check-circle' : logSucesso(log), 'fa-times-circle': !logSucesso(log)}"></i>
                                             </button>                                            
                                         </div>    
                                     </div>

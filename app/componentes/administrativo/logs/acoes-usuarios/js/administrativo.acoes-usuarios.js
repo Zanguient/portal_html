@@ -48,11 +48,47 @@ angular.module("administrativo-acoes-usuarios", [])
         $scope.pagina.titulo = 'Logs';                          
         $scope.pagina.subtitulo = 'Ações de Usuários';
         // Busca Logs
-        $scope.buscaLogs();
+        //$scope.buscaLogs();
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
-        });  
+        });
+        
+        $scope.logs.push({
+				idLogAcessoUsuario : 1,
+				user : { idUser : 255,
+						 ds_login : 'deividgfmarinho',
+					   },
+				method : { idMethod : 81,
+						   ds_method : 'Cadastro'
+						 },
+				dsUrl : 'administracao/webpagesroles',
+				dsParametros : '',
+				dsFiltros : '?token=QA34324244332SDEWdwedweweewf',
+				dtAcesso : '2015-08-05 09:50:00.000',
+				dsAplicacao : 'Portal',
+				codResposta : 200,
+				msgErro : '',
+				dsJson : "{RoleName:'Teste'}",
+			 });
+        
+        $scope.logs.push({
+				idLogAcessoUsuario : 1,
+				user : { idUser : 255,
+						 ds_login : 'deividgfmarinho',
+					   },
+				method : { idMethod : 81,
+						   ds_method : 'Remoção'
+						 },
+				dsUrl : 'administracao/webpagesroles',
+				dsParametros : '',
+				dsFiltros : '?token=QA34324244332SDEWdwedweweewf&RoleId=300',
+				dtAcesso : '2015-08-05 09:58:00.000',
+				dsAplicacao : 'Portal',
+				codResposta : 500,
+				msgErro : '',
+				dsJson : "",
+			 });
     }; 
                                                 
                                                 
@@ -192,6 +228,7 @@ angular.module("administrativo-acoes-usuarios", [])
                                                 
     // AÇÕES
     $scope.logSucesso = function(log){
+        //console.log(log);
         if(!log) return false;
         return log.codResposta === 200;
     }
