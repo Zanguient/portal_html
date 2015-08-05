@@ -260,9 +260,9 @@ angular.module("AtosCapital", ['ui.router',
                         '$apis',
                         '$webapi',
                         '$empresa',
-                        '$campos',
+                        /*'$campos',*/
                         function($scope,$rootScope,$window,$location,$state,$stateParams,$http,$timeout,$modal,
-                                 $autenticacao,$apis,$webapi,$empresa,$campos){ 
+                                 $autenticacao,$apis,$webapi,$empresa/*,$campos*/){ 
     // Título da página                            
     $scope.pagina = {'titulo': 'Home', 'subtitulo': ''};
     // Usuário
@@ -1112,7 +1112,7 @@ angular.module("AtosCapital", ['ui.router',
          progressoGrupoEmpresas(true);
          // Obtém a URL                                                      
          $webapi.get($apis.getUrl($apis.cliente.grupoempresa, [$scope.token, 0], 
-                                  {id:$campos.cliente.grupoempresa.id_grupo, valor: empresaId}))
+                                  {id:/*$campos.cliente.grupoempresa.id_grupo*/ 100, valor: empresaId}))
             .then(function(dados){  
                 $scope.usuariologado.grupoempresa = dados.Registros[0];
                 $scope.$broadcast("alterouGrupoEmpresa");
@@ -1134,7 +1134,7 @@ angular.module("AtosCapital", ['ui.router',
          progressoGrupoEmpresas(true);
          // Obtém a URL                                                      
          $webapi.get($apis.getUrl($apis.cliente.empresa, [$scope.token, 0], 
-                                  {id:$campos.cliente.empresa.nu_cnpj, valor: nu_cnpj}))
+                                  {id:/*$campos.cliente.empresa.nu_cnpj*/ 100, valor: nu_cnpj}))
             .then(function(dados){  
                 $scope.usuariologado.empresa = dados.Registros[0];
                 $scope.$broadcast("alterouGrupoEmpresa");
@@ -1155,8 +1155,8 @@ angular.module("AtosCapital", ['ui.router',
        
        // Obtém a URL                                                      
        var url = $apis.getUrl($apis.cliente.grupoempresa, 
-                              [$scope.token, 0, $campos.cliente.grupoempresa.ds_nome, 0, 10, 1], // ordenado crescente com 10 itens no máximo
-                              {id:$campos.cliente.grupoempresa.ds_nome, valor: texto + '%'});
+                              [$scope.token, 0, /*$campos.cliente.grupoempresa.ds_nome*/ 101, 0, 10, 1], // ordenado crescente com 10 itens no máximo
+                              {id:/*$campos.cliente.grupoempresa.ds_nome*/ 101, valor: texto + '%'});
        // Requisita e obtém os dados
        return $http.get(url).then(function(dados){
            progressoGrupoEmpresas(false);
@@ -1343,12 +1343,14 @@ angular.module("AtosCapital", ['ui.router',
    var getElementProgress = function(divPortletBodyPos){
         if(typeof divPortletBodyPos !== 'number') return undefined;
         var div = $('div[class="portlet light"]');
+        //console.log(div);
         if(div.length == 0){ 
             // Verifica se está em full screen
             div = $('div[class="portlet light portlet-fullscreen"]');
             if(div.length == 0) return undefined; 
         }
         var body = div.children(".portlet-body");
+        //console.log(body);
         if(divPortletBodyPos < 0 || divPortletBodyPos >= body.length) return undefined;
         return body[divPortletBodyPos]; 
    }
@@ -1357,6 +1359,7 @@ angular.module("AtosCapital", ['ui.router',
      */
    $scope.showProgress = function(divPortletBodyPos, zIndex){
         var el = getElementProgress(divPortletBodyPos);
+        //console.log("ELEMENT"); console.log(el);
         Metronic.blockUI({
             target: el,
             animate: true,

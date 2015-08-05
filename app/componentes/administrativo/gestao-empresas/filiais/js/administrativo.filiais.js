@@ -11,10 +11,10 @@ angular.module("administrativo-filiais", [])
 .controller("administrativo-filiaisCtrl", ['$scope',
                                            '$state',
                                            '$filter',
-                                           '$campos',
+                                           /*'$campos',*/
                                            '$webapi',
                                            '$apis', 
-                                           function($scope,$state,$filter,$campos,$webapi,$apis){ 
+                                           function($scope,$state,$filter,/*$campos,*/$webapi,$apis){ 
 
     var divPortletBodyFilialPos = 0; // posição da div que vai receber o loading progress
     $scope.paginaInformada = 1; // página digitada pelo usuário
@@ -155,18 +155,18 @@ angular.module("administrativo-filiais", [])
 
            $scope.showProgress(divPortletBodyFilialPos);    
 
-           var filtros = [{id: $campos.cliente.empresa.id_grupo, 
+           var filtros = [{id: /*$campos.cliente.empresa.id_grupo*/ 116, 
                            valor: $scope.usuariologado.grupoempresa.id_grupo}];
 
            // Verifica se tem algum valor para ser filtrado    
-           if($scope.filial.busca.length > 0) filtros.push({id: $campos.cliente.empresa.ds_fantasia, 
+           if($scope.filial.busca.length > 0) filtros.push({id: /*$campos.cliente.empresa.ds_fantasia*/ 104, 
                                                             valor: $scope.filial.busca + '%'});        
 
-           if($scope.usuariologado.empresa) filtros.push({id: $campos.cliente.empresa.nu_cnpj, 
+           if($scope.usuariologado.empresa) filtros.push({id: /*$campos.cliente.empresa.nu_cnpj*/ 100, 
                                                           valor: $scope.usuariologado.empresa.nu_cnpj});
            
            $webapi.get($apis.getUrl($apis.cliente.empresa, 
-                                    [$scope.token, 2, $campos.cliente.empresa.ds_fantasia, 0, 
+                                    [$scope.token, 2, /*$campos.cliente.empresa.ds_fantasia*/ 104, 0, 
                                      $scope.filial.itens_pagina, $scope.filial.pagina],
                                     filtros)) 
                 .then(function(dados){

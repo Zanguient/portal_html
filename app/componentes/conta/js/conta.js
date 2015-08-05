@@ -12,9 +12,9 @@ angular.module("conta", [])
                           '$state',
                           '$webapi',
                           '$apis', 
-                          '$campos',
+                          /*'$campos',*/
                           '$filter',
-                          function($scope,$state,$webapi,$apis,$campos,$filter){  
+                          function($scope,$state,$webapi,$apis,/*$campos,*/$filter){  
     
     $scope.tab = 2;
     
@@ -223,7 +223,7 @@ angular.module("conta", [])
             }
             $scope.validandoEmail = true;
             $webapi.get($apis.getUrl($apis.administracao.webpagesusers, [$scope.token, 0], 
-                                     {id:$campos.administracao.webpagesusers.ds_email, 
+                                     {id:/*$campos.administracao.webpagesusers.ds_email*/ 102, 
                                       valor:$scope.newconta.ds_email.toLowerCase()}))
             // Verifica se a requisição foi respondida com sucesso
                 .then(function(dados){
@@ -259,7 +259,7 @@ angular.module("conta", [])
             }
             $scope.validandoLogin = true;
             $webapi.get($apis.getUrl($apis.administracao.webpagesusers, [$scope.token, 0], 
-                                     {id:$campos.administracao.webpagesusers.ds_login, 
+                                     {id:/*$campos.administracao.webpagesusers.ds_login*/ 101, 
                                       valor:$scope.newconta.ds_login}))
             // Verifica se a requisição foi respondida com sucesso
                 .then(function(dados){

@@ -12,11 +12,11 @@ angular.module("card-services-cash-flow-relatorios", [])
                                              '$state',
                                              '$filter',
                                              '$timeout',
-                                             '$campos',
+                                             /*'$campos',*/
                                              '$webapi',
                                              '$apis',
                                              function($scope,$state,$filter,$timeout,
-                                                      $campos,$webapi,$apis){ 
+                                                      /*$campos,*/$webapi,$apis){ 
     
     // Exibição
     $scope.itens_pagina = [10, 20, 50, 100]; 
@@ -27,10 +27,10 @@ angular.module("card-services-cash-flow-relatorios", [])
     $scope.bandeiras = [];   
     $scope.camposBusca = [
                           {
-                            id: $campos.pos.recebimentoparcela.recebimento + $campos.pos.recebimento.nsu - 100,
+                            id: 603, //$campos.pos.recebimentoparcela.recebimento + $campos.pos.recebimento.nsu - 100,
                             nome: "NSU"
                           },{
-                            id: $campos.pos.recebimentoparcela.recebimento + $campos.pos.recebimento.codResumoVenda - 100, 
+                            id: 613, //$campos.pos.recebimentoparcela.recebimento + $campos.pos.recebimento.codResumoVenda - 100, 
                             nome: "Resumo Vendas"
                           },
                          ];                                             
@@ -169,13 +169,13 @@ angular.module("card-services-cash-flow-relatorios", [])
 
        // Filtro do grupo empresa => barra administrativa
        if($scope.usuariologado.grupoempresa){ 
-           filtros = [{id: $campos.cliente.empresa.id_grupo, valor: $scope.usuariologado.grupoempresa.id_grupo}];
-           if($scope.usuariologado.empresa) filtros.push({id: $campos.cliente.empresa.nu_cnpj, 
+           filtros = [{id: /*$campos.cliente.empresa.id_grupo*/ 116, valor: $scope.usuariologado.grupoempresa.id_grupo}];
+           if($scope.usuariologado.empresa) filtros.push({id: /*$campos.cliente.empresa.nu_cnpj*/ 100, 
                                                           valor: $scope.usuariologado.empresa.nu_cnpj});
        }
        
        $webapi.get($apis.getUrl($apis.cliente.empresa, 
-                                [$scope.token, 0, $campos.cliente.empresa.ds_fantasia],
+                                [$scope.token, 0, /*$campos.cliente.empresa.ds_fantasia*/ 104],
                                 filtros)) 
             .then(function(dados){
                 $scope.filiais = dados.Registros;
@@ -216,11 +216,12 @@ angular.module("card-services-cash-flow-relatorios", [])
        var filtros = undefined;
 
        // Filtro do grupo empresa => barra administrativa
-       if($scope.filtro.filial !== null) filtros = {id: $campos.pos.operadora.empresa + $campos.cliente.empresa.nu_cnpj - 100, 
+       if($scope.filtro.filial !== null) filtros = {id: 300,
+                                                    //id: $campos.pos.operadora.empresa + $campos.cliente.empresa.nu_cnpj - 100, 
                                                     valor: $scope.filtro.filial.nu_cnpj};
        
        $webapi.get($apis.getUrl($apis.pos.operadora, 
-                                [$scope.token, 0, $campos.pos.operadora.nmOperadora],
+                                [$scope.token, 0, /*$campos.pos.operadora.nmOperadora*/ 101],
                                 filtros)) 
             .then(function(dados){
                 $scope.adquirentes = dados.Registros;
@@ -262,11 +263,11 @@ angular.module("card-services-cash-flow-relatorios", [])
        var filtros = undefined;
 
        // Filtro de adquirente
-       if($scope.filtro.adquirente !== null) filtros = {id: $campos.pos.bandeirapos.idOperadora, 
+       if($scope.filtro.adquirente !== null) filtros = {id: /*$campos.pos.bandeirapos.idOperadora*/ 102, 
                                                         valor: $scope.filtro.adquirente.id};
        
        $webapi.get($apis.getUrl($apis.pos.bandeirapos, 
-                                [$scope.token, 0, $campos.pos.bandeirapos.desBandeira],
+                                [$scope.token, 0, /*$campos.pos.bandeirapos.desBandeira*/ 101],
                                 filtros)) 
             .then(function(dados){
                 $scope.bandeiras = dados.Registros;
@@ -391,9 +392,10 @@ angular.module("card-services-cash-flow-relatorios", [])
        // Data
        var filtroData;
         
-       if($scope.filtro.data === 'Venda') filtroData = {id: $campos.pos.recebimentoparcela.recebimento + $campos.pos.recebimento.dtaVenda - 100,
+       if($scope.filtro.data === 'Venda') filtroData = {//id: $campos.pos.recebimentoparcela.recebimento + $campos.pos.recebimento.dtaVenda - 100,
+                          id: 605,
                           valor: $scope.getFiltroData($scope.filtro.datamin)};  
-       else filtroData = {id: $campos.pos.recebimentoparcela.dtaRecebimento,
+       else filtroData = {id: /*$campos.pos.recebimentoparcela.dtaRecebimento*/ 104 ,
                           valor: $scope.getFiltroData($scope.filtro.datamin)};
            
        if($scope.filtro.datamax)
@@ -402,21 +404,21 @@ angular.module("card-services-cash-flow-relatorios", [])
         
        // Filial
        if($scope.filtro.filial !== null){
-           var filtroFilial = {id: $campos.pos.recebimentoparcela.empresa + $campos.cliente.empresa.nu_cnpj - 100, 
+           var filtroFilial = {id: 300,//$campos.pos.recebimentoparcela.empresa + $campos.cliente.empresa.nu_cnpj - 100, 
                                valor: $scope.filtro.filial.nu_cnpj};
            filtros.push(filtroFilial);  
        }
         
        // Adquirente
        if($scope.filtro.adquirente !== null){
-           var filtroAdquirente = {id: $campos.pos.recebimentoparcela.operadora + $campos.pos.operadora.id - 100, 
+           var filtroAdquirente = {id: 400,//$campos.pos.recebimentoparcela.operadora + $campos.pos.operadora.id - 100, 
                                    valor: $scope.filtro.adquirente.id};
            filtros.push(filtroAdquirente);
        } 
         
        // Bandeira
        if($scope.filtro.bandeira !== null){
-           var filtroBandeira = {id: $campos.pos.recebimentoparcela.bandeira + $campos.pos.bandeirapos.id - 100, 
+           var filtroBandeira = {id: 500,//$campos.pos.recebimentoparcela.bandeira + $campos.pos.bandeirapos.id - 100, 
                                  valor: $scope.filtro.bandeira.id};
            filtros.push(filtroBandeira);
        }
@@ -495,7 +497,8 @@ angular.module("card-services-cash-flow-relatorios", [])
            
        $webapi.get($apis.getUrl($apis.pos.recebimentoparcela, 
                                 [$scope.token, 9, 
-                                 $campos.pos.recebimentoparcela.bandeira + $campos.pos.bandeirapos.desBandeira - 100, 0, 
+                                 //$campos.pos.recebimentoparcela.bandeira + $campos.pos.bandeirapos.desBandeira - 100, 
+                                 501, 0, 
                                  $scope.filtro.itens_pagina, $scope.filtro.sintetico.pagina],
                                 filtros)) 
             .then(function(dados){
@@ -594,8 +597,8 @@ angular.module("card-services-cash-flow-relatorios", [])
        // Filtros    
        var filtros = obtemFiltroDeBusca();
     
-       var order = $scope.filtro.data === 'Recebimento' ? $campos.pos.recebimentoparcela.dtaRecebimento :
-                   $campos.pos.recebimentoparcela.recebimento + $campos.pos.recebimento.dtaVenda - 100;    
+       var order = $scope.filtro.data === 'Recebimento' ? /*$campos.pos.recebimentoparcela.dtaRecebimento*/ 104  :
+                   605;//$campos.pos.recebimentoparcela.recebimento + $campos.pos.recebimento.dtaVenda - 100;    
         
        $webapi.get($apis.getUrl($apis.pos.recebimentoparcela, 
                                 [$scope.token, 8, order, 0, 

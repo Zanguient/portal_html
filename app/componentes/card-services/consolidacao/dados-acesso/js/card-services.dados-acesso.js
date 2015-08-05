@@ -12,11 +12,11 @@ angular.module("card-services-dados-acesso", [])
                                              '$state',
                                              '$filter',
                                              '$timeout',
-                                             '$campos',
+                                             /*'$campos',*/
                                              '$webapi',
                                              '$apis',
                                              function($scope,$state,$filter,$timeout,
-                                                      $campos,$webapi,$apis){ 
+                                                      /*$campos,*/$webapi,$apis){ 
     
     // Exibição
     $scope.itens_pagina = [10, 20, 50, 100]; 
@@ -135,13 +135,13 @@ angular.module("card-services-dados-acesso", [])
 
        // Filtro do grupo empresa => barra administrativa
        if($scope.usuariologado.grupoempresa){ 
-           filtros = [{id: $campos.cliente.empresa.id_grupo, valor: $scope.usuariologado.grupoempresa.id_grupo}];
-           if($scope.usuariologado.empresa) filtros.push({id: $campos.cliente.empresa.nu_cnpj, 
+           filtros = [{id: /*$campos.cliente.empresa.id_grupo*/ 116, valor: $scope.usuariologado.grupoempresa.id_grupo}];
+           if($scope.usuariologado.empresa) filtros.push({id: /*$campos.cliente.empresa.nu_cnpj*/ 100, 
                                                           valor: $scope.usuariologado.empresa.nu_cnpj});
        }
        
        $webapi.get($apis.getUrl($apis.cliente.empresa, 
-                                [$scope.token, 0, $campos.cliente.empresa.ds_fantasia],
+                                [$scope.token, 0, /*$campos.cliente.empresa.ds_fantasia*/ 104],
                                 filtros)) 
             .then(function(dados){
                 $scope.filiais = dados.Registros;
@@ -186,11 +186,12 @@ angular.module("card-services-dados-acesso", [])
        var filtros = undefined;
 
        // Filtro do grupo empresa => barra administrativa
-       if($scope.filtro.filial !== null) filtros = {id: $campos.pos.operadora.empresa + $campos.cliente.empresa.nu_cnpj - 100, 
+       if($scope.filtro.filial !== null) filtros = {id: 300,
+                                                    //id: $campos.pos.operadora.empresa + $campos.cliente.empresa.nu_cnpj - 100, 
                                                     valor: $scope.filtro.filial.nu_cnpj};
        
        $webapi.get($apis.getUrl($apis.pos.operadora, 
-                                [$scope.token, 0, $campos.pos.operadora.nmOperadora],
+                                [$scope.token, 0, /*$campos.pos.operadora.nmOperadora*/ 101],
                                 filtros)) 
             .then(function(dados){
                 $scope.adquirentes = dados.Registros;
@@ -219,7 +220,7 @@ angular.module("card-services-dados-acesso", [])
       */
     var buscaAdquirentesCadastro = function(){
         $webapi.get($apis.getUrl($apis.pos.adquirente, 
-                                 [$scope.token, 0, $campos.pos.adquirente.descricao, 0])) 
+                                 [$scope.token, 0, /*$campos.pos.adquirente.descricao*/ 102, 0])) 
             .then(function(dados){           
                 // Obtém os dados
                 $scope.adquirentescadastro = dados.Registros;
@@ -306,20 +307,20 @@ angular.module("card-services-dados-acesso", [])
     var obtemFiltroDeBusca = function(){
        var filtros = [];
        // Filial
-       var filtroFilial = {id: $campos.pos.loginoperadora.cnpj, 
+       var filtroFilial = {id: /*$campos.pos.loginoperadora.cnpj*/ 105, 
                            valor: $scope.filtro.filial.nu_cnpj};
        filtros.push(filtroFilial);  
         
        // Adquirente
        if($scope.filtro.adquirente !== null){
-           var filtroAdquirente = {id: $campos.pos.loginoperadora.idOperadora, 
+           var filtroAdquirente = {id: /*$campos.pos.loginoperadora.idOperadora*/ 106, 
                                    valor: $scope.filtro.adquirente.id};
            filtros.push(filtroAdquirente);
        } 
         
        // Bandeira
        if($scope.filtro.status !== null){
-           var filtroStatus = {id: $campos.pos.loginoperadora.status, 
+           var filtroStatus = {id: /*$campos.pos.loginoperadora.status*/ 104, 
                                valor: $scope.filtro.status.status};
            filtros.push(filtroStatus);
        }
@@ -350,7 +351,7 @@ angular.module("card-services-dados-acesso", [])
            
        $webapi.get($apis.getUrl($apis.pos.loginoperadora, 
                                 [$scope.token, 3, 
-                                 $campos.pos.loginoperadora.idGrupo, 0, 
+                                 /*$campos.pos.loginoperadora.idGrupo*/ 107, 0, 
                                  $scope.filtro.itens_pagina, $scope.filtro.pagina],
                                 filtros)) 
             .then(function(dados){           

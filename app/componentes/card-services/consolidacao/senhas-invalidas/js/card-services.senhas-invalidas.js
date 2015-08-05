@@ -12,11 +12,11 @@ angular.module("card-services-senhas-invalidas", [])
                                              '$state',
                                              '$filter',
                                              '$timeout',
-                                             '$campos',
+                                             /*'$campos',*/
                                              '$webapi',
                                              '$apis',
                                              function($scope,$state,$filter,$timeout,
-                                                      $campos,$webapi,$apis){ 
+                                                      /*$campos,*/$webapi,$apis){ 
     
     // Exibição
     $scope.itens_pagina = [10, 20, 50, 100]; 
@@ -143,7 +143,7 @@ angular.module("card-services-senhas-invalidas", [])
       * Retorna os filtros para ser usado junto a url para requisição via webapi
       */
     var obtemFiltroDeBusca = function(){
-        if($scope.usuariologado.grupoempresa) return {id: $campos.pos.loginoperadora.idGrupo, 
+        if($scope.usuariologado.grupoempresa) return {id: /*$campos.pos.loginoperadora.idGrupo*/ 107, 
                                         valor: $scope.usuariologado.grupoempresa.id_grupo};
        
         return undefined;
@@ -164,7 +164,7 @@ angular.module("card-services-senhas-invalidas", [])
            
        $webapi.get($apis.getUrl($apis.pos.loginoperadora, 
                                 [$scope.token, 4, 
-                                 $campos.pos.loginoperadora.idGrupo, 0, 
+                                 /*$campos.pos.loginoperadora.idGrupo*/ 107, 0, 
                                  $scope.filtro.itens_pagina, $scope.filtro.pagina],
                                 filtros)) 
             .then(function(dados){           

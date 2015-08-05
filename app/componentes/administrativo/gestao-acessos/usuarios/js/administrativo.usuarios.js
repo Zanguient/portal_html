@@ -11,29 +11,31 @@ angular.module("administrativo-usuarios", [])
 .controller("administrativo-usuariosCtrl", ['$scope',
                                             '$state',
                                             '$filter',
-                                            '$campos',
+                                            /*'$campos',*/
                                             '$webapi',
                                             '$apis', 
-                                            function($scope,$state,$filter,$campos,$webapi,$apis){ 
+                                            function($scope,$state,$filter,/*$campos,*/$webapi,$apis){ 
    
     var divPortletBodyUsuarioPos = 0; // posição da div que vai receber o loading progress
     $scope.paginaInformada = 1; // página digitada pelo usuário
     $scope.usuarios = [];
     $scope.camposBusca = [
                           {
-                            id: $campos.administracao.webpagesusers.ds_email,
+                            id: /*$campos.administracao.webpagesusers.ds_email*/ 102,
                             ativo: true,  
                             nome: "E-mail"
                           },{
-                            id: $campos.administracao.webpagesusers.ds_login,
+                            id: /*$campos.administracao.webpagesusers.ds_login*/ 101,
                             ativo: true,
                             nome: "Login"
                           },{
-                            id: $campos.administracao.webpagesusers.grupo_empresa + ($campos.cliente.grupoempresa.ds_nome - 100), 
+                              id: 301,
+                            //id: $campos.administracao.webpagesusers.grupo_empresa + ($campos.cliente.grupoempresa.ds_nome - 100), 
                             ativo : !$scope.usuariologado.grupoempresa, // é desativado quando o $scope.usuariologado.grupoempresa !== undefined
                             nome: "Empresa"
                           },{
-                            id: $campos.administracao.webpagesusers.empresa + ($campos.cliente.empresa.ds_fantasia - 100), 
+                              id: 404,
+                            //id: $campos.administracao.webpagesusers.empresa + (/*$campos.cliente.empresa.ds_fantasia*/ 104 - 100), 
                             ativo: true,
                             nome: "Filial"
                           },
@@ -43,7 +45,7 @@ angular.module("administrativo-usuarios", [])
     $scope.usuario = {busca:'', campo_busca : $scope.camposBusca[1], 
                       itens_pagina : $scope.itens_pagina[0], pagina : 1,
                       total_registros : 0, faixa_registros : '0-0', total_paginas : 0, 
-                      campo_ordenacao : {id: $campos.administracao.webpagesusers.ds_email, order : 0}};
+                      campo_ordenacao : {id: /*$campos.administracao.webpagesusers.ds_email*/ 102, order : 0}};
     // Permissões                                           
     var permissaoAlteracao = false;
     var permissaoCadastro = false;
@@ -268,7 +270,7 @@ angular.module("administrativo-usuarios", [])
        if($scope.usuario.busca.length > 0) filtros = {id: $scope.usuario.campo_busca.id, valor: $scope.usuario.busca + '%'};        
        // Filtro do grupo empresa => barra administrativa
        if($scope.usuariologado.grupoempresa){
-            var filtroGrupoEmpresa = {id: $campos.administracao.webpagesusers.id_grupo, valor: $scope.usuariologado.grupoempresa.id_grupo};
+            var filtroGrupoEmpresa = {id: /*$campos.administracao.webpagesusers.id_grupo*/ 103, valor: $scope.usuariologado.grupoempresa.id_grupo};
             if(filtros) filtros = [filtros, filtroGrupoEmpresa];
             else filtros = filtroGrupoEmpresa;
        }

@@ -12,11 +12,11 @@ angular.module("card-services-consolidacao-relatorios", [])
                                              '$state',
                                              '$filter',
                                              '$timeout',
-                                             '$campos',
+                                             /*'$campos',*/
                                              '$webapi',
                                              '$apis',
                                              function($scope,$state,$filter,$timeout,
-                                                      $campos,$webapi,$apis){ 
+                                                      /*$campos,*/$webapi,$apis){ 
     
     // Exibição
     $scope.itens_pagina = [10, 20, 50, 100]; 
@@ -24,10 +24,10 @@ angular.module("card-services-consolidacao-relatorios", [])
     // Filtros
     $scope.filiais = $scope.adquirentes = $scope.bandeiras =  $scope.terminais = [];                                         $scope.camposBusca = [
                           {
-                            id: $campos.pos.recebimento.cdAutorizador, 
+                            id: /*$campos.pos.recebimento.cdAutorizador*/ 104, 
                             nome: "Código Autorizador"
                           },{
-                            id: $campos.pos.recebimento.nsu,
+                            id: /*$campos.pos.recebimento.nsu*/ 103,
                             nome: "NSU"
                           }
                          ]; 
@@ -170,13 +170,13 @@ angular.module("card-services-consolidacao-relatorios", [])
 
        // Filtro do grupo empresa => barra administrativa
        if($scope.usuariologado.grupoempresa){ 
-           filtros = [{id: $campos.cliente.empresa.id_grupo, valor: $scope.usuariologado.grupoempresa.id_grupo}];
-           if($scope.usuariologado.empresa) filtros.push({id: $campos.cliente.empresa.nu_cnpj, 
+           filtros = [{id: /*$campos.cliente.empresa.id_grupo*/ 116, valor: $scope.usuariologado.grupoempresa.id_grupo}];
+           if($scope.usuariologado.empresa) filtros.push({id: /*$campos.cliente.empresa.nu_cnpj*/ 100, 
                                                           valor: $scope.usuariologado.empresa.nu_cnpj});
        }
        
        $webapi.get($apis.getUrl($apis.cliente.empresa, 
-                                [$scope.token, 0, $campos.cliente.empresa.ds_fantasia],
+                                [$scope.token, 0, /*$campos.cliente.empresa.ds_fantasia*/ 104],
                                 filtros)) 
             .then(function(dados){
                 $scope.filiais = dados.Registros;
@@ -217,11 +217,12 @@ angular.module("card-services-consolidacao-relatorios", [])
        var filtros = undefined;
 
        // Filtro do grupo empresa => barra administrativa
-       if($scope.filtro.filial !== null) filtros = {id: $campos.pos.operadora.empresa + $campos.cliente.empresa.nu_cnpj - 100, 
+       if($scope.filtro.filial !== null) filtros = {id: 300,
+                                                    //id: $campos.pos.operadora.empresa + $campos.cliente.empresa.nu_cnpj - 100, 
                                                     valor: $scope.filtro.filial.nu_cnpj};
        
        $webapi.get($apis.getUrl($apis.pos.operadora, 
-                                [$scope.token, 0, $campos.pos.operadora.nmOperadora],
+                                [$scope.token, 0, /*$campos.pos.operadora.nmOperadora*/ 101],
                                 filtros)) 
             .then(function(dados){
                 $scope.adquirentes = dados.Registros;
@@ -266,11 +267,11 @@ angular.module("card-services-consolidacao-relatorios", [])
        var filtros = undefined;
 
        // Filtro de adquirente
-       if($scope.filtro.adquirente !== null) filtros = {id: $campos.pos.bandeirapos.idOperadora, 
+       if($scope.filtro.adquirente !== null) filtros = {id: /*$campos.pos.bandeirapos.idOperadora*/ 102, 
                                                         valor: $scope.filtro.adquirente.id};
        
        $webapi.get($apis.getUrl($apis.pos.bandeirapos, 
-                                [$scope.token, 0, $campos.pos.bandeirapos.desBandeira],
+                                [$scope.token, 0, /*$campos.pos.bandeirapos.desBandeira*/ 101],
                                 filtros)) 
             .then(function(dados){
                 $scope.bandeiras = dados.Registros;
@@ -314,11 +315,11 @@ angular.module("card-services-consolidacao-relatorios", [])
        var filtros = undefined;
 
        // Filtro de adquirente
-       if($scope.filtro.adquirente !== null) filtros = {id: $campos.pos.terminallogico.idOperadora, 
+       if($scope.filtro.adquirente !== null) filtros = {id: 102,//$campos.pos.terminallogico.idOperadora, 
                                                         valor: $scope.filtro.adquirente.id};
        
        $webapi.get($apis.getUrl($apis.pos.terminallogico, 
-                                [$scope.token, 2, $campos.pos.terminallogico.dsTerminalLogico],
+                                [$scope.token, 2, 101],//$campos.pos.terminallogico.dsTerminalLogico],
                                 filtros)) 
             .then(function(dados){
                 $scope.terminais = dados.Registros;
@@ -454,7 +455,7 @@ angular.module("card-services-consolidacao-relatorios", [])
     var obtemFiltroDeBusca = function(){
        var filtros = undefined;
        // Data
-       var filtroData = {id: $campos.pos.recebimento.dtaVenda,
+       var filtroData = {id: /*$campos.pos.recebimento.dtaVenda*/ 105,
                          valor: $scope.getFiltroData($scope.filtro.datamin)}; 
        if($scope.filtro.datamax)
            filtroData.valor = filtroData.valor + '|' + $scope.getFiltroData($scope.filtro.datamax);
@@ -462,28 +463,28 @@ angular.module("card-services-consolidacao-relatorios", [])
         
        // Filial
        if($scope.filtro.filial !== null){
-           var filtroFilial = {id: $campos.pos.recebimento.cnpj, 
+           var filtroFilial = {id: /*$campos.pos.recebimento.cnpj*/ 102, 
                                valor: $scope.filtro.filial.nu_cnpj};
            filtros.push(filtroFilial);  
        }
         
        // Adquirente
        if($scope.filtro.adquirente !== null){
-           var filtroAdquirente = {id: $campos.pos.recebimento.operadora + $campos.pos.operadora.id - 100, 
+           var filtroAdquirente = {id: 300,//$campos.pos.recebimento.operadora + $campos.pos.operadora.id - 100, 
                                    valor: $scope.filtro.adquirente.id};
            filtros.push(filtroAdquirente);
        } 
         
        // Bandeira
        if($scope.filtro.bandeira !== null){
-           var filtroBandeira = {id: $campos.pos.recebimento.idBandeira, 
+           var filtroBandeira = {id: /*$campos.pos.recebimento.idBandeira*/ 101, 
                                  valor: $scope.filtro.bandeira.id};
            filtros.push(filtroBandeira);
        }
         
        // Terminal Lógico
        if($scope.filtro.terminallogico !== null){
-           var filtroTerminal = {id: $campos.pos.recebimento.idLogicoTerminal, 
+           var filtroTerminal = {id: /*$campos.pos.recebimento.idLogicoTerminal*/ 110, 
                                  valor: $scope.filtro.terminallogico.idTerminalLogico};
            filtros.push(filtroTerminal);
        }  
@@ -718,7 +719,7 @@ angular.module("card-services-consolidacao-relatorios", [])
        var filtros = obtemFiltroDeBusca();
            
        $webapi.get($apis.getUrl($apis.pos.recebimento, 
-                                [$scope.token, 5, $campos.pos.recebimento.dtaVenda, 0, 
+                                [$scope.token, 5, /*$campos.pos.recebimento.dtaVenda*/ 105, 0, 
                                  $scope.filtro.itens_pagina, $scope.filtro.analitico.pagina],
                                 filtros)) 
             .then(function(dados){

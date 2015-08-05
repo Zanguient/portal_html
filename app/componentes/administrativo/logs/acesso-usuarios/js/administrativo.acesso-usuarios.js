@@ -11,25 +11,27 @@ angular.module("administrativo-acesso-usuarios", [])
 .controller("administrativo-acesso-usuariosCtrl", ['$scope',
                                             '$state',
                                             '$http',
-                                            '$campos',
+                                            /*'$campos',*/
                                             '$webapi',
                                             '$apis',
                                             '$filter', 
-                                            function($scope,$state,$http,$campos,
+                                            function($scope,$state,$http,/*$campos,*/
                                                      $webapi,$apis,$filter){ 
    
     var divPortletBodyLogsPos = 0; // posição da div que vai receber o loading progress
     $scope.paginaInformada = 1; // página digitada pelo privilégio
     $scope.logs = [];
     $scope.camposBusca = [{
-                            id: $campos.administracao.tblogacessousuario.webpagesusers + 
-                                $campos.administracao.webpagesusers.ds_login - 100,
+                            id: 201,
+                            /*id: $campos.administracao.tblogacessousuario.webpagesusers + 
+                                  $campos.administracao.webpagesusers.ds_login - 100,*/
                             ativo: true,  
                             nome: "Login"
                           },
                           {
-                            id: $campos.administracao.tblogacessousuario.webpagescontrollers + 
-                                $campos.administracao.webpagescontrollers.ds_controller - 100,
+                              id: 301,
+                            /*id: $campos.administracao.tblogacessousuario.webpagescontrollers + 
+                                $campos.administracao.webpagescontrollers.ds_controller - 100,*/
                             ativo: true,  
                             nome: "Módulo"
                           }];
@@ -37,7 +39,8 @@ angular.module("administrativo-acesso-usuarios", [])
     $scope.filtro = {busca:'', campo_busca : $scope.camposBusca[0], 
                       itens_pagina : $scope.itens_pagina[0], pagina : 1,
                       total_registros : 0, faixa_registros : '0-0', total_paginas : 0, 
-                      campo_ordenacao : {id: $campos.administracao.tblogacessousuario.dtAcessos, order : 1}};    
+                      campo_ordenacao : {id: 107,//$campos.administracao.tblogacessousuario.dtAcessos, 
+                                         order : 1}};    
     
  
                                                 
@@ -150,8 +153,9 @@ angular.module("administrativo-acesso-usuarios", [])
        if($scope.filtro.busca.length > 0) filtros = {id: $scope.filtro.campo_busca.id, valor: $scope.filtro.busca + '%'};        
        // Filtro do grupo empresa => barra administrativa
        if($scope.usuariologado.grupoempresa){
-            var filtroGrupoEmpresa = {id: $campos.administracao.tblogacessousuario.webpagesusers + 
-                                          $campos.administracao.webpagesusers.id_grupo - 100, 
+            var filtroGrupoEmpresa = {/*id: $campos.administracao.tblogacessousuario.webpagesusers + 
+                                          $campos.administracao.webpagesusers.id_grupo - 100, */
+                                      id: 203,
                                       valor: $scope.usuariologado.grupoempresa.id_grupo};
             if(filtros) filtros = [filtros, filtroGrupoEmpresa];
             else filtros = filtroGrupoEmpresa;

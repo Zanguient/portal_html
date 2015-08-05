@@ -13,11 +13,11 @@ angular.module("administrativo-filiais-cadastro", [])
                                                      '$stateParams',
                                                      '$timeout',
                                                      '$http',
-                                                     '$campos',
+                                                     /*'$campos',*/
                                                      '$webapi',
                                                      '$apis',
                                                      '$filter', 
-                                                     function($scope,$state,$stateParams,$timeout,$http,$campos,
+                                                     function($scope,$state,$stateParams,$timeout,$http,/*$campos,*/
                                                               $webapi,$apis,$filter){ 
     
     var divPortletBodyFilialCadPos = 0; // posição da div que vai receber o loading progress
@@ -196,9 +196,9 @@ angular.module("administrativo-filiais-cadastro", [])
             }
             $scope.validandoCNPJ = true;
             
-            var filtro = [{id:$campos.cliente.empresa.nu_cnpj, valor:$scope.filial.nu_cnpj}];
+            var filtro = [{id:/*$campos.cliente.empresa.nu_cnpj*/ 100, valor:$scope.filial.nu_cnpj}];
             // O CNPJ é validada em relação a toda as filiais de todos os grupos, não só do grupo associado
-            //if($scope.usuariologado.grupoempresa) filtro.push({id:$campos.cliente.empresa.id_grupo, 
+            //if($scope.usuariologado.grupoempresa) filtro.push({id:/*$campos.cliente.empresa.id_grupo*/ 116, 
             //                                     valor:$scope.usuariologado.grupoempresa.id_grupo});
             
 
@@ -248,10 +248,10 @@ angular.module("administrativo-filiais-cadastro", [])
             
             $scope.validandoNomeFantasia = true;
             
-            var filtro = [{id:$campos.cliente.empresa.ds_fantasia, valor:$scope.filial.ds_fantasia}];
+            var filtro = [{id:/*$campos.cliente.empresa.ds_fantasia*/ 104, valor:$scope.filial.ds_fantasia}];
             // Nome fantasia é validadao apenas no domínio do grupo associado
             // Isto é, podem existir nomes fantasia iguais, porém de filiais associadas a grupos distintos
-            if($scope.usuariologado.grupoempresa) filtro.push({id:$campos.cliente.empresa.id_grupo, 
+            if($scope.usuariologado.grupoempresa) filtro.push({id:/*$campos.cliente.empresa.id_grupo*/ 116, 
                                                  valor:$scope.usuariologado.grupoempresa.id_grupo});
                 
             $webapi.get($apis.getUrl($apis.cliente.empresa, [$scope.token, 0], filtro))

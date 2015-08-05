@@ -7,7 +7,7 @@
 
 angular.module('webapi', ['utils'])
 
-// CONSTANTES
+/* CONSTANTES
 .factory('$campos', [function(){
    return{
       administracao : {
@@ -42,7 +42,7 @@ angular.module('webapi', ['utils'])
             fl_menu: 103, // se true, aparece como MENU raiz
             id_subController: 104, // se for filho de alguém, setar o ID dele aqui (FK)
             // Relacionamentos
-            RoleId : 200
+            webpagesroles : 200
         },
         webpagesmembership : {
             UserId : 100,
@@ -55,7 +55,7 @@ angular.module('webapi', ['utils'])
             fl_menu : 103,
             id_controller : 104
         },
-        webpagespermissions : {
+        /*webpagespermissions : {
             id_roles : 100,
             id_method : 101,
             fl_principal : 102,
@@ -196,7 +196,7 @@ angular.module('webapi', ['utils'])
         }
       }
    }
-}])
+}])*/
 
 
 .factory('$apis', ['$autenticacao', function($autenticacao){

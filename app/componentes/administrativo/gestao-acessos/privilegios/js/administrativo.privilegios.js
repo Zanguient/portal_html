@@ -11,23 +11,23 @@ angular.module("administrativo-privilegios", [])
 .controller("administrativo-privilegiosCtrl", ['$scope',   
                                             '$state',
                                             '$http',
-                                            '$campos',
+                                            /*'$campos',*/
                                             '$webapi',
                                             '$apis',
                                             '$filter', 
-                                            function($scope,$state,$http,$campos,
+                                            function($scope,$state,$http,/*$campos,*/
                                                      $webapi,$apis,$filter){ 
    
     var divPortletBodyPrivilegioPos = 0; // posição da div que vai receber o loading progress
     $scope.paginaInformada = 1; // página digitada pelo privilégio
     $scope.privilegios = [];
     $scope.camposBusca = [{
-                            id: $campos.administracao.webpagesroles.RoleName,
+                            id: /*$campos.administracao.webpagesroles.RoleName*/ 101,
                             ativo: true,  
                             nome: "Privilégio"
                           },
                           {
-                            id: $campos.administracao.webpagesroles.RoleLevel,
+                            id: /*$campos.administracao.webpagesroles.RoleLevel*/ 103,
                             ativo: true,  
                             nome: "Nível"
                           }];
@@ -35,7 +35,7 @@ angular.module("administrativo-privilegios", [])
     $scope.privilegio = {busca:'', campo_busca : $scope.camposBusca[1], 
                       itens_pagina : $scope.itens_pagina[0], pagina : 1,
                       total_registros : 0, faixa_registros : '0-0', total_paginas : 0, 
-                      campo_ordenacao : {id: $campos.administracao.webpagesroles.RoleLevel, order : 0}};    
+                      campo_ordenacao : {id: /*$campos.administracao.webpagesroles.RoleLevel*/ 103, order : 0}};    
     
     $scope.roleSelecionada = undefined; 
     var controllerPrincipal = undefined;
@@ -247,7 +247,7 @@ angular.module("administrativo-privilegios", [])
     var obtemLevels = function(funcao){
         $scope.showProgress(divPortletBodyPrivilegioPos);
         $webapi.get($apis.getUrl($apis.administracao.webpagesrolelevels, 
-                                 [$scope.token, 0,$campos.administracao.webpagesrolelevels.LevelId])) 
+                                 [$scope.token, 0,100]))//$campos.administracao.webpagesrolelevels.LevelId])) 
             .then(function(dados){
                 $scope.levels = dados.Registros;
                 if(typeof funcao === 'function') funcao();
@@ -302,7 +302,7 @@ angular.module("administrativo-privilegios", [])
         $scope.showProgress();
         $webapi.get($apis.getUrl($apis.administracao.webpagesroles, 
                                  [$scope.token], 
-                                 {id: $campos.administracao.webpagesroles.RoleName,
+                                 {id: /*$campos.administracao.webpagesroles.RoleName*/ 101,
                                   valor: $scope.inputCadastro.nome})) 
             .then(function(dados){
                 if(dados.Registros.length > 0){
@@ -405,7 +405,7 @@ angular.module("administrativo-privilegios", [])
             $scope.showProgress();
             $webapi.get($apis.getUrl($apis.administracao.webpagesroles, 
                                      [$scope.token], 
-                                     {id: $campos.administracao.webpagesroles.RoleName,
+                                     {id: /*$campos.administracao.webpagesroles.RoleName*/ 101,
                                       valor: $scope.inputCadastro.nome})) 
                 .then(function(dados){
                     if(dados.Registros.length > 0){
@@ -631,9 +631,12 @@ angular.module("administrativo-privilegios", [])
     var obtemModulosEFuncionalidades = function(){
        //$scope.obtendoModulosEFuncionalidades = true;
        $scope.showProgress();
-       $webapi.get($apis.getUrl($apis.administracao.webpagescontrollers, [$scope.token, 3,       
-                                                             $campos.administracao.webpagescontrollers.ds_controller], 
-                   {id : $campos.administracao.webpagescontrollers.RoleId, valor: $scope.roleSelecionada.RoleId})) 
+       $webapi.get($apis.getUrl($apis.administracao.webpagescontrollers, [$scope.token, 3, 101],      
+                                                             //$campos.administracao.webpagescontrollers.ds_controller], 
+                   {/*id : $campos.administracao.webpagescontrollers.webpagesroles + 
+                           $campos.administracao.webpagesroles.RoleId - 100, */
+                    id : 200,
+                    valor: $scope.roleSelecionada.RoleId})) 
             .then(function(dados){
                 $scope.controllers = dados.Registros;
                 // Reseta valores

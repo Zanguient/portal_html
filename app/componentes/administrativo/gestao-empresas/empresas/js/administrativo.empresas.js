@@ -11,10 +11,10 @@ angular.module("administrativo-empresas", [])
 .controller("administrativo-empresasCtrl", ['$scope',
                                             '$state',
                                             '$filter',
-                                            '$campos',
+                                            /*'$campos',*/
                                             '$webapi',
                                             '$apis', 
-                                            function($scope,$state,$filter,$campos,$webapi,$apis){ 
+                                            function($scope,$state,$filter,/*$campos,*/$webapi,$apis){ 
 
     var divPortletBodyEmpresaPos = 0; // posição da div que vai receber o loading progress
     $scope.paginaInformada = 1; // página digitada pelo usuário
@@ -155,11 +155,11 @@ angular.module("administrativo-empresas", [])
        var filtros = undefined;
        
        // Verifica se tem algum valor para ser filtrado    
-       if($scope.empresa.busca.length > 0) filtros = {id: $campos.cliente.grupoempresa.ds_nome, 
+       if($scope.empresa.busca.length > 0) filtros = {id: /*$campos.cliente.grupoempresa.ds_nome*/ 101, 
                                                       valor: $scope.empresa.busca + '%'};        
         
        $webapi.get($apis.getUrl($apis.cliente.grupoempresa, 
-                                [$scope.token, 3, $campos.cliente.grupoempresa.ds_nome, 0, 
+                                [$scope.token, 3, /*$campos.cliente.grupoempresa.ds_nome*/ 101, 0, 
                                  $scope.empresa.itens_pagina, $scope.empresa.pagina],
                                 filtros)) 
             .then(function(dados){
@@ -290,7 +290,7 @@ angular.module("administrativo-empresas", [])
             alteraGrupoEmpresa(jsonEmpresa);
         }else{
             // Busca no servidor
-            var filtros = {id: $campos.cliente.grupoempresa.ds_nome, 
+            var filtros = {id: /*$campos.cliente.grupoempresa.ds_nome*/ 101, 
                           valor: $scope.modalEmpresa.nome};        
 
             $webapi.get($apis.getUrl($apis.cliente.grupoempresa, [$scope.token, 0], filtros)) 
