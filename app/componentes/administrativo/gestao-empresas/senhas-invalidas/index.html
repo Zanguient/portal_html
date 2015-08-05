@@ -7,141 +7,24 @@
  */
 -->
 
-<div class="container" ng-controller="card-services-dados-acessoCtrl" ng-init="cardServices_dadosAcessoInit()">    
+<div class="container" ng-controller="administrativo-senhas-invalidasCtrl" ng-init="administrativo_senhasInvalidasInit()">    
     <!-- BEGIN PAGE BREADCRUMB -->
     <ul class="page-breadcrumb breadcrumb">
         <li>
             <a href="javascript:;" ng-click="goHome()">Início</a><i class="fa fa-circle"></i>
         </li>
         <li class="active">
-             Card Services<i class="fa fa-caret-right"></i>
-             Consolidação<i class="fa fa-caret-right"></i>
-             Dados de Acesso
+             Administrativo<i class="fa fa-caret-right"></i>
+             Gestão de Empresas<i class="fa fa-caret-right"></i>
+             Senhas Inválidas
         </li>
     </ul>
     <!-- END PAGE BREADCRUMB -->
     <div class="row">
         <div class="col-md-12">
             <!-- BEGIN TABLE PORTLET-->
-            <div class="portlet light">
-				 
-                <div class="portlet-title">
-                    <div class="caption">								
-                        <span class="caption-subject font-green-sharp bold uppercase">Filtros</span>						
-                    </div>                    
-                </div>
-                <div class="portlet-body">
-                    <div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">
-                        <div class="row">                       
-                            <div class="col-md-8 col-sm-12">
-                                <div class="dataTables_paginate paging_bootstrap_extended" id="datatable_ajax_paginate">
-                                </div>
-                                <div class="dataTables_info" id="datatable_ajax_info" role="status" aria-live="polite">
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-sm-12">
-                                <div class="table-group-actions pull-right">
-                                    <span> </span>
-                                </div>
-                            </div>
-                        </div>
-                        <!--div class="table-scrollable"-->
-                        <div class="table-scrollable">
-                            <table class="table table-striped table-bordered table-hover dataTable no-footer conteudoTabelas" id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
-                                <thead>
-                                    <tr role="row" class="heading">
-                                        <th width="10%" tabindex="0" rowspan="1" colspan="1">
-                                             Filiais 
-                                        </th>
-                                        <th width="8%" tabindex="1" rowspan="1" colspan="1">
-                                             Adquirentes
-                                        </th>
-                                        <th width="8%" tabindex="2" rowspan="1" colspan="1">
-                                             Status da senha
-                                        </th>
-                                        <th width="2%" tabindex="3" rowspan="1" colspan="1">
-                                             Opções
-                                        </th>
-                                    </tr>
-                                    <tr role="row" class="filter">   
-                                        <!-- FILIAIS -->
-                                        <td rowspan="1" colspan="1" style="text-align: center">
-                                            <select class="form-control form-filter input-sm filtros"
-                                                    ng-disabled="filiais.length == 0"
-                                                    ng-model="filtro.filial"
-                                                    ng-change="alterouFilial()"
-                                                    ng-options="filial as (filial.ds_fantasia | uppercase) for filial in filiais">
-                                                <!--option value="">Todas</option-->
-                                            </select>
-                                            <i class="fa fa-question-circle"
-                                               ng-show="!usuariologado.grupoempresa"
-                                               popover-placement="bottom"
-                                               popover="É necessário selecionar uma empresa"
-                                               popover-trigger="mouseenter"></i>
-                                        </td>
-                                        <!-- ADQUIRENTES -->
-                                        <td rowspan="1" colspan="1" style="text-align: center">
-                                            <select class="form-control form-filter input-sm filtros"
-                                                    ng-disabled="filtro.filial === null"
-                                                    ng-model="filtro.adquirente"
-                                                    ng-change="alterouAdquirente()"
-                                                    ng-options="adquirente as (adquirente.nmOperadora | uppercase) for adquirente in adquirentes">
-                                                <option value="">TODAS</option>
-                                            </select>
-                                            <i class="fa fa-question-circle"
-                                               ng-show="!usuariologado.grupoempresa"
-                                               popover-placement="bottom"
-                                               popover="É necessário selecionar uma empresa"
-                                               popover-trigger="mouseenter"></i>
-                                        </td>
-                                        <!-- STATUS -->
-                                        <td rowspan="1" colspan="1">
-                                            <select class="form-control form-filter input-sm"
-                                                    ng-model="filtro.status"
-                                                    ng-change="alterouStatus()"
-                                                    ng-options="status as (status.nome | uppercase) for status in statusSenha">
-                                                <option value="">TODAS</option>
-                                            </select>
-                                        </td>
-                                        <!--BUSCAR E LIMPAR-->
-                                        <td rowspan="1" colspan="1">
-                                            <div class="margin-bottom-5">
-                                                <button class="btn btn-sm red filter-submit margin-bottom" 
-                                                        ng-click="buscaDadosAcesso()">
-                                                    <i class="fa fa-search"></i> Buscar
-                                                </button>
-                                            </div>
-                                            <button class="btn btn-sm grey filter-cancel"
-                                                    ng-click="limpaFiltros()">
-                                                <i class="fa fa-times"></i> 
-                                                Limpar
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </thead>
-                            </table>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-8 col-sm-12">
-                                <div class="dataTables_paginate paging_bootstrap_extended">
-                                </div>
-                                <div class="dataTables_info">
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-sm-12">
-                            </div>
-                        </div>
-                    </div>
-                </div>    		
-            </div>
-            <!-- END TABLE PORTLET-->
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <!-- BEGIN TABLE PORTLET-->
             <div class="portlet light">                
-                <!-- TOPO : Nome 'Usuários' e botões de 'Opções' e FullScreen -->
+                <!-- TOPO : Nome 'Informações' e botões de 'Opções' e FullScreen -->
                 <div class="portlet-title">
                     <div class="caption">
                         <!--i class="fa fa-cogs font-green-sharp"></i-->
@@ -181,20 +64,6 @@
                     </div>
                 </div>                
                 <div class="portlet-body">  
-                    <!-- TOPO DA TABELA COM BOTÃO 'Novo Usuário' -->
-                    <div class="table-toolbar">
-                        <div class="row">
-                            <div class="col-md-5" style="margin-left:20px">
-                                <div class="btn-group">
-                                    <a href="javascript:;" ng-click="novoDadoDeAcesso()"
-                                       ng-class="{'element-hidden' : !usuarioPodeCadastrarDadosAcesso()}">
-                                        <button class="btn red">
-                                        Novo <i class="fa fa-plus"></i>
-                                    </button></a>
-                                </div>
-                            </div>                            
-                        </div>
-                    </div>
                     <!-- TABELA -->
                     <div class="dataTables_wrapper no-footer">
                         <!-- EXIBIÇÃO E PESQUISA -->
@@ -250,25 +119,35 @@
                                                 <tr role="row">
                                                     <th tabindex="0" 
                                                         rowspan="1" colspan="1" 
+                                                        style="width: 250px; text-align:center">
+                                                        Empresa
+                                                    </th>
+                                                    <th tabindex="1" 
+                                                        rowspan="1" colspan="1" 
+                                                        style="width: 250px; text-align:center">
+                                                        Filial
+                                                    </th>
+                                                    <th tabindex="2" 
+                                                        rowspan="1" colspan="1" 
                                                         style="width: 188px; text-align:center">
                                                         Adquirente
                                                     </th>
-                                                    <th tabindex="1" 
+                                                    <th tabindex="3" 
                                                         rowspan="1" colspan="1" 
                                                         style="width: 237px;">
                                                         Login
                                                     </th>
-                                                    <th tabindex="2" 
+                                                    <th tabindex="4" 
                                                         rowspan="1" colspan="1" 
                                                         style="width: 237px;">
                                                         Estabelecimento
                                                     </th>
-                                                    <th tabindex="3" 
+                                                    <th tabindex="5" 
                                                         rowspan="1" colspan="1" 
                                                         style="width: 128px;">
                                                         Senha
                                                     </th>
-                                                    <th tabindex="4" 
+                                                    <th tabindex="6" 
                                                         rowspan="1" colspan="1" 
                                                         style="width: 163px;">
                                                         Ações
@@ -276,54 +155,17 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr role="row" class="odd" ng-show="exibePrimeiraLinha">
-                                                    <!-- ADQUIRENTE -->
-                                                    <td>
-                                                         <select class="form-control form-filter input-sm"
-                                                                ng-model="cadastro.adquirente"
-                                                                ng-change="alterouAdquirenteCadastro()"
-                                                                ng-options="adquirente as (adquirente.descricao | uppercase) for adquirente in adquirentescadastro">
-                                                            <option value=""></option>
-                                                        </select>
-                                                    </td>
-                                                    <!-- LOGIN -->
-                                                    <td>
-                                                         <input type="text" 
-                                                                class="form-control" 
-                                                                placeholder="Login"
-                                                                ng-model="cadastro.login">
-                                                    </td>
-                                                    <!-- ESTABELECIMENTO -->
-                                                    <td style="text-align:center">
-                                                         <input type="text" 
-                                                                class="form-control" 
-                                                                placeholder="Estabelecimento"
-                                                                ng-model="cadastro.estabelecimento">
-                                                    </td>
-                                                    <!-- SENHA -->
-                                                    <td style="text-align:center">
-                                                         <input type="text" class="form-control" 
-                                                                placeholder="Senha"
-                                                                ng-model="cadastro.senha">
-                                                    </td>
-                                                    <!-- BOTÕES-->
-                                                    <td class="center btnacoes">
-                                                        <button class="btn btn-primary"
-                                                                ng-click="salvarDadosAcesso()">
-                                                            Salvar
-                                                        </button>
-                                                        <button class="btn btn-default"
-                                                                ng-click="cancelar()">
-                                                            Cancelar
-                                                        </button>
-                                                    </td> 
-                                                    <!--FIM BOTÃO-->
-                                                </tr> 
                                                 <!-- DADOS DE ACESSO -->
                                                 <tr role="row" class="odd"
                                                     ng-repeat="dadoacesso in dadosAcesso">
                                                     <td>
-                                                         {{dadoacesso.operadora.desOperadora | uppercase}}
+                                                         {{dadoacesso.grupoempresa | uppercase}}
+                                                    </td>
+                                                    <td>
+                                                         {{dadoacesso.empresa | uppercase}}
+                                                    </td>
+                                                    <td style="text-align:center">
+                                                         {{dadoacesso.operadora | uppercase}}
                                                     </td>
                                                     <td style="text-align:center">
                                                          <span ng-hide="alterando && alteracao.id === dadoacesso.id">

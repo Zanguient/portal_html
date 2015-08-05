@@ -6,9 +6,9 @@
  */
 
 // App
-angular.module("card-services-dados-acesso", []) 
+angular.module("administrativo-dados-acesso", []) 
 
-.controller("card-services-dados-acessoCtrl", ['$scope',
+.controller("administrativo-dados-acessoCtrl", ['$scope',
                                              '$state',
                                              '$filter',
                                              '$timeout',
@@ -50,9 +50,9 @@ angular.module("card-services-dados-acesso", [])
                                                  
     
     // Inicialização do controller
-    $scope.cardServices_dadosAcessoInit = function(){
+    $scope.administrativo_dadosAcessoInit = function(){
         // Título da página 
-        $scope.pagina.titulo = 'Card Services';                          
+        $scope.pagina.titulo = 'Administrativo';                          
         $scope.pagina.subtitulo = 'Dados de Acesso';
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state, params){

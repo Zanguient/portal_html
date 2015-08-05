@@ -6,9 +6,9 @@
  */
 
 // App
-angular.module("card-services-senhas-invalidas", []) 
+angular.module("administrativo-senhas-invalidas", []) 
 
-.controller("card-services-senhas-invalidasCtrl", ['$scope',
+.controller("administrativo-senhas-invalidasCtrl", ['$scope',
                                              '$state',
                                              '$filter',
                                              '$timeout',
@@ -49,9 +49,9 @@ angular.module("card-services-senhas-invalidas", [])
                                                  
     
     // Inicialização do controller
-    $scope.cardServices_senhasInvalidasInit = function(){
+    $scope.administrativo_senhasInvalidasInit = function(){
         // Título da página 
-        $scope.pagina.titulo = 'Card Services';                          
+        $scope.pagina.titulo = 'Administrativo';                          
         $scope.pagina.subtitulo = 'Senhas inválidas';
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state, params){
