@@ -24,6 +24,7 @@ angular.module("administrativo-filiais", [])
     $scope.filial = {busca:'', itens_pagina : $scope.itens_pagina[0], pagina : 1,
                      total_registros : 0, faixa_registros : '0-0', total_paginas : 0
                      };   
+    $scope.filialSelecionada = undefined;
     // Permissões                                           
     var permissaoAlteracao = false;
     var permissaoCadastro = false;
@@ -280,6 +281,13 @@ angular.module("administrativo-filiais", [])
                      // Hide progress
                      $scope.hideProgress(divPortletBodyFilialPos);
                   });    
+    };          
+    /**
+      * Exibe o modal que exibe todas as informações da filial
+      */
+    $scope.verDetalhes = function(filial){
+        $scope.filialSelecionada = filial;
+        $('#modalFilial').modal('show');    
     };                                           
                                                
 }]);

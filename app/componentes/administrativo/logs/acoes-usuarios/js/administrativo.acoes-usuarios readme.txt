@@ -43,7 +43,7 @@ Não é necessário nenhum outro módulo externo.
 				dsAplicacao : string,
 				codResposta : int,
 				msgErro : string,
-				dsJson = string,
+				dsJson : string,
 			 }
  
    
