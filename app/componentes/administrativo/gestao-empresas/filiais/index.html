@@ -25,6 +25,185 @@
         <div class="col-md-12">
             <!-- BEGIN TABLE PORTLET-->
             <div class="portlet light">
+                
+                <!-- MODAL FILIAL -->
+                <div class="modal fade ng-scope" id="modalFilial" tabindex="-1" 
+                     aria-hidden="true" style="display: none;">
+                    <div class="modal-dialog" style="width: 650px">
+                        <div class="modal-content">
+                            <div class="modal-header">                    
+                                <h4 class="modal-title modal-cabecalho">Detalhes da filial</h4>
+                            </div>
+                            <!-- BODY -->
+                            <div class="modal-body height-auto" style="width: 100%">
+                                <!-- EMPRESA -->
+                                <div class="row">
+                                    <div class="col-sm-4" style="margin-bottom:10px" >
+                                        <label style="font-weight: bolder">Empresa:</label>
+                                    </div>
+                                    <div class="col-sm-8" style="margin-bottom:10px" >
+                                        <label>{{(usuariologado.grupoempresa.ds_nome | uppercase) || ''}}</label>
+                                    </div>
+                                </div> 
+                                <!-- NOME FANTASIA -->
+                                <div class="row">
+                                    <div class="col-sm-4" style="margin-bottom:10px" >
+                                        <label style="font-weight: bolder">Nome Fantasia:</label>
+                                    </div>
+                                    <div class="col-sm-8" style="margin-bottom:10px" >
+                                        <label>{{filialSelecionada.ds_fantasia | uppercase}}</label>
+                                    </div>
+                                </div>
+                                <!-- CNPJ -->
+                                <div class="row">
+                                    <div class="col-sm-4" style="margin-bottom:10px" >
+                                        <label style="font-weight: bolder">CNPJ:</label>
+                                    </div>
+                                    <div class="col-sm-8" style="margin-bottom:10px" >
+                                        <label>{{filialSelecionada.nu_cnpj}}</label>
+                                    </div>
+                                </div>
+                                <!-- RAZÃO SOCIAL -->
+                                <div class="row">
+                                    <div class="col-sm-4" style="margin-bottom:10px" >
+                                        <label style="font-weight: bolder">Razão Social:</label>
+                                    </div>
+                                    <div class="col-sm-8" style="margin-bottom:10px" >
+                                        <label>{{(filialSelecionada.ds_razaoSocial | uppercase) || ''}}</label>
+                                    </div>
+                                </div>
+                                <!-- FILIAL -->
+                                <div class="row">
+                                    <div class="col-sm-4" style="margin-bottom:10px" >
+                                        <label style="font-weight: bolder">Filial:</label>
+                                    </div>
+                                    <div class="col-sm-8" style="margin-bottom:10px" >
+                                        <label>{{(filialSelecionada.filial | uppercase) || ''}}</label>
+                                    </div>
+                                </div> 
+                                <!-- INSCRIÇÃO ESTADUAL -->
+                                <div class="row">
+                                    <div class="col-sm-4" style="margin-bottom:10px" >
+                                        <label style="font-weight: bolder">Inscrição Estadual:</label>
+                                    </div>
+                                    <div class="col-sm-8" style="margin-bottom:10px" >
+                                        <label>{{filialSelecionada.nu_inscEstadual || ''}}</label>
+                                    </div>
+                                </div> 
+                                
+                                <!-- CONTATO -->
+                                <!-- E-MAIL -->
+                                <div class="row">
+                                    <div class="col-sm-4" style="margin-bottom:10px" >
+                                        <label style="font-weight: bolder">E-mail:</label>
+                                    </div>
+                                    <div class="col-sm-8" style="margin-bottom:10px" >
+                                        <label>{{filialSelecionada.ds_email | lowercase}}</label>
+                                    </div>
+                                </div> 
+                                <!-- TELEFONE -->
+                                <div class="row">
+                                    <div class="col-sm-4" style="margin-bottom:10px" >
+                                        <label style="font-weight: bolder">Telefone:</label>
+                                    </div>
+                                    <div class="col-sm-8" style="margin-bottom:10px" >
+                                        <label>{{filialSelecionada.nu_telefone || ''}}</label>
+                                    </div>
+                                </div> 
+                                
+                                <!-- CONTROLE -->
+                                <!-- DATA DE CADASTRO -->
+                                <div class="row">
+                                    <div class="col-sm-4" style="margin-bottom:10px" >
+                                        <label style="font-weight: bolder">Data de Cadastro:</label>
+                                    </div>
+                                    <div class="col-sm-8" style="margin-bottom:10px" >
+                                        <label ng-bind="getDataString(filialSelecionada.dt_cadastro)"></label>
+                                    </div>
+                                </div> 
+                                <!-- ÚLTIMO ACESSO -->
+                                <div class="row">
+                                    <div class="col-sm-4" style="margin-bottom:10px" >
+                                        <label style="font-weight: bolder">Último Acesso:</label>
+                                    </div>
+                                    <div class="col-sm-8" style="margin-bottom:10px" >
+                                        <label ng-bind="getDataString(filialSelecionada.dt_ultimoAcesso) !== '01/01/0001' ? getDataTimeString(filialSelecionada.dt_ultimoAcesso) : '-'"></label>
+                                    </div>
+                                </div> 
+                                <!-- STATUS -->
+                                <div class="row">
+                                    <div class="col-sm-4" style="margin-bottom:10px" >
+                                        <label style="font-weight: bolder">Status:</label>
+                                    </div>
+                                    <div class="col-sm-8" style="margin-bottom:10px" >
+                                        <label ng-bind="filialSelecionada.fl_ativo ? 'ATIVO' : 'INATIVO'"></label>
+                                    </div>
+                                </div> 
+                                
+                                <!-- ENDEREÇO -->
+                                <!-- LOGRADOURO -->
+                                <div class="row">
+                                    <div class="col-sm-4" style="margin-bottom:10px" >
+                                        <label style="font-weight: bolder">Logradouro:</label>
+                                    </div>
+                                    <div class="col-sm-8" style="margin-bottom:10px" >
+                                        <label>{{(filialSelecionada.ds_endereco | uppercase) || ''}}</label>
+                                    </div>
+                                </div> 
+                                <!-- BAIRRO -->
+                                <div class="row">
+                                    <div class="col-sm-4" style="margin-bottom:10px" >
+                                        <label style="font-weight: bolder">Bairro:</label>
+                                    </div>
+                                    <div class="col-sm-8" style="margin-bottom:10px" >
+                                        <label>{{(filialSelecionada.ds_bairro | uppercase) || ''}}</label>
+                                    </div>
+                                </div>
+                                <!-- CIDADE -->
+                                <div class="row">
+                                    <div class="col-sm-4" style="margin-bottom:10px" >
+                                        <label style="font-weight: bolder">Cidade:</label>
+                                    </div>
+                                    <div class="col-sm-8" style="margin-bottom:10px" >
+                                        <label>{{(filialSelecionada.ds_cidade | uppercase) || ''}}</label>
+                                    </div>
+                                </div> 
+                                <!-- ESTADO -->
+                                <div class="row">
+                                    <div class="col-sm-4" style="margin-bottom:10px" >
+                                        <label style="font-weight: bolder">Estado:</label>
+                                    </div>
+                                    <div class="col-sm-8" style="margin-bottom:10px" >
+                                        <label>{{(filialSelecionada.sg_uf | uppercase) || ''}}</label>
+                                    </div>
+                                </div> 
+                                <!-- CEP -->
+                                <div class="row">
+                                    <div class="col-sm-4" style="margin-bottom:10px" >
+                                        <label style="font-weight: bolder">CEP:</label>
+                                    </div>
+                                    <div class="col-sm-8" style="margin-bottom:10px" >
+                                        <label>{{filialSelecionada.nu_cep || ''}}</label>
+                                    </div>
+                                </div> 
+                                
+                                <!-- BOTÕES -->
+                                <div class="modal-footer" style="text-align:center">
+                                    <div class="col-md-6">
+                                        <button type="button" 
+                                                data-dismiss="modal"
+                                                class="btn default">
+                                            Fechar
+                                        </button> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>              
+                <!-- END MODAL FILIAL -->
+                
+                
                 <div class="portlet-title">
                     <div class="caption">                        
                         <span class="caption-subject font-green-sharp bold uppercase">Filiais</span>
@@ -195,8 +374,7 @@
                                               ng-bind="filial.fl_ativo ? 'Ativo' : 'Inativo'"></span>
                                     </td>
                                     <td style="text-align:center">
-                                       <div class="btn-group" dropdown dropdown-append-to-body
-                                            ng-show="usuarioPodeDesativarFiliais() || usuarioPodeAlterarFiliais() || usuarioPodeExcluirFiliais()">
+                                       <div class="btn-group" dropdown dropdown-append-to-body>
                                             <a class="btn btn-default btn-circle" 
                                                href="javascript:;" dropdown-toggle>
                                                 <i class="fa fa-pencil"></i> 
@@ -216,6 +394,9 @@
                                                 <li ng-show="usuarioPodeExcluirFiliais()">
                                                     <a href="javascript:;" ng-click="excluirFilial(filial)">Excluir</a>
                                                 </li> 
+                                                <li>
+                                                    <a href="javascript:;" ng-click="verDetalhes(filial)">Ver Detalhes</a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </td>

@@ -53,6 +53,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				  ds_bairro: string (ou null),
 				  ds_email: string,
 				  dt_cadastro: date,
+				  dt_ultimoAcesso : datetime,
 				  fl_ativo: boolean,
 				  id_grupo: int,
 				  filial: string,

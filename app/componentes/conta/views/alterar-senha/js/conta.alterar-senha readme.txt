@@ -31,7 +31,7 @@ Não é necessário nenhum outro módulo externo.
      - PUT  : altera a senha 
 	          { userId : -1,  // => indica que é o usuário logado
 			    senhaAtual: string,
-			    novaSenha : '' } // password vazio => redefinir senha para a padrão
+			    novaSenha : string } // password vazio => redefinir senha para a padrão
  
    
    
