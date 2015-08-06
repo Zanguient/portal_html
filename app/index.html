@@ -198,32 +198,27 @@
 			</div>
 			<!-- END PAGE TITLE --> 
             
-            <!-- TESTE-->
-            <div class="page-toolbar">
+            <!-- TESTE -->
+            <!-- BEGIN PAGE TOOLBAR : Busca de grupo empresa para administrar -->
+			<div class="page-toolbar">
 				<!-- BEGIN THEME PANEL -->
-				<div class="btn-theme-panel">
-                    <div class="row" style="margin-top:-15px;">
-                        <div class="col-sm-9" style="width:80%; text-align:right;">
-                            <label>
-                                <strong>
-                                    {{(usuariologado.grupoempresa.ds_nome | uppercase) || ''}}
-                                </strong>
-                            </label>   
-                            <label style="margin-bottom:10px">
-                                <strong>
-                                    {{(usuariologado.empresa.ds_fantasia | uppercase) || ''}}
-                                </strong>
-                            </label>  
-                        </div>    
-                        <div class="col-sm-1">
+				<div class="btn-group btn-theme-panel"> 
+                    <div class="row">
+                        <div class="col-sm-10">                            
+                            <strong>
+                                {{(usuariologado.grupoempresa.ds_nome | uppercase) || ''}}
+                            </strong><br>
+                            <strong>
+                                {{(usuariologado.empresa.ds_fantasia | uppercase) || ''}}
+                            </strong>
+                        </div>
+                        <div class="col-sm-2"> 
                             <img ng-src="../img/loading-atos.gif" ng-show="carregandoGrupoEmpresas"/>
                             <a class="btn" href="javascript:;" 
                                ng-click="limpaGrupoEmpresa()"
                                ng-show="PERMISSAO_FILTRO_EMPRESA && PERMISSAO_ADMINISTRATIVO && usuariologado.grupoempresa">
                                 <i class="fa fa-times-circle"></i>
                             </a>
-                        </div>
-                        <div class="col-sm-1" style="margin-right:-40px; margin-top:-5px">
                             <a href="javascript:;" class="btn dropdown-toggle" 
                                data-toggle="dropdown"
                                ng-show="PERMISSAO_FILTRO_EMPRESA && PERMISSAO_ADMINISTRATIVO && !usuariologado.grupoempresa">
@@ -256,9 +251,10 @@
                                 </form>
                             </div>    
                         </div>    
-                    </div>                      
+                    </div>                    
                 </div>
             </div>
+            
 			<!-- BEGIN PAGE TOOLBAR : Busca de grupo empresa para administrar -->
 			<!-- div class="page-toolbar">
 				<!-- BEGIN THEME PANEL -- >
