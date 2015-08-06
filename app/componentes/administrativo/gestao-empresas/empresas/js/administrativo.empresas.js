@@ -18,10 +18,10 @@ angular.module("administrativo-empresas", [])
 
     var divPortletBodyEmpresaPos = 0; // posição da div que vai receber o loading progress
     $scope.paginaInformada = 1; // página digitada pelo usuário
-    $scope.empresas = [];
+    $scope.gruposempresas = [];
     $scope.itens_pagina = [10, 20, 50, 100];
     $scope.busca = ''; // model do input de busca                                            
-    $scope.empresa = {busca:'', itens_pagina : $scope.itens_pagina[0], pagina : 1,
+    $scope.grupoempresa = {busca:'', itens_pagina : $scope.itens_pagina[0], pagina : 1,
                       total_registros : 0, faixa_registros : '0-0', total_paginas : 0
                      };                                            
                                                 
@@ -100,8 +100,8 @@ angular.module("administrativo-empresas", [])
       * Altera efetivamente a página exibida
       */                                            
     var setPagina = function(pagina){
-       if(pagina >= 1 && pagina <= $scope.empresa.total_paginas){ 
-           $scope.empresa.pagina = pagina;
+       if(pagina >= 1 && pagina <= $scope.grupoempresa.total_paginas){ 
+           $scope.grupoempresa.pagina = pagina;
            $scope.buscaEmpresas(); 
        }
        $scope.atualizaPaginaDigitada();    
@@ -110,13 +110,13 @@ angular.module("administrativo-empresas", [])
       * Vai para a página anterior
       */
     $scope.retrocedePagina = function(){
-        setPagina($scope.empresa.pagina - 1); 
+        setPagina($scope.grupoempresa.pagina - 1); 
     };
     /**
       * Vai para a página seguinte
       */                                            
     $scope.avancaPagina = function(){
-        setPagina($scope.empresa.pagina + 1); 
+        setPagina($scope.grupoempresa.pagina + 1); 
     };
     /**
       * Foi informada pelo usuário uma página para ser exibida
@@ -129,7 +129,7 @@ angular.module("administrativo-empresas", [])
       * Sincroniza a página digitada com a que efetivamente está sendo exibida
       */                                            
     $scope.atualizaPaginaDigitada = function(){
-        $scope.paginaInformada = $scope.empresa.pagina; 
+        $scope.paginaInformada = $scope.grupoempresa.pagina; 
     };                                             
     /**
       * Notifica que o total de itens por página foi alterado
@@ -145,7 +145,7 @@ angular.module("administrativo-empresas", [])
         $scope.filtraEmpresas();
     };
     $scope.filtraEmpresas = function(){
-        $scope.empresa.busca = $scope.busca;
+        $scope.grupoempresa.busca = $scope.busca;
         $scope.buscaEmpresas();
     };
     $scope.buscaEmpresas = function(){
@@ -155,26 +155,26 @@ angular.module("administrativo-empresas", [])
        var filtros = undefined;
        
        // Verifica se tem algum valor para ser filtrado    
-       if($scope.empresa.busca.length > 0) filtros = {id: /*$campos.cliente.grupoempresa.ds_nome*/ 101, 
-                                                      valor: $scope.empresa.busca + '%'};        
-        
+       if($scope.grupoempresa.busca.length > 0) filtros = {id: /*$campos.cliente.grupoempresa.ds_nome*/ 101, 
+                                                      valor: $scope.grupoempresa.busca + '%'};        
+    
        $webapi.get($apis.getUrl($apis.cliente.grupoempresa, 
                                 [$scope.token, 3, /*$campos.cliente.grupoempresa.ds_nome*/ 101, 0, 
-                                 $scope.empresa.itens_pagina, $scope.empresa.pagina],
+                                 $scope.grupoempresa.itens_pagina, $scope.grupoempresa.pagina],
                                 filtros)) 
             .then(function(dados){
-                $scope.empresas = dados.Registros;
-                $scope.empresa.total_registros = dados.TotalDeRegistros;
-                $scope.empresa.total_paginas = Math.ceil($scope.empresa.total_registros / $scope.empresa.itens_pagina);
-                if($scope.empresas.length === 0) $scope.empresa.faixa_registros = '0-0';
+                $scope.gruposempresas = dados.Registros;
+                $scope.grupoempresa.total_registros = dados.TotalDeRegistros;
+                $scope.grupoempresa.total_paginas = Math.ceil($scope.grupoempresa.total_registros / $scope.grupoempresa.itens_pagina);
+                if($scope.gruposempresas.length === 0) $scope.grupoempresa.faixa_registros = '0-0';
                 else{
-                    var registroInicial = ($scope.empresa.pagina - 1)*$scope.empresa.itens_pagina + 1;
-                    var registroFinal = registroInicial - 1 + $scope.empresa.itens_pagina;
-                    if(registroFinal > $scope.empresa.total_registros) registroFinal = $scope.empresa.total_registros;
-                    $scope.empresa.faixa_registros =  registroInicial + '-' + registroFinal;
+                    var registroInicial = ($scope.grupoempresa.pagina - 1)*$scope.grupoempresa.itens_pagina + 1;
+                    var registroFinal = registroInicial - 1 + $scope.grupoempresa.itens_pagina;
+                    if(registroFinal > $scope.grupoempresa.total_registros) registroFinal = $scope.grupoempresa.total_registros;
+                    $scope.grupoempresa.faixa_registros =  registroInicial + '-' + registroFinal;
                 }
                 // Verifica se a página atual é maior que o total de páginas
-                if($scope.empresa.pagina > $scope.empresa.total_paginas)
+                if($scope.grupoempresa.pagina > $scope.grupoempresa.total_paginas)
                     setPagina(1); // volta para a primeira página e refaz a busca
            
                 // Esconde o progress
@@ -329,22 +329,22 @@ angular.module("administrativo-empresas", [])
     /**
       * Exibe o modal para editar as informações da empresa
       */
-    $scope.editarEmpresa = function(empresa){
+    $scope.editarEmpresa = function(grupoempresa){
         $scope.modalEmpresa.titulo = 'Alteração de Empresa';
-        $scope.modalEmpresa.nome = empresa.ds_nome;
-        $scope.modalEmpresa.fl_cardservices = empresa.fl_cardservices;
-        $scope.modalEmpresa.fl_proinfo = empresa.fl_proinfo;
-        $scope.modalEmpresa.fl_taxservices = empresa.fl_taxservices;
-        $scope.modalEmpresa.salvar = function(){ validaGrupoEmpresa(empresa) };
+        $scope.modalEmpresa.nome = grupoempresa.ds_nome;
+        $scope.modalEmpresa.fl_cardservices = grupoempresa.fl_cardservices;
+        $scope.modalEmpresa.fl_proinfo = grupoempresa.fl_proinfo;
+        $scope.modalEmpresa.fl_taxservices = grupoempresa.fl_taxservices;
+        $scope.modalEmpresa.salvar = function(){ validaGrupoEmpresa(grupoempresa) };
         $('#modalEmpresa').modal('show');
     };
     /**
       * Solicitação confirmação para excluir a empresa
       */
-    $scope.excluirEmpresa = function(empresa){
+    $scope.excluirEmpresa = function(grupoempresa){
         $scope.showModalConfirmacao('Confirmação', 
-                         'Tem certeza que deseja excluir ' + empresa.ds_nome.toUpperCase(),
-                         excluiEmpresa, empresa.id_grupo,
+                         'Tem certeza que deseja excluir ' + grupoempresa.ds_nome.toUpperCase(),
+                         excluiEmpresa, grupoempresa.id_grupo,
                          'Sim', 'Não');
     };                                             
                                                 

@@ -341,6 +341,7 @@ angular.module("administrativo-privilegios", [])
                     $scope.buscaPrivilegios();
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 500) $scope.showModalAlerta('Já existe um privilégio com esse nome');
                      else if(failData.status === 401) $scope.showModalAlerta('Você não possui privilégios para criar um privilégio com esse nível');
                      else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao cadastrar o privilégio (' + failData.status + ')', true, 'danger', true);
@@ -445,7 +446,7 @@ angular.module("administrativo-privilegios", [])
                     $scope.buscaPrivilegios();
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
-                     else if(failData.status === 401) $scope.showModalAlerta('Você não possui privilégios para criar um privilégio com esse nível');
+                     else if(failData.status === 401) $scope.showModalAlerta('Você não possui privilégios para fazer essa alteração');
                      else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login    
                      else $scope.showAlert('Houve uma falha ao alterar o privilégio (' + failData.status + ')', true, 'danger', true); 
                      $scope.hideProgress(divPortletBodyPrivilegioPos);
@@ -479,6 +480,7 @@ angular.module("administrativo-privilegios", [])
                     $scope.buscaPrivilegios();
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 401) $scope.showModalAlerta('Você não possui permissão para remover esse privilégio');
                      else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao excluir o privilégio (' + failData.status + ')', true, 'danger', true);
                      $scope.hideProgress(divPortletBodyPrivilegioPos);

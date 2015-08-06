@@ -1014,7 +1014,7 @@ angular.module("AtosCapital", ['ui.router',
         
         //data.id_grupo = 12; // TEMP
         
-        console.log(data.id_grupo);
+        //console.log(data.id_grupo);
         
         // Verifica se estava administrando algum grupo empresa
         if(data.id_grupo && data.id_grupo !== -1) obtemGrupoEmpresa(data.id_grupo, data.nu_cnpj);

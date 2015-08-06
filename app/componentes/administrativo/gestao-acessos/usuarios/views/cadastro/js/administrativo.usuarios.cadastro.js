@@ -202,16 +202,16 @@ angular.module("administrativo-usuarios-cadastro", [])
             }else $scope.old.gruposempresasvendedor = [];
             // Atualiza demais dados
             atualizaDadosDoUsuario();
+            // Empresa
+            if($scope.old.usuario.nu_cnpjEmpresa && $scope.old.usuario.nu_cnpjEmpresa !== null){
+                $scope.usuario.empresa = {nu_cnpj: $scope.old.usuario.nu_cnpjEmpresa, 
+                                          ds_fantasia: $stateParams.usuario.empresa};
+            }
             // Grupo Empresa
             if($scope.old.usuario.id_grupo && $scope.old.usuario.id_grupo !== null){
                 $scope.usuario.grupoempresa = {id_grupo: $scope.old.usuario.id_grupo, 
                                                ds_nome: $stateParams.usuario.grupoempresa};
                 $scope.buscaEmpresas(); // busca filiais 
-            }
-            // Empresa
-            if($scope.old.usuario.nu_cnpjEmpresa && $scope.old.usuario.nu_cnpjEmpresa !== null){
-                $scope.usuario.empresa = {nu_cnpj: $scope.old.usuario.nu_cnpjEmpresa, 
-                                          ds_fantasia: $stateParams.usuario.empresa};
             }
             //console.log($stateParams.usuario);
             //console.log($scope.old);
@@ -231,7 +231,7 @@ angular.module("administrativo-usuarios-cadastro", [])
         $scope.setTabCadastro(1);
         if($scope.usuariologado.grupoempresa){
             $scope.usuario.grupoempresa = $scope.usuariologado.grupoempresa; 
-            $scope.selecionouGrupoEmpresa();
+            $scope.selecionouGrupoEmpresa(true);
         }
     };
     /**
@@ -545,8 +545,8 @@ angular.module("administrativo-usuarios-cadastro", [])
     /*$scope.selecionouEmpresa = function(){
         console.log($scope.usuario.empresa);   
     }; */                                                     
-    $scope.selecionouGrupoEmpresa = function(){
-        $scope.usuario.empresa = '';
+    $scope.selecionouGrupoEmpresa = function(mantemEmpresa){
+        if(!mantemEmpresa) $scope.usuario.empresa = '';
         $scope.buscaEmpresas();    
     };
     /**
@@ -598,6 +598,9 @@ angular.module("administrativo-usuarios-cadastro", [])
        $http.get(url).then(function(dados){
            $scope.pesquisandoEmpresas = false;
            $scope.empresas = dados.data.Registros;
+           
+           if($scope.usuario.empresa)
+               $scope.usuario.empresa = $filter('filter')($scope.empresas, function(e){return e.nu_cnpj === $scope.usuario.empresa.nu_cnpj;})[0];
            //return dados.data.Registros;
         },function(failData){
              if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 

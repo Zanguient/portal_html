@@ -220,7 +220,8 @@ angular.module("administrativo-dados-acesso", [])
       */
     var buscaAdquirentesCadastro = function(){
         $webapi.get($apis.getUrl($apis.pos.adquirente, 
-                                 [$scope.token, 0, /*$campos.pos.adquirente.descricao*/ 102, 0])) 
+                                 [$scope.token, 0, /*$campos.pos.adquirente.descricao*/ 102, 0],
+                                 {id: /*$campos.pos.adquirente.status*/ 103, valor: 1})) // somente as adquirentes com status = 1
             .then(function(dados){           
                 // Obtém os dados
                 $scope.adquirentescadastro = dados.Registros;
@@ -441,9 +442,13 @@ angular.module("administrativo-dados-acesso", [])
            cnpj : $scope.filtro.filial.nu_cnpj,
            idGrupo : $scope.usuariologado.grupoempresa.id_grupo,
            estabelecimento : $scope.cadastro.estabelecimento ? $scope.cadastro.estabelecimento : null, 
-           operadora : { nmOperadora : $scope.cadastro.adquirente.descricao }
+           operadora : { nmOperadora : $scope.cadastro.adquirente.nome/*descricao*/ }
        };
-       //console.log(jsonDadoAcesso);
+       /*console.log(jsonDadoAcesso);
+       $scope.exibePrimeiraLinha = false;
+       $scope.hideProgress(divPortletBodyFiltrosPos);
+       $scope.hideProgress(divPortletBodyDadosPos);*/
+        
        $webapi.post($apis.getUrl($apis.pos.loginoperadora, undefined,
                                  {id : 'token', valor : $scope.token}), jsonDadoAcesso) 
             .then(function(dados){           
@@ -461,6 +466,7 @@ angular.module("administrativo-dados-acesso", [])
                  $scope.hideProgress(divPortletBodyFiltrosPos);
                  $scope.hideProgress(divPortletBodyDadosPos);
               });    
+                    
     };
     /**
       * Altera o dado de acesso
