@@ -167,10 +167,10 @@
                                     <span class="seperator"></span>Exibindo 
                                     <select name="datatable_products_length" aria-controls="datatable_products" 
                                             class="form-control input-xsmall input-sm input-inline"
-                                            ng-model="empresa.itens_pagina"
+                                            ng-model="grupoempresa.itens_pagina"
                                             ng-change="alterouItensPagina()"
                                             ng-options="item for item in itens_pagina">                                            
-                                    </select> registros de {{empresa.total_registros}}
+                                    </select> registros de {{grupoempresa.total_registros}}
                                 </label>
                             </div>
                         </div>
@@ -178,7 +178,7 @@
                         <div class="pagination-panel centralizarPaginacao col-md-3 col-sm-6"> Página 
                             <a href="javascript:;" ng-click="retrocedePagina()"
                                class="btn btn-sm default prev" 
-                               ng-class="{disabled: empresa.pagina <= 1}" 
+                               ng-class="{disabled: grupoempresa.pagina <= 1}" 
                                title="Página anterior">
                                     <i class="fa fa-angle-left"></i>
                             </a>
@@ -189,11 +189,11 @@
                                    ng-blur="atualizaPaginaDigitada()">
                             <a href="javascript:;" ng-click="avancaPagina()"
                                class="btn btn-sm default next"
-                               ng-class="{disabled: empresa.pagina >= empresa.total_paginas}"
+                               ng-class="{disabled: grupoempresa.pagina >= grupoempresa.total_paginas}"
                                title="Próxima página">
                                 <i class="fa fa-angle-right"></i>
                             </a>
-                             de <span class="pagination-panel-total">{{empresa.total_paginas}}</span>
+                             de <span class="pagination-panel-total">{{grupoempresa.total_paginas}}</span>
                         </div>
                         <!-- PESQUISA -->
                         <div class="col-md-5 col-sm-12">
@@ -204,7 +204,7 @@
                                         <div class="input-group input-icon right">
                                             <i class="fa fa-times" style="right:50px;cursor:pointer"
                                                ng-click="resetaBusca()"
-                                               ng-show="empresa.busca"></i>
+                                               ng-show="grupoempresa.busca"></i>
                                             <input type="text" 
                                                class="form-control input-inline" 
                                                placeholder="Buscar" 
@@ -272,37 +272,37 @@
                                 </tr>
                             </thead>
                             <tbody class="centralizarVertical">
-                                <tr role="row" class="odd" ng-repeat="empresa in empresas" style="max-heigt:30px">
+                                <tr role="row" class="odd" ng-repeat="grupoempresa in gruposempresas" style="max-heigt:30px">
                                     <td class="sorting_1"
                                         style="text-align:left;">
                                             <div class="dadosEmpresa">
-                                                {{empresa.ds_nome | uppercase}}
+                                                {{grupoempresa.ds_nome | uppercase}}
                                             </div>
                                     </td>
                                     <td>
                                         <div class="dadosEmpresa" style="text-align:center">
                                             <i class="fa icone-cardservices" title="Card Services"
-                                               ng-show="empresa.fl_cardservices" style="font-size: 30px"></i>
+                                               ng-show="grupoempresa.fl_cardservices" style="font-size: 30px"></i>
                                             <i class="fa icone-proinfo" title="ProInfo"
-                                                 ng-show="empresa.fl_proinfo" style="font-size: 30px"></i> 
+                                                 ng-show="grupoempresa.fl_proinfo" style="font-size: 30px"></i> 
                                             <i class="fa icone-taxservices" title="Tax Services"
-                                                 ng-show="empresa.fl_taxservices" style="font-size: 30px"></i> 
+                                                 ng-show="grupoempresa.fl_taxservices" style="font-size: 30px"></i> 
                                         </div> 
                                     </td>
                                     <td class="center">
-                                         <span ng-class="{ 'StatusSenhaValida' : empresa.fl_ativo, 
-                                                           'StatusSenhaInvalida' : !empresa.fl_ativo}"
-                                               ng-bind="empresa.fl_ativo ? 'Ativo' : 'Inativo'">
+                                         <span ng-class="{ 'StatusSenhaValida' : grupoempresa.fl_ativo, 
+                                                           'StatusSenhaInvalida' : !grupoempresa.fl_ativo}"
+                                               ng-bind="grupoempresa.fl_ativo ? 'Ativo' : 'Inativo'">
                                         </span>
                                     </td>
                                     <td>
                                         <div class="dadosEmpresa"
-                                             ng-bind="getDataString(empresa.dt_ultimoAcesso) !== '01/01/0001' ? getDataTimeString(empresa.dt_ultimoAcesso) : '-'" style="text-align:center">
+                                             ng-bind="getDataString(grupoempresa.dt_ultimoAcesso) !== '01/01/0001' ? getDataTimeString(grupoempresa.dt_ultimoAcesso) : '-'" style="text-align:center">
                                         </div>    
                                     </td>
                                     <td>
                                         <div class="dadosEmpresa"
-                                             ng-bind="getDataString(empresa.dt_cadastro)" style="text-align:center">
+                                             ng-bind="getDataString(grupoempresa.dt_cadastro)" style="text-align:center">
                                         </div>    
                                     </td>
                                     <td>
@@ -316,27 +316,27 @@
                                                 </a>
                                                 <ul class="dropdown-menu dropDownAtos">
                                                     <li>
-                                                        <a href="javascript:;" ng-click="verFiliais(empresa)">
+                                                        <a href="javascript:;" ng-click="verFiliais(grupoempresa)">
                                                             Filiais
                                                         </a>
                                                     </li>
                                                     <li ng-show="usuarioPodeDesativarEmpresas()">
-                                                        <a ng-show="empresa.fl_ativo"
-                                                           href="javascript:;" ng-click="desativar(empresa)">
+                                                        <a ng-show="grupoempresa.fl_ativo"
+                                                           href="javascript:;" ng-click="desativar(grupoempresa)">
                                                             Desativar
                                                         </a>
-                                                        <a ng-show="!empresa.fl_ativo"
-                                                           href="javascript:;" ng-click="ativar(empresa)">
+                                                        <a ng-show="!grupoempresa.fl_ativo"
+                                                           href="javascript:;" ng-click="ativar(grupoempresa)">
                                                             Ativar
                                                         </a>
                                                     </li>
                                                     <li ng-show="usuarioPodeAlterarEmpresas()">
-                                                        <a href="javascript:;" ng-click="editarEmpresa(empresa)">
+                                                        <a href="javascript:;" ng-click="editarEmpresa(grupoempresa)">
                                                             Editar
                                                         </a>
                                                     </li>
                                                     <li ng-show="usuarioPodeExcluirEmpresas()">
-                                                        <a href="javascript:;" ng-click="excluirEmpresa(empresa)">
+                                                        <a href="javascript:;" ng-click="excluirEmpresa(grupoempresa)">
                                                             Excluir
                                                         </a>
                                                     </li> 
@@ -353,14 +353,14 @@
                     <div class="row" style="margin: 10px 0 20px 0">
                         <div class="col-md-4 col-sm-12">
                             <div class="dataTables_info" id="sample_editable_1_info" role="status" aria-live="polite">
-                                <strong>Exibindo os registros {{empresa.faixa_registros}}</strong>
+                                <strong>Exibindo os registros {{grupoempresa.faixa_registros}}</strong>
                             </div>
                         </div>
                         <!--PAGINAÇÃO-RODAPÉ-->
                         <div class="pagination-panel centralizarPaginacao col-md-3 col-sm-12"> Página 
                             <a href="javascript:;" ng-click="retrocedePagina()"
                                class="btn btn-sm default prev" 
-                               ng-class="{disabled: empresa.pagina <= 1}" 
+                               ng-class="{disabled: grupoempresa.pagina <= 1}" 
                                title="Página anterior">
                                     <i class="fa fa-angle-left"></i>
                             </a>
@@ -371,11 +371,11 @@
                                    ng-blur="atualizaPaginaDigitada()">
                             <a href="javascript:;" ng-click="avancaPagina()"
                                class="btn btn-sm default next"
-                               ng-class="{disabled: empresa.pagina >= empresa.total_paginas}"
+                               ng-class="{disabled: grupoempresa.pagina >= grupoempresa.total_paginas}"
                                title="Próxima página">
                                 <i class="fa fa-angle-right"></i>
                             </a>
-                             de <span class="pagination-panel-total">{{empresa.total_paginas}}</span>
+                             de <span class="pagination-panel-total">{{grupoempresa.total_paginas}}</span>
                         </div>
                         <!-- FIM PAGINAÇÃO -->
                     </div>

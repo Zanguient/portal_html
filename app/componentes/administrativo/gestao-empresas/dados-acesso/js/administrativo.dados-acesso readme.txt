@@ -53,9 +53,9 @@ Além deles, é necessária a importação dos seguintes módulos externos.
     - GET : listagem as adquirentes que podem ser cadastradas (coleção 0)
 			[
 			  { id : int,
-				nome : string,
-				descricao : string,
-				status : int,
+				nome : string, // nome que deve ser armazenado no banco para interação com o ICARD
+				descricao : string,  // nome amigável
+				status : int, // as que devem ser listadas são as de status = 1
 				hraExecucao : int
 			  }
 			]	
@@ -96,7 +96,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				cnpj : string,
 				idGrupo : int,
 				estabelecimento : string (pode ser null),
-				operadora : { nmOperadora : descricaoAdquirente }
+				operadora : { nmOperadora : nomeAdquirente }
 			  }
 			]	
 				

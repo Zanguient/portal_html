@@ -12,29 +12,32 @@ angular.module("administrativo-contas-correntes", [])
                                              '$state',
                                              '$filter',
                                              '$timeout',
+                                             '$http',
                                              /*'$campos',*/
                                              '$webapi',
                                              '$apis',
-                                             function($scope,$state,$filter,$timeout,
+                                             function($scope,$state,$filter,$timeout,$http,
                                                       /*$campos,*/$webapi,$apis){ 
     
     // Exibição
     $scope.itens_pagina = [10, 20, 50, 100]; 
     $scope.paginaInformada = 1; // página digitada pelo usuário                                             
     // Dados
-    $scope.contas = [];
-    $scope.bancos = [];                                             
+    $scope.contas = [];                                            
     $scope.filtro = {itens_pagina : $scope.itens_pagina[0], order : 0,
                      pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0
                     };
     var divPortletBodyContasPos = 0; // posição da div que vai receber o loading progress
     // Modal
     $scope.modalConta = { titulo : '', banco : undefined, buscaBanco : '',
-                          nrAgencia : '', nrConta : '', nrCnpj : ''};                                             
+                          nrAgencia : '', nrConta : '', nrCnpj : '',
+                          textoConfirma : '', funcaoConfirma : function(){} };                                             
     // Permissões                                           
     var permissaoAlteracao = false;
     var permissaoCadastro = false;
     var permissaoRemocao = false;
+    // flags
+    $scope.buscandoBancos = false;                                             
                                                  
                                                  
                                                  
@@ -62,7 +65,7 @@ angular.module("administrativo-contas-correntes", [])
             permissaoCadastro = $scope.methodsDoControllerCorrente['cadastro'] ? true : false;
             permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;
         }
-        // Carrega filiais
+        // Carrega contas
         if($scope.usuariologado.grupoempresa) buscaContas();
     };
                                                  
@@ -138,9 +141,43 @@ angular.module("administrativo-contas-correntes", [])
                                                  
             
     
-    // BUSCA BANCOS                                             
-    $scope.buscaBancos = function(){
-      // ....      
+    // BUSCA BANCOS  
+    /**
+      * Exibe o código do banco seguido do nome (reduzido ou extenso)
+      */
+    $scope.exibeBanco = function(banco, reduzido){
+        if(typeof banco === 'undefined') return '';
+        var text = banco.Codigo + '    ';
+        if(reduzido) text += banco.NomeReduzido;   
+        else text += banco.NomeExtenso;
+        return text.toUpperCase();
+    }
+    /**
+      * Selecionou um banco
+      */
+    $scope.selecionouBanco = function(){
+        console.log($scope.modalConta.banco);    
+    }
+    /**
+      * Busca o banco digitado
+      */
+    $scope.buscaBancos = function(texto){
+        $scope.buscandoBancos = true;
+        
+        return $http.get($apis.getUrl($apis.utils.bancos, 
+                                [$scope.token, 0, /*$campos.utils.bancos.NomeExtenso*/ 102, 0, 10, 1],
+                                {id: /*$campos.utils.bancos.NomeExtenso*/ 102, valor: texto + '%'}))
+                 .then(function(dados){
+                        $scope.buscandoBancos = false;
+                        return dados.data.Registros;
+                  },function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                     else $scope.showAlert('Houve uma falha ao obter bancos (' + failData.status + ')', true, 'danger', true);
+
+                     $scope.buscandoBancos = false;
+                     return [];
+              });          
     }
                                                  
                                                  
@@ -168,7 +205,7 @@ angular.module("administrativo-contas-correntes", [])
                       valor: $scope.usuariologado.grupoempresa.id_grupo};
            
         $webapi.get($apis.getUrl($apis.card.tbcontacorrente, 
-                                [$scope.token, 3, 
+                                [$scope.token, 2, 
                                  /*$campos.card.tbcontacorrente.cdBanco*/ 103, 0, 
                                  $scope.filtro.itens_pagina, $scope.filtro.pagina],
                                 filtros)) 
@@ -217,6 +254,8 @@ angular.module("administrativo-contas-correntes", [])
       */
     $scope.novaConta = function(){
         $scope.modalConta.titulo = 'Nova Conta em ' + $scope.usuariologado.grupoempresa.ds_nome.toUpperCase();
+        $scope.modalConta.textoConfirma = 'Cadastrar';
+        $scope.modalConta.funcaoConfirma = salvarConta;
         $scope.modalConta.buscaBanco = '';
         $scope.modalConta.banco = undefined;
         $scope.modalConta.nrAgencia = '';
@@ -227,6 +266,11 @@ angular.module("administrativo-contas-correntes", [])
     };
                                                  
     
+    var salvarConta = function(){
+        console.log("SALVAR CONTA");
+        console.log($scope.modalConta);
+    }
+                                                 
     /**
       * Salva os dados de acesso
       * /                                              
