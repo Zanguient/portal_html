@@ -248,8 +248,8 @@ angular.module('diretivas', ['ui.bootstrap'])
 })
 
 
-// Conta bancária em um input text
-.directive('validContaBancaria', function() {
+// Agência bancária em um input text
+.directive('validAgenciaBancaria', function() {
   return {
     require: 'ngModel',
     link: function(scope, element, attrs, ngModelCtrl) { 
@@ -276,6 +276,76 @@ angular.module('diretivas', ['ui.bootstrap'])
             if(idxStart > -1 && clean.length > idxStart + 2){
                 clean = clean.substr(0, idxStart + 2); 
                 render = true;    
+            }
+              
+            // Altera o valor do input?
+            if(render){
+                ngModelCtrl.$setViewValue(clean);
+                ngModelCtrl.$render(); 
+            }
+              
+            // Retorna o valor utilizado
+            // Se tiver definido maxlength, impede de entrar com um número maior
+            if(element[0].maxLength && clean.length > element[0].maxLength)
+                return clean.substring(0, element[0].maxLength);
+              
+            return clean;   
+          };
+        
+          // Mudança direta do ng-model
+          ngModelCtrl.$formatters.push(function(val) {
+              return avaliaConta(val);
+          });
+          // Mudança direta no input text
+          ngModelCtrl.$parsers.push(function(val) {
+              return avaliaConta(val);
+          });
+         
+          element.bind('keydown', function(event) {
+            if(event.keyCode === 8) backspace = true; // backspace
+          });    
+
+          element.bind('keypress', function(event) {
+            if(event.keyCode === 32) event.preventDefault(); // espaço
+          });
+    }
+  };
+})
+
+// Conta bancária em um input text
+.directive('validContaBancaria', function() {
+  return {
+    require: 'ngModel',
+    link: function(scope, element, attrs, ngModelCtrl) { 
+      
+          if(!ngModelCtrl) return; 
+        
+          var avaliaConta = function(val){
+            //console.log("VAL: " + val);      
+            
+            var clean = val.replace( /[^0-9a-zA-Z-]+/g, '');
+            var render = false;
+            if (val !== clean) render = true;
+            
+            // Só pode existir um '-'
+            var idxStart = clean.indexOf('-');
+            var idxEnd = clean.lastIndexOf('-');
+            while(idxEnd > -1 && idxStart !== idxEnd){
+                clean = clean.substr(0, idxEnd) + clean.substr(idxEnd + 1);
+                idxEnd = clean.lastIndexOf('-');  
+                render = true;
+            }
+            
+            // Após o '-' só pode existir um único dígito
+            if(idxStart > -1 && clean.length > idxStart + 2){
+                clean = clean.substr(0, idxStart + 2); 
+                render = true;    
+            }
+            
+            var c = angular.uppercase(clean);
+            if(c !== clean){ 
+                clean = c;
+                render = true;
             }
               
             // Altera o valor do input?

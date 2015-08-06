@@ -184,13 +184,13 @@ angular.module("administrativo-filiais-cadastro", [])
     $scope.cnpjValido = function(){
         return cnpjValido;    
     }                                                     
-    // Valida login
+    // Valida CNPJ
     $scope.validaCNPJ = function(){
         if($scope.filial.nu_cnpj && $scope.filial.nu_cnpj.length == 14){
             if($scope.old !== null && $scope.old.nu_cnpj === $scope.filial.nu_cnpj){ 
-                // Não alterou o login
+                // Não alterou o cnpj
                 $('#labelCNPJEmUso').hide();
-                loginValido = true;
+                cnpjValido = true;
                 $('#icon-cnpj').hide(); // sem exibir o ícone
                 return;
             }
@@ -383,6 +383,9 @@ angular.module("administrativo-filiais-cadastro", [])
                                                          
    // CADASTRO
    var cadastraFilial = function(){
+        // Não faz nada se tiver validando campos
+        if($scope.validandoCNPJ || $scope.validandoNomeFantasia) return;
+       
         // Cadastra
         $scope.showProgress(divPortletBodyFilialCadPos);
         // Obrigatórios
@@ -403,7 +406,7 @@ angular.module("administrativo-filiais-cadastro", [])
         if($scope.filial.nu_telefone) jsonFilial.nu_telefone = $scope.filial.nu_telefone;
 
         // Envia
-        console.log(jsonFilial);
+        //console.log(jsonFilial);
         $webapi.post($apis.getUrl($apis.cliente.empresa, undefined,
                                   {id: 'token', valor: $scope.token}), jsonFilial)
                 .then(function(dados){
@@ -461,6 +464,9 @@ angular.module("administrativo-filiais-cadastro", [])
      */
    var alteraFilial = function(){
         
+       // Não faz nada se tiver validando campos
+       if($scope.validandoCNPJ || $scope.validandoNomeFantasia) return;
+       
        if($scope.old === null){ 
             console.log("NÃO HÁ DADOS ANTERIORES!");
             return;

@@ -38,8 +38,10 @@
                                <!-- BANCO -->
                                <div class="row">
                                     <div class="col-sm-12">
-                                        <label>Banco</label>
-                                        <label>
+                                        <div class="col-sm-2">
+                                            <label>Banco</label>
+                                        </div>
+                                        <div class="col-sm-10">
                                             <input type="text" class="form-control" 
                                                    ng-class="{'spinner' : buscandoBancos}"
                                                    placeholder="Banco" 
@@ -52,45 +54,57 @@
                                                    typeahead-min-length='3'
                                                    typeahead-wait-ms="500"
                                                    typeahead="banco as exibeBanco(banco) for banco in buscaBancos($viewValue)" />
-                                        </label>    
+                                        </div>    
                                    </div>
                                    <!-- AGÊNCIA -->
                                    <div class="col-sm-12">
-                                        <label>Agência</label>
-                                        <label>
+                                       <div class="col-sm-2">
+                                            <label>Agência</label>
+                                       </div>
+                                       <div class="col-sm-5">
                                             <input type="text" 
-                                                   class="form-control input-inline" 
-                                                   placeholder="Agência" valid-conta-bancaria 
+                                                   class="form-control" 
+                                                   placeholder="Agência" valid-agencia-bancaria 
                                                    maxlength="10"
                                                    ng-model="modalConta.nrAgencia"> 
-                                        </label>     
+                                       </div>     
                                    </div>
                                    <!-- CONTA -->
                                    <div class="col-sm-12">
-                                        <label>Conta</label>
-                                        <label>
+                                        <div class="col-sm-2">
+                                            <label>Conta</label>
+                                        </div>
+                                        <div class="col-sm-5">
                                             <input type="text" 
-                                                   class="form-control input-inline" 
+                                                   class="form-control" 
                                                    placeholder="Conta" valid-conta-bancaria 
                                                    maxlength="10"
                                                    ng-model="modalConta.nrConta"> 
-                                        </label>     
+                                        </div>     
                                    </div>
-                                   <!-- CNPJ -->
+                                   <!-- FILIAL -->
                                    <div class="col-sm-12">
-                                        <label>CNPJ</label>
-                                        <label>
-                                            <input type="text" 
-                                                   class="form-control input-inline"
-                                                   ng-class="{'spinner' : validandoCNPJ}"
-                                                   placeholder="CNPJ" valid-integer-number
-                                                   ng-minlength="14"
-                                                   maxlength="14"
-                                                   ng-model="modalConta.nrCnpj"> 
-                                        </label>     
+                                        <div class="col-sm-2">
+                                            <label>Filial</label>
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <!-- COMBO -->
+                                            <select class="form-control input-sm input-inline"
+                                                    ng-disabled="filiais.length == 0"
+                                                    ng-model="modalConta.filial"
+                                                    ng-options="filial as (filial.ds_fantasia | uppercase) for filial in filiais">
+                                                <!--option value="">Todas</option-->
+                                            </select>
+                                            <!-- CNPJ -->
+                                            <label style="text-align:left">
+                                               <em style="font-size: 12px">
+                                                   {{modalConta.filial.nu_cnpj || ''}}
+                                               </em>
+                                            </label>
+                                       </div>
                                    </div>
                                </div>
-                            </div>
+                           </div>
                            <div class="modal-footer">
                                <div class="col-sm-3 col-sm-offset-2">
                                    <button type="button" class="btn default" data-dismiss="modal">
@@ -99,7 +113,8 @@
                                </div>                           
                                <div class="col-sm-4 col-sm-offset-1">
                                    <button type="button" class="btn blue"
-                                           ng-click="modalConta.funcaoConfirma()">
+                                           ng-click="modalConta.funcaoConfirma()"
+                                           ng-disabled="validandoCNPJ">
                                        {{modalConta.textoConfirma}}
                                    </button>                                
                                </div>
@@ -108,6 +123,93 @@
                    </div>
                </div>
                <!-- END MODAL CONTA -->
+                
+                
+                <!-- MODAL FILIAIS -->
+                <div class="modal fade ng-scope" id="modalFiliais" tabindex="-1" 
+                     aria-hidden="true" style="display: none;">
+                    <div class="modal-dialog" style="min-width: 700px">
+                        <div class="modal-content">
+                            <div class="modal-header">                    
+                                <h4 class="modal-title modal-cabecalho">
+                                    Filiais e Operadoras associadas à conta
+                                </h4>
+                            </div>
+                            <div class="modal-body height-auto" style="min-width: 500px">                                
+                                <!-- CONTEÚDO -->
+                                 <div class="skin skin-square scroller caption-subject font-green-sharp bold" 
+                                     style="min-height: 300px" 
+                                     data-always-visible="1" data-rail-visible1="1">
+                                    
+                                    <!--FILIAIS NÃO ASSOCIADAS-->                                    
+                                    <div class="col-md-4" style="text-align:center">
+                                        <label style="text-align:center">
+                                            <strong>Filiais não associadas</strong>
+                                        </label>
+                                        <select class="form-control" 
+                                                size="15" 
+                                                ng-model="modalFiliais.adquirenteEmpresaNaoSelecionada"
+                                                ng-options="adquirenteempresa as (adquirenteempresa.descricao | uppercase) for adquirenteempresa in modaFiliais.adquirenteempresa"
+                                                style="width:100%">  
+                                            <option style="display:none" value=""></option>
+                                        </select>
+                                    </div>
+                                     <!-- BOTÕES -->
+                                     <div class="col-md-4" style="text-align:center">
+                                         <div class="row">
+                                             <button class="btn">
+                                                >
+                                             </button>
+                                         </div>
+                                         <div class="row">
+                                             <button class="btn">
+                                                <
+                                             </button>
+                                         </div>
+                                     </div>
+                                    <!-- FILIAIS ASSOCIADAS -->                                    
+                                    <div class="col-md-4" style="text-align:center">
+                                        <label style="text-align:center">
+                                            <strong>Empresas Associadas</strong>
+                                        </label>
+                                        <select class="form-control" 
+                                                size="15" 
+                                                ng-model="modalFiliais.adquirenteEmpresaSelecionada"
+                                                ng-options="filial as (filial.ds_fantasia | uppercase) for filial in modaFiliais.filiaisNaoSelecionadas"
+                                                style="width:100%">  
+                                            <option style="display:none" value=""></option>
+                                        </select>
+                                    </div>
+                                </div> 
+                                <!--FIM CONTEÚDO-->
+                                
+                                <!-- BOTÕES -->
+                                <div class="modal-footer">
+                                    <div class="col-md-3">
+                                        <button type="button" 
+                                                class="btn btn-success"
+                                                ng-click="salvaGrupoEmpresaVendedor()">
+                                            Salvar
+                                        </button>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="button" class="btn green"
+                                                popover-placement="top"
+                                                popover="Retoma as associações previamente salvas, sem alterações"
+                                                popover-trigger="mouseenter"
+                                                ng-click="resetaGrupoEmpresaVendedor()">
+                                            Resetar
+                                        </button>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="button" data-dismiss="modal" class="btn default">Fechar</button> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>              
+                <!-- END MODAL FILIAIS -->
                 
                 
                 <!-- TOPO : Nome 'Contas Correntes' e botões de 'Opções' e FullScreen -->
@@ -219,27 +321,32 @@
                                                 <tr role="row">
                                                     <th tabindex="0" 
                                                         rowspan="1" colspan="1" 
-                                                        style="width: 188px; text-align:center">
+                                                        style="width: 200px; text-align:center">
                                                         Banco
                                                     </th>
                                                     <th tabindex="1" 
                                                         rowspan="1" colspan="1" 
-                                                        style="width: 237px;">
+                                                        style="width: 60px;">
                                                         Agência
                                                     </th>
                                                     <th tabindex="2" 
                                                         rowspan="1" colspan="1" 
-                                                        style="width: 237px;">
+                                                        style="width: 60px;">
                                                         Conta
                                                     </th>
                                                     <th tabindex="3" 
                                                         rowspan="1" colspan="1" 
-                                                        style="width: 128px;">
+                                                        style="width: 100px;">
                                                         CNPJ
                                                     </th>
                                                     <th tabindex="4" 
                                                         rowspan="1" colspan="1" 
-                                                        style="width: 163px;">
+                                                        style="width: 200px;">
+                                                        Filial
+                                                    </th>
+                                                    <th tabindex="5" 
+                                                        rowspan="1" colspan="1" 
+                                                        style="width: 100px;">
                                                         Ações
                                                     </th>                                        
                                                 </tr>
@@ -249,8 +356,8 @@
                                                     ng-repeat="conta in contas">
                                                     <!-- BANCO -->
                                                     <td>
-                                                         {{conta.banco.cdBanco || ''}}&nbsp;
-                                                         {{conta.banco.nomeAbrev || ''}}
+                                                         {{(conta.banco.Codigo | uppercase) || ''}}&nbsp;
+                                                         {{(conta.banco.NomeExtenso  | uppercase) || ''}}
                                                     </td>
                                                     <!-- AGÊNCIA -->
                                                     <td style="text-align:center">
@@ -262,7 +369,11 @@
                                                     </td>
                                                     <!-- CNPJ -->
                                                     <td style="text-align:center">
-                                                         {{conta.nrCnpj}}
+                                                         {{conta.empresa.nu_cnpj}}
+                                                    </td>
+                                                    <!-- FILIAL -->
+                                                    <td style="text-align:center">
+                                                         {{conta.empresa.ds_fantasia | uppercase}}
                                                     </td>
                                                     <!-- BOTÃO AÇÕES-->
                                                     <td class="center btnacoes">

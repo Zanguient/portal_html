@@ -592,6 +592,7 @@
                                         </a>
                                         <a href="javascript:;" ng-click="armazenaInformacoesDoUsuario()"
                                            class="btn button-submit"
+                                           ng-disabled="validandoEmail || validandoLogin"
                                            ng-class="{ 'red' : ehCadastro(), 'green': !ehCadastro()}"
                                            ng-show="tabCadastroSelecionada(4) && !cadastrando">
                                             {{tela.acao}} 

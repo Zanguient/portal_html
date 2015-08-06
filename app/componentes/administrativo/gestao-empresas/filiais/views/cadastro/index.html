@@ -515,6 +515,7 @@
                                         </a>
                                         <a href="javascript:;" ng-click="armazenaInformacoesDaFilial()"
                                            class="btn button-submit"
+                                           ng-disabled="validandoCNPJ || validandoNomeFantasia"
                                            ng-class="{ 'red' : ehCadastro(), 'green': !ehCadastro()}" 
                                            ng-show="tabCadastroSelecionada(4) && !cadastrando">
                                             {{tela.acao}} 
