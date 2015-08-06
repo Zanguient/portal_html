@@ -359,7 +359,7 @@ angular.module("administrativo-dados-acesso", [])
 
                 // Obtém os dados
                 $scope.dadosAcesso = dados.Registros;
-                
+
                 // Set valores de exibição
                 $scope.filtro.total_registros = dados.TotalDeRegistros;
                 $scope.filtro.total_paginas = Math.ceil($scope.filtro.total_registros / $scope.filtro.itens_pagina);
@@ -465,7 +465,7 @@ angular.module("administrativo-dados-acesso", [])
                  // Fecha os progress
                  $scope.hideProgress(divPortletBodyFiltrosPos);
                  $scope.hideProgress(divPortletBodyDadosPos);
-              });    
+              });   
                     
     };
     /**

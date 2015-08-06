@@ -23,206 +23,156 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+.icone-cardservices:before {
+	content: "\e633";
+}
 .icone-proinfo:before {
 	content: "\e632";
 }
-
-.icone-cardservices:before {
-	content: "\e600";
-}
-
 .icone-taxservices:before {
 	content: "\e601";
 }
-
 .icone-heart:before {
 	content: "\e602";
 }
-
 .icone-cloud:before {
 	content: "\e603";
 }
-
 .icone-star:before {
 	content: "\e604";
 }
-
 .icone-tv:before {
 	content: "\e605";
 }
-
 .icone-sound:before {
 	content: "\e606";
 }
-
 .icone-video:before {
 	content: "\e607";
 }
-
 .icone-trash:before {
 	content: "\e608";
 }
-
 .icone-user:before {
 	content: "\e609";
 }
-
 .icone-key:before {
 	content: "\e60a";
 }
-
 .icone-search:before {
 	content: "\e60b";
 }
-
 .icone-settings:before {
 	content: "\e60c";
 }
-
 .icone-camera:before {
 	content: "\e60d";
 }
-
 .icone-tag:before {
 	content: "\e60e";
 }
-
 .icone-lock:before {
 	content: "\e60f";
 }
-
 .icone-bulb:before {
 	content: "\e610";
 }
-
 .icone-pen:before {
 	content: "\e611";
 }
-
 .icone-diamond:before {
 	content: "\e612";
 }
-
 .icone-display:before {
 	content: "\e613";
 }
-
 .icone-location:before {
 	content: "\e614";
 }
-
 .icone-eye:before {
 	content: "\e615";
 }
-
 .icone-bubble:before {
 	content: "\e616";
 }
-
 .icone-stack:before {
 	content: "\e617";
 }
-
 .icone-cup:before {
 	content: "\e618";
 }
-
 .icone-phone:before {
 	content: "\e619";
 }
-
 .icone-news:before {
 	content: "\e61a";
 }
-
 .icone-mail:before {
 	content: "\e61b";
 }
-
 .icone-like:before {
 	content: "\e61c";
 }
-
 .icone-photo:before {
 	content: "\e61d";
 }
-
 .icone-note:before {
 	content: "\e61e";
 }
-
 .icone-clock:before {
 	content: "\e61f";
 }
-
 .icone-paperplane:before {
 	content: "\e620";
 }
-
 .icone-params:before {
 	content: "\e621";
 }
-
 .icone-banknote:before {
 	content: "\e622";
 }
-
 .icone-data:before {
 	content: "\e623";
 }
-
 .icone-music:before {
 	content: "\e624";
 }
-
 .icone-megaphone:before {
 	content: "\e625";
 }
-
 .icone-study:before {
 	content: "\e626";
 }
-
 .icone-lab:before {
 	content: "\e627";
 }
-
 .icone-food:before {
 	content: "\e628";
 }
-
 .icone-t-shirt:before {
 	content: "\e629";
 }
-
 .icone-fire:before {
 	content: "\e62a";
 }
-
 .icone-clip:before {
 	content: "\e62b";
 }
-
 .icone-shop:before {
 	content: "\e62c";
 }
-
 .icone-calendar:before {
 	content: "\e62d";
 }
-
 .icone-wallet:before {
 	content: "\e62e";
 }
-
 .icone-vynil:before {
 	content: "\e62f";
 }
-
 .icone-truck:before {
 	content: "\e630";
 }
-
 .icone-world:before {
 	content: "\e631";
 }

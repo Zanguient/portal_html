@@ -8,6 +8,19 @@
 // App
 angular.module("administrativo-contas-correntes", []) 
 
+.filter('adquirenteEmpresainArray', ['$filter', function($filter) {
+    return function inArray( adquirenteempresa , adquirenteempresabase ) {
+        var result = [];
+        var item, i;
+        for (i=0; i< adquirenteempresa.length;i++) {
+            item = adquirenteempresa[i];
+            if ($filter('filter')(adquirenteempresabase, function(af){return af.cdLoginAdquirenteEmpresa === item.cdLoginAdquirenteEmpresa}).length === 0) result.push(item);
+        };
+        return (result);
+    };
+}])
+
+
 .controller("administrativo-contas-correntesCtrl", ['$scope',
                                              '$state',
                                              '$filter',
@@ -23,20 +36,23 @@ angular.module("administrativo-contas-correntes", [])
     $scope.itens_pagina = [10, 20, 50, 100]; 
     $scope.paginaInformada = 1; // página digitada pelo usuário                                             
     // Dados
-    $scope.contas = [];                                            
+    $scope.contas = [];     
+    $scope.filiais = [];
     $scope.filtro = {itens_pagina : $scope.itens_pagina[0], order : 0,
                      pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0
                     };
     var divPortletBodyContasPos = 0; // posição da div que vai receber o loading progress
     // Modal
-    $scope.modalConta = { titulo : '', banco : undefined, buscaBanco : '',
-                          nrAgencia : '', nrConta : '', nrCnpj : '',
-                          textoConfirma : '', funcaoConfirma : function(){} };                                             
+    $scope.modalConta = { titulo : '', banco : undefined, //buscaBanco : '',
+                          nrAgencia : '', nrConta : '', nrCnpj : '', filial: '',
+                          textoConfirma : '', funcaoConfirma : function(){} };                                       var old = null;      
     // Permissões                                           
     var permissaoAlteracao = false;
     var permissaoCadastro = false;
     var permissaoRemocao = false;
-    // flags
+    // Flags
+    var cnpjValido = false;
+    $scope.validandoCNPJ = false;
     $scope.buscandoBancos = false;                                             
                                                  
                                                  
@@ -54,10 +70,13 @@ angular.module("administrativo-contas-correntes", [])
         // Quando houver alteração do grupo empresa na barra administrativa                                           
         $scope.$on('alterouGrupoEmpresa', function(event){ 
             // Avalia grupo empresa
-            if($scope.usuariologado.grupoempresa)
+            if($scope.usuariologado.grupoempresa){
                 buscaContas();
-            else // reseta tudo e não faz buscas 
+                buscaFiliais();
+            }else{ // reseta tudo e não faz buscas 
                 $scope.contas = []; 
+                $scope.filiais = [];
+            }
         });
         // Obtém as permissões
         if($scope.methodsDoControllerCorrente){
@@ -156,7 +175,7 @@ angular.module("administrativo-contas-correntes", [])
       * Selecionou um banco
       */
     $scope.selecionouBanco = function(){
-        console.log($scope.modalConta.banco);    
+        //console.log($scope.modalConta.banco);    
     }
     /**
       * Busca o banco digitado
@@ -240,12 +259,96 @@ angular.module("administrativo-contas-correntes", [])
                  $scope.hideProgress(divPortletBodyContasPos);
               });       
     };
-                                                 
         
+                                                 
+                                                 
+    /**
+      * Busca as filiais
+      */
+    var buscaFiliais = function(){
+
+       var filtros = undefined;
+
+       // Filtro do grupo empresa => barra administrativa
+       if($scope.usuariologado.grupoempresa){ 
+           filtros = [{id: /*$campos.cliente.empresa.cdGrupo*/ 116, 
+                       valor: $scope.usuariologado.grupoempresa.id_grupo}];
+           if($scope.usuariologado.empresa) filtros.push({id: /*$campos.cliente.empresa.nu_cnpj*/ 100, 
+                                                          valor: $scope.usuariologado.empresa.nu_cnpj});
+       }
+       
+       $webapi.get($apis.getUrl($apis.cliente.empresa, 
+                                [$scope.token, 0, /*$campos.cliente.empresa.ds_fantasia*/ 104],
+                                filtros)) 
+            .then(function(dados){
+                $scope.filiais = dados.Registros;
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter filiais (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+              });     
+    };                                             
+    
+    
+                                                 
+    // Valida CNPJ
+    /*$scope.cnpjValido = function(){
+        return cnpjValido;    
+    }                                              
+    $scope.validaCNPJ = function(force){
+        if($scope.modalConta.nrCnpj && $scope.modalConta.nrCnpj.length == 14){
+            if(!force && old !== null && old.empresa.nu_cnpj === $scope.modalConta.nrCnpj){ 
+                // Não alterou o cnpj
+                $('#labelCNPJInvalido').hide();
+                cnpjValido = true;
+                $('#icon-cnpj').hide(); // sem exibir o ícone
+                return;
+            }
+            
+            $scope.validandoCNPJ = true;
+            
+            var filtro = [{id:/*$campos.cliente.empresa.nu_cnpj* / 100, valor:$scope.modalConta.nrCnpj}];
+            // O CNPJ é validado em relação às filiais do grupo associado
+            if($scope.usuariologado.grupoempresa) 
+                filtro.push({id:/*$campos.cliente.empresa.id_grupo* / 116, 
+                             valor:$scope.usuariologado.grupoempresa.id_grupo});
+            
+
+            $webapi.get($apis.getUrl($apis.cliente.empresa, [$scope.token, 0], filtro))
+            // Verifica se a requisição foi respondida com sucesso
+                .then(function(dados){
+                            if(!dados) console.log("DADOS NÃO FORAM RECEBIDOS!");
+                            else if(dados.Registros && dados.Registros.length == 0){ 
+                                $('#labelCNPJInvalido').show();
+                                cnpjValido = false;
+                                $('#icon-cnpj').show();
+                            }else{
+                                $scope.modalConta.filial = dados.Registros[0].ds_fantasia;
+                                $('#labelCNPJInvalido').hide();
+                                cnpjValido = true;
+                                $('#icon-cnpj').show();
+                            }
+                            $scope.validandoCNPJ = false;
+                        },
+                        function(failData){
+                            console.log("FALHA AO VALIDAR CNPJ");
+                            $scope.validandoCNPJ = false;
+                        });
+        }else
+            cnpjValido = false;  
+        
+    };   */                                            
+                                                 
+                                                 
      
     // AÇÕES
     var exibeModalConta = function(){
         $('#modalConta').modal('show');       
+    }
+    var fechaModalConta = function(){
+        $('#modalConta').modal('hide');       
     }
                                                  
                                                  
@@ -256,115 +359,218 @@ angular.module("administrativo-contas-correntes", [])
         $scope.modalConta.titulo = 'Nova Conta em ' + $scope.usuariologado.grupoempresa.ds_nome.toUpperCase();
         $scope.modalConta.textoConfirma = 'Cadastrar';
         $scope.modalConta.funcaoConfirma = salvarConta;
-        $scope.modalConta.buscaBanco = '';
+        //$scope.modalConta.buscaBanco = '';
         $scope.modalConta.banco = undefined;
         $scope.modalConta.nrAgencia = '';
         $scope.modalConta.nrConta = '';
-        $scope.modalConta.nrCnpj = '';
+        //$scope.modalConta.nrCnpj = '';
+        $scope.modalConta.filial = $scope.filiais[0];
+        
+        // Esconde os texto e ícone de erro de cnpj
+        /*$('#labelCNPJInvalido').hide();
+        $('#icon-cnpj').hide(); 
+        // Ajusta o valor do flag
+        cnpjValido = false;*/
+        
         // Exibe o modal
         exibeModalConta();
     };
-                                                 
-    
-    var salvarConta = function(){
-        console.log("SALVAR CONTA");
-        console.log($scope.modalConta);
+         
+            
+    /**
+      * Valida as informações preenchidas no modal
+      */                                             
+    var camposModalValidos = function(){
+        // Valida
+        if(!$scope.modalConta.banco){
+            $scope.showModalAlerta('Informe o banco!');
+            return false;
+        }
+        if(!$scope.modalConta.nrAgencia){
+            $scope.showModalAlerta('Informe a agência!');
+            return false;
+        }
+        if(!$scope.modalConta.nrConta){
+            $scope.showModalAlerta('Informe a conta!');
+            return false;
+        }
+        /*if(!$scope.cnpjValido()){
+            $scope.showModalAlerta('Informe um CNPJ associado a empresa ' +
+                                   $scope.usuariologado.grupoempresa.ds_nome.toUpperCase() + 
+                                   ' que esteja armazenado na base!');
+            return false;
+        }   */
+        if(!$scope.modalConta.filial){
+            $scope.showModalAlerta('É necessário selecionar uma filial!');
+            return false;
+        }
+        return true;
     }
                                                  
+                                                 
     /**
-      * Salva os dados de acesso
-      * /                                              
-    $scope.salvarConta = function(){
-       if(!validaDadoAcesso()) return;    
-       // Cadastra
-       $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen    
-       $scope.showProgress(divPortletBodyDadosPos);
-       var jsonDadoAcesso = {
-           login : $scope.cadastro.login,
-           senha : $scope.cadastro.senha,
-           cnpj : $scope.filtro.filial.nu_cnpj,
-           idGrupo : $scope.usuariologado.grupoempresa.id_grupo,
-           estabelecimento : $scope.cadastro.estabelecimento ? $scope.cadastro.estabelecimento : null, 
-           operadora : { nmOperadora : $scope.cadastro.adquirente.descricao }
-       };
-       //console.log(jsonDadoAcesso);
-       $webapi.post($apis.getUrl($apis.pos.loginoperadora, undefined,
-                                 {id : 'token', valor : $scope.token}), jsonDadoAcesso) 
-            .then(function(dados){           
-                $scope.showAlert('Cadastrado com sucesso!', true, 'success', true);
-                // Esconde a linha
-                $scope.exibePrimeiraLinha = false;
-                // Relista
-                buscaDadosDeAcesso(true);
-              },
-              function(failData){
-                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
-                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                 else $scope.showAlert('Houve uma falha ao realizar o cadastro (' + failData.status + ')', true, 'danger', true);
-                 // Fecha os progress
-                 $scope.hideProgress(divPortletBodyFiltrosPos);
-                 $scope.hideProgress(divPortletBodyDadosPos);
-              });    
-    };
-    /**
-      * Altera o dado de acesso
-      * /
-    $scope.editarConta = function(dadoacesso){
-        // ...        
-    };
-    /**
-      * Cancela a alteração
-      * /                                             
-    $scope.alteraConta = function(old){
-       if(typeof old === 'undefined') return; 
-       // Verifica se houve alteração
-       if(old.login === $scope.alteracao.login &&
-          old.senha === $scope.alteracao.senha &&
-          (old.estabelecimento === null && !$scope.alteracao.estabelecimento || 
-           old.estabelecimento === $scope.alteracao.estabelecimento)){
-            $scope.cancelaAlteracao();
-            return;
-       }
+      * Valida as informações preenchidas e envia para o servidor
+      */
+    var salvarConta = function(){
+         // Não faz nada se tiver validando o CNPJ
+        if($scope.validandoCNPJ) return;
         
-       if($scope.alteracao.login.trim().length < 3){
-           $scope.showModalAlerta('Preencha um login com no mínimo 3 caracteres!');
-           return false;
-       }
-       if($scope.alteracao.senha.trim().length < 3){
-           $scope.showModalAlerta('Preencha uma senha com no mínimo 3 caracteres!');
-           return false;
-       }
-       // Altera
-       $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen    
-       $scope.showProgress(divPortletBodyDadosPos);
-       var jsonDadoAcesso = {
-           id : $scope.alteracao.id,
-           login : $scope.alteracao.login,
-           senha : $scope.alteracao.senha,
-           estabelecimento : $scope.alteracao.estabelecimento ? $scope.alteracao.estabelecimento : null
-       };
-       //console.log(jsonDadoAcesso);
-       $webapi.update($apis.getUrl($apis.pos.loginoperadora, undefined,
-                                   {id : 'token', valor : $scope.token}), jsonDadoAcesso) 
+        // Valida campos
+        if(!camposModalValidos()) return;
+        
+        // Obtém o JSON
+        var jsonConta = { cdGrupo : $scope.usuariologado.grupoempresa.id_grupo,
+                          nrCnpj : $scope.modalConta.filial.nu_cnpj,//nrCnpj,
+                          cdBanco : $scope.modalConta.banco.Codigo, 
+                          nrAgencia : $scope.modalConta.nrAgencia,
+                          nrConta : $scope.modalConta.nrConta
+                        };
+        //console.log(jsonConta);
+        
+        // POST
+        $scope.showProgress();
+        $webapi.post($apis.getUrl($apis.card.tbcontacorrente, undefined,
+                                 {id : 'token', valor : $scope.token}), jsonConta) 
             .then(function(dados){           
-                $scope.showAlert('Alterado com sucesso!', true, 'success', true);
-                // Esconde a linha
-                $scope.cancelaAlteracao();
+                $scope.showAlert('Conta cadastrada com sucesso!', true, 'success', true);
+                // Fecha os progress
+                $scope.hideProgress();
+                // Fecha o modal
+                fechaModalConta();
                 // Relista
-                buscaDadosDeAcesso(true);
+                buscaContas();
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 500) $scope.showAlert('Conta já cadastrada!', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao cadastrar conta (' + failData.status + ')', true, 'danger', true);
+                 // Fecha os progress
+                 $scope.hideProgress();
+              });   
+    }
+                                                 
+    
+    /**
+      * Altera os dados da conta
+      */
+    $scope.editarConta = function(conta){
+        
+        old = conta;
+        
+        $scope.modalConta.titulo = 'Altera conta em ' + $scope.usuariologado.grupoempresa.ds_nome.toUpperCase();
+        $scope.modalConta.textoConfirma = 'Alterar';
+        $scope.modalConta.funcaoConfirma = alterarConta;
+        //$scope.modalConta.buscaBanco = '';
+        $scope.modalConta.banco = conta.banco;
+        $scope.modalConta.nrAgencia = conta.nrAgencia;
+        $scope.modalConta.nrConta = conta.nrConta;
+        //$scope.modalConta.nrCnpj = conta.empresa.nrCnpj;
+        $scope.modalConta.filial = $filter('filter')($scope.filiais, function(f) {return f.nu_cnpj === conta.empresa.nu_cnpj;})[0];
+        
+        /* Esconde os texto e ícone de erro de cnpj
+        $('#labelCNPJInvalido').hide();
+        $('#icon-cnpj').hide(); 
+        cnpjValido = true;
+        
+        $scope.validaCNPJ(true); // força a busca pelo CNPJ para obter o nome da filial*/
+        
+        // Exibe o modal
+        exibeModalConta();      
+    };
+    /**
+      * Valida as informações alteradas e envia para o servidor
+      */                                             
+    var alterarConta = function(){
+        // Não faz nada se tiver validando o CNPJ
+        if($scope.validandoCNPJ) return;
+        
+        // Valida campos
+        if(typeof old === 'undefined' || old === null) return;
+        
+        // Houve alterações?
+        if($scope.modalConta.nrConta === old.nrConta &&
+           $scope.modalConta.nrAgencia === old.nrAgencia &&
+           $scope.modalConta.nrConta === old.nrConta &&
+           $scope.modalConta.banco.Codigo === old.banco.Codigo &&
+           $scope.modalConta.filial && old.empresa && 
+           $scope.modalConta.filial.nu_cnpj === old.empresa.nu_cnpj){//nrCnpj === old.empresa.nu_cnpj){
+            // Não houve alterações
+            fechaModalConta();
+            return;
+        }
+        
+        if(!camposModalValidos()) return;
+        
+        // Obtém o JSON
+        var jsonConta = { idContaCorrente : old.idContaCorrente,
+                          nrCnpj : $scope.modalConta.filial.nu_cnpj,//nrCnpj,
+                          cdBanco : $scope.modalConta.banco.Codigo, 
+                          nrAgencia : $scope.modalConta.nrAgencia,
+                          nrConta : $scope.modalConta.nrConta
+                        };
+        //console.log(jsonConta);
+        
+        // UPDATE
+        $scope.showProgress();
+        $webapi.update($apis.getUrl($apis.card.tbcontacorrente, undefined,
+                                 {id : 'token', valor : $scope.token}), jsonConta) 
+            .then(function(dados){           
+                $scope.showAlert('Conta alterada com sucesso!', true, 'success', true);
+                // Fecha os progress
+                $scope.hideProgress();
+                // Fecha o modal
+                fechaModalConta();
+                // Relista
+                buscaContas();
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                 else $scope.showAlert('Houve uma falha ao atualizar os dados (' + failData.status + ')', true, 'danger', true);
+                 else $scope.showAlert('Houve uma falha ao alterar conta (' + failData.status + ')', true, 'danger', true);
                  // Fecha os progress
-                 $scope.hideProgress(divPortletBodyFiltrosPos);
-                 $scope.hideProgress(divPortletBodyDadosPos);
-              }); 
-    };*/
+                 $scope.hideProgress();
+              });   
+    }
+    
+   /**
+     * Solicita confirmação para excluir a filial
+     */
     $scope.excluirConta = function(conta){
-        // ...    
-    };                                             
+        $scope.showModalConfirmacao('Confirmação', 
+                                    'Tem certeza que deseja excluir a conta?',
+                                     excluiConta, conta.idContaCorrente, 'Sim', 'Não');  
+    };                   
+    /**
+      * Efetiva a exclusão da conta
+      */
+    var excluiConta = function(idContaCorrente){
+         // Exclui
+         $webapi.delete($apis.getUrl($apis.card.tbcontacorrente, undefined,
+                                     [{id: 'token', valor: $scope.token},
+                                      {id: 'idContaCorrente', valor: idContaCorrente}]))
+                .then(function(dados){           
+                    $scope.showAlert('Conta excluída com sucesso!', true, 'success', true);
+                    // Fecha os progress
+                    $scope.hideProgress();
+                    // Fecha o modal
+                    fechaModalConta();
+                    // Relista
+                    buscaContas();
+                  },
+                  function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                     else if(failData.status === 500) $scope.showAlert('Conta não pode ser excluída!', true, 'warning', true); 
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                     else $scope.showAlert('Houve uma falha ao excluir a conta (' + failData.status + ')', true, 'danger', true);
+                     // Fecha os progress
+                     $scope.hideProgress();
+                  });         
+    }
+    
+    /**
+      * Exibe um modal com as filiais vinculadas a conta e possibilita vincular outras
+      */
     $scope.filiaisVinculadas = function(conta){
         // ...    
     };

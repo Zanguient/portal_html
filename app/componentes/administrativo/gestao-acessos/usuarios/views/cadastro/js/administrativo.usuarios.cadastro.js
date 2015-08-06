@@ -260,6 +260,9 @@ angular.module("administrativo-usuarios-cadastro", [])
       * Cadastra o usuário na base de dados
       */
     var cadastraUsuario = function(){
+        // Não faz nada se tiver validando campos
+        if($scope.validandoEmail || $scope.validandoLogin) return;
+        
         // Cadastra
         progressoCadastro(true)
         $scope.showProgress(divPortletBodyUsuarioCadPos);
@@ -393,6 +396,8 @@ angular.module("administrativo-usuarios-cadastro", [])
       * Altera as informações do usuário
       */                                                     
     var alteraUsuario = function(){
+        // Não faz nada se tiver validando campos
+        if($scope.validandoEmail || $scope.validandoLogin) return;
         
         if($scope.old.usuario === null){ 
             console.log("NÃO HÁ DADOS ANTERIORES!");

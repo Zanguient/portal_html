@@ -102,11 +102,12 @@ Não é necessário nenhum outro módulo externo.
 							 nm_pessoa: string,  *
 							 nu_ramal: string, 
 							 nu_telefone: string}, 
-				"webpagesusers" : { ds_email: string, *
+				"webpagesusers" : { id_users : int,
+									ds_email: string, *
 								    ds_login: string, *
 								    id_grupo: int ou null,
 								    nu_cnpjEmpresa : string ou null },
-				"webpagesusersinroles" : [{RoleId: roleid, RolePrincipal: boolean}],
+				"webpagesusersinroles" : [{RoleId: roleid, UserId: -1, RolePrincipal: boolean}],
 				"addidsgrupoempresavendedor" : [ids], // associa grupos empresas ao vendedor
 				"removeidsgrupoempresavendedor" : [ids], // desassocia grupos empresas ao vendedor
 			}

@@ -240,7 +240,8 @@
                         </button>
                     </div>
                     <div class="col-sm-3 col-sm-offset-2" ng-show="editandoDadosConta">
-                        <button class="btn red"                                 
+                        <button class="btn red" 
+                                ng-disabled="validandoEmail || validandoLogin"
                                 ng-click="alteraInformacoesConta()">
                             Salvar
                         </button>

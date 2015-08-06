@@ -330,6 +330,10 @@ angular.module("conta", [])
       * Avalia se houveram mudanças
       */
     $scope.alteraInformacoesConta = function(){
+        
+        // Não faz nada se tiver validando campos
+        if($scope.validandoEmail || $scope.validandoLogin) return;
+        
         // Houve alterações?
         if($scope.newconta.ds_email && 
            $scope.newconta.ds_email.toLowerCase() === $scope.usuario.webpagesusers.ds_email.toLowerCase() &&
