@@ -250,8 +250,8 @@
                                     <th class="" 
                                         tabindex="3"                                        
                                         rowspan="1" 
-                                        colspan="1"
-                                        style="width: 10%;">
+                                        colspan="2"
+                                        style="width: 30%;">
                                          Último Acesso
                                     </th>
                                     <th class="" 
@@ -295,11 +295,20 @@
                                                ng-bind="grupoempresa.fl_ativo ? 'Ativo' : 'Inativo'">
                                         </span>
                                     </td>
-                                    <td>
+                                    <!-- DATA ÚLTIMO ACESSO -->
+                                    <td class="center">
                                         <div class="dadosEmpresa"
                                              ng-bind="getDataString(grupoempresa.dt_ultimoAcesso) !== '01/01/0001' ? getDataTimeString(grupoempresa.dt_ultimoAcesso) : '-'" style="text-align:center">
                                         </div>    
                                     </td>
+                                    <!-- LOGIN ÚLTIMO ACESSO -->
+                                    <td>
+                                        <div class="dadosEmpresa"
+                                             style="text-align:center">
+                                            {{grupoempresa.login_ultimoAcesso || ''}}
+                                        </div>    
+                                    </td>
+                                    <!-- DATA DE CADASTRO -->
                                     <td>
                                         <div class="dadosEmpresa"
                                              ng-bind="getDataString(grupoempresa.dt_cadastro)" style="text-align:center">

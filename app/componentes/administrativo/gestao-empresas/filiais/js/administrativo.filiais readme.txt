@@ -54,6 +54,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				  ds_email: string,
 				  dt_cadastro: date,
 				  dt_ultimoAcesso : datetime,
+				  login_ultimoAcesso : string,
 				  fl_ativo: boolean,
 				  id_grupo: int,
 				  filial: string,

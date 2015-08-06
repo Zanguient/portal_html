@@ -140,8 +140,10 @@
                                             <div class="col-sm-4">
                                                 <label>Último Acesso:</label>
                                             </div>
-                                            <div class="col-sm-8" 
-                                                 ng-bind="getDataString(filialSelecionada.dt_ultimoAcesso) !== '01/01/0001' ? getDataTimeString(filialSelecionada.dt_ultimoAcesso) : '-'">                                        
+                                            <div class="col-sm-8"> 
+                                                <span ng-bind="getDataString(filialSelecionada.dt_ultimoAcesso) !== '01/01/0001' ? getDataTimeString(filialSelecionada.dt_ultimoAcesso) : '-'"></span>                                                                            <span>
+                                                    por {{filialSelecionada.login_ultimoAcesso || ''}}
+                                                </span>
                                             </div>
                                         </div>
                                         <!-- STATUS -->

@@ -33,6 +33,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
   * APIS:
     - card/tbcontacorrente
 	- card/tbcontacorrentetbloginadquirenteempresa
+	- card/loginadquirenteempresa
 	- utils/bancos
 	
  
@@ -81,7 +82,8 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 			]			
 			// OBS: cdGrupo não é alterado
 	
- 
+   * card/tbcontacorrentetbloginadquirenteempresa
+    - GET 
    
 
    
