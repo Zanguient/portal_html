@@ -388,6 +388,25 @@ margin-top:170px;
     
 }
 
+.selecionar-empresa {
+    
+}
+.selecionar-empresa .row{
+    margin: 0;
+}
+.selecionar-empresa .col-sm-2 {
+    padding-right: 0;
+    text-align: right;
+}
+.selecionar-empresa span{
+    font-weight: bold;
+    display: block;
+    text-align: right;
+    min-width: 200px;
+    white-space: nowrap;
+}
+
+
 .StatusSenhaValida{
   background-color: #45B6AF;  
   color: #fff; 
