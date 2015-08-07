@@ -39,7 +39,19 @@
                            </div>
                            <div class="modal-body modal-corpo modalAcessoDeUsuarios" style="text-align: left">
                                <div class="row">
-                                    <div class="col-sm-12">
+                                   <div class="col-sm-12">
+                                        <label>Login:</label>{{log.user.ds_login}}    
+                                   </div>
+                                   <div class="col-sm-12">
+                                        <label>Data de acesso:</label><a ng-bind="getDataTimeString(log.dtAcesso)"></a>    
+                                   </div>
+                                   <div class="col-sm-12">
+                                        <label>Aplicação:</label>{{log.dsAplicacao | uppercase}}    
+                                   </div> 
+                                   <div class="col-sm-12">
+                                        <label>Ação:</label>{{log.method.ds_method | uppercase}}   
+                                   </div> 
+                                   <div class="col-sm-12">
                                         <label>HTTP:</label>{{log.codResposta}}    
                                    </div>
                                    <div class="col-sm-12">

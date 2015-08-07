@@ -112,7 +112,8 @@
                                    </button>
                                </div>                           
                                <div class="col-sm-4 col-sm-offset-1">
-                                   <button type="button" class="btn blue"
+                                   <button type="button" class="btn"
+                                           ng-class="{'blue' : ehCadastro(), 'green' : !ehCadastro()}"
                                            ng-click="modalConta.funcaoConfirma()"
                                            ng-disabled="validandoCNPJ">
                                        {{modalConta.textoConfirma}}
@@ -140,7 +141,7 @@
                             <div class="modal-body height-auto" style="min-width: 700px">                                
                                 <!-- CONTEÚDO -->
                                  <div class="skin skin-square scroller caption-subject font-green-sharp bold" 
-                                     style="min-height: 300px" 
+                                     style="min-height: 300px; margin-bottom: 15px" 
                                      data-always-visible="1" data-rail-visible1="1">
                                      
                                     <!--FILIAIS NÃO ASSOCIADAS-->                                    
@@ -157,16 +158,16 @@
                                         </select>
                                     </div>
                                      <!-- BOTÕES -->
-                                     <div class="col-md-2" style="text-align:center">
-                                         <div class="row">
-                                             <button class="btn btn-default"
+                                     <div class="col-md-2" style="text-align:center; margin-top:13%;">
+                                         <div class="row" style="margin-bottom:25%">
+                                             <button class="btn grey"
                                                      ng-class="{'element-hidden' : !modalAdquirenteEmpresa.adquirenteEmpresaSelecionada}"
                                                      href="javascript:;" ng-click="associaAdquirenteEmpresa()">
                                                 <i class="fa fa-share"></i>
                                              </button>
                                          </div>
                                          <div class="row">
-                                             <button class="btn btn-default" 
+                                             <button class="btn grey" 
                                                      ng-class="{'element-hidden' : !modalAdquirenteEmpresa.vigenciaSelecionada}"
                                                      href="javascript:;" ng-click="desassociaAdquirenteEmpresa()">
                                                 <i class="fa fa-reply"></i>

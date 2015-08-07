@@ -378,7 +378,11 @@ angular.module("administrativo-contas-correntes", [])
         
     };   */                                            
                                                  
+                   
                                                  
+    $scope.ehCadastro = function(){
+        return old === null;
+    }                                             
      
     // AÇÕES
     var exibeModalConta = function(){
@@ -403,6 +407,7 @@ angular.module("administrativo-contas-correntes", [])
         //$scope.modalConta.nrCnpj = '';
         $scope.modalConta.filial = $scope.filiais[0];
         
+        old = null;
         // Esconde os texto e ícone de erro de cnpj
         /*$('#labelCNPJInvalido').hide();
         $('#icon-cnpj').hide(); 
