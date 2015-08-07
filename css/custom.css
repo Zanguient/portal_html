@@ -342,6 +342,11 @@ margin-top:170px;
   margin-top: 15px;    
 }
 
+.modalContasCorrentes{
+  margin-top: 10px;
+  vertical-align: middle;
+}
+
 .modalFilialDetalhes{
   border-bottom: 1px solid #eaeaea;
   margin: 10px 10px;    
@@ -514,4 +519,8 @@ margin-top:170px;
 
 tbody.centralizarVertical > tr > td {
    vertical-align: middle;
+}
+
+.teste col-xs-3{
+  padding-left: -60px;
 }
