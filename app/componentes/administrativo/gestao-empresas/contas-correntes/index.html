@@ -126,57 +126,63 @@
                 
                 
                 <!-- MODAL FILIAIS -->
-                <div class="modal fade ng-scope" id="modalFiliais" tabindex="-1" 
+                <div class="modal fade ng-scope" id="modalAdquirenteEmpresa" tabindex="-1" 
                      aria-hidden="true" style="display: none;">
-                    <div class="modal-dialog" style="min-width: 700px">
+                    <div class="modal-dialog" style="min-width: 1000px">
                         <div class="modal-content">
                             <div class="modal-header">                    
                                 <h4 class="modal-title modal-cabecalho">
-                                    Filiais e Operadoras associadas à conta
+                                    Adquirentes-Filiais associadas à conta &nbsp;&nbsp;
+                                    {{modalAdquirenteEmpresa.conta.nrAgencia}}&nbsp;&nbsp;
+                                    {{modalAdquirenteEmpresa.conta.nrConta}}
                                 </h4>
                             </div>
-                            <div class="modal-body height-auto" style="min-width: 500px">                                
+                            <div class="modal-body height-auto" style="min-width: 700px">                                
                                 <!-- CONTEÚDO -->
                                  <div class="skin skin-square scroller caption-subject font-green-sharp bold" 
                                      style="min-height: 300px" 
                                      data-always-visible="1" data-rail-visible1="1">
-                                    
+                                     
                                     <!--FILIAIS NÃO ASSOCIADAS-->                                    
-                                    <div class="col-md-4" style="text-align:center">
+                                    <div class="col-md-5" style="text-align:center">
                                         <label style="text-align:center">
-                                            <strong>Filiais não associadas</strong>
+                                            <strong>Não associadas</strong>
                                         </label>
                                         <select class="form-control" 
                                                 size="15" 
-                                                ng-model="modalFiliais.adquirenteEmpresaNaoSelecionada"
-                                                ng-options="adquirenteempresa as (adquirenteempresa.descricao | uppercase) for adquirenteempresa in modaFiliais.adquirenteempresa"
-                                                style="width:100%">  
+                                                ng-model="modalAdquirenteEmpresa.adquirenteEmpresaSelecionada"
+                                                ng-options="adquirenteempresa as getAdquirenteEmpresaAmigavel(adquirenteempresa) for adquirenteempresa in modalAdquirenteEmpresa.naoSelecionadas"
+                                                style="width:100%; overflow: auto;">  
                                             <option style="display:none" value=""></option>
                                         </select>
                                     </div>
                                      <!-- BOTÕES -->
-                                     <div class="col-md-4" style="text-align:center">
+                                     <div class="col-md-2" style="text-align:center">
                                          <div class="row">
-                                             <button class="btn">
-                                                >
+                                             <button class="btn btn-default"
+                                                     ng-class="{'element-hidden' : !modalAdquirenteEmpresa.adquirenteEmpresaSelecionada}"
+                                                     href="javascript:;" ng-click="associaAdquirenteEmpresa()">
+                                                <i class="fa fa-share"></i>
                                              </button>
                                          </div>
                                          <div class="row">
-                                             <button class="btn">
-                                                <
+                                             <button class="btn btn-default" 
+                                                     ng-class="{'element-hidden' : !modalAdquirenteEmpresa.vigenciaSelecionada}"
+                                                     href="javascript:;" ng-click="desassociaAdquirenteEmpresa()">
+                                                <i class="fa fa-reply"></i>
                                              </button>
                                          </div>
                                      </div>
                                     <!-- FILIAIS ASSOCIADAS -->                                    
-                                    <div class="col-md-4" style="text-align:center">
+                                    <div class="col-md-5" style="text-align:center">
                                         <label style="text-align:center">
-                                            <strong>Empresas Associadas</strong>
+                                            <strong>Associadas</strong>
                                         </label>
                                         <select class="form-control" 
                                                 size="15" 
-                                                ng-model="modalFiliais.adquirenteEmpresaSelecionada"
-                                                ng-options="filial as (filial.ds_fantasia | uppercase) for filial in modaFiliais.filiaisNaoSelecionadas"
-                                                style="width:100%">  
+                                                ng-model="modalAdquirenteEmpresa.vigenciaSelecionada"
+                                                ng-options="vigencia as getAdquirenteEmpresaAmigavel(vigencia.loginAdquirenteEmpresa) for vigencia in modalAdquirenteEmpresa.vigentes"
+                                                style="width:100%;overflow: auto;">  
                                             <option style="display:none" value=""></option>
                                         </select>
                                     </div>
@@ -188,7 +194,7 @@
                                     <div class="col-md-3">
                                         <button type="button" 
                                                 class="btn btn-success"
-                                                ng-click="salvaGrupoEmpresaVendedor()">
+                                                ng-click="salvaAdquirentesEmpresas()">
                                             Salvar
                                         </button>
                                     </div>
@@ -197,7 +203,7 @@
                                                 popover-placement="top"
                                                 popover="Retoma as associações previamente salvas, sem alterações"
                                                 popover-trigger="mouseenter"
-                                                ng-click="resetaGrupoEmpresaVendedor()">
+                                                ng-click="resetaAdquirentesEmpresas()">
                                             Resetar
                                         </button>
                                     </div>
@@ -207,8 +213,9 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- FIM MODAL BODY -->
                     </div>
-                </div>              
+                </div> 
                 <!-- END MODAL FILIAIS -->
                 
                 
@@ -388,7 +395,7 @@
                                                                 <li>
                                                                     <a href="javascript:;" 
                                                                        ng-click="filiaisVinculadas(conta)">
-                                                                        Filiais Vinculadas
+                                                                        Adquirentes-Filiais Vinculadas
                                                                     </a>
                                                                 </li>
                                                                 <li>
