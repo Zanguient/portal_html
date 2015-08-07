@@ -6,7 +6,6 @@
  *
  */
 -->
-
 <div class="container" ng-controller="administrativo-privilegiosCtrl" ng-init="administrativoPrivilegiosInit()">   
     
     <!-- BEGIN PAGE BREADCRUMB -->
@@ -348,7 +347,7 @@
                             </div>
                             
                             <!-- PAGINAÇÃO -->
-                            <div class="col-xs-4 col-sm-3"> 
+                            <div class="col-xs-4 col-sm-4 col-md-3"> 
                                 <div class="pagination-panel centralizarPaginacao"> Página 
                                     <a href="javascript:;" ng-click="retrocedePagina()"
                                        class="btn btn-sm default prev" 
@@ -372,7 +371,7 @@
                             </div>
                             
                             <!--PESQUISA-->
-                            <div class="col-xs-4 col-sm-5 teste">
+                            <div class="col-xs-4 col-sm-4 col-md-5 teste">
                                 <div class="dataTables_filter">                                    
                                     <label>
                                         <div class="input-group input-icon right" style="width:70%;float:right;">
@@ -396,7 +395,7 @@
                         
                         <!-- TABELA -->
                         <div class="row">
-                            <div class="col-sm-6 col-sm-offset-3">
+                            <div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2">
                                 <!-- TABELA -->
                                 <div class="table-scrollable">
                                     <table class="table table-striped table-hover table-bordered dataTable no-footer" 
@@ -473,14 +472,14 @@
                         <!--TESTE-->
                         <div class="row">
                             <!-- RODAPÉ : Exibição dos resultados e paginação -->
-                            <div class="col-xs-4 col-sm-4">
+                            <div class="col-xs-4 col-sm-4 col-md-4">
                                 <div class="dataTables_info" role="status" aria-live="polite">
                                     <strong>Exibindo os registros {{privilegio.faixa_registros}}</strong>
                                 </div>  
                             </div>
                             
                             <!--PAGINAÇÃO-RODAPÉ-->
-                            <div class="col-xs-4 col-sm-3">
+                            <div class="col-xs-4 col-sm-4 col-md-3">
                                 <div class="pagination-panel centralizarPaginacao"> Página 
                                     <a href="javascript:;" ng-click="retrocedePagina()"
                                        class="btn btn-sm default prev" 
@@ -514,3 +513,4 @@
     </div>
     <!-- END PAGE CONTENT INNER -->
 </div>
+
