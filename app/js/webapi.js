@@ -92,6 +92,13 @@ angular.module('webapi', ['utils'])
         }
       },
       card : {
+        tbadquirente : {
+            cdAdquirente : 100,
+            nmAdquirente : 101,
+            dsAdquirente : 102,
+            stAdquirente : 103,
+            hrExecucao : 104
+        },
         tbcontacorrente: {
             idContaCorrente : 100,
             cdGrupo : 101,
@@ -99,6 +106,27 @@ angular.module('webapi', ['utils'])
             cdBanco : 103, 
             nrAgencia : 104
             nrConta : 105
+        },
+        tbcontacorrentetbloginadquirenteempresa: {
+            cdContaCorrente : 100,
+            cdLoginAdquirenteEmpresa : 101,
+            dtInicio : 102,
+            dtFim : 103
+        },
+        tbloginadquirenteempresa: {
+            cdLoginAdquirenteEmpresa : 100,
+            cdAdquirente : 101,
+            cdGrupo : 102,
+            nrCNPJ : 103,
+            dsLogin : 104,
+            dsSenha : 105,
+            cdEstabelecimento : 106,
+            dtAlteracao : 107,
+            stLoginAdquirente : 108,
+            stLoginAdquirenteEmpresa : 109, // controle de Bruno 
+            // Relacionamentos
+            tbadquirente : 200,
+            empresa : 300
         },
       },
       cliente : {
@@ -279,7 +307,10 @@ angular.module('webapi', ['utils'])
         webpagesusersinroles : $autenticacao.getUrlBase() + '/administracao/webpagesusersinroles/'
     },
     card : {
+        tbadquirente : $autenticacao.getUrlBase() + '/card/tbadquirente/',
         tbcontacorrente: $autenticacao.getUrlBase() + '/card/tbcontacorrente/',  
+        tbcontacorrentetbloginadquirenteempresa : $autenticacao.getUrlBase() + '/card/tbcontacorrentetbloginadquirenteempresa/', 
+        tbloginadquirenteempresa : $autenticacao.getUrlBase() + '/card/tbloginadquirenteempresa/', 
         uploadextrato : $autenticacao.getUrlBase() + '/card/testeupload/',    
     },
     cliente: {

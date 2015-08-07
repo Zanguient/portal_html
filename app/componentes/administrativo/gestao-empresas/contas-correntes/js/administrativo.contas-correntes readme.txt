@@ -33,7 +33,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
   * APIS:
     - card/tbcontacorrente
 	- card/tbcontacorrentetbloginadquirenteempresa
-	- card/loginadquirenteempresa
+	- card/tbloginadquirenteempresa
 	- utils/bancos
 	
  
@@ -59,8 +59,21 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				banco : { Codigo : string, 
 						  NomeExtenso : string},
 				nrAgencia : string,
-				nrConta : string
-			  }
+				nrConta : string,
+				vigentes : [{ dtInicio : datetime,
+							  loginAdquirenteEmpresa : {
+														cdLoginAdquirenteEmpresa : int,
+														adquirente :{ cdAdquirente : int,
+																	  nmAdquirente : string,
+																	  dsAdquirente : string,
+																	  stAdquirente : int,
+																	},
+														empresa : { nu_cnpj = string,
+																	ds_fantasia = string
+																  },
+														stLoginAdquirenteEmpresa = int
+													  }
+						  }]
 			]	
 	- POST : adiciona uma nova conta corrente
 			[
@@ -82,8 +95,36 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 			]			
 			// OBS: cdGrupo não é alterado
 	
-   * card/tbcontacorrentetbloginadquirenteempresa
-    - GET 
+	
+   * card/tbloginadquirenteempresa
+     - GET : coleção com todas as adquirentes por filial do grupo (coleção 2)
+	     [ {
+			  cdLoginAdquirenteEmpresa: int,
+			  adquirente: {
+				cdAdquirente: int,
+				nmAdquirente: string,
+				dsAdquirente: string,
+				stAdquirente: int
+			  },
+			  grupo_empresa: {
+				id_grupo: int,
+				ds_nome: string
+			  },
+			  empresa: {
+				nu_cnpj: string,
+				ds_fantasia: string
+			  },
+			  stLoginAdquirenteEmpresa: int
+			}
+	    ]
+		
+	*card/tbcontacorrentetbloginadquirenteempresa
+	 - UPDATE : armazena os loginAdquirenteEmpresa associados a conta
+		 {
+			idContaCorrente : int,
+			associar : [cdLoginAdquirenteEmpresa1,cdLoginAdquirenteEmpresa]
+			desassociar: [cdLoginAdquirenteEmpresa1,cdLoginAdquirenteEmpresa]
+		 }
    
 
    

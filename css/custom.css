@@ -317,6 +317,9 @@ margin-top:170px;
   margin-bottom: 17px;
 }
 
+.linhaselecionada {
+    background-color: aqua;
+}
 
 .linhaTotalRelatorios{
   text-align: center;
