@@ -317,6 +317,10 @@ margin-top:170px;
   margin-bottom: 17px;
 }
 
+.large-popover > .popover{
+    width: 200px;
+}
+
 .linhaselecionada {
     background-color: aqua;
 }

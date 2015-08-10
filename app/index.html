@@ -214,16 +214,16 @@
                                 </span>
                             </div>
                             <div class="col col-sm-2">
+                                <img ng-src="../img/loading-atos.gif" ng-show="carregandoGrupoEmpresas"/>
                                 <a class="btn" href="javascript:;" 
                                    ng-click="limpaGrupoEmpresa()"
-                                   ng-show="PERMISSAO_FILTRO_EMPRESA && PERMISSAO_ADMINISTRATIVO && usuariologado.grupoempresa">
+                                   ng-show="PERMISSAO_FILTRO_EMPRESA && PERMISSAO_ADMINISTRATIVO && usuariologado.grupoempresa && !carregandoGrupoEmpresas">
                                     <i class="fa fa-times-circle"></i>
                                 </a>
                                 <a href="javascript:;" class="btn dropdown-toggle" 
                                    data-toggle="dropdown"
-                                   ng-show="PERMISSAO_FILTRO_EMPRESA && PERMISSAO_ADMINISTRATIVO && !usuariologado.grupoempresa">
-                                    <i class="icon-settings" 
-                                       ng-hide="carregandoGrupoEmpresas"></i>
+                                   ng-show="PERMISSAO_FILTRO_EMPRESA && PERMISSAO_ADMINISTRATIVO && !usuariologado.grupoempresa  && !carregandoGrupoEmpresas">
+                                    <i class="icon-settings"></i>
                                 </a>
                                 
                                 <!-- LAYOUT DE BUSCA DO GRUPO EMPRESA -->
