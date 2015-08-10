@@ -279,7 +279,7 @@
                         <!-- EXIBIÇÃO E PESQUISA -->
                         <div class="row paddingDivs">
                             <!-- EXIBIÇÃO --> 
-                            <div class="col-md-4 col-sm-12">
+                            <div class="col-xs-4 col-sm-4">
                                 <div class="dataTables_length">
                                     <label>
                                         <span class="seperator"></span>Exibindo 
@@ -293,28 +293,28 @@
                                 </div>
                             </div> 
                             <!--PAGINAÇÃO-TOPO-->
-                            <div class="pagination-panel centralizarPaginacao col-md-3 col-sm-12"> Página 
-                                <a href="javascript:;" ng-click="retrocedePagina()"
-                                   class="btn btn-sm default prev" 
-                                   ng-class="{disabled: filtro.pagina <= 1}" 
-                                   title="Página anterior">
-                                        <i class="fa fa-angle-left"></i>
-                                </a>
-                                <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
-                                       maxlength="4" style="text-align:center; margin: 0 5px;"
-                                       ng-model="paginaInformada" valid-integer-number
-                                       ng-keypress="($event.which === 13) ? alteraPagina() : 0"
-                                       ng-blur="atualizaPaginaDigitada()">
-                                    <a href="javascript:;" ng-click="avancaPagina()"
-                                       class="btn btn-sm default next"
-                                       ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
-                                       title="Próxima página">
-                                        <i class="fa fa-angle-right"></i>
+                            <div class="col-xs-4 col-sm-4 col-md-3">
+                                <div class="pagination-panel centralizarPaginacao"> Página 
+                                    <a href="javascript:;" ng-click="retrocedePagina()"
+                                       class="btn btn-sm default prev" 
+                                       ng-class="{disabled: filtro.pagina <= 1}" 
+                                       title="Página anterior">
+                                            <i class="fa fa-angle-left"></i>
                                     </a>
-                                    de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
-                            </div>
-                            <div class="col-md-5 col-sm-12">
-                            </div>
+                                    <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                           maxlength="4" style="text-align:center; margin: 0 5px;"
+                                           ng-model="paginaInformada" valid-integer-number
+                                           ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                                           ng-blur="atualizaPaginaDigitada()">
+                                        <a href="javascript:;" ng-click="avancaPagina()"
+                                           class="btn btn-sm default next"
+                                           ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
+                                           title="Próxima página">
+                                            <i class="fa fa-angle-right"></i>
+                                        </a>
+                                        de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
+                                </div>
+                            </div>                            
                             <!-- FIM PAGINAÇÃO -->
                         </div>
                         <div class="row">                            
@@ -424,32 +424,34 @@
                                     </div>  
                                     <!--FIM TABELA-->
                                     <!-- RODAPÉ : Exibição dos resultados e paginação -->
-                                    <div class="row" style="margin: 10px 0 20px 0">
-                                        <div class="col-md-4 col-sm-12">
+                                    <div class="row">
+                                        <div class="col-xs-4 col-sm-4 col-md-4">
                                             <div class="dataTables_info" role="status" aria-live="polite">
                                                 <strong>Exibindo os registros {{filtro.faixa_registros}}</strong>
                                             </div>
                                         </div>
                                         <!--PAGINAÇÃO-RODAPÉ-->
-                                        <div class="pagination-panel centralizarPaginacao col-md-3 col-sm-12"> Página 
-                                            <a href="javascript:;" ng-click="retrocedePagina()"
-                                               class="btn btn-sm default prev" 
-                                               ng-class="{disabled: filtro.pagina <= 1}" 
-                                               title="Página anterior">
-                                                    <i class="fa fa-angle-left"></i>
-                                            </a>
-                                            <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
-                                                   maxlength="4" style="text-align:center; margin: 0 5px;"
-                                                   ng-model="paginaInformada" valid-integer-number
-                                                   ng-keypress="($event.which === 13) ? alteraPagina() : 0"
-                                                   ng-blur="atualizaPaginaDigitada()">
-                                                <a href="javascript:;" ng-click="avancaPagina()"
-                                                   class="btn btn-sm default next"
-                                                   ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
-                                                   title="Próxima página">
-                                                    <i class="fa fa-angle-right"></i>
+                                        <div class="col-xs-4 col-sm-4 col-md-3">
+                                            <div class="pagination-panel centralizarPaginacao"> Página 
+                                                <a href="javascript:;" ng-click="retrocedePagina()"
+                                                   class="btn btn-sm default prev" 
+                                                   ng-class="{disabled: filtro.pagina <= 1}" 
+                                                   title="Página anterior">
+                                                        <i class="fa fa-angle-left"></i>
                                                 </a>
-                                                de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
+                                                <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                                       maxlength="4" style="text-align:center; margin: 0 5px;"
+                                                       ng-model="paginaInformada" valid-integer-number
+                                                       ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                                                       ng-blur="atualizaPaginaDigitada()">
+                                                    <a href="javascript:;" ng-click="avancaPagina()"
+                                                       class="btn btn-sm default next"
+                                                       ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
+                                                       title="Próxima página">
+                                                        <i class="fa fa-angle-right"></i>
+                                                    </a>
+                                                    de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
+                                            </div>
                                         </div>
                                         <!-- FIM PAGINAÇÃO -->
                                     </div>

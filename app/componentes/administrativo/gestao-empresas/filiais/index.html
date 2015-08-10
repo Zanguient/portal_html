@@ -280,7 +280,7 @@
                 <!-- EXIBIÇÃO E PESQUISA -->
                 <div class="row" style="border-bottom:0px solid #EAEAEA">
                     <!-- EXIBIÇÃO --> 
-                    <div class="col-md-4 col-sm-6">
+                    <div class="col-xs-4 col-sm-4 col-md-4">
                         <div class="dataTables_length">
                             <label>
                                 <span class="seperator"></span>Exibindo 
@@ -294,28 +294,30 @@
                         </div>
                     </div>
                     <!--PAGINAÇÃO-TOPO-->
-                    <div class="pagination-panel centralizarPaginacao col-md-3 col-sm-6"> Página 
-                        <a href="javascript:;" ng-click="retrocedePagina()"
-                           class="btn btn-sm default prev" 
-                           ng-class="{disabled: filial.pagina <= 1}" 
-                           title="Página anterior">
-                                <i class="fa fa-angle-left"></i>
-                        </a>
-                        <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
-                               maxlength="4" style="text-align:center; margin: 0 5px;"
-                               ng-model="paginaInformada" valid-integer-number
-                               ng-keypress="($event.which === 13) ? alteraPagina() : 0"
-                               ng-blur="atualizaPaginaDigitada()">
-                        <a href="javascript:;" ng-click="avancaPagina()"
-                           class="btn btn-sm default next"
-                           ng-class="{disabled: filial.pagina >= filial.total_paginas}"
-                           title="Próxima página">
-                            <i class="fa fa-angle-right"></i>
-                        </a>
-                         de <span class="pagination-panel-total">{{filial.total_paginas}}</span>
-                    </div>
+                    <div class="col-xs-4 col-sm-4 col-md-3">
+                        <div class="pagination-panel centralizarPaginacao"> Página 
+                            <a href="javascript:;" ng-click="retrocedePagina()"
+                               class="btn btn-sm default prev" 
+                               ng-class="{disabled: filial.pagina <= 1}" 
+                               title="Página anterior">
+                                    <i class="fa fa-angle-left"></i>
+                            </a>
+                            <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                   maxlength="4" style="text-align:center; margin: 0 5px;"
+                                   ng-model="paginaInformada" valid-integer-number
+                                   ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                                   ng-blur="atualizaPaginaDigitada()">
+                            <a href="javascript:;" ng-click="avancaPagina()"
+                               class="btn btn-sm default next"
+                               ng-class="{disabled: filial.pagina >= filial.total_paginas}"
+                               title="Próxima página">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                             de <span class="pagination-panel-total">{{filial.total_paginas}}</span>
+                        </div>
+                    </div>    
                     <!-- PESQUISA -->
-                    <div class="col-md-5 col-sm-12" style="margin-bottom:15px">
+                    <div class=" col-sm-4  col-xs-4 col-md-5">
                         <div class="dataTables_filter">                            
                             <div class="col-md-7 col-sm-12 col-md-offset-5" style="padding-right: 1px; padding-left: 1px;">
                                 <label>
@@ -431,33 +433,35 @@
                    
                     
                     <!-- RODAPÉ : Exibição dos resultados e paginação -->
-                    <div class="row" style="margin: 10px 0 20px 0">
-                        <div class="col-md-4 col-sm-12">
+                    <div class="row">
+                        <div class=" col-sm-4  col-xs-4 col-md-4">
                             <div class="dataTables_info" role="status" aria-live="polite">
                                 <strong>Exibindo os registros {{filial.faixa_registros}}</strong>
                             </div>
                         </div>
                         <!--PAGINAÇÃO-RODAPÉ-->
-                        <div class="pagination-panel centralizarPaginacao col-md-3 col-sm-12"> Página 
-                            <a href="javascript:;" ng-click="retrocedePagina()"
-                               class="btn btn-sm default prev" 
-                               ng-class="{disabled: filial.pagina <= 1}" 
-                               title="Página anterior">
-                                    <i class="fa fa-angle-left"></i>
-                            </a>
-                            <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
-                                   maxlength="4" style="text-align:center; margin: 0 5px;"
-                                   ng-model="paginaInformada" valid-integer-number
-                                   ng-keypress="($event.which === 13) ? alteraPagina() : 0"
-                                   ng-blur="atualizaPaginaDigitada()">
-                            <a href="javascript:;" ng-click="avancaPagina()"
-                               class="btn btn-sm default next"
-                               ng-class="{disabled: filial.pagina >= filial.total_paginas}"
-                               title="Próxima página">
-                                <i class="fa fa-angle-right"></i>
-                            </a>
-                             de <span class="pagination-panel-total">{{filial.total_paginas}}</span>
-                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-3">
+                            <div class="pagination-panel centralizarPaginacao"> Página 
+                                <a href="javascript:;" ng-click="retrocedePagina()"
+                                   class="btn btn-sm default prev" 
+                                   ng-class="{disabled: filial.pagina <= 1}" 
+                                   title="Página anterior">
+                                        <i class="fa fa-angle-left"></i>
+                                </a>
+                                <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                       maxlength="4" style="text-align:center; margin: 0 5px;"
+                                       ng-model="paginaInformada" valid-integer-number
+                                       ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                                       ng-blur="atualizaPaginaDigitada()">
+                                <a href="javascript:;" ng-click="avancaPagina()"
+                                   class="btn btn-sm default next"
+                                   ng-class="{disabled: filial.pagina >= filial.total_paginas}"
+                                   title="Próxima página">
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                                 de <span class="pagination-panel-total">{{filial.total_paginas}}</span>
+                            </div>
+                        </div>    
                         <!-- FIM PAGINAÇÃO -->
                     </div>
                     <!-- FIM RODAPÉ -->
