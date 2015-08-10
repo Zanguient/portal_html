@@ -81,26 +81,65 @@
                                     <!-- CONTEUDO DO FILTRO -->
                                     <tr role="row" class="filter">
                                         <!-- DATA DE RECEBIMENTO -->
-                                        <td rowspan="1" colspan="1">  
-                                            <div class="row" style="margin-bottom:10px">
-                                                <div class="col-sm-1"></div>
-                                                <div class="btn-group col-sm-10">
+                                        <td rowspan="1" colspan="1"> 
+                                            
+                                            <div class="clearfix" style="text-align:center; margin-bottom:10px">
+                                                <div class="btn-group" data-toggle="buttons">
+                                                    <div class="col-md-6 col-sm-12">
+                                                        <label class="btn" 
+                                                               ng-class="{ 'red': filtro.data === 'Recebimento', 'grey': filtro.data !== 'Recebimento'}"
+                                                               ng-model="filtro.data" 
+                                                               btn-radio="'Recebimento'">
+                                                            Recebimento
+                                                        </label> 
+                                                    </div>
+                                                    <div class="col-md-6 col-sm-12">
+                                                        <label class="btn" 
+                                                               ng-class="{ 'red': filtro.data === 'Venda', 'grey': filtro.data !== 'Venda'}"
+                                                               ng-model="filtro.data" 
+                                                               btn-radio="'Venda'">
+                                                            Venda
+                                                        </label>
+                                                    </div>    
+                                                </div>
+                                            </div>
+                                            
+                                            <!--div class="row" style="margin-bottom:10px">                                             
+                                                    
+                                                <div class="row btn-group">
                                                     <label class="btn" 
                                                            ng-class="{ 'red': filtro.data === 'Recebimento', 'grey': filtro.data !== 'Recebimento'}"
                                                            ng-model="filtro.data" 
                                                            btn-radio="'Recebimento'">
                                                         Recebimento
-                                                    </label>
+                                                    </label>                                                        
                                                     <label class="btn" 
                                                            ng-class="{ 'red': filtro.data === 'Venda', 'grey': filtro.data !== 'Venda'}"
                                                            ng-model="filtro.data" 
-                                                           btn-radio="'Venda'"
-                                                           style="margin-left: -5px">
+                                                           btn-radio="'Venda'">
                                                         Venda
-                                                    </label>                                                            
+                                                    </label>
                                                 </div>
-                                                <div class="col-sm-1"></div>
-                                            </div>
+                                                
+                                                
+                                                
+                                                    <!--div class="btn-group col-sm-10">
+                                                        <label class="btn" 
+                                                               ng-class="{ 'red': filtro.data === 'Recebimento', 'grey': filtro.data !== 'Recebimento'}"
+                                                               ng-model="filtro.data" 
+                                                               btn-radio="'Recebimento'">
+                                                            Recebimento
+                                                        </label>
+                                                        <label class="btn" 
+                                                               ng-class="{ 'red': filtro.data === 'Venda', 'grey': filtro.data !== 'Venda'}"
+                                                               ng-model="filtro.data" 
+                                                               btn-radio="'Venda'"
+                                                               style="margin-left: -5px">
+                                                            Venda
+                                                        </label>                                                            
+                                                    </div-- >
+                                                    
+                                            </div-->
                                                                            
                                             <div class="input-group date date-picker margin-bottom-5"
                                                  data-date-format="dd/mm/yyyy">
@@ -285,7 +324,7 @@
                         <!-- EXIBIÇÃO E PESQUISA -->
                         <div class="row">
                             <!-- EXIBIÇÃO --> 
-                            <div class="col-md-4 col-sm-12">
+                            <div class="col-xs-4 col-sm-4 col-md-4">
                                 <div class="dataTables_length">
                                     <label>
                                         <span class="seperator"></span>Exibindo 
@@ -301,67 +340,90 @@
                                 </div>
                             </div>                                                      
                             <!--PAGINAÇÃO-TOPO-->
-                            <div class="pagination-panel centralizarPaginacao col-md-3 col-sm-12"> Página 
-                                <a href="javascript:;" ng-click="retrocedePagina()"
-                                   class="btn btn-sm default prev" 
-                                   ng-class="{disabled: (tabIs(0) && filtro.sintetico.pagina  <= 1) || (tabIs(1) && filtro.analitico.pagina <= 1)}" 
-                                   title="Página anterior">
-                                        <i class="fa fa-angle-left"></i>
-                                </a>
-                                <input type="text" 
-                                       class="pagination-panel-input form-control input-mini input-inline input-sm" 
-                                       maxlength="4" style="text-align:center; margin: 0 5px;"
-                                       ng-model="paginaInformada" valid-integer-number
-                                       ng-keypress="($event.which === 13) ? alteraPagina() : 0"
-                                       ng-blur="atualizaPaginaDigitada()">
-                                <a href="javascript:;" ng-click="avancaPagina()"
-                                   class="btn btn-sm default next"
-                                   ng-class="{disabled: (tabIs(0) && filtro.sintetico.pagina >= filtro.sintetico.total_paginas) || (tabIs(1) && filtro.analitico.pagina >= filtro.analitico.total_paginas)}"
-                                   title="Próxima página">
-                                    <i class="fa fa-angle-right"></i>
-                                </a>
-                                 de 
-                                <span class="pagination-panel-total" ng-show="tabIs(0)">
-                                    {{filtro.sintetico.total_paginas}}
-                                </span>
-                                <span class="pagination-panel-total" ng-show="tabIs(1)">
-                                    {{filtro.analitico.total_paginas}}
-                                </span>
-                            </div>
+                            <div class="col-xs-4 col-sm-4 col-md-3">
+                                <div class="pagination-panel centralizarPaginacao"> Página 
+                                    <a href="javascript:;" ng-click="retrocedePagina()"
+                                       class="btn btn-sm default prev" 
+                                       ng-class="{disabled: (tabIs(0) && filtro.sintetico.pagina  <= 1) || (tabIs(1) && filtro.analitico.pagina <= 1)}" 
+                                       title="Página anterior">
+                                            <i class="fa fa-angle-left"></i>
+                                    </a>
+                                    <input type="text" 
+                                           class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                           maxlength="4" style="text-align:center; margin: 0 5px;"
+                                           ng-model="paginaInformada" valid-integer-number
+                                           ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                                           ng-blur="atualizaPaginaDigitada()">
+                                    <a href="javascript:;" ng-click="avancaPagina()"
+                                       class="btn btn-sm default next"
+                                       ng-class="{disabled: (tabIs(0) && filtro.sintetico.pagina >= filtro.sintetico.total_paginas) || (tabIs(1) && filtro.analitico.pagina >= filtro.analitico.total_paginas)}"
+                                       title="Próxima página">
+                                        <i class="fa fa-angle-right"></i>
+                                    </a>
+                                     de 
+                                    <span class="pagination-panel-total" ng-show="tabIs(0)">
+                                        {{filtro.sintetico.total_paginas}}
+                                    </span>
+                                    <span class="pagination-panel-total" ng-show="tabIs(1)">
+                                        {{filtro.analitico.total_paginas}}
+                                    </span>
+                                </div>
+                            </div>    
                             <!-- PESQUISA -->
-                            <div class="col-md-5 col-sm-12" ng-class="{'element-hidden':!tabIs(1)}">
-                                <div class="dataTables_filter">  
-                                    <div class="col-sm-7" style="padding-right: 1px;padding-left: 1px;">
-                                        <label>
+                            <div class="col-xs-4 col-sm-4 col-md-5" ng-class="{'element-hidden':!tabIs(1)}">
+                                <div class="dataTables_filter"> 
+                                    
+                                    <div class="col-md-5">
+                                        <div class="dataTables_length" 
+                                             id="datatable_ajax_length">
+                                            <label>
+                                                <span class="seperator"></span>Pesquisar
                                                 <select aria-controls="datatable_products" 
                                                         class="form-control input-sm input-inline"
                                                         ng-model="filtro.campo_busca"
                                                         ng-options="campo as campo.nome for campo in camposBusca">
                                                 </select>
-                                        </label>
-                                        
-                                        <label>
-                                                <span class="seperator"></span>Pesquisar 
-                                        </label>
-                                    </div>
-                                    <div class="col-sm-5" style="padding-right: 1px; padding-left: 1px;">
-                                        <label>
-                                            <div class="input-group input-icon right">
-                                                <i class="fa fa-times" style="right:50px;cursor:pointer"
-                                                   ng-click="resetaBusca()"
-                                                   ng-show="filtro.busca"></i>
-                                                <input type="text" 
-                                                   class="form-control input-inline" 
-                                                   placeholder="Buscar" 
-                                                   ng-model="filtro.busca"
-                                                   ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !filtro.busca)) && buscaRelatorio()">
-												<span class="input-group-addon">
-                                                    <i class="fa fa-search" style="cursor:pointer"
-                                                       ng-click="buscaRelatorio()"></i>
-												</span>
-											</div> 
-                                        </label>
-                                    </div>
+                                            </label>                                         
+                                        </div>                                    
+                                    </div> 
+                                    <div class="col-md-7 input-group input-icon right">
+                                        <i class="fa fa-times" style="right:50px;cursor:pointer"
+                                           ng-click="resetaBusca()"
+                                           ng-show="filtro.busca"></i>
+                                        <input type="text" 
+                                           class="form-control input-inline" 
+                                           placeholder="Buscar" 
+                                           ng-model="filtro.busca"
+                                           ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !filtro.busca)) && buscaRelatorio()">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-search" style="cursor:pointer"
+                                               ng-click="buscaRelatorio()"></i>
+                                        </span>
+                                    </div>    
+                                    
+                                    
+                                   <!--label>Pesquisar </label>
+                                    <div class="">
+                                        <select aria-controls="datatable_products" 
+                                                class="form-control input-sm input-inline"
+                                                ng-model="filtro.campo_busca"
+                                                ng-options="campo as campo.nome for campo in camposBusca">
+                                        </select>
+                                    </div>  
+                                    <div class="input-group input-icon right" style="width:20%">
+                                        <i class="fa fa-times" style="right:50px;cursor:pointer"
+                                           ng-click="resetaBusca()"
+                                           ng-show="filtro.busca"></i>
+                                        <input type="text" 
+                                           class="form-control input-inline" 
+                                           placeholder="Buscar" 
+                                           ng-model="filtro.busca"
+                                           ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !filtro.busca)) && buscaRelatorio()">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-search" style="cursor:pointer"
+                                               ng-click="buscaRelatorio()"></i>
+                                        </span>
+                                    </div--> 
                                 </div>
                             </div>
                         </div>
@@ -695,8 +757,8 @@
                             <!--FIM NAVEGAÇÃO-->
                         </div>    
                         <!-- RODAPÉ : Exibição dos resultados e paginação -->
-                        <div class="row" style="margin: 10px 0 20px 0">
-                            <div class="col-md-4 col-sm-12">
+                        <div class="row">
+                            <div class="col-xs-4 col-sm-4 col-md-4">
                                 <div class="dataTables_info" role="status" aria-live="polite">
                                     <strong>Exibindo os registros 
                                         <span ng-show="tabIs(0)">{{filtro.sintetico.faixa_registros}}</span>
@@ -705,32 +767,34 @@
                                 </div> 
                             </div>
                             <!--PAGINAÇÃO-RODAPÉ-->
-                            <div class="pagination-panel centralizarPaginacao col-md-3 col-sm-12"> Página 
-                                <a href="javascript:;" ng-click="retrocedePagina()"
-                                   class="btn btn-sm default prev" 
-                                   ng-class="{disabled: (tabIs(0) && filtro.sintetico.pagina  <= 1) || (tabIs(1) && filtro.analitico.pagina <= 1)}" 
-                                   title="Página anterior">
-                                        <i class="fa fa-angle-left"></i>
-                                </a>
-                                <input type="text" 
-                                       class="pagination-panel-input form-control input-mini input-inline input-sm" 
-                                       maxlength="4" style="text-align:center; margin: 0 5px;"
-                                       ng-model="paginaInformada" valid-integer-number
-                                       ng-keypress="($event.which === 13) ? alteraPagina() : 0"
-                                       ng-blur="atualizaPaginaDigitada()">
-                                <a href="javascript:;" ng-click="avancaPagina()"
-                                   class="btn btn-sm default next"
-                                   ng-class="{disabled: (tabIs(0) && filtro.sintetico.pagina >= filtro.sintetico.total_paginas) || (tabIs(1) && filtro.analitico.pagina >= filtro.analitico.total_paginas)}"
-                                   title="Próxima página">
-                                    <i class="fa fa-angle-right"></i>
-                                </a>
-                                 de 
-                                <span class="pagination-panel-total" ng-show="tabIs(0)">
-                                    {{filtro.sintetico.total_paginas}}
-                                </span>
-                                <span class="pagination-panel-total" ng-show="tabIs(1)">
-                                    {{filtro.analitico.total_paginas}}
-                                </span>    
+                            <div class="col-xs-4 col-sm-4 col-md-3">
+                                <div class="pagination-panel centralizarPaginacao"> Página 
+                                    <a href="javascript:;" ng-click="retrocedePagina()"
+                                       class="btn btn-sm default prev" 
+                                       ng-class="{disabled: (tabIs(0) && filtro.sintetico.pagina  <= 1) || (tabIs(1) && filtro.analitico.pagina <= 1)}" 
+                                       title="Página anterior">
+                                            <i class="fa fa-angle-left"></i>
+                                    </a>
+                                    <input type="text" 
+                                           class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                           maxlength="4" style="text-align:center; margin: 0 5px;"
+                                           ng-model="paginaInformada" valid-integer-number
+                                           ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                                           ng-blur="atualizaPaginaDigitada()">
+                                    <a href="javascript:;" ng-click="avancaPagina()"
+                                       class="btn btn-sm default next"
+                                       ng-class="{disabled: (tabIs(0) && filtro.sintetico.pagina >= filtro.sintetico.total_paginas) || (tabIs(1) && filtro.analitico.pagina >= filtro.analitico.total_paginas)}"
+                                       title="Próxima página">
+                                        <i class="fa fa-angle-right"></i>
+                                    </a>
+                                     de 
+                                    <span class="pagination-panel-total" ng-show="tabIs(0)">
+                                        {{filtro.sintetico.total_paginas}}
+                                    </span>
+                                    <span class="pagination-panel-total" ng-show="tabIs(1)">
+                                        {{filtro.analitico.total_paginas}}
+                                    </span>    
+                                </div>
                             </div>
                             <!-- FIM PAGINAÇÃO -->
                         </div>
