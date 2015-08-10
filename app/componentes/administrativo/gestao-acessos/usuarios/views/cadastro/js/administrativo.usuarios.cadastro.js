@@ -205,7 +205,8 @@ angular.module("administrativo-usuarios-cadastro", [])
             // Empresa
             if($scope.old.usuario.nu_cnpjEmpresa && $scope.old.usuario.nu_cnpjEmpresa !== null){
                 $scope.usuario.empresa = {nu_cnpj: $scope.old.usuario.nu_cnpjEmpresa, 
-                                          ds_fantasia: $stateParams.usuario.empresa};
+                                          ds_fantasia: $stateParams.usuario.empresa,
+                                          filial : ''};
             }
             // Grupo Empresa
             if($scope.old.usuario.id_grupo && $scope.old.usuario.id_grupo !== null){
@@ -415,8 +416,7 @@ angular.module("administrativo-usuarios-cadastro", [])
             alterouPessoa = true;
         }
         if($scope.old.pessoa.dt_nascimento !== $scope.pessoa.data_nasc){
-            var dt = $scope.pessoa.data_nasc.split('/');
-            jsonPessoa.dt_nascimento = $filter('date')(new Date(dt[2], dt[1] - 1, dt[0], 1, 0, 0, 0), "yyyy-MM-dd HH:mm:ss");
+            jsonPessoa.dt_nascimento = $scope.getDataFromString($scope.pessoa.data_nasc);
             //jsonPessoa.dt_nascimento = $filter('date')(new Date($scope.pessoa.data_nasc), "yyyy-MM-dd HH:mm:ss");
             alterouPessoa = true; 
         }

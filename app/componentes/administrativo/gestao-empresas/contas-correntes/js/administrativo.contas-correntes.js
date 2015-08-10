@@ -576,7 +576,7 @@ angular.module("administrativo-contas-correntes", [])
     }
     
    /**
-     * Solicita confirmação para excluir a filial
+     * Solicita confirmação para excluir a conta
      */
     $scope.excluirConta = function(conta){
         $scope.showModalConfirmacao('Confirmação', 
@@ -595,8 +595,6 @@ angular.module("administrativo-contas-correntes", [])
                     $scope.showAlert('Conta excluída com sucesso!', true, 'success', true);
                     // Fecha os progress
                     $scope.hideProgress();
-                    // Fecha o modal
-                    fechaModalConta();
                     // Relista
                     buscaContas();
                   },
@@ -613,51 +611,11 @@ angular.module("administrativo-contas-correntes", [])
     
     
     // ASSOCIAÇÃO DA CONTA ÀS ADQUIRENTES-FILIAIS
-    
-    var exibeModalAdquirenteEmpresa = function(){
-        $('#modalAdquirenteEmpresa').modal('show');       
-    }
-    var fechaModalAdquirenteEmpresa = function(){
-        $('#modalAdquirenteEmpresa').modal('hide');       
-    }
-    
-    /**
-      * Retoma as associações previamente salvas
-      */
-    $scope.resetaAdquirentesEmpresas = function(novaContaSelecionada){
-        // Vigentes
-        $scope.modalAdquirenteEmpresa.vigentes = [];
-        angular.copy($scope.modalAdquirenteEmpresa.conta.vigentes, $scope.modalAdquirenteEmpresa.vigentes); 
-
-        // Não associadas => adiciona as adquirentesempresas que não estão na lista de geral
-        if(novaContaSelecionada || $scope.modalAdquirenteEmpresa.adquirentesempresa.length === 0){
-            $scope.modalAdquirenteEmpresa.adquirentesempresa = [];
-            for(var k = 0; k < adquirentesempresas.length; k++){
-                var adquirenteempresa = adquirentesempresas[k];
-                if ($filter('filter')($scope.modalAdquirenteEmpresa.vigentes, function(v){return v.loginAdquirenteEmpresa.cdLoginAdquirenteEmpresa === adquirenteempresa.cdLoginAdquirenteEmpresa}).length === 0)
-                    $scope.modalAdquirenteEmpresa.adquirentesempresa.push(adquirenteempresa);   
-            }
-        }
-        // Lista de exibição
-        $scope.modalAdquirenteEmpresa.naoSelecionadas = [];
-        angular.copy($scope.modalAdquirenteEmpresa.adquirentesempresa, $scope.modalAdquirenteEmpresa.naoSelecionadas); 
-        
-        // Seleciona o primeiro elemento das relações
-        $scope.modalAdquirenteEmpresa.vigenciaSelecionada = $scope.modalAdquirenteEmpresa.vigentes[0];
-        $scope.modalAdquirenteEmpresa.adquirenteEmpresaSelecionada = $scope.modalAdquirenteEmpresa.naoSelecionadas[0];   
-    }
-    
     /**
       * Exibe um modal com as filiais vinculadas a conta e possibilita vincular outras
       */
-    $scope.filiaisVinculadas = function(conta){
-        $scope.modalAdquirenteEmpresa.conta = conta;  
-        
-        // Reset
-        $scope.resetaAdquirentesEmpresas(true);
-        
-        // Exibe modal
-        exibeModalAdquirenteEmpresa();
+    $scope.vigencias = function(conta){
+        $scope.goAdministrativoContasCorrentesVigencias({conta : conta, adquirentesempresas: adquirentesempresas});
     };
                                                  
     
@@ -679,114 +637,6 @@ angular.module("administrativo-contas-correntes", [])
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else $scope.showAlert('Houve uma falha ao obter registros adquirente-filial associados a empresa (' + failData.status + ')', true, 'danger', true);
               });           
-    }
-    
-
-    /**
-      * Retorna o nome da filial seguido da adquirente
-      */    
-    $scope.getAdquirenteEmpresaAmigavel = function(adquirenteempresa){
-        if(!adquirenteempresa) return '';
-        var txt = adquirenteempresa.empresa.ds_fantasia + 
-                  String.fromCharCode(160) + String.fromCharCode(160) + String.fromCharCode(160) +
-                  String.fromCharCode(160) + String.fromCharCode(160) + String.fromCharCode(160) +
-                  adquirenteempresa.adquirente.dsAdquirente;
-        return txt.toUpperCase();
-    }
-    
-    /**
-      * Associa adquirente-empresa não selecionada
-      */
-    $scope.associaAdquirenteEmpresa = function(){
-        if(!$scope.modalAdquirenteEmpresa.adquirenteEmpresaSelecionada) return;    
-        // Remove da lista de não associados
-        var index = $scope.modalAdquirenteEmpresa.naoSelecionadas.indexOf($scope.modalAdquirenteEmpresa.adquirenteEmpresaSelecionada);
-        $scope.modalAdquirenteEmpresa.naoSelecionadas.splice(index,1);
-        
-        // Adiciona na lista de associados
-        $scope.modalAdquirenteEmpresa.vigentes.push({loginAdquirenteEmpresa: $scope.modalAdquirenteEmpresa.adquirenteEmpresaSelecionada});
-        // Ordena
-        $scope.modalAdquirenteEmpresa.vigentes = $filter('orderVigentes')($scope.modalAdquirenteEmpresa.vigentes, '');
-        
-        // Seleciona o primeiro elemento das relações
-        $scope.modalAdquirenteEmpresa.vigenciaSelecionada = $scope.modalAdquirenteEmpresa.vigentes[0];
-        $scope.modalAdquirenteEmpresa.adquirenteEmpresaSelecionada = $scope.modalAdquirenteEmpresa.naoSelecionadas[0];
-    }
-    
-    /**
-      * Desassocia adquirente-empresa selecionada
-      */
-    $scope.desassociaAdquirenteEmpresa = function(){
-        if(!$scope.modalAdquirenteEmpresa.vigenciaSelecionada) return;    
-        // Remove da lista de associados
-        var index = $scope.modalAdquirenteEmpresa.vigentes.indexOf($scope.modalAdquirenteEmpresa.vigenciaSelecionada);
-        $scope.modalAdquirenteEmpresa.vigentes.splice(index,1);
-
-        // Adiciona na lista de não associados
-        $scope.modalAdquirenteEmpresa.naoSelecionadas.push($scope.modalAdquirenteEmpresa.vigenciaSelecionada.loginAdquirenteEmpresa);
-        // Ordena
-        $scope.modalAdquirenteEmpresa.naoSelecionadas = $filter('orderAdquirentesEmpresas')($scope.modalAdquirenteEmpresa.naoSelecionadas, '');
-        
-        // Seleciona o primeiro elemento das relações
-        $scope.modalAdquirenteEmpresa.vigenciaSelecionada = $scope.modalAdquirenteEmpresa.vigentes[0];
-        $scope.modalAdquirenteEmpresa.adquirenteEmpresaSelecionada = $scope.modalAdquirenteEmpresa.naoSelecionadas[0];
-    }
-    
-    /**
-      * Avalia as adquirentes-empresas associadas e desassociadas e envia o json
-      */
-    $scope.salvaAdquirentesEmpresas = function(){
-        // Procura as novas associações e desassociações
-        var idContaCorrente = $scope.modalAdquirenteEmpresa.conta.idContaCorrente;
-        var associar = [];
-        var desassociar = [];
-        
-        
-        // Novas associações ?
-        for(var k = 0; k < $scope.modalAdquirenteEmpresa.vigentes.length; k++){ 
-            var vigente = $scope.modalAdquirenteEmpresa.vigentes[k];
-            if($filter('filter')($scope.modalAdquirenteEmpresa.conta.vigentes, function(v){ return v.loginAdquirenteEmpresa.cdLoginAdquirenteEmpresa === vigente.loginAdquirenteEmpresa.cdLoginAdquirenteEmpresa}).length === 0)
-                associar.push(vigente.loginAdquirenteEmpresa.cdLoginAdquirenteEmpresa); 
-        }
-        
-        // Desassociar ?
-        for(var k = 0; k < $scope.modalAdquirenteEmpresa.naoSelecionadas.length; k++){ 
-            var adquirenteempresa = $scope.modalAdquirenteEmpresa.naoSelecionadas[k];
-            if($filter('filter')($scope.modalAdquirenteEmpresa.adquirentesempresa, function(a){return a.cdLoginAdquirenteEmpresa === adquirenteempresa.cdLoginAdquirenteEmpresa}).length === 0)
-                desassociar.push(adquirenteempresa.cdLoginAdquirenteEmpresa); 
-        }
-        
-        // Teve alterações ?
-        if(associar.length === 0 && desassociar.length ===0){
-            // não houve alterações
-            fechaModalAdquirenteEmpresa();
-            return;
-        }
-        // JSON
-        var json = { idContaCorrente : idContaCorrente };
-        if(associar.length > 0) json.associar = associar;
-        if(desassociar.length > 0) json.desassociar = desassociar;
-        // Envia
-        //console.log(json);
-        $scope.showProgress();
-        $webapi.update($apis.getUrl($apis.card.tbcontacorrentetbloginadquirenteempresa, undefined,
-                                 {id : 'token', valor : $scope.token}), json) 
-            .then(function(dados){           
-                $scope.showAlert('Associações/desassociações realizadas com sucesso!', true, 'success', true);
-                // Fecha os progress
-                $scope.hideProgress();
-                // Fecha o modal
-                fechaModalAdquirenteEmpresa();
-                // Relista
-                buscaContas();
-              },
-              function(failData){
-                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
-                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                 else $scope.showAlert('Houve uma falha ao realizar associações/desassociações (' + failData.status + ')', true, 'danger', true);
-                 // Fecha os progress
-                 $scope.hideProgress();
-              });  
     }
     
 }]);

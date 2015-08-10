@@ -27,6 +27,7 @@ angular.module("AtosCapital", ['ui.router',
                                'administrativo-dados-acesso',
                                'administrativo-senhas-invalidas',
                                'administrativo-contas-correntes',
+                               'administrativo-contas-correntes-vigencias',
                                'dashboard', 
                                'card-services-cash-flow-relatorios',
                                'card-services-conciliacao-vendas',
@@ -169,6 +170,16 @@ angular.module("AtosCapital", ['ui.router',
         }
       })
     
+      .state('administrativo-gestao-empresas-contas-correntes-vigencias', {
+        url: prefixo + 'administrativo/conta-corrente-vigencias',
+        params: {conta: null, adquirentesempresas: null},
+        templateUrl: 'componentes/administrativo/gestao-empresas/contas-correntes/views/vigencias/index.html',
+        controller: "administrativo-contas-correntes-vigenciasCtrl",
+        data: {
+            titulo: 'Administrativo'
+        }
+      })
+    
     
       // DASHBOARD
       .state('dashboard', {
@@ -265,13 +276,13 @@ angular.module("AtosCapital", ['ui.router',
                         '$stateParams',
                         '$http',
                         '$timeout',
-                        '$modal',
+                        '$filter',
                         '$autenticacao',
                         '$apis',
                         '$webapi',
                         '$empresa',
                         /*'$campos',*/
-                        function($scope,$rootScope,$window,$location,$state,$stateParams,$http,$timeout,$modal,
+                        function($scope,$rootScope,$window,$location,$state,$stateParams,$http,$timeout,$filter,
                                  $autenticacao,$apis,$webapi,$empresa/*,$campos*/){ 
     // Título da página                            
     $scope.pagina = {'titulo': 'Home', 'subtitulo': ''};
@@ -466,7 +477,14 @@ angular.module("AtosCapital", ['ui.router',
     $scope.goAdministrativoContasCorrentes = function(params){
         controllerAtual = controllerAdministrativoContasCorrentes;
         go('administrativo-gestao-empresas-contas-correntes', params);
-    };                          
+    };
+    /**
+      * Exibe como conteúdo as Vigências de Contas Correntes Gestão de Empresas, de Administrativo
+      */
+    $scope.goAdministrativoContasCorrentesVigencias = function(params){
+        controllerAtual = controllerAdministrativoContasCorrentes;//Vigencias;
+        go('administrativo-gestao-empresas-contas-correntes-vigencias', params);
+    }; 
     /**
       * Exibe como conteúdo a Logs Acesso de Usuários, de Administrativo
       */                        
@@ -551,7 +569,8 @@ angular.module("AtosCapital", ['ui.router',
         //console.log("FROM " + current + " TO " + next);
         var url = next.split('#')[1];
         // Avalia
-        if(url === $state.get('administrativo-gestao-acessos-usuarios').url || url === $state.get('administrativo-gestao-acessos-usuarios-cadastro').url){ 
+        if(url === $state.get('administrativo-gestao-acessos-usuarios').url || 
+           url === $state.get('administrativo-gestao-acessos-usuarios-cadastro').url){ 
             // Gestão de Acesso > Usuários (cadastro ou não)
             if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_USUARIOS){
                 // Não possui permissão!
@@ -584,7 +603,8 @@ angular.module("AtosCapital", ['ui.router',
                 $scope.goUsuarioSemPrivilegios();
             }else if(!controllerAtual || controllerAtual.ds_controller.toUpperCase() !== 'EMPRESAS')
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual   
-        }else if(url === $state.get('administrativo-gestao-empresas-filiais').url || url === $state.get('administrativo-gestao-empresas-filiais-cadastro').url){ 
+        }else if(url === $state.get('administrativo-gestao-empresas-filiais').url || 
+                 url === $state.get('administrativo-gestao-empresas-filiais-cadastro').url){ 
             // Gestão de Empresas > Filiais (cadastro ou não)
             if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_FILIAIS){
                 // Não possui permissão!
@@ -606,7 +626,8 @@ angular.module("AtosCapital", ['ui.router',
                 $scope.goUsuarioSemPrivilegios();
             }else if(!controllerAtual || controllerAtual.ds_controller.toUpperCase() !== 'SENHAS INVÁLIDAS')
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual  
-        }else if(url === $state.get('administrativo-gestao-empresas-contas-correntes').url){ 
+        }else if(url === $state.get('administrativo-gestao-empresas-contas-correntes').url || 
+                 url === $state.get('administrativo-gestao-empresas-contas-correntes-vigencias').url){ 
             if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_CONTAS_CORRENTES){
                 // Não possui permissão!
                 event.preventDefault();
@@ -717,7 +738,8 @@ angular.module("AtosCapital", ['ui.router',
                 controllerAdministrativoSenhasInvalidas = controller;
                 return $scope.goAdministrativoSenhasInvalidas;
             case 'CONTAS CORRENTES':
-                 if($location.path() === $state.get('administrativo-gestao-empresas-contas-correntes').url) 
+                 if($location.path() === $state.get('administrativo-gestao-empresas-contas-correntes').url || 
+                    $location.path() === $state.get('administrativo-gestao-empresas-contas-correntes-vigencias').url) 
                     controllerAtual = controller;
                 controllerAdministrativoContasCorrentes = controller;
                 return $scope.goAdministrativoContasCorrentes;
@@ -847,7 +869,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'FILIAIS' :  return state == 'filiais' || state == 'cadastro-filiais';
             case 'DADOS DE ACESSO': return state == 'dados-acesso';
             case 'SENHAS INVÁLIDAS': return state == 'senhas-invalidas';
-            case 'CONTAS CORRENTES': return state == 'contas-correntes';
+            case 'CONTAS CORRENTES': return state == 'contas-correntes' || state == 'conta-corrente-vigencias';
             case 'ACESSO DE USUÁRIOS' : return state == 'acesso-usuarios';  
             case 'AÇÕES DE USUÁRIOS': return state == 'acoes-usuarios';
             // Card Services
@@ -1420,11 +1442,27 @@ angular.module("AtosCapital", ['ui.router',
       return (ary1.join('') == ary2.join(''));
    };
    /**
+     * A partir da data em string do tipo dd/MM/yyyy, retorna um Date, com horário zerado
+     */
+   $scope.getDataFromString = function(dataString){
+       var dt = dataString.split('/');
+       return $filter('date')(new Date(dt[2], dt[1] - 1, dt[0], 0, 0, 0, 0), "yyyy-MM-dd HH:mm:ss");
+   }
+   /**
+     * A partir da data proveniente do banco de dados, retorna um Date, com horário zerado
+     */
+   $scope.getDataFromDate = function(date){
+       return $filter('date')(new Date(date.replace("T", " ")), "yyyy-MM-dd HH:mm:ss")
+   }
+   /**
      * Retorna a data do tipo Date yyyy-MM-dd em string dd/MM/yyyy
      */
    $scope.getDataString = function(data){
-        if(typeof data !== 'undefined' && data !== null) 
+        if(typeof data !== 'undefined' && data !== null){ 
+            if(typeof data.getDate === 'function')
+                return data.getDate() + '/' + (data.getMonth() + 1) + '/' +  data.getFullYear();
             return data.substr(8, 2) + '/' + data.substr(5, 2) + '/' + data.substr(0, 4);
+        }
         return '';
    };
    $scope.getDataTimeString = function(data){
@@ -1454,8 +1492,18 @@ angular.module("AtosCapital", ['ui.router',
         else dia = '0' + dia;
         
         return ano + mes + dia;
-    };                       
+    };     
                             
+                            
+    /** 
+      * Retorna o nome fantasia da filial seguido do campo filial
+      */
+    $scope.getNomeAmigavelFilial = function(filial){
+        if(!filial) return '';   
+        var nome = filial.ds_fantasia;
+        if(filial.filial && filial.filial !== null) nome += ' ' + filial.filial;
+        return nome.toUpperCase();
+    }
 }])
 
 

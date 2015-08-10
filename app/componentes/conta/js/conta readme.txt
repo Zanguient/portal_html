@@ -50,7 +50,7 @@ Não é necessário nenhum outro módulo externo.
 										   RoleName : string,
 										   RolePrincipal : boolean}]
 				"grupoempresa" : ds_nome,
-				"empresa" : ds_fantasia,
+				"empresa" : ds_fantasia + ' ' + filial,
 				"gruposvendedor" : [{ id_grupo : int, 
 									  ds_nome : string }]
 			}

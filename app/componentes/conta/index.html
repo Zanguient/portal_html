@@ -278,7 +278,7 @@
                                 <label>{{(usuariologado.grupoempresa.ds_nome | uppercase) || ''}}</label>
                             </div>
                             <div class="col-sm-12">
-                                <label>{{(usuariologado.empresa.ds_fantasia | uppercase) || ''}}</label>
+                                <label ng-bind="getNomeAmigavelFilial(usuariologado.empresa)"></label>
                             </div>
                         </div>                        
                     </div>  

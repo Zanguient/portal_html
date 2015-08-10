@@ -45,6 +45,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 			[
 			  { nu_cnpj : string,
 				ds_fantasia : string,
+				filial : string ou null,
 				id_grupo : int
 			  }
 			]

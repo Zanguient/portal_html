@@ -141,10 +141,10 @@ angular.module('utils', [ ])
 .factory('$autenticacao', ['$localstorage', function($localstorage){
   
   // URL base da WEBAPI
-  //var urlBase = 'http://localhost:55007';
+  var urlBase = 'http://localhost:55007';
   //var urlBase = 'http://192.168.0.100/ws/proxy';  // proxy: versão mais atualizada da webapi 
   //var urlBase = 'http://ws.atoscapital.com.br/proxy';
-  var urlBase = 'http://apiportal.atoscapital.com.br';
+  //var urlBase = 'http://apiportal.atoscapital.com.br';
   // Tempo em horas máximos definido de inatividade para requerer novo login, caso LEMBRAR não tenha sido marcado
   const HORAS_NOVO_LOGIN = 2;
     

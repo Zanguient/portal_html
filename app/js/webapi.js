@@ -112,6 +112,9 @@ angular.module('webapi', ['utils'])
             cdLoginAdquirenteEmpresa : 101,
             dtInicio : 102,
             dtFim : 103
+            // Relacionamentos
+            empresa : 200,
+            adquirente : 300
         },
         tbloginadquirenteempresa: {
             cdLoginAdquirenteEmpresa : 100,
