@@ -90,7 +90,6 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				?token=....&id=id
 				
     - POST : cadastrar novo dado de acesso da adquirente (relacionando com filial)
-			[
 			  { login : string,
 				senha : string,
 				cnpj : string,
@@ -98,7 +97,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				estabelecimento : string (pode ser null),
 				operadora : { nmOperadora : nomeAdquirente }
 			  }
-			]	
+				
 				
     - PUT : alterar dado de acesso da adquirente (relacionando com filial)
 			[

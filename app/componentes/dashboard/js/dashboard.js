@@ -55,7 +55,7 @@ angular.module("dashboard", ['ngFileUpload'])
             for (var i = 0; i < $scope.total; i++) {
                 var file = files[i];
                 Upload.upload({
-                    url: 'http://192.168.0.100/apiportal/card/testeupload/',//$apis.getUrl($apis.card.uploadextrato, undefined, {id:'token', valor: $scope.token}),
+                    url: /*'http://192.168.0.100/apiportal/card/testeupload/'*/$apis.getUrl($apis.card.uploadextrato, undefined/*, {id:'token', valor: $scope.token}*/),
                     file: file
                 }).progress(function (evt) {
                     $scope.progresso = parseInt(100.0 * evt.loaded / evt.total);
