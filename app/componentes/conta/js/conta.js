@@ -180,8 +180,8 @@ angular.module("conta", [])
             if($scope.usuario.pessoa.nm_pessoa !== $scope.newpessoa.nm_pessoa)
                 jsonPessoa.nm_pessoa = $scope.newpessoa.nm_pessoa;
             if($scope.getDataString($scope.usuario.pessoa.dt_nascimento) !== $scope.newpessoa.dt_nascimento){
-                var dt = $scope.newpessoa.dt_nascimento.split('/');
-                jsonPessoa.dt_nascimento = $filter('date')(new Date(dt[2], dt[1] - 1, dt[0], 1, 0, 0, 0), "yyyy-MM-dd HH:mm:ss");
+                //var dt = $scope.newpessoa.dt_nascimento.split('/');
+                jsonPessoa.dt_nascimento = $scope.getDataFromString($scope.newpessoa.dt_nascimento);//$filter('date')(new Date(dt[2], dt[1] - 1, dt[0], 1, 0, 0, 0), "yyyy-MM-dd HH:mm:ss");
             }
             if($scope.usuario.pessoa.nu_telefone !== $scope.newpessoa.nu_telefone)
                 jsonPessoa.nu_telefone = $scope.newpessoa.nu_telefone;    

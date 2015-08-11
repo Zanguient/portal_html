@@ -463,7 +463,7 @@ angular.module("administrativo-filiais-cadastro", [])
      * Envia o json com as alterações
      */
    var alteraFilial = function(){
-        
+       
        // Não faz nada se tiver validando campos
        if($scope.validandoCNPJ || $scope.validandoNomeFantasia) return;
        
@@ -473,7 +473,7 @@ angular.module("administrativo-filiais-cadastro", [])
        }
        
        // Houve alterações?
-       if(!!houveAlteracoes()){
+       if(!houveAlteracoes()){
             $scope.goAdministrativoFiliais();
             return;    
        }

@@ -144,7 +144,7 @@
                                                     ng-disabled="filiais.length == 0"
                                                     ng-model="filtro.filial"
                                                     ng-change="alterouFilial()"
-                                                    ng-options="filial as (filial.ds_fantasia | uppercase) for filial in filiais">
+                                                    ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
                                                 <!--option value="">Todas</option-->
                                             </select>
                                             <i class="fa fa-question-circle"

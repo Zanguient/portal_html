@@ -195,6 +195,10 @@ margin-top:170px;
   font-size: 17px;  
 }
 
+.cursorLink {
+    cursor: pointer;
+}
+
 .filtros{
   width: 90%;
   display: inline;
