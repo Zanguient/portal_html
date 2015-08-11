@@ -128,7 +128,7 @@ angular.module('utils', [ ])
     facebook: 'http://www.facebook.com.br/atoscapital',
     linkedin: 'http://br.linkedin.com/company/atos-capital',
     aplicativo : { android: 'https://play.google.com/store/apps/details?id=br.com.atoscapital.app',
-                   ios: ''
+                   ios: 'https://itunes.apple.com/us/app/atos-capital/id1022443742'
                  }
   }
 })

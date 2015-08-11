@@ -240,7 +240,7 @@ angular.module("administrativo-contas-correntes", [])
     // BUSCA CONTAS CORRENTES                                                                                     
                                            
     /**
-      * Busca Conta Correntes
+      * Busca as contas correntes
       */
     var buscaContas = function(){
         
