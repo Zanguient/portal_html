@@ -199,12 +199,6 @@ margin-top:170px;
     cursor: pointer;
 }
 
-.filtros{
-  width: 90%;
-  display: inline;
-  margin-right: 7px;
-}
-
 .conteudoConta{
   margin-left: -15px;
 }
@@ -277,6 +271,12 @@ margin-top:170px;
 .dadosRelatorioAnaliticoCash{
     font-weight: bolder;
     margin-right: 10px;
+}
+
+.filtros{
+  width: 90%;
+  display: inline;
+  margin-right: 7px;
 }
 
 .form-controlModuloseFuncionalidades{
@@ -438,6 +438,23 @@ margin-top:170px;
   text-align: center;
   border-radius: .25em; 
 }
+
+.statusPositivoValorExtrato{
+  background-color: #45B6AF;   
+  color: #fff;  
+  padding: 3px 6px 3px 6px;
+  text-align: center;
+  border-radius: .25em;
+}
+
+.statusNegativoValorExtrato{
+  background-color: #F3565D;  
+  color: #fff;  
+  padding: 3px 6px 3px 6px;
+  text-align: center;
+  border-radius: .25em;
+}
+
 
 .statusSituacaoFiliaisAtivo{
   background-color: #45B6AF;  

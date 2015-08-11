@@ -191,10 +191,10 @@
                                         <h3 class="block">Forneça seus dados pessoais</h3>
                                         <!-- NOME -->
                                         <div class="form-group" ng-class="{ 'has-error' : formCadastroUsuario.pessoaNome.$invalid && !formCadastroUsuario.pessoaNome.$pristine }">
-                                            <label class="control-label col-md-3">Nome <span class="required">
+                                            <label class="control-label col-sm-3 col-sm-offset-2 col-md-3 col-md-offset-0">Nome <span class="required">
                                             * </span>
                                             </label>
-                                            <div class="col-md-4">
+                                            <div class="col-sm-4 col-md-4">
                                                 <input type="text" 
                                                        placeholder="Nome Sobrenome" 
                                                        class="form-control" 
@@ -208,8 +208,9 @@
                                         </div>
                                         <!-- DATA DE NASCIMENTO -->
                                         <div class="form-group" ng-class="{ 'has-error' : formCadastroUsuario.pessoaDataNasc.$invalid && !formCadastroUsuario.pessoaDataNasc.$pristine }">
-                                            <label class="control-label col-md-3">Data de Nascimento</label>
-                                            <div class="col-md-4">
+                                            <label class="control-label col-sm-3 col-sm-offset-2
+col-md-offset-0 col-md-3">Data de Nascimento</label>
+                                            <div class="col-sm-4 col-md-4">
                                                <input type="text" placeholder="DD/MM/YYYY" maxlength="10" class="form-control" 
                                                       ng-model="pessoa.data_nasc" ng-change="validaData()" name="pessoaDataNasc" 
                                                       ng-pattern='/^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[012])\/\d{4}$/'
@@ -224,8 +225,9 @@
                                         </div>
                                         <!-- TELEFONE -->
                                         <div class="form-group" ng-class="{ 'has-error' : formCadastroUsuario.pessoaTelefone.$invalid && !formCadastroUsuario.pessoaTelefone.$pristine }">
-                                            <label class="control-label col-md-3">Telefone </label>
-                                            <div class="col-md-4">
+                                            <label class="control-label col-sm-3 col-sm-offset-2
+col-md-offset-0 col-md-3">Telefone </label>
+                                            <div class="col-sm-4 col-md-4">
                                                 <input type="text" class="form-control" ng-model="pessoa.telefone" 
                                                        maxlength="15" ng-minlength="10" ng-pattern="/\(\d{2}\)\d{8}\d?/"
                                                        name="pessoaTelefone" placeholder="(79)12345678" valid-telefone
@@ -238,8 +240,9 @@
                                         </div>
                                         <!-- RAMAL -->
                                         <div class="form-group" ng-class="{ 'has-error' : formCadastroUsuario.pessoaRamal.$invalid && !formCadastroUsuario.pessoaRamal.$pristine }">
-                                            <label class="control-label col-md-3">Ramal </label>
-                                            <div class="col-md-4">
+                                            <label class="control-label col-sm-3 col-sm-offset-2
+col-md-offset-0 col-md-3">Ramal </label>
+                                            <div class="col-sm-4 col-md-4">
                                                 <input type="text" class="form-control" ng-model="pessoa.ramal"
                                                        maxlength="4" ng-minlength="2" valid-integer-number
                                                        name="pessoaRamal" placeholder="1234"

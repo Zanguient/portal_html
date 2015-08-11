@@ -251,6 +251,20 @@ angular.module("administrativo-extratos-bancarios", [])
               });   */           
     };
                                                  
+    //TAB
+    /**
+      * Retorna true se a tab informada corresponde a tab em exibição
+      */
+    $scope.tabIs = function (tab){
+        return $scope.tab === tab;
+    }
+    /**
+      * Altera a tab em exibição
+      */
+    $scope.setTab = function (tab){
+        if (tab >= 1 && tab <= 4) $scope.tab = tab;        
+    }                              
+                                                 
 
     
 }]);
