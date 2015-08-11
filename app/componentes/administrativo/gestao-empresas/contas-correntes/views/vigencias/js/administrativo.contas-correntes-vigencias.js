@@ -424,6 +424,7 @@ angular.module("administrativo-contas-correntes-vigencias", [])
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else if(failData.status === 500) $scope.showModalAlerta("A vigência não pode ser alterada porque há um conflito com o período de outra vigência cadastrada"); 
                  else $scope.showAlert('Houve uma falha ao alterar a vigência (' + failData.status + ')', true, 'danger', true);
                  // Fecha os progress
                  $scope.hideProgress();

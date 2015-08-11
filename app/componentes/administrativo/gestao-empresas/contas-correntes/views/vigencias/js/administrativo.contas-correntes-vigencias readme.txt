@@ -80,7 +80,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 					},
 		  empresa : { nu_cnpj : string,
 					  ds_fantasia : string,
-					  filial : string,
+					  filial : string ou null,
 				    },
 		  stLoginAdquirenteEmpresa = int
 	    }

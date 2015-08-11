@@ -116,6 +116,14 @@ angular.module('webapi', ['utils'])
             empresa : 200,
             adquirente : 300
         },
+        tbextrato : {
+            idExtrato : 100,
+            cdContaCorrente : 101,
+            dtExtrato : 102,
+            nrDocumento : 103,
+            dsDocumento : 104,
+            vlMovimento : 105
+        },
         tbloginadquirenteempresa: {
             cdLoginAdquirenteEmpresa : 100,
             cdAdquirente : 101,
@@ -313,6 +321,7 @@ angular.module('webapi', ['utils'])
         tbadquirente : $autenticacao.getUrlBase() + '/card/tbadquirente/',
         tbcontacorrente: $autenticacao.getUrlBase() + '/card/tbcontacorrente/',  
         tbcontacorrentetbloginadquirenteempresa : $autenticacao.getUrlBase() + '/card/tbcontacorrentetbloginadquirenteempresa/', 
+        tbextrato : $autenticacao.getUrlBase() + '/card/tbextrato/', 
         tbloginadquirenteempresa : $autenticacao.getUrlBase() + '/card/tbloginadquirenteempresa/', 
         uploadextrato : $autenticacao.getUrlBase() + '/card/testeupload/',    
     },
