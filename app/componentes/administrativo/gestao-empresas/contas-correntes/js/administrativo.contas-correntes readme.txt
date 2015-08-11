@@ -63,6 +63,8 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 						  NomeExtenso : string},
 				nrAgencia : string,
 				nrConta : string,
+				flAtivo : boolean,
+				podeAtualizar : boolean // true se pode ser atualizada
 			  }
 			]	
 	- POST : adiciona uma nova conta corrente
@@ -80,7 +82,8 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				nrCnpj : string,
 				cdBanco : string, 
 				nrAgencia : string,
-				nrConta : string
+				nrConta : string,
+				flAtivo : boolean
 			  }
 			]			
 			// OBS: cdGrupo não é alterado

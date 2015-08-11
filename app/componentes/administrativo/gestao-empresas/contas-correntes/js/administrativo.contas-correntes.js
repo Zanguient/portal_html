@@ -8,40 +8,6 @@
 // App
 angular.module("administrativo-contas-correntes", []) 
 
-.filter('orderAdquirentesEmpresas', function() {
-  return function(items, field, reverse) {
-    var filtered = [];
-    angular.forEach(items, function(item) {
-      filtered.push(item);
-    });
-    filtered.sort(function (a, b) {
-        if(a.empresa.ds_fantasia > b.empresa.ds_fantasia) return 1;
-        if(a.empresa.ds_fantasia < b.empresa.ds_fantasia) return -1;
-        // Mesmo nome fantasia => ordena pela descrição da adquirente
-        return a.adquirente.dsAdquirente > b.adquirente.dsAdquirente ? 1 : -1;
-    });
-    if(reverse) filtered.reverse();
-    return filtered;
-  };
-})
-
-.filter('orderVigentes', function() {
-  return function(items, field, reverse) {
-    var filtered = [];
-    angular.forEach(items, function(item) {
-      filtered.push(item);
-    });
-    filtered.sort(function (a, b) {
-        if(a.loginAdquirenteEmpresa.empresa.ds_fantasia > b.loginAdquirenteEmpresa.empresa.ds_fantasia) return 1;
-        if(a.loginAdquirenteEmpresa.empresa.ds_fantasia < b.loginAdquirenteEmpresa.empresa.ds_fantasia) return -1;
-        // Mesmo nome fantasia => ordena pela descrição da adquirente
-        return a.loginAdquirenteEmpresa.adquirente.dsAdquirente > b.loginAdquirenteEmpresa.adquirente.dsAdquirente ? 1 : -1;
-    });
-    if(reverse) filtered.reverse();
-    return filtered;
-  };
-})
-
 .controller("administrativo-contas-correntesCtrl", ['$scope',
                                              '$state',
                                              '$filter',
@@ -64,7 +30,7 @@ angular.module("administrativo-contas-correntes", [])
                     };
     var divPortletBodyContasPos = 0; // posição da div que vai receber o loading progress
     // Modal Conta
-    $scope.modalConta = { titulo : '', banco : undefined, //buscaBanco : '',
+    $scope.modalConta = { titulo : '', banco : undefined, flAtivo : true,
                           nrAgencia : '', nrConta : '', nrCnpj : '', filial: '',
                           textoConfirma : '', funcaoConfirma : function(){} };
     var old = null;    
@@ -324,7 +290,6 @@ angular.module("administrativo-contas-correntes", [])
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else $scope.showAlert('Houve uma falha ao obter filiais (' + failData.status + ')', true, 'danger', true);
-                 $scope.hideProgress(divPortletBodyFiltrosPos);
               });     
     };                                             
     
@@ -404,6 +369,7 @@ angular.module("administrativo-contas-correntes", [])
         $scope.modalConta.banco = undefined;
         $scope.modalConta.nrAgencia = '';
         $scope.modalConta.nrConta = '';
+        $scope.modalConta.flAtivo = true;
         //$scope.modalConta.nrCnpj = '';
         $scope.modalConta.filial = $scope.filiais[0];
         
@@ -507,6 +473,7 @@ angular.module("administrativo-contas-correntes", [])
         $scope.modalConta.banco = conta.banco;
         $scope.modalConta.nrAgencia = conta.nrAgencia;
         $scope.modalConta.nrConta = conta.nrConta;
+        $scope.modalConta.flAtivo = conta.flAtivo;
         //$scope.modalConta.nrCnpj = conta.empresa.nrCnpj;
         $scope.modalConta.filial = $filter('filter')($scope.filiais, function(f) {return f.nu_cnpj === conta.empresa.nu_cnpj;})[0];
         
@@ -549,7 +516,8 @@ angular.module("administrativo-contas-correntes", [])
                           nrCnpj : $scope.modalConta.filial.nu_cnpj,//nrCnpj,
                           cdBanco : $scope.modalConta.banco.Codigo, 
                           nrAgencia : $scope.modalConta.nrAgencia,
-                          nrConta : $scope.modalConta.nrConta
+                          nrConta : $scope.modalConta.nrConta,
+                          flAtivo : $scope.modalConta.flAtivo
                         };
         //console.log(jsonConta);
         
@@ -637,6 +605,47 @@ angular.module("administrativo-contas-correntes", [])
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else $scope.showAlert('Houve uma falha ao obter registros adquirente-filial associados a empresa (' + failData.status + ')', true, 'danger', true);
               });           
+    }
+    
+    
+    // ATIVAR/DESATIVAR
+    $scope.desativar = function(conta){
+        var jsonConta = { idContaCorrente : conta.idContaCorrente,
+                          flAtivo : false
+                        };
+        $scope.showModalConfirmacao('Confirmação', 
+                                    'Tem certeza que deseja desativar a conta?',
+                                     alteraStatusConta, jsonConta, 'Sim', 'Não'); 
+    }
+    $scope.ativar = function(conta){
+        var jsonConta = { idContaCorrente : conta.idContaCorrente,
+                          flAtivo : true
+                        };
+        $scope.showModalConfirmacao('Confirmação', 
+                                    'Tem certeza que deseja ativar a conta?',
+                                     alteraStatusConta, jsonConta, 'Sim', 'Não');    
+    }
+    /**
+      * Efetiva a alteração do status da conta
+      */
+    var alteraStatusConta = function(jsonConta){
+        $scope.showProgress(divPortletBodyContasPos);
+        $webapi.update($apis.getUrl($apis.card.tbcontacorrente, undefined,
+                                 {id : 'token', valor : $scope.token}), jsonConta) 
+            .then(function(dados){           
+                $scope.showAlert('Status da conta alterado com sucesso!', true, 'success', true);
+                // Fecha os progress
+                $scope.hideProgress(divPortletBodyContasPos);
+                // Relista
+                buscaContas();
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao alterar status da conta (' + failData.status + ')', true, 'danger', true);
+                 // Fecha os progress
+                 $scope.hideProgress(divPortletBodyContasPos);
+              });       
     }
     
 }]);

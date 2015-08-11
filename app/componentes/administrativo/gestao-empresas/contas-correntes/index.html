@@ -240,12 +240,12 @@
                                                     </th>
                                                     <th tabindex="1" 
                                                         rowspan="1" colspan="1" 
-                                                        style="width: 60px;">
+                                                        style="width: 40px;">
                                                         Agência
                                                     </th>
                                                     <th tabindex="2" 
                                                         rowspan="1" colspan="1" 
-                                                        style="width: 60px;">
+                                                        style="width: 40px;">
                                                         Conta
                                                     </th>
                                                     <th tabindex="3" 
@@ -257,6 +257,11 @@
                                                         rowspan="1" colspan="1" 
                                                         style="width: 200px;">
                                                         Filial
+                                                    </th>
+                                                    <th tabindex="4" 
+                                                        rowspan="1" colspan="1" 
+                                                        style="width: 50px;">
+                                                        Status
                                                     </th>
                                                     <th tabindex="5" 
                                                         rowspan="1" colspan="1" 
@@ -289,6 +294,13 @@
                                                     <td style="text-align:center"
                                                         ng-bind="getNomeAmigavelFilial(conta.empresa)">
                                                     </td>
+                                                    <!-- STATUS -->
+                                                    <td style="text-align:center">
+                                                        <span ng-class="{ 'StatusSenhaValida' : conta.flAtivo, 
+                                                                          'StatusSenhaInvalida' : !conta.flAtivo}"
+                                                               ng-bind="conta.flAtivo ? 'Ativo' : 'Inativo'">
+                                                        </span>
+                                                    </td>
                                                     <!-- BOTÃO AÇÕES-->
                                                     <td class="center btnacoes">
                                                         <div class="btn-group" dropdown dropdown-append-to-body>
@@ -305,18 +317,26 @@
                                                                         Vigências
                                                                     </a>
                                                                 </li>
-                                                                <li>
+                                                                <li ng-show="usuarioPodeAlterarContas() && conta.podeAtualizar">
                                                                     <a href="javascript:;" 
-                                                                       ng-click="editarConta(conta)"
-                                                                       ng-show="usuarioPodeAlterarContas()">
+                                                                       ng-click="editarConta(conta)">
                                                                         Editar
                                                                     </a>
                                                                 </li>
-                                                                <li>
+                                                                <li ng-show="usuarioPodeExcluirContas() && conta.podeAtualizar">
                                                                     <a href="javascript:;" 
-                                                                       ng-click="excluirConta(conta)"
-                                                                       ng-show="usuarioPodeExcluirContas()">
+                                                                       ng-click="excluirConta(conta)">
                                                                         Excluir
+                                                                    </a>
+                                                                </li> 
+                                                                <li ng-show="usuarioPodeAlterarContas() && !conta.podeAtualizar">
+                                                                    <a ng-show="conta.flAtivo"
+                                                                       href="javascript:;" ng-click="desativar(conta)">
+                                                                        Desativar
+                                                                    </a>
+                                                                    <a ng-show="!conta.flAtivo"
+                                                                       href="javascript:;" ng-click="ativar(conta)">
+                                                                        Ativar
                                                                     </a>
                                                                 </li> 
                                                             </ul>

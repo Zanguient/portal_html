@@ -55,7 +55,8 @@ angular.module("dashboard", ['ngFileUpload'])
             for (var i = 0; i < $scope.total; i++) {
                 var file = files[i];
                 Upload.upload({
-                    url: /*'http://192.168.0.100/apiportal/card/testeupload/'*/$apis.getUrl($apis.card.uploadextrato, undefined/*, {id:'token', valor: $scope.token}*/),
+                    url: $apis.getUrl($apis.card.tbextrato, $scope.token, 
+                                      {id: /*$campos.card.tbextrato.cdContaCorrente*/ 101, valor: 1}),
                     file: file,
                     method: 'PATCH'
                 }).progress(function (evt) {

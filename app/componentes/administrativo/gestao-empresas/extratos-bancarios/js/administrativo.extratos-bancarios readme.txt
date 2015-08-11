@@ -51,11 +51,13 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 						  NomeExtenso : string},
 				nrAgencia : string,
 				nrConta : string,
+				flAtivo : boolean,
+				podeAtualizar : boolean
 			  }
 			]
 
    * card/tbextrato 
-     - GET : listagem do extrato   
+     - GET : listagem do extratos (coleção 1) // solicitar ordenado pelo idExtrato, que é a ordem de inserção na base   
 	
  
  
