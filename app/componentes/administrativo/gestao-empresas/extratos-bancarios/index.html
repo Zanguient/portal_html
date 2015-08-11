@@ -52,14 +52,11 @@
                                     <tr role="row" class="heading">
                                         <th width="10%" tabindex="0" rowspan="1" colspan="1">
                                              Contas Correntes 
-                                        </th>
-                                        <!--th width="8%" tabindex="1" rowspan="1" colspan="1">
-                                             Adquirentes
-                                        </th>
-                                        <th width="8%" tabindex="2" rowspan="1" colspan="1">
-                                             Status da senha
-                                        </th-->
+                                        </th>                                        
                                         <th width="2%" tabindex="3" rowspan="1" colspan="1">
+                                             Datas
+                                        </th>
+                                        <th width="1%" tabindex="3" rowspan="1" colspan="1">
                                              Opções
                                         </th>
                                     </tr>
@@ -79,6 +76,60 @@
                                                popover="É necessário selecionar uma empresa"
                                                popover-trigger="mouseenter"></i>
                                         </td>
+                                        <!--DATAS-->
+                                        <td rowspan="1" colspan="1">                                    
+                                            <div class="input-group date date-picker margin-bottom-5"
+                                                 data-date-format="dd/mm/yyyy">
+                                                <input type="text" 
+                                                       class="form-control form-filter input-sm ng-pristine ng-valid ng-isolate-scope ng-valid-required ng-valid-date ng-touched" 
+                                                       readonly="" 
+                                                       style="cursor: pointer" 
+                                                       ng-click="exibeCalendarioDataMin($event)"
+                                                       placeholder="Início"
+                                                       ng-model="filtro.datamin" 
+                                                       ng-change="alterouDataMin()"
+                                                       datepicker-append-to-body="true" 
+                                                       datepicker-popup="dd MMMM yyyy" 
+                                                       is-open="abrirCalendarioDataMin"
+                                                       ng-required="true" 
+                                                       show-button-bar="false" 
+                                                       show-weeks="false" 
+                                                       required="required">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-sm default" 
+                                                            type="button" 
+                                                            ng-click="exibeCalendarioDataMin($event)">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                            <div class="input-group"> <!--  date date-picker margin-bottom-5" -->
+                                                <input type="text" 
+                                                       class="form-control form-filter input-sm ng-pristine ng-untouched ng-valid ng-isolate-scope ng-valid-date ng-valid-required" 
+                                                       readonly="" 
+                                                       style="cursor: pointer"
+                                                       ng-click="exibeCalendarioDataMax($event)" 
+                                                       placeholder="Fim"
+                                                       ng-model="filtro.datamax"
+                                                       ng-change="alterouDataMax()" 
+                                                       datepicker-popup="dd MMMM yyyy"
+                                                       is-open="abrirCalendarioDataMax"
+                                                       datepicker-append-to-body="true"
+                                                       ng-required="false" 
+                                                       current-text="Hoje" 
+                                                       clear-text="Limpar" 
+                                                       close-text="Fechar" 
+                                                       show-button-bar="true" 
+                                                       show-weeks="false">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-sm default" 
+                                                            type="button" 
+                                                            ng-click="exibeCalendarioDataMax($event)">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </button>
+                                                </span>
+                                            </div>                                            
+                                        </td>
                                         <!--BUSCAR E LIMPAR-->
                                         <td rowspan="1" colspan="1">
                                             <div class="margin-bottom-5">
@@ -92,7 +143,7 @@
                                                 <i class="fa fa-times"></i> 
                                                 Limpar
                                             </button>
-                                        </td>
+                                        </td>                                        
                                     </tr>
                                 </thead>
                             </table>
@@ -156,9 +207,270 @@
                         </div>
                     </div>
                 </div>                
-                <div class="portlet-body">  
+                <div class="portlet-body" style="min-height:300px">  
                     <!-- LAYOUT AQUI! -->
-                </div>        
+                    
+                    <!-- TABS -->
+                    <div class="" style="text-align:center">
+                        <tabset type="pills">
+                            <tab heading="Janeiro" select="setTab(1)" active="true"></tab>
+                            <tab heading="Fevereiro" select="setTab(2)"></tab>
+                            <tab heading="Março" select="setTab(3)"></tab>
+                            <tab heading="Abril" select="setTab(3)"></tab>
+                            <tab heading="Maio" select="setTab(3)"></tab>
+                            <tab heading="Junho" select="setTab(3)"></tab>
+                            <tab heading="Julho" select="setTab(3)"></tab>
+                            <tab heading="Agosto" select="setTab(3)"></tab>
+                            <tab heading="Setembro" select="setTab(3)"></tab>
+                            <tab heading="Outubro" select="setTab(3)"></tab>
+                            <tab heading="Novembro" select="setTab(3)"></tab>
+                            <tab heading="Dezembro" select="setTab(3)"></tab>
+                        </tabset>
+                    </div>
+                    
+                    <!-- CONTEÚDO -->
+                    <div class="">
+                        <!-- JANEIRO -->
+                        <div class="panel" ng-show="tabIs(1)">
+                            <div class="row conteudoMinhaConta">
+                                <div class="table-responsive" style="margin-left:15px">
+                                    <table class="table table-hover table-light">
+                                        <thead>
+                                            <tr class="uppercase">
+                                                <th style="text-align:left">
+                                                     Data movimento
+                                                </th>
+                                                <th style="text-align:left">
+                                                     Descrição
+                                                </th>
+                                                <th class="conteudoTabelas">
+                                                     Documento
+                                                </th>
+                                                <th class="conteudoTabelas">
+                                                     Valor
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>                                                    
+                                                    11/08/2015                                                    
+                                                </td>
+                                                <td>
+                                                     Exemplo
+                                                </td>
+                                                <td class="conteudoTabelas">
+                                                     Exemplo
+                                                </td>
+                                                <td class="conteudoTabelas">
+                                                    <span class="statusPositivoValorExtrato">
+                                                        <label style="font-size:13px">R$</label>
+                                                        535,00</span>
+                                                </td>
+                                            </tr>
+
+                                            <!--RÉPLICAS DADOS-->                                
+                                            <tr>
+                                                <td>
+                                                    21/04/2015                                                    
+                                                </td>
+                                                <td>
+                                                     Exemplo
+                                                </td>
+                                                <td class="conteudoTabelas">
+                                                     Exemplo
+                                                </td>
+                                                <td class="conteudoTabelas">
+                                                    <span class="statusNegativoValorExtrato">
+                                                        <label style="font-size:13px">R$</label>
+                                                        -6.755,00</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    23/05/2015                                                    
+                                                </td>
+                                                <td>
+                                                     Exemplo
+                                                </td>
+                                                <td class="conteudoTabelas">
+                                                     Exemplo
+                                                </td>
+                                                <td class="conteudoTabelas">
+                                                    <span class="statusPositivoValorExtrato">
+                                                        <label style="font-size:13px">R$</label>
+                                                        1.535,00</span>
+                                                </td>
+                                            </tr>
+                                            <!--FIM RÉPLICA DADOS-->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>  
+                        </div>
+                    </div>
+                    
+                    <div class="">
+                        <!-- FEVEREIRO -->
+                        <div class="panel" ng-show="tabIs(2)">
+                            <div class="row conteudoMinhaConta">
+                                <div class="table-responsive" style="margin-left:15px">
+                                    <table class="table table-hover table-light">
+                                        <thead>
+                                            <tr class="uppercase">
+                                                <th style="text-align:left">
+                                                     Data movimento
+                                                </th>
+                                                <th style="text-align:left">
+                                                     Descrição
+                                                </th>
+                                                <th class="conteudoTabelas">
+                                                     Documento
+                                                </th>
+                                                <th class="conteudoTabelas">
+                                                     Valor
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>                                                    
+                                                    15/05/2015                                                    
+                                                </td>
+                                                <td>
+                                                     Exemplo fevereiro
+                                                </td>
+                                                <td class="conteudoTabelas">
+                                                     Exemplo fevereiro
+                                                </td>
+                                                <td class="conteudoTabelas">
+                                                    <span class="statusPositivoValorExtrato">
+                                                        <label style="font-size:13px">R$</label>
+                                                        465,00</span>
+                                                </td>
+                                            </tr>
+
+                                            <!--RÉPLICAS DADOS-->                                
+                                            <tr>
+                                                <td>
+                                                    21/04/2015                                                    
+                                                </td>
+                                                <td>
+                                                     Exemplo fevereiro
+                                                </td>
+                                                <td class="conteudoTabelas">
+                                                     Exemplo fevereiro
+                                                </td>
+                                                <td class="conteudoTabelas">
+                                                    <span class="statusNegativoValorExtrato">
+                                                        <label style="font-size:13px">R$</label>
+                                                        -2.455,00</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    19/10/2015                                                    
+                                                </td>
+                                                <td>
+                                                     Exemplo fevereiro
+                                                </td>
+                                                <td class="conteudoTabelas">
+                                                     Exemplo fevereiro
+                                                </td>
+                                                <td class="conteudoTabelas">
+                                                    <span class="statusPositivoValorExtrato">
+                                                        <label style="font-size:13px">R$</label>
+                                                        2.565,00</span>
+                                                </td>
+                                            </tr>
+                                            <!--FIM RÉPLICA DADOS-->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>  
+                        </div>
+                    </div>
+                    <div class="">
+                        <!--MARÇO-->
+                        <div class="panel" ng-show="tabIs(3)">
+                            <div class="row conteudoMinhaConta">
+                            <div class="table-responsive" style="margin-left:15px">
+                                    <table class="table table-hover table-light">
+                                        <thead>
+                                            <tr class="uppercase">
+                                                <th style="text-align:left">
+                                                     Data movimento
+                                                </th>
+                                                <th style="text-align:left">
+                                                     Descrição
+                                                </th>
+                                                <th class="conteudoTabelas">
+                                                     Documento
+                                                </th>
+                                                <th class="conteudoTabelas">
+                                                     Valor
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>                                                    
+                                                    11/08/2015                                                    
+                                                </td>
+                                                <td>
+                                                     Exemplo
+                                                </td>
+                                                <td class="conteudoTabelas">
+                                                     Exemplo
+                                                </td>
+                                                <td class="conteudoTabelas">
+                                                    <span class="statusPositivoValorExtrato">
+                                                        <label style="font-size:13px">R$</label>
+                                                        535,00</span>
+                                                </td>
+                                            </tr>
+
+                                            <!--RÉPLICAS DADOS-->                                
+                                            <tr>
+                                                <td>
+                                                    21/04/2015                                                    
+                                                </td>
+                                                <td>
+                                                     Exemplo
+                                                </td>
+                                                <td class="conteudoTabelas">
+                                                     Exemplo
+                                                </td>
+                                                <td class="conteudoTabelas">
+                                                    <span class="statusNegativoValorExtrato">
+                                                        <label style="font-size:13px">R$</label>
+                                                        -6.755,00</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    23/05/2015                                                    
+                                                </td>
+                                                <td>
+                                                     Exemplo
+                                                </td>
+                                                <td class="conteudoTabelas">
+                                                     Exemplo
+                                                </td>
+                                                <td class="conteudoTabelas">
+                                                    <span class="statusPositivoValorExtrato">
+                                                        <label style="font-size:13px">R$</label>
+                                                        1.535,00</span>
+                                                </td>
+                                            </tr>
+                                            <!--FIM RÉPLICA DADOS-->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>  
+                        </div>
+                    </div>
+                </div>
             </div>    
         </div>
     </div>
