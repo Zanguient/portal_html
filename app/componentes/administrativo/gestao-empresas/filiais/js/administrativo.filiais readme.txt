@@ -40,7 +40,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
   * api/cliente/empresa
 	 - DELETE : deleta uma filial
 				  ?token=...&nu_cnpj=cnpj  OBS: remove tudo que tiver associado
-	 - GET  : listagem de todas as filiais da empresa gerenciada (coleção 1)
+	 - GET  : listagem de todas as filiais da empresa gerenciada (coleção 2)
 	          [{ 
 				  nu_cnpj: string,
 				  ds_fantasia: string,
@@ -58,7 +58,10 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				  fl_ativo: boolean,
 				  id_grupo: int,
 				  filial: string,
-				  nu_inscEstadual: int (ou null)
+				  nu_inscEstadual: int (ou null),
+				  login_ultimoAcesso : string,
+                  dt_ultimoAcesso : datetime,
+				  podeExcluir : boolean,
 			   }
 			  ]
  

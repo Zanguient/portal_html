@@ -53,6 +53,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				fl_ativo : boolean,
 				dt_ultimoAcesso : data,
 				login_ultimoAcesso : string,
+				podeExcluir : boolean,
 			  }
 			]
 	- DELETE : deletar uma empresa

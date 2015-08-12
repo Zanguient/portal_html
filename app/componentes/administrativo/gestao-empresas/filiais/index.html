@@ -417,7 +417,7 @@
                                                 <li ng-show="usuarioPodeAlterarFiliais()" class="ng-hide">
                                                     <a href="javascript:;" ng-click="editarFilial(filial)">Editar</a>
                                                 </li>
-                                                <li ng-show="usuarioPodeExcluirFiliais()">
+                                                <li ng-show="usuarioPodeExcluirFiliais() && filial.podeExcluir">
                                                     <a href="javascript:;" ng-click="excluirFilial(filial)">Excluir</a>
                                                 </li> 
                                                 <li>

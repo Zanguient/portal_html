@@ -86,27 +86,6 @@
             <!-- Begin: life time stats -->
             <div class="portlet light">
                 
-                <!-- UPLOAD -->
-                <!--button class="btn btn-primary" ngf-select ngf-change="upload($files)" 
-                     ngf-multiple="false" accept=".ofx"
-                     ng-disabled="uploadEmProgresso()">
-                    <img ng-src="../img/loading-atos.gif" 
-                         style="margin-top: 10px" 
-                         ng-show="uploadEmProgresso()"/>
-                    Selecionar Extrato
-                </button-->
-                
-                <div class="col-sm-4">
-                    <progressbar class="progress-striped" value="progresso" type="{{type}}" 
-                                 ng-class="{active : uploadEmProgresso()}">
-                        {{current}}/{{total}}
-                    </progressbar>
-                </div>
-                
-                <!--input ng-model="extrato"
-                       onchange="angular.element(this).scope().file_changed(this)"
-                       type="file" accept=".ofx" /-->
-                
                 <div class="portlet-title">
                     <div class="caption">                        
                         <span class="caption-subject font-green-sharp bold uppercase">Consolidado por adquirente</span>

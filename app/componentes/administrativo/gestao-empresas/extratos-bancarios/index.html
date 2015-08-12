@@ -53,11 +53,8 @@
                                         <th width="10%" tabindex="0" rowspan="1" colspan="1">
                                              Contas Correntes 
                                         </th>                                        
-                                        <th width="2%" tabindex="3" rowspan="1" colspan="1">
-                                             Datas
-                                        </th>
                                         <th width="1%" tabindex="3" rowspan="1" colspan="1">
-                                             Opções
+                                             Upload
                                         </th>
                                     </tr>
                                     <tr role="row" class="filter">   
@@ -76,74 +73,30 @@
                                                popover="É necessário selecionar uma empresa"
                                                popover-trigger="mouseenter"></i>
                                         </td>
-                                        <!--DATAS-->
+                                        <!--UPLOAD-->
                                         <td rowspan="1" colspan="1">                                    
-                                            <div class="input-group date date-picker margin-bottom-5"
-                                                 data-date-format="dd/mm/yyyy">
-                                                <input type="text" 
-                                                       class="form-control form-filter input-sm ng-pristine ng-valid ng-isolate-scope ng-valid-required ng-valid-date ng-touched" 
-                                                       readonly="" 
-                                                       style="cursor: pointer" 
-                                                       ng-click="exibeCalendarioDataMin($event)"
-                                                       placeholder="Início"
-                                                       ng-model="filtro.datamin" 
-                                                       ng-change="alterouDataMin()"
-                                                       datepicker-append-to-body="true" 
-                                                       datepicker-popup="dd MMMM yyyy" 
-                                                       is-open="abrirCalendarioDataMin"
-                                                       ng-required="true" 
-                                                       show-button-bar="false" 
-                                                       show-weeks="false" 
-                                                       required="required">
-                                                <span class="input-group-btn">
-                                                    <button class="btn btn-sm default" 
-                                                            type="button" 
-                                                            ng-click="exibeCalendarioDataMin($event)">
-                                                        <i class="fa fa-calendar"></i>
-                                                    </button>
-                                                </span>
-                                            </div>
-                                            <div class="input-group"> <!--  date date-picker margin-bottom-5" -->
-                                                <input type="text" 
-                                                       class="form-control form-filter input-sm ng-pristine ng-untouched ng-valid ng-isolate-scope ng-valid-date ng-valid-required" 
-                                                       readonly="" 
-                                                       style="cursor: pointer"
-                                                       ng-click="exibeCalendarioDataMax($event)" 
-                                                       placeholder="Fim"
-                                                       ng-model="filtro.datamax"
-                                                       ng-change="alterouDataMax()" 
-                                                       datepicker-popup="dd MMMM yyyy"
-                                                       is-open="abrirCalendarioDataMax"
-                                                       datepicker-append-to-body="true"
-                                                       ng-required="false" 
-                                                       current-text="Hoje" 
-                                                       clear-text="Limpar" 
-                                                       close-text="Fechar" 
-                                                       show-button-bar="true" 
-                                                       show-weeks="false">
-                                                <span class="input-group-btn">
-                                                    <button class="btn btn-sm default" 
-                                                            type="button" 
-                                                            ng-click="exibeCalendarioDataMax($event)">
-                                                        <i class="fa fa-calendar"></i>
-                                                    </button>
-                                                </span>
-                                            </div>                                            
-                                        </td>
-                                        <!--BUSCAR E LIMPAR-->
-                                        <td rowspan="1" colspan="1">
-                                            <div class="margin-bottom-5">
-                                                <button class="btn btn-sm red filter-submit margin-bottom" 
-                                                        ng-click="buscaDadosAcesso()">
-                                                    <i class="fa fa-search"></i> Buscar
+                            
+                                            <div class="col-sm-12">
+                                                <button class="btn btn-primary" ngf-select ngf-change="upload($files)" 
+                                                        ngf-multiple="false" accept=".ofx"
+                                                        ng-disabled="uploadEmProgresso()"
+                                                        ng-show="filtro.conta && $filtro.conta !== null">
+                                                    <i class="fa fa-spinner" 
+                                                       ng-show="uploadEmProgresso()"/>
+                                                    Selecionar Extrato
                                                 </button>
                                             </div>
-                                            <button class="btn btn-sm grey filter-cancel"
-                                                    ng-click="limpaFiltros()">
-                                                <i class="fa fa-times"></i> 
-                                                Limpar
-                                            </button>
-                                        </td>                                        
+
+                                            <div class="col-sm-12" style="margin-top: 10px">
+                                                <progressbar class="progress-striped" 
+                                                             value="progresso" type="{{type}}" 
+                                                             ng-show="filtro.conta && $filtro.conta !== null"
+                                                             ng-class="{active : uploadEmProgresso()}">
+                                                    {{current}}/{{total}}
+                                                </progressbar>
+                                            </div>
+                                              
+                                        </td>                                      
                                     </tr>
                                 </thead>
                             </table>

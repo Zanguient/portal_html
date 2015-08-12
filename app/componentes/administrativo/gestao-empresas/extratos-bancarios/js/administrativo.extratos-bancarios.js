@@ -6,7 +6,7 @@
  */
 
 // App
-angular.module("administrativo-extratos-bancarios", []) 
+angular.module("administrativo-extratos-bancarios", ['ngFileUpload']) 
 
 .controller("administrativo-extratos-bancariosCtrl", ['$scope',
                                              '$state',
@@ -16,15 +16,21 @@ angular.module("administrativo-extratos-bancarios", [])
                                              /*'$campos',*/
                                              '$webapi',
                                              '$apis',
+                                             'Upload',
                                              function($scope,$state,$stateParams,$filter,$timeout,
-                                                      /*$campos,*/$webapi,$apis){ 
+                                                      /*$campos,*/$webapi,$apis,Upload){ 
                                                 
     // Filtros
     $scope.extrato = [];
     $scope.contas = [];                                             
     $scope.filtro = {conta : null };
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
-    var divPortletBodyExtratosPos = 1; // posição da div que vai receber o loading progress                                         
+    var divPortletBodyExtratosPos = 1; // posição da div que vai receber o loading progress                                           // UPLOAD
+    var uploadEmProgresso = false;
+    $scope.progresso = 0;
+    $scope.type = 'info';
+    $scope.current = 0;
+    $scope.total = 0;                                             
     // flag
     $scope.exibePrimeiraLinha = false;                                             
     // Permissões                                           
@@ -172,7 +178,63 @@ angular.module("administrativo-extratos-bancarios", [])
         //buscaExtratos();
     };
     
-                                                                                         
+          
+                                                 
+                                                 
+    // UPLOAD
+    /**
+      * Retorna true se o upload está em curso
+      */
+    $scope.uploadEmProgresso = function(){
+        return uploadEmProgresso;    
+    }
+    /**
+      * Faz o upload
+      */
+    $scope.upload = function (files) {
+        if (files && files.length) {
+            uploadEmProgresso = true;
+            $scope.type = 'info';
+            $scope.progresso = 0;
+            $scope.total = files.length;
+            $scope.current = 0;
+            // Loading progress
+            $scope.showProgress(divPortletBodyFiltrosPos);
+            for (var i = 0; i < $scope.total; i++) {
+                var file = files[i];
+                Upload.upload({
+                    url: $apis.getUrl($apis.card.tbextrato, $scope.token, 
+                                      {id: /*$campos.card.tbextrato.cdContaCorrente*/ 101, 
+                                       valor: $scope.filtro.conta.idContaCorrente}),
+                    file: file,
+                    method: 'PATCH'
+                }).progress(function (evt) {
+                    $scope.progresso = parseInt(100.0 * evt.loaded / evt.total);
+                }).success(function (data, status, headers, config) {
+                    $timeout(function() {
+                        if(++$scope.current === $scope.total){
+                            $scope.type = 'success';
+                            uploadEmProgresso = false;
+                            $scope.hideProgress(divPortletBodyFiltrosPos);
+                        }
+                        // Relista o extrato corrente
+                        //buscaExtrato();
+                    });
+                }).error(function (data, status, headers, config){
+                    console.log("ERROR : " + status);
+                    console.log(data);
+                    if(++$scope.current === $scope.total){
+                        $scope.type = 'danger';
+                        uploadEmProgresso = false;
+                        $scope.hideProgress(divPortletBodyFiltrosPos);
+                    }
+                });
+            }
+        }
+    };                                             
+                                                 
+                                                 
+                                                 
     // EXTRATO
     /**
       * Busca os extratos
@@ -249,7 +311,8 @@ angular.module("administrativo-extratos-bancarios", [])
                  $scope.hideProgress(divPortletBodyFiltrosPos);
                  $scope.hideProgress(divPortletBodyExtratosPos);
               });   */           
-    };
+    };                               
+                                                 
                                                  
     //TAB
     /**
@@ -263,7 +326,11 @@ angular.module("administrativo-extratos-bancarios", [])
       */
     $scope.setTab = function (tab){
         if (tab >= 1 && tab <= 4) $scope.tab = tab;        
-    }                              
+    }        
+    
+    
+    
+    
                                                  
 
     

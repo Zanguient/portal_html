@@ -339,6 +339,10 @@ angular.module("administrativo-dados-acesso", [])
         
         if($scope.filtro.filial === null){
            $scope.showModalAlerta('É necessário selecionar uma filial!');
+           if(progressoemexecucao){
+                $scope.hideProgress(divPortletBodyFiltrosPos);     
+                $scope.hideProgress(divPortletBodyDadosPos);        
+           }
            return;
         }
         
