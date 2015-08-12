@@ -27,7 +27,7 @@
 				 
                 <div class="portlet-title">
                     <div class="caption">								
-                        <span class="caption-subject font-green-sharp bold uppercase">Filtros</span>						
+                        <span class="caption-subject font-green-sharp bold uppercase">Conta Corrente</span>						
                     </div>                    
                 </div>
                 <div class="portlet-body">
@@ -160,271 +160,152 @@
                         </div>
                     </div>
                 </div>                
-                <div class="portlet-body" style="min-height:300px">  
-                    <!-- LAYOUT AQUI! -->
+                <div class="portlet-body" style="min-height:300px"> 
+                    
+                    <!-- ANO -->
+                    <div class="row">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4"> 
+                            <div class="pagination-panel centralizarPaginacao"> 
+                                <a href="javascript:;" ng-click="setAnoAnterior()"
+                                   class="btn btn-sm default prev"  
+                                   title="{{anoAnterior()}}">
+                                        <i class="fa fa-caret-left"></i>
+                                </a>
+                                <input type="text" class="pagination-panel-input form-control input-inline input-sm" 
+                                       maxlength="4" style="text-align:center; margin: 0 5px;"
+                                       ng-model="anoDigitado" valid-integer-number
+                                       ng-keypress="($event.which === 13) ? alteraAno() : 0"
+                                       ng-blur="atualizaAnoDigitado()">
+                                <a href="javascript:;" ng-click="setAnoPosterior()"
+                                   class="btn btn-sm default next"
+                                   ng-class="{disabled: !temProximoAno()}"
+                                   title="{{anoPosterior()}}">
+                                    <i class="fa fa-caret-right"></i>
+                                </a>
+                            </div>
+                        </div> 
+                        <div class="col-sm-4"></div>
+                    </div>
+                    <!-- FIM ANO -->
                     
                     <!-- TABS -->
-                    <div class="" style="text-align:center">
+                    <div class="row" style="text-align:center; margin-top:20px">
                         <tabset type="pills">
-                            <tab heading="Janeiro" select="setTab(1)" active="true"></tab>
-                            <tab heading="Fevereiro" select="setTab(2)"></tab>
-                            <tab heading="Março" select="setTab(3)"></tab>
-                            <tab heading="Abril" select="setTab(3)"></tab>
-                            <tab heading="Maio" select="setTab(3)"></tab>
-                            <tab heading="Junho" select="setTab(3)"></tab>
-                            <tab heading="Julho" select="setTab(3)"></tab>
-                            <tab heading="Agosto" select="setTab(3)"></tab>
-                            <tab heading="Setembro" select="setTab(3)"></tab>
-                            <tab heading="Outubro" select="setTab(3)"></tab>
-                            <tab heading="Novembro" select="setTab(3)"></tab>
-                            <tab heading="Dezembro" select="setTab(3)"></tab>
+                            <tab heading="Jan{{getAno()}}" select="setTab(1)" 
+                                 disable="mes.janeiro.disabled" active="mes.janeiro.active"></tab>
+                            <tab heading="Fev{{getAno()}}" select="setTab(2)" 
+                                 disable="mes.fevereiro.disabled" active="mes.fevereiro.active"></tab>
+                            <tab heading="Mar{{getAno()}}" select="setTab(3)" 
+                                 disable="mes.marco.disabled" active="mes.marco.active"></tab>
+                            <tab heading="Abr{{getAno()}}" select="setTab(4)" 
+                                 disable="mes.abril.disabled" active="mes.abril.active"></tab>
+                            <tab heading="Mai{{getAno()}}" select="setTab(5)" 
+                                 disable="mes.maio.disabled" active="mes.maio.active"></tab>
+                            <tab heading="Jun{{getAno()}}" select="setTab(6)" 
+                                 disable="mes.junho.disabled" active="mes.junho.active"></tab>
+                            <tab heading="Jul{{getAno()}}" select="setTab(7)" 
+                                 disable="mes.julho.disabled" active="mes.julho.active"></tab>
+                            <tab heading="Ago{{getAno()}}" select="setTab(8)" 
+                                 disable="mes.agosto.disabled" active="mes.agosto.active"></tab>
+                            <tab heading="Set{{getAno()}}" select="setTab(9)" 
+                                 disable="mes.setembro.disabled" active="mes.setembro.active"></tab>
+                            <tab heading="Out{{getAno()}}" select="setTab(10)" 
+                                 disable="mes.outubro.disabled" active="mes.outubro.active"></tab>
+                            <tab heading="Nov{{getAno()}}" select="setTab(11)" 
+                                 disable="mes.novembro.disabled" active="mes.novembro.active"></tab>
+                            <tab heading="Dez{{getAno()}}" select="setTab(12)" 
+                                 disable="mes.dezembro.disabled" active="mes.dezembro.active"></tab>
                         </tabset>
                     </div>
                     
-                    <!-- CONTEÚDO -->
-                    <div class="">
-                        <!-- JANEIRO -->
-                        <div class="panel" ng-show="tabIs(1)">
+                    <!-- CONTEÚDO DO EXTRATO-->
+                    <div class="row">
+                        <div class="panel">
                             <div class="row conteudoMinhaConta">
+                                <!-- TABLE RESPOSIVE -->
                                 <div class="table-responsive" style="margin-left:15px">
                                     <table class="table table-hover table-light">
                                         <thead>
                                             <tr class="uppercase">
-                                                <th style="text-align:left">
+                                                <th>
                                                      Data movimento
                                                 </th>
-                                                <th style="text-align:left">
+                                                <th>
+                                                     Tipo
+                                                </th>
+                                                <th>
                                                      Descrição
                                                 </th>
-                                                <th class="conteudoTabelas">
+                                                <th>
                                                      Documento
                                                 </th>
-                                                <th class="conteudoTabelas">
+                                                <th>
                                                      Valor
                                                 </th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>                                                    
-                                                    11/08/2015                                                    
+                                            <tr ng-repeat="movimentacao in extrato">
+                                                <!-- DATA -->
+                                                <td ng-bind="getDataString(movimentacao.dtExtrato)"
+                                                    style="text-align:center">
                                                 </td>
+                                                <!-- TIPO -->
+                                                <td style="text-align:center">                                                    
+                                                    {{movimentacao.dsTipo}}                                                  
+                                                </td>
+                                                <!-- DESCRIÇÃO -->
                                                 <td>
-                                                     Exemplo
+                                                     {{movimentacao.dsDocumento}}
                                                 </td>
-                                                <td class="conteudoTabelas">
-                                                     Exemplo
+                                                <!-- DOCUMENTO -->
+                                                <td style="text-align:center">
+                                                     {{movimentacao.nrDocumento}}
                                                 </td>
-                                                <td class="conteudoTabelas">
-                                                    <span class="statusPositivoValorExtrato">
-                                                        <label style="font-size:13px">R$</label>
-                                                        535,00</span>
+                                                <!-- VALOR -->
+                                                <td style="text-align:center">
+                                                    <span ng-class="{'statusPositivoValorExtrato' : movimentacao.vlMovimento >= 0.0, 'statusNegativoValorExtrato' : movimentacao.vlMovimento < 0.0}">
+                                                        {{movimentacao.vlMovimento | currency:'R$'}}
+                                                    </span>
                                                 </td>
                                             </tr>
-
-                                            <!--RÉPLICAS DADOS-->                                
-                                            <tr>
+                                            <tr ng-hide="!filtro.conta || filtro.conta === null || extrato.length > 0">
+                                                <td colspan="2"></td>
                                                 <td>
-                                                    21/04/2015                                                    
+                                                    <div class="col-sm-12" 
+                                                         ng-class="{'element-hidden': !uploadEmProgresso()}">
+                                                        <progressbar class="progress-striped" 
+                                                                     value="progresso" type="{{type}}" 
+                                                                     ng-show="filtro.conta && $filtro.conta !== null"
+                                                                     ng-class="{active : uploadEmProgresso()}">
+                                                            {{current}}/{{total}}
+                                                        </progressbar>
+                                                    </div>
+                                                    <div ngf-drop ngf-select class="col-sm-12 drop-box"
+                                                         ngf-drag-over-class="dragover" 
+                                                         ngf-multiple="false" 
+                                                         ngf-change="upload($files)"
+                                                         ngf-allow-dir="true"
+                                                         ng-disabled="uploadEmProgresso()"
+                                                         accept=".ofx">
+                                                        Arraste até aqui o extrato ou clique aqui para selecioná-lo
+                                                    </div>
                                                 </td>
-                                                <td>
-                                                     Exemplo
-                                                </td>
-                                                <td class="conteudoTabelas">
-                                                     Exemplo
-                                                </td>
-                                                <td class="conteudoTabelas">
-                                                    <span class="statusNegativoValorExtrato">
-                                                        <label style="font-size:13px">R$</label>
-                                                        -6.755,00</span>
-                                                </td>
+                                                <td colspan="2"></td>
                                             </tr>
-                                            <tr>
-                                                <td>
-                                                    23/05/2015                                                    
-                                                </td>
-                                                <td>
-                                                     Exemplo
-                                                </td>
-                                                <td class="conteudoTabelas">
-                                                     Exemplo
-                                                </td>
-                                                <td class="conteudoTabelas">
-                                                    <span class="statusPositivoValorExtrato">
-                                                        <label style="font-size:13px">R$</label>
-                                                        1.535,00</span>
-                                                </td>
-                                            </tr>
-                                            <!--FIM RÉPLICA DADOS-->
                                         </tbody>
                                     </table>
                                 </div>
+                                <!-- FIM TABLE RESPOSIVE -->
                             </div>  
                         </div>
                     </div>
-                    
-                    <div class="">
-                        <!-- FEVEREIRO -->
-                        <div class="panel" ng-show="tabIs(2)">
-                            <div class="row conteudoMinhaConta">
-                                <div class="table-responsive" style="margin-left:15px">
-                                    <table class="table table-hover table-light">
-                                        <thead>
-                                            <tr class="uppercase">
-                                                <th style="text-align:left">
-                                                     Data movimento
-                                                </th>
-                                                <th style="text-align:left">
-                                                     Descrição
-                                                </th>
-                                                <th class="conteudoTabelas">
-                                                     Documento
-                                                </th>
-                                                <th class="conteudoTabelas">
-                                                     Valor
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>                                                    
-                                                    15/05/2015                                                    
-                                                </td>
-                                                <td>
-                                                     Exemplo fevereiro
-                                                </td>
-                                                <td class="conteudoTabelas">
-                                                     Exemplo fevereiro
-                                                </td>
-                                                <td class="conteudoTabelas">
-                                                    <span class="statusPositivoValorExtrato">
-                                                        <label style="font-size:13px">R$</label>
-                                                        465,00</span>
-                                                </td>
-                                            </tr>
-
-                                            <!--RÉPLICAS DADOS-->                                
-                                            <tr>
-                                                <td>
-                                                    21/04/2015                                                    
-                                                </td>
-                                                <td>
-                                                     Exemplo fevereiro
-                                                </td>
-                                                <td class="conteudoTabelas">
-                                                     Exemplo fevereiro
-                                                </td>
-                                                <td class="conteudoTabelas">
-                                                    <span class="statusNegativoValorExtrato">
-                                                        <label style="font-size:13px">R$</label>
-                                                        -2.455,00</span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    19/10/2015                                                    
-                                                </td>
-                                                <td>
-                                                     Exemplo fevereiro
-                                                </td>
-                                                <td class="conteudoTabelas">
-                                                     Exemplo fevereiro
-                                                </td>
-                                                <td class="conteudoTabelas">
-                                                    <span class="statusPositivoValorExtrato">
-                                                        <label style="font-size:13px">R$</label>
-                                                        2.565,00</span>
-                                                </td>
-                                            </tr>
-                                            <!--FIM RÉPLICA DADOS-->
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>  
-                        </div>
-                    </div>
-                    <div class="">
-                        <!--MARÇO-->
-                        <div class="panel" ng-show="tabIs(3)">
-                            <div class="row conteudoMinhaConta">
-                            <div class="table-responsive" style="margin-left:15px">
-                                    <table class="table table-hover table-light">
-                                        <thead>
-                                            <tr class="uppercase">
-                                                <th style="text-align:left">
-                                                     Data movimento
-                                                </th>
-                                                <th style="text-align:left">
-                                                     Descrição
-                                                </th>
-                                                <th class="conteudoTabelas">
-                                                     Documento
-                                                </th>
-                                                <th class="conteudoTabelas">
-                                                     Valor
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>                                                    
-                                                    11/08/2015                                                    
-                                                </td>
-                                                <td>
-                                                     Exemplo
-                                                </td>
-                                                <td class="conteudoTabelas">
-                                                     Exemplo
-                                                </td>
-                                                <td class="conteudoTabelas">
-                                                    <span class="statusPositivoValorExtrato">
-                                                        <label style="font-size:13px">R$</label>
-                                                        535,00</span>
-                                                </td>
-                                            </tr>
-
-                                            <!--RÉPLICAS DADOS-->                                
-                                            <tr>
-                                                <td>
-                                                    21/04/2015                                                    
-                                                </td>
-                                                <td>
-                                                     Exemplo
-                                                </td>
-                                                <td class="conteudoTabelas">
-                                                     Exemplo
-                                                </td>
-                                                <td class="conteudoTabelas">
-                                                    <span class="statusNegativoValorExtrato">
-                                                        <label style="font-size:13px">R$</label>
-                                                        -6.755,00</span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    23/05/2015                                                    
-                                                </td>
-                                                <td>
-                                                     Exemplo
-                                                </td>
-                                                <td class="conteudoTabelas">
-                                                     Exemplo
-                                                </td>
-                                                <td class="conteudoTabelas">
-                                                    <span class="statusPositivoValorExtrato">
-                                                        <label style="font-size:13px">R$</label>
-                                                        1.535,00</span>
-                                                </td>
-                                            </tr>
-                                            <!--FIM RÉPLICA DADOS-->
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>  
-                        </div>
-                    </div>
+                    <!-- FIM CONTEUDO -->
                 </div>
-            </div>    
+                <!-- FIM PORTLET BODY -->
+            </div> 
+            <!-- FIM PORTLET LIGTH -->
         </div>
     </div>
 </div>

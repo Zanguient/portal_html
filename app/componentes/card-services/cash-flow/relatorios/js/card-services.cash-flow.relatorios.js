@@ -335,7 +335,7 @@ angular.module("card-services-cash-flow-relatorios", [])
       */                                            
     $scope.alteraPagina = function(){
         if($scope.paginaInformada) setPagina(parseInt($scope.paginaInformada));
-        else $scope.setaPaginaDigitada();  
+        else $scope.atualizaPaginaDigitada();  
     };
     /**
       * Sincroniza a página digitada com a que efetivamente está sendo exibida

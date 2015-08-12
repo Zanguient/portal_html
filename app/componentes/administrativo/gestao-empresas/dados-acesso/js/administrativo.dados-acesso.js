@@ -72,9 +72,9 @@ angular.module("administrativo-dados-acesso", [])
             }
         });
         // Obtém as permissões
-        if($scope.methodsDoControllerCorrente){// && $scope.methodsDoControllerCorrente.length > 0){
-            permissaoAlteracao = $scope.methodsDoControllerCorrente['atualização'] ? true : false;//$filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'ATUALIZAÇÃO' }).length > 0;   
-            permissaoCadastro = $scope.methodsDoControllerCorrente['cadastro'] ? true : false;//$filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'CADASTRO' }).length > 0;
+        if($scope.methodsDoControllerCorrente){
+            permissaoAlteracao = $scope.methodsDoControllerCorrente['atualização'] ? true : false;   
+            permissaoCadastro = $scope.methodsDoControllerCorrente['cadastro'] ? true : false;
             //permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;
         }
         // Carrega filiais
@@ -262,7 +262,7 @@ angular.module("administrativo-dados-acesso", [])
       */                                            
     $scope.alteraPagina = function(){
         if($scope.paginaInformada) setPagina(parseInt($scope.paginaInformada));
-        else $scope.setaPaginaDigitada();  
+        else $scope.atualizaPaginaDigitada();  
     };
     /**
       * Sincroniza a página digitada com a que efetivamente está sendo exibida

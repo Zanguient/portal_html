@@ -58,7 +58,18 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 
    * card/tbextrato 
      - GET : listagem do extratos (coleção 1) // solicitar ordenado pelo idExtrato, que é a ordem de inserção na base   
-	
+		  [
+			{
+				idExtrato : int,
+				cdContaCorrente : int,
+				nrDocumento : string,
+				dtExtrato : datetime,
+				dsDocumento : string,
+				vlMovimento : double,
+				dsTipo : string,
+				dsArquivo : string,
+			}
+		  ]
  
  
    

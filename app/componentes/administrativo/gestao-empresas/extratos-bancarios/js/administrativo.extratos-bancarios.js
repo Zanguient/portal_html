@@ -22,10 +22,28 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
                                                 
     // Filtros
     $scope.extrato = [];
-    $scope.contas = [];                                             
-    $scope.filtro = {conta : null };
+    $scope.contas = [];         
+    var dataAtual = new Date();    
+    $scope.anoDigitado = dataAtual.getFullYear();                                           
+    $scope.filtro = {conta : null, 
+                     ano :  dataAtual.getFullYear(),  // ano corrente
+                     mes : dataAtual.getMonth()}; // mês corrente
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
-    var divPortletBodyExtratosPos = 1; // posição da div que vai receber o loading progress                                           // UPLOAD
+    var divPortletBodyExtratosPos = 1; // posição da div que vai receber o loading progress
+    $scope.mes = { janeiro : { active: false, disabled : false }, 
+                   fevereiro: { active: false, disabled : false }, 
+                   marco : { active: false, disabled : false },
+                   abril : { active: false, disabled : false },
+                   maio : { active: false, disabled : false }, 
+                   junho : { active: false, disabled : false }, 
+                   julho : { active: false, disabled : false }, 
+                   agosto : { active: false, disabled : false },
+                   setembro : { active: false, disabled : false }, 
+                   outubro : { active: false, disabled : false },
+                   novembro : { active: false, disabled : false }, 
+                   dezembro : { active: false, disabled : false },
+                 };
+    // UPLOAD
     var uploadEmProgresso = false;
     $scope.progresso = 0;
     $scope.type = 'info';
@@ -64,10 +82,14 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
         });
         // Obtém as permissões
         if($scope.methodsDoControllerCorrente){
-            permissaoAlteracao = $scope.methodsDoControllerCorrente['atualização'] ? true : false;  
+            permissaoAlteracao = $scope.methodsDoControllerCorrente['atualização'] ? true : false;   
             permissaoCadastro = $scope.methodsDoControllerCorrente['cadastro'] ? true : false;
             permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;
         }
+        
+        // Seleciona o mês corrente
+        $scope.setTab($scope.filtro.mes + 1);
+        ajustaTabs();
         
         // Tem parâmetro?
         if($stateParams.conta !== null)
@@ -157,10 +179,8 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
             
                 $scope.filtro.conta = $scope.contas[0];
                 
-                //buscaExtratos(true);
-            
-                // Fecha o progress
-                $scope.hideProgress(divPortletBodyFiltrosPos);
+                // Alterou conta
+                $scope.alterouConta(true);
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
@@ -173,10 +193,134 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
     /**
       * Selecionou uma conta
       */
-    $scope.alterouConta = function(){
-        console.log("alterou conta");
-        //buscaExtratos();
+    $scope.alterouConta = function(progressemexecucao){
+        // Set para o ano e mês corrente 
+        $scope.filtro.ano = dataAtual.getFullYear(); 
+        $scope.filtro.mes = dataAtual.getMonth();
+        $scope.setTab($scope.filtro.mes + 1);
+        ajustaTabs();
+        // Busca extrato, caso a conta seja válida
+        buscaExtrato(progressemexecucao);
     };
+    
+   
+                                                 
+                                                 
+    // FILTRO DE MÊS/ANO 
+    /**
+      * Retorna o ano a ser exibido nas tabs
+      */                                             
+    $scope.getAno = function(){
+        return String.fromCharCode(10,13) + $scope.filtro.ano;   
+    }
+    /**
+      * Retorna true se o ano corrente do filtro é inferior ao ano atual
+      */
+    $scope.temProximoAno = function(){
+        return $scope.filtro.ano < dataAtual.getFullYear();   
+    }
+    /**
+      * Informa qual o ano posterior ao corrente do filtro
+      */
+    $scope.anoPosterior = function(){
+        return $scope.filtro.ano + 1;   
+    }
+    /**
+      * Informa qual o ano anterior ao corrente do filtro
+      */
+    $scope.anoAnterior = function(){
+        return $scope.filtro.ano - 1;   
+    }
+    /**
+      * Altera efetivamente o ano exibido
+      */ 
+    var setAno = function(ano){
+        if(ano <= dataAtual.getFullYear()){ 
+            if($scope.filtro.ano > ano)
+                $scope.filtro.mes = 11; // Retrocedeu o ano
+            else if($scope.filtro.ano < ano)
+                $scope.filtro.mes = 0; // Avançou o ano
+            $scope.filtro.ano = ano;
+            ajustaTabs();
+            buscaExtrato();
+       }
+       $scope.atualizaAnoDigitado();     
+    }
+    /**
+      * Seta o ano em exibição para o anterior
+      */
+    $scope.setAnoAnterior = function(){
+        setAno($scope.filtro.ano - 1);
+    }
+    /**
+      * Seta o ano em exibição para o posterior
+      */
+    $scope.setAnoPosterior = function(){
+        setAno($scope.filtro.ano + 1);
+    }
+    /**
+      * Foi informado pelo usuário um ano para ser exibido
+      */                                            
+    $scope.alteraAno = function(){
+        if($scope.anoDigitado) setAno(parseInt($scope.anoDigitado));
+        else $scope.atualizaAnoDigitado();  
+    }
+    /**
+      * Sincroniza o ano digitado com a que efetivamente está sendo exibido
+      */
+    $scope.atualizaAnoDigitado = function(){
+        $scope.anoDigitado = $scope.filtro.ano;       
+    }
+    // MES
+    /**
+      * Retorna true se o mês informado pode ser exibido
+      */
+    $scope.exibeMes = function(mes){
+        if(dataAtual.getFullYear > $scope.filtro.ano) return true;
+        return mes <= dataAtual.getMonth();
+    }
+    /**
+      * Retorna true se o mês informado é o mês em exibição
+      */
+    $scope.mesIs = function(mes){
+        return $scope.filtro.mes === mes;    
+    }
+    
+    
+    // TABS
+    /**
+      * Ajusta o flag active e disable estáticos das tabs
+      */
+    var ajustaTabs = function(){
+        // Seleciona a tab do mês
+        var cont = 0;
+        for(var key in $scope.mes){
+            if ($scope.mes.hasOwnProperty(key)){
+                $scope.mes[key].active = $scope.filtro.mes == cont;
+                $scope.mes[key].disabled = $scope.filtro.ano > dataAtual.getFullYear() || 
+                                           ($scope.filtro.ano == dataAtual.getFullYear() && 
+                                            cont > dataAtual.getMonth());
+            }
+            cont++;
+        }    
+    }
+    
+    /**
+      * Retorna true se a tab informada corresponde a tab em exibição
+      */
+    $scope.tabIs = function (tab){
+        return $scope.tab === tab;
+    }
+    /**
+      * Altera a tab em exibição
+      */
+    $scope.setTab = function (tab){
+        if (tab >= 1 && tab <= 12){
+            $scope.tab = tab;
+            $scope.filtro.mes = tab - 1;
+            buscaExtrato();
+        }
+    }    
     
           
                                                  
@@ -218,7 +362,7 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
                             $scope.hideProgress(divPortletBodyFiltrosPos);
                         }
                         // Relista o extrato corrente
-                        //buscaExtrato();
+                        buscaExtrato();
                     });
                 }).error(function (data, status, headers, config){
                     console.log("ERROR : " + status);
@@ -236,102 +380,55 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
                                                  
                                                  
     // EXTRATO
-    /**
-      * Busca os extratos
-      */
-    $scope.buscaExtratos = function(){
-        console.log("busca extratos"); 
-        $scope.hideProgress(divPortletBodyFiltrosPos);
-    }
-                                                 
-    
-                     
+             
     /**
       * Retorna os filtros para ser usado junto a url para requisição via webapi
       */
     var obtemFiltroDeBusca = function(){
        var filtros = [];
        // Filial
-       var filtroFilial = {id: /*$campos.pos.loginoperadora.cnpj*/ 105, 
-                           valor: $scope.filtro.filial.nu_cnpj};
-       filtros.push(filtroFilial);  
+       var filtroConta = {id: /*$campos.card.tbextrato.cdContaCorrente*/ 101, 
+                           valor: $scope.filtro.conta.idContaCorrente};
+       filtros.push(filtroConta);  
         
-       // Adquirente
-       if($scope.filtro.adquirente !== null){
-           var filtroAdquirente = {id: /*$campos.pos.loginoperadora.idOperadora*/ 106, 
-                                   valor: $scope.filtro.adquirente.id};
-           filtros.push(filtroAdquirente);
-       } 
-        
-       // Bandeira
-       if($scope.filtro.status !== null){
-           var filtroStatus = {id: /*$campos.pos.loginoperadora.status*/ 104, 
-                               valor: $scope.filtro.status.status};
-           filtros.push(filtroStatus);
-       }
+       // Período
+       filtros.push({id : /*$campos.card.tbextrato.dtExtrato*/ 102,
+                     valor: $scope.getFiltroDataString($scope.filtro.ano, $scope.filtro.mes + 1)});
        
        // Retorna    
        return filtros;
-    };  
+    }  
                                                                                         
                                                  
                                                  
     /**
       * Efetiva a busca
       */
-    var buscaDadosDeAcesso = function(progressoemexecucao){
+    var buscaExtrato = function(progressoemexecucao){
         
         if(!$scope.filtro.conta || $scope.filtro.conta === null) return;
        
+        if(!progressoemexecucao) $scope.showProgress(divPortletBodyFiltrosPos);    
+        $scope.showProgress(divPortletBodyExtratosPos);
         
-       // PEGAR PERÍODO...    
-        
-       /*if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos);    
-       $scope.showProgress(divPortletBodyFiltrosPos);
-        
-       var filtros = undefined;
-
-       // Filtro do grupo empresa => barra administrativa
-       if($scope.filtro.filial !== null) filtros = {id: 300,
-                                                    //id: $campos.pos.operadora.empresa + $campos.cliente.empresa.nu_cnpj - 100, 
-                                                    valor: $scope.filtro.filial.nu_cnpj};
+        var filtros = obtemFiltroDeBusca();
        
-       $webapi.get($apis.getUrl($apis.pos.operadora, 
-                                [$scope.token, 0, /*$campos.card.tbextrato.* / 101],
+        $webapi.get($apis.getUrl($apis.card.tbextrato, 
+                                [$scope.token, 1, /*$campos.card.tbextrato.idExtrato*/ 100, 0],
                                 filtros)) 
             .then(function(dados){
-                $scope.adquirentes = dados.Registros;
+                $scope.extrato = dados.Registros;
                 $scope.hideProgress(divPortletBodyFiltrosPos);
                 $scope.hideProgress(divPortletBodyExtratosPos);
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                 else $scope.showAlert('Houve uma falha ao obter extratos bancários (' + failData.status + ')', true, 'danger', true);
+                 else $scope.showAlert('Houve uma falha ao obter extrato bancário (' + failData.status + ')', true, 'danger', true);
                  $scope.hideProgress(divPortletBodyFiltrosPos);
                  $scope.hideProgress(divPortletBodyExtratosPos);
-              });   */           
-    };                               
-                                                 
-                                                 
-    //TAB
-    /**
-      * Retorna true se a tab informada corresponde a tab em exibição
-      */
-    $scope.tabIs = function (tab){
-        return $scope.tab === tab;
-    }
-    /**
-      * Altera a tab em exibição
-      */
-    $scope.setTab = function (tab){
-        if (tab >= 1 && tab <= 4) $scope.tab = tab;        
-    }        
+              });             
+    }                               
     
-    
-    
-    
-                                                 
-
     
 }]);

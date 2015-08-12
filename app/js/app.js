@@ -1509,24 +1509,33 @@ angular.module("AtosCapital", ['ui.router',
    };
    /**
       * Retorna a string aceita para filtro de data
-      */
-   $scope.getFiltroData = function(data){
-        var ano = data.getFullYear(); 
-        var mes = (data.getMonth() + 1); 
-        var dia = data.getDate(); 
-        
+      * OBS: ano é obrigatório
+      */                         
+   $scope.getFiltroDataString = function(ano, mes, dia){
         if(ano >= 1000) ano = '' + ano; 
         else if(ano >= 100) ano = '0' + ano;
         else if(ano >= 10) ano = '00' + ano;
         else ano = '000' + ano;
         
+        if(!mes) return ano;
+       
         if(mes >= 10) mes = '' + mes;
         else mes = '0' + mes;
-        
+       
+        if(!dia) return ano + mes;
         if(dia >= 10) dia = '' + dia;
         else dia = '0' + dia;
         
         return ano + mes + dia;
+   }
+   /**
+      * Retorna a string aceita para filtro de data
+      */
+   $scope.getFiltroData = function(data){
+        var ano = data.getFullYear(); 
+        var mes = (data.getMonth() + 1); 
+        var dia = data.getDate(); 
+        return $scope.getFiltroDataString(ano, mes, dia);
     };     
                             
                             
