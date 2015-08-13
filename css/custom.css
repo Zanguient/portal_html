@@ -46,7 +46,7 @@
 }
 
 .dragover {
-    border: 5px dashed blue;
+    border: 5px dashed blue !important;
 }
 
 .drop-box {
@@ -56,7 +56,7 @@
     height: 100px;
     text-align: center;
     padding-top: 40px;
-    margin: 0 100px;
+    /*margin: 0 100px;*/
 }
 
 .dropdown-menu{

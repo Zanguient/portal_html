@@ -31,6 +31,7 @@ angular.module("AtosCapital", ['ui.router',
                                'administrativo-extratos-bancarios',
                                'dashboard', 
                                'card-services-cash-flow-relatorios',
+                               'card-services-conciliacao-bancaria',
                                'card-services-conciliacao-vendas',
                                'card-services-consolidacao-relatorios',
                                'conta',
@@ -215,6 +216,15 @@ angular.module("AtosCapital", ['ui.router',
         }
       })
     
+      .state('card-services-conciliacao-conciliacao-bancaria', {
+        url: prefixo + 'card-services/conciliacao-bancaria',
+        templateUrl: 'componentes/card-services/conciliacao/conciliacao-bancaria/index.html',
+        controller: "card-services-conciliacao-bancariaCtrl",
+        data: {
+            titulo: 'Card Services'
+        }
+      })
+    
       .state('card-services-conciliacao-conciliacao-vendas', {
         url: prefixo + 'card-services/conciliacao-vendas',
         templateUrl: 'componentes/card-services/conciliacao/conciliacao-vendas/index.html',
@@ -336,6 +346,7 @@ angular.module("AtosCapital", ['ui.router',
     var controllerAdministrativoAcoesUsuarios = undefined;
     var controllerDashboard = undefined;
     var controllerCardServicesCashFlowRelatorios = undefined;
+    var controllerCardServicesConciliacaoBancaria = undefined;
     var controllerCardServicesConciliacaoVendas = undefined;
     var controllerCardServicesConsolidacaoRelatorios = undefined;
     // Permissões
@@ -361,6 +372,7 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW = false;   
     $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW_RELATORIOS = false;                        
     $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO = false;
+    $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_BANCARIA = false;
     $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_VENDAS = false;
     $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO = false;
     $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_RELATORIOS = false;                                               
@@ -532,7 +544,14 @@ angular.module("AtosCapital", ['ui.router',
     $scope.goCardServicesCashFlowRelatorios = function(params){
         controllerAtual = controllerCardServicesCashFlowRelatorios;
         go('card-services-cash-flow-relatorios', params);
-    };                         
+    }; 
+    /**
+      * Exibe como conteúdo a Conciliação Conciliação Bancária, de Card Services
+      */
+    $scope.goCardServicesConciliacaoBancaria = function(params){
+        controllerAtual = controllerCardServicesConciliacaoBancaria;
+        go('card-services-conciliacao-conciliacao-bancaria', params);
+    };                          
     /**
       * Exibe como conteúdo a Conciliação Conciliação de Vendas, de Card Services
       */
@@ -694,6 +713,14 @@ angular.module("AtosCapital", ['ui.router',
                 $scope.goUsuarioSemPrivilegios();
             }else if(!controllerAtual || controllerAtual.ds_controller.toUpperCase() !== 'RELATÓRIOS') // problem!
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual 
+        }else if(url === $state.get('card-services-conciliacao-conciliacao-bancaria').url){ 
+            // Card Services > Conciliação > Conciliação Bancária
+            if(!$scope.PERMISSAO_CARD_SERVICES || !$scope.PERMISSAO_CARD_SERVICES_CONCILIACAO || !$scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_BANCARIA){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.goUsuarioSemPrivilegios();
+            }else if(!controllerAtual || controllerAtual.ds_controller.toUpperCase() !== 'CONCILIAÇÃO BANCÁRIA') 
+                $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual 
         }else if(url === $state.get('card-services-conciliacao-conciliacao-vendas').url){ 
             // Card Services > Conciliação > Conciliação de Vendas
             if(!$scope.PERMISSAO_CARD_SERVICES || !$scope.PERMISSAO_CARD_SERVICES_CONCILIACAO || !$scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_VENDAS){
@@ -792,6 +819,11 @@ angular.module("AtosCapital", ['ui.router',
                 controllerDashboard = controller;
                 return $scope.goDashboard;  
             // Card Services
+            case 'CONCILIAÇÃO BANCÁRIA': 
+                if($location.path() === $state.get('card-services-conciliacao-conciliacao-bancaria').url) 
+                    controllerAtual = controller;
+                controllerCardServicesConciliacaoBancaria = controller;
+                return $scope.goCardServicesConciliacaoBancaria;
             case 'CONCILIAÇÃO DE VENDAS': 
                 if($location.path() === $state.get('card-services-conciliacao-conciliacao-vendas').url) 
                     controllerAtual = controller;
@@ -843,6 +875,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'CARD SERVICES': $scope.PERMISSAO_CARD_SERVICES = true; break;
             case 'CASH FLOW' : $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW = true; break;
             case 'CONCILIAÇÃO': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO = true; break;
+            case 'CONCILIAÇÃO BANCÁRIA': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_BANCARIA = true; break;
             case 'CONCILIAÇÃO DE VENDAS': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_VENDAS = true; break;
             case 'CONSOLIDAÇÃO': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO = true; break;      
             // Dashboard
@@ -908,6 +941,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'ACESSO DE USUÁRIOS' : return state == 'acesso-usuarios';  
             case 'AÇÕES DE USUÁRIOS': return state == 'acoes-usuarios';
             // Card Services
+            case 'CONCILIAÇÃO BANCÁRIA': return state == 'conciliacao-bancaria';
             case 'CONCILIAÇÃO DE VENDAS': return state == 'conciliacao-vendas';
                 
             // AMBÍGUOS    
@@ -1326,8 +1360,9 @@ angular.module("AtosCapital", ['ui.router',
      * @param closable : set true se deseja que apareça um botão que fecha manualmente o alert. Default: false
      * @param type : 'info' (default), 'success', 'danger', 'warning'.
      * @param scroll : set true se deseja que, ao ser exibido, a barra de rolagem rolará até ele. Default: false
+     * @param reset : por default ele é true. Set false para não remover outros alerts da tela
      */
-   $scope.showAlert = function(mensagem, closable, type, scroll){
+   $scope.showAlert = function(mensagem, closable, type, scroll, reset){
         jQuery(document).ready(function() { 
         //$rootScope.$on('$viewContentLoaded', function(){
            $timeout(function(){
@@ -1337,7 +1372,7 @@ angular.module("AtosCapital", ['ui.router',
                     type: type ? type : 'info',  // alert's type
                     message: mensagem ? mensagem : 'Por favor, aguarde',  // alert's message
                     close: closable ? true : false, // make alert closable
-                    reset: true, // close all previouse alerts first
+                    reset: typeof reset === 'undefined' ? true : reset, // close all previouse alerts first
                     focus: scroll ? true : false, // auto scroll to the alert after shown
                     closeInSeconds: type !== 'info' ? 10 : 0, // auto close after defined seconds
                     icon: type === 'danger' || type === 'warning' ? 'warning' : type === 'success' ? 'check' : '', // put icon before the message

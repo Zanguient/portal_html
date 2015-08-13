@@ -543,7 +543,7 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
       */
     $scope.excluirMetodo = function(){
         $scope.showModalConfirmacao('Confirmação', 
-                                    'Tem certeza que deseja excluir ' + $scope.funcionalidadeSelecionada.ds_method,
+                                    'Tem certeza que deseja excluir ' + $scope.funcionalidadeSelecionada.ds_method + '?',
                  excluirMetodo, $scope.funcionalidadeSelecionada.id_method,
                  'Sim', 'Não');    
     };
