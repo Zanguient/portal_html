@@ -83,6 +83,8 @@ angular.module("card-services-consolidacao-relatorios", [])
                 $scope.terminais = [];
             }
         }); 
+        // Acessou a tela
+        $scope.$emit("acessouTela");
         // Carrega filiais
         if($scope.usuariologado.grupoempresa) buscaFiliais(true);
     };

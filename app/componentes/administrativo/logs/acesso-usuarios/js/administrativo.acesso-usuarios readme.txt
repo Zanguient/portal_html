@@ -20,26 +20,26 @@ Não é necessário nenhum outro módulo externo.
 
   * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
   * $scope.token do "appCtrl"
+  * Emite evento "acessouTela" no init do controller para que seja feito o log de acesso de tela
   * APIS:
-    -  administracao/tblogacessousuario
+    -  administracao/logacesso
 	
  
  
  ### Interação com a WEB API ###
  
-  * GET : obtém a lista de usuários baseado no log de acesso aos controllers (coleção 3)
+  * administracao/logacesso
+	- GET : obtém a lista de usuários baseado no log de acesso aos controllers (coleção 2)
 			{
-				idLogAcessoUsuario : int,
-				user : { idUser : int,
-						 ds_login : string,
-					   },
-				controller : { idController : int,
-							   path : string,
-							 },
-				dtAcesso : datetime,
-				dsAplicacao : string,
-				codResposta : int,
-				msgErro : string,
+				webpagesusers = new { id_users = int,
+									  ds_login = string
+									},
+				controller = new { id_controller = int,
+								   ds_controller = string,
+								 },
+				dtAcesso = datetime,
+				flMobile = boolean,
+				dsUserAgent = string
 			 }
  
    

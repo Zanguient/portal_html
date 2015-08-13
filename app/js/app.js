@@ -404,6 +404,18 @@ angular.module("AtosCapital", ['ui.router',
                             
                             
     // LINKS
+    // Indica que uma tela foi acessada => envia para a API
+    $scope.$on("acessouTela", function(event){
+        if(controllerAtual && typeof controllerAtual.id_controller === 'number'){
+            $webapi.post($apis.getUrl($apis.administracao.logacesso, undefined, 
+                                  {id: 'token', valor: $scope.token}), {idController : controllerAtual.id_controller})
+                .then(function(dados){
+                     //console.log('Notificação de acesso de tela relizada com sucesso');
+                  },function(failData){
+                     //console.log('Houve uma falha ao notificar o acesso da tela (' + failData.status + ')');
+                  });     
+        }
+    });  
     /**
       * Envia o broadcast para os controllers filhos, notificando a requisição de mudança de estado
       * Isso foi feito visando telas que possuem informações preenchidas pelo usuário e

@@ -20,6 +20,7 @@ Não é necessário nenhum outro módulo externo.
 
   * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
   * $scope.token do "appCtrl"
+  * Emite evento "acessouTela" no init do controller para que seja feito o log de acesso de tela
   * APIS:
     -  administracao/tblogacessousuario
 	

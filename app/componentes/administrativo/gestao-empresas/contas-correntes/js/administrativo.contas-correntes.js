@@ -83,6 +83,8 @@ angular.module("administrativo-contas-correntes", [])
             permissaoCadastro = $scope.methodsDoControllerCorrente['cadastro'] ? true : false;
             permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;
         }
+        // Acessou a tela
+        $scope.$emit("acessouTela");
         // Carrega dados associados
         if($scope.usuariologado.grupoempresa){
             buscaContas();

@@ -199,21 +199,20 @@
                                                     ng-disabled="filiais.length == 0"
                                                     ng-model="filtro.filial"
                                                     ng-change="alterouFilial()"
-                                                    ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais" 
-                                                    >
-                                            <!--option value="">Todas</option-->
+                                                    ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
+                                                <option value="">TODAS</option>
                                             </select>
                                             <i class="fa fa-question-circle"
-                                            ng-show="!usuariologado.grupoempresa"
-                                            popover-placement="bottom"
-                                            popover="É necessário selecionar uma empresa"
-                                            popover-trigger="mouseenter"
-                                            ></i> 
+                                                ng-show="!usuariologado.grupoempresa"
+                                                popover-placement="bottom"
+                                                popover="É necessário selecionar uma empresa"
+                                                popover-trigger="mouseenter"
+                                                ></i> 
                                         </td>
                                         <!-- ADQUIRENTES -->
                                         <td rowspan="1" colspan="1" style="text-align: center">
                                             <select class="form-control form-filter input-sm comboBoxFiltros"
-                                                    ng-disabled="filtro.filial === null"
+                                                    ng-disabled="!filtro.filial || filtro.filial === null"
                                                     ng-model="filtro.adquirente"
                                                     ng-change="alterouAdquirente()"
                                                     ng-options="adquirente as (adquirente.nmOperadora | uppercase) for adquirente in adquirentes"
@@ -221,9 +220,9 @@
                                                 <option value="">TODAS</option>
                                             </select>
                                             <i class="fa fa-question-circle"
-                                               ng-show="!usuariologado.grupoempresa"
+                                               ng-show="!usuariologado.grupoempresa || !filtro.filial || filtro.filial === null"
                                                popover-placement="bottom"
-                                               popover="É necessário selecionar uma empresa"
+                                               popover="É necessário selecionar uma filial"
                                                popover-trigger="mouseenter"></i>
                                         </td>
                                         <!-- BANDEIRAS -->
@@ -464,44 +463,53 @@
                                                             <tr role="row">
                                                                 <th tabindex="0" 
                                                                     rowspan="1" colspan="1" 
+                                                                    style="width: 300px">
+                                                                    Filial
+                                                                </th>
+                                                                <th tabindex="1" 
+                                                                    rowspan="1" colspan="1" 
                                                                     style="width: 188px">
                                                                     Bandeira
                                                                 </th>
-                                                                <th tabindex="1" 
+                                                                <th tabindex="2" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 237px">
                                                                     Transações
                                                                 </th>
-                                                                <th tabindex="2" 
+                                                                <th tabindex="3" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 237px;">
                                                                     VL Bruto
                                                                 </th>
-                                                                <th tabindex="3" 
+                                                                <th tabindex="4" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 237px;">
                                                                     VL Parcela
                                                                 </th>
-                                                                <th tabindex="4" 
+                                                                <th tabindex="5" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 237px;">
                                                                     VL Descontado
                                                                 </th>                                                        
-                                                                <th tabindex="5" 
+                                                                <th tabindex="6" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 237px;">
                                                                     VL Líquido
                                                                 </th>                                                       
-                                                                <th tabindex="6" 
+                                                                <th tabindex="7" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 163px;">
-                                                                    Detalhar Bandeira
+                                                                    Detalhar
                                                                 </th>                                        
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <tr role="row" class="odd conteudoTabelas"
                                                                 ng-repeat="relsintetico in relatorio.sintetico">
+                                                                <!-- FILIAL -->
+                                                                <td style="text-align:left">
+                                                                     {{relsintetico.empresa.ds_fantasia | uppercase}}
+                                                                </td>
                                                                 <!-- BANDEIRA -->
                                                                 <td style="text-align:left">
                                                                      {{relsintetico.bandeira.desBandeira}}
@@ -531,7 +539,7 @@
                                                                     <div class="btn-group">
                                                                         <a class="btn btn-default btn-circle" 
                                                                            href="javascript:;" 
-                                                                           ng-click="detalhar(relsintetico.bandeira)">
+                                                                           ng-click="detalhar(relsintetico)">
                                                                         
                                                                             Detalhar <i class="fa fa-angle-right"></i>
                                                                         </a>
@@ -540,7 +548,7 @@
                                                             </tr>
                                                             <tr role="row" class="odd linhaTotalRelatorios" 
                                                                 style="font-weight:bolder">
-                                                                <td style="text-align:right">
+                                                                <td style="text-align:right" colspan="2">
                                                                      Total Exibido
                                                                 </td>
                                                                 <td>
@@ -564,7 +572,7 @@
                                                             </tr>
                                                             <tr role="row" class="odd linhaTotalRelatorios" 
                                                                 style="font-weight:bolder">
-                                                                <td style="text-align:right">
+                                                                <td style="text-align:right" colspan="2">
                                                                      Total Filtrado
                                                                 </td>
                                                                 <td>
@@ -602,55 +610,60 @@
                                                             <tr role="row">
                                                                 <th tabindex="0" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 237px; vertical-align: middle;">
-                                                                    Bandeira
+                                                                    style="width: 300px; vertical-align: middle;">
+                                                                    Filial
                                                                 </th>
                                                                 <th tabindex="1" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 237px; vertical-align: middle;">
-                                                                    Venda
+                                                                    Bandeira
                                                                 </th>
                                                                 <th tabindex="2" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 128px; vertical-align: middle;">
-                                                                    Recebimento
+                                                                    style="width: 237px; vertical-align: middle;">
+                                                                    Venda
                                                                 </th>
                                                                 <th tabindex="3" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 128px; vertical-align: middle;">
-                                                                   Resumo<br>Vendas
+                                                                    Recebimento
                                                                 </th>
                                                                 <th tabindex="4" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 128px; vertical-align: middle;">
+                                                                   Resumo<br>Vendas
+                                                                </th>
+                                                                <th tabindex="5" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 163px; vertical-align: middle;">
                                                                     NSU
                                                                 </th> 
-                                                                <th tabindex="5" 
+                                                                <th tabindex="6" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 163px; vertical-align: middle;">
                                                                     Parcela
                                                                 </th>
-                                                                <th tabindex="6" 
+                                                                <th tabindex="7" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 163px; vertical-align: middle;">
                                                                     VL Bruto
                                                                 </th>
-                                                                <th tabindex="7" 
+                                                                <th tabindex="8" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 163px; vertical-align: middle;">
                                                                     VL Parcela
                                                                 </th>
-                                                                <th tabindex="8" 
+                                                                <th tabindex="9" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 163px; vertical-align: middle;">
                                                                     VL Descontado
                                                                 </th>
-                                                                <th tabindex="9" 
+                                                                <th tabindex="10" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 163px; vertical-align: middle;">
                                                                     Taxa <br> Cashflow
                                                                 </th>
-                                                                <th tabindex="10" 
+                                                                <th tabindex="11" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 163px; vertical-align: middle;">
                                                                     VL Líquido
@@ -660,9 +673,13 @@
                                                         <tbody>
                                                             <tr role="row" class="odd"
                                                                 ng-repeat="relanalitico in relatorio.analitico">
+                                                                <!-- FILIAL -->
+                                                                <td style="text-align:left">
+                                                                     {{relanalitico.dsFantasia | uppercase}}
+                                                                </td>
                                                                 <!-- BANDEIRA -->
                                                                 <td style="text-align:left">
-                                                                     {{relanalitico.desBandeira}}
+                                                                     {{relanalitico.desBandeira | uppercase}}
                                                                 </td>
                                                                 <!-- DATA DA VENDA -->
                                                                 <td ng-bind="getDataTimeString(relanalitico.dtaVenda)">
@@ -704,12 +721,12 @@
                                                                 </td>
                                                             </tr>
                                                             <tr role="row" class="odd linhaTotalRelatorios">
-                                                                <td colspan="6" style="text-align:right">
+                                                                <td colspan="8" style="text-align:right">
                                                                     Total Exibido
                                                                 </td> 
-                                                                <td>
+                                                                <!--td>
                                                                     {{total.analitico.valorBruto | currency:'R$'}}    
-                                                                </td>
+                                                                </td-->
                                                                 <td>
                                                                     {{total.analitico.valorParcela  | currency:'R$'}}  
                                                                 </td>
@@ -725,12 +742,12 @@
                                                                 </td>                                                    
                                                             </tr>
                                                             <tr role="row" class="odd linhaTotalRelatorios">
-                                                                <td colspan="6" style="text-align:right">
+                                                                <td colspan="8" style="text-align:right">
                                                                     Total Filtrado
                                                                 </td>  
-                                                                <td>
+                                                                <!--td>
                                                                     {{total.analitico.valorBrutoFiltrado | currency:'R$'}}    
-                                                                </td>
+                                                                </td-->
                                                                 <td>
                                                                     {{total.analitico.valorParcelaFiltrado  | currency:'R$'}}  
                                                                 </td>

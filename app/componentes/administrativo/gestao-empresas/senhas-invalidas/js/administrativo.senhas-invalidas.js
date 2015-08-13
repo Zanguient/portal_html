@@ -67,6 +67,8 @@ angular.module("administrativo-senhas-invalidas", [])
             permissaoAlteracao = $scope.methodsDoControllerCorrente['atualização'] ? true : false;//$filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'ATUALIZAÇÃO' }).length > 0;   
             //permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;
         }
+        // Acessou a tela
+        $scope.$emit("acessouTela");
         // Carrega dados de acesso com senha inválida
         $scope.buscaSenhasInvalidas();
     };

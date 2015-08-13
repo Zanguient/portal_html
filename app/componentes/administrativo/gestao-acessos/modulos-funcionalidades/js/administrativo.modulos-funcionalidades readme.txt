@@ -30,7 +30,9 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 
   * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
   * $scope.token do "appCtrl"
+  * Emite evento "acessouTela" no init do controller para que seja feito o log de acesso de tela
   * APIS:
+    - administracao/logacesso
     - administracao/webpagescontrollers
     - administracao/webpagesmethods
 	
@@ -83,16 +85,17 @@ Além deles, é necessária a importação dos seguintes módulos externos.
   * api/administracao/webpagesmethods
      - DELETE : deleta uma funcionalidade (method)    
 				  ?token=...&id_method=id  OBS: remove todos as permissões associadas
-	- POST : nova funcionalidade (method)
+	 - POST : nova funcionalidade (method)
 				{ ds_method : string 
 				  id_controller : int // essa informação pode ser enviada ou não
 				}
 			 // obtém como resposta o id_method
 			 OBS: Não é possível armazenar o método "Filtro Empresa" em outro lugar que não seja Administrativo
-	- PUT : altera o nome de exibição de uma funcionalidade (method)
+	 - PUT : altera o nome de exibição de uma funcionalidade (method)
 				{ id_method : int,
 				  ds_method : string
 				}
+
  
    
 

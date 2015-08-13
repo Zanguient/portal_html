@@ -75,6 +75,9 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
             permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;
         }
         
+        // Acessou a tela
+        $scope.$emit("acessouTela");
+        
         // Seleciona o mês corrente
         $scope.setTab($scope.filtro.mes + 1);
         ajustaTabs();

@@ -26,10 +26,8 @@ angular.module("dashboard", [])
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
         });
-         // Focus
-         /*$timeout(function() {
-             jQuery('body').trigger('click');
-          }, 500);*/
+        // Acessou a tela
+        $scope.$emit("acessouTela");
     }
     
     

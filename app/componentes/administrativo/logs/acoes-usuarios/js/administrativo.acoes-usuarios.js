@@ -47,13 +47,14 @@ angular.module("administrativo-acoes-usuarios", [])
         // Título da página 
         $scope.pagina.titulo = 'Logs';                          
         $scope.pagina.subtitulo = 'Ações de Usuários';
-        // Busca Logs
-        //$scope.buscaLogs();
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
         });
-        
+        // Acessou a tela
+        $scope.$emit("acessouTela");
+        // Busca Logs
+        //$scope.buscaLogs();
         $scope.logs.push({
 				idLogAcessoUsuario : 1,
 				user : { idUser : 255,

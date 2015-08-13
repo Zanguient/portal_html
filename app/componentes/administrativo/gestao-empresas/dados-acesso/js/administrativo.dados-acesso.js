@@ -77,6 +77,8 @@ angular.module("administrativo-dados-acesso", [])
             permissaoCadastro = $scope.methodsDoControllerCorrente['cadastro'] ? true : false;
             //permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;
         }
+        // Acessou a tela
+        $scope.$emit("acessouTela");
         // Carrega filiais
         if($scope.usuariologado.grupoempresa) buscaFiliais();
     };

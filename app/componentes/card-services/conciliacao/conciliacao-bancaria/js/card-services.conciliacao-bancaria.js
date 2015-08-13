@@ -25,6 +25,8 @@ angular.module("card-services-conciliacao-bancaria", [])
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
         });
+        // Acessou a tela
+        $scope.$emit("acessouTela");
     };
     
     // DATA

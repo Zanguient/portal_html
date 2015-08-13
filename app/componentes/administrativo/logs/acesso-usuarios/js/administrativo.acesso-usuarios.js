@@ -23,17 +23,17 @@ angular.module("administrativo-acesso-usuarios", [])
     $scope.logs = [];
     $scope.camposBusca = [{
                             id: 201,
-                            /*id: $campos.administracao.tblogacessousuario.webpagesusers + 
+                            /*id: $campos.administracao.logacesso.webpagesusers + 
                                   $campos.administracao.webpagesusers.ds_login - 100,*/
                             ativo: true,  
                             nome: "Login"
                           },
                           {
                               id: 301,
-                            /*id: $campos.administracao.tblogacessousuario.webpagescontrollers + 
+                            /*id: $campos.administracao.logacesso.webpagescontrollers + 
                                 $campos.administracao.webpagescontrollers.ds_controller - 100,*/
                             ativo: true,  
-                            nome: "Módulo"
+                            nome: "Tela"
                           }];
     $scope.itens_pagina = [10, 20, 50, 100];
     $scope.filtro = {busca:'', campo_busca : $scope.camposBusca[0], 
@@ -49,12 +49,14 @@ angular.module("administrativo-acesso-usuarios", [])
         // Título da página 
         $scope.pagina.titulo = 'Logs';                          
         $scope.pagina.subtitulo = 'Acesso de Usuários';
-        // Busca Logs
-        $scope.buscaLogs();
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
         });  
+        // Acessou a tela
+        $scope.$emit("acessouTela");
+        // Busca Logs
+        $scope.buscaLogs();
     }; 
                                                 
                                                 

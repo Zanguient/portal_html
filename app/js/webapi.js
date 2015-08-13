@@ -11,6 +11,17 @@ angular.module('webapi', ['utils'])
 .factory('$campos', [function(){
    return{
       administracao : {
+        logacesso : {
+            idUsers : 100,
+            idController : 101,
+            idMethod : 102,
+            dtAcesso : 103,
+            flMobile : 104,
+            dsUserAgent : 105,
+            // Relacionamentos
+            webpagesusers : 200,
+            webpagescontrollers : 300
+        },
         pessoa : {
             id_pesssoa : 100,
             nm_pessoa : 101, 
@@ -306,6 +317,7 @@ angular.module('webapi', ['utils'])
       
  
     administracao : {
+        logacesso : $autenticacao.getUrlBase() + '/administracao/logacesso/',   
         pessoa : $autenticacao.getUrlBase() + '/administracao/pessoa/',
         tblogacessousuario : $autenticacao.getUrlBase() + '/administracao/tblogacessousuario/',
         webpagescontrollers : $autenticacao.getUrlBase() + '/administracao/webpagescontrollers/',
