@@ -234,6 +234,11 @@ margin-top:170px;
     border-bottom: 1px solid #EAEAEA;    
 }
 
+.cuponsConciliacaoVendas{
+    margin: 40px 0 100px 0;
+}
+
+
 .cuponAzulConciliacaoVendas{
     background-color: #eef7fb;
     border-color: #a6e1ec;
