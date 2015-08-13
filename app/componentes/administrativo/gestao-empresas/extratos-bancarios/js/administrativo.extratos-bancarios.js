@@ -24,7 +24,8 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
     $scope.extrato = [];
     $scope.contas = [];         
     var dataAtual = new Date();    
-    $scope.anoDigitado = dataAtual.getFullYear();                                           
+    $scope.anoDigitado = dataAtual.getFullYear();  
+    $scope.totais = { extrato : 0, movimentacao : 0 };
     $scope.filtro = {conta : null, 
                      ano :  dataAtual.getFullYear(),  // ano corrente
                      mes : dataAtual.getMonth()}; // mês corrente
@@ -50,15 +51,13 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
     $scope.current = 0;
     $scope.total = 0;                                             
     // flag
-    $scope.exibePrimeiraLinha = false;                                             
+    $scope.buscandoExtrato = false;                                             
     // Permissões                                           
     var permissaoAlteracao = false;
     var permissaoCadastro = false;
     var permissaoRemocao = false;
                                                  
-                                                 
-                                                 
-    
+
     // Inicialização do controller
     $scope.administrativo_extratosBancariosInit = function(){
         // Título da página 
@@ -68,18 +67,7 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
         });
-        // Quando houver alteração do grupo empresa na barra administrativa                                           
-        $scope.$on('alterouGrupoEmpresa', function(event){ 
-            // Avalia grupo empresa
-            if($scope.usuariologado.grupoempresa){ 
-                // Reseta seleção de filtro específico de contas
-                $scope.filtro.conta = null;
-                buscaContas();
-            }else{ // reseta tudo e não faz buscas 
-                $scope.extratos = []; 
-                $scope.contas = [];
-            }
-        });
+        
         // Obtém as permissões
         if($scope.methodsDoControllerCorrente){
             permissaoAlteracao = $scope.methodsDoControllerCorrente['atualização'] ? true : false;   
@@ -97,6 +85,21 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
             
         // Carrega contas
         if($scope.usuariologado.grupoempresa) buscaContas();
+        
+        // Quando houver alteração do grupo empresa na barra administrativa                                           
+        $scope.$on('alterouGrupoEmpresa', function(event){ 
+            // Avalia grupo empresa
+            if($scope.usuariologado.grupoempresa){ 
+                // Reseta seleção de filtro específico de contas
+                $scope.filtro.conta = null;
+                buscaContas();
+            }else{ // reseta tudo e não faz buscas 
+                $scope.extrato = []; 
+                $scope.contas = [];
+                $scope.filtro.conta = null;
+            }
+        });
+        
     };
                                                  
                                                  
@@ -177,7 +180,11 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
                 // Obtém as contas correntes
                 $scope.contas = dados.Registros;
             
-                $scope.filtro.conta = $scope.contas[0];
+                if($scope.filtro.conta && $scope.filtro.conta !== null)
+                    $scope.filtro.conta = $filter('filter')($scope.contas, function(c) {return c.idContaCorrente === $scope.filtro.conta.idContaCorrente;})[0];
+            
+                if(!$scope.filtro.conta || $scope.filtro.conta === null)
+                    $scope.filtro.conta = $scope.contas[0];
                 
                 // Alterou conta
                 $scope.alterouConta(true);
@@ -214,9 +221,15 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
         return String.fromCharCode(10,13) + $scope.filtro.ano;   
     }
     /**
+      * Retorna true se o ano corrente do filtro é superior a 1900
+      */
+    $scope.temAnoAnterior = function(){
+        return $scope.filtro.ano > 1900;   
+    }
+    /**
       * Retorna true se o ano corrente do filtro é inferior ao ano atual
       */
-    $scope.temProximoAno = function(){
+    $scope.temAnoPosterior = function(){
         return $scope.filtro.ano < dataAtual.getFullYear();   
     }
     /**
@@ -235,7 +248,7 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
       * Altera efetivamente o ano exibido
       */ 
     var setAno = function(ano){
-        if(ano <= dataAtual.getFullYear()){ 
+        if(ano >= 1900 && ano <= dataAtual.getFullYear()){ 
             if($scope.filtro.ano > ano)
                 $scope.filtro.mes = 11; // Retrocedeu o ano
             else if($scope.filtro.ano < ano)
@@ -346,6 +359,20 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
             $scope.showProgress(divPortletBodyFiltrosPos);
             for (var i = 0; i < $scope.total; i++) {
                 var file = files[i];
+                // Avalia a extensão
+                var index = file.name.lastIndexOf('.');
+                if(index === -1 || file.name.substr(index + 1) !== 'ofx'){ 
+                    // Extensão não é OFX
+                    //console.log("ARQUIVO '" + file.name + "' NÃO É UM .ofx");
+                    $scope.showAlert("O arquivo deve ser do tipo .ofx!", true, 'warning', true, false);
+                    if(++$scope.current === $scope.total){
+                        $scope.type = 'danger';
+                        $scope.progresso = 100;
+                        uploadEmProgresso = false;
+                        $scope.hideProgress(divPortletBodyFiltrosPos);
+                    }
+                    continue;
+                }
                 Upload.upload({
                     url: $apis.getUrl($apis.card.tbextrato, $scope.token, 
                                       {id: /*$campos.card.tbextrato.cdContaCorrente*/ 101, 
@@ -365,8 +392,10 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
                         buscaExtrato();
                     });
                 }).error(function (data, status, headers, config){
-                    console.log("ERROR : " + status);
-                    console.log(data);
+                     if(status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                     else if(status === 503 || status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                     else if(status === 500) $scope.showModalAlerta("Extrato '" + files[$scope.current].name + "' não corresponde a conta " + $scope.getNomeAmigavelConta($scope.filtro.conta));
+                     else $scope.showAlert("Houve uma falha ao fazer upload do extrato '" + files[$scope.current] + "' (" + status + ")", true, 'danger', true, false);
                     if(++$scope.current === $scope.total){
                         $scope.type = 'danger';
                         uploadEmProgresso = false;
@@ -406,18 +435,26 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
       */
     var buscaExtrato = function(progressoemexecucao){
         
-        if(!$scope.filtro.conta || $scope.filtro.conta === null) return;
+        if(!$scope.filtro.conta || $scope.filtro.conta === null){ 
+            if(progressoemexecucao) $scope.hideProgress(divPortletBodyFiltrosPos);  
+            return;
+        }
        
-        if(!progressoemexecucao) $scope.showProgress(divPortletBodyFiltrosPos);    
+        $scope.buscandoExtrato = true;
+        
+        if(!progressoemexecucao) $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
         $scope.showProgress(divPortletBodyExtratosPos);
         
         var filtros = obtemFiltroDeBusca();
        
         $webapi.get($apis.getUrl($apis.card.tbextrato, 
-                                [$scope.token, 1, /*$campos.card.tbextrato.idExtrato*/ 100, 0],
+                                [$scope.token, 1, /*$campos.card.tbextrato.dtExtrato*/ 102, 0],
                                 filtros)) 
             .then(function(dados){
+                $scope.totais.extrato = 0;
+                $scope.totais.movimentacao = dados.TotalDeRegistros;
                 $scope.extrato = dados.Registros;
+                $scope.buscandoExtrato = false;
                 $scope.hideProgress(divPortletBodyFiltrosPos);
                 $scope.hideProgress(divPortletBodyExtratosPos);
               },
@@ -425,10 +462,20 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else $scope.showAlert('Houve uma falha ao obter extrato bancário (' + failData.status + ')', true, 'danger', true);
+                 $scope.buscandoExtrato = false;
                  $scope.hideProgress(divPortletBodyFiltrosPos);
                  $scope.hideProgress(divPortletBodyExtratosPos);
               });             
-    }                               
+    }  
+    
+    /**
+      * Soma valor ao total do extrato
+      */
+    $scope.incrementaValorTotalExtrato = function(valor){
+        //console.log(valor);
+        //console.log($scope.totais.extrato);
+        $scope.totais.extrato += valor;  
+    }
     
     
 }]);

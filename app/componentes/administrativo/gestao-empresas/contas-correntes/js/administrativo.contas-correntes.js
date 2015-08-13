@@ -289,7 +289,7 @@ angular.module("administrativo-contas-correntes", [])
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                 else $scope.showAlert('Houve uma falha ao obter filiais (' + failData.status + ')', true, 'danger', true);
+                 //else $scope.showAlert('Houve uma falha ao obter filiais (' + failData.status + ')', true, 'danger', true);
               });     
     };                                             
     
@@ -646,6 +646,13 @@ angular.module("administrativo-contas-correntes", [])
                  // Fecha os progress
                  $scope.hideProgress(divPortletBodyContasPos);
               });       
+    }
+    
+    /**
+      * Acessa os extratos bancários da conta
+      */
+    $scope.extrato = function(conta){
+        $scope.goAdministrativoExtratosBancarios({conta: conta});    
     }
     
 }]);

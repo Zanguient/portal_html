@@ -169,6 +169,7 @@
                             <div class="pagination-panel centralizarPaginacao"> 
                                 <a href="javascript:;" ng-click="setAnoAnterior()"
                                    class="btn btn-sm default prev"  
+                                   ng-class="{disabled: !temAnoAnterior()}"
                                    title="{{anoAnterior()}}">
                                         <i class="fa fa-caret-left"></i>
                                 </a>
@@ -179,7 +180,7 @@
                                        ng-blur="atualizaAnoDigitado()">
                                 <a href="javascript:;" ng-click="setAnoPosterior()"
                                    class="btn btn-sm default next"
-                                   ng-class="{disabled: !temProximoAno()}"
+                                   ng-class="{disabled: !temAnoPosterior()}"
                                    title="{{anoPosterior()}}">
                                     <i class="fa fa-caret-right"></i>
                                 </a>
@@ -190,57 +191,55 @@
                     <!-- FIM ANO -->
                     
                     <!-- TABS -->
-                    <div class="row" style="text-align:center; margin-top:20px">
-                        <tabset type="pills">
-                            <tab heading="Jan{{getAno()}}" select="setTab(1)" 
-                                 disable="mes.janeiro.disabled" active="mes.janeiro.active"></tab>
-                            <tab heading="Fev{{getAno()}}" select="setTab(2)" 
-                                 disable="mes.fevereiro.disabled" active="mes.fevereiro.active"></tab>
-                            <tab heading="Mar{{getAno()}}" select="setTab(3)" 
-                                 disable="mes.marco.disabled" active="mes.marco.active"></tab>
-                            <tab heading="Abr{{getAno()}}" select="setTab(4)" 
-                                 disable="mes.abril.disabled" active="mes.abril.active"></tab>
-                            <tab heading="Mai{{getAno()}}" select="setTab(5)" 
-                                 disable="mes.maio.disabled" active="mes.maio.active"></tab>
-                            <tab heading="Jun{{getAno()}}" select="setTab(6)" 
-                                 disable="mes.junho.disabled" active="mes.junho.active"></tab>
-                            <tab heading="Jul{{getAno()}}" select="setTab(7)" 
-                                 disable="mes.julho.disabled" active="mes.julho.active"></tab>
-                            <tab heading="Ago{{getAno()}}" select="setTab(8)" 
-                                 disable="mes.agosto.disabled" active="mes.agosto.active"></tab>
-                            <tab heading="Set{{getAno()}}" select="setTab(9)" 
-                                 disable="mes.setembro.disabled" active="mes.setembro.active"></tab>
-                            <tab heading="Out{{getAno()}}" select="setTab(10)" 
-                                 disable="mes.outubro.disabled" active="mes.outubro.active"></tab>
-                            <tab heading="Nov{{getAno()}}" select="setTab(11)" 
-                                 disable="mes.novembro.disabled" active="mes.novembro.active"></tab>
-                            <tab heading="Dez{{getAno()}}" select="setTab(12)" 
-                                 disable="mes.dezembro.disabled" active="mes.dezembro.active"></tab>
-                        </tabset>
-                    </div>
+                    <tabset style="margin-top:20px" type="pills">
+                        <tab heading="Jan{{getAno()}}" select="setTab(1)" 
+                             disable="mes.janeiro.disabled" active="mes.janeiro.active"></tab>
+                        <tab heading="Fev{{getAno()}}" select="setTab(2)" 
+                             disable="mes.fevereiro.disabled" active="mes.fevereiro.active"></tab>
+                        <tab heading="Mar{{getAno()}}" select="setTab(3)" 
+                             disable="mes.marco.disabled" active="mes.marco.active"></tab>
+                        <tab heading="Abr{{getAno()}}" select="setTab(4)" 
+                             disable="mes.abril.disabled" active="mes.abril.active"></tab>
+                        <tab heading="Mai{{getAno()}}" select="setTab(5)" 
+                             disable="mes.maio.disabled" active="mes.maio.active"></tab>
+                        <tab heading="Jun{{getAno()}}" select="setTab(6)" 
+                             disable="mes.junho.disabled" active="mes.junho.active"></tab>
+                        <tab heading="Jul{{getAno()}}" select="setTab(7)" 
+                             disable="mes.julho.disabled" active="mes.julho.active"></tab>
+                        <tab heading="Ago{{getAno()}}" select="setTab(8)" 
+                             disable="mes.agosto.disabled" active="mes.agosto.active"></tab>
+                        <tab heading="Set{{getAno()}}" select="setTab(9)" 
+                             disable="mes.setembro.disabled" active="mes.setembro.active"></tab>
+                        <tab heading="Out{{getAno()}}" select="setTab(10)" 
+                             disable="mes.outubro.disabled" active="mes.outubro.active"></tab>
+                        <tab heading="Nov{{getAno()}}" select="setTab(11)" 
+                             disable="mes.novembro.disabled" active="mes.novembro.active"></tab>
+                        <tab heading="Dez{{getAno()}}" select="setTab(12)" 
+                             disable="mes.dezembro.disabled" active="mes.dezembro.active"></tab>
+                    </tabset>
                     
                     <!-- CONTEÚDO DO EXTRATO-->
                     <div class="row">
                         <div class="panel">
-                            <div class="row conteudoMinhaConta">
+                            <!--div class="row conteudoMinhaConta"-->
                                 <!-- TABLE RESPOSIVE -->
                                 <div class="table-responsive" style="margin-left:15px">
                                     <table class="table table-hover table-light">
                                         <thead>
                                             <tr class="uppercase">
-                                                <th>
-                                                     Data movimento
+                                                <th width="15%" tabindex="0" rowspan="1" colspan="1">
+                                                     Data
                                                 </th>
-                                                <th>
+                                                <th width="10%" tabindex="1" rowspan="1" colspan="1">
                                                      Tipo
                                                 </th>
-                                                <th>
+                                                <th width="45%" tabindex="2" rowspan="1" colspan="1">
                                                      Descrição
                                                 </th>
-                                                <th>
+                                                <th width="15%" tabindex="3" rowspan="1" colspan="1">
                                                      Documento
                                                 </th>
-                                                <th>
+                                                <th width="15%" tabindex="4" rowspan="1" colspan="1">
                                                      Valor
                                                 </th>
                                             </tr>
@@ -264,15 +263,36 @@
                                                      {{movimentacao.nrDocumento}}
                                                 </td>
                                                 <!-- VALOR -->
-                                                <td style="text-align:center">
-                                                    <span ng-class="{'statusPositivoValorExtrato' : movimentacao.vlMovimento >= 0.0, 'statusNegativoValorExtrato' : movimentacao.vlMovimento < 0.0}">
+                                                <td style="text-align:center"
+                                                    ng-init="incrementaValorTotalExtrato(movimentacao.vlMovimento)">
+                                                    <span ng-class="{'statusPositivoValorExtrato' : movimentacao.vlMovimento >= 0.0, 'statusNegativoValorExtrato' : movimentacao.vlMovimento < 0.0}"
+                                                          style="width:100%; min-width: 100%">
                                                         {{movimentacao.vlMovimento | currency:'R$'}}
                                                     </span>
                                                 </td>
                                             </tr>
-                                            <tr ng-hide="!filtro.conta || filtro.conta === null || extrato.length > 0">
+                                            <tr ng-hide="extrato.length == 0">
+                                                <td colspan="1"
+                                                    style="font-weight: bolder; text-align: right">
+                                                    Movimentações
+                                                </td>
+                                                <td style="font-weight: bolder; text-align:left">
+                                                    {{totais.movimentacao}}
+                                                </td>
+                                                <td colspan="2"
+                                                    style="font-weight: bolder; text-align: right">
+                                                    Total
+                                                </td>
+                                                <td style="font-weight: bolder; text-align:center">
+                                                    <span ng-class="{'statusPositivoValorExtrato' : totais.extrato >= 0.0, 'statusNegativoValorExtrato' : totais.extrato < 0.0}"
+                                                          style="width:100%; min-width: 100%">
+                                                        {{totais.extrato | currency:'R$'}}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr ng-show="!buscandoExtrato && filtro.conta && filtro.conta !== null && extrato.length == 0">
                                                 <td colspan="2"></td>
-                                                <td>
+                                                <td> 
                                                     <div class="col-sm-12" 
                                                          ng-class="{'element-hidden': !uploadEmProgresso()}">
                                                         <progressbar class="progress-striped" 
@@ -298,7 +318,7 @@
                                     </table>
                                 </div>
                                 <!-- FIM TABLE RESPOSIVE -->
-                            </div>  
+                            <!--/div-->  
                         </div>
                     </div>
                     <!-- FIM CONTEUDO -->
