@@ -223,8 +223,8 @@
                         <div class="panel">
                             <!--div class="row conteudoMinhaConta"-->
                                 <!-- TABLE RESPOSIVE -->
-                                <div class="table-responsive" style="margin-left:15px">
-                                    <table class="table table-hover table-light">
+                                <div class="table-scrollabel" style="margin-left:15px">
+                                    <table class="table table-striped table-hover table-bordered dataTable no-footer conteudoTabelas">
                                         <thead>
                                             <tr class="uppercase">
                                                 <th width="15%" tabindex="0" rowspan="1" colspan="1">
@@ -255,7 +255,7 @@
                                                     {{movimentacao.dsTipo}}                                                  
                                                 </td>
                                                 <!-- DESCRIÇÃO -->
-                                                <td>
+                                                <td class="contud">
                                                      {{movimentacao.dsDocumento}}
                                                 </td>
                                                 <!-- DOCUMENTO -->
@@ -272,15 +272,16 @@
                                                 </td>
                                             </tr>
                                             <tr ng-hide="extrato.length == 0">
-                                                <td colspan="1"
-                                                    style="font-weight: bolder; text-align: right">
+                                                <td colspan="2"
+                                                    style="font-weight: bolder; text-align: center">
                                                     Movimentações
                                                 </td>
-                                                <td style="font-weight: bolder; text-align:left">
+                                                <td colspan="1"
+                                                    style="font-weight: bolder; text-align:center">
                                                     {{totais.movimentacao}}
                                                 </td>
-                                                <td colspan="2"
-                                                    style="font-weight: bolder; text-align: right">
+                                                <td colspan="1"
+                                                    style="font-weight: bolder; text-align: center">
                                                     Total
                                                 </td>
                                                 <td style="font-weight: bolder; text-align:center">
