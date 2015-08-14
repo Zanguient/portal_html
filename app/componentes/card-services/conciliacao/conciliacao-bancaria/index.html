@@ -161,23 +161,137 @@
                 </div>
             </div>
         </div>
-        <div class="portlet-body" ng-show="exibeTela">
+        <div class="portlet-body" ng-show="exibeTela"> 
             <div class="row">
-            <!--EXIBIÇÃO-->
-            <div class="col-xs-4 col-sm-4 col-md-4">
-                <div class="dataTables_length">
-                    <label>
-                        <span class="seperator"></span>Exibindo 
-                        <select name="datatable_products_length" aria-controls="datatable_products" 
-                                class="form-control input-xsmall input-sm input-inline"
-                                ng-model="usuario.itens_pagina"
-                                ng-change="alterouItensPagina()"
-                                ng-options="item for item in itens_pagina">                                            
-                        </select> registros de
-                    </label>
-                </div>   
+                <!--EXIBIÇÃO-->
+                <div class="col-xs-4 col-sm-4 col-md-4">
+                    <div class="dataTables_length">
+                        <label>
+                            <span class="seperator"></span>Exibindo 
+                            <select name="datatable_products_length" aria-controls="datatable_products" 
+                                    class="form-control input-xsmall input-sm input-inline"
+                                    ng-model="usuario.itens_pagina"
+                                    ng-change="alterouItensPagina()"
+                                    ng-options="item for item in itens_pagina">                                            
+                            </select> registros de
+                        </label>
+                    </div>   
+                </div>
+                <!--PAGINAÇÃO-->
+                <div class="col-xs-4 col-sm-4 col-md-3">
+                    <div class="pagination-panel centralizarPaginacao"> Página 
+                        <a href="javascript:;" ng-click="retrocedePagina()"
+                           class="btn btn-sm default prev" 
+                           ng-class="{disabled: usuario.pagina <= 1}" 
+                           title="Página anterior">
+                                <i class="fa fa-angle-left"></i>
+                        </a>
+                        <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                               maxlength="4" style="text-align:center; margin: 0 5px;"
+                               ng-model="paginaInformada" valid-integer-number
+                               ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                               ng-blur="atualizaPaginaDigitada()">
+                        <a href="javascript:;" ng-click="avancaPagina()"
+                           class="btn btn-sm default next"
+                           ng-class="{disabled: usuario.pagina >= usuario.total_paginas}"
+                           title="Próxima página">
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                         de <span class="pagination-panel-total"></span>
+                    </div>    
+                </div>  
             </div>
-            <!--PAGINAÇÃO-->
+        </div> 
+        
+        <div class="table-container">
+            <div class="row">
+                <!--1º CUPOM-->
+                <div class="col-md-4 col-md-offset-1 primeiroCupom">
+                    <!--TITULO DO CUPON -->
+                    <div class="row">
+                        <!--TIPO DO CUPON-->
+                        <div class="col-md-12 conteudoCuponsConciliacaobancaria">
+                            Previsão Crédito
+                        </div>
+                    </div>
+                    <!--SUBTITULO DO CUPON -->
+                    <div class="row">
+                        <!--BANCO-->
+                        <div class="col-md-12 conteudoCuponsConciliacaobancaria">
+                            Banco do Brasil
+                        </div>
+                    </div> 
+                    <!--CAMPO AGÊNCIA E CONTA -->
+                    <div class="row">
+                        <!--AGÊNCIA-->
+                        <div class="col-md-6">
+                            <label>Agência:</label>87695-9
+                        </div>
+                        <!--CONTA-->
+                        <div class="col-md-6 alinhamentoDados">
+                            <label>Conta:</label>09076346-9
+                        </div>
+                    </div>                    
+                    <!--DIVISÓRIA DOS TIPOS DE CUPONS-->
+                    <div class="row">   
+                        <div class="col-md-12 conteudoCuponsConciliacaobancaria">
+                            ==============================
+                        </div>
+                    </div>
+                    <!--CAMPO DATA-->
+                    <div class="row">
+                        <!--DATA-->
+                        <div class="col-md-6">
+                            <label>Data:</label>
+                        </div>
+                        <!--RESULTADO DA DATA-->
+                        <div class="col-md-6 alinhamentoDados">
+                            14/08/2015
+                        </div>
+                        <!--DESCRIÇÃO-->                       
+                    </div>
+                    <!--CAMPO DESCRIÇÃO -->
+                    <div class="row">
+                        <!--DESCRIÇÃO-->
+                        <div class="col-md-6 ">
+                            <label>Descrição:</label>
+                        </div>
+                        <!--RESULTADO DA DESCRIÇÃO-->
+                        <div class="col-md-6 alinhamentoDados">
+                            REDE
+                        </div>                      
+                    </div> 
+                    <!--CAMPO VALOR-->
+                    <div class="row">
+                        <!--VALOR-->
+                        <div class="col-md-6">
+                            <label>Valor:</label>
+                        </div>
+                        <!--RESULTADO DO VALOR-->
+                        <div class="col-md-6 alinhamentoDados">
+                            <label>R$</label>440,00
+                        </div>                                              
+                    </div> 
+                </div>
+                <!--BOTÃO-->
+                <div class="col-md-3">
+                
+                </div>
+                <!--2º CUPOM-->
+                <div class="col-md-4">
+                
+                </div>
+            </div>
+        </div>
+        
+        <!-- RODAPÉ : Exibição dos resultados e paginação -->
+        <div class="row">
+            <div class="col-xs-4 col-sm-4 col-md-4">
+                <div class="dataTables_info" id="sample_editable_1_info" role="status" aria-live="polite">
+                    <strong>Exibindo os registros <!--{{ }}--></strong>
+                </div>
+            </div>
+            <!--PAGINAÇÃO-RODAPÉ-->
             <div class="col-xs-4 col-sm-4 col-md-3">
                 <div class="pagination-panel centralizarPaginacao"> Página 
                     <a href="javascript:;" ng-click="retrocedePagina()"
@@ -197,103 +311,10 @@
                        title="Próxima página">
                         <i class="fa fa-angle-right"></i>
                     </a>
-                     de <span class="pagination-panel-total"></span>
-                </div>    
-            </div>                                        
-        </div>
-            
-            <div class="table-container">
-                <div class="table-scrollable">
-                    <table class="table table-striped table-hover table-bordered dataTable no-footer" role="grid">
-                        <thead>
-                            <tr role="row">
-                                <th tabindex="0" rowspan="1" colspan="1" style="width: 25%;">
-                                   Banco
-                                </th>
-                                <th tabindex="1" rowspan="1" colspan="1" style="width: 10%;">
-                                   Tipo 
-                                </th>
-                                <th tabindex="2" rowspan="1" colspan="1" style="width: 10%;">
-                                   Descrição
-                                </th>
-                                <th tabindex="3" rowspan="1" colspan="1" style="width: 10%;">
-                                   Adquirente
-                                </th>
-                                <th tabindex="4" rowspan="1" colspan="1" style="width: 10%;">
-                                   Ação
-                                </th>                                        
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- ngRepeat:  -->
-                            <tr role="row" class="odd ng-scope conteudoTabelas" >
-                                <!--BANCO-->
-                                <td style="text-align:left">
-                                    104  CAIXA ECONÔMICA FEDERAL
-                                </td>
-                                <!--TIPO-->
-                                <td>
-                                    1402-8
-                                </td>
-                                <!--DESCRIÇÃO-->
-                                <td>
-                                    Descrição exemplo
-                                </td>
-                                <!--ADQUIRENTE-->
-                                <td>
-                                    Cielo
-                                </td>
-                                <!--AÇÃO-->
-                                <td class="center btnacoes">
-                                    <div class="btn-group" dropdown="" dropdown-append-to-body="">
-                                        <a class="btn btn-default btn-circle"
-                                           href="javascript:;" 
-                                           dropdown-toggle="" 
-                                           aria-haspopup="true" 
-                                           aria-expanded="false">
-                                            <i class="fa fa-pencil"></i>
-                                             Ações 
-                                            <i class="fa fa-angle-down"></i>
-                                        </a>
-                                    </div>
-                                </td>                                                                       
-                            </tr>                                                                
-                        </tbody>
-                    </table>
-                </div> 
-                <!-- RODAPÉ : Exibição dos resultados e paginação -->
-                <div class="row">
-                    <div class="col-xs-4 col-sm-4 col-md-4">
-                        <div class="dataTables_info" id="sample_editable_1_info" role="status" aria-live="polite">
-                            <strong>Exibindo os registros <!--{{ }}--></strong>
-                        </div>
-                    </div>
-                    <!--PAGINAÇÃO-RODAPÉ-->
-                    <div class="col-xs-4 col-sm-4 col-md-3">
-                        <div class="pagination-panel centralizarPaginacao"> Página 
-                            <a href="javascript:;" ng-click="retrocedePagina()"
-                               class="btn btn-sm default prev" 
-                               ng-class="{disabled: usuario.pagina <= 1}" 
-                               title="Página anterior">
-                                    <i class="fa fa-angle-left"></i>
-                            </a>
-                            <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
-                                   maxlength="4" style="text-align:center; margin: 0 5px;"
-                                   ng-model="paginaInformada" valid-integer-number
-                                   ng-keypress="($event.which === 13) ? alteraPagina() : 0"
-                                   ng-blur="atualizaPaginaDigitada()">
-                            <a href="javascript:;" ng-click="avancaPagina()"
-                               class="btn btn-sm default next"
-                               ng-class="{disabled: usuario.pagina >= usuario.total_paginas}"
-                               title="Próxima página">
-                                <i class="fa fa-angle-right"></i>
-                            </a>
-                             de <span class="pagination-panel-total"><!--{{ }}--></span>
-                        </div>
-                    </div>
-                    <!-- FIM PAGINAÇÃO -->
+                     de <span class="pagination-panel-total"><!--{{ }}--></span>
                 </div>
             </div>
-        </div>
+            <!-- FIM PAGINAÇÃO -->
+        </div>        
     </div>
 </div>
