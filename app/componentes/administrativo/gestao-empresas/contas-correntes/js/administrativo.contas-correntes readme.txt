@@ -54,10 +54,10 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 	
   * card/tbcontacorrente
     - DELETE : exclui uma conta
-	        ?token=....&idContaCorrente=id
+	        ?token=....&cdContaCorrente=id
     - GET : listagem as contas correntes (coleção 2)
 			[
-			  { idContaCorrente : int,
+			  { cdContaCorrente : int,
 				cdGrupo : int,
 				empresa : { nu_cnpj : string, 
 							ds_fantasia : string, 
@@ -81,7 +81,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 			]	
 	- PUT : altera uma conta corrente existente
 			[
-			  { idContaCorrente : int,
+			  { cdContaCorrente : int,
 				nrCnpj : string,
 				cdBanco : string, 
 				nrAgencia : string,

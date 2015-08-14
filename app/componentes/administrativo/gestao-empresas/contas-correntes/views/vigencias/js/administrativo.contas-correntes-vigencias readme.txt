@@ -32,7 +32,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
   * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
   * $stateParams para receber o usuário para alteração (quando não receber, significa que é um cadastro)
       {
-		conta : {   idContaCorrente : int,
+		conta : {   cdContaCorrente : int,
 					cdGrupo : int,
 					empresa : { nu_cnpj : string, ds_fantasia : string },
 					banco : { Codigo : string, 

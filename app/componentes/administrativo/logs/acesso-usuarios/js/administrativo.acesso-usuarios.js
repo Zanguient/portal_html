@@ -65,7 +65,17 @@ angular.module("administrativo-acesso-usuarios", [])
         $scope.$emit("acessouTela");
         // Busca Logs
         //$scope.buscaLogs();
-    }; 
+    } 
+                                                
+    /** 
+      * Substitui na string os '\n' e coloca a quebra de linha do html
+      */
+    $scope.adicionaQuebraLinhaHtml = function(text){
+        console.log(text);
+        console.log($scope.modalLog
+        if(typeof text === 'string') return text.split("\n").join(String.fromCharCode(160));
+        return text;
+    }                                            
                                                 
                                                 
     // ORDENAÇÃO

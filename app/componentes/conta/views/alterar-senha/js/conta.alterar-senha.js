@@ -27,6 +27,14 @@ angular.module("conta-alterar-senha", [])
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
         });
+        // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
+        $scope.$on('acessoDeTelaNotificado', function(event){
+            $scope.exibeTela = true;
+            // Obtém os dados do usuário logado
+            buscaUsuarioLogado();
+        });
+        // Acessou a tela
+        $scope.$emit("acessouTela");
     };  
     
     

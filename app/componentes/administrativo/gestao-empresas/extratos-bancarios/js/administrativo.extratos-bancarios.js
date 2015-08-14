@@ -193,7 +193,7 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
                 $scope.contas = dados.Registros;
             
                 if($scope.filtro.conta && $scope.filtro.conta !== null)
-                    $scope.filtro.conta = $filter('filter')($scope.contas, function(c) {return c.idContaCorrente === $scope.filtro.conta.idContaCorrente;})[0];
+                    $scope.filtro.conta = $filter('filter')($scope.contas, function(c) {return c.cdContaCorrente === $scope.filtro.conta.cdContaCorrente;})[0];
             
                 if(!$scope.filtro.conta || $scope.filtro.conta === null)
                     $scope.filtro.conta = $scope.contas[0];
@@ -388,7 +388,7 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
                 Upload.upload({
                     url: $apis.getUrl($apis.card.tbextrato, $scope.token, 
                                       {id: /*$campos.card.tbextrato.cdContaCorrente*/ 101, 
-                                       valor: $scope.filtro.conta.idContaCorrente}),
+                                       valor: $scope.filtro.conta.cdContaCorrente}),
                     file: file,
                     method: 'PATCH'
                 }).progress(function (evt) {
@@ -429,7 +429,7 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
        var filtros = [];
        // Filial
        var filtroConta = {id: /*$campos.card.tbextrato.cdContaCorrente*/ 101, 
-                           valor: $scope.filtro.conta.idContaCorrente};
+                           valor: $scope.filtro.conta.cdContaCorrente};
        filtros.push(filtroConta);  
         
        // Período

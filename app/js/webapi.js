@@ -34,14 +34,15 @@ angular.module('webapi', ['utils'])
             idUser : 101,
             dsUrl : 102,
             idController : 103,
-            idMethod : 104,
-            dsParametros : 105,
-            dsFiltros : 106,
-            dtAcesso : 107,
-            dsAplicacao : 108,
-            codResposta : 109,
-            msgErro : 110,
-            dsJson : 111,
+            dsParametros : 104,
+            dsFiltros : 105,
+            dtAcesso : 106,
+            dsAplicacao : 107,
+            codResposta : 108,
+            msgErro : 109,
+            dsJson : 110,
+            dsUserAgente : 111,
+            dsMethod : 112,
             // Relacionamentos
             webpagesusers : 200,
             webpagescontrollers : 300
@@ -111,7 +112,7 @@ angular.module('webapi', ['utils'])
             hrExecucao : 104
         },
         tbcontacorrente: {
-            idContaCorrente : 100,
+            cdContaCorrente : 100,
             cdGrupo : 101,
             nrCnpj : 102,
             cdBanco : 103, 

@@ -45,7 +45,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
    * card/tbcontacorrente
     - GET : listagem as contas correntes (coleção 2)
 			[
-			  { idContaCorrente : int,
+			  { cdContaCorrente : int,
 				cdGrupo : int,
 				empresa : { nu_cnpj : string, 
 							ds_fantasia : string, 

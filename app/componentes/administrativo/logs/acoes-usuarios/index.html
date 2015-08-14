@@ -29,44 +29,51 @@
                 
                <!-- MODAL INPUT -->
                <div class="modal fade bs-modal-sm modal-input" 
-                    id="modalLog" 
-                    aria-hidden="true">
+                    id="modalLog" aria-hidden="true">
                    <div class="modal-dialog modal-sm" style="width:400px">
                        <div class="modal-content">
                            <div class="modal-header">
-                               <h4 class="modal-title modal-cabecalho">{{log.user.ds_login}}</h4>
+                               <h4 class="modal-title modal-cabecalho">Detalhes do log</h4>
                            </div>
                            <div class="modal-body modal-corpo modalAcessoDeUsuarios" style="text-align: left">
                                <div class="row">
                                    <div class="col-sm-12">
-                                        <label>Login:</label>{{log.user.ds_login}}    
+                                        <label>Login:</label>{{modalLog.log.webpagesusers.ds_login}}    
                                    </div>
                                    <div class="col-sm-12">
-                                        <label>Data de acesso:</label><a ng-bind="getDataTimeString(log.dtAcesso)"></a>    
+                                        <label>Data de acesso:</label>
+                                        <a ng-bind="getDataTimeString(modalLog.log.dtAcesso)"></a>    
                                    </div>
                                    <div class="col-sm-12">
-                                        <label>Aplicação:</label>{{log.dsAplicacao | uppercase}}    
+                                        <label>Aplicação:</label>{{modalLog.log.dsAplicacao | uppercase}}    
+                                   </div>
+                                   <div class="col-sm-12">
+                                        <label>Origem:</label>{{modalLog.log.controller.ds_controller | uppercase}}    
                                    </div> 
                                    <div class="col-sm-12">
-                                        <label>Ação:</label>{{log.method.ds_method | uppercase}}   
+                                        <label>Ação:</label>{{modalLog.log.dsMethod | uppercase}}   
                                    </div> 
                                    <div class="col-sm-12">
-                                        <label>HTTP:</label>{{log.codResposta}}    
+                                        <label>Resposta HTTP:</label>{{modalLog.log.codResposta}}    
                                    </div>
                                    <div class="col-sm-12">
-                                        <label>URL:</label>{{log.dsUrl}}    
+                                        <label>URL:</label>{{modalLog.log.dsUrl}}    
+                                   </div>
+                                   <div class="col-sm-12" ng-show="modalLog.log.dsParametros">
+                                        <label>Parâmetros:</label>{{modalLog.log.dsParametros}}    
+                                   </div>
+                                   <div class="col-sm-12" ng-show="modalLog.log.dsFiltros">
+                                        <label>Filtros:</label>{{modalLog.log.dsFiltros}}    
+                                   </div>
+                                   <div class="col-sm-12" ng-show="modalLog.log.dsJson && modalLog.log.dsJson !== null">
+                                        <label>JSON:</label>{{modalLog.log.dsJson}}    
                                    </div>
                                    <div class="col-sm-12">
-                                        <label>PARAMETROS:</label>{{log.dsParametros}}    
+                                        <label>UserAgent:</label>{{modalLog.log.dsUserAgent}}    
                                    </div>
-                                   <div class="col-sm-12">
-                                        <label>FILTROS:</label>{{log.dsFiltros}}    
-                                   </div>
-                                   <div class="col-sm-12">
-                                        <label>JSON:</label>{{log.dsJson}}    
-                                   </div>
-                                   <div class="col-sm-12">
-                                        <label>MENSAGEM DE ERRO:</label>{{log.msgErro}}    
+                                   <div class="col-sm-12" ng-show="modalLog.log.msgErro && modalLog.log.msgErro !== null">
+                                        <label>Mensagem de erro:</label>
+                                        <span ng-bind="adicionaQuebraLinhaHtml(modalLog.log.msgErro)"></span>
                                    </div>
                                </div>
                             </div>
@@ -75,13 +82,7 @@
                                    <button type="button" class="btn default" data-dismiss="modal">
                                        Fechar
                                    </button>
-                               </div>                           
-                               <!--div class="col-sm-4 col-sm-offset-1">
-                                   <button type="button" class="btn blue"
-                                           ng-click="inputCadastro.funcao()">
-                                       {{input.textoConfirma}}
-                                   </button>                                
-                               </div-->
+                               </div>  
                            </div>
                        </div>
                    </div>
@@ -131,7 +132,7 @@
                 <div class="portlet-body" ng-show="exibeTela">
                     <!-- TABELA -->
                     <div class="dataTables_wrapper no-footer">
-                        <!-- EXIBIÇÃO E PESQUISA -->
+                       <!-- EXIBIÇÃO E PESQUISA -->
                        <div class="row">
                             <!-- EXIBIÇÃO --> 
                             <div class="col-xs-4 col-sm-4 col-md-4">
@@ -140,10 +141,10 @@
                                         <span class="seperator"></span>Exibindo 
                                         <select name="datatable_products_length" aria-controls="datatable_products" 
                                                 class="form-control input-xsmall input-sm input-inline"
-                                                ng-model="filtroitens_pagina"
+                                                ng-model="filtro.itens_pagina"
                                                 ng-change="alterouItensPagina()"
-                                                ng-options="item for item in itens_pagina">                                            
-                                        </select> registros de {{filtrototal_registros}}
+                                                ng-options="item for item in itens_pagina">                                                                                    
+                                        </select> registros de {{filtro.total_registros}}
                                     </label>
                                 </div>
                             </div>
@@ -152,7 +153,7 @@
                                 <div class="pagination-panel centralizarPaginacao"> Página 
                                     <a href="javascript:;" ng-click="retrocedePagina()"
                                        class="btn btn-sm default prev" 
-                                       ng-class="{disabled: filtropagina <= 1}" 
+                                       ng-class="{disabled: filtro.pagina <= 1}" 
                                        title="Página anterior">
                                             <i class="fa fa-angle-left"></i>
                                     </a>
@@ -163,52 +164,48 @@
                                            ng-blur="atualizaPaginaDigitada()">
                                     <a href="javascript:;" ng-click="avancaPagina()"
                                        class="btn btn-sm default next"
-                                       ng-class="{disabled: filtropagina >= filtrototal_paginas}"
+                                       ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
                                        title="Próxima página">
                                         <i class="fa fa-angle-right"></i>
                                     </a>
-                                     de <span class="pagination-panel-total">{{filtrototal_paginas}}</span>
+                                     de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
                                 </div>
-                            </div>
+                            </div>    
                             <!-- PESQUISA -->
                             <div class="col-xs-4 col-sm-4 col-md-5">
-                                <div class="dataTables_filter">
-                                    <div class="col-md-6">
-                                        <label>                                       
-                                            <select aria-controls="datatable_products" 
-                                                    class="form-control input-sm input-inline"
-                                                    ng-model="filtro.campo_busca"
-                                                    ng-options="campo as campo.nome for campo in camposBusca | filter:{ativo:true}">
-                                                <option style="display: none" value=""></option>
-                                            </select>
-                                        </label>
-                                        <label>
-                                            <span class="seperator"></span>Pesquisar
-                                        </label>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label>
-                                            <div class="input-group input-icon right">
-                                                <i class="fa fa-times" style="right:50px;cursor:pointer"
-                                                   ng-click="resetaBusca()"
-                                                   ng-show="filtrobusca"></i>
-                                                <input type="text" 
-                                                   class="form-control input-inline" 
-                                                   placeholder="Buscar" 
-                                                   ng-model="busca"
-                                                   ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !busca)) && filtraUsuarios()">
-                                                <span class="input-group-addon">
-                                                    <i class="fa fa-search" style="cursor:pointer"
-                                                           ng-click="filtraUsuarios()"></i>
-                                                </span>
-                                            </div>
-                                        </label>    
+                                <div class="dataTables_filter">                                    
+                                    <div class="col-md-5">
+                                        <div class="dataTables_length" 
+                                             id="datatable_ajax_length">
+                                            <label>
+                                                <span class="seperator"></span>Pesquisar
+                                                <select aria-controls="datatable_products" 
+                                                        class="form-control input-sm input-inline"
+                                                        ng-model="filtro.campo_busca"
+                                                        ng-options="campo as campo.nome for campo in camposBusca">
+                                                </select>
+                                            </label>                                         
+                                        </div>                                    
                                     </div> 
+                                    <div class="col-md-7 input-group input-icon right">
+                                        <i class="fa fa-times" style="right:50px;cursor:pointer"
+                                           ng-click="resetaBusca()"
+                                           ng-show="filtro.busca"></i>
+                                        <input type="text" 
+                                           class="form-control input-inline" 
+                                           placeholder="Buscar" 
+                                           ng-model="filtro.busca"
+                                           ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !filtro.busca)) && buscaLogs()">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-search" style="cursor:pointer"
+                                               ng-click="buscaLogs()"></i>
+                                        </span>
+                                    </div>                                    
                                 </div>
                             </div>
-                        </div>
-                        <!-- TABELA -->
+                        </div>   
                         
+                        <!-- CONTEUDO -->
                         <div class="table-scrollable">
                             <table class="table table-striped table-hover table-bordered dataTable no-footer" 
                                    id="sample_editable_1"
@@ -216,203 +213,87 @@
                                    aria-describedby="sample_editable_1_info">
 				                <thead>
                                     <tr role="row">
-                                        <th class="" 
-                                            tabindex="0"
-                                            aria-controls="sample_editable_1" 
+                                        <th tabindex="0" 
                                             rowspan="1" 
                                             colspan="1" 
-                                            aria-sort="ascending" 
-                                            aria-label="Username:activate to sort column ascending" 
                                             style="width: 15%;">
-									 Login
+									       Data de Acesso
 								        </th>
-                                        <th class="" 
-                                            tabindex="0" 
-                                            aria-controls="sample_editable_1" 
-                                            rowspan="1"
-                                            colspan="1"
-                                            aria-label="Full Name: activate to sort column ascending" 
-                                            style="width: 14%;">
-									 Data de Acesso
-								        </th>
-                                        <th class="" 
-                                            tabindex="0" 
-                                            aria-controls="sample_editable_1"
+                                        <th tabindex="1" 
                                             rowspan="1" 
                                             colspan="1"
-                                            aria-label="Points: activate to sort column ascending" 
-                                            style="width: 5%;">
-									 Aplicação
-								        </th>
-                                        <th class="" 
-                                            tabindex="0" 
-                                            aria-controls="sample_editable_1"
-                                            rowspan="1"
-                                            colspan="1" 
-                                            aria-label="Notes: activate to sort column ascending" 
                                             style="width: 25%;">
-									 URL
+                                           Login 
 								        </th>
-                                        <th class="" 
-                                            tabindex="0"
-                                            aria-controls="sample_editable_1" 
-                                            rowspan="1" 
-                                            colspan="1"
-                                            aria-label="Edit: activate to sort column ascending" 
-                                            style="width: 15%;">
-									 Ação
-								        </th>
-                                        <th class="" 
-                                            tabindex="0" 
-                                            aria-controls="sample_editable_1"
+                                        <th tabindex="2"
                                             rowspan="1"
                                             colspan="1" 
-                                            aria-label="Delete: activate to sort column ascending" 
-                                            style="width: 7%;">
-									 Status
+                                            style="width: 5%;">
+									       Aplicação
 								        </th>
+                                        <th tabindex="2"
+                                            rowspan="1"
+                                            colspan="1" 
+                                            style="width: 5%;">
+									       Ação
+								        </th>
+                                        <th tabindex="3"
+                                            rowspan="1" 
+                                            colspan="1" 
+                                            style="width: 40%;">
+									       URL
+								        </th>
+                                        <th tabindex="4" 
+                                            rowspan="1" 
+                                            colspan="1" 
+                                            style="width: 10%;">
+									       Detalhar
+								        </th>                                        
                                     </tr>
 							    </thead>
-                                <tbody>
-                                    <tr role="row" class="odd conteudoAcoesUsuarios" ng-repeat="log in logs">
-                                        <td class="">                                            
-                                            <div class="col-sm-2">
-                                                <div class="">
-                                                    {{log.user.ds_login}}
-                                                </div>    
-                                            </div>                                            
+                                <tbody> 
+                                    <tr role="row" class="odd" 
+                                        ng-repeat="log in logs">
+                                        <!--DATA DE ACESSO-->
+                                        <td style="text-align:center"
+                                            ng-bind="getDataTimeString(log.dtAcesso)">
                                         </td>
-                                        <td class="">
-                                            <div ng-bind="getDataTimeString(log.dtAcesso)">
-                                            </div> 
+                                        <!--LOGIN-->
+                                        <td style="text-align:left">                                            
+                                            {{log.webpagesusers.ds_login | lowercase}}
                                         </td>
-                                        <td class="">
-                                            <div class="">
-                                                {{log.dsAplicacao | uppercase}}
-                                            </div>
+                                        <!--APLICAÇÃO-->
+                                        <td style="text-align:center">
+                                            {{log.dsAplicacao | uppercase}} 
                                         </td>
-                                        <td class="">
-                                            <div class="">
-                                                {{log.dsUrl | lowercase}}
-                                            </div>
+                                        <!--AÇÃO-->
+                                        <td style="text-align:center">
+                                            {{log.dsMethod | uppercase}}
                                         </td>
-                                        <td class="">
-                                            <div class="">
-                                                {{log.method.ds_method | uppercase}}
-                                            </div>
+                                        <!--URL-->
+                                        <td style="text-align:left">
+                                            {{log.dsUrl | uppercase}}
                                         </td>
-                                        <td class="">
-                                            <div class="">
-                                                <button class="btn btn-icon-only"
-                                                        ng-click="detalhaLog(log)"
-                                                        ng-class="{'green' : logSucesso(log), 'red': !logSucesso(log)}">
-                                                    <i class="fa" 
-                                                       ng-class="{'fa-check-circle' : logSucesso(log), 'fa-times-circle': !logSucesso(log)}"></i>
-                                                </button>                                            
-                                            </div> 
-                                        </td>
-                                    </tr>
+                                        
+                                        <!--DETALHAR-->
+                                        <td style="text-align:center">
+                                            <button class="btn btn-icon-only"
+                                                    ng-click="detalhaLog(log)"
+                                                    ng-class="{'green' : logSucesso(log), 'red': !logSucesso(log)}">
+                                                <i class="fa" 
+                                                   ng-class="{'fa-check-circle' : logSucesso(log), 'fa-times-circle': !logSucesso(log)}"></i>
+                                            </button> 
+                                        </td>                                        
+                                    </tr>   
                                 </tbody>
                             </table>
                         </div>
-                        
-                        <!--VERSÃO COM GRID-- >
-                        <div class="row">
-                           <div class="col-sm-12">
-                                <div class="row tableAcessoUsuarios">
-                                    <div class="col-sm-2">
-                                        <div class="cabecalhoTableAcessoUsuarios">
-                                        Login
-                                        </div>    
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <div class="cabecalhoTableAcessoUsuarios">
-                                        Data de Acesso
-                                        </div>    
-                                    </div>
-                                    <div class="col-sm-1">
-                                        <div class="cabecalhoTableAcessoUsuarios">
-                                        Aplicação
-                                        </div>    
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <div class="cabecalhoTableAcessoUsuarios">
-                                        URL
-                                        </div>    
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <div class="cabecalhoTableAcessoUsuarios">
-                                        Ação
-                                        </div>    
-                                    </div>
-                                    <div class="col-sm-1">
-                                        <div class="cabecalhoTableAcessoUsuarios">
-                                        Status
-                                        </div>    
-                                    </div>
-                               </div>
-                            </div>
-                        </div>   
-                        <!-- CONTEUDO -- >
-                        <div class="row" ng-repeat="log in logs">    
-                            <div class="col-sm-12">
-                                <div class="row tableAcessoUsuarios">
-                                    
-                                    <!--LOGIN USUÁRIO-- >
-                                    <div class="col-sm-2">
-                                        <div class="componentesTableAcessoUsuarios">
-                                        {{log.user.ds_login}}
-                                        </div>    
-                                    </div>
-                                    
-                                    <!--DATA DO ULTIMO ACESSO-- >
-                                    <div class="col-sm-2">
-                                        <div class="componentesTableAcessoUsuarios"
-                                             ng-bind="getDataTimeString(log.dtAcesso)">
-                                        </div>    
-                                    </div>
-                                    
-                                    <!--APLICAÇÃO-- >
-                                    <div class="col-sm-1">
-                                        <div class="componentesTableAcessoUsuarios">
-                                        {{log.dsAplicacao | uppercase}}
-                                        </div>    
-                                    </div>
-                                    
-                                    <!--URL-- >
-                                    <div class="col-sm-4">
-                                        <div class="componentesTableAcessoUsuarios">
-                                        {{log.dsUrl | lowercase}}
-                                        </div>    
-                                    </div>
-                                    
-                                    <!-- AÇÃO -- >
-                                    <div class="col-sm-2">
-                                        <div class="componentesTableAcessoUsuarios">
-                                        {{log.method.ds_method | uppercase}}
-                                        </div>    
-                                    </div>
-                                    
-                                    <!--BOTÃO DE VISUALIZAÇÃO-- >
-                                    <div class="col-sm-1">
-                                        <div class="componentesTableAcessoUsuarios">
-                                            <button class="btn btn-icon-only default"
-                                                    ng-click="detalhaLog(log)">
-                                                <i class="fa" 
-                                                   ng-class="{'fa-check-circle' : logSucesso(log), 'fa-times-circle': !logSucesso(log)}"></i>
-                                            </button>                                            
-                                        </div>    
-                                    </div>
-                               </div>
-                            </div>
-                        </div>
-                        <! --FIM DA VERÃO GRID-->
 
                         <!-- RODAPÉ : Exibição dos resultados e paginação -->
                         <div class="row">
                             <div class="col-xs-4 col-sm-4 col-md-4">
                                 <div class="dataTables_info" role="status" aria-live="polite">
-                                    <strong>Exibindo os registros {{privilegio.faixa_registros}}</strong>
+                                    <strong>Exibindo os registros {{filtro.faixa_registros}}</strong>
                                 </div>
                             </div>
                             <!--PAGINAÇÃO-RODAPÉ-->
@@ -420,7 +301,7 @@
                                 <div class="pagination-panel centralizarPaginacao"> Página 
                                     <a href="javascript:;" ng-click="retrocedePagina()"
                                        class="btn btn-sm default prev" 
-                                       ng-class="{disabled: privilegio.pagina <= 1}" 
+                                       ng-class="{disabled: filtro.pagina <= 1}" 
                                        title="Página anterior">
                                             <i class="fa fa-angle-left"></i>
                                     </a>
@@ -431,11 +312,11 @@
                                            ng-blur="atualizaPaginaDigitada()">
                                     <a href="javascript:;" ng-click="avancaPagina()"
                                        class="btn btn-sm default next"
-                                       ng-class="{disabled: privilegio.pagina >= privilegio.total_paginas}"
+                                       ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
                                        title="Próxima página">
                                         <i class="fa fa-angle-right"></i>
                                     </a>
-                                     de <span class="pagination-panel-total">{{privilegio.total_paginas}}</span>
+                                     de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
                                 </div>
                             </div>    
                             <!-- FIM PAGINAÇÃO -->

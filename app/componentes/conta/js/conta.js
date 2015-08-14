@@ -25,6 +25,7 @@ angular.module("conta", [])
 				         nu_ramal: '', nu_telefone: ''};
     $scope.newconta = { ds_email : '', ds_login : '' };                          
     // flags
+    $scope.exibeTela = false;                          
     $scope.editandoDadosPessoais = false;                          
     $scope.editandoDadosConta = false; 
     var dataValida = false;
@@ -41,9 +42,16 @@ angular.module("conta", [])
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
         });
-        
+        // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
+        $scope.$on('acessoDeTelaNotificado', function(event){
+            $scope.exibeTela = true;
+            // Obtém os dados do usuário logado
+            buscaUsuarioLogado();
+        });
+        // Acessou a tela
+        $scope.$emit("acessouTela");
         // Obtém os dados do usuário logado
-        buscaUsuarioLogado();
+        //buscaUsuarioLogado();
     } 
     
     //TAB

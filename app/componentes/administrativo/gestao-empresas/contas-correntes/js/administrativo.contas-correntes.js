@@ -527,7 +527,7 @@ angular.module("administrativo-contas-correntes", [])
         if(!camposModalValidos()) return;
         
         // Obtém o JSON
-        var jsonConta = { idContaCorrente : old.idContaCorrente,
+        var jsonConta = { cdContaCorrente : old.cdContaCorrente,
                           nrCnpj : $scope.modalConta.filial.nu_cnpj,//nrCnpj,
                           cdBanco : $scope.modalConta.banco.Codigo, 
                           nrAgencia : $scope.modalConta.nrAgencia,
@@ -564,16 +564,16 @@ angular.module("administrativo-contas-correntes", [])
     $scope.excluirConta = function(conta){
         $scope.showModalConfirmacao('Confirmação', 
                                     'Tem certeza que deseja excluir a conta?',
-                                     excluiConta, conta.idContaCorrente, 'Sim', 'Não');  
+                                     excluiConta, conta.cdContaCorrente, 'Sim', 'Não');  
     };                   
     /**
       * Efetiva a exclusão da conta
       */
-    var excluiConta = function(idContaCorrente){
+    var excluiConta = function(cdContaCorrente){
          // Exclui
          $webapi.delete($apis.getUrl($apis.card.tbcontacorrente, undefined,
                                      [{id: 'token', valor: $scope.token},
-                                      {id: 'idContaCorrente', valor: idContaCorrente}]))
+                                      {id: 'cdContaCorrente', valor: cdContaCorrente}]))
                 .then(function(dados){           
                     $scope.showAlert('Conta excluída com sucesso!', true, 'success', true);
                     // Fecha os progress
@@ -625,7 +625,7 @@ angular.module("administrativo-contas-correntes", [])
     
     // ATIVAR/DESATIVAR
     $scope.desativar = function(conta){
-        var jsonConta = { idContaCorrente : conta.idContaCorrente,
+        var jsonConta = { cdContaCorrente : conta.cdContaCorrente,
                           flAtivo : false
                         };
         $scope.showModalConfirmacao('Confirmação', 
@@ -633,7 +633,7 @@ angular.module("administrativo-contas-correntes", [])
                                      alteraStatusConta, jsonConta, 'Sim', 'Não'); 
     }
     $scope.ativar = function(conta){
-        var jsonConta = { idContaCorrente : conta.idContaCorrente,
+        var jsonConta = { cdContaCorrente : conta.cdContaCorrente,
                           flAtivo : true
                         };
         $scope.showModalConfirmacao('Confirmação', 

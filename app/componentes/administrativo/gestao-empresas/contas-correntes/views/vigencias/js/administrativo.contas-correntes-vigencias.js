@@ -185,7 +185,7 @@ angular.module("administrativo-contas-correntes-vigencias", [])
         
         // Filtro  
         var filtros = {id: /*$campos.card.tbcontacorrentetbloginadquirenteempresa.cdContaCorrente*/ 100,
-                      valor: $scope.conta.idContaCorrente};
+                      valor: $scope.conta.cdContaCorrente};
            
         $webapi.get($apis.getUrl($apis.card.tbcontacorrentetbloginadquirenteempresa, 
                                 [$scope.token, 2, 
@@ -331,7 +331,7 @@ angular.module("administrativo-contas-correntes-vigencias", [])
         var dtInicio = $scope.getDataFromString($scope.getDataString($scope.modalVigencia.dtInicio));
         var dtFim = $scope.modalVigencia.dtFim ? $scope.getDataFromString($scope.getDataString($scope.modalVigencia.dtFim)) :
                                                  null;
-        var jsonVigencia = { cdContaCorrente : $scope.conta.idContaCorrente,
+        var jsonVigencia = { cdContaCorrente : $scope.conta.cdContaCorrente,
                              cdLoginAdquirenteEmpresa : $scope.modalVigencia.adquirenteempresa.cdLoginAdquirenteEmpresa,
                              dtInicio : dtInicio,
                              dtFim : dtFim
@@ -400,7 +400,7 @@ angular.module("administrativo-contas-correntes-vigencias", [])
         var dtInicio = $scope.getDataFromDate(old.dtInicio);
         var dtFim = $scope.modalVigencia.dtFim ? $scope.getDataFromString($scope.getDataString($scope.modalVigencia.dtFim)) :
                                                  null;
-        var jsonVigencia = { cdContaCorrente : $scope.conta.idContaCorrente,
+        var jsonVigencia = { cdContaCorrente : $scope.conta.cdContaCorrente,
                              cdLoginAdquirenteEmpresa : old.cdLoginAdquirenteEmpresa,
                              dtInicio : dtInicio,
                              dtFim : dtFim
@@ -438,7 +438,7 @@ angular.module("administrativo-contas-correntes-vigencias", [])
         $scope.showModalConfirmacao('Confirmação', 
                                     'Tem certeza que deseja excluir a vigência?',
                                      excluiVigencia, 
-                                    { cdContaCorrente : $scope.conta.idContaCorrente,
+                                    { cdContaCorrente : $scope.conta.cdContaCorrente,
                                       cdLoginAdquirenteEmpresa : vigencia.cdLoginAdquirenteEmpresa,
                                       dtInicio : $scope.getDataFromDate(vigencia.dtInicio)}, 
                                     'Sim', 'Não');  

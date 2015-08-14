@@ -391,7 +391,7 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
       */
     $scope.selecionaModulo = function(event,object){
         $scope.moduloSelecionado = object.node;
-        $scope.funcionalidadeSelecionada = $scope.moduloSelecionado.data.methods[0];
+        $scope.funcionalidadeSelecionada = $scope.moduloSelecionado.data && $scope.moduloSelecionado.data !== null ? $scope.moduloSelecionado.data.methods[0] : undefined;
         if(!$scope.$$phase) $scope.$apply();
     };                                             
     /**

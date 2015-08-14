@@ -22,8 +22,9 @@ Não é necessário nenhum outro módulo externo.
 
   * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
   * $scope.token do "appCtrl"
-  * $scope.grupoempresa, do "appCtrl" : grupo empresa informado pelo usuário na barra administrativa
-  * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
+  * Emite evento "acessouTela" no init do controller para que seja feito o log de acesso de tela
+  * Evento "acessoDeTelaNotificado", proveniente do "appCtrl", para de fato exibir a tela e fazer requisições 
+ 	=> importante para o log correto de requisições HTTP, ao qual identifica corretamente a (tela de) origem
   * Faz referência direta ao controller de alteração de senha, de conta (conta.alterar-senha.js)
   * APIS:
 	- administracao/webpagesusers

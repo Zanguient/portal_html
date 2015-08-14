@@ -20,6 +20,7 @@ angular.module("administrativo-acoes-usuarios", [])
    
     var divPortletBodyLogsPos = 0; // posição da div que vai receber o loading progress
     $scope.paginaInformada = 1; // página digitada pelo privilégio
+    $scope.modalLog = { log : null };                                               
     $scope.logs = [];
     $scope.camposBusca = [{
                             /*id: $campos.administracao.tblogacessousuario.webpagesusers + 
@@ -61,51 +62,16 @@ angular.module("administrativo-acoes-usuarios", [])
         $scope.$on('acessoDeTelaNotificado', function(event){
             $scope.exibeTela = true;
             // Busca Logs
-            //$scope.buscaLogs();
+            $scope.buscaLogs();
         });
         // Acessou a tela
         $scope.$emit("acessouTela");
         // Busca Logs
         //$scope.buscaLogs();
-        $scope.logs.push({
-				idLogAcessoUsuario : 1,
-				user : { idUser : 255,
-						 ds_login : 'deividgfmarinho',
-					   },
-				method : { idMethod : 81,
-						   ds_method : 'Cadastro'
-						 },
-				dsUrl : 'administracao/webpagesroles',
-				dsParametros : '',
-				dsFiltros : '?token=QA34324244332SDEWdwedweweewf',
-				dtAcesso : '2015-08-05 09:50:00.000',
-				dsAplicacao : 'Portal',
-				codResposta : 200,
-				msgErro : '',
-				dsJson : "{RoleName:'Teste'}",
-			 });
-        
-        $scope.logs.push({
-				idLogAcessoUsuario : 1,
-				user : { idUser : 255,
-						 ds_login : 'deividgfmarinho',
-					   },
-				method : { idMethod : 81,
-						   ds_method : 'Remoção'
-						 },
-				dsUrl : 'administracao/webpagesroles',
-				dsParametros : '',
-				dsFiltros : '?token=QA34324244332SDEWdwedweweewf&RoleId=300',
-				dtAcesso : '2015-08-05 09:58:00.000',
-				dsAplicacao : 'Portal',
-				codResposta : 500,
-				msgErro : '',
-				dsJson : "",
-			 });
     }; 
                                                 
                                                 
-    // ORDENAÇÃO
+     // ORDENAÇÃO
     /**
       * Modifica a ordenação
       */
@@ -187,8 +153,12 @@ angular.module("administrativo-acoes-usuarios", [])
     };
      
     // BUSCA
-    $scope.filtraLogs = function(filtro){
-        $scope.filtro.busca = filtro;
+    $scope.resetaBusca = function(){
+        $scope.filtro.busca = '';
+        $scope.buscaLogs();
+    };                                             
+    $scope.filtraLogs = function(){
+        //$scope.filtro.busca = filtro;
         $scope.buscaLogs();
     };
     $scope.buscaLogs = function(){
@@ -205,7 +175,14 @@ angular.module("administrativo-acoes-usuarios", [])
                                       id: 203,
                                       valor: $scope.usuariologado.grupoempresa.id_grupo};
             if(filtros) filtros = [filtros, filtroGrupoEmpresa];
-            else filtros = filtroGrupoEmpresa;
+            else filtros = [filtroGrupoEmpresa];
+           
+           if($scope.usuariologado.empresa){
+                filtros.push({/*id: $campos.administracao.tblogacessousuario.webpagesusers + 
+                                          $campos.administracao.webpagesusers.nu_cnpj - 100, */
+                                      id: 204,
+                                      valor: $scope.usuariologado.empresa.nu_cnpj});    
+           }
        }
         
        $webapi.get($apis.getUrl($apis.administracao.tblogacessousuario, 
@@ -231,29 +208,33 @@ angular.module("administrativo-acoes-usuarios", [])
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
-                 //else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else $scope.showAlert('Houve uma falha ao requisitar logs (' + failData.status + ')', true, 'danger', true);
                  $scope.hideProgress(divPortletBodyLogsPos);
               }); 
     };
         
                                                                                        
+    
                                                 
-    // AÇÕES
+    // AÇÕES                                            
+    /**
+      * Exibe as todos os detalhes do log de acesso
+      */
+    $scope.detalhaLog = function(log){
+        // Reseta permissões
+        $scope.modalLog.log = log;
+        // Exibe o modal
+        $('#modalLog').modal('show');
+        
+    };                                              
+    /**
+      * Retorna true se o log obteve resposta de sucesso
+      */
     $scope.logSucesso = function(log){
         //console.log(log);
         if(!log) return false;
         return log.codResposta === 200;
     }
-    /**
-      * Exibe as funcionalidades associadas ao privilégio
-      */
-    $scope.detalhaLog = function(log){
-        // Reseta permissões
-        $scope.log = log;
-        // Exibe o modal
-        $('#modalLog').modal('show');
-        
-    }; 
 
 }])

@@ -20,6 +20,9 @@ Não é necessário nenhum outro módulo externo.
 
   * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
   * $scope.token do "appCtrl"
+  * Emite evento "acessouTela" no init do controller para que seja feito o log de acesso de tela
+  * Evento "acessoDeTelaNotificado", proveniente do "appCtrl", para de fato exibir a tela e fazer requisições 
+ 	=> importante para o log correto de requisições HTTP, ao qual identifica corretamente a (tela de) origem
   * APIS:
     - administracao/webpagesmembership
 	

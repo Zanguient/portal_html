@@ -349,6 +349,7 @@ angular.module("AtosCapital", ['ui.router',
     var controllerCardServicesConciliacaoBancaria = undefined;
     var controllerCardServicesConciliacaoVendas = undefined;
     var controllerCardServicesConsolidacaoRelatorios = undefined;
+    var controllerMinhaConta = {idController : 91, ds_controller : 'Minha Conta', methods : []};
     // Permissões
     //$scope.usuarioTemAcesso = false;                      
     $scope.PERMISSAO_FILTRO_EMPRESA = false;                        
@@ -403,20 +404,31 @@ angular.module("AtosCapital", ['ui.router',
     };
                             
                             
-    // LINKS                  
+    // LINKS   
+    var ultimoController = 0;                        
     // Indica que uma tela foi acessada => envia para a API
     $scope.$on("acessouTela", function(event){
         if(controllerAtual && typeof controllerAtual.id_controller === 'number'){
+            if(controllerAtual.id_controller === ultimoController){ 
+                $scope.$broadcast('acessoDeTelaNotificado');
+                return;
+            }
+            ultimoController = controllerAtual.id_controller;
+            $scope.$broadcast('acessoDeTelaNotificado');
+            /*
+            $scope.showProgress();
             $webapi.post($apis.getUrl($apis.administracao.logacesso, undefined, 
                                   {id: 'token', valor: $scope.token}), {idController : controllerAtual.id_controller})
                 .then(function(dados){
+                     $scope.hideProgress();
                      $scope.$broadcast('acessoDeTelaNotificado');
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                      else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao se comunicar com o servidor (' + failData.status + ')', true, 'danger', true);
+                     $scope.hideProgress();
                      //console.log('Houve uma falha ao notificar o acesso da tela (' + failData.status + ')');
-                  });     
+                  });   */
         }
     });  
     /**
@@ -585,14 +597,14 @@ angular.module("AtosCapital", ['ui.router',
       * Exibe a tela de perfil de conta
       */
     $scope.goMinhaConta = function(params){
-        controllerAtual = undefined;
+        controllerAtual = controllerMinhaConta;
         go('minha-conta', params);    
     };
     /**
       * Exibe a tela para alterar a senha do usuário
       */
     $scope.goMinhaContaAlterarSenha = function(params){
-        controllerAtual = undefined;
+        controllerAtual = controllerMinhaConta;
         go('minha-conta-alterar-senha', params);    
     }; 
     /**
@@ -1598,6 +1610,14 @@ angular.module("AtosCapital", ['ui.router',
         if(filial.filial && filial.filial !== null) nome += ' ' + filial.filial;
         return nome.toUpperCase();
     }
+    /** 
+      * Substitui na string os '\n' e coloca a quebra de linha do html
+      * /
+    $scope.adicionaQuebraLinhaHtml = function(text){
+        console.log(text);
+        if(typeof text === 'string') return text.split("\n").join(String.fromCharCode(160));
+        return text;
+    }*/
 }])
 
 

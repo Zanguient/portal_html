@@ -33,20 +33,22 @@ Não é necessário nenhum outro módulo externo.
   * GET : obtém a lista de usuários baseado no log de post, put e delete (coleção 2)
 			 {
 				idLogAcessoUsuario : int,
-				user : { idUser : int,
-						 ds_login : string,
-					   },
-				method : { idMethod : int,
-						   ds_method : string
-						 },
+				webpagesusers : { id_users : int,
+								  ds_login : string,
+								},
+				controller : { id_controller : int,
+							   ds_controller : string
+							 },
 				dsUrl : string,
 				dsParametros : string,
 				dsFiltros : string,
 				dtAcesso : datetime,
 				dsAplicacao : string,
+				dsMethod : string,
 				codResposta : int,
-				msgErro : string,
+				msgErro : string ou null,
 				dsJson : string,
+				dsUserAgent : string,
 			 }
  
    
