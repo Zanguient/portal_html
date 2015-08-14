@@ -30,8 +30,7 @@
                <!-- MODAL INPUT -->
                <div class="modal fade bs-modal-sm modal-input" 
                     id="modalLog" 
-                    aria-hidden="true"
-                    >
+                    aria-hidden="true">
                    <div class="modal-dialog modal-sm" style="width:400px">
                        <div class="modal-content">
                            <div class="modal-header">
@@ -129,7 +128,7 @@
                     </div>
                 </div>
                 <!-- CORPO : Botão 'Novo Privilégio' e Tabela -->
-                <div class="portlet-body">
+                <div class="portlet-body" ng-show="exibeTela">
                     <!-- TABELA -->
                     <div class="dataTables_wrapper no-footer">
                         <!-- EXIBIÇÃO E PESQUISA -->
@@ -304,9 +303,9 @@
                                         </td>
                                         <td class="">
                                             <div class="">
-                                                <button class="btn"
+                                                <button class="btn btn-icon-only"
                                                         ng-click="detalhaLog(log)"
-                                                        ng-class="{'btn btn-icon-only green' : logSucesso(log), 'btn btn-icon-only red': !logSucesso(log)}">
+                                                        ng-class="{'green' : logSucesso(log), 'red': !logSucesso(log)}">
                                                     <i class="fa" 
                                                        ng-class="{'fa-check-circle' : logSucesso(log), 'fa-times-circle': !logSucesso(log)}"></i>
                                                 </button>                                            

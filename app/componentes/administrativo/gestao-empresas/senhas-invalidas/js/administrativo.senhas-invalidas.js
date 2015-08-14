@@ -39,7 +39,8 @@ angular.module("administrativo-senhas-invalidas", [])
     $scope.alterando = true;                                             
     $scope.alteracao = {id : 0, login : '', estabelecimento : '', senha : ''};                                             
     // flag
-    $scope.exibePrimeiraLinha = false;                                             
+    $scope.exibePrimeiraLinha = false;
+    $scope.exibeTela = false;                                             
     // Permissões                                           
     var permissaoAlteracao = false;
     var permissaoCadastro = false;
@@ -60,17 +61,23 @@ angular.module("administrativo-senhas-invalidas", [])
         // Quando houver alteração do grupo empresa na barra administrativa                                           
         $scope.$on('alterouGrupoEmpresa', function(event){ 
             // Refaz a busca
-            $scope.buscaSenhasInvalidas();
+            if($scope.exibeTela) $scope.buscaSenhasInvalidas();
         });
         // Obtém as permissões
         if($scope.methodsDoControllerCorrente){// && $scope.methodsDoControllerCorrente.length > 0){
             permissaoAlteracao = $scope.methodsDoControllerCorrente['atualização'] ? true : false;//$filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'ATUALIZAÇÃO' }).length > 0;   
             //permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;
         }
+        // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
+        $scope.$on('acessoDeTelaNotificado', function(event){
+            $scope.exibeTela = true;
+            // Carrega dados de acesso com senha inválida
+            $scope.buscaSenhasInvalidas();
+        });
         // Acessou a tela
         $scope.$emit("acessouTela");
         // Carrega dados de acesso com senha inválida
-        $scope.buscaSenhasInvalidas();
+        //$scope.buscaSenhasInvalidas();
     };
                                                  
                                                  

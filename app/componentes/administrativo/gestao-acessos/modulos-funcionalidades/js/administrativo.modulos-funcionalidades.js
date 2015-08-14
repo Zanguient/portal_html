@@ -25,7 +25,8 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
     $scope.novoModuloMenu = ''; // cadastro
     $scope.busca = '';
     // flags
-    $scope.cadastrarFuncionalidadesPadrao = true;                                            
+    $scope.cadastrarFuncionalidadesPadrao = true; 
+    $scope.exibeTela = false;                                            
     // Permissões                                           
     var permissaoAlteracao = false;
     var permissaoCadastro = false;
@@ -130,12 +131,18 @@ angular.module("administrativo-modulos-funcionalidades", ['jsTree.directive'])
             permissaoCadastro = $scope.methodsDoControllerCorrente['cadastro'] ? true : false;//$filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'CADASTRO' }).length > 0;
             permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;//$filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'REMOÇÃO' }).length > 0;
         }
+        // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
+        $scope.$on('acessoDeTelaNotificado', function(event){
+            $scope.exibeTela = true;
+            // Busca módulos
+            $scope.buscaModulos();
+        }); 
         // Acessou a tela
         $scope.$emit("acessouTela");
         // Obtem Context Menu a partir das permissões
         obtemContextMenu();
         // Busca módulos
-        $scope.buscaModulos();
+        //$scope.buscaModulos();
     };
                                                 
                                                 

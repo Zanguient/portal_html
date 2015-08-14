@@ -30,7 +30,7 @@
                         <span class="caption-subject font-green-sharp bold uppercase">Conta Corrente</span>						
                     </div>                    
                 </div>
-                <div class="portlet-body">
+                <div class="portlet-body" ng-show="exibeTela">
                     <div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">
                         <div class="row">                       
                             <div class="col-md-8 col-sm-12">
@@ -160,7 +160,7 @@
                         </div>
                     </div>
                 </div>                
-                <div class="portlet-body" style="min-height:300px"> 
+                <div class="portlet-body" ng-show="exibeTela" style="min-height:300px"> 
                     
                     <!-- ANO -->
                     <div class="row">

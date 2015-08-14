@@ -29,6 +29,8 @@ Além deles, é necessária a importação dos seguintes módulos externos.
   * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
   * $scope.token do "appCtrl"
   * Emite evento "acessouTela" no init do controller para que seja feito o log de acesso de tela
+  * Evento "acessoDeTelaNotificado", proveniente do "appCtrl", para de fato exibir a tela e fazer requisições 
+	=> importante para o log correto de requisições HTTP, ao qual identifica corretamente a (tela de) origem
   * $scope.grupoempresa, do "appCtrl" : grupo empresa informado pelo usuário na barra administrativa
   * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
   * APIS:
@@ -97,12 +99,15 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 		
 		-> Cod. Autorizador (coleção 12) = [cdAutorizador1,cdAutorizador2,...]
 		
-		-> TERMINAL LÓGICO (coleção 3) : ordenado por dsTerminalLogico
+		-> TERMINAL LÓGICO (coleção 3) : ordenado por ds_fantasia + dsTerminalLogico
 			 Registros = [
 							{
 								terminal : { idTerminalLogico : int,
 											 dsTerminalLogico : string
 										   },
+								empresa : { nu_cnpj : string,
+											ds_fantasia : string
+										  },
 								bandeira : { id : int
 											 desBandeira : string
 										   },
@@ -116,9 +121,13 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 						valorBruto : double
 					  }
 			 
-		-> SINTÉTICO (coleção 4) : ordenado por desBandeira
+		-> SINTÉTICO (coleção 4) : ordenado por ds_fantasia + desBandeira
 			 Regitros = [
 							{
+								empresa : { nu_cnpj : string,
+											ds_fantasia : string,
+											filial : string,
+										  },
 								bandeira : { id : int
 											 desBandeira : string
 										   },
@@ -137,6 +146,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 							{
 								cnpj : string,
 								dtaVenda : date,
+								dsFantasia : string, // ds_fantasia + filial
 								dsTerminalLogico : string,
 								desBandeira : string
 								nsu	: string,

@@ -50,7 +50,8 @@ angular.module("administrativo-contas-correntes", [])
     // Flags
     var cnpjValido = false;
     $scope.validandoCNPJ = false;
-    $scope.buscandoBancos = false;                                             
+    $scope.buscandoBancos = false; 
+    $scope.exibeTela = false;                                             
                                                  
                                                  
                                                  
@@ -66,15 +67,17 @@ angular.module("administrativo-contas-correntes", [])
         });
         // Quando houver alteração do grupo empresa na barra administrativa                                           
         $scope.$on('alterouGrupoEmpresa', function(event){ 
-            // Avalia grupo empresa
-            if($scope.usuariologado.grupoempresa){
-                buscaContas();
-                buscaFiliais();
-                buscaLoginAdquirenteEmpresa();
-            }else{ // reseta tudo e não faz buscas 
-                $scope.contas = []; 
-                $scope.filiais = [];
-                $scope.modalAdquirenteEmpresa.adquirentesempresa = [];
+            if($scope.exibeTela){
+                // Avalia grupo empresa
+                if($scope.usuariologado.grupoempresa){
+                    buscaContas();
+                    buscaFiliais();
+                    buscaLoginAdquirenteEmpresa();
+                }else{ // reseta tudo e não faz buscas 
+                    $scope.contas = []; 
+                    $scope.filiais = [];
+                    $scope.modalAdquirenteEmpresa.adquirentesempresa = [];
+                }
             }
         });
         // Obtém as permissões
@@ -83,14 +86,24 @@ angular.module("administrativo-contas-correntes", [])
             permissaoCadastro = $scope.methodsDoControllerCorrente['cadastro'] ? true : false;
             permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;
         }
+        // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
+        $scope.$on('acessoDeTelaNotificado', function(event){
+            $scope.exibeTela = true;
+            // Carrega dados associados
+            if($scope.usuariologado.grupoempresa){
+                buscaContas();
+                buscaFiliais();
+                buscaLoginAdquirenteEmpresa();
+            }
+        });
         // Acessou a tela
         $scope.$emit("acessouTela");
         // Carrega dados associados
-        if($scope.usuariologado.grupoempresa){
+        /*if($scope.usuariologado.grupoempresa){
             buscaContas();
             buscaFiliais();
             buscaLoginAdquirenteEmpresa();
-        }
+        }*/
     };
                                                  
                                                  

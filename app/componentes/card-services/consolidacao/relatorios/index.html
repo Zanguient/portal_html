@@ -30,7 +30,7 @@
                         <span class="caption-subject font-green-sharp bold uppercase">Filtros</span>					
                     </div>                    
                 </div>
-                <div class="portlet-body">
+                <div class="portlet-body" ng-show="exibeTela">
                     <!-- PORTLET BODY FILTRO INSIDE -->
                     <div class="dataTables_wrapper dataTables_extended_wrapper no-footer">
                         <div class="row">                       
@@ -145,7 +145,7 @@
                                                     ng-model="filtro.filial"
                                                     ng-change="alterouFilial()"
                                                     ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
-                                                <!--option value="">Todas</option-->
+                                                <option value="">TODAS</option>
                                             </select>
                                             <i class="fa fa-question-circle"
                                                ng-show="!usuariologado.grupoempresa"
@@ -156,17 +156,17 @@
                                         <!-- ADQUIRENTES -->
                                         <td rowspan="1" colspan="1" style="text-align: center">
                                             <select class="form-control form-filter input-sm comboBoxFiltros"
-                                                    ng-disabled="filtro.filial === null"
+                                                    ng-disabled="!filtro.filial || filtro.filial === null"
                                                     ng-model="filtro.adquirente"
                                                     ng-change="alterouAdquirente()"
                                                     ng-options="adquirente as (adquirente.nmOperadora | uppercase) for adquirente in adquirentes">
                                                 <option value="">TODAS</option>
                                             </select>
-                                            <i class="fa fa-question-circle"
-                                               ng-show="!usuariologado.grupoempresa"
-                                               popover-placement="bottom"
-                                               popover="É necessário selecionar uma empresa"
-                                               popover-trigger="mouseenter"></i>
+                                             <i class="fa fa-question-circle"
+                                                ng-show="!usuariologado.grupoempresa || !filtro.filial || filtro.filial === null"
+                                                popover-placement="bottom"
+                                                popover="É necessário selecionar uma filial"
+                                                popover-trigger="mouseenter"></i>
                                         </td>
                                         <!-- BANDEIRAS -->
                                         <td rowspan="1" colspan="1" style="text-align: center">
@@ -275,7 +275,7 @@
                         </div>
                     </div>
                 </div>                
-                <div class="portlet-body">                    
+                <div class="portlet-body" ng-show="exibeTela">                    
                     <!-- TABELA -->
                     <div class="dataTables_wrapper no-footer">
                         <!-- EXIBIÇÃO E PESQUISA -->
@@ -392,7 +392,7 @@
                                         </ul>
                                     </div>
                                     <!--CONTEUDO DA NAVEGAÇÃO-->
-                                    <div class="portlet-body">
+                                    <div class="portlet-body" ng-show="exibeTela">
                                         <div class="tab-content">
                                             <!--CONTEÚDO DO TERMINAL LÓGICO-->
                                             <div class="tab-pane conteudoNavegacao"
@@ -405,35 +405,44 @@
                                                             <tr role="row">
                                                                 <th tabindex="0"  
                                                                     rowspan="1" colspan="1" 
+                                                                    style="width: 300px;">
+                                                                    Filial
+                                                                </th>
+                                                                <th tabindex="1"  
+                                                                    rowspan="1" colspan="1" 
                                                                     style="width: 188px;">
                                                                     Terminal
                                                                 </th>
-                                                                <th tabindex="1" 
+                                                                <th tabindex="2" 
                                                                     rowspan="1" 
                                                                     colspan="1" 
                                                                     style="width: 237px;">
                                                                     Bandeira
                                                                 </th>
-                                                                <th tabindex="2" 
+                                                                <th tabindex="3" 
                                                                     rowspan="1" colspan="1"
                                                                     style="width: 237px;">
                                                                     Total de Transações
                                                                 </th>
-                                                                <th tabindex="3" 
+                                                                <th tabindex="4" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 128px;">
                                                                     Valor Bruto
                                                                 </th>
-                                                                <th tabindex="4" 
+                                                                <th tabindex="5" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 163px;">
-                                                                    Detalhar Terminal-Bandeira
+                                                                    Detalhar
                                                                 </th>                                        
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <tr role="row" class="odd"
                                                                 ng-repeat="relterminal in relatorio.terminal">
+                                                                <!-- FILIAL -->
+                                                                <td style="text-align:left"
+                                                                    ng-bind="getNomeAmigavelFilial(relterminal.empresa)">
+                                                                </td>
                                                                 <!-- TERMINAL -->
                                                                 <td>
                                                                      {{relterminal.terminal.dsTerminalLogico}}
@@ -455,7 +464,7 @@
                                                                     <div class="btn-group">
                                                                         <a class="btn btn-default btn-circle" 
                                                                            href="javascript:;" 
-                                                                           ng-click="detalhar(relterminal.idOperadora, relterminal.bandeira, relterminal.terminal)">
+                                                                           ng-click="detalhar(relterminal.empresa.nu_cnpj, relterminal.idOperadora, relterminal.bandeira, relterminal.terminal)">
                                                                         
                                                                             Detalhar <i class="fa fa-angle-right"></i>
                                                                         </a>
@@ -465,7 +474,7 @@
                                                             
                                                             <tr role="row" class="odd linhaTotalRelatorios"
                                                                 style="font-weight : bolder">
-                                                                <td colspan="2" style="text-align:right;">
+                                                                <td colspan="3" style="text-align:right;">
                                                                     Total Exibido
                                                                 </td>
                                                                 <td>
@@ -479,7 +488,7 @@
                                                             </tr>
                                                             <tr role="row" class="odd linhaTotalRelatorios"
                                                                 style="font-weight : bolder">
-                                                                <td colspan="2" style="text-align:right;">
+                                                                <td colspan="3" style="text-align:right;">
                                                                     Total Filtrado
                                                                 </td>
                                                                 <td>
@@ -511,29 +520,38 @@
                                                             <tr role="row">
                                                                 <th tabindex="0" 
                                                                     rowspan="1" colspan="1" 
+                                                                    style="width: 300px;">
+                                                                    Filial
+                                                                </th>
+                                                                <th tabindex="1" 
+                                                                    rowspan="1" colspan="1" 
                                                                     style="width: 188px;">
                                                                     Bandeira
                                                                 </th>
-                                                                <th tabindex="1" 
+                                                                <th tabindex="2" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 237px">
                                                                     Total de Transações
                                                                 </th>
-                                                                <th tabindex="2" 
+                                                                <th tabindex="3" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 128px;">
                                                                     Valor Bruto
                                                                 </th>
-                                                                <th tabindex="3" 
+                                                                <th tabindex="4" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 163px;">
-                                                                    Detalhar Bandeira
+                                                                    Detalhar
                                                                 </th>                                        
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <tr role="row" class="odd"
                                                                 ng-repeat="relsintetico in relatorio.sintetico">
+                                                                <!-- FILIAL -->
+                                                                <td style="text-align:left"
+                                                                    ng-bind="getNomeAmigavelFilial(relsintetico.empresa)">
+                                                                </td>
                                                                 <!-- BANDEIRA -->
                                                                 <td style="text-align:left;">
                                                                      {{relsintetico.bandeira.desBandeira}}
@@ -551,7 +569,7 @@
                                                                     <div class="btn-group">
                                                                         <a class="btn btn-default btn-circle" 
                                                                            href="javascript:;" 
-                                                                           ng-click="detalhar(relsintetico.idOperadora, relsintetico.bandeira)">
+                                                                           ng-click="detalhar(relsintetico.empresa.nu_cnpj, relsintetico.idOperadora, relsintetico.bandeira)">
                                                                         
                                                                             Detalhar <i class="fa fa-angle-right"></i>
                                                                         </a>
@@ -560,7 +578,7 @@
                                                             </tr>
                                                             <tr role="row" class="odd linhaTotalRelatorios" 
                                                                 style="font-weight:bolder">
-                                                                <td style="text-align:right;">
+                                                                <td style="text-align:right;" colspan="2">
                                                                      Total Exibido
                                                                 </td>
                                                                 <td>
@@ -575,7 +593,7 @@
                                                             </tr>
                                                             <tr role="row" class="odd linhaTotalRelatorios" 
                                                                 style="font-weight:bolder">
-                                                                <td style="text-align:right;">
+                                                                <td style="text-align:right;" colspan="2">
                                                                      Total Filtrado
                                                                 </td>
                                                                 <td>
@@ -602,37 +620,37 @@
                                                           role="grid">
                                                         <thead>
                                                             <tr role="row">
-                                                                <!--th tabindex="0" 
-                                                                    rowspan="1" colspan="1" 
-                                                                    style="width: 188px;">
-                                                                    CNPJ
-                                                                </th-->
                                                                 <th tabindex="0" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 300px;">
+                                                                    Filial
+                                                                </th>
+                                                                <th tabindex="1" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 128px;">
                                                                     Venda
                                                                 </th>
-                                                                <th tabindex="1" 
+                                                                <th tabindex="2" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 237px;">
                                                                     Bandeira
                                                                 </th>
-                                                                <th tabindex="2" 
+                                                                <th tabindex="3" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 128px;">
                                                                     Terminal Lógico
                                                                 </th>
-                                                                <th tabindex="3" 
+                                                                <th tabindex="4" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 88px;">
                                                                     NSU
                                                                 </th>
-                                                                <th tabindex="4" 
+                                                                <th tabindex="5" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 128px;">
                                                                     Cod. Autorizador
                                                                 </th>
-                                                                <th tabindex="5" 
+                                                                <th tabindex="6" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 163px;">
                                                                     Valor Bruto
@@ -642,9 +660,9 @@
                                                         <tbody>
                                                             <tr role="row" class="odd"
                                                                 ng-repeat="relanalitico in relatorio.analitico">
-                                                                <!-- CNPJ -- >
+                                                                <!-- FILIAL -->
                                                                 <td>
-                                                                     {{relanalitico.cnpj}}
+                                                                     {{relanalitico.dsFantasia | uppercase}}
                                                                 </td>
                                                                 <!-- DATA DA VENDA -->
                                                                 <td ng-bind="getDataTimeString(relanalitico.dtaVenda)">
@@ -671,7 +689,7 @@
                                                                 </td>
                                                             </tr>
                                                             <tr role="row" class="odd linhaTotalRelatorios">
-                                                                <td colspan="5" style="text-align:right;">
+                                                                <td colspan="6" style="text-align:right;">
                                                                      Total Exibido
                                                                 </td>                                                     
                                                                 <td>
@@ -679,7 +697,7 @@
                                                                 </td> 
                                                             </tr>
                                                             <tr role="row" class="odd linhaTotalRelatorios">
-                                                                <td colspan="5" style="text-align:right;">
+                                                                <td colspan="6" style="text-align:right;">
                                                                      Total Filtrado
                                                                 </td>                                                     
                                                                 <td>

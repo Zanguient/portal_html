@@ -46,6 +46,7 @@ angular.module("administrativo-privilegios", [])
     $scope.levels = [];                                            
     // flags
     $scope.cadastraNovoPrivilegio = false; // faz exibir a linha para adicionar um novo privilégio
+    $scope.exibeTela = false;                                            
     // Permissões                                           
     var permissaoAlteracao = false;
     var permissaoCadastro = false;
@@ -67,10 +68,16 @@ angular.module("administrativo-privilegios", [])
             permissaoCadastro = $scope.methodsDoControllerCorrente['cadastro'] ? true : false;//$filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'CADASTRO' }).length > 0;
             permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;//$filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'REMOÇÃO' }).length > 0;
         }
+        // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
+        $scope.$on('acessoDeTelaNotificado', function(event){
+            $scope.exibeTela = true;
+            // Busca Privilégios
+            $scope.buscaPrivilegios();
+        }); 
         // Acessou a tela
         $scope.$emit("acessouTela");
         // Busca Privilégios
-        $scope.buscaPrivilegios();
+        //$scope.buscaPrivilegios();
     }; 
                                                 
                                                 

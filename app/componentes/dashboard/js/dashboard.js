@@ -15,7 +15,9 @@ angular.module("dashboard", [])
                               '$apis',
                             function($scope,$state,$timeout,$webapi,$apis){ 
     
-    $scope.extrato = undefined;                            
+    $scope.extrato = undefined;   
+    // Flags
+    $scope.exibeTela = false;                           
                                 
     // Inicialização do controller
     $scope.dashboardInit = function(){
@@ -25,6 +27,12 @@ angular.module("dashboard", [])
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
+        });
+        // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
+        $scope.$on('acessoDeTelaNotificado', function(event){
+            $scope.exibeTela = true;
+            // Carrega dados
+            // ....
         });
         // Acessou a tela
         $scope.$emit("acessouTela");

@@ -25,6 +25,8 @@ angular.module("administrativo-filiais", [])
                      total_registros : 0, faixa_registros : '0-0', total_paginas : 0
                      };   
     $scope.filialSelecionada = undefined;
+    // Flags
+    $scope.exibeTela = false;                                           
     // Permissões                                           
     var permissaoAlteracao = false;
     var permissaoCadastro = false;
@@ -42,7 +44,7 @@ angular.module("administrativo-filiais", [])
         // Quando houver alteração do grupo empresa na barra administrativa                                           
         $scope.$on('alterouGrupoEmpresa', function(event){ 
             // Refaz a busca
-            $scope.buscaFiliais(true);
+            if($scope.exibeTela) $scope.buscaFiliais(true);
         }); 
         // Obtém as permissões
         if($scope.methodsDoControllerCorrente){// && $scope.methodsDoControllerCorrente.length > 0){
@@ -50,10 +52,16 @@ angular.module("administrativo-filiais", [])
             permissaoCadastro = $scope.methodsDoControllerCorrente['cadastro'] ? true : false;//$filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'CADASTRO' }).length > 0;
             permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;//$filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'REMOÇÃO' }).length > 0;
         }
+        // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
+        $scope.$on('acessoDeTelaNotificado', function(event){
+            $scope.exibeTela = true;
+            // Busca filiais
+            $scope.buscaFiliais();
+        });
         // Acessou a tela
         $scope.$emit("acessouTela");
         // Busca filiais
-        $scope.buscaFiliais();
+        //$scope.buscaFiliais();
     };
                                                
                                                

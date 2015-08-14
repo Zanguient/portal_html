@@ -40,7 +40,8 @@ angular.module("administrativo-dados-acesso", [])
     $scope.alterando = true;                                             
     $scope.alteracao = {id : 0, login : '', estabelecimento : '', senha : ''};                                             
     // flag
-    $scope.exibePrimeiraLinha = false;                                             
+    $scope.exibePrimeiraLinha = false; 
+    $scope.exibeTela = false;                                             
     // Permissões                                           
     var permissaoAlteracao = false;
     var permissaoCadastro = false;
@@ -60,15 +61,17 @@ angular.module("administrativo-dados-acesso", [])
         });
         // Quando houver alteração do grupo empresa na barra administrativa                                           
         $scope.$on('alterouGrupoEmpresa', function(event){ 
-            // Avalia grupo empresa
-            if($scope.usuariologado.grupoempresa){ 
-                // Reseta seleção de filtro específico de empresa
-                $scope.filtro.filial = $scope.filtro.adquirente = $scope.filtro.status = null;
-                buscaFiliais();
-            }else{ // reseta tudo e não faz buscas 
-                $scope.filiais = []; 
-                $scope.adquirentes = [];
-                $scope.bandeiras = [];
+            if($scope.exibeTela){
+                // Avalia grupo empresa
+                if($scope.usuariologado.grupoempresa){ 
+                    // Reseta seleção de filtro específico de empresa
+                    $scope.filtro.filial = $scope.filtro.adquirente = $scope.filtro.status = null;
+                    buscaFiliais();
+                }else{ // reseta tudo e não faz buscas 
+                    $scope.filiais = []; 
+                    $scope.adquirentes = [];
+                    $scope.bandeiras = [];
+                }
             }
         });
         // Obtém as permissões
@@ -77,10 +80,16 @@ angular.module("administrativo-dados-acesso", [])
             permissaoCadastro = $scope.methodsDoControllerCorrente['cadastro'] ? true : false;
             //permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;
         }
+        // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
+        $scope.$on('acessoDeTelaNotificado', function(event){
+            $scope.exibeTela = true;
+            // Carrega filiais
+            if($scope.usuariologado.grupoempresa) buscaFiliais();
+        });
         // Acessou a tela
         $scope.$emit("acessouTela");
         // Carrega filiais
-        if($scope.usuariologado.grupoempresa) buscaFiliais();
+        //if($scope.usuariologado.grupoempresa) buscaFiliais();
     };
                                                  
                                                  
