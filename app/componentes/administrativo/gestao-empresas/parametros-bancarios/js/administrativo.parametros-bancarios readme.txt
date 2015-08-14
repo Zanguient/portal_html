@@ -49,7 +49,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 			]
  
   * card/tbadquirente
-    - GET : listagem as adquirentes que podem ser cadastradas (coleção 0)
+    - GET : listagem as adquirentes que podem ser cadastradas (coleção 1)
 			[
 			  { cdAdquirente = int,
                 nmAdquirente = string,

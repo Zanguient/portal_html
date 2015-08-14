@@ -111,6 +111,14 @@ angular.module('webapi', ['utils'])
             stAdquirente : 103,
             hrExecucao : 104
         },
+        tbbancoparametro : {
+            cdBanco : 100,
+            dsMemo : 101,
+            cdAdquirente : 102,
+            dsTipo : 103,
+            // Relacionamentos
+            tbadquirentes : 200
+        },
         tbcontacorrente: {
             cdContaCorrente : 100,
             cdGrupo : 101,
@@ -332,6 +340,7 @@ angular.module('webapi', ['utils'])
     },
     card : {
         tbadquirente : $autenticacao.getUrlBase() + '/card/tbadquirente/',
+        tbbancoparametro : $autenticacao.getUrlBase() + '/card/tbbancoparametro/',
         tbcontacorrente: $autenticacao.getUrlBase() + '/card/tbcontacorrente/',  
         tbcontacorrentetbloginadquirenteempresa : $autenticacao.getUrlBase() + '/card/tbcontacorrentetbloginadquirenteempresa/', 
         tbextrato : $autenticacao.getUrlBase() + '/card/tbextrato/', 

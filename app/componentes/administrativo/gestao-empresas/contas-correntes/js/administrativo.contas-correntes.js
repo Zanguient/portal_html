@@ -196,6 +196,12 @@ angular.module("administrativo-contas-correntes", [])
         //console.log($scope.modalConta.banco);    
     }
     /**
+      * Se nenhum banco foi selecionado, apaga o conteúdo do input text
+      */
+    $scope.validaBanco = function(){
+        if(!$scope.modalConta.banco.Codigo) $('#buscabanco').val("");    
+    }
+    /**
       * Busca o banco digitado
       */
     $scope.buscaBancos = function(texto){
@@ -405,7 +411,7 @@ angular.module("administrativo-contas-correntes", [])
       */                                             
     var camposModalValidos = function(){
         // Valida
-        if(!$scope.modalConta.banco){
+        if(!$scope.modalConta.banco || !$scope.modalParametro.banco.Codigo){
             $scope.showModalAlerta('Informe o banco!');
             return false;
         }

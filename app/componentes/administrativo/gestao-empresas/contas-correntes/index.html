@@ -43,10 +43,11 @@
                                         </div>
                                         <div class="col-sm-10">
                                             <input type="text" class="form-control modalContasCorrentes"
+                                                   id="buscabanco"
                                                    ng-class="{'spinner' : buscandoBancos}"
                                                    placeholder="Banco" 
                                                    ng-model="modalConta.banco"
-                                                   ng-blur="atualizaProgressoDoCadastro()"
+                                                   ng-blur="validaBanco()"
                                                    onfocus="this.select();" 
                                                    onmouseup="return false;"
                                                    typeahead-on-select="selecionouBanco()"
@@ -223,174 +224,167 @@
                             </div>                            
                             <!-- FIM PAGINAÇÃO -->
                         </div>
-                        <div class="row">                            
-                            <!--NAVEGAÇÃO-->  
-                            <div class="col-md-12">
-                                <div class="portlet light">                                    
-                                    <!--TABELA-->
-                                    <div class="table-scrollable">
-                                        <table class="table table-striped table-hover table-bordered dataTable no-footer" 
-                                               role="grid">
-                                            <thead>
-                                                <tr role="row">
-                                                    <th tabindex="0" 
-                                                        rowspan="1" colspan="1" 
-                                                        style="width: 200px; text-align:center">
-                                                        Banco
-                                                    </th>
-                                                    <th tabindex="1" 
-                                                        rowspan="1" colspan="1" 
-                                                        style="width: 40px;">
-                                                        Agência
-                                                    </th>
-                                                    <th tabindex="2" 
-                                                        rowspan="1" colspan="1" 
-                                                        style="width: 40px;">
-                                                        Conta
-                                                    </th>
-                                                    <th tabindex="3" 
-                                                        rowspan="1" colspan="1" 
-                                                        style="width: 100px;">
-                                                        CNPJ
-                                                    </th>
-                                                    <th tabindex="4" 
-                                                        rowspan="1" colspan="1" 
-                                                        style="width: 200px;">
-                                                        Filial
-                                                    </th>
-                                                    <th tabindex="4" 
-                                                        rowspan="1" colspan="1" 
-                                                        style="width: 50px;">
-                                                        Status
-                                                    </th>
-                                                    <th tabindex="5" 
-                                                        rowspan="1" colspan="1" 
-                                                        style="width: 100px;">
-                                                        Ações
-                                                    </th>                                        
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr role="row" class="odd"
-                                                    ng-repeat="conta in contas">
-                                                    <!-- BANCO -->
-                                                    <td>
-                                                         {{(conta.banco.Codigo | uppercase) || ''}}&nbsp;
-                                                         {{(conta.banco.NomeExtenso  | uppercase) || ''}}
-                                                    </td>
-                                                    <!-- AGÊNCIA -->
-                                                    <td style="text-align:center">
-                                                         {{conta.nrAgencia}}
-                                                    </td>
-                                                    <!-- CONTA -->
-                                                    <td style="text-align:center">
-                                                        {{conta.nrConta}}
-                                                    </td>
-                                                    <!-- CNPJ -->
-                                                    <td style="text-align:center">
-                                                         {{conta.empresa.nu_cnpj}}
-                                                    </td>
-                                                    <!-- FILIAL -->
-                                                    <td style="text-align:center"
-                                                        ng-bind="getNomeAmigavelFilial(conta.empresa)">
-                                                    </td>
-                                                    <!-- STATUS -->
-                                                    <td style="text-align:center">
-                                                        <span ng-class="{ 'StatusSenhaValida' : conta.flAtivo, 
-                                                                          'StatusSenhaInvalida' : !conta.flAtivo}"
-                                                               ng-bind="conta.flAtivo ? 'Ativo' : 'Inativo'">
-                                                        </span>
-                                                    </td>
-                                                    <!-- BOTÃO AÇÕES-->
-                                                    <td class="center btnacoes">
-                                                        <div class="btn-group" dropdown dropdown-append-to-body>
-                                                            <a class="btn btn-default btn-circle" 
-                                                               href="javascript:;" dropdown-toggle>
-                                                                <i class="fa fa-pencil"></i>
-                                                                 Ações 
-                                                                <i class="fa fa-angle-down"></i>
-                                                            </a>
-                                                            <ul class="dropdown-menu dropDownAtos">
-                                                                <li>
-                                                                    <a href="javascript:;" ng-click="extrato(conta)">
-                                                                        Extratos Bancários
-                                                                    </a>
-                                                                </li> 
-                                                                <li>
-                                                                    <a href="javascript:;" 
-                                                                       ng-click="vigencias(conta)">
-                                                                        Vigências
-                                                                    </a>
-                                                                </li>
-                                                                <li ng-show="usuarioPodeAlterarContas() && conta.podeAtualizar">
-                                                                    <a href="javascript:;" 
-                                                                       ng-click="editarConta(conta)">
-                                                                        Editar
-                                                                    </a>
-                                                                </li>
-                                                                <li ng-show="usuarioPodeExcluirContas() && conta.podeAtualizar">
-                                                                    <a href="javascript:;" 
-                                                                       ng-click="excluirConta(conta)">
-                                                                        Excluir
-                                                                    </a>
-                                                                </li> 
-                                                                <li ng-show="usuarioPodeAlterarContas() && !conta.podeAtualizar">
-                                                                    <a ng-show="conta.flAtivo"
-                                                                       href="javascript:;" ng-click="desativar(conta)">
-                                                                        Desativar
-                                                                    </a>
-                                                                    <a ng-show="!conta.flAtivo"
-                                                                       href="javascript:;" ng-click="ativar(conta)">
-                                                                        Ativar
-                                                                    </a>
-                                                                </li> 
-                                                            </ul>
-                                                        </div>
-                                                    </td> 
-                                                    <!--FIM BOTÃO AÇÕES-->
-                                                </tr>
-                                                <!-- FIM DADOS DE ACESSO -->
-                                            </tbody>
-                                        </table>
-                                    </div>  
-                                    <!--FIM TABELA-->
-                                    <!-- RODAPÉ : Exibição dos resultados e paginação -->
-                                    <div class="row">
-                                        <div class="col-xs-4 col-sm-4 col-md-4">
-                                            <div class="dataTables_info" role="status" aria-live="polite">
-                                                <strong>Exibindo os registros {{filtro.faixa_registros}}</strong>
-                                            </div>
-                                        </div>
-                                        <!--PAGINAÇÃO-RODAPÉ-->
-                                        <div class="col-xs-4 col-sm-4 col-md-3">
-                                            <div class="pagination-panel centralizarPaginacao"> Página 
-                                                <a href="javascript:;" ng-click="retrocedePagina()"
-                                                   class="btn btn-sm default prev" 
-                                                   ng-class="{disabled: filtro.pagina <= 1}" 
-                                                   title="Página anterior">
-                                                        <i class="fa fa-angle-left"></i>
+                                
+                        <!--TABELA-->
+                        <div class="table-scrollable">
+                            <table class="table table-striped table-hover table-bordered dataTable no-footer" 
+                                   role="grid">
+                                <thead>
+                                    <tr role="row">
+                                        <th tabindex="0" 
+                                            rowspan="1" colspan="1" 
+                                            style="width: 200px; text-align:center">
+                                            Banco
+                                        </th>
+                                        <th tabindex="1" 
+                                            rowspan="1" colspan="1" 
+                                            style="width: 40px;">
+                                            Agência
+                                        </th>
+                                        <th tabindex="2" 
+                                            rowspan="1" colspan="1" 
+                                            style="width: 40px;">
+                                            Conta
+                                        </th>
+                                        <th tabindex="3" 
+                                            rowspan="1" colspan="1" 
+                                            style="width: 100px;">
+                                            CNPJ
+                                        </th>
+                                        <th tabindex="4" 
+                                            rowspan="1" colspan="1" 
+                                            style="width: 200px;">
+                                            Filial
+                                        </th>
+                                        <th tabindex="4" 
+                                            rowspan="1" colspan="1" 
+                                            style="width: 50px;">
+                                            Status
+                                        </th>
+                                        <th tabindex="5" 
+                                            rowspan="1" colspan="1" 
+                                            style="width: 100px;">
+                                            Ações
+                                        </th>                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr role="row" class="odd"
+                                        ng-repeat="conta in contas">
+                                        <!-- BANCO -->
+                                        <td ng-bind="exibeBanco(conta.banco)">
+                                             <!--{{(conta.banco.Codigo | uppercase) || ''}}&nbsp;
+                                             {{(conta.banco.NomeExtenso  | uppercase) || ''}}
+                                        </td>
+                                        <!-- AGÊNCIA -->
+                                        <td style="text-align:center">
+                                             {{conta.nrAgencia}}
+                                        </td>
+                                        <!-- CONTA -->
+                                        <td style="text-align:center">
+                                            {{conta.nrConta}}
+                                        </td>
+                                        <!-- CNPJ -->
+                                        <td style="text-align:center">
+                                             {{conta.empresa.nu_cnpj}}
+                                        </td>
+                                        <!-- FILIAL -->
+                                        <td style="text-align:center"
+                                            ng-bind="getNomeAmigavelFilial(conta.empresa)">
+                                        </td>
+                                        <!-- STATUS -->
+                                        <td style="text-align:center">
+                                            <span ng-class="{ 'StatusSenhaValida' : conta.flAtivo, 
+                                                              'StatusSenhaInvalida' : !conta.flAtivo}"
+                                                   ng-bind="conta.flAtivo ? 'Ativo' : 'Inativo'">
+                                            </span>
+                                        </td>
+                                        <!-- BOTÃO AÇÕES-->
+                                        <td class="center btnacoes">
+                                            <div class="btn-group" dropdown dropdown-append-to-body>
+                                                <a class="btn btn-default btn-circle" 
+                                                   href="javascript:;" dropdown-toggle>
+                                                    <i class="fa fa-pencil"></i>
+                                                     Ações 
+                                                    <i class="fa fa-angle-down"></i>
                                                 </a>
-                                                <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
-                                                       maxlength="4" style="text-align:center; margin: 0 5px;"
-                                                       ng-model="paginaInformada" valid-integer-number
-                                                       ng-keypress="($event.which === 13) ? alteraPagina() : 0"
-                                                       ng-blur="atualizaPaginaDigitada()">
-                                                    <a href="javascript:;" ng-click="avancaPagina()"
-                                                       class="btn btn-sm default next"
-                                                       ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
-                                                       title="Próxima página">
-                                                        <i class="fa fa-angle-right"></i>
-                                                    </a>
-                                                    de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
+                                                <ul class="dropdown-menu dropDownAtos">
+                                                    <li>
+                                                        <a href="javascript:;" ng-click="extrato(conta)">
+                                                            Extratos Bancários
+                                                        </a>
+                                                    </li> 
+                                                    <li>
+                                                        <a href="javascript:;" 
+                                                           ng-click="vigencias(conta)">
+                                                            Vigências
+                                                        </a>
+                                                    </li>
+                                                    <li ng-show="usuarioPodeAlterarContas() && conta.podeAtualizar">
+                                                        <a href="javascript:;" 
+                                                           ng-click="editarConta(conta)">
+                                                            Editar
+                                                        </a>
+                                                    </li>
+                                                    <li ng-show="usuarioPodeExcluirContas() && conta.podeAtualizar">
+                                                        <a href="javascript:;" 
+                                                           ng-click="excluirConta(conta)">
+                                                            Excluir
+                                                        </a>
+                                                    </li> 
+                                                    <li ng-show="usuarioPodeAlterarContas() && !conta.podeAtualizar">
+                                                        <a ng-show="conta.flAtivo"
+                                                           href="javascript:;" ng-click="desativar(conta)">
+                                                            Desativar
+                                                        </a>
+                                                        <a ng-show="!conta.flAtivo"
+                                                           href="javascript:;" ng-click="ativar(conta)">
+                                                            Ativar
+                                                        </a>
+                                                    </li> 
+                                                </ul>
                                             </div>
-                                        </div>
-                                        <!-- FIM PAGINAÇÃO -->
-                                    </div>
-                                    <!-- FIM RODAPÉ -->
-                                </div>    
-                            </div>	
-                            <!--FIM NAVEGAÇÃO-->  
-                        </div>                   
+                                        </td> 
+                                        <!--FIM BOTÃO AÇÕES-->
+                                    </tr>
+                                    <!-- FIM DADOS DE ACESSO -->
+                                </tbody>
+                            </table>
+                        </div>  
+                        <!--FIM TABELA-->
+                        <!-- RODAPÉ : Exibição dos resultados e paginação -->
+                        <div class="row">
+                            <div class="col-xs-4 col-sm-4 col-md-4">
+                                <div class="dataTables_info" role="status" aria-live="polite">
+                                    <strong>Exibindo os registros {{filtro.faixa_registros}}</strong>
+                                </div>
+                            </div>
+                            <!--PAGINAÇÃO-RODAPÉ-->
+                            <div class="col-xs-4 col-sm-4 col-md-3">
+                                <div class="pagination-panel centralizarPaginacao"> Página 
+                                    <a href="javascript:;" ng-click="retrocedePagina()"
+                                       class="btn btn-sm default prev" 
+                                       ng-class="{disabled: filtro.pagina <= 1}" 
+                                       title="Página anterior">
+                                            <i class="fa fa-angle-left"></i>
+                                    </a>
+                                    <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                           maxlength="4" style="text-align:center; margin: 0 5px;"
+                                           ng-model="paginaInformada" valid-integer-number
+                                           ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                                           ng-blur="atualizaPaginaDigitada()">
+                                        <a href="javascript:;" ng-click="avancaPagina()"
+                                           class="btn btn-sm default next"
+                                           ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
+                                           title="Próxima página">
+                                            <i class="fa fa-angle-right"></i>
+                                        </a>
+                                        de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
+                                </div>
+                            </div>
+                            <!-- FIM PAGINAÇÃO -->
+                        </div>
+                        <!-- FIM RODAPÉ -->                     
                     </div>
                 </div>        
             </div>    

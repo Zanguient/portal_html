@@ -22,16 +22,14 @@
     </ul>
     <!-- END PAGE BREADCRUMB -->
 
-     <div class="portlet light"> 
+    <!-- PORTLET FILTROS -->
+    <div class="portlet light"> 
         <div class="portlet-title">
             <div class="caption">								
                 <span class="caption-subject font-green-sharp bold uppercase">Filtros</span>						
             </div>
-            <div class="actions">
-
-
-            </div>
         </div>
+        <!-- FILTROS -->
         <div class="portlet-body" ng-show="exibeTela">
             <div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">
                 <div class="row">                       
@@ -47,69 +45,77 @@
                         </div>
                     </div>
                 </div>
-                <!--div class="table-scrollable"-->
+                
                 <div class="table-scrollable">
                     <table class="table table-striped table-bordered table-hover dataTable no-footer conteudoTabelas" id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
                         <thead>
                             <tr role="row" class="heading">
-                                <th tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="10%">
+                                <th tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="40%">
                                      Banco
                                 </th>
-                                <th tabindex="1" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="8%">
+                                <th tabindex="1" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="20%">
                                      Tipo 
                                 </th>
-                                <th tabindex="2" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="8%">
+                                <th tabindex="2" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="20%">
                                      Adquirente
                                 </th>
-                                <th tabindex="3" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="1%">
+                                <th tabindex="3" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="20%">
                                      Ações de Filtro
                                 </th>                                
                             </tr>
-                        </thead>
-                        <tbody>
-                            <tr role="row" class="filter">                               
-                                <td rowspan="1" colspan="1">                                    
-                                    <div class="input-group input-icon right">
-                                        <i class="fa fa-times ng-hide" 
-                                           style="right:50px;cursor:pointer" 
-                                           ng-click="resetaBusca()" 
-                                           ng-show="usuario.busca">
-                                        </i>
-                                        <input type="text" 
-                                               class="form-control input-inline ng-pristine ng-valid ng-touched" 
-                                               placeholder="Buscar" 
-                                               ng-model="busca" 
-                                               ng-keyup="">
-                                        <span class="input-group-addon">
-                                            <i class="fa fa-search" style="cursor:pointer" ng-click="filtraUsuarios()"></i>
-                                        </span>
-                                    </div>                                      
+                            <tr role="row" class="filter">  
+                                <!-- BANCO -->
+                                <td rowspan="1" colspan="1">                   
+                                    <input type="text" class="form-control"
+                                           id="buscabanco"
+                                           ng-class="{'spinner' : buscandoBancos}"
+                                           placeholder="Banco" 
+                                           ng-model="filtro.banco"
+                                           ng-blur="validaBanco()"
+                                           onfocus="this.select();" 
+                                           onmouseup="return false;"
+                                           typeahead-on-select="selecionouBanco()"
+                                           typeahead-focus-first=false
+                                           typeahead-min-length='3'
+                                           typeahead-wait-ms="500"
+                                           typeahead="banco as exibeBanco(banco) for banco in buscaBancos($viewValue)" />                                    
                                 </td>
+                                <!-- TIPO -->
                                 <td rowspan="1" colspan="1">
-                                    <select name="order_status" class="form-control form-filter input-sm">
-                                        <option value="">Todas</option>                                        
+                                    <select aria-controls="datatable_products" 
+                                            class="form-control input-sm input-inline"
+                                            ng-model="filtro.tipo"
+                                            ng-change="alterouDsTipo()"
+                                            ng-options="dsTipo for dsTipo in dsTipos"> 
+                                        <option value="">TODOS</option>  
                                     </select>
                                 </td>
+                                <!-- ADQUIRENTE -->
                                 <td rowspan="1" colspan="1">
-                                    <select name="order_status" class="form-control form-filter input-sm">
-                                        <option value="">Todas</option>                                        
+                                    <select aria-controls="datatable_products" 
+                                            class="form-control input-sm input-inline"
+                                            ng-model="filtro.adquirente"
+                                            ng-change="alterouAdquirente()"
+                                            ng-options="adquirente as (adquirente.dsAdquirente | uppercase) for adquirente in adquirentes"> 
+                                        <option value="">TODAS</option>  
                                     </select>
                                 </td>
                                 <td rowspan="1" colspan="1">
                                     <div class="margin-bottom-5">
                                         <button class="btn btn-sm red filter-submit margin-bottom"
-                                                ng-click="">
+                                                ng-click="buscaParametrosBancarios()">
                                             <i class="fa fa-search"></i> 
                                             Buscar
                                         </button>
                                     </div>
-                                    <button class="btn btn-sm grey filter-cancel">
+                                    <button class="btn btn-sm grey filter-cancel"
+                                            ng-click="resetaFiltros()">
                                         <i class="fa fa-times"></i> 
                                         Limpar
                                     </button>
                                 </td>
                             </tr>                       
-                        </tbody>
+                        </thead>
                     </table>
                 </div>
                 <div class="row">
@@ -125,10 +131,107 @@
             </div>
         </div>
     </div>
+    <!-- FIM PORTLET FILTROS -->
+    
+    <!-- PORTLET TABELA -->
     <div class="portlet light">
+        
+        <!-- MODAL PARÂMETRO BANCÁRIO -->
+       <div class="modal fade bs-modal-sm modal-input" 
+            id="modalParametroBancario" aria-hidden="true">
+           <div class="modal-dialog modal-sm" style="width:600px">
+               <div class="modal-content">
+                   <div class="modal-header">
+                       <h4 class="modal-title modal-cabecalho">{{modalParametro.titulo}}</h4>
+                   </div>
+                   <div class="modal-body modal-corpo modalAcessoDeUsuarios" style="text-align: left">
+                       <!-- BANCO -->
+                       <div class="row">
+                            <div class="col-sm-12">
+                                <div class="col-sm-2">
+                                    <label>Banco</label>
+                                </div>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control modalContasCorrentes"
+                                           id="buscabancomodal"
+                                           ng-disabled="!ehCadastro()"
+                                           ng-class="{'spinner' : buscandoBancos}"
+                                           placeholder="Banco" 
+                                           ng-model="modalParametro.banco"
+                                           ng-blur="validaBancoModal()"
+                                           onfocus="this.select();" 
+                                           onmouseup="return false;"
+                                           typeahead-focus-first=false
+                                           typeahead-min-length='3'
+                                           typeahead-wait-ms="500"
+                                           typeahead="banco as exibeBanco(banco) for banco in buscaBancos($viewValue)" />
+                                </div>    
+                           </div>
+                           <!-- DESCRIÇÃO -->
+                           <div class="col-sm-12">
+                               <div class="col-sm-2">
+                                    <label>Descrição</label>
+                               </div>
+                               <div class="col-sm-10">
+                                    <input type="text" 
+                                           ng-disabled="!ehCadastro()"
+                                           class="form-control modalContasCorrentes" 
+                                           placeholder="Descrição"
+                                           ng-model="modalParametro.dsMemo"> 
+                               </div>     
+                           </div>
+                           <!-- TIPO -->
+                           <div class="col-sm-12">
+                                <div class="col-sm-2">
+                                    <label>Tipo</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <select aria-controls="datatable_products" 
+                                            class="form-control input-sm input-inline"
+                                            ng-model="modalParametro.dsTipo"
+                                            ng-options="dsTipo for dsTipo in dsTipos"> 
+                                        <option style="display: none" value=""></option>  
+                                    </select>
+                                </div>     
+                           </div>
+                           <!-- ADQUIRENTE -->
+                           <div class="col-sm-12">
+                                <div class="col-sm-2">
+                                    <label>Adquirente</label>
+                                </div>
+                                <div class="col-sm-10">
+                                    <select aria-controls="datatable_products" 
+                                            class="form-control input-sm input-inline"
+                                            ng-model="modalParametro.adquirente"
+                                            ng-options="adquirente as (adquirente.dsAdquirente | uppercase) for adquirente in adquirentes"> 
+                                        <option value=""></option>  
+                                    </select>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="modal-footer">
+                       <div class="col-sm-3 col-sm-offset-2">
+                           <button type="button" class="btn default" data-dismiss="modal">
+                               Cancelar
+                           </button>
+                       </div>                           
+                       <div class="col-sm-4 col-sm-offset-1">
+                           <button type="button" class="btn"
+                                   ng-class="{'blue' : ehCadastro(), 'green' : !ehCadastro()}"
+                                   ng-click="modalParametro.funcaoConfirma()">
+                               {{modalParametro.textoConfirma}}
+                           </button>                                
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+       <!-- END MODAL PARÂMETRO BANCÁRIO -->
+        
         <div class="portlet-title">
             <div class="caption">								
-                <span class="caption-subject font-green-sharp bold uppercase">INFORMAÇÕES</span>
+                <span class="caption-subject font-green-sharp bold uppercase">PARÂMETROS BANCÁRIOS</span>
             </div>
             <div class="actions">
                 <a class="btn btn-circle btn-icon-only btn-default fullscreen" 
@@ -163,152 +266,165 @@
             </div>
         </div>
         <div class="portlet-body" ng-show="exibeTela">
-            <!-- TOPO DA TABELA COM BOTÃO 'Novo Usuário' -->     
+            <!-- TOPO DA TABELA COM BOTÃO 'Novo Parâmetro' -->     
             <div class="table-toolbar">
                 <div class="row">
                     <div class="col-md-5">
                         <div class="btn-group">
-                            <a href="javascript:;" ng-click="goAdministrativoUsuariosCadastro()"
-                               ng-class="">
+                            <a href="javascript:;" ng-click="novoParametroBancario()"
+                               ng-class="{'element-hidden': !usuarioPodeCadastrarParametros()}">
                                 <button class="btn red">
-                                Novo Usuário <i class="fa fa-plus"></i>
+                                Novo Parâmetro <i class="fa fa-plus"></i>
                             </button></a>
                         </div>
                     </div>                            
                 </div>
             </div>
-            <div class="row">
-            <!--EXIBIÇÃO-->
-            <div class="col-xs-4 col-sm-4 col-md-4">
-                <div class="dataTables_length">
-                    <label>
-                        <span class="seperator"></span>Exibindo 
-                        <select name="datatable_products_length" aria-controls="datatable_products" 
-                                class="form-control input-xsmall input-sm input-inline"
-                                ng-model="usuario.itens_pagina"
-                                ng-change="alterouItensPagina()"
-                                ng-options="item for item in itens_pagina">                                            
-                        </select> registros de
-                    </label>
-                </div>   
-            </div>
-            <!--PAGINAÇÃO-->
-            <div class="col-xs-4 col-sm-4 col-md-3">
-                <div class="pagination-panel centralizarPaginacao"> Página 
-                    <a href="javascript:;" ng-click="retrocedePagina()"
-                       class="btn btn-sm default prev" 
-                       ng-class="{disabled: usuario.pagina <= 1}" 
-                       title="Página anterior">
-                            <i class="fa fa-angle-left"></i>
-                    </a>
-                    <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
-                           maxlength="4" style="text-align:center; margin: 0 5px;"
-                           ng-model="paginaInformada" valid-integer-number
-                           ng-keypress="($event.which === 13) ? alteraPagina() : 0"
-                           ng-blur="atualizaPaginaDigitada()">
-                    <a href="javascript:;" ng-click="avancaPagina()"
-                       class="btn btn-sm default next"
-                       ng-class="{disabled: usuario.pagina >= usuario.total_paginas}"
-                       title="Próxima página">
-                        <i class="fa fa-angle-right"></i>
-                    </a>
-                     de <span class="pagination-panel-total"></span>
-                </div>    
-            </div>                                        
-        </div>
-            
-            <div class="table-container">
-                <div class="table-scrollable">
-                    <table class="table table-striped table-hover table-bordered dataTable no-footer" role="grid">
-                        <thead>
-                            <tr role="row">
-                                <th tabindex="0" rowspan="1" colspan="1" style="width: 25%;">
-                                   Banco
-                                </th>
-                                <th tabindex="1" rowspan="1" colspan="1" style="width: 10%;">
-                                   Tipo 
-                                </th>
-                                <th tabindex="2" rowspan="1" colspan="1" style="width: 10%;">
-                                   Descrição
-                                </th>
-                                <th tabindex="3" rowspan="1" colspan="1" style="width: 10%;">
-                                   Adquirente
-                                </th>
-                                <th tabindex="4" rowspan="1" colspan="1" style="width: 10%;">
-                                   Ação
-                                </th>                                        
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- ngRepeat:  -->
-                            <tr role="row" class="odd ng-scope conteudoTabelas" >
-                                <!--BANCO-->
-                                <td style="text-align:left">
-                                    104  CAIXA ECONÔMICA FEDERAL
-                                </td>
-                                <!--TIPO-->
-                                <td>
-                                    1402-8
-                                </td>
-                                <!--DESCRIÇÃO-->
-                                <td>
-                                    Descrição exemplo
-                                </td>
-                                <!--ADQUIRENTE-->
-                                <td>
-                                    Cielo
-                                </td>
-                                <!--AÇÃO-->
-                                <td class="center btnacoes">
-                                    <div class="btn-group" dropdown="" dropdown-append-to-body="">
-                                        <a class="btn btn-default btn-circle"
-                                           href="javascript:;" 
-                                           dropdown-toggle="" 
-                                           aria-haspopup="true" 
-                                           aria-expanded="false">
-                                            <i class="fa fa-pencil"></i>
-                                             Ações 
-                                            <i class="fa fa-angle-down"></i>
-                                        </a>
-                                    </div>
-                                </td>                                                                       
-                            </tr>                                                                
-                        </tbody>
-                    </table>
-                </div> 
-                <!-- RODAPÉ : Exibição dos resultados e paginação -->
-                <div class="row">
-                    <div class="col-xs-4 col-sm-4 col-md-4">
-                        <div class="dataTables_info" id="sample_editable_1_info" role="status" aria-live="polite">
-                            <strong>Exibindo os registros <!--{{ }}--></strong>
-                        </div>
+            <div class="row paddingDivs">
+                <!--EXIBIÇÃO-->
+                <div class="col-xs-4 col-sm-4">
+                    <div class="dataTables_length">
+                        <label>
+                            <span class="seperator"></span>Exibindo 
+                            <select name="datatable_products_length" aria-controls="datatable_products" 
+                                    class="form-control input-xsmall input-sm input-inline"
+                                    ng-model="filtro.itens_pagina"
+                                    ng-change="alterouItensPagina()"
+                                    ng-options="item for item in itens_pagina">                                            
+                            </select> registros de {{filtro.total_registros}}
+                        </label>
                     </div>
-                    <!--PAGINAÇÃO-RODAPÉ-->
-                    <div class="col-xs-4 col-sm-4 col-md-3">
-                        <div class="pagination-panel centralizarPaginacao"> Página 
-                            <a href="javascript:;" ng-click="retrocedePagina()"
-                               class="btn btn-sm default prev" 
-                               ng-class="{disabled: usuario.pagina <= 1}" 
-                               title="Página anterior">
-                                    <i class="fa fa-angle-left"></i>
-                            </a>
-                            <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
-                                   maxlength="4" style="text-align:center; margin: 0 5px;"
-                                   ng-model="paginaInformada" valid-integer-number
-                                   ng-keypress="($event.which === 13) ? alteraPagina() : 0"
-                                   ng-blur="atualizaPaginaDigitada()">
+                </div> 
+                <!--PAGINAÇÃO-TOPO-->
+                <div class="col-xs-4 col-sm-4 col-md-3">
+                    <div class="pagination-panel centralizarPaginacao"> Página 
+                        <a href="javascript:;" ng-click="retrocedePagina()"
+                           class="btn btn-sm default prev" 
+                           ng-class="{disabled: filtro.pagina <= 1}" 
+                           title="Página anterior">
+                                <i class="fa fa-angle-left"></i>
+                        </a>
+                        <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                               maxlength="4" style="text-align:center; margin: 0 5px;"
+                               ng-model="paginaInformada" valid-integer-number
+                               ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                               ng-blur="atualizaPaginaDigitada()">
                             <a href="javascript:;" ng-click="avancaPagina()"
                                class="btn btn-sm default next"
-                               ng-class="{disabled: usuario.pagina >= usuario.total_paginas}"
+                               ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
                                title="Próxima página">
                                 <i class="fa fa-angle-right"></i>
                             </a>
-                             de <span class="pagination-panel-total"><!--{{ }}--></span>
-                        </div>
+                            de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
                     </div>
-                    <!-- FIM PAGINAÇÃO -->
-                </div>
+                </div>                            
+                <!-- FIM PAGINAÇÃO -->                                  
             </div>
+            
+            <!-- CONTEÚDO DA TABELA -->
+            <div class="table-scrollable">
+                <table class="table table-striped table-hover table-bordered dataTable no-footer" role="grid">
+                    <thead>
+                        <tr role="row">
+                            <th tabindex="0" rowspan="1" colspan="1" style="width: 25%;">
+                               Banco
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 10%;">
+                               Tipo 
+                            </th>
+                            <th tabindex="2" rowspan="1" colspan="1" style="width: 10%;">
+                               Descrição
+                            </th>
+                            <th tabindex="3" rowspan="1" colspan="1" style="width: 10%;">
+                               Adquirente
+                            </th>
+                            <th tabindex="4" rowspan="1" colspan="1" style="width: 10%;">
+                               Ação
+                            </th>                                        
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr role="row" class="odd conteudoTabelas"
+                            ng-repeat="parametro in parametros">
+                            <!--BANCO-->
+                            <td style="text-align:left"
+                                ng-bind="exibeBanco(parametro.banco)">
+                            </td>
+                            <!--TIPO-->
+                            <td>
+                                {{parametro.dsTipo | uppercase}}
+                            </td>
+                            <!--DESCRIÇÃO-->
+                            <td>
+                                {{parametro.dsMemo | uppercase}}
+                            </td>
+                            <!--ADQUIRENTE-->
+                            <td>
+                                {{(parametro.adquirente.dsAdquirente | uppercase) || ''}}
+                            </td>
+                            <!-- BOTÃO AÇÕES -->
+                            <td class="center btnacoes">
+                                <div class="btn-group" dropdown dropdown-append-to-body>
+                                    <a class="btn btn-default btn-circle" 
+                                       href="javascript:;" dropdown-toggle>
+                                        <i class="fa fa-pencil"></i>
+                                         Ações 
+                                        <i class="fa fa-angle-down"></i>
+                                    </a>
+                                    <ul class="dropdown-menu dropDownAtos">
+                                        <li ng-show="usuarioPodeAlterarParametros()">
+                                            <a href="javascript:;" 
+                                               ng-click="editarParametroBancario(parametro)">
+                                                Editar
+                                            </a>
+                                        </li>
+                                        <li ng-show="usuarioPodeExcluirParametros()">
+                                            <a href="javascript:;" 
+                                               ng-click="excluirParametroBancario(parametro)">
+                                                Excluir
+                                            </a>
+                                        </li> 
+                                    </ul>
+                                </div>
+                            </td> 
+                            <!--FIM BOTÃO AÇÕES-->                                                                   
+                        </tr>                                                                
+                    </tbody>
+                </table>
+            </div> 
+            <!-- RODAPÉ : Exibição dos resultados e paginação -->
+            <div class="row">
+                <div class="col-xs-4 col-sm-4 col-md-4">
+                    <div class="dataTables_info" role="status" aria-live="polite">
+                        <strong>Exibindo os registros {{filtro.faixa_registros}}</strong>
+                    </div>
+                </div>
+                <!--PAGINAÇÃO-RODAPÉ-->
+                <div class="col-xs-4 col-sm-4 col-md-3">
+                    <div class="pagination-panel centralizarPaginacao"> Página 
+                        <a href="javascript:;" ng-click="retrocedePagina()"
+                           class="btn btn-sm default prev" 
+                           ng-class="{disabled: filtro.pagina <= 1}" 
+                           title="Página anterior">
+                                <i class="fa fa-angle-left"></i>
+                        </a>
+                        <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                               maxlength="4" style="text-align:center; margin: 0 5px;"
+                               ng-model="paginaInformada" valid-integer-number
+                               ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                               ng-blur="atualizaPaginaDigitada()">
+                            <a href="javascript:;" ng-click="avancaPagina()"
+                               class="btn btn-sm default next"
+                               ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
+                               title="Próxima página">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                            de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
+                    </div>
+                </div>
+                <!-- FIM PAGINAÇÃO -->
+            </div>
+            <!-- FIM RODAPÉ -->
         </div>
     </div>
 </div>
