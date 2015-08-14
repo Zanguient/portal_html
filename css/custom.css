@@ -568,6 +568,10 @@ tbody.centralizarVertical > tr > td {
    vertical-align: middle;
 }
 
+thead.centralizarVerticalTitulos > tr > th {
+   vertical-align: middle;
+}
+
 .teste col-xs-3{
   padding-left: -60px;
 }

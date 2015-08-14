@@ -407,7 +407,8 @@ angular.module("AtosCapital", ['ui.router',
     // Indica que uma tela foi acessada => envia para a API
     $scope.$on("acessouTela", function(event){
         if(controllerAtual && typeof controllerAtual.id_controller === 'number'){
-            $webapi.post($apis.getUrl($apis.administracao.logacesso, undefined, 
+            $scope.$broadcast('acessoDeTelaNotificado');
+            /*$webapi.post($apis.getUrl($apis.administracao.logacesso, undefined, 
                                   {id: 'token', valor: $scope.token}), {idController : controllerAtual.id_controller})
                 .then(function(dados){
                      $scope.$broadcast('acessoDeTelaNotificado');
@@ -416,7 +417,7 @@ angular.module("AtosCapital", ['ui.router',
                      else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao se comunicar com o servidor (' + failData.status + ')', true, 'danger', true);
                      //console.log('Houve uma falha ao notificar o acesso da tela (' + failData.status + ')');
-                  });     
+                  }); */  
         }
     });  
     /**
