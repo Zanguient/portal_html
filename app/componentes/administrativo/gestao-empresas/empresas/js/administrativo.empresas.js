@@ -30,7 +30,9 @@ angular.module("administrativo-empresas", [])
                            fl_taxservices : false,
                            fl_proinfo : false,
                            salvar : function(){}
-                          }                                            
+                          }  
+    // flags
+    $scope.exibeTela = false;
     // Permissões                                           
     var permissaoAlteracao = false;
     var permissaoCadastro = false;
@@ -49,7 +51,7 @@ angular.module("administrativo-empresas", [])
         // Quando houver alteração do grupo empresa na barra administrativa                                           
         $scope.$on('alterouGrupoEmpresa', function(event){ 
             // Refaz a busca
-            $scope.buscaEmpresas();
+            if($scope.exibeTela) $scope.buscaEmpresas();
         }); 
         // Obtém as permissões
         if($scope.methodsDoControllerCorrente){// && $scope.methodsDoControllerCorrente.length > 0){
@@ -57,10 +59,16 @@ angular.module("administrativo-empresas", [])
             permissaoCadastro = $scope.methodsDoControllerCorrente['cadastro'] ? true : false;//$filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'CADASTRO' }).length > 0;
             permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;//$filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'REMOÇÃO' }).length > 0;
         }
+        // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
+        $scope.$on('acessoDeTelaNotificado', function(event){
+            $scope.exibeTela = true;
+            // Busca empresas
+            $scope.buscaEmpresas();
+        });
         // Acessou a tela
         $scope.$emit("acessouTela");
         // Busca empresas
-        $scope.buscaEmpresas();
+        //$scope.buscaEmpresas();
     };
     
                                                 

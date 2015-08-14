@@ -21,6 +21,7 @@ angular.module("administrativo-acesso-usuarios", [])
     var divPortletBodyLogsPos = 0; // posição da div que vai receber o loading progress
     $scope.paginaInformada = 1; // página digitada pelo privilégio
     $scope.logs = [];
+    $scope.modalLog = { log : null };                                            
     $scope.camposBusca = [{
                             id: 201,
                             /*id: $campos.administracao.logacesso.webpagesusers + 
@@ -33,15 +34,16 @@ angular.module("administrativo-acesso-usuarios", [])
                             /*id: $campos.administracao.logacesso.webpagescontrollers + 
                                 $campos.administracao.webpagescontrollers.ds_controller - 100,*/
                             ativo: true,  
-                            nome: "Tela"
+                            nome: "Módulo"
                           }];
     $scope.itens_pagina = [10, 20, 50, 100];
     $scope.filtro = {busca:'', campo_busca : $scope.camposBusca[0], 
                       itens_pagina : $scope.itens_pagina[0], pagina : 1,
                       total_registros : 0, faixa_registros : '0-0', total_paginas : 0, 
-                      campo_ordenacao : {id: 107,//$campos.administracao.tblogacessousuario.dtAcessos, 
+                      campo_ordenacao : {id: 103,//$campos.administracao.logacesso.dtAcesso, 
                                          order : 1}};    
-    
+    // flags
+    $scope.exibeTela = false;                                            
  
                                                 
     // Inicialização do controller
@@ -53,10 +55,16 @@ angular.module("administrativo-acesso-usuarios", [])
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
         });  
+        // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
+        $scope.$on('acessoDeTelaNotificado', function(event){
+            $scope.exibeTela = true;
+            // Busca Logs
+            $scope.buscaLogs();
+        });
         // Acessou a tela
         $scope.$emit("acessouTela");
         // Busca Logs
-        $scope.buscaLogs();
+        //$scope.buscaLogs();
     }; 
                                                 
                                                 
@@ -142,8 +150,12 @@ angular.module("administrativo-acesso-usuarios", [])
     };
      
     // BUSCA
-    $scope.filtraLogs = function(filtro){
-        $scope.filtro.busca = filtro;
+    $scope.resetaBusca = function(){
+        $scope.filtro.busca = '';
+        $scope.buscaLogs();
+    };                                             
+    $scope.filtraLogs = function(){
+        //$scope.filtro.busca = filtro;
         $scope.buscaLogs();
     };
     $scope.buscaLogs = function(){
@@ -155,16 +167,23 @@ angular.module("administrativo-acesso-usuarios", [])
        if($scope.filtro.busca.length > 0) filtros = {id: $scope.filtro.campo_busca.id, valor: $scope.filtro.busca + '%'};        
        // Filtro do grupo empresa => barra administrativa
        if($scope.usuariologado.grupoempresa){
-            var filtroGrupoEmpresa = {/*id: $campos.administracao.tblogacessousuario.webpagesusers + 
+            var filtroGrupoEmpresa = {/*id: $campos.administracao.logacesso.webpagesusers + 
                                           $campos.administracao.webpagesusers.id_grupo - 100, */
                                       id: 203,
                                       valor: $scope.usuariologado.grupoempresa.id_grupo};
             if(filtros) filtros = [filtros, filtroGrupoEmpresa];
-            else filtros = filtroGrupoEmpresa;
+            else filtros = [filtroGrupoEmpresa];
+           
+           if($scope.usuariologado.empresa){
+                filtros.push({/*id: $campos.administracao.logacesso.webpagesusers + 
+                                          $campos.administracao.webpagesusers.nu_cnpj - 100, */
+                                      id: 204,
+                                      valor: $scope.usuariologado.empresa.nu_cnpj});    
+           }
        }
         
-       $webapi.get($apis.getUrl($apis.administracao.tblogacessousuario, 
-                                [$scope.token, 3, $scope.filtro.campo_ordenacao.id, 
+       $webapi.get($apis.getUrl($apis.administracao.logacesso, 
+                                [$scope.token, 2, $scope.filtro.campo_ordenacao.id, 
                                  $scope.filtro.campo_ordenacao.order, 
                                  $scope.filtro.itens_pagina, $scope.filtro.pagina],
                    filtros)) 
@@ -186,7 +205,7 @@ angular.module("administrativo-acesso-usuarios", [])
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
-                 //else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else $scope.showAlert('Houve uma falha ao requisitar logs (' + failData.status + ')', true, 'danger', true);
                  $scope.hideProgress(divPortletBodyLogsPos);
               }); 
@@ -194,15 +213,15 @@ angular.module("administrativo-acesso-usuarios", [])
         
                                                                                        
                                                 
-    // RESPOSTA
-    $scope.getResposta = function(log){
-        if(!log) return '';
+    /**
+      * Exibe as todos os detalhes do log de acesso
+      */
+    $scope.detalhaLog = function(log){
+        // Reseta permissões
+        $scope.modalLog.log = log;
+        // Exibe o modal
+        $('#modalLog').modal('show');
         
-        if(log.codResposta === 200) return 'OK';
-        
-        var erro = 'Falha de acesso ' + log.codResposta;
-        if(log.msgErro) erro += '  (' + log.msgErro + ')';
-        return erro;
-    }
+    }; 
 
 }])

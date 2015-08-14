@@ -40,7 +40,9 @@ angular.module("administrativo-acoes-usuarios", [])
                       campo_ordenacao : {id: 107,//$campos.administracao.tblogacessousuario.dtAcesso, 
                                          order : 1}};    
     
- 
+    // flags
+    $scope.exibeTela = false;                                            
+                                                
                                                 
     // Inicialização do controller
     $scope.administrativoAcoesUsuariosInit = function(){
@@ -50,6 +52,16 @@ angular.module("administrativo-acoes-usuarios", [])
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
+        });
+        // Quando houver alteração do grupo empresa na barra administrativa                                           
+        $scope.$on('alterouGrupoEmpresa', function(event){
+            if($scope.exibeTela) $scope.buscaLogs();
+        }); 
+        // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
+        $scope.$on('acessoDeTelaNotificado', function(event){
+            $scope.exibeTela = true;
+            // Busca Logs
+            //$scope.buscaLogs();
         });
         // Acessou a tela
         $scope.$emit("acessouTela");

@@ -31,7 +31,7 @@
                         <span class="caption-subject font-green-sharp bold uppercase">Filtros</span>					
                     </div>                    
                 </div>
-                <div class="portlet-body">
+                <div class="portlet-body" ng-show="exibeTela">
                     <!-- PORTLET BODY FILTRO INSIDE -->
                     <div class="dataTables_wrapper dataTables_extended_wrapper no-footer">
                         <div class="row">                       
@@ -317,7 +317,7 @@
                         </div>
                     </div>
                 </div>                
-                <div class="portlet-body">                    
+                <div class="portlet-body" ng-show="exibeTela">                    
                     <!-- TABELA -->
                     <div class="dataTables_wrapper no-footer">
                         <!-- EXIBIÇÃO E PESQUISA -->
@@ -449,7 +449,7 @@
                                         </ul>
                                     </div>
                                     <!--CONTEUDO DA NAVEGAÇÃO-->
-                                    <div class="portlet-body">
+                                    <div class="portlet-body" ng-show="exibeTela">
                                         <div class="tab-content">
                                             <!--CONTEÚDO DO TERMINAL LÓGICO-->
                                             <div class="tab-pane conteudoNavegacao"
@@ -507,8 +507,8 @@
                                                             <tr role="row" class="odd conteudoTabelas"
                                                                 ng-repeat="relsintetico in relatorio.sintetico">
                                                                 <!-- FILIAL -->
-                                                                <td style="text-align:left">
-                                                                     {{relsintetico.empresa.ds_fantasia | uppercase}}
+                                                                <td style="text-align:left"
+                                                                    ng-bind="getNomeAmigavelFilial(relsintetico.empresa)">
                                                                 </td>
                                                                 <!-- BANDEIRA -->
                                                                 <td style="text-align:left">

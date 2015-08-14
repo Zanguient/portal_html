@@ -51,7 +51,8 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
     $scope.current = 0;
     $scope.total = 0;                                             
     // flag
-    $scope.buscandoExtrato = false;                                             
+    $scope.buscandoExtrato = false;
+    $scope.exibeTela = false;                                             
     // Permissões                                           
     var permissaoAlteracao = false;
     var permissaoCadastro = false;
@@ -75,6 +76,12 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
             permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;
         }
         
+        // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
+        $scope.$on('acessoDeTelaNotificado', function(event){
+            $scope.exibeTela = true;
+            // Carrega contas
+            if($scope.usuariologado.grupoempresa) buscaContas();
+        });
         // Acessou a tela
         $scope.$emit("acessouTela");
         
@@ -87,19 +94,21 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
             $scope.filtro.conta = $stateParams.conta;
             
         // Carrega contas
-        if($scope.usuariologado.grupoempresa) buscaContas();
+        //if($scope.usuariologado.grupoempresa) buscaContas();
         
         // Quando houver alteração do grupo empresa na barra administrativa                                           
         $scope.$on('alterouGrupoEmpresa', function(event){ 
-            // Avalia grupo empresa
-            if($scope.usuariologado.grupoempresa){ 
-                // Reseta seleção de filtro específico de contas
-                $scope.filtro.conta = null;
-                buscaContas();
-            }else{ // reseta tudo e não faz buscas 
-                $scope.extrato = []; 
-                $scope.contas = [];
-                $scope.filtro.conta = null;
+            if($scope.exibeTela){
+                // Avalia grupo empresa
+                if($scope.usuariologado.grupoempresa){ 
+                    // Reseta seleção de filtro específico de contas
+                    $scope.filtro.conta = null;
+                    buscaContas();
+                }else{ // reseta tudo e não faz buscas 
+                    $scope.extrato = []; 
+                    $scope.contas = [];
+                    $scope.filtro.conta = null;
+                }
             }
         });
         

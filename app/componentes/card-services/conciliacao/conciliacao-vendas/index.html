@@ -31,7 +31,7 @@
 
             </div>
         </div>
-        <div class="portlet-body">
+        <div class="portlet-body" ng-show="exibeTela">
             <div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">
                 <div class="row">                       
                     <div class="col-md-8 col-sm-12">
@@ -210,7 +210,7 @@
                 </div>
             </div>
         </div>
-        <div class="portlet-body">
+        <div class="portlet-body" ng-show="exibeTela">
             <div class="table-container">
                 <div id="datatable_products_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">
                     
@@ -638,47 +638,47 @@
                 </div>
             </div>
             <!--CUPONS AZUIS-->
-            
-        </div>
-        <!--RODAPÉ-->
-        <div class="row">
-            <div class="col-xs-4 col-sm-4 col-md-4">
-                <div class="dataTables_info" 
-                     id="sample_editable_1_info" 
-                     role="status"
-                     aria-live="polite">
-                    <strong class="ng-binding">Exibindo os registros 1-10</strong>
+            <!--RODAPÉ-->
+            <div class="row">
+                <div class="col-xs-4 col-sm-4 col-md-4">
+                    <div class="dataTables_info" 
+                         id="sample_editable_1_info" 
+                         role="status"
+                         aria-live="polite">
+                        <strong class="ng-binding">Exibindo os registros 1-10</strong>
+                    </div>
                 </div>
-            </div>
-            <!--PAGINAÇÃO-RODAPÉ-->
-            <div class="col-xs-4 col-sm-4 col-md-3">
-                <div class="pagination-panel centralizarPaginacao"> Página 
-                    <a href="javascript:;" 
-                       ng-click="retrocedePagina()" 
-                       class="btn btn-sm default prev disabled" 
-                       ng-class="{disabled: usuario.pagina <= 1}" 
-                       title="Página anterior">
-                            <i class="fa fa-angle-left"></i>
-                    </a>
-                    <input type="text" 
-                           class="pagination-panel-input form-control input-mini input-inline input-sm ng-pristine ng-untouched ng-valid ng-valid-maxlength"
-                           maxlength="4" 
-                           style="text-align:center; margin: 0 5px;" 
-                           ng-model="paginaInformada"
-                           valid-integer-number=""
-                           ng-keypress="($event.which === 13) ? alteraPagina() : 0"
-                           ng-blur="atualizaPaginaDigitada()">
-                    <a href="javascript:;" 
-                       ng-click="avancaPagina()"
-                       class="btn btn-sm default next" 
-                       ng-class="{disabled: usuario.pagina >= usuario.total_paginas}" 
-                       title="Próxima página">
-                        <i class="fa fa-angle-right"></i>
-                    </a>
-                     de <span class="pagination-panel-total ng-binding">4</span>
+                <!--PAGINAÇÃO-RODAPÉ-->
+                <div class="col-xs-4 col-sm-4 col-md-3">
+                    <div class="pagination-panel centralizarPaginacao"> Página 
+                        <a href="javascript:;" 
+                           ng-click="retrocedePagina()" 
+                           class="btn btn-sm default prev disabled" 
+                           ng-class="{disabled: usuario.pagina <= 1}" 
+                           title="Página anterior">
+                                <i class="fa fa-angle-left"></i>
+                        </a>
+                        <input type="text" 
+                               class="pagination-panel-input form-control input-mini input-inline input-sm ng-pristine ng-untouched ng-valid ng-valid-maxlength"
+                               maxlength="4" 
+                               style="text-align:center; margin: 0 5px;" 
+                               ng-model="paginaInformada"
+                               valid-integer-number=""
+                               ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                               ng-blur="atualizaPaginaDigitada()">
+                        <a href="javascript:;" 
+                           ng-click="avancaPagina()"
+                           class="btn btn-sm default next" 
+                           ng-class="{disabled: usuario.pagina >= usuario.total_paginas}" 
+                           title="Próxima página">
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                         de <span class="pagination-panel-total ng-binding">4</span>
+                    </div>
                 </div>
+                <!-- FIM PAGINAÇÃO -->
             </div>
-            <!-- FIM PAGINAÇÃO -->
         </div>
+        
     </div>
 </div>

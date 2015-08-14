@@ -50,7 +50,8 @@ angular.module("administrativo-usuarios", [])
     var permissaoAlteracao = false;
     var permissaoCadastro = false;
     var permissaoRemocao = false;
-                                                
+    // flags
+    $scope.exibeTela = false;                                            
                                                 
     // Inicialização do controller
     $scope.administrativoUsuariosInit = function(){
@@ -63,10 +64,12 @@ angular.module("administrativo-usuarios", [])
         });
         // Quando houver alteração do grupo empresa na barra administrativa                                           
         $scope.$on('alterouGrupoEmpresa', function(event){
-            // Modifica a visibilidade do campo de busca para o grupo empresa
-            $scope.camposBusca[2].ativo = !$scope.usuariologado.grupoempresa;   
-            // Refaz a busca
-            $scope.buscaUsuarios();
+            if($scope.exibeTela){
+                // Modifica a visibilidade do campo de busca para o grupo empresa
+                $scope.camposBusca[2].ativo = !$scope.usuariologado.grupoempresa;   
+                // Refaz a busca
+                $scope.buscaUsuarios();
+            }
         }); 
         // Obtém as permissões
         if($scope.methodsDoControllerCorrente){// && $scope.methodsDoControllerCorrente.length > 0){
@@ -74,10 +77,16 @@ angular.module("administrativo-usuarios", [])
             permissaoCadastro = $scope.methodsDoControllerCorrente['cadastro'] ? true : false;//$filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'CADASTRO' }).length > 0;
             permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;//$filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'REMOÇÃO' }).length > 0;
         }
+        // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
+        $scope.$on('acessoDeTelaNotificado', function(event){
+            $scope.exibeTela = true;
+            // Busca Usuários
+            $scope.buscaUsuarios();
+        });
         // Acessou a tela
         $scope.$emit("acessouTela");
         // Busca Usuários
-        $scope.buscaUsuarios();
+        //$scope.buscaUsuarios();
     };
                                                 
                                                 

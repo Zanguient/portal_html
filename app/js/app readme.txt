@@ -136,7 +136,7 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
  O estado só é de fato modificado depois da execução do "$state.go(state, params);" interno à função de escuta citado.
  Isso foi feito visando telas que possuem informações preenchidas pelo usuário e questiona se de fato ele deseja descartá-las antes de prosseguir.
  
-  Cada controller filho deve, no init, obter os métodos permitidos para o controller corrente através de $scope.methodsDoControllerCorrente
+ Cada controller filho deve, no init, obter os métodos permitidos para o controller corrente através de $scope.methodsDoControllerCorrente
  
  
  
@@ -144,7 +144,13 @@ O módulo faz uso de módulos externos. Para cada um deles, devem ser adicionados 
  
  Envia para a api qual a tela (controller) que está sendo acessada.
  Para isso, cada filho deve emitir no init o evento "acessouTela", que é escutado pelo controller pai, responsável por 
- enviar para a API o idController.
+ enviar para a API o idController. Quando a notificação é enviada com sucesso para o servidor, o evento "acessoDeTelaNotificado"
+ é disparado, ao qual os controllers envolvidos devem escutar o evento.
+ 
+		$scope.$on('acessoDeTelaNotificado', function(event){
+			$scope.exibeTela = true;
+			// Faz requisições na inicialização
+		});
  
  
  

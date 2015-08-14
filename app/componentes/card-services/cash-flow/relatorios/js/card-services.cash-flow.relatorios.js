@@ -59,7 +59,8 @@ angular.module("card-services-cash-flow-relatorios", [])
                                  valorBrutoFiltrado : 0, valorParcelaFiltrado : 0, 
                                  valorLiquidoFiltrado : 0, valorDescontadoFiltrado : 0}};                         
     // flag
-    var ultimoFiltro = undefined;                     
+    var ultimoFiltro = undefined;
+    $scope.exibeTela = false;                                             
                                             
                                                  
                                                  
@@ -74,21 +75,29 @@ angular.module("card-services-cash-flow-relatorios", [])
         });
         // Quando houver alteração do grupo empresa na barra administrativa                                           
         $scope.$on('alterouGrupoEmpresa', function(event){ 
-            // Avalia grupo empresa
-            if($scope.usuariologado.grupoempresa){ 
-                // Reseta seleção de filtro específico de empresa
-                $scope.filtro.filial = $scope.filtro.adquirente = $scope.filtro.bandeira = null;
-                buscaFiliais(true);
-            }else{ // reseta tudo e não faz buscas 
-                $scope.filiais = []; 
-                $scope.adquirentes = [];
-                $scope.bandeiras = [];
+            if($scope.exibeTela){
+                // Avalia grupo empresa
+                if($scope.usuariologado.grupoempresa){ 
+                    // Reseta seleção de filtro específico de empresa
+                    $scope.filtro.filial = $scope.filtro.adquirente = $scope.filtro.bandeira = null;
+                    buscaFiliais(true);
+                }else{ // reseta tudo e não faz buscas 
+                    $scope.filiais = []; 
+                    $scope.adquirentes = [];
+                    $scope.bandeiras = [];
+                }
             }
         }); 
+        // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
+        $scope.$on('acessoDeTelaNotificado', function(event){
+            $scope.exibeTela = true;
+            // Carrega filiais
+            if($scope.usuariologado.grupoempresa) buscaFiliais(true);
+        });
         // Acessou a tela
         $scope.$emit("acessouTela");
         // Carrega filiais
-        if($scope.usuariologado.grupoempresa) buscaFiliais(true);
+        //if($scope.usuariologado.grupoempresa) buscaFiliais(true);
     };
     
                                                  
@@ -235,7 +244,7 @@ angular.module("card-services-cash-flow-relatorios", [])
                 if(!idOperadora) $scope.filtro.adquirente = null;
                 else $scope.filtro.adquirente = $filter('filter')($scope.adquirentes, function(a) {return a.id === idOperadora;})[0];
                 // Busca bandeiras
-                if(idBandeira) buscaBandeiras(true, idBandeira);
+                if($scope.filtro.adquirente && $scope.filtro.adquirente !== null) buscaBandeiras(true, idBandeira);
                 else $scope.hideProgress(divPortletBodyFiltrosPos);
               },
               function(failData){
@@ -263,6 +272,7 @@ angular.module("card-services-cash-flow-relatorios", [])
        
        if(!$scope.filtro.adquirente || $scope.filtro.adquirente === null){
            $scope.filtro.bandeira = null;
+           $scope.bandeiras = [];
            return;
        }    
         

@@ -10,6 +10,8 @@ angular.module("card-services-conciliacao-vendas", [])
 
 .controller("card-services-conciliacao-vendasCtrl", ['$scope','$state',function($scope,$state){ 
     
+    // flags
+    $scope.exibeTela = false;
     // Data
     $scope.datamin = new Date();
     $scope.datamax = null;
@@ -24,6 +26,12 @@ angular.module("card-services-conciliacao-vendas", [])
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
+        });
+        // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
+        $scope.$on('acessoDeTelaNotificado', function(event){
+            $scope.exibeTela = true;
+            // Carrega dados
+            // ....
         });
         // Acessou a tela
         $scope.$emit("acessouTela");
