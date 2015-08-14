@@ -51,113 +51,63 @@
                     <table class="table table-striped table-bordered table-hover dataTable no-footer conteudoTabelas" id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
                         <thead>
                             <tr role="row" class="heading">
-                                <th width="8%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
-                                     Data
+                                <th tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="10%">
+                                     Banco
                                 </th>
-                                <th width="11%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
-                                     Filiais 
+                                <th tabindex="1" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="8%">
+                                     Tipo 
                                 </th>
-                                <th width="5%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
-                                     Adquirentes
+                                <th tabindex="2" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="8%">
+                                     Adquirente
                                 </th>
-                                <th width="8%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
-                                     Bandeiras
-                                </th>
-                                <th width="8%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
-                                     Status
-                                </th>
-                                <th width="1%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
-                                     Opções
-                                </th>
+                                <th tabindex="3" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="1%">
+                                     Ações de Filtro
+                                </th>                                
                             </tr>
-                            <tr role="row" class="filter">
+                        </thead>
+                        <tbody>
+                            <tr role="row" class="filter">                               
                                 <td rowspan="1" colspan="1">                                    
-                                    <div class="input-group date date-picker margin-bottom-5">
-                                        <!--input type="text" class="form-control form-filter input-sm" readonly name="order_date_from" placeholder="Início"-->
-                                        <input type="text" class="form-control form-filter input-sm" 
-                                               readonly style="cursor: pointer"
-                                               ng-click="exibeCalendarioDataMin($event)"
-                                               placeholder="Início" 
-                                               ng-model="datamin"
-                                               ng-change="alterouDataMin()"
-                                               datepicker-append-to-body=true
-                                               datepicker-popup="dd MMMM yyyy"
-                                               is-open="abrirCalendarioDataMin" 
-                                               min-date="2000-01-01"
-                                               ng-required="true" 
-                                               show-button-bar="false"
-                                               show-weeks="false" />
-                                        <span class="input-group-btn">
-                                        <button class="btn btn-sm default" type="button" ng-click="exibeCalendarioDataMin($event)"><i class="fa fa-calendar"></i></button>
+                                    <div class="input-group input-icon right">
+                                        <i class="fa fa-times ng-hide" 
+                                           style="right:50px;cursor:pointer" 
+                                           ng-click="resetaBusca()" 
+                                           ng-show="usuario.busca">
+                                        </i>
+                                        <input type="text" 
+                                               class="form-control input-inline ng-pristine ng-valid ng-touched" 
+                                               placeholder="Buscar" 
+                                               ng-model="busca" 
+                                               ng-keyup="">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-search" style="cursor:pointer" ng-click="filtraUsuarios()"></i>
                                         </span>
-                                    </div>
-                                    <div class="input-group date date-picker margin-bottom-5" data-date-format="dd/mm/yyyy">
-                                        <input type="text" class="form-control form-filter input-sm" 
-                                               readonly style="cursor: pointer" 
-                                               ng-click="exibeCalendarioDataMax($event)"
-                                               placeholder="Fim" 
-                                               ng-model="datamax" 
-                                               ng-change="alterouDataMax()"
-                                               datepicker-popup="dd MMMM yyyy" 
-                                               is-open="abrirCalendarioDataMax" 
-                                               datepicker-append-to-body=true
-                                               min-date="2000-01-01"
-                                               ng-required="false" 
-                                               current-text="Hoje" 
-                                               clear-text="Limpar" 
-                                               close-text="Fechar" 
-                                               show-button-bar="true"
-                                               show-weeks="false" />
-                                        <span class="input-group-btn">
-                                        <button class="btn btn-sm default" type="button" ng-click="exibeCalendarioDataMax($event)"><i class="fa fa-calendar"></i></button>
-                                        </span>
-                                    </div>                                            
+                                    </div>                                      
                                 </td>
                                 <td rowspan="1" colspan="1">
                                     <select name="order_status" class="form-control form-filter input-sm">
-                                        <option value="">Todas</option>
-                                        <option value="pending">Pending</option>
-                                        <option value="closed">Closed</option>
-                                        <option value="hold">On Hold</option>
-                                        <option value="fraud">Fraud</option>
+                                        <option value="">Todas</option>                                        
                                     </select>
                                 </td>
                                 <td rowspan="1" colspan="1">
                                     <select name="order_status" class="form-control form-filter input-sm">
-                                        <option value="">Todas</option>
-                                        <option value="pending">Pending</option>
-                                        <option value="closed">Closed</option>
-                                        <option value="hold">On Hold</option>
-                                        <option value="fraud">Fraud</option>
-                                    </select>
-                                </td>
-                                <td rowspan="1" colspan="1">
-                                    <select name="order_status" class="form-control form-filter input-sm">
-                                        <option value="">Todas</option>
-                                        <option value="pending">Pending</option>
-                                        <option value="closed">Closed</option>
-                                        <option value="hold">On Hold</option>
-                                        <option value="fraud">Fraud</option>
-                                    </select>
-                                </td>
-                                <td rowspan="1" colspan="1">
-                                    <select name="order_status" class="form-control form-filter input-sm">
-                                        <option value="">Todas</option>
-                                        <option value="pending">Pending</option>
-                                        <option value="closed">Closed</option>
-                                        <option value="hold">On Hold</option>
-                                        <option value="fraud">Fraud</option>
+                                        <option value="">Todas</option>                                        
                                     </select>
                                 </td>
                                 <td rowspan="1" colspan="1">
                                     <div class="margin-bottom-5">
-                                        <button class="btn btn-sm red filter-submit margin-bottom" ng-click="showModalConfirmacao('Meu titulo')"><i class="fa fa-search"></i> Buscar</button>
+                                        <button class="btn btn-sm red filter-submit margin-bottom"
+                                                ng-click="">
+                                            <i class="fa fa-search"></i> 
+                                            Buscar
+                                        </button>
                                     </div>
-                                    <button class="btn btn-sm grey filter-cancel"><i class="fa fa-times"></i> Limpar</button>
+                                    <button class="btn btn-sm grey filter-cancel">
+                                        <i class="fa fa-times"></i> 
+                                        Limpar
+                                    </button>
                                 </td>
-                            </tr>
-                        </thead>
-                        <tbody>
+                            </tr>                       
                         </tbody>
                     </table>
                 </div>
@@ -181,8 +131,9 @@
             </div>
             <div class="actions">
                 <a class="btn btn-circle btn-icon-only btn-default fullscreen" 
-                   href="javascript:;" ng-click="fullScreenClick()"
-                           title="{{telaEstaEmFullScreen() ? 'Tela Normal' : 'Tela Cheia'}}"></a>
+                   href="javascript:;" 
+                   ng-click="fullScreenClick()"
+                   title="{{telaEstaEmFullScreen() ? 'Tela Normal' : 'Tela Cheia'}}"></a>
                 <div class="btn-group element-hidden"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -->
                     <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
                     <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
@@ -211,10 +162,138 @@
             </div>
         </div>
         <div class="portlet-body" ng-show="exibeTela">
-            <div class="table-container">
-                
+            <div class="row">
+            <!--EXIBIÇÃO-->
+            <div class="col-xs-4 col-sm-4 col-md-4">
+                <div class="dataTables_length">
+                    <label>
+                        <span class="seperator"></span>Exibindo 
+                        <select name="datatable_products_length" aria-controls="datatable_products" 
+                                class="form-control input-xsmall input-sm input-inline"
+                                ng-model="usuario.itens_pagina"
+                                ng-change="alterouItensPagina()"
+                                ng-options="item for item in itens_pagina">                                            
+                        </select> registros de
+                    </label>
+                </div>   
             </div>
+            <!--PAGINAÇÃO-->
+            <div class="col-xs-4 col-sm-4 col-md-3">
+                <div class="pagination-panel centralizarPaginacao"> Página 
+                    <a href="javascript:;" ng-click="retrocedePagina()"
+                       class="btn btn-sm default prev" 
+                       ng-class="{disabled: usuario.pagina <= 1}" 
+                       title="Página anterior">
+                            <i class="fa fa-angle-left"></i>
+                    </a>
+                    <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                           maxlength="4" style="text-align:center; margin: 0 5px;"
+                           ng-model="paginaInformada" valid-integer-number
+                           ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                           ng-blur="atualizaPaginaDigitada()">
+                    <a href="javascript:;" ng-click="avancaPagina()"
+                       class="btn btn-sm default next"
+                       ng-class="{disabled: usuario.pagina >= usuario.total_paginas}"
+                       title="Próxima página">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                     de <span class="pagination-panel-total"></span>
+                </div>    
+            </div>                                        
+        </div>
             
+            <div class="table-container">
+                <div class="table-scrollable">
+                    <table class="table table-striped table-hover table-bordered dataTable no-footer" role="grid">
+                        <thead>
+                            <tr role="row">
+                                <th tabindex="0" rowspan="1" colspan="1" style="width: 25%;">
+                                   Banco
+                                </th>
+                                <th tabindex="1" rowspan="1" colspan="1" style="width: 10%;">
+                                   Tipo 
+                                </th>
+                                <th tabindex="2" rowspan="1" colspan="1" style="width: 10%;">
+                                   Descrição
+                                </th>
+                                <th tabindex="3" rowspan="1" colspan="1" style="width: 10%;">
+                                   Adquirente
+                                </th>
+                                <th tabindex="4" rowspan="1" colspan="1" style="width: 10%;">
+                                   Ação
+                                </th>                                        
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- ngRepeat:  -->
+                            <tr role="row" class="odd ng-scope conteudoTabelas" >
+                                <!--BANCO-->
+                                <td style="text-align:left">
+                                    104  CAIXA ECONÔMICA FEDERAL
+                                </td>
+                                <!--TIPO-->
+                                <td>
+                                    1402-8
+                                </td>
+                                <!--DESCRIÇÃO-->
+                                <td>
+                                    Descrição exemplo
+                                </td>
+                                <!--ADQUIRENTE-->
+                                <td>
+                                    Cielo
+                                </td>
+                                <!--AÇÃO-->
+                                <td class="center btnacoes">
+                                    <div class="btn-group" dropdown="" dropdown-append-to-body="">
+                                        <a class="btn btn-default btn-circle"
+                                           href="javascript:;" 
+                                           dropdown-toggle="" 
+                                           aria-haspopup="true" 
+                                           aria-expanded="false">
+                                            <i class="fa fa-pencil"></i>
+                                             Ações 
+                                            <i class="fa fa-angle-down"></i>
+                                        </a>
+                                    </div>
+                                </td>                                                                       
+                            </tr>                                                                
+                        </tbody>
+                    </table>
+                </div> 
+                <!-- RODAPÉ : Exibição dos resultados e paginação -->
+                <div class="row">
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class="dataTables_info" id="sample_editable_1_info" role="status" aria-live="polite">
+                            <strong>Exibindo os registros <!--{{ }}--></strong>
+                        </div>
+                    </div>
+                    <!--PAGINAÇÃO-RODAPÉ-->
+                    <div class="col-xs-4 col-sm-4 col-md-3">
+                        <div class="pagination-panel centralizarPaginacao"> Página 
+                            <a href="javascript:;" ng-click="retrocedePagina()"
+                               class="btn btn-sm default prev" 
+                               ng-class="{disabled: usuario.pagina <= 1}" 
+                               title="Página anterior">
+                                    <i class="fa fa-angle-left"></i>
+                            </a>
+                            <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                   maxlength="4" style="text-align:center; margin: 0 5px;"
+                                   ng-model="paginaInformada" valid-integer-number
+                                   ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                                   ng-blur="atualizaPaginaDigitada()">
+                            <a href="javascript:;" ng-click="avancaPagina()"
+                               class="btn btn-sm default next"
+                               ng-class="{disabled: usuario.pagina >= usuario.total_paginas}"
+                               title="Próxima página">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                             de <span class="pagination-panel-total"><!--{{ }}--></span>
+                        </div>
+                    </div>
+                    <!-- FIM PAGINAÇÃO -->
+                </div>
+            </div>
         </div>
     </div>
 </div>
