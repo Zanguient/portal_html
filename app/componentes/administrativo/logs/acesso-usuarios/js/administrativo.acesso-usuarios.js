@@ -72,7 +72,7 @@ angular.module("administrativo-acesso-usuarios", [])
       */
     $scope.adicionaQuebraLinhaHtml = function(text){
         console.log(text);
-        console.log($scope.modalLog
+        console.log($scope.modalLog.log.msgErro);
         if(typeof text === 'string') return text.split("\n").join(String.fromCharCode(160));
         return text;
     }                                            

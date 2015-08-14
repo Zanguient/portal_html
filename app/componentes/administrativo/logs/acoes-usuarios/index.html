@@ -57,7 +57,7 @@
                                         <label>Resposta HTTP:</label>{{modalLog.log.codResposta}}    
                                    </div>
                                    <div class="col-sm-12">
-                                        <label>URL:</label>{{modalLog.log.dsUrl}}    
+                                        <label>URL:</label>{{modalLog.log.dsUrl | lowercase}}    
                                    </div>
                                    <div class="col-sm-12" ng-show="modalLog.log.dsParametros">
                                         <label>Parâmetros:</label>{{modalLog.log.dsParametros}}    
@@ -272,7 +272,7 @@
                                         </td>
                                         <!--URL-->
                                         <td style="text-align:left">
-                                            {{log.dsUrl | uppercase}}
+                                            {{log.dsUrl | lowercase}}
                                         </td>
                                         
                                         <!--DETALHAR-->
