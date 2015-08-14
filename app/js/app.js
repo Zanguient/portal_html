@@ -349,7 +349,7 @@ angular.module("AtosCapital", ['ui.router',
     var controllerCardServicesConciliacaoBancaria = undefined;
     var controllerCardServicesConciliacaoVendas = undefined;
     var controllerCardServicesConsolidacaoRelatorios = undefined;
-    var controllerMinhaConta = {idController : 91, ds_controller : 'Minha Conta', methods : []};
+    var controllerMinhaConta = {id_controller : 91, ds_controller : 'Minha Conta', methods : []};
     // Permissões
     //$scope.usuarioTemAcesso = false;                      
     $scope.PERMISSAO_FILTRO_EMPRESA = false;                        
@@ -413,13 +413,14 @@ angular.module("AtosCapital", ['ui.router',
                 $scope.$broadcast('acessoDeTelaNotificado');
                 return;
             }
-            ultimoController = controllerAtual.id_controller;
-            $scope.$broadcast('acessoDeTelaNotificado');
-            /*
+            //ultimoController = controllerAtual.id_controller;
+            //$scope.$broadcast('acessoDeTelaNotificado');
+            
             $scope.showProgress();
             $webapi.post($apis.getUrl($apis.administracao.logacesso, undefined, 
                                   {id: 'token', valor: $scope.token}), {idController : controllerAtual.id_controller})
                 .then(function(dados){
+                     ultimoController = controllerAtual.id_controller;
                      $scope.hideProgress();
                      $scope.$broadcast('acessoDeTelaNotificado');
                   },function(failData){
@@ -428,7 +429,7 @@ angular.module("AtosCapital", ['ui.router',
                      else $scope.showAlert('Houve uma falha ao se comunicar com o servidor (' + failData.status + ')', true, 'danger', true);
                      $scope.hideProgress();
                      //console.log('Houve uma falha ao notificar o acesso da tela (' + failData.status + ')');
-                  });   */
+                  });   
         }
     });  
     /**
@@ -1566,7 +1567,7 @@ angular.module("AtosCapital", ['ui.router',
         // 2015-07-21T10:51:15.917  
         if(typeof data !== 'undefined' && data !== null) 
             return data.substr(8, 2) + '/' + data.substr(5, 2) + '/' + data.substr(0, 4) + 
-                   ' ' + data.substr(11,5);
+                   ' ' + data.substr(11,8);
         return '';
    };
    /**
