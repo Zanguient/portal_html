@@ -1,0 +1,95 @@
+# README #
+
+Módulo que:
+ - gerencia o layout da tela de parâmetros bancários de Gestão de Empresas (app/componentes/administracao/gestao-empresas/parametros-bancarios/index.html);
+ - permite a visualização da relação entre os MEMOs de extrato bancário associado a cada banco, a fim de associar a alguma adquirente
+ 
+
+### Pra Que Serve Este Módulo? ###
+
+Gerenciar completamente a tela de parâmetros bancários de Gestão de Empresas (Administrativo). 
+
+
+
+### O que é necessário para usar o módulo? ###
+
+Como esse é um controller filho do controller principal "appCtrl" (app.js), ele herda todos os módulos importados por ele.
+Além deles, é necessária a importação dos seguintes módulos externos.
+
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |                MODULO                  |                   DESCRIÇÃO                       |         IMPORT (no app/index.html)        |
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |                       
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+
+
+ 
+### Outras depêndencias ###
+
+  * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
+  * $scope.token do "appCtrl"
+  * Emite evento "acessouTela" no init do controller para que seja feito o log de acesso de tela
+  * Evento "acessoDeTelaNotificado", proveniente do "appCtrl", para de fato exibir a tela e fazer requisições 
+	=> importante para o log correto de requisições HTTP, ao qual identifica corretamente a (tela de) origem
+  * APIS:
+    - card/tbbancoparametro
+	- card/tbloginadquirenteempresa
+	- utils/bancos
+	
+ 
+ 
+ ### Interação com a WEB API ###
+ 
+  * utils/bancos
+	- GET : listagem dos bancos (coleção 0)
+			[
+			  { Codigo : string,
+				NomeExtenso : string
+			  }
+			]
+ 
+  * card/tbadquirente
+    - GET : listagem as adquirentes que podem ser cadastradas (coleção 0)
+			[
+			  { cdAdquirente = int,
+                nmAdquirente = string,
+                dsAdquirente = string,
+                stAdquirente = int,  // igual a 1
+				hrExecucao = datetime,
+			  }
+			]	
+	
+  * card/tbbancoparametro
+    - DELETE : exclui um parâmetro bancário
+	        ?token=....&cdBanco=codigo&dsMemo=memo
+    - GET : listagem dos parâmetros bancários (coleção 2)
+			[
+			  { dsMemo : string,
+				adquirente : null ou { cdAdquirente : int, nmAdquirente : string, dsAdquirente : string, stAdquirente : int},
+				dsTipo : e.dsTipo,
+				banco : { Codigo : string, 
+						  NomeExtenso : string},
+			  }
+			]	
+	- POST : adiciona um novo parâmetro bancário
+			[
+			  { cdBanco : string, 
+				dsMemo : string,
+				dsTipo : string,
+				cdAdquirente : int, // set -1 para deixar indefinido
+			  }
+			]	
+	- PUT : altera um parâmetro bancário existente
+			[
+			  { cdBanco : string, // não altera
+				dsMemo : string, // não altera
+				dsTipo : string,
+				cdAdquirente : int, // set -1 para deixar indefinido
+			  }
+			]			
+   
+
+   
+### Desenvolvedores ###
+
+Deivid Marinho - deividgfmarinho@gmail.com
