@@ -46,7 +46,7 @@ angular.module("administrativo-acoes-usuarios", [])
                                                 
                                                 
     // Inicialização do controller
-    $scope.administrativoAcoesUsuariosInit = function(){
+    $scope.administrativo_acoesUsuariosInit = function(){
         // Título da página 
         $scope.pagina.titulo = 'Logs';                          
         $scope.pagina.subtitulo = 'Ações de Usuários';
