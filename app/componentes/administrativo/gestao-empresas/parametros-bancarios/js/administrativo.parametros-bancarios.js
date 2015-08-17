@@ -25,7 +25,7 @@ angular.module("administrativo-parametros-bancarios", [])
     // Dados    
     $scope.parametros = [];
     $scope.adquirentes = [];                                            
-    $scope.filtro = {banco : undefined, tipo : '', adquirente : undefined,
+    $scope.filtro = {banco : undefined, tipo : '', adquirente : undefined, semadquirentes : false,
                      itens_pagina : $scope.itens_pagina[0], order : 0,
                      pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0
                     };  
@@ -207,6 +207,12 @@ angular.module("administrativo-parametros-bancarios", [])
     
     
     // ADQUIRENTES
+    /**
+      * Somente os registros sem adquirente associada
+      */
+    $scope.selecionouCheckboxAdquirente = function(){
+        if($scope.filtro.semadquirentes) $scope.filtro.adquirente = null;    
+    }
     $scope.alterouAdquirente = function(){
         // ....
     }
@@ -264,30 +270,29 @@ angular.module("administrativo-parametros-bancarios", [])
       * Obtém os filtros de busca
       */
     var obtemFiltrosBusca = function(){
-        var filtros = undefined;
+        var filtros = [];
         
         // BANCO
         if($scope.filtro.banco && $scope.filtro.banco !== null && $scope.filtro.banco.Codigo){
-            filtros = [{id: /*$campos.card.tbbancoparametro.cdBanco*/ 100,
-                        valor: $scope.filtro.banco.Codigo}];    
+            filtros.push({id: /*$campos.card.tbbancoparametro.cdBanco*/ 100,
+                          valor: $scope.filtro.banco.Codigo});    
         }
         
         // TIPO
         if($scope.filtro.tipo && $scope.filtro.tipo !== null){
-            var filtroTipo = filtros = [{id: /*$campos.card.tbbancoparametro.dsTipo*/ 103,
-                                         valor: $scope.filtro.tipo}]; 
-            if(!filtros) filtros = filtroTipo;
-            else filtros.push(filtroTipo);
+            filtros.push({id: /*$campos.card.tbbancoparametro.dsTipo*/ 103,
+                          valor: $scope.filtro.tipo});
         }
         
         // ADQUIRENTE
-        if($scope.filtro.adquirente && $scope.filtro.adquirente !== null){
-            var filtroAdquirente = filtros = [{id: /*$campos.card.tbbancoparametro.cdAdquirente*/ 102,
-                                         valor: $scope.filtro.adquirente.cdAdquirente}]; 
-            if(!filtros) filtros = filtroAdquirente;
-            else filtros.push(filtroAdquirente);
+        if($scope.filtro.semadquirentes){
+            filtros.push({id: /*$campos.card.tbbancoparametro.cdAdquirente*/ 102,
+                          valor: -1});       
+        }else if($scope.filtro.adquirente && $scope.filtro.adquirente !== null){
+            filtros.push({id: /*$campos.card.tbbancoparametro.cdAdquirente*/ 102,
+                          valor: $scope.filtro.adquirente.cdAdquirente}); 
         }
-        return filtros;
+        return filtros.length > 0 ? filtros : undefined;
     }
                                            
     /**
@@ -302,6 +307,9 @@ angular.module("administrativo-parametros-bancarios", [])
         
         // Filtro  
         var filtros = obtemFiltrosBusca();
+        
+        //$scope.hideProgress(divPortletBodyFiltrosPos);
+        //$scope.hideProgress(divPortletBodyParametrosPos);
            
         $webapi.get($apis.getUrl($apis.card.tbbancoparametro, 
                                 [$scope.token, 2, 
@@ -458,11 +466,12 @@ angular.module("administrativo-parametros-bancarios", [])
         
         $scope.modalParametro.titulo = 'Altera Parâmetro Bancário';
         $scope.modalParametro.textoConfirma = 'Alterar';
-        $scope.modalParametro.funcaoConfirma = alterarConta;
+        $scope.modalParametro.funcaoConfirma = alterarParametroBancario;
         $scope.modalParametro.banco = parametro.banco;
         $scope.modalParametro.dsMemo = parametro.dsMemo;
         $scope.modalParametro.dsTipo = parametro.dsTipo.toUpperCase();
-        $scope.modalParametro.adquirente = $filter('filter')($scope.adquirentes, function(a) {return a.cdAdquirente === parametro.adquirente.cdAdquirente;})[0];
+        if(parametro.adquirente === null) $scope.modalParametro.adquirente = undefined;
+        else $scope.modalParametro.adquirente = $filter('filter')($scope.adquirentes, function(a) {return a.cdAdquirente === parametro.adquirente.cdAdquirente;})[0];
         
         // Exibe o modal
         exibeModalParametroBancario();      
@@ -478,7 +487,7 @@ angular.module("administrativo-parametros-bancarios", [])
         // Houve alterações?
         if($scope.modalParametro.banco.Codigo === old.banco.Codigo &&
            $scope.modalParametro.dsMemo.toUpperCase() === old.dsMemo.toUpperCase() &&
-           $scope.modalParametro.dsTipo.toUpperCase() === old.nrConta.toUpperCase() &&
+           $scope.modalParametro.dsTipo.toUpperCase() === old.dsTipo.toUpperCase() &&
            // Alterou adquirente ?
            (((!$scope.modalParametro.adquirente || $scope.modalParametro.adquirente === null) && old.adquirente === null) || 
             ($scope.modalParametro.adquirente && $scope.modalParametro.adquirente !== null && old.adquirente !== null && 
@@ -498,28 +507,28 @@ angular.module("administrativo-parametros-bancarios", [])
                               dsTipo : $scope.modalParametro.dsTipo,
                               cdAdquirente : cdAdquirente
                             };
-        console.log(jsonConta);
+        //console.log(jsonParametro);
         
         // UPDATE
-        /*$scope.showProgress();
-        $webapi.update($apis.getUrl($apis.card.tbcontacorrente, undefined,
-                                 {id : 'token', valor : $scope.token}), jsonConta) 
+        $scope.showProgress();
+        $webapi.update($apis.getUrl($apis.card.tbbancoparametro, undefined,
+                                 {id : 'token', valor : $scope.token}), jsonParametro) 
             .then(function(dados){           
-                $scope.showAlert('Conta alterada com sucesso!', true, 'success', true);
+                $scope.showAlert('Parâmetro bancário alterado com sucesso!', true, 'success', true);
                 // Fecha os progress
                 $scope.hideProgress();
                 // Fecha o modal
-                fechaModalConta();
+                fechaModalParametroBancario();
                 // Relista
-                buscaContas();
+                buscaParametros();
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                 else $scope.showAlert('Houve uma falha ao alterar conta (' + failData.status + ')', true, 'danger', true);
+                 else $scope.showAlert('Houve uma falha ao alterar parâmetro bancário (' + failData.status + ')', true, 'danger', true);
                  // Fecha os progress
                  $scope.hideProgress();
-              });   */
+              });   
     }
     
    /**
@@ -529,7 +538,7 @@ angular.module("administrativo-parametros-bancarios", [])
         $scope.showModalConfirmacao('Confirmação', 
                                     'Tem certeza que deseja excluir o parâmetro bancário?',
                                      excluiParametroBancario, 
-                                    {cdBanco : parametro.cdBanco,
+                                    {cdBanco : parametro.banco.Codigo,
                                      dsMemo: parametro.dsMemo}, 'Sim', 'Não');  
     };                   
     /**

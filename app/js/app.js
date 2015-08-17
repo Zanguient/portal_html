@@ -426,10 +426,10 @@ angular.module("AtosCapital", ['ui.router',
                 $scope.$broadcast('acessoDeTelaNotificado');
                 return;
             }
-            ultimoController = controllerAtual.id_controller;
-            $scope.$broadcast('acessoDeTelaNotificado');
+            //ultimoController = controllerAtual.id_controller;
+            //$scope.$broadcast('acessoDeTelaNotificado');
             
-            /*$scope.showProgress();
+            $scope.showProgress();
             $webapi.post($apis.getUrl($apis.administracao.logacesso, undefined, 
                                   {id: 'token', valor: $scope.token}), {idController : controllerAtual.id_controller})
                 .then(function(dados){
@@ -442,7 +442,7 @@ angular.module("AtosCapital", ['ui.router',
                      else $scope.showAlert('Houve uma falha ao se comunicar com o servidor (' + failData.status + ')', true, 'danger', true);
                      $scope.hideProgress();
                      //console.log('Houve uma falha ao notificar o acesso da tela (' + failData.status + ')');
-                  });  */ 
+                  });   
         }
     });  
     /**

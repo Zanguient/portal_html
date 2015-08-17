@@ -508,13 +508,14 @@ angular.module("administrativo-dados-acesso", [])
     $scope.alteraDadosAcesso = function(old){
        if(typeof old === 'undefined') return; 
        // Verifica se houve alteração
-       if(old.login === $scope.alteracao.login &&
+       /*if(old.login === $scope.alteracao.login &&
           old.senha === $scope.alteracao.senha &&
           (old.estabelecimento === null && !$scope.alteracao.estabelecimento || 
            old.estabelecimento === $scope.alteracao.estabelecimento)){
             $scope.cancelaAlteracao();
             return;
-       }
+       }*/
+        // PERMITE ENVIAR PARA O SERVIDOR SEM ALTERAR NADA => PODE SER UTILIZADO PARA ARMAZENAR NO LOGEXECUTION
         
        if($scope.alteracao.login.trim().length < 3){
            $scope.showModalAlerta('Preencha um login com no mínimo 3 caracteres!');
