@@ -19,8 +19,6 @@ angular.module("AtosCapital", ['ui.router',
                                'administrativo-usuarios-cadastro',
                                'administrativo-privilegios',
                                'administrativo-modulos-funcionalidades',
-                               'administrativo-acesso-usuarios',
-                               'administrativo-acoes-usuarios',
                                'administrativo-empresas',
                                'administrativo-filiais',
                                'administrativo-filiais-cadastro',
@@ -30,6 +28,9 @@ angular.module("AtosCapital", ['ui.router',
                                'administrativo-contas-correntes-vigencias',
                                'administrativo-extratos-bancarios',
                                'administrativo-parametros-bancarios',
+                               'administrativo-acesso-usuarios',
+                               'administrativo-acoes-usuarios',
+                               'administrativo-monitor-cargas',
                                'dashboard', 
                                'card-services-cash-flow-relatorios',
                                'card-services-conciliacao-bancaria',
@@ -201,6 +202,15 @@ angular.module("AtosCapital", ['ui.router',
             titulo: 'Administrativo'
         }
       })
+    
+      .state('administrativo-monitor-monitor-cargas', {
+        url: prefixo + 'administrativo/monitor-bancarios',
+        templateUrl: 'componentes/administrativo/monitor/monitor-cargas/index.html',
+        controller: "administrativo-monitor-cargasCtrl",
+        data: {
+            titulo: 'Administrativo'
+        }
+      })
 
     
     
@@ -356,6 +366,7 @@ angular.module("AtosCapital", ['ui.router',
     var controllerAdministrativoParametrosBancarios = undefined;
     var controllerAdministrativoAcessoUsuarios = undefined;
     var controllerAdministrativoAcoesUsuarios = undefined;
+    var controllerAdministrativoMonitorCargas = undefined;
     var controllerDashboard = undefined;
     var controllerCardServicesCashFlowRelatorios = undefined;
     var controllerCardServicesConciliacaoBancaria = undefined;
@@ -380,7 +391,9 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_PARAMETROS_BANCARIOS = false;                        
     $scope.PERMISSAO_ADMINISTRATIVO_LOGS = false;
     $scope.PERMISSAO_ADMINISTRATIVO_LOGS_ACESSO_USUARIOS = false;     
-    $scope.PERMISSAO_ADMINISTRATIVO_LOGS_ACOES_USUARIOS = false;                           
+    $scope.PERMISSAO_ADMINISTRATIVO_LOGS_ACOES_USUARIOS = false;  
+    $scope.PERMISSAO_ADMINISTRATIVO_MONITOR = false;                        
+    $scope.PERMISSAO_ADMINISTRATIVO_MONITOR_MONITOR_CARGAS = false;
     $scope.PERMISSAO_DASHBOARD = false;
     $scope.PERMISSAO_CARD_SERVICES = false;
     $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW = false;   
@@ -578,7 +591,14 @@ angular.module("AtosCapital", ['ui.router',
     $scope.goAdministrativoAcoesUsuarios = function(params){
         controllerAtual = controllerAdministrativoAcoesUsuarios;
         go('administrativo-logs-acoes-usuarios', params);
-    };                         
+    };       
+    /**
+      * Exibe como conteúdo a Monitor Monitor de Cargas, de Administrativo
+      */                        
+    $scope.goAdministrativoMonitorCargas = function(params){
+        controllerAtual = controllerAdministrativoMonitorCargas;
+        go('administrativo-monitor-monitor-cargas', params);
+    };                             
     /**
       * Exibe como conteúdo o Dashboard
       */                        
@@ -763,6 +783,15 @@ angular.module("AtosCapital", ['ui.router',
             }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'AÇÕES DE USUÁRIOS')
                      controllerAtual.id_controller !== controllerAdministrativoAcoesUsuarios.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual 
+        }else if(url === $state.get('administrativo-monitor-monitor-cargas').url){ 
+            // Logs > Ações de usuários
+            if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_MONITOR || !$scope.PERMISSAO_ADMINISTRATIVO_MONITOR_MONITOR_CARGAS){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.goUsuarioSemPrivilegios();
+            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'AÇÕES DE USUÁRIOS')
+                     controllerAtual.id_controller !== controllerAdministrativoMonitorCargas.id_controller)
+                $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual 
         }else if(url === $state.get('dashboard').url){ 
             // Dashboard
             if(!$scope.PERMISSAO_DASHBOARD){
@@ -889,6 +918,11 @@ angular.module("AtosCapital", ['ui.router',
                     controllerAtual = controller;
                 controllerAdministrativoAcoesUsuarios = controller;
                 return $scope.goAdministrativoAcoesUsuarios;
+            case 'MONITOR DE CARGAS':
+                if($location.path() === $state.get('administrativo-monitor-monitor-cargas').url) 
+                    controllerAtual = controller;
+                controllerAdministrativoMonitorCargas = controller;
+                return $scope.goAdministrativoMonitorCargas;    
             // Dashboard
             case 'DASHBOARD ATOS': 
                 if($location.path() === $state.get('dashboard').url) controllerAtual = controller;
@@ -948,6 +982,8 @@ angular.module("AtosCapital", ['ui.router',
             case 'LOGS' : $scope.PERMISSAO_ADMINISTRATIVO_LOGS = true; break;
             case 'ACESSO DE USUÁRIOS' : $scope.PERMISSAO_ADMINISTRATIVO_LOGS_ACESSO_USUARIOS = true; break;
             case 'AÇÕES DE USUÁRIOS': $scope.PERMISSAO_ADMINISTRATIVO_LOGS_ACOES_USUARIOS = true; break;
+            case 'MONITOR': $scope.PERMISSAO_ADMINISTRATIVO_MONITOR = true; break;
+            case 'MONITOR DE CARGAS': $scope.PERMISSAO_ADMINISTRATIVO_MONITOR_MONITOR_CARGAS = true; break;
             // Card Services
             case 'CARD SERVICES': $scope.PERMISSAO_CARD_SERVICES = true; break;
             case 'CASH FLOW' : $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW = true; break;
@@ -1018,6 +1054,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'PARÂMETROS BANCÁRIOS': return state == 'parametros-bancarios';
             case 'ACESSO DE USUÁRIOS' : return state == 'acesso-usuarios';  
             case 'AÇÕES DE USUÁRIOS': return state == 'acoes-usuarios';
+            case 'MONITOR DE CARGAS': return state == 'monitor-cargas';
             // Card Services
             case 'CONCILIAÇÃO BANCÁRIA': return state == 'conciliacao-bancaria';
             case 'CONCILIAÇÃO DE VENDAS': return state == 'conciliacao-vendas';

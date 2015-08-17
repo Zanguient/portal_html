@@ -47,7 +47,7 @@ angular.module("administrativo-acesso-usuarios", [])
  
                                                 
     // Inicialização do controller
-    $scope.administrativoAcessoUsuariosInit = function(){
+    $scope.administrativo_acessoUsuariosInit = function(){
         // Título da página 
         $scope.pagina.titulo = 'Logs';                          
         $scope.pagina.subtitulo = 'Acesso de Usuários';
