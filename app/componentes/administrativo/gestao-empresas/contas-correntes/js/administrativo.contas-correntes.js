@@ -411,7 +411,7 @@ angular.module("administrativo-contas-correntes", [])
       */                                             
     var camposModalValidos = function(){
         // Valida
-        if(!$scope.modalConta.banco || !$scope.modalParametro.banco.Codigo){
+        if(!$scope.modalConta.banco || !$scope.modalConta.banco.Codigo){
             $scope.showModalAlerta('Informe o banco!');
             return false;
         }

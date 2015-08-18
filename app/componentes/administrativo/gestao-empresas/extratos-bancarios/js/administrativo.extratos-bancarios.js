@@ -369,6 +369,7 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
             $scope.current = 0;
             // Loading progress
             $scope.showProgress(divPortletBodyFiltrosPos);
+            $scope.showProgress(divPortletBodyExtratosPos);
             for (var i = 0; i < $scope.total; i++) {
                 var file = files[i];
                 // Avalia a extensão
@@ -382,6 +383,7 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
                         $scope.progresso = 100;
                         uploadEmProgresso = false;
                         $scope.hideProgress(divPortletBodyFiltrosPos);
+                        $scope.hideProgress(divPortletBodyExtratosPos);
                     }
                     continue;
                 }
@@ -399,6 +401,7 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
                             $scope.type = 'success';
                             uploadEmProgresso = false;
                             $scope.hideProgress(divPortletBodyFiltrosPos);
+                            $scope.hideProgress(divPortletBodyExtratosPos);
                         }
                         // Relista o extrato corrente
                         buscaExtrato();
@@ -412,6 +415,7 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
                         $scope.type = 'danger';
                         uploadEmProgresso = false;
                         $scope.hideProgress(divPortletBodyFiltrosPos);
+                        $scope.hideProgress(divPortletBodyExtratosPos);
                     }
                 });
             }

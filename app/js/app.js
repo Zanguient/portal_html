@@ -51,6 +51,9 @@ angular.module("AtosCapital", ['ui.router',
     $httpProvider.defaults.useXDomain = true; 
     delete $httpProvider.defaults.headers.common['X-Requested-With'];               
              
+    // HTML 5
+    //$locationProvider.html5Mode(true);
+             
     // ROTAS         
     var prefixo = '/';
     
