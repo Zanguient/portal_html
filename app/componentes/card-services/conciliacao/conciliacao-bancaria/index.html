@@ -48,7 +48,8 @@
                 </div>
                 <!--div class="table-scrollable"-->
                 <div class="table-scrollable">
-                    <table class="table table-striped table-bordered table-hover dataTable no-footer conteudoTabelas" id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
+                    <table class="table table-striped table-bordered table-hover dataTable no-footer conteudoTabelas" 
+                           id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
                         <thead>
                             <tr role="row" class="heading">
                                 <th tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="10%">
@@ -203,80 +204,91 @@
             </div>
          
         
-            <div class="table-container">
+            <div class="table-container" style="margin-bottom:50px">
+                <!--CUPONS AZUIS-->
                 <div class="row">
                     <!--1º CUPOM (PREVISÃO CRÉDITO)-->
-                    <div class="col-md-4 col-md-offset-2 cupomAzulConciliacaoBancaria">
-                        <!--TITULO DO CUPON -->
+                    <div class="col-md-5 col-sm-5">
                         <div class="row">
-                            <!--TIPO DO CUPON-->
-                            <div class="col-md-12 conteudoCuponsConciliacaobancaria">
-                                Previsão Crédito
+                            <div class="col-md-8 col-md-offset-4 col-sm-12 cupomAzulConciliacaoBancaria">
+                                <!--HEAD-->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <!--TITULO DO CUPON -->
+                                        <div class="row tituloCumponsConciliacaoBancaria">
+                                            <!--TIPO DO CUPON-->
+                                            <div class="col-md-12 conteudoCuponsConciliacaobancaria">
+                                                Previsão de Crédito
+                                            </div>
+                                        </div>
+                                        <!--SUBTITULO DO CUPON -->
+                                        <div class="row subTituloCuponsConciliacaoBancaria">
+                                            <!--BANCO-->
+                                            <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
+                                                Banco do Brasil
+                                            </div>
+                                        </div>                                 
+                                    </div>
+                                </div>
+                                <!--BODY-->
+                                <!--CAMPO AGÊNCIA E CONTA -->
+                                <div class="row">
+                                    <!--AGÊNCIA-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Agência:</label>87695-9
+                                    </div>
+                                    <!--CONTA-->
+                                    <div class="col-md-6  alinhamentoDados">
+                                        <label>Conta:</label>09076346-9
+                                    </div> 
+                                </div>                    
+                                <!--DIVISÓRIA DOS TIPOS DE CUPONS-->
+                                <div class="row">   
+                                    <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
+                                        ==============================
+                                    </div>
+                                </div>
+                                <!--CAMPO DATA-->
+                                <div class="row">
+                                    <!--DATA-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Data:</label>
+                                    </div>
+                                    <!--RESULTADO DA DATA-->
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                        14/08/2015
+                                    </div>
+                                    <!--DESCRIÇÃO-->                       
+                                </div>
+                                <!--CAMPO DESCRIÇÃO -->
+                                <div class="row">
+                                    <!--DESCRIÇÃO-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Descrição:</label>
+                                    </div>
+                                    <!--RESULTADO DA DESCRIÇÃO-->
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                        REDE
+                                    </div>                      
+                                </div> 
+                                <!--CAMPO VALOR-->
+                                <div class="row">
+                                    <!--VALOR-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Valor:</label>
+                                    </div>
+                                    <!--RESULTADO DO VALOR-->
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                        <label>R$</label>440,00
+                                    </div>                                              
+                                </div> 
                             </div>
                         </div>
-                        <!--SUBTITULO DO CUPON -->
-                        <div class="row">
-                            <!--BANCO-->
-                            <div class="col-md-12 conteudoCuponsConciliacaobancaria">
-                                Banco do Brasil
-                            </div>
-                        </div> 
-                        <!--CAMPO AGÊNCIA E CONTA -->
-                        <div class="row">
-                            <!--AGÊNCIA-->
-                            <div class="col-md-6">
-                                <label>Agência:</label>87695-9
-                            </div>
-                            <!--CONTA-->
-                            <div class="col-md-6 alinhamentoDados">
-                                <label>Conta:</label>09076346-9
-                            </div> 
-                        </div>                    
-                        <!--DIVISÓRIA DOS TIPOS DE CUPONS-->
-                        <div class="row">   
-                            <div class="col-md-12 conteudoCuponsConciliacaobancaria">
-                                ==============================
-                            </div>
-                        </div>
-                        <!--CAMPO DATA-->
-                        <div class="row">
-                            <!--DATA-->
-                            <div class="col-md-6">
-                                <label>Data:</label>
-                            </div>
-                            <!--RESULTADO DA DATA-->
-                            <div class="col-md-6 alinhamentoDados">
-                                14/08/2015
-                            </div>
-                            <!--DESCRIÇÃO-->                       
-                        </div>
-                        <!--CAMPO DESCRIÇÃO -->
-                        <div class="row">
-                            <!--DESCRIÇÃO-->
-                            <div class="col-md-6 ">
-                                <label>Descrição:</label>
-                            </div>
-                            <!--RESULTADO DA DESCRIÇÃO-->
-                            <div class="col-md-6 alinhamentoDados">
-                                REDE
-                            </div>                      
-                        </div> 
-                        <!--CAMPO VALOR-->
-                        <div class="row">
-                            <!--VALOR-->
-                            <div class="col-md-6">
-                                <label>Valor:</label>
-                            </div>
-                            <!--RESULTADO DO VALOR-->
-                            <div class="col-md-6 alinhamentoDados">
-                                <label>R$</label>440,00
-                            </div>                                              
-                        </div> 
                     </div>
                     <!--BOTÃO-->
-                    <div class="col-md-2">
+                    <div class="col-md-2 col-sm-2 btnCheckConciliacaoBancaria">
                         <div class="row">
-                            <div class="col-md-6 col-md-offset-3">
+                            <div class="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-4">
                                 <a href="javascript:;" class="btn btn-icon-only default">
                                     <i class="fa fa-check"></i>
                                 </a>
@@ -284,89 +296,467 @@
                         </div>
                     </div>
                     <!--2º CUPOM(COMPROVANTE CRÉDITO)-->
-                    <div class="col-md-4 cupomAzulConciliacaoBancaria">
-                        <!--TITULO DO CUPON -->
-                        <div class="row headCumponsConciliacaoBancaria">
-                            <div class="col-md-12">
+                    <div class="col-md-5 col-sm-5">
+                        <div class="row">
+                            <div class="col-md-8 col-sm-12 cupomAzulConciliacaoBancaria">
+                                <!--HEAD-->
                                 <div class="row">
-                                    <!--TIPO DO CUPON-->
-                                    <div class="col-md-12 conteudoCuponsConciliacaobancaria">
-                                        Comprovante Crédito
+                                    <div class="col-md-12 col-sm-12">
+                                        <!--TITULO DO CUPON -->
+                                        <div class="row tituloCumponsConciliacaoBancaria">
+                                            <!--TIPO DO CUPON-->
+                                            <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
+                                                Comprovante de Crédito
+                                            </div>
+                                        </div>
+                                        <!--SUBTITULO DO CUPON -->
+                                        <div class="row subTituloCuponsConciliacaoBancaria">
+                                            <!--BANCO-->
+                                            <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
+                                                Banco do Brasil
+                                            </div>
+                                        </div>                                 
                                     </div>
                                 </div>
-                                <!--SUBTITULO DO CUPON -->
+                                <!--BODY-->
+                                <!--CAMPO AGÊNCIA E CONTA -->
                                 <div class="row">
-                                    <!--BANCO-->
-                                    <div class="col-md-12 conteudoCuponsConciliacaobancaria">
-                                        Banco do Brasil
+                                    <!--AGÊNCIA-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Agência:</label>87695-9
                                     </div>
-                                </div>                                 
+                                    <!--CONTA-->
+                                    <div class="col-md-6 alinhamentoDados">
+                                        <label>Conta:</label>09076346-9
+                                    </div>
+                                </div>                    
+                                <!--DIVISÓRIA DOS TIPOS DE CUPONS-->
+                                <div class="row">   
+                                    <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
+                                        =============================
+                                    </div>
+                                </div>
+                                <!--CAMPO DATA-->
+                                <div class="row">
+                                    <!--DATA-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Data:</label>
+                                    </div>
+                                    <!--RESULTADO DA DATA-->
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                        14/08/2015
+                                    </div>
+                                    <!--DESCRIÇÃO-->                       
+                                </div>
+                                <!--CAMPO NUMERO DOCUMENTO -->
+                                <div class="row">
+                                    <!--Nº DOCUMENTO-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Nº Documento:</label>
+                                    </div>
+                                    <!--RESULTADO DO NUMERO-->
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                        0000000000
+                                    </div>                      
+                                </div> 
+                                <!--CAMPO DESCRIÇÃO -->
+                                <div class="row">
+                                    <!--DESCRIÇÃO-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Descrição:</label>
+                                    </div>
+                                    <!--RESULTADO DA DESCRIÇÃO-->
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                        REDE
+                                    </div>                      
+                                </div> 
+                                <!--CAMPO VALOR-->
+                                <div class="row">
+                                    <!--VALOR-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Valor:</label>
+                                    </div>
+                                    <!--RESULTADO DO VALOR-->
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                        <label>R$</label>440,00
+                                    </div>                                              
+                                </div>
                             </div>
-                        </div>
-                        <!--CAMPO AGÊNCIA E CONTA -->
-                        <div class="row">
-                            <!--AGÊNCIA-->
-                            <div class="col-md-6">
-                                <label>Agência:</label>87695-9
-                            </div>
-                            <!--CONTA-->
-                            <div class="col-md-6 alinhamentoDados">
-                                <label>Conta:</label>09076346-9
-                            </div>
-                        </div>                    
-                        <!--DIVISÓRIA DOS TIPOS DE CUPONS-->
-                        <div class="row">   
-                            <div class="col-md-12 conteudoCuponsConciliacaobancaria">
-                                ====================================
-                            </div>
-                        </div>
-                        <!--CAMPO DATA-->
-                        <div class="row">
-                            <!--DATA-->
-                            <div class="col-md-6">
-                                <label>Data:</label>
-                            </div>
-                            <!--RESULTADO DA DATA-->
-                            <div class="col-md-6 alinhamentoDados">
-                                14/08/2015
-                            </div>
-                            <!--DESCRIÇÃO-->                       
-                        </div>
-                        <!--CAMPO NUMERO DOCUMENTO -->
-                        <div class="row">
-                            <!--Nº DOCUMENTO-->
-                            <div class="col-md-6 ">
-                                <label>Nº Documento:</label>
-                            </div>
-                            <!--RESULTADO DO NUMERO-->
-                            <div class="col-md-6 alinhamentoDados">
-                                0000000000
-                            </div>                      
-                        </div> 
-                        <!--CAMPO DESCRIÇÃO -->
-                        <div class="row">
-                            <!--DESCRIÇÃO-->
-                            <div class="col-md-6 ">
-                                <label>Descrição:</label>
-                            </div>
-                            <!--RESULTADO DA DESCRIÇÃO-->
-                            <div class="col-md-6 alinhamentoDados">
-                                REDE
-                            </div>                      
-                        </div> 
-                        <!--CAMPO VALOR-->
-                        <div class="row">
-                            <!--VALOR-->
-                            <div class="col-md-6">
-                                <label>Valor:</label>
-                            </div>
-                            <!--RESULTADO DO VALOR-->
-                            <div class="col-md-6 alinhamentoDados">
-                                <label>R$</label>440,00
-                            </div>                                              
-                        </div> 
+                        </div>    
                     </div>
                 </div>
+                <!--FIM CUPONS AZUIS-->
+                
+                <!--CUPONS LARANJAS-->
+                <div class="row">
+                    <!--1º CUPOM (PREVISÃO CRÉDITO)-->
+                    <div class="col-md-5 col-sm-5">
+                        <div class="row">
+                            <div class="col-md-8 col-md-offset-4 col-sm-12 cupomLaranjaConciliacaoBancaria">
+                                <!--HEAD-->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <!--TITULO DO CUPON -->
+                                        <div class="row tituloCumponsConciliacaoBancaria">
+                                            <!--TIPO DO CUPON-->
+                                            <div class="col-md-12 conteudoCuponsConciliacaobancaria">
+                                                Previsão de Crédito
+                                            </div>
+                                        </div>
+                                        <!--SUBTITULO DO CUPON -->
+                                        <div class="row subTituloCuponsConciliacaoBancaria">
+                                            <!--BANCO-->
+                                            <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
+                                                Banco do Brasil
+                                            </div>
+                                        </div>                                 
+                                    </div>
+                                </div>
+                                <!--BODY-->
+                                <!--CAMPO AGÊNCIA E CONTA -->
+                                <div class="row">
+                                    <!--AGÊNCIA-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Agência:</label>87695-9
+                                    </div>
+                                    <!--CONTA-->
+                                    <div class="col-md-6  alinhamentoDados">
+                                        <label>Conta:</label>09076346-9
+                                    </div> 
+                                </div>                    
+                                <!--DIVISÓRIA DOS TIPOS DE CUPONS-->
+                                <div class="row">   
+                                    <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
+                                        ==============================
+                                    </div>
+                                </div>
+                                <!--CAMPO DATA-->
+                                <div class="row">
+                                    <!--DATA-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Data:</label>
+                                    </div>
+                                    <!--RESULTADO DA DATA-->
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                        14/08/2015
+                                    </div>
+                                    <!--DESCRIÇÃO-->                       
+                                </div>
+                                <!--CAMPO DESCRIÇÃO -->
+                                <div class="row">
+                                    <!--DESCRIÇÃO-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Descrição:</label>
+                                    </div>
+                                    <!--RESULTADO DA DESCRIÇÃO-->
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                        REDE
+                                    </div>                      
+                                </div> 
+                                <!--CAMPO VALOR-->
+                                <div class="row">
+                                    <!--VALOR-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Valor:</label>
+                                    </div>
+                                    <!--RESULTADO DO VALOR-->
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                        <label>R$</label>440,00
+                                    </div>                                              
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                    <!--BOTÓES-->
+                    <div class="col-md-2 col-sm-2">
+                        <div class="row  btnTimesConciliacaoBancaria">
+                            <div class="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-4">
+                                <a href="javascript:;" class="btn btn-icon-only default">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row btnSeachConciliacaoBancaria">
+                            <div class="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-4">
+                                <a href="javascript:;" class="btn btn-icon-only default">
+                                    <i class="fa fa-search"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!--2º CUPOM(COMPROVANTE CRÉDITO)-->
+                    <div class="col-md-5 col-sm-5">
+                        <div class="row">
+                            <div class="col-md-8 col-sm-12 cupomLaranjaConciliacaoBancaria">
+                                <!--HEAD-->
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12">
+                                        <!--TITULO DO CUPON -->
+                                        <div class="row tituloCumponsConciliacaoBancaria">
+                                            <!--TIPO DO CUPON-->
+                                            <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
+                                                Comprovante de Crédito
+                                            </div>
+                                        </div>
+                                        <!--SUBTITULO DO CUPON -->
+                                        <div class="row subTituloCuponsConciliacaoBancaria">
+                                            <!--BANCO-->
+                                            <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
+                                                Banco do Brasil
+                                            </div>
+                                        </div>                                 
+                                    </div>
+                                </div>
+                                <!--BODY-->
+                                <!--CAMPO AGÊNCIA E CONTA -->
+                                <div class="row">
+                                    <!--AGÊNCIA-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Agência:</label>87695-9
+                                    </div>
+                                    <!--CONTA-->
+                                    <div class="col-md-6 alinhamentoDados">
+                                        <label>Conta:</label>09076346-9
+                                    </div>
+                                </div>                    
+                                <!--DIVISÓRIA DOS TIPOS DE CUPONS-->
+                                <div class="row">   
+                                    <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
+                                        =============================
+                                    </div>
+                                </div>
+                                <!--CAMPO DATA-->
+                                <div class="row">
+                                    <!--DATA-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Data:</label>
+                                    </div>
+                                    <!--RESULTADO DA DATA-->
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                        14/08/2015
+                                    </div>
+                                    <!--DESCRIÇÃO-->                       
+                                </div>
+                                <!--CAMPO NUMERO DOCUMENTO -->
+                                <div class="row">
+                                    <!--Nº DOCUMENTO-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Nº Documento:</label>
+                                    </div>
+                                    <!--RESULTADO DO NUMERO-->
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                        0000000000
+                                    </div>                      
+                                </div> 
+                                <!--CAMPO DESCRIÇÃO -->
+                                <div class="row">
+                                    <!--DESCRIÇÃO-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Descrição:</label>
+                                    </div>
+                                    <!--RESULTADO DA DESCRIÇÃO-->
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                        REDE
+                                    </div>                      
+                                </div> 
+                                <!--CAMPO VALOR-->
+                                <div class="row">
+                                    <!--VALOR-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Valor:</label>
+                                    </div>
+                                    <!--RESULTADO DO VALOR-->
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                        <label>R$</label>440,00
+                                    </div>                                              
+                                </div>
+                            </div>
+                        </div>    
+                    </div>
+                </div>
+                <!--FIM CUPONS LARANJAS-->
+                
+                <!--CUPONS VERMELHOS-->
+                <div class="row">
+                    <!--1º CUPOM (PREVISÃO CRÉDITO)-->
+                    <div class="col-md-5 col-sm-5">
+                        <div class="row">
+                            <div class="col-md-8 col-md-offset-4 col-sm-12 cupomVermelhoConciliacaoBancaria">
+                                <!--HEAD-->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <!--TITULO DO CUPON -->
+                                        <div class="row tituloCumponsConciliacaoBancaria">
+                                            <!--TIPO DO CUPON-->
+                                            <div class="col-md-12 conteudoCuponsConciliacaobancaria">
+                                                Previsão de Crédito
+                                            </div>
+                                        </div>
+                                        <!--SUBTITULO DO CUPON -->
+                                        <div class="row subTituloCuponsConciliacaoBancaria">
+                                            <!--BANCO-->
+                                            <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
+                                                Banco do Brasil
+                                            </div>
+                                        </div>                                 
+                                    </div>
+                                </div>
+                                <!--BODY-->
+                                <!--CAMPO AGÊNCIA E CONTA -->
+                                <div class="row">
+                                    <!--AGÊNCIA-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Agência:</label>87695-9
+                                    </div>
+                                    <!--CONTA-->
+                                    <div class="col-md-6  alinhamentoDados">
+                                        <label>Conta:</label>09076346-9
+                                    </div> 
+                                </div>                    
+                                <!--DIVISÓRIA DOS TIPOS DE CUPONS-->
+                                <div class="row">   
+                                    <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
+                                        ==============================
+                                    </div>
+                                </div>
+                                <!--CAMPO DATA-->
+                                <div class="row">
+                                    <!--DATA-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Data:</label>
+                                    </div>
+                                    <!--RESULTADO DA DATA-->
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                        14/08/2015
+                                    </div>
+                                    <!--DESCRIÇÃO-->                       
+                                </div>
+                                <!--CAMPO DESCRIÇÃO -->
+                                <div class="row">
+                                    <!--DESCRIÇÃO-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Descrição:</label>
+                                    </div>
+                                    <!--RESULTADO DA DESCRIÇÃO-->
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                        REDE
+                                    </div>                      
+                                </div> 
+                                <!--CAMPO VALOR-->
+                                <div class="row">
+                                    <!--VALOR-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Valor:</label>
+                                    </div>
+                                    <!--RESULTADO DO VALOR-->
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                        <label>R$</label>440,00
+                                    </div>                                              
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                    <!--BOTÃO-->
+                    <div class="col-md-2 col-sm-2 btnArrowRightConciliacaoBancaria">
+                        <div class="row">
+                            <div class="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-4">
+                                <a href="javascript:;" class="btn btn-icon-only default">
+                                    <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!--2º CUPOM(COMPROVANTE CRÉDITO)-->
+                    <div class="col-md-5 col-sm-5">
+                        <div class="row">
+                            <div class="col-md-8 col-sm-12 cupomVermelhoConciliacaoBancaria">
+                                <!--HEAD-->
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12">
+                                        <!--TITULO DO CUPON -->
+                                        <div class="row tituloCumponsConciliacaoBancaria">
+                                            <!--TIPO DO CUPON-->
+                                            <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
+                                                Comprovante de Crédito
+                                            </div>
+                                        </div>
+                                        <!--SUBTITULO DO CUPON -->
+                                        <div class="row subTituloCuponsConciliacaoBancaria">
+                                            <!--BANCO-->
+                                            <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
+                                                Banco do Brasil
+                                            </div>
+                                        </div>                                 
+                                    </div>
+                                </div>
+                                <!--BODY-->
+                                <!--CAMPO AGÊNCIA E CONTA -->
+                                <div class="row">
+                                    <!--AGÊNCIA-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Agência:</label>87695-9
+                                    </div>
+                                    <!--CONTA-->
+                                    <div class="col-md-6 alinhamentoDados">
+                                        <label>Conta:</label>09076346-9
+                                    </div>
+                                </div>                    
+                                <!--DIVISÓRIA DOS TIPOS DE CUPONS-->
+                                <div class="row">   
+                                    <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
+                                        =============================
+                                    </div>
+                                </div>
+                                <!--CAMPO DATA-->
+                                <div class="row">
+                                    <!--DATA-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Data:</label>
+                                    </div>
+                                    <!--RESULTADO DA DATA-->
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                        14/08/2015
+                                    </div>
+                                    <!--DESCRIÇÃO-->                       
+                                </div>
+                                <!--CAMPO NUMERO DOCUMENTO -->
+                                <div class="row">
+                                    <!--Nº DOCUMENTO-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Nº Documento:</label>
+                                    </div>
+                                    <!--RESULTADO DO NUMERO-->
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                        0000000000
+                                    </div>                      
+                                </div> 
+                                <!--CAMPO DESCRIÇÃO -->
+                                <div class="row">
+                                    <!--DESCRIÇÃO-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Descrição:</label>
+                                    </div>
+                                    <!--RESULTADO DA DESCRIÇÃO-->
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                        REDE
+                                    </div>                      
+                                </div> 
+                                <!--CAMPO VALOR-->
+                                <div class="row">
+                                    <!--VALOR-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Valor:</label>
+                                    </div>
+                                    <!--RESULTADO DO VALOR-->
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                        <label>R$</label>440,00
+                                    </div>                                              
+                                </div>
+                            </div>
+                        </div>    
+                    </div>
+                </div>
+                <!--FIM CUPONS VERMELHOS-->
             </div>
 
             <!-- RODAPÉ : Exibição dos resultados e paginação -->
