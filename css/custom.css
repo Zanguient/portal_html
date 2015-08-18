@@ -334,6 +334,11 @@ margin-top:170px;
       
 }
 
+.fonteTabelaMonitoramentoCargas{
+    font-size: 20px;
+    width: 3%;
+}
+
 .imgPreloader{
   position: absolute;
   margin: auto;
