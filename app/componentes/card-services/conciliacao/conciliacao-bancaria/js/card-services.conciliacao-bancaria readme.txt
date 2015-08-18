@@ -2,7 +2,6 @@
 
 Módulo que:
  - gerencia o layout da tela de consolidação bancária da Conciliação (app/componentes/card-services/conciliação/conciliacao-bancaria/index.html);
- - permite a realização
  
 
 ### Pra Que Serve Este Módulo? ###
@@ -34,12 +33,36 @@ Além deles, é necessária a importação dos seguintes módulos externos.
   * $scope.grupoempresa, do "appCtrl" : grupo empresa informado pelo usuário na barra administrativa
   * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
   * APIS:
-    - 
+    - card/conciliacaobancaria
 	
  
  
  ### Interação com a WEB API ###
  
+  * card/conciliacaobancaria
+    - GET : obtém as informações para conciliação bancária
+	  [
+		{ ExtratoBancario : [idExtrato], // se vier vazio => não tem info do lado do extrato
+		  RecebimentosParcela : [idRecebimento], // se vier vazio => não tem info do lado do recebimento parcela
+		  Adquirente : string, 
+		  Data : datetime,
+		  Valores : [valor],
+		  Conciliado : int, // 1 : CONCILIADO | 2 : NÃO-CONCILIADO
+		  Conta : null ou  // vem NULL quando é não info de extrato
+				  {
+					cdContaCorrente : int,
+					nrAgencia : string,
+					nrConta : string,
+					banco : { Codigo : string,
+							  NomeExtenso : string
+							}
+				  },
+		}
+	  ]
+
+	  OBS1: Obrigatório o envio de filtro de data
+	  OBS2: Por ser um processamento "pesado", importante o filtrar o grupo empresa e usar um intervalo de data pequeno (de preferência, diário)
+	  OBS3: Usar paginação grande, 20+ itens por página
   
  
    

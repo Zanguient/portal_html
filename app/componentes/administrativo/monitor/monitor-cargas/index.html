@@ -33,43 +33,536 @@
                         <!--i class="fa fa-cogs font-green-sharp"></i-->
                         <span class="caption-subject font-green-sharp bold uppercase">Monitor de Cargas</span>
                     </div>                    
-                    <div class="actions">
-                        <!-- FULLSCREEN -->
-                        <a class="btn btn-circle btn-icon-only btn-default fullscreen" 
-                           href="javascript:;" ng-click="fullScreenClick()"
-                           title="{{telaEstaEmFullScreen() ? 'Tela Normal' : 'Tela Cheia'}}"></a>
-                        <!-- OPÇÕES -->
-                        <div class="btn-group element-hidden"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -->
-                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
-                            <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
-                            </a>
-                            <ul class="dropdown-menu pull-right">
-                                <li>
-                                    <a href="javascript:;">
-                                    Export to Excel </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                    Export to CSV </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                    Export to XML </a>
-                                </li>
-                                <li class="divider">
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                    Print Invoices </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+
                 </div>
                 <!-- CORPO -->
                 <div class="portlet-body" ng-show="exibeTela">
                     
                     <!-- LAYOUT AQUI -->
+                    <!-- FILTROS -->
+        <div class="portlet-body" ng-show="exibeTela">
+            <div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">
+                <div class="row">                       
+                    <div class="col-md-8 col-sm-12">
+                        <div class="dataTables_paginate paging_bootstrap_extended" id="datatable_ajax_paginate">
+                        </div>
+                        <div class="dataTables_info" id="datatable_ajax_info" role="status" aria-live="polite">
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                        <div class="table-group-actions pull-right">
+                        <span> </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="table-scrollable">
+                    <table class="table table-striped table-bordered table-hover dataTable no-footer conteudoTabelas" id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
+                        <thead>
+                            <tr role="row" class="heading">
+                                <th tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="18%">
+                                     Mês/Ano
+                                </th>
+                                <th tabindex="1" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="23%">
+                                     Status 
+                                </th>
+                                <th tabindex="2" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="23%">
+                                     Grupo
+                                </th>
+                                <th tabindex="3" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="10%">
+                                     Ações de Filtro
+                                </th>                                
+                            </tr>
+                            <tr role="row" class="filter">  
+                                <!-- Mês/Ano -->
+                                <td rowspan="1" colspan="1">
+                                    <!-- Aqui entra o codigo do Calendário -->
+                                    <div class="input-group date date-picker margin-bottom-5"
+                                                 data-date-format="dd/mm/yyyy">
+                                                <input type="text" 
+                                                       class="form-control form-filter input-sm" 
+                                                       readonly="" 
+                                                       style="cursor: pointer" 
+                                                       ng-click="exibeCalendarioDataMin($event)" 
+                                                       placeholder="Início" 
+                                                       ng-model="filtro.datamin" 
+                                                       ng-change="alterouDataMin()" 
+                                                       datepicker-append-to-body="true" 
+                                                       datepicker-popup="dd MMMM yyyy" 
+                                                       is-open="abrirCalendarioDataMin" 
+                                                       ng-required="true" 
+                                                       show-button-bar="false" 
+                                                       show-weeks="false" 
+                                                       required="required">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-sm default" 
+                                                        type="button" 
+                                                        ng-click="exibeCalendarioDataMin($event)">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                </td>
+                                <!-- Status -->
+                                <td rowspan="1" colspan="1">
+                                    <select style="width: 100%;" class="form-control input-sm input-inline">
+                                            <!--
+											aria-controls="datatable_products"
+                                            class="form-control input-sm input-inline"
+                                            ng-model="filtro.tipo"
+                                            ng-change="alterouDsTipo()"
+                                            ng-options="dsTipo for dsTipo in dsTipos"
+                                            -->
+                                        
+                                        <option value="">TODOS</option>
+                                        <option value="1">NÃO CARREGADO</option>
+                                        <option value="2">CARREGADO COM SUCESSO</option>
+                                        <option value="3">CARREGADO COM ERRO</option>
+                                        <option value="4">ERRO DE SENHA</option>
+                                    </select>
+                                </td>
+                                <!-- GRUPO EMPRESA -->
+                                <td rowspan="1" colspan="1">
+                                    <div class="row">
+										<div class="col-md-12">
+                                            <input type="text" class="form-control"
+                                                   id="buscagrupoempresa"
+                                                   placeholder="Grupo Empresa"
+                                                   onfocus="this.select();"
+                                                   onmouseup="return false;"
+                                                   typeahead-focus-first=false
+                                                   typeahead-min-length='3'
+                                                   typeahead-wait-ms="500"
+                                                   />                                                
+										</div>
+                                    </div>
+                                </td>
+                                <td rowspan="1" colspan="1">
+                                    <div class="margin-bottom-5">
+                                        <button class="btn btn-sm red filter-submit margin-bottom"
+                                                ng-click="buscaParametrosBancarios()">
+                                            <i class="fa fa-search"></i>
+                                            Buscar
+                                        </button>
+                                    </div>
+                                    <button class="btn btn-sm grey filter-cancel"
+                                            ng-click="resetaFiltros()">
+                                        <i class="fa fa-times"></i>
+                                        Limpar
+                                    </button>
+                                </td>
+                            </tr>                   
+                        </thead>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-8 col-sm-12">
+                        <div class="dataTables_paginate paging_bootstrap_extended">
+                        </div>
+                        <div class="dataTables_info">
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- FIM PORTLET FILTROS -->
+    
+    <!-- PORTLET TABELA -->
+    <div class="portlet light">
+        
+        <!-- MODAL PARÂMETRO BANCÁRIO -->
+       <div class="modal fade bs-modal-sm modal-input" 
+            id="modalParametroBancario" aria-hidden="true">
+           <div class="modal-dialog modal-sm" style="width:600px">
+               <div class="modal-content">
+                   <div class="modal-header">
+                       <h4 class="modal-title modal-cabecalho">{{modalParametro.titulo}}</h4>
+                   </div>
+                   <div class="modal-body modal-corpo modalAcessoDeUsuarios" style="text-align: left">
+                       <!-- BANCO -->
+                       <div class="row">
+                            <div class="col-sm-12">
+                                <div class="col-sm-2">
+                                    <label>Banco</label>
+                                </div>
+                                <div class="col-sm-10">
+                                    <!-- Aqui entra o Calendario -->
+                                </div>    
+                           </div>
+                           <!-- DESCRIÇÃO -->
+                           <div class="col-sm-12">
+                               <div class="col-sm-2">
+                                    <label>Descrição</label>
+                               </div>
+                               <div class="col-sm-10">
+                                    <input type="text" 
+                                           ng-disabled="!ehCadastro()"
+                                           class="form-control modalContasCorrentes" 
+                                           placeholder="Descrição"
+                                           ng-model="modalParametro.dsMemo"> 
+                               </div>     
+                           </div>
+                           <!-- TIPO -->
+                           <div class="col-sm-12">
+                                <div class="col-sm-2">
+                                    <label>Tipo</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <select aria-controls="datatable_products" 
+                                            class="form-control input-sm input-inline"
+                                            ng-model="modalParametro.dsTipo"
+                                            ng-options="dsTipo for dsTipo in dsTipos"> 
+                                        <option style="display: none" value=""></option>  
+                                    </select>
+                                </div>     
+                           </div>
+                           <!-- Grupo -->
+                           <div class="col-sm-12">
+                                <div class="col-sm-2">
+                                    <label>Grupo</label>
+                                </div>
+                                <div class="col-sm-10">
+                                    <select aria-controls="datatable_products" 
+                                            class="form-control input-sm input-inline"
+                                            ng-model="modalParametro.adquirente"
+                                            ng-options="adquirente as (adquirente.dsAdquirente | uppercase) for adquirente in adquirentes"> 
+                                        <option value=""></option>  
+                                    </select>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="modal-footer">
+                       <div class="col-sm-3 col-sm-offset-2">
+                           <button type="button" class="btn default" data-dismiss="modal">
+                               Cancelar
+                           </button>
+                       </div>                           
+                       <div class="col-sm-4 col-sm-offset-1">
+                           <button type="button" class="btn"
+                                   ng-class="{'blue' : ehCadastro(), 'green' : !ehCadastro()}"
+                                   ng-click="modalParametro.funcaoConfirma()">
+                               {{modalParametro.textoConfirma}}
+                           </button>                                
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+       <!-- END MODAL PARÂMETRO BANCÁRIO -->
+        
+        <div class="portlet-title">
+            <div class="caption">								
+                <span class="caption-subject font-green-sharp bold uppercase">DIAS</span>
+            </div>
+            <div class="actions">
+                <a class="btn btn-circle btn-icon-only btn-default fullscreen" 
+                   href="javascript:;" 
+                   ng-click="fullScreenClick()"
+                   title="{{telaEstaEmFullScreen() ? 'Tela Normal' : 'Tela Cheia'}}"></a>
+                <div class="btn-group element-hidden"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -->
+                    <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
+                    <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu pull-right">
+                        <li>
+                            <a href="javascript:;">
+                            Export to Excel </a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                            Export to CSV </a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                            Export to XML </a>
+                        </li>
+                        <li class="divider">
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                            Print Invoices </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="portlet-body" ng-show="exibeTela">
+            <div class="row paddingDivs">
+                <!--EXIBIÇÃO-->
+                <div class="col-xs-4 col-sm-4">
+                    <div class="dataTables_length">
+                        <label>
+                            <span class="seperator"></span>Exibindo 
+                            <select name="datatable_products_length" aria-controls="datatable_products" 
+                                    class="form-control input-xsmall input-sm input-inline"
+                                    ng-model="filtro.itens_pagina"
+                                    ng-change="alterouItensPagina()"
+                                    ng-options="item for item in itens_pagina">                                            
+                            </select> registros de 
+                        </label>
+                    </div>
+                </div> 
+                <!--PAGINAÇÃO-TOPO-->
+                <div class="col-xs-4 col-sm-4 col-md-3">
+                    <div class="pagination-panel centralizarPaginacao"> Página 
+                        <a href="javascript:;" ng-click="retrocedePagina()"
+                           class="btn btn-sm default prev" 
+                           ng-class="{disabled: filtro.pagina <= 1}" 
+                           title="Página anterior">
+                                <i class="fa fa-angle-left"></i>
+                        </a>
+                        <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                               maxlength="4" style="text-align:center; margin: 0 5px;"
+                               ng-model="paginaInformada" valid-integer-number
+                               ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                               ng-blur="atualizaPaginaDigitada()">
+                            <a href="javascript:;" ng-click="avancaPagina()"
+                               class="btn btn-sm default next"
+                               ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
+                               title="Próxima página">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                            de <span class="pagination-panel-total"></span>
+                    </div>
+                </div>                            
+                <!-- FIM PAGINAÇÃO -->                                  
+            </div>
+            
+            <!-- CONTEÚDO DA TABELA -->
+            <div class="table-scrollable">
+                <table class="table table-striped table-hover table-bordered dataTable no-footer" role="grid">
+                    <thead>
+                        <tr role="row">
+                            <th tabindex="0" rowspan="1" colspan="1" style="width: 10%;">
+                               Razão Social / Adquirente
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" class="fonteTabelaMonitoramentoCargas">
+                               01 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               02 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               03 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               04 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               05 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               06 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               07 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               08 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               09 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               10 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               11 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               12 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               13 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               14 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               15 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               16 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               17 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               18 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               19 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               20 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               21 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               22 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               23 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               24 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               25 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               26 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               27 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               28 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               29 
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 3%;">
+                               30 
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr role="row" class="odd conteudoTabelas">
+                            <!-- Razão Social / Adquirente -- ng-repeat="parametro in parametros"   --- ng-bind="exibeBanco(parametro.banco)" -->
+                            
+                            <td style="text-align:left">
+                                Petrox Mania - Cielo
+                            </td>
+                            <!--01-->
+                            <td>
+                                <i class="fa fa-key" style="color: #daa520"></i>
+                            </td>
+                            <!--02-->
+                            <td>
+                                <i class="fa fa-check-square" style="color: #1f897f"></i>
+                            </td>
+                            <!--03-->
+                            <td>
+                                <i class="fa fa-times-circle" style="color: #7e1416"></i>
+                            </td>
+                            <!--04-->
+                            <td>
+                                <i class="fa fa-key" style="color: #daa520"></i>
+                            </td>
+                            <!--05-->
+                            <td>
+                                <i class="fa fa-times-circle" style="color: #7e1416"></i>
+                            </td>
+                            <!--06-->
+                            <td>
+                                <i class="fa fa-check-square" style="color: #1f897f"></i>
+                            </td>
+                            <!--07-->
+                            <td>
+                                <i class="fa fa-times-circle" style="color: #7e1416"></i>
+                            </td>
+                            <!--08-->
+                            <td>
+                               <i class="fa fa-check-square" style="color: #1f897f"></i>
+                            </td>
+                            <!--09-->
+                            <td>
+                                <i class="fa fa-check-square" style="color: #1f897f"></i>
+                            </td>
+                            <!--10-->
+                            <td>
+                                <i class="fa fa-key" style="color: #daa520"></i>
+                            </td>
+                            <!--11-->
+                            <td>
+                               <i class="fa fa-check-square" style="color: #1f897f"></i>
+                            </td>
+                            <!--12-->
+                            <td>
+                                <i class="fa fa-times-circle" style="color: #7e1416"></i>
+                            </td>
+                            <!--13-->
+                            <td>
+                                <i class="fa fa-check-square" style="color: #1f897f"></i>
+                            </td>
+                            <!--14-->
+                            <td>
+                                <i class="fa fa-key" style="color: #daa520"></i>
+                            </td>
+                            <!--15-->
+                            <td>
+                                <i class="fa fa-times-circle" style="color: #7e1416"></i>
+                            </td>
+                            <!--16-->
+                            <td>
+                                <i class="fa fa-times-circle" style="color: #7e1416"></i>
+                            </td>
+                            <!--17-->
+                            <td>
+                               <i class="fa fa-key" style="color: #daa520"></i>
+                            </td>
+                            <!--18-->
+                            <td>
+                                <i class="fa fa-key" style="color: #daa520"></i>
+                            </td>
+                            <!--19-->
+                            <td>
+                                <i class="fa fa-times-circle" style="color: #7e1416"></i>
+                            </td>
+                            <!--20-->
+                            <td>
+                               <i class="fa fa-key" style="color: #daa520"></i>
+                            </td>
+                            <!--21-->
+                            <td>
+                                <i class="fa fa-times-circle" style="color: #7e1416"></i>
+                            </td>
+                            <!--22-->
+                            <td>
+                                <i class="fa fa-check-square" style="color: #1f897f"></i>
+                            </td>
+                            <!--23-->
+                            <td>
+                               <i class="fa fa-times-circle" style="color: #7e1416"></i>
+                            </td>
+                            <!--24-->
+                            <td>
+                                <i class="fa fa-check-square" style="color: #1f897f"></i>
+                            </td>
+                            <!--25-->
+                            <td>
+                                <i class="fa fa-times-circle" style="color: #7e1416"></i>
+                            </td>
+                            <!--26-->
+                            <td>
+                               <i class="fa fa-check-square" style="color: #1f897f"></i>
+                            </td>
+                            <!--27-->
+                            <td>
+                                <i class="fa fa-times-circle" style="color: #7e1416"></i>
+                            </td>
+                            <!--28-->
+                            <td>
+                              <i class="fa fa-check-square" style="color: #1f897f"></i>
+                            </td>
+                            <!--29-->
+                            <td>
+                               <i class="fa fa-key" style="color: #daa520"></i>
+                            </td>
+                            <!--30-->
+                            <td>
+                                <i class="fa fa-key" style="color: #daa520"></i>
+                            </td>                                                                  
+                        </tr>                                                                
+                    </tbody>
+                </table>
+            </div> 
                     
                 </div>
                 <!-- FIM CORPO -->
