@@ -219,7 +219,7 @@ margin-top:170px;
     background-color: #eef7fb;
     border-color: #a6e1ec;
     color: #31708f;
-    border:2px solid #a6e1ec;      
+    border-left:2px solid #a6e1ec;      
     border-radius: 4px 4px; 
     padding: 15px 30px 15px 15px;
     margin-top:40px;
@@ -301,6 +301,12 @@ margin-top:170px;
   text-align: center;
 }
 
+tbody.conteudotabelasCentralizadas > tr > td{
+    text-align: center;
+    vertical-align: middle;
+    fon
+}
+
 .conteudoColunas{
   text-align: center;
 }
@@ -380,10 +386,15 @@ margin-top:170px;
       
 }
 
-.fonteTabelaMonitoramentoCargas{
-    font-size: 20px;
-    width: 3%;
+.fonteTabelaMonitoramentoCargas > tr > th{
+    font-size: 11px;
 }
+
+.fonteTabelaMonitoramentoCargas > tr > td{
+    font-size: 12px;
+}
+
+
 
 .imgPreloader{
   position: absolute;
