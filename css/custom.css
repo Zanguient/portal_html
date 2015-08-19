@@ -301,6 +301,12 @@ margin-top:170px;
   text-align: center;
 }
 
+tbody.conteudotabelasCentralizadas > tr > td{
+    text-align: center;
+    vertical-align: middle;
+    fon
+}
+
 .conteudoColunas{
   text-align: center;
 }
