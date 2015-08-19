@@ -74,7 +74,9 @@ angular.module("administrativo-contas-correntes-vigencias", [])
     var divPortletBodyVigenciasPos = 0; // posição da div que vai receber o loading progress
                                                    
     // Permissões                                           
-    var permissaoAlteracao = false;                                           
+    var permissaoAlteracao = false; 
+    // flags
+    $scope.exibeTela = false;                                             
                                                  
                                                  
                                                  
@@ -94,6 +96,8 @@ angular.module("administrativo-contas-correntes-vigencias", [])
             // volta para a tela de contas correntes
             $scope.goAdministrativoContasCorrentes();
         });
+        
+        $scope.exibeTela = true;
         
         // Tem que ter uma empresa e a conta selecionadas, além do array de adquirentes-filiais
         if(!$scope.usuariologado.grupoempresa || 

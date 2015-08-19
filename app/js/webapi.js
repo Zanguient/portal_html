@@ -104,6 +104,14 @@ angular.module('webapi', ['utils'])
         }
       },
       card : {
+        conciliacaobancaria : {
+            data = 100, 
+            tipo = 101,
+            id_grupo = 102,
+            nu_cnpj = 103,
+            // Relacionamentos
+            operadora : 200
+        },
         tbadquirente : {
             cdAdquirente : 100,
             nmAdquirente : 101,
@@ -142,7 +150,10 @@ angular.module('webapi', ['utils'])
             dtExtrato : 102,
             nrDocumento : 103,
             dsDocumento : 104,
-            vlMovimento : 105
+            vlMovimento : 105,
+            // Relaciomentos
+            empresa : 200,
+            tbadquirente : 300,
         },
         tbloginadquirenteempresa: {
             cdLoginAdquirenteEmpresa : 100,
@@ -339,6 +350,7 @@ angular.module('webapi', ['utils'])
         webpagesusersinroles : $autenticacao.getUrlBase() + '/administracao/webpagesusersinroles/'
     },
     card : {
+        conciliacaobancaria : $autenticacao.getUrlBase() + '/card/conciliacaobancaria/',
         tbadquirente : $autenticacao.getUrlBase() + '/card/tbadquirente/',
         tbbancoparametro : $autenticacao.getUrlBase() + '/card/tbbancoparametro/',
         tbcontacorrente: $autenticacao.getUrlBase() + '/card/tbcontacorrente/',  

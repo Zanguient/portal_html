@@ -1701,6 +1701,17 @@ angular.module("AtosCapital", ['ui.router',
         if(filial.filial && filial.filial !== null) nome += ' ' + filial.filial;
         return nome.toUpperCase();
     }
+    
+    /**
+      * Exibe o código do banco seguido do nome (reduzido ou extenso)
+      */
+    $scope.exibeBanco = function(banco, reduzido){
+        if(typeof banco === 'undefined') return '';
+        var text = banco.Codigo + '    ';
+        if(reduzido) text += banco.NomeReduzido;   
+        else text += banco.NomeExtenso;
+        return text.toUpperCase();
+    }
     /** 
       * Substitui na string os '\n' e coloca a quebra de linha do html
       * /

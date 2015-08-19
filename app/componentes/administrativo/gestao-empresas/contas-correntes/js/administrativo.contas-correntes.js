@@ -180,16 +180,6 @@ angular.module("administrativo-contas-correntes", [])
     
     // BUSCA BANCOS  
     /**
-      * Exibe o código do banco seguido do nome (reduzido ou extenso)
-      */
-    $scope.exibeBanco = function(banco, reduzido){
-        if(typeof banco === 'undefined') return '';
-        var text = banco.Codigo + '    ';
-        if(reduzido) text += banco.NomeReduzido;   
-        else text += banco.NomeExtenso;
-        return text.toUpperCase();
-    }
-    /**
       * Selecionou um banco
       */
     $scope.selecionouBanco = function(){
