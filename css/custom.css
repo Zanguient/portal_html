@@ -380,10 +380,15 @@ margin-top:170px;
       
 }
 
-.fonteTabelaMonitoramentoCargas{
-    font-size: 20px;
-    width: 3%;
+.fonteTabelaMonitoramentoCargas > tr > th{
+    font-size: 11px;
 }
+
+.fonteTabelaMonitoramentoCargas > tr > td{
+    font-size: 12px;
+}
+
+
 
 .imgPreloader{
   position: absolute;
