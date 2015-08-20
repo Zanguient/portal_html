@@ -211,6 +211,15 @@ margin-top:170px;
     margin-top: 140px;
 }
 
+.btnRegistrosCupon{
+    height: 20px;
+    width: 30px;
+    padding-top: 0px;
+    text-align: center;
+    padding-left: 0;
+    padding-right: 0;
+}
+
 .conteudoCuponsConciliacaobancaria{
   text-align: center;
 }
@@ -219,11 +228,11 @@ margin-top:170px;
     background-color: #eef7fb;
     border-color: #a6e1ec;
     color: #31708f;
-    border-left:2px solid #a6e1ec;      
+    border-left:3px solid #a6e1ec;      
     border-radius: 4px 4px; 
     padding: 15px 30px 15px 15px;
     margin-top:40px;
-    height: 250px;
+    height: 240px;
     max-width:320px; 
 }
 
@@ -231,12 +240,12 @@ margin-top:170px;
     background-color: #fcf8e3;
     border-color: #f5d89e;
     color: #8a6d3b;
-    border: 2px solid #f5d89e;    
+    border-left: 3px solid #f5d89e;    
     border-radius: 4px 4px; 
     padding: 15px 30px 15px 15px;
     margin-top:40px;
     margin-top:40px;
-    height: 250px;
+    height: 240px;
     max-width:320px;  
 }
 
@@ -244,23 +253,29 @@ margin-top:170px;
     background-color: #f9f0f0;
     border-color: #e4b9c0;
     color: #a94442;
-    border: 2px solid #e4b9c0;  
+    border-left: 3px solid #e4b9c0;  
     border-radius: 4px 4px; 
     padding: 15px 30px 15px 15px;
     margin-top:40px;
     margin-top:40px;
-    height: 250px;
+    height: 240px;
     max-width:320px;  
 }
 
-.tituloCumponsConciliacaoBancaria{
-    margin-top:5px;    
+.tituloCumponsConciliacaoBancariaExtrato{
+    margin-top:5px; 
+    margin-bottom:30px; 
 }
 
-.subTituloCuponsConciliacaoBancaria{
-    margin-top: 10px;
-    margin-bottom:30px;      
+.tituloCumponsConciliacaoBancariaICard{
+    margin-top:5px; 
+    margin-bottom:40px; 
 }
+
+/*.subTituloCuponsConciliacaoBancaria{
+    margin-top: 10px;
+         
+}*/
 
 /*FIM Estilos dos cumpons de conciliação bancária*/
 
