@@ -268,6 +268,23 @@ angular.module("AtosCapital", ['ui.router',
       })
     
     
+    
+    
+      // TAX SERVICES
+      /*.state('tax-services', {
+        abstract: true
+      })*/
+      .state('tax-services-nota-fiscal-eletronica-importacao-xml', {
+        url: prefixo + 'tax-services/importacao-xml',
+        templateUrl: 'componentes/tax-services/nota-fiscal-eletronica/importacao-xml/index.html',
+        controller: "tax-services-importacao-xmlCtrl",
+        data: {
+            titulo: 'Tax Services'
+        }
+      })
+    
+    
+    
       // CONTA
       .state('minha-conta', {
         url: prefixo + 'minha-conta',
@@ -375,6 +392,7 @@ angular.module("AtosCapital", ['ui.router',
     var controllerCardServicesConciliacaoBancaria = undefined;
     var controllerCardServicesConciliacaoVendas = undefined;
     var controllerCardServicesConsolidacaoRelatorios = undefined;
+    var controllerTaxServicesImportacaoXML = undefined;                        
     var controllerMinhaConta = {id_controller : 91, ds_controller : 'Minha Conta', methods : []};
     // Permissões
     //$scope.usuarioTemAcesso = false;                      
@@ -405,7 +423,10 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_BANCARIA = false;
     $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_VENDAS = false;
     $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO = false;
-    $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_RELATORIOS = false;                                               
+    $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_RELATORIOS = false; 
+    $scope.PERMISSAO_TAX_SERVICES = false;
+    $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA = false;   
+    $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_IMPORTACAO_XML = false;                        
                             
                             
     
@@ -636,6 +657,13 @@ angular.module("AtosCapital", ['ui.router',
     $scope.goCardServicesConsolidacaoRelatorios = function(params){
         controllerAtual = controllerCardServicesConsolidacaoRelatorios;
         go('card-services-consolidacao-relatorios', params);
+    }; 
+    /**
+      * Exibe como conteúdo a Nota Fiscal Eletrônica Importação XML, de Tax Services
+      */
+    $scope.goTaxServicesImportacaoXML = function(params){
+        controllerAtual = controllerTaxServicesImportacaoXML;
+        go('tax-services-nota-fiscal-eletronica-importacao-xml', params);
     };                         
     /**
       * Exibe a tela de perfil de conta
@@ -840,6 +868,15 @@ angular.module("AtosCapital", ['ui.router',
             }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'RELATÓRIOS') // problem!
                      controllerAtual.id_controller !== controllerCardServicesConsolidacaoRelatorios.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
+        }else if(url === $state.get('tax-services-nota-fiscal-eletronica-importacao-xml').url){ 
+            // Tax Services > Nota Fiscal Eletrônica > Importação XML
+            if(!$scope.PERMISSAO_TAX_SERVICES || !$scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA || !$scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_IMPORTACAO_XML){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.goUsuarioSemPrivilegios();
+            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'RELATÓRIOS') // problem!
+                     controllerAtual.id_controller !== controllerTaxServicesImportacaoXML.id_controller)
+                $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
         }
         //else event.preventDefault();//console.log("VAI PARA ONDE?");
      });
@@ -942,6 +979,12 @@ angular.module("AtosCapital", ['ui.router',
                     controllerAtual = controller;
                 controllerCardServicesConciliacaoVendas = controller;
                 return $scope.goCardServicesConciliacaoVendas;
+            // Tax Services
+            case 'IMPORTAÇÃO XML': 
+                if($location.path() === $state.get('tax-services-nota-fiscal-eletronica-importacao-xml').url) 
+                    controllerAtual = controller;
+                controllerTaxServicesImportacaoXML = controller;
+                return $scope.goTaxServicesImportacaoXML;    
                 
             // AMBÍGUOS    
             case 'RELATÓRIOS': 
@@ -987,16 +1030,20 @@ angular.module("AtosCapital", ['ui.router',
             case 'AÇÕES DE USUÁRIOS': $scope.PERMISSAO_ADMINISTRATIVO_LOGS_ACOES_USUARIOS = true; break;
             case 'MONITOR': $scope.PERMISSAO_ADMINISTRATIVO_MONITOR = true; break;
             case 'MONITOR DE CARGAS': $scope.PERMISSAO_ADMINISTRATIVO_MONITOR_MONITOR_CARGAS = true; break;
+            // Dashboard
+            case 'DASHBOARD ATOS': $scope.PERMISSAO_DASHBOARD = true; break;
+            // Tax Services
+            case 'TAX SERVICES' : $scope.PERMISSAO_TAX_SERVICES = true; break;
+            case 'NOTA FISCAL ELETRÔNICA': $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA = true; break;
+            case 'IMPORTAÇÃO XML':  $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_IMPORTACAO_XML = true; break;
             // Card Services
             case 'CARD SERVICES': $scope.PERMISSAO_CARD_SERVICES = true; break;
             case 'CASH FLOW' : $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW = true; break;
             case 'CONCILIAÇÃO': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO = true; break;
             case 'CONCILIAÇÃO BANCÁRIA': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_BANCARIA = true; break;
             case 'CONCILIAÇÃO DE VENDAS': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_VENDAS = true; break;
-            case 'CONSOLIDAÇÃO': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO = true; break;      
-            // Dashboard
-            case 'DASHBOARD ATOS': $scope.PERMISSAO_DASHBOARD = true; break;
-                
+            case 'CONSOLIDAÇÃO': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO = true; break;   
+                  
             // AMBÍGUOS    
             case 'RELATÓRIOS': controllerpai.ds_controller.toUpperCase() === 'CASH FLOW' ? 
                                 $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW_RELATORIOS = true  :
@@ -1033,6 +1080,8 @@ angular.module("AtosCapital", ['ui.router',
             case 'DASHBOARD ATOS': return state == 'dashboard';
             // Card Services
             case 'CARD SERVICES': return state == 'card-services';
+            // Tax Services
+            case 'TAX SERVICES' : return state == 'tax-services';
                 
             default : return false;        
         }
@@ -1058,6 +1107,8 @@ angular.module("AtosCapital", ['ui.router',
             case 'ACESSO DE USUÁRIOS' : return state == 'acesso-usuarios';  
             case 'AÇÕES DE USUÁRIOS': return state == 'acoes-usuarios';
             case 'MONITOR DE CARGAS': return state == 'monitor-cargas';
+            // Tax Services
+            case 'IMPORTAÇÃO XML': return state == 'importacao-xml';    
             // Card Services
             case 'CONCILIAÇÃO BANCÁRIA': return state == 'conciliacao-bancaria';
             case 'CONCILIAÇÃO DE VENDAS': return state == 'conciliacao-vendas';

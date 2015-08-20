@@ -1,0 +1,79 @@
+<!-- 
+/*
+ *  Atos Capital - www.atoscapital.com.br
+ *  
+ *  suporte@atoscapital.com.br
+ *
+ */
+-->
+<div class="container" ng-controller="tax-services-importacao-xmlCtrl" ng-init="taxServices_importacaoXMLInit()">   
+    
+    <!-- BEGIN PAGE BREADCRUMB -->
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href="javascript:;" ng-click="goHome()">Início</a><i class="fa fa-circle"></i>
+        </li>
+        <li class="active">
+             Tax Services<i class="fa fa-caret-right"></i>
+             Nota Fiscal Eletrônica<i class="fa fa-caret-right"></i>
+             Importação XML
+        </li>
+    </ul>
+    <!-- END PAGE BREADCRUMB -->
+    <!-- BEGIN PAGE CONTENT INNER -->
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN TABLE PORTLET-->
+            <div class="portlet light">  
+
+                <!-- TOPO : Nome 'Importação XML' e botões de 'Opções' e FullScreen -->
+                <div class="portlet-title">
+                    <div class="caption">
+                        <!--i class="fa fa-cogs font-green-sharp"></i-->
+                        <span class="caption-subject font-green-sharp bold uppercase">Importação XML</span>
+                    </div>
+                    <div class="actions">
+                        <!-- FULLSCREEN -->
+                        <a class="btn btn-circle btn-icon-only btn-default fullscreen" 
+                           href="javascript:;" ng-click="fullScreenClick()"
+                           title="{{telaEstaEmFullScreen() ? 'Tela Normal' : 'Tela Cheia'}}"></a>
+                        <!-- OPÇÕES -->
+                        <div class="btn-group element-hidden"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -->
+                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
+                            <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to Excel </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to CSV </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to XML </a>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Print Invoices </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- CORPO  -->
+                <div class="portlet-body" ng-show="exibeTela">
+                    <!-- LAYOUT AQUI -->
+                </div>
+                <!-- END TABLE PORTLET BODY -->
+            </div>
+            <!-- END TABLE PORTLET-->
+        </div>
+    </div>
+    <!-- END PAGE CONTENT INNER -->
+</div>
+
