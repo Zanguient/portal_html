@@ -207,7 +207,7 @@ angular.module("AtosCapital", ['ui.router',
       })
     
       .state('administrativo-monitor-monitor-cargas', {
-        url: prefixo + 'administrativo/monitor-bancarios',
+        url: prefixo + 'administrativo/monitor-cargas',
         templateUrl: 'componentes/administrativo/monitor/monitor-cargas/index.html',
         controller: "administrativo-monitor-cargasCtrl",
         data: {
