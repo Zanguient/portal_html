@@ -124,7 +124,7 @@
                                     </div>                                                      
                                 </td>
                                 <!-- FILIAL -->
-                                <th rowspan="1" colspan="1">
+                                <td rowspan="1" colspan="1">
                                     <select class="form-control form-filter input-sm comboBoxFiltros"
                                             ng-disabled="filiais.length == 0"
                                             ng-model="filtro.filial"
@@ -137,7 +137,7 @@
                                         popover-placement="bottom"
                                         popover="É necessário selecionar uma empresa"
                                         popover-trigger="mouseenter"></i> 
-                                </th>
+                                </td>
                                 <!-- ADQUIRENTE -->
                                 <td rowspan="1" colspan="1">
                                     <select class="form-control form-filter input-sm comboBoxFiltros"
@@ -337,7 +337,7 @@
                                             </div>
                                         </div>
                                         <!--SUBTITULO DO CUPON -->
-                                        <div class="row subTituloCuponsConciliacaoBancaria">
+                                        <div class="row tituloCumponsConciliacaoBancariaICard">
                                             <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
                                                 
                                             </div>
@@ -408,8 +408,8 @@
                                         <label>Registros agrupados:</label>
                                     </div>
                                     <div class="col-md-2 col-sm-2 alinhamentoDados">
-                                        <button class="btn btn-icon-only"
-                                                 ng-class="{'blue' : dado.Conciliado === 1, 'yellow' : dado.Conciliado === 2 && dado.ExtratoBancario !== null, 'red': dado.Conciliado === 2 && dado.ExtratoBancario === null}"
+                                        <button class="btn btnRegistrosCupon"
+                                                 ng-class="{'blue ' : dado.Conciliado === 1, 'yellow' : dado.Conciliado === 2 && dado.ExtratoBancario !== null, 'red': dado.Conciliado === 2 && dado.ExtratoBancario === null}"
                                                 ng-click="detalhar(dado.RecebimentosParcela)"
                                                 style="color:#fff">
                                             {{dado.RecebimentosParcela.length}}
@@ -479,7 +479,7 @@
                                             </div>
                                         </div>
                                         <!--SUBTITULO DO CUPON -->
-                                        <div class="row subTituloCuponsConciliacaoBancaria">
+                                        <div class="row">
                                             <!--BANCO-->
                                             <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria"
                                                  ng-bind="exibeBanco(dado.Conta.banco)">
@@ -564,7 +564,7 @@
                                         <label>Registros agrupados:</label>
                                     </div>
                                     <div class="col-md-2 col-sm-2 alinhamentoDados">
-                                        <button class="btn btn-icon-only"
+                                        <button class="btn btnRegistrosCupon"
                                                 ng-class="{'blue' : dado.Conciliado === 1, 'yellow' : dado.Conciliado === 2 && dado.ExtratoBancario !== null, 'red': dado.Conciliado === 2 && dado.ExtratoBancario === null}"
                                                 ng-click="detalhar(dado.ExtratoBancario)"
                                                 style="color:#fff">
