@@ -6,7 +6,7 @@
  */
 
 // App
-angular.module("dashboard", ['SignalR']) 
+angular.module("dashboard", []) 
 
 .controller("dashboardCtrl", ['$scope',
                               '$state',
@@ -39,65 +39,4 @@ angular.module("dashboard", ['SignalR'])
     }
     
     
-}])
-
-
-.factory('realtimeservice',['$rootScope','$scope','Hub', '$timeout', function($rootScope, $scope, Hub, $timeout){
-    
-    //declaring the hub connection
-    var hub = new Hub('message', {
-
-        //client side methods
-        listeners:{
-            'updateMessages': function (data) {
-                console.log("RECEBEU");
-                console.log(data);
-                $rootScope.$apply();
-            }
-        },
-
-        //server side methods
-        methods: ['send'],
-
-        //query params sent on initial connection
-        queryParams:{
-            token: $scope.token
-        },
-
-        //handle connection error
-        errorHandler: function(error){
-            console.log("ERRO");
-            console.error(error);
-        },
-        
-        transport: 'webSockets',
-
-        //specify a non default root
-        //rootPath: '/api
-
-        stateChanged: function(state){
-            switch (state.newState) {
-                case $.signalR.connectionState.connecting:
-                    console.log("CONECTANDO...");
-                    break;
-                case $.signalR.connectionState.connected:
-                    console.log("CONECTADO!");
-                    break;
-                case $.signalR.connectionState.reconnecting:
-                    console.log("RECONECTANDO...");
-                    break;
-                case $.signalR.connectionState.disconnected:
-                    console.log("DESCONECTADO!");
-                    break;
-            }
-        }
-    });
-
-    var send = function (employee) {
-        hub.send("deivid", "teste"); //Calling a server method
-    };
-
-    return {
-        send: send
-    };
 }]);

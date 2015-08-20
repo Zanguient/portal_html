@@ -22,7 +22,8 @@ angular.module("card-services-consolidacao-relatorios", [])
     $scope.itens_pagina = [10, 20, 50, 100]; 
     $scope.paginaInformada = 1; // página digitada pelo usuário                                             
     // Filtros
-    $scope.filiais = $scope.adquirentes = $scope.bandeiras =  $scope.terminais = [];                                         $scope.camposBusca = [
+    $scope.filiais = $scope.adquirentes = $scope.bandeiras =  $scope.terminais = [];                                          
+    $scope.camposBusca = [
                           {
                             id: /*$campos.pos.recebimento.cdAutorizador*/ 104, 
                             nome: "Código Autorizador"
