@@ -141,7 +141,7 @@ angular.module("administrativo-parametros-bancarios", [])
       * Notifica que o total de itens por página foi alterado
       */                                            
     $scope.alterouItensPagina = function(){
-        buscaParametros();
+        if($scope.parametros.length > 0) buscaParametros();
     }; 
                                                  
     

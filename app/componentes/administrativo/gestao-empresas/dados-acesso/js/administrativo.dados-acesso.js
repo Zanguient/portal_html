@@ -287,7 +287,7 @@ angular.module("administrativo-dados-acesso", [])
       * Notifica que o total de itens por página foi alterado
       */                                            
     $scope.alterouItensPagina = function(){
-        $scope.buscaDadosAcesso();
+        if($scope.dadosAcesso.length > 0) $scope.buscaDadosAcesso();
     }; 
                                                  
                                                  

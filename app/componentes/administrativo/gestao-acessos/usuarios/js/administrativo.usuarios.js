@@ -259,7 +259,7 @@ angular.module("administrativo-usuarios", [])
       * Notifica que o total de itens por página foi alterado
       */                                            
     $scope.alterouItensPagina = function(){
-        $scope.buscaUsuarios();   
+        if($scope.usuarios.length > 0) $scope.buscaUsuarios();   
     };
      
     // BUSCA

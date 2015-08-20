@@ -139,7 +139,7 @@ angular.module("administrativo-filiais", [])
       * Notifica que o total de itens por página foi alterado
       */                                            
     $scope.alterouItensPagina = function(){
-        $scope.buscaFiliais();   
+        if($scope.filiais.length > 0) $scope.buscaFiliais();   
     };
                                                
                                                

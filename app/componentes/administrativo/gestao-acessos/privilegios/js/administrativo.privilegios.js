@@ -200,7 +200,7 @@ angular.module("administrativo-privilegios", [])
       * Notifica que o total de itens por página foi alterado
       */                                            
     $scope.alterouItensPagina = function(){
-        $scope.buscaPrivilegios();   
+        if($scope.privilegios.length > 0) $scope.buscaPrivilegios();   
     };
      
     // BUSCA

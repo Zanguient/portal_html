@@ -29,8 +29,8 @@ angular.module("card-services-conciliacao-bancaria", [])
     $scope.adquirentes = [];
     $scope.filiais = [];
     $scope.filtro = {datamin : new Date(), datamax : '', 
-                     tipo : '', adquirente : undefined, filial : undefined,
-                     itens_pagina : $scope.itens_pagina[0], order : 0,
+                     tipo : $scope.tipos[1], adquirente : undefined, filial : undefined,
+                     itens_pagina : $scope.itens_pagina[1], order : 0,
                      pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0
                     };  
     
@@ -67,8 +67,11 @@ angular.module("card-services-conciliacao-bancaria", [])
                     // Reseta seleção de filtro específico de empresa
                     $scope.filtro.filial = $scope.filtro.adquirente = null;
                     buscaFiliais();
-                }else // reseta tudo e não faz buscas 
+                }else{ // reseta tudo e não faz buscas 
                     $scope.dadosconciliacao = []; 
+                    $scope.filiais = [];
+                    $scope.filtro.filial = $scope.filtro.adquirente = null;
+                }
                 
             }
         }); 
@@ -307,7 +310,7 @@ angular.module("card-services-conciliacao-bancaria", [])
     var setPagina = function(pagina){
        if(pagina >= 1 && pagina <= $scope.filtro.total_paginas){ 
            $scope.filtro.pagina = pagina;
-           buscaDadosConciliacaoBancaria();
+           $scope.buscaDadosConciliacao();
        }
        $scope.atualizaPaginaDigitada();    
     };
@@ -342,7 +345,7 @@ angular.module("card-services-conciliacao-bancaria", [])
       * Notifica que o total de itens por página foi alterado
       */                                            
     $scope.alterouItensPagina = function(){
-        buscaDadosConciliacaoBancaria();
+        if($scope.dadosconciliacao.length > 0) $scope.buscaDadosConciliacao();
     }; 
     
     
@@ -447,6 +450,20 @@ angular.module("card-services-conciliacao-bancaria", [])
         //console.log(grupo);
         // Exibe o modal
         $('#modalDetalhes').modal('show');
+    }
+    
+    
+    
+    // AÇÕES
+    $scope.concilia = function(dado, pendencia){
+        //if(pendencia) // concilia mas valores não "batem"
+        console.log("CONCILIA");
+        console.log(dado);
+    }
+    
+    $scope.procuraDadoConciliacao = function(dado){
+        console.log("PROCURA");
+        console.log(dado);    
     }
     
 }]);

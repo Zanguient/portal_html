@@ -145,7 +145,7 @@ angular.module("administrativo-empresas", [])
       * Notifica que o total de itens por página foi alterado
       */                                            
     $scope.alterouItensPagina = function(){
-        $scope.buscaEmpresas();   
+        if($scope.gruposempresas.length > 0) $scope.buscaEmpresas();   
     };
                                                 
                                                 

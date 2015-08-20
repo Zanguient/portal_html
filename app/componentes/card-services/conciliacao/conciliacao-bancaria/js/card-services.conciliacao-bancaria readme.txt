@@ -34,6 +34,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
   * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
   * APIS:
     - card/conciliacaobancaria
+	- pos/recebimentoparcela
 	
  
  
@@ -56,7 +57,8 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 		  Bandeira : string,
 		  Memo : string,
 		  Data : datetime,
-		  ValorTotal : double,
+		  ValorTotalRecebimento : double,
+		  ValorTotalExtrato : double,
 		  Conciliado : int, // 1 : CONCILIADO | 2 : NÃO-CONCILIADO
 		  Conta : null ou  // vem NULL quando é não info de extrato
 				  {
@@ -74,6 +76,15 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 	  OBS2: Por ser um processamento "pesado", importante o filtrar o grupo empresa e usar um intervalo de data pequeno (de preferência, diário)
 	  OBS3: Usar paginação grande, 20+ itens por página
   
+  * pos/recebimentoparcela
+    - PUT : seta o item recebimento parcela para apontar para determinado extrato ou desassociar de um extrato
+			{ 
+				idExtrato : int, // set -1 para desassociar de um extrato
+				idsRecebimento: [int]
+			}
+	
+	
+	
  
    
 

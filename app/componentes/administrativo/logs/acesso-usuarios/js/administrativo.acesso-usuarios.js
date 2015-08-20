@@ -156,7 +156,7 @@ angular.module("administrativo-acesso-usuarios", [])
       * Notifica que o total de itens por página foi alterado
       */                                            
     $scope.alterouItensPagina = function(){
-        $scope.buscaLogs();   
+        if($scope.logs.length > 0) $scope.buscaLogs();   
     };
      
     // BUSCA

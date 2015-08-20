@@ -141,7 +141,7 @@ angular.module("administrativo-senhas-invalidas", [])
       * Notifica que o total de itens por página foi alterado
       */                                            
     $scope.alterouItensPagina = function(){
-        $scope.buscaSenhasInvalidas();
+        if($scope.dadosAcesso.length > 0) $scope.buscaSenhasInvalidas();
     }; 
                                                  
                                                  

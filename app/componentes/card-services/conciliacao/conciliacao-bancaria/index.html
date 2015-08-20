@@ -390,7 +390,7 @@
                                     </div>
                                     <!--RESULTADO DO VALOR-->
                                     <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        <label>{{dado.ValorTotal | currency:'R$'}}</label>
+                                        <label>{{dado.ValorTotalRecebimento | currency:'R$'}}</label>
                                     </div>                                              
                                 </div> 
                                 <!--DOCUMENTO-->
@@ -421,45 +421,25 @@
                     </div>
                     
                     <!--BOTÕES-->
-                    <!--BOTÃO CUMPOM AZUL: CONCILIADO-->
-                    <div class="col-md-2 col-sm-2 btnCheckConciliacaoBancaria"
-                         ng-show="dado.Conciliado === 1">
+                    <div class="col-md-2 col-sm-2"
+                         ng-class="{'btnCheckConciliacaoBancaria': dado.Conciliado === 1, 'btnArrowRightConciliacaoBancaria': dado.Conciliado === 2 && (dado.ExtratoBancario === null || dado.RecebimentosParcela === null)}">
                         <div class="row">
                             <div class="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-4">
-                                <a href="javascript:;" class="btn btn-icon-only default">
-                                    <i class="fa fa-check"></i>
+                                <a href="javascript:;" class="btn btn-icon-only default"
+                                   ng-click="dado.Conciliado === 1 ? concilia(dado) : dado.Conciliado === 2 && dado.ExtratoBancario !== null && dado.RecebimentosParcela !== null ? concilia(dado, true) : dado.Conciliado === 2 && (dado.ExtratoBancario === null || dado.RecebimentosParcela === null) ? procuraDadoConciliacao(dado) : 0">
+                                    <i class="fa"
+                                       ng-class="{'fa-check': dado.Conciliado === 1, 'fa-times': dado.Conciliado === 2 && (dado.ExtratoBancario === null || dado.RecebimentosParcela === null), 'fa-arrow-right': dado.Conciliado === 2 && dado.ExtratoBancario !== null && dado.RecebimentosParcela !== null}"></i>
                                 </a>
                             </div>
                         </div>
-                    </div>
-                    <!--BOTÃO CUPOM VERMELHO: NÃO-CONCILIADO -->
-                    <div class="col-md-2 col-sm-2 btnArrowRightConciliacaoBancaria"
-                         ng-show="dado.Conciliado === 2 && (dado.ExtratoBancario === null || dado.RecebimentosParcela === null)">
-                        <div class="row">
-                            <div class="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-4">
-                                <a href="javascript:;" class="btn btn-icon-only default">
-                                    <i class="fa fa-arrow-right"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- BOTÕES CUPOM LARANJA-->
-                    <div class="col-md-2 col-sm-2" 
-                         ng-show="dado.Conciliado === 2 && dado.ExtratoBancario !== null && dado.RecebimentosParcela !== null">
-                        <div class="row  btnTimesConciliacaoBancaria">
-                            <div class="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-4">
-                                <a href="javascript:;" class="btn btn-icon-only default">
-                                    <i class="fa fa-times"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="row btnSeachConciliacaoBancaria">
+                        <!--div class="row btnSeachConciliacaoBancaria"
+                             ng-show="dado.Conciliado === 2 && (dado.ExtratoBancario === null || dado.RecebimentosParcela === null)">
                             <div class="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-4">
                                 <a href="javascript:;" class="btn btn-icon-only default">
                                     <i class="fa fa-search"></i>
                                 </a>
                             </div>
-                        </div>
+                        </div-->
                     </div>
                     
                     <!--2º CUPOM(COMPROVANTE CRÉDITO)-->
@@ -546,7 +526,7 @@
                                     </div>
                                     <!--RESULTADO DO VALOR-->
                                     <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        <label>{{dado.ValorTotal | currency:'R$'}}</label>
+                                        <label>{{dado.ValorTotalExtrato | currency:'R$'}}</label>
                                     </div>                                              
                                 </div> 
                                 <!--DOCUMENTO-->
