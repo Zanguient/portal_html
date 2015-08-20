@@ -36,6 +36,7 @@ angular.module("AtosCapital", ['ui.router',
                                'card-services-conciliacao-bancaria',
                                'card-services-conciliacao-vendas',
                                'card-services-consolidacao-relatorios',
+                               'tax-services-importacao-xml',
                                'conta',
                                'conta-alterar-senha',
                                'usuario-sem-link']) 
