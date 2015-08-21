@@ -210,7 +210,7 @@
                    <div class="modal-body modal-corpo modalAcessoDeUsuarios" style="text-align: center">
                        <div class="row">
                            <div class="col-sm-6">
-                                <label>Documento</label>
+                                <label>NSU</label>
                            </div>
                            <div class="col-sm-6">
                                 <label>Valor</label>
@@ -383,7 +383,8 @@
                                     </div>                      
                                 </div> 
                                 <!--VALOR TOTAL-->
-                                <div class="row">
+                                <div class="row" 
+                                     ng-init="incrementaContRecebimentosParcelas(dado.RecebimentosParcela)">
                                     <!--VALOR-->
                                     <div class="col-md-6 col-sm-6">
                                         <label>Valor total:</label>
@@ -396,7 +397,7 @@
                                 <!--DOCUMENTO-->
                                 <div class="row" ng-show="dado.RecebimentosParcela.length === 1">
                                     <div class="col-md-6 col-sm-6">
-                                        <label>Documento:</label>
+                                        <label>NSU:</label>
                                     </div>
                                     <div class="col-md-6 col-sm-6 alinhamentoDados">
                                         <label>{{dado.RecebimentosParcela[0].Documento}}</label>
@@ -409,7 +410,7 @@
                                     </div>
                                     <div class="col-md-2 col-sm-2 alinhamentoDados">
                                         <button class="btn btnRegistrosCupon"
-                                                 ng-class="{'blue ' : dado.Conciliado === 1, 'yellow' : dado.Conciliado === 2 && dado.ExtratoBancario !== null, 'red': dado.Conciliado === 2 && dado.ExtratoBancario === null}"
+                                                ng-class="{'blue ' : dado.Conciliado === 1, 'btnPossivelConciliadoConciliacaoBancaria' : dado.Conciliado === 2 && dado.ExtratoBancario !== null, 'red': dado.Conciliado === 2 && dado.ExtratoBancario === null}"
                                                 ng-click="detalhar(dado.RecebimentosParcela)"
                                                 style="color:#fff">
                                             {{dado.RecebimentosParcela.length}}
@@ -421,25 +422,18 @@
                     </div>
                     
                     <!--BOTÕES-->
-                    <div class="col-md-2 col-sm-2"
-                         ng-class="{'btnCheckConciliacaoBancaria': dado.Conciliado === 1, 'btnArrowRightConciliacaoBancaria': dado.Conciliado === 2 && (dado.ExtratoBancario === null || dado.RecebimentosParcela === null)}">
+                    <div class="col-md-2 col-sm-2 btnConciliacaoBancaria">
                         <div class="row">
-                            <div class="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-4">
+                            <div class="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-4"
+                                 title="{{dado.Conciliado == 1 ? 'Conciliado' : dado.Conciliado === 2 && dado.ExtratoBancario !== null && dado.RecebimentosParcela !== null ? 'Conciliar' : dado.Conciliado === 2 && dado.ExtratoBancario === null ? 'Procurar movimentação bancária' : dado.Conciliado === 2 && dado.RecebimentosParcela === null ? 'Procurar carga(s)' : ''}}">
                                 <a href="javascript:;" class="btn btn-icon-only default"
-                                   ng-click="dado.Conciliado === 1 ? concilia(dado) : dado.Conciliado === 2 && dado.ExtratoBancario !== null && dado.RecebimentosParcela !== null ? concilia(dado, true) : dado.Conciliado === 2 && (dado.ExtratoBancario === null || dado.RecebimentosParcela === null) ? procuraDadoConciliacao(dado) : 0">
+                                   ng-click="dado.Conciliado === 2 && dado.ExtratoBancario !== null && dado.RecebimentosParcela !== null ? concilia(dado) : dado.Conciliado === 2 && (dado.ExtratoBancario === null || dado.RecebimentosParcela === null) ? procuraDadoConciliacao(dado) : 0"
+                                   ng-disabled="dado.Conciliado === 1">
                                     <i class="fa"
-                                       ng-class="{'fa-check': dado.Conciliado === 1, 'fa-times': dado.Conciliado === 2 && (dado.ExtratoBancario === null || dado.RecebimentosParcela === null), 'fa-arrow-right': dado.Conciliado === 2 && dado.ExtratoBancario !== null && dado.RecebimentosParcela !== null}"></i>
+                                       ng-class="{'fa-check': dado.Conciliado === 1, 'fa-search': dado.Conciliado === 2 && (dado.ExtratoBancario === null || dado.RecebimentosParcela === null), 'fa-arrow-right': dado.Conciliado === 2 && dado.ExtratoBancario !== null && dado.RecebimentosParcela !== null}"></i>
                                 </a>
                             </div>
                         </div>
-                        <!--div class="row btnSeachConciliacaoBancaria"
-                             ng-show="dado.Conciliado === 2 && (dado.ExtratoBancario === null || dado.RecebimentosParcela === null)">
-                            <div class="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-4">
-                                <a href="javascript:;" class="btn btn-icon-only default">
-                                    <i class="fa fa-search"></i>
-                                </a>
-                            </div>
-                        </div-->
                     </div>
                     
                     <!--2º CUPOM(COMPROVANTE CRÉDITO)-->
@@ -519,7 +513,8 @@
                                     <!-- nothing ...-->           
                                 </div> 
                                 <!--VALOR TOTAL-->
-                                <div class="row">
+                                <div class="row"
+                                     ng-init="incrementaContExtratoBancario(dado.ExtratoBancario)">
                                     <!--VALOR-->
                                     <div class="col-md-6 col-sm-6">
                                         <label>Valor total:</label>
@@ -557,6 +552,7 @@
                     </div>
                 </div>
                 <!--FIM CUPONS-->
+                <!-- TOTAIS - VALORES -->
                 <div class="row" style="margin-top:30px">
                     <!-- RECEBIMENTO PARCELA -->
                     <div class="col-md-5 col-sm-5" style="text-align:center">
@@ -571,6 +567,24 @@
                     <div class="col-md-5 col-sm-5" style="text-align:center">
                         <label style="font-weight:bolder">
                             TOTAL:&nbsp;{{totais.totalExtrato | currency:'R$'}}
+                        </label>
+                    </div>
+                </div>
+                <!-- TOTAIS - REGISTROS -->
+                <div class="row" style="margin-top:30px">
+                    <!-- RECEBIMENTO PARCELA -->
+                    <div class="col-md-5 col-sm-5" style="text-align:center">
+                        <label style="font-weight:bolder">
+                            CARGAS:&nbsp;{{totais.contRecebimentosParcela}}
+                        </label>    
+                    </div>
+                    <!-- ESPAÇO DOS BOTOÕES -->
+                    <div class="col-md-2 col-sm-2">
+                    </div>
+                    <!-- EXTRATO BANCÁRIO -->
+                    <div class="col-md-5 col-sm-5" style="text-align:center">
+                        <label style="font-weight:bolder">
+                            MOVIMENTAÇÕES:&nbsp;{{totais.contExtrato}}
                         </label>
                     </div>
                 </div>
