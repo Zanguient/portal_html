@@ -682,3 +682,52 @@ thead.centralizarVerticalTitulos > tr > th {
 .teste col-xs-3{
   padding-left: -60px;
 }
+
+/*ESTILO CUPONS RELATÓRIOS*/
+
+.dataHoraCuponRelatorios{
+    margin-bottom: 20px;
+}
+
+.dataHoraCuponRelatorios  label{
+    font-size: 13px;
+    margin-right: 5px; 
+}
+
+.conteudoCupomRelatorios{
+    margin-bottom: 20px;
+}
+
+.cuponAzulRelatorios{
+    background-color: #eef7fb; 
+    border-color: #a6e1ec; 
+    color: #31708f;
+    border-left:3px solid #a6e1ec;
+    border-radius: 4px 4px;
+    padding: 15px 30px 15px 15px;
+    text-transform: uppercase;
+}
+
+.legendaCupomRelatorios{
+    margin-bottom: 20px;
+}
+
+.rodapeCupomRelatorio{
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.textAlinhamentoCupomRelatorio{
+    text-align: right;
+}
+
+.tituloCuponRelatorios{
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.informacoesCuponRelatorios{
+    margin-bottom: 20px;
+}
+
+/*FIM ESTILO CUPONS RELATÓRIOS*/
