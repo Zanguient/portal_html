@@ -195,20 +195,12 @@ margin-top:170px;
 }
 
 /* BOTÕES*/
-.btnCheckConciliacaoBancaria{
+.btnConciliacaoBancaria{
   margin-top: 140px;
 }
 
-.btnTimesConciliacaoBancaria{
-    margin-top: 120px;
-}
-
-.btnSeachConciliacaoBancaria{
-    margin-top: 20px;
-}
-
-.btnArrowRightConciliacaoBancaria{
-    margin-top: 140px;
+.btnPossivelConciliadoConciliacaoBancaria{
+    background-color: #807C15;
 }
 
 .btnRegistrosCupon{

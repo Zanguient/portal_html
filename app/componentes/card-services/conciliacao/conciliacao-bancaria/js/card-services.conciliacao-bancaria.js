@@ -25,16 +25,18 @@ angular.module("card-services-conciliacao-bancaria", [])
     $scope.paginaInformada = 1; // página digitada pelo usuário                                             
     // Dados    
     $scope.dadosconciliacao = [];
-    $scope.totais = { totalExtrato : 0.0, totalRecebimentosParcela : 0.0};
+    $scope.totais = { totalExtrato : 0.0, totalRecebimentosParcela : 0.0,
+                      contExtrato : 0, contRecebimentosParcela : 0};
     $scope.adquirentes = [];
     $scope.filiais = [];
+    $scope.tipos = [{id: 1, nome: 'CONCILIADO'}, {id: 2, nome: 'NÃO CONCILIADO'}];                                             
     $scope.filtro = {datamin : new Date(), datamax : '', 
                      tipo : $scope.tipos[1], adquirente : undefined, filial : undefined,
                      itens_pagina : $scope.itens_pagina[1], order : 0,
                      pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0
                     };  
     
-    $scope.tipos = [{id: 1, nome: 'CONCILIADO'}, {id: 2, nome: 'NÃO CONCILIADO'}];                                             
+                                                 
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyDadosPos = 1;  
     // Modal Detalhes
@@ -401,6 +403,8 @@ angular.module("card-services-conciliacao-bancaria", [])
                                 filtros)) 
             .then(function(dados){           
 
+                $scope.totais.contExtrato = $scope.totais.contRecebimentosParcela = 0;
+            
                 // Obtém os dados
                 $scope.dadosconciliacao = dados.Registros;
                 
@@ -441,6 +445,18 @@ angular.module("card-services-conciliacao-bancaria", [])
               });  
     }
     
+    /**
+      * Incrementa o total de registros associados a recebimentoparcela
+      */
+    $scope.incrementaContRecebimentosParcelas = function(RecebimentosParcela){
+        if(RecebimentosParcela != null) $scope.totais.contRecebimentosParcela += RecebimentosParcela.length;
+    }
+    /**
+      * Incrementa o total de registros associados a extrato
+      */
+    $scope.incrementaContExtratoBancario = function(ExtratoBancario){
+        if(ExtratoBancario != null) $scope.totais.contExtrato += ExtratoBancario.length;
+    }
     
     
     
@@ -455,15 +471,51 @@ angular.module("card-services-conciliacao-bancaria", [])
     
     
     // AÇÕES
-    $scope.concilia = function(dado, pendencia){
-        //if(pendencia) // concilia mas valores não "batem"
-        console.log("CONCILIA");
-        console.log(dado);
+    /**
+      * Solicita confirmação para o usuário quanto a conciliação
+      */
+    $scope.concilia = function(dado){
+        // Confirma conciliação
+        var carga = dado.RecebimentosParcela.length > 1 ? "as cargas" : "a carga";
+        $scope.showModalConfirmacao('Confirmação', 
+            "Uma vez confirmada a conciliação, a movimentação e " + carga + " não poderão se envolver em outra conciliação bancária. Confirma essa conciliação?",
+            concilia, dado, 'Sim', 'Não');  
+    }
+    /**
+      * Efetiva a conciliação
+      */
+    var concilia = function(dado){
+        $scope.showProgress(divPortletBodyFiltrosPos);
+        $scope.showProgress(divPortletBodyDadosPos);
+        
+        // Obtém o json
+        var json = { idExtrato : parseInt(dado.ExtratoBancario[0].Id), 
+                     idsRecebimento : []
+                   };
+        for(var k = 0; k < dado.RecebimentosParcela.length; k++)
+            json.idsRecebimento.push(dado.RecebimentosParcela[k].Id);
+
+        $webapi.update($apis.getUrl($apis.pos.recebimentoparcela, undefined,
+                       {id: 'token', valor: $scope.token}), json)
+            .then(function(dados){
+                    //$scope.showAlert('Conciliação bancária realizada com sucesso!', true, 'success', true);
+                    // Altera o status da conciliação
+                    dado.Conciliado = 1;
+                    // Esconde o progress
+                    $scope.hideProgress(divPortletBodyFiltrosPos);
+                    $scope.hideProgress(divPortletBodyDadosPos);
+                  },function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                     else $scope.showAlert('Houve uma falha ao realizar a conciliação bancária (' + failData.status + ')', true, 'danger', true); 
+                    $scope.hideProgress(divPortletBodyFiltrosPos);
+                    $scope.hideProgress(divPortletBodyDadosPos);
+                  });     
     }
     
     $scope.procuraDadoConciliacao = function(dado){
-        console.log("PROCURA");
-        console.log(dado);    
+        //console.log("PROCURA");
+        //console.log(dado);    
     }
     
 }]);
