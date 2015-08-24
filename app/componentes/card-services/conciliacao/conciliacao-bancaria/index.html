@@ -222,17 +222,23 @@
                    <div class="modal-body modal-corpo modalAcessoDeUsuarios" style="text-align: center">
                        <div class="row">
                            <div class="col-sm-6">
+                                <label>Bandeira</label>
+                           </div>
+                           <div class="col-sm-3">
                                 <label>NSU</label>
                            </div>
-                           <div class="col-sm-6">
+                           <div class="col-sm-3">
                                 <label>Valor</label>
                            </div>
                        </div>
                        <div class="row" ng-repeat="item in modalDetalhes.grupo">
                            <div class="col-sm-6" style="text-align:center">
+                                {{item.Bandeira | uppercase}}
+                           </div>
+                           <div class="col-sm-3" style="text-align:center">
                                 {{item.Documento | uppercase}}
                            </div>
-                           <div class="col-sm-6" style="text-align:center">
+                           <div class="col-sm-3" style="text-align:center">
                                 {{item.Valor | currency:'R$'}}
                            </div>
                        </div>
@@ -248,6 +254,40 @@
            </div>
        </div>
         <!-- FIM - MODAL DETALHAR DOCUMENTOS -->
+        
+        <!-- MODAL ALTERAR DATA DE RECEBIMENTO -->
+       <div class="modal fade bs-modal-sm modal-input" 
+            id="modalDataRecebimento" aria-hidden="true">
+           <div class="modal-dialog modal-sm" style="width:400px">
+               <div class="modal-content">
+                   <div class="modal-header">
+                       <h4 class="modal-title modal-cabecalho">Alterar Data de Recebimento</h4>
+                   </div>
+                   <div class="modal-body modal-corpo modalAcessoDeUsuarios" style="text-align: center">
+                       <div class="row">
+                           <input class="form-control input-sm input-inline"
+                                  type="text" valid-data 
+                                  ng-model="modalDataRecebimento.data"
+                                  ng-blur="validaData()"
+                                  ng-keypress="($event.which === 13) ? alteraDataRecebimento() : 0">
+                       </div>
+                    </div>
+                   <div class="modal-footer">
+                       <div class="col-sm-5">
+                           <button type="button" class="btn btn-primary" ng-click="alteraDataRecebimento()">
+                               Salvar
+                           </button>
+                       </div> 
+                       <div class="col-sm-5">
+                           <button type="button" class="btn default" data-dismiss="modal">
+                               Fechar
+                           </button>
+                       </div>                           
+                   </div>
+               </div>
+           </div>
+       </div>
+        <!-- FIM - MODAL ALTERAR DATA DE RECEBIMENTO -->
         
         
         <div class="portlet-title">
@@ -383,7 +423,7 @@
                                     </div>
                                     <div class="col-md-6 col-sm-6 alinhamentoDados"
                                          ng-bind="getDataString(dado.Data)">
-                                    </div>                      
+                                    </div>
                                 </div>
                                 <!--ADQUIRENTE -->
                                 <div class="row">
@@ -396,10 +436,10 @@
                                 </div> 
                                 <!--BANDEIRA -->
                                 <div class="row">
-                                    <div class="col-md-6 col-sm-6">
+                                    <div class="col-md-4 col-sm-4">
                                         <label>Bandeira:</label>
                                     </div>
-                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                    <div class="col-md-8 col-sm-8 alinhamentoDados">
                                         {{(dado.Bandeira | uppercase) || ''}}
                                     </div>                      
                                 </div> 
@@ -446,12 +486,12 @@
                     <div class="col-md-2 col-sm-2 btnConciliacaoBancaria">
                         <div class="row" ng-init="incrementaTotalPreConciliados(dado.Conciliado === 2)">
                             <div class="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-4"
-                                 title="{{dado.Conciliado == 1 ? 'Conciliado' : dado.Conciliado === 2 ? 'Conciliar' : dado.Conciliado === 3 && dado.ExtratoBancario === null ? 'Procurar movimentação bancária' : dado.Conciliado === 3 && dado.RecebimentosParcela === null ? 'Procurar carga(s)' : ''}}">
+                                 title="{{dado.Conciliado == 1 ? 'Conciliado' : dado.Conciliado === 2 ? 'Conciliar' : dado.Conciliado === 3 && dado.ExtratoBancario === null ? 'Alterar data de recebimento' : dado.Conciliado === 3 && dado.RecebimentosParcela === null ? 'Sem associação' : ''}}">
                                 <a href="javascript:;" class="btn btn-icon-only default"
-                                   ng-click="dado.Conciliado === 2 ? concilia(dado) : dado.Conciliado === 3 ? procuraDadoConciliacao(dado) : 0"
-                                   ng-disabled="dado.Conciliado === 1">
+                                   ng-click="dado.Conciliado === 2 ? concilia(dado) : dado.Conciliado === 3 && dado.ExtratoBancario === null ? exibeModalDataRecebimento(dado) : 0"
+                                   ng-disabled="dado.Conciliado === 1 || dado.Conciliado === 3 && dado.RecebimentosParcela === null">
                                     <i class="fa"
-                                       ng-class="{'fa-check': dado.Conciliado === 1, 'fa-arrow-right': dado.Conciliado === 2, 'fa-search': dado.Conciliado === 3}"></i>
+                                       ng-class="{'fa-check': dado.Conciliado === 1, 'fa-arrow-right': dado.Conciliado === 2, 'fa-edit': dado.Conciliado === 3 && dado.ExtratoBancario === null, 'fa-times' : dado.Conciliado === 3 && dado.RecebimentosParcela === null}"></i>
                                 </a>
                             </div>
                         </div>

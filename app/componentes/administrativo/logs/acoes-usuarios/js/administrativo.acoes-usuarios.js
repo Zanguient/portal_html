@@ -34,7 +34,7 @@ angular.module("administrativo-acoes-usuarios", [])
                             ativo: true,  
                             nome: "URL"
                           }];
-    $scope.itens_pagina = [10, 20, 50, 100];
+    $scope.itens_pagina = [50, 100, 150, 200];
     $scope.filtro = {busca:'', campo_busca : $scope.camposBusca[0], 
                       itens_pagina : $scope.itens_pagina[0], pagina : 1,
                       total_registros : 0, faixa_registros : '0-0', total_paginas : 0, 

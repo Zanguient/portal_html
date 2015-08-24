@@ -8,79 +8,71 @@
 // App
 angular.module("administrativo-monitor-cargas", ['SignalR']) 
 
-
-.factory('monitorService', ['$rootScope','$scope','Hub', '$timeout', 
-                            function($rootScope, $scope, Hub, $timeout){
-    
-    var monitor = this;                           
-                                
-    monitor.mudancas = [];
-                                
-    //declaring the hub connection
-    var hub = new Hub('ServerAtosCapital', {
+.factory('monitorService',
+    ["$http", "$rootScope", "$location", "Hub", "$timeout",
+    function ($http, $rootScope, $location, Hub, $timeout) {
         
-        //client side methods
-        listeners:{
-            'notifyCarga': function (mudancas) {
-                console.log("NOTIFY CARGA");console.log(mudancas);
-                $scope.$broadcast("notifyMonitor", mudancas);
-            }
-        },
+        var monitor = this;
 
-        //server side methods
-        methods: ['conectado'],
+        //Hub setup
+        var hub = new Hub("ServerAtosCapital", {
+            listeners: {
+                'notifyCarga': function (mudancas) {
+                    console.log("NOTIFY CARGA");console.log(mudancas);
+                    $scope.$broadcast("notifyMonitor", mudancas);
+                }
+            },
+            rootPath : 'http://localhost:55007/signalr',
+            
+            methods: ['conectado'],
+            errorHandler: function (error) {
+                //console.log("ERRO");
+                //console.log(error);
+            },
+            hubDisconnected: function () {
+                if (hub.connection.lastError) {
+                    hub.connection.start();
+                }
+            },
+            transport: 'webSockets',
+            logging: false,
+            
+            /*stateChanged: function(state){
+                switch (state.newState) {
+                    case $.signalR.connectionState.connecting:
+                        console.log("CONECTANDO...");
+                        break;
+                    case $.signalR.connectionState.connected:
+                        console.log("CONECTADO!");
+                        break;
+                    case $.signalR.connectionState.reconnecting:
+                        console.log("RECONECTANDO...");
+                        break;
+                    case $.signalR.connectionState.disconnected:
+                        console.log("DESCONECTADO!");
+                        break;
+                }
+            }*/
+        });
 
-        //query params sent on initial connection
-        queryParams:{
-            token: $scope.token
-        },
-
-        //handle connection error
-        errorHandler: function(error){
-            console.log("ERRO");
-            console.error(error);
-        },
+        /**
+          * Função que notifica ao servidor que está monitorando
+          */
+        monitor.conectado = function () {
+            hub.conectado($scope.token); //Calling a server method
+        };
+        /**
+          *
+          */
+        monitor.desconectar = function(){
+            hub.connection.stop();    
+        };
+        /*monitor.send = function (userName, chatMessage) {
+            hub.send(userName, chatMessage);
+        }*/
         
-        transport: 'webSockets',
-
-        //specify a non default root
-        //rootPath: '/api
-
-        stateChanged: function(state){
-            switch (state.newState) {
-                case $.signalR.connectionState.connecting:
-                    console.log("CONECTANDO...");
-                    break;
-                case $.signalR.connectionState.connected:
-                    console.log("CONECTADO!");
-                    break;
-                case $.signalR.connectionState.reconnecting:
-                    console.log("RECONECTANDO...");
-                    break;
-                case $.signalR.connectionState.disconnected:
-                    console.log("DESCONECTADO!");
-                    break;
-            }
-        }
-    });
-
-    /**
-      * Função que notifica ao servidor que está monitorando
-      */
-    monitor.conectado = function () {
-        hub.conectado($scope.token); //Calling a server method
-    };
-                                
-    /**
-      * Função que notifica ao servidor que está monitorando
-      * /
-    monitor.desconectado = function () {
-        hub.desconectado($scope.token); //Calling a server method
-    };*/                            
-
-    
-    return monitor;
-}])
+        return monitor;
+    }])
 
 .controller("administrativo-monitor-cargasCtrl", ['$scope',
                                             '$state',
@@ -97,7 +89,7 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
     $scope.monitorCargas = [];                                            
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyMonitorPos = 1; // posição da div que vai receber o loading progress
-    $scope.itens_pagina = [10, 20, 50, 100];
+    $scope.itens_pagina = [50, 100, 150, 200];
     $scope.filtro = { data : new Date(),
                       itens_pagina : $scope.itens_pagina[0], pagina : 1,
                       total_registros : 0, faixa_registros : '0-0', total_paginas : 0, 
@@ -115,6 +107,7 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
         $scope.pagina.subtitulo = 'Monitor de Cargas';
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state, params){
+            $scope.monitor.desconectar();
             $state.go(state, params);
         });
         $scope.$on('notifyMonitor', function(event, mudancas){

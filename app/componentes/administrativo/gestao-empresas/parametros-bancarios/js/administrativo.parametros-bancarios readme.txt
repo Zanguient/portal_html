@@ -66,7 +66,8 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 			[
 			  { dsMemo : string,
 				adquirente : null ou { cdAdquirente : int, nmAdquirente : string, dsAdquirente : string, stAdquirente : int},
-				dsTipo : e.dsTipo,
+				dsTipo : string,
+				flVisivel : bool,
 				banco : { Codigo : string, 
 						  NomeExtenso : string},
 			  }
@@ -85,6 +86,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				dsMemo : string, // não altera
 				dsTipo : string,
 				cdAdquirente : int, // set -1 para deixar indefinido
+				flVisivel : bool, 
 			  }
 			]			
    

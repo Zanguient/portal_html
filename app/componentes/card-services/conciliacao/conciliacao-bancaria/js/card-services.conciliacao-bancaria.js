@@ -42,7 +42,9 @@ angular.module("card-services-conciliacao-bancaria", [])
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyDadosPos = 1;  
     // Modal Detalhes
-    $scope.modalDetalhes = {grupo : [] };                                             
+    $scope.modalDetalhes = {grupo : [] };  
+    // Modal Data de Recebimento
+    $scope.modalDataRecebimento = { dado : undefined, data : '', dataValida : false };  
     // Permissões                                           
     var permissaoAlteracao = false;
     var permissaoCadastro = false;
@@ -215,7 +217,7 @@ angular.module("card-services-conciliacao-bancaria", [])
       */
     var buscaFiliais = function(nu_cnpj, idOperadora){
         
-       $scope.showProgress(divPortletBodyFiltrosPos);    
+       $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
         
        var filtros = undefined;
 
@@ -266,7 +268,7 @@ angular.module("card-services-conciliacao-bancaria", [])
            return;
        }    
         
-       if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos);    
+       if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
         
        var filtros = undefined;
 
@@ -405,12 +407,14 @@ angular.module("card-services-conciliacao-bancaria", [])
         buscaDadosConciliacaoBancaria();
     }
     
-    var buscaDadosConciliacaoBancaria = function(){
+    var buscaDadosConciliacaoBancaria = function(progressoemexecucao){
         if(!$scope.usuariologado.grupoempresa ||  !$scope.filtro.filial || $scope.filtro.filial === null) 
             return;
         
-        $scope.showProgress(divPortletBodyFiltrosPos, 10000);
-        $scope.showProgress(divPortletBodyDadosPos);
+        if(!progressoemexecucao){
+            $scope.showProgress(divPortletBodyFiltrosPos, 10000);
+            $scope.showProgress(divPortletBodyDadosPos);
+        }
         
         // Filtro  
         var filtros = obtemFiltroDeBusca();
@@ -525,7 +529,7 @@ angular.module("card-services-conciliacao-bancaria", [])
       * Efetiva a conciliação
       */
     var concilia = function(dadosConciliacao){
-        $scope.showProgress(divPortletBodyFiltrosPos);
+        $scope.showProgress(divPortletBodyFiltrosPos, 10000);
         $scope.showProgress(divPortletBodyDadosPos);
         
         // Obtém o json
@@ -545,7 +549,7 @@ angular.module("card-services-conciliacao-bancaria", [])
         //$scope.hideProgress(divPortletBodyFiltrosPos);
         //$scope.hideProgress(divPortletBodyDadosPos);
 
-        $webapi.update($apis.getUrl($apis.pos.recebimentoparcela, undefined,
+        $webapi.update($apis.getUrl($apis.card.conciliacaobancaria, undefined,
                        {id: 'token', valor: $scope.token}), jsonConciliacaoBancaria)
             .then(function(dados){
                     //$scope.showAlert('Conciliação bancária realizada com sucesso!', true, 'success', true);
@@ -564,9 +568,84 @@ angular.module("card-services-conciliacao-bancaria", [])
                   });     
     }
     
-    $scope.procuraDadoConciliacao = function(dado){
-        //console.log("PROCURA");
-        //console.log(dado);    
+    
+    // EDIÇÃO DA DATA DE RECEBIMENTO 
+    var fechaModalDataRecebimento = function(){
+        $('#modalDataRecebimento').modal('hide');    
     }
+    var exibeModalDataRecebimento = function(){
+        $('#modalDataRecebimento').modal('show');    
+    }
+    /**
+      * Valida a data informada e envia para o servidor
+      */
+    $scope.alteraDataRecebimento = function(){
+        if(!$scope.modalDataRecebimento.dataValida){
+            $scope.showModalAlerta('Data informada é inválida!');
+            return;
+        }
+            
+        if($scope.getDataString($scope.modalDataRecebimento.dado.Data) === $scope.modalDataRecebimento.data){
+            // Não houve alterações
+            fechaModalDataRecebimento();
+            return;
+        }
+        
+        // Envia para o servidor
+        //console.log("ALTERA DATA PARA " + $scope.getDataFromString($scope.modalDataRecebimento.data));
+        $scope.showProgress(divPortletBodyFiltrosPos, 10000);
+        $scope.showProgress(divPortletBodyDadosPos);
+        
+        // Obtém o json
+        var jsonRecebimentoParcela = { dtaRecebimento : $scope.getDataFromString($scope.modalDataRecebimento.data),
+                                       idsRecebimento : []
+                                     };
+        for(var k = 0; k < $scope.modalDataRecebimento.dado.RecebimentosParcela.length; k++)
+            jsonRecebimentoParcela.idsRecebimento.push($scope.modalDataRecebimento.dado.RecebimentosParcela[k].Id);
+        
+        
+        //console.log(jsonRecebimentoParcela);
+        //$scope.hideProgress(divPortletBodyFiltrosPos);
+        //$scope.hideProgress(divPortletBodyDadosPos);
+
+        $webapi.update($apis.getUrl($apis.pos.recebimentoparcela, undefined,
+                       {id: 'token', valor: $scope.token}), jsonRecebimentoParcela)
+            .then(function(dados){
+                    //$scope.showAlert('Data de recebimento alterada com sucesso!', true, 'success', true);
+                    // Fecha o modal
+                    fechaModalDataRecebimento();
+                    // Refaz a busca de conciliação
+                    buscaDadosConciliacaoBancaria(true);
+                  },function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                     else $scope.showAlert('Houve uma falha ao alterar data de recebimento (' + failData.status + ')', true, 'danger', true); 
+                    $scope.hideProgress(divPortletBodyFiltrosPos);
+                    $scope.hideProgress(divPortletBodyDadosPos);
+                  });     
+    }
+    $scope.exibeModalDataRecebimento = function(dado){
+        $scope.modalDataRecebimento.dado = dado;
+        $scope.modalDataRecebimento.data = $scope.getDataString(dado.Data);
+        $scope.modalDataRecebimento.dataValida = true;
+        // Exibe o modal
+        exibeModalDataRecebimento();
+    }
+    /**
+      * Valida a data informada
+      */
+    $scope.validaData = function(){
+        if($scope.modalDataRecebimento.data){
+            if($scope.modalDataRecebimento.data.length < 10) $scope.modalDataRecebimento.dataValida = false;
+            else{
+                var parts = $scope.modalDataRecebimento.data.split("/");
+                var data = new Date(parts[2], parts[1] - 1, parts[0]);
+                // Verifica se a data é válida
+                $scope.modalDataRecebimento.dataValida =  parts[0] == data.getDate() && 
+                                                          (parts[1] - 1) == data.getMonth() && 
+                                                          parts[2] == data.getFullYear();
+            }
+        }else $scope.modalDataRecebimento.dataValida = false;
+    };
     
 }]);
