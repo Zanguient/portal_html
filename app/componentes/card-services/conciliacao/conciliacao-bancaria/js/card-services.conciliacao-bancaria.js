@@ -26,12 +26,14 @@ angular.module("card-services-conciliacao-bancaria", [])
     // Dados    
     $scope.dadosconciliacao = [];
     $scope.totais = { totalExtrato : 0.0, totalRecebimentosParcela : 0.0,
-                      contExtrato : 0, contRecebimentosParcela : 0};
+                      contExtrato : 0, contRecebimentosParcela : 0,
+                    };
+    var totalPreConciliados = 0;                                            
     $scope.adquirentes = [];
     $scope.filiais = [];
-    $scope.tipos = [{id: 1, nome: 'CONCILIADO'}, {id: 2, nome: 'NÃO CONCILIADO'}];                                             
-    $scope.filtro = {datamin : new Date(), datamax : '', 
-                     tipo : $scope.tipos[1], adquirente : undefined, filial : undefined,
+    $scope.tipos = [{id: 1, nome: 'CONCILIADO'}, {id: 2, nome: 'PRÉ-CONCILIADO'}, {id: 3, nome: 'NÃO CONCILIADO'}];             
+    $scope.filtro = {datamin : new Date(), datamax : '', consideraPeriodo : true,
+                     tipo : null, adquirente : undefined, filial : undefined,
                      itens_pagina : $scope.itens_pagina[1], order : 0,
                      pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0
                     };  
@@ -44,8 +46,7 @@ angular.module("card-services-conciliacao-bancaria", [])
     // Permissões                                           
     var permissaoAlteracao = false;
     var permissaoCadastro = false;
-    var permissaoRemocao = false;
-    // Flags 
+    var permissaoRemocao = false;                                          
     $scope.exibeTela = false;    
     $scope.abrirCalendarioDataMin = $scope.abrirCalendarioDataVendaMin = false;
     $scope.abrirCalendarioDataMax = $scope.abrirCalendarioDataVendaMax = false; 
@@ -140,12 +141,15 @@ angular.module("card-services-conciliacao-bancaria", [])
       */
     var obtemFiltroDeBusca = function(){
        var filtros = [];
-       // Data
-       var filtroData = {id: /*$campos.card.conciliacaobancaria.data*/ 100,
-                         valor: $scope.getFiltroData($scope.filtro.datamin)}; 
-       if($scope.filtro.datamax)
-           filtroData.valor = filtroData.valor + '|' + $scope.getFiltroData($scope.filtro.datamax);
-       filtros.push(filtroData);
+    
+       if($scope.filtro.consideraPeriodo){    
+           // Data
+           var filtroData = {id: /*$campos.card.conciliacaobancaria.data*/ 100,
+                             valor: $scope.getFiltroData($scope.filtro.datamin)}; 
+           if($scope.filtro.datamax)
+               filtroData.valor = filtroData.valor + '|' + $scope.getFiltroData($scope.filtro.datamax);
+           filtros.push(filtroData);
+       }
     
        // Filial
        if($scope.filtro.filial && $scope.filtro.filial !== null){
@@ -298,8 +302,23 @@ angular.module("card-services-conciliacao-bancaria", [])
     
     
     // TIPO CONCILIAÇÃO
+    $scope.isTipoNaoConciliado = function(){
+        return $scope.filtro.tipo && $scope.filtro.tipo !== null && $scope.filtro.tipo.id === $scope.tipos[2].id;    
+    }
     $scope.alterouTipo = function(){
-        //console.log($scope.filtro.tipo);  
+        //console.log($scope.filtro.tipo); 
+        if(!$scope.isTipoNaoConciliado()) $scope.filtro.consideraPeriodo = true;
+    }
+    
+    $scope.selecionouCheckboxSemData = function(){
+        //console.log($scope.filtro.consideraPeriodo);     
+    }
+    
+    $scope.temElementosPreConciliados = function(){
+        return totalPreConciliados > 0;
+    }
+    $scope.incrementaTotalPreConciliados = function(incrementa){
+        if(incrementa) totalPreConciliados++;    
     }
     
     
@@ -390,7 +409,7 @@ angular.module("card-services-conciliacao-bancaria", [])
         if(!$scope.usuariologado.grupoempresa ||  !$scope.filtro.filial || $scope.filtro.filial === null) 
             return;
         
-        $scope.showProgress(divPortletBodyFiltrosPos);
+        $scope.showProgress(divPortletBodyFiltrosPos, 10000);
         $scope.showProgress(divPortletBodyDadosPos);
         
         // Filtro  
@@ -403,7 +422,7 @@ angular.module("card-services-conciliacao-bancaria", [])
                                 filtros)) 
             .then(function(dados){           
 
-                $scope.totais.contExtrato = $scope.totais.contRecebimentosParcela = 0;
+                $scope.totais.contExtrato = $scope.totais.contRecebimentosParcela = totalPreConciliados = 0;
             
                 // Obtém os dados
                 $scope.dadosconciliacao = dados.Registros;
@@ -479,28 +498,60 @@ angular.module("card-services-conciliacao-bancaria", [])
         var carga = dado.RecebimentosParcela.length > 1 ? "as cargas" : "a carga";
         $scope.showModalConfirmacao('Confirmação', 
             "Uma vez confirmada a conciliação, a movimentação e " + carga + " não poderão se envolver em outra conciliação bancária. Confirma essa conciliação?",
-            concilia, dado, 'Sim', 'Não');  
+            concilia, [dado], 'Sim', 'Não');  
+    }
+    /**
+      * Solicita confirmação para o usuário quanto a(s) conciliação(ões)
+      */
+    $scope.conciliaPreConciliados = function(){
+        var preConciliados = $filter('filter')($scope.dadosconciliacao, function(c){ return c.Conciliado === 2 }); 
+        var total = preConciliados.length;
+        // Tem elementos pré-conciliados?
+        if(total === 0){
+            $scope.showModalAlerta('Não há dados pré-conciliados em exibição!');
+            return;        
+        } 
+        // Prepara o texto
+        var texto = "";
+        if(total === 1){
+            texto += "Foi encontrada 1 pré-conciliação. Uma vez confirmada a conciliação, a movimentação e ";
+            if(preConciliados[0].RecebimentosParcela.length > 1) texto += "as cargas não poderão se envolver em outra conciliação bancária. Confirma essa conciliação?"
+            else texto += "a carga";
+        }else texto += "Foram encontradas " + total + " pré-conciliações. Uma vez confirmadas as conciliações, as movimentações e as cargas não poderão se envolver em outra conciliação bancária. Confirma essas conciliações?";
+        // Exibe o modal de confirmação
+        $scope.showModalConfirmacao('Confirmação', texto, concilia, preConciliados, 'Sim', 'Não');
     }
     /**
       * Efetiva a conciliação
       */
-    var concilia = function(dado){
+    var concilia = function(dadosConciliacao){
         $scope.showProgress(divPortletBodyFiltrosPos);
         $scope.showProgress(divPortletBodyDadosPos);
         
         // Obtém o json
-        var json = { idExtrato : parseInt(dado.ExtratoBancario[0].Id), 
-                     idsRecebimento : []
-                   };
-        for(var k = 0; k < dado.RecebimentosParcela.length; k++)
-            json.idsRecebimento.push(dado.RecebimentosParcela[k].Id);
+        var jsonConciliacaoBancaria = [];
+        for(var k = 0; k < dadosConciliacao.length ; k++){
+            var dado = dadosConciliacao[k];
+            var json = { idExtrato : parseInt(dado.ExtratoBancario[0].Id), 
+                         idsRecebimento : []
+                       };
+            for(var j = 0; j < dado.RecebimentosParcela.length; j++)
+                json.idsRecebimento.push(dado.RecebimentosParcela[j].Id);
+            // Adiciona
+            jsonConciliacaoBancaria.push(json);
+        }
+        
+        //console.log(jsonConciliacaoBancaria);
+        //$scope.hideProgress(divPortletBodyFiltrosPos);
+        //$scope.hideProgress(divPortletBodyDadosPos);
 
         $webapi.update($apis.getUrl($apis.pos.recebimentoparcela, undefined,
-                       {id: 'token', valor: $scope.token}), json)
+                       {id: 'token', valor: $scope.token}), jsonConciliacaoBancaria)
             .then(function(dados){
                     //$scope.showAlert('Conciliação bancária realizada com sucesso!', true, 'success', true);
                     // Altera o status da conciliação
-                    dado.Conciliado = 1;
+                    for(var k = 0; k < dadosConciliacao.length; k++) dadosConciliacao[k].Conciliado = 1;  
+                    if(!$scope.$$phase) $scope.$apply();
                     // Esconde o progress
                     $scope.hideProgress(divPortletBodyFiltrosPos);
                     $scope.hideProgress(divPortletBodyDadosPos);
