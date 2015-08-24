@@ -675,15 +675,10 @@ thead.centralizarVerticalTitulos > tr > th {
   padding-left: -60px;
 }
 
-/*ESTILO CUPONS RELATÓRIOS*/
+/*ESTILO CUPONS RELATÓRIOS TÉRMINAIS LÓGICOS*/
 
-.dataHoraCuponRelatorios{
-    margin-bottom: 20px;
-}
-
-.dataHoraCuponRelatorios  label{
-    font-size: 13px;
-    margin-right: 5px; 
+.btnRelatoriosTerminal{
+padding-top: 16%;
 }
 
 .conteudoCupomRelatorios{
@@ -698,6 +693,21 @@ thead.centralizarVerticalTitulos > tr > th {
     border-radius: 4px 4px;
     padding: 15px 30px 15px 15px;
     text-transform: uppercase;
+    font-size: 12px;
+    width: 275px;
+}
+
+.cuponsRelatoriosTerminais{
+    margin-top: 50px;
+}
+
+.dataHoraCuponRelatorios{
+    margin-bottom: 20px;
+}
+
+.dataHoraCuponRelatorios  label{
+    font-size: 13px;
+    margin-right: 5px; 
 }
 
 .legendaCupomRelatorios{
@@ -713,6 +723,10 @@ thead.centralizarVerticalTitulos > tr > th {
     text-align: right;
 }
 
+.totaisCuponRelatorios{
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
 .tituloCuponRelatorios{
     margin-bottom: 20px;
     text-align: center;
@@ -722,4 +736,4 @@ thead.centralizarVerticalTitulos > tr > th {
     margin-bottom: 20px;
 }
 
-/*FIM ESTILO CUPONS RELATÓRIOS*/
+/*FIM ESTILO CUPONS RELATÓRIOS TÉRMINAIS LÓGICOS*/
