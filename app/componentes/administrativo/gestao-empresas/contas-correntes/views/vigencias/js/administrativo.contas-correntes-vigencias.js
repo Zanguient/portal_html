@@ -56,7 +56,7 @@ angular.module("administrativo-contas-correntes-vigencias", [])
                                                       /*$campos,*/$webapi,$apis){ 
     
     // Exibição
-    $scope.itens_pagina = [10, 20, 50, 100]; 
+    $scope.itens_pagina = [50, 100, 150, 200]; 
     $scope.paginaInformada = 1; // página digitada pelo usuário                                             
     // Dados
     $scope.vigencias = [];     

@@ -40,7 +40,7 @@ angular.module("administrativo-usuarios", [])
                             nome: "Filial"
                           },
                          ];
-    $scope.itens_pagina = [10, 20, 50, 100];
+    $scope.itens_pagina = [50, 100, 150, 200];
     $scope.busca = ''; // model do input de busca                                            
     $scope.usuario = {busca:'', campo_busca : $scope.camposBusca[1], 
                       itens_pagina : $scope.itens_pagina[0], pagina : 1,

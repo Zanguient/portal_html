@@ -19,7 +19,7 @@ angular.module("administrativo-filiais", [])
     var divPortletBodyFilialPos = 0; // posição da div que vai receber o loading progress
     $scope.paginaInformada = 1; // página digitada pelo usuário
     $scope.filiais = [];
-    $scope.itens_pagina = [10, 20, 50, 100];
+    $scope.itens_pagina = [50, 100, 150, 200];
     $scope.busca = ''; // model do input de busca                                            
     $scope.filial = {busca:'', itens_pagina : $scope.itens_pagina[0], pagina : 1,
                      total_registros : 0, faixa_registros : '0-0', total_paginas : 0

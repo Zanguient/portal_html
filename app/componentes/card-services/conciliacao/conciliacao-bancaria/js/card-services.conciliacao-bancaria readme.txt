@@ -51,7 +51,8 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 		  RecebimentosParcela : null ou // se null => não tem info do lado do recebimento parcela
 							[{ Id : int, 
 							   Documento : string,
-							   Valor : double 
+							   Valor : double,
+							   Bandeira : string,
 							 }],
 		  Adquirente : string, 
 		  Bandeira : string,
@@ -76,10 +77,15 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 	  OBS2: Por ser um processamento "pesado", importante o filtrar o grupo empresa e usar um intervalo de data pequeno (de preferência, diário)
 	  OBS3: Usar paginação grande, 20+ itens por página
   
-  * pos/recebimentoparcela
-    - PUT : seta o item recebimento parcela para apontar para determinado extrato ou desassociar de um extrato
-			{ 
+	- PUT : seta os itens recebimento parcela para apontar para determinado extrato ou desassociar de um extrato
+			[{ 
 				idExtrato : int, // set -1 para desassociar de um extrato
+				idsRecebimento: [int]
+			}]
+  
+  * pos/recebimentoparcela
+    - PUT : altera a data de recibimento de um determinado grupo
+			{   dtaRecebimento : datetime,
 				idsRecebimento: [int]
 			}
 	

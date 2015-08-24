@@ -20,7 +20,7 @@ angular.module("administrativo-parametros-bancarios", [])
                                                       /*$campos,*/$webapi,$apis){ 
     
     // Exibição
-    $scope.itens_pagina = [10, 20, 50, 100];                                             
+    $scope.itens_pagina = [50, 100, 150, 200];                                             
     $scope.paginaInformada = 1; // página digitada pelo usuário                                             
     // Dados    
     $scope.parametros = [];
@@ -495,7 +495,8 @@ angular.module("administrativo-parametros-bancarios", [])
         var jsonParametro = { cdBanco : $scope.modalParametro.banco.Codigo, 
                               dsMemo : $scope.modalParametro.dsMemo,
                               dsTipo : $scope.modalParametro.dsTipo,
-                              cdAdquirente : cdAdquirente
+                              cdAdquirente : cdAdquirente,
+                              flVisivel : $scope.modalParametro.flVisivel
                             };
         //console.log(jsonParametro);
         
@@ -556,6 +557,41 @@ angular.module("administrativo-parametros-bancarios", [])
                      $scope.hideProgress(divPortletBodyFiltrosPos);
                      $scope.hideProgress(divPortletBodyParametrosPos);
                   });         
+    }
+    
+    /**
+     * Solicita confirmação para ocultar o parâmetro bancário
+     */
+    $scope.ocultaParametroBancario = function(parametro){
+        $scope.showModalConfirmacao('Confirmação', 
+                                    'Tem certeza que deseja ocultar o parâmetro bancário?',
+                                     ocultaParametroBancario, 
+                                    {cdBanco : parametro.banco.Codigo,
+                                     dsMemo: parametro.dsMemo,
+                                     flVisivel : false}, 'Sim', 'Não');  
+    };                   
+    /**
+      * Efetiva a exclusão do parâmetro bancário
+      */
+    var ocultaParametroBancario = function(jsonParametro){
+         // Oculta
+         $scope.showProgress(divPortletBodyFiltrosPos);
+         $scope.showProgress(divPortletBodyParametrosPos);
+         $webapi.update($apis.getUrl($apis.card.tbbancoparametro, undefined,
+                                 {id : 'token', valor : $scope.token}), jsonParametro) 
+            .then(function(dados){           
+                //$scope.showAlert('Parâmetro bancário ocultado com sucesso!', true, 'success', true);
+                // Relista
+                buscaParametros(true);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao ocultar parâmetro bancário (' + failData.status + ')', true, 'danger', true);
+                 // Fecha os progress
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+                 $scope.hideProgress(divPortletBodyParametrosPos);
+              });  
     }
     
 }]);

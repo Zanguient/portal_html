@@ -31,7 +31,7 @@ angular.module("administrativo-privilegios", [])
                             ativo: true,  
                             nome: "Nível"
                           }];
-    $scope.itens_pagina = [10, 20, 50, 100];
+    $scope.itens_pagina = [50, 100, 150, 200];
     $scope.privilegio = {busca:'', campo_busca : $scope.camposBusca[1], 
                       itens_pagina : $scope.itens_pagina[0], pagina : 1,
                       total_registros : 0, faixa_registros : '0-0', total_paginas : 0, 
