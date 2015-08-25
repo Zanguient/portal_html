@@ -7,8 +7,8 @@
  */
 -->
 
-<div class="container" ng-controller="card-services-conciliacao-terminal-logicoCtrl" 
-     ng-init="cardServices_conciliacaoTerminalLogicoInit()">    
+<div class="container" ng-controller="card-services-conciliacao-vendasCtrl" 
+     ng-init="cardServices_conciliacaoVendasInit()">    
     <!-- BEGIN PAGE BREADCRUMB -->
     <ul class="page-breadcrumb breadcrumb">
         <li>
@@ -17,7 +17,7 @@
         <li class="active">
              Card Services<i class="fa fa-caret-right"></i>
              Conciliação<i class="fa fa-caret-right"></i>
-             Conciliação Terminal Lógico
+             Conciliação de Vendas
         </li>
     </ul>
     <!-- END PAGE BREADCRUMB -->
@@ -177,12 +177,13 @@
     <div class="portlet light">
         <div class="portlet-title">
             <div class="caption">								
-                <span class="caption-subject font-green-sharp bold uppercase">INFORMAÇÕES</span>
+                <span class="caption-subject font-green-sharp bold uppercase">Conciliação Bancária</span>
             </div>
             <div class="actions">
                 <a class="btn btn-circle btn-icon-only btn-default fullscreen" 
-                   href="javascript:;" ng-click="fullScreenClick()"
-                           title="{{telaEstaEmFullScreen() ? 'Tela Normal' : 'Tela Cheia'}}"></a>
+                   href="javascript:;" 
+                   ng-click="fullScreenClick()"
+                   title="{{telaEstaEmFullScreen() ? 'Tela Normal' : 'Tela Cheia'}}"></a>
                 <div class="btn-group element-hidden"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -->
                     <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
                     <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
@@ -210,475 +211,560 @@
                 </div>
             </div>
         </div>
-        <div class="portlet-body" ng-show="exibeTela">
-            <div class="table-container">
-                <div id="datatable_products_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">
-                    
-                    <!--EXIBIÇÃO E PESQUISA-->
-                    <div class="row">
-                        <!--EXIBIÇÃO-->
-                        <div class="col-xs-4 col-sm-4 col-md-4">
-                            <div class="dataTables_length">
-                                <label>
-                                    <span class="seperator"></span>Exibindo 
-                                    <select name="datatable_products_length" aria-controls="datatable_products" 
-                                            class="form-control input-xsmall input-sm input-inline"
-                                            ng-model="usuario.itens_pagina"
-                                            ng-change="alterouItensPagina()"
-                                            ng-options="item for item in itens_pagina">                                            
-                                    </select> registros de {{usuario.total_registros}}
-                                </label>
-                            </div>   
-                        </div>
-                        <!--PAGINAÇÃO-->
-                        <div class="col-xs-4 col-sm-4 col-md-3">
-                            <div class="pagination-panel centralizarPaginacao"> Página 
-                                <a href="javascript:;" ng-click="retrocedePagina()"
-                                   class="btn btn-sm default prev" 
-                                   ng-class="{disabled: usuario.pagina <= 1}" 
-                                   title="Página anterior">
-                                        <i class="fa fa-angle-left"></i>
-                                </a>
-                                <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
-                                       maxlength="4" style="text-align:center; margin: 0 5px;"
-                                       ng-model="paginaInformada" valid-integer-number
-                                       ng-keypress="($event.which === 13) ? alteraPagina() : 0"
-                                       ng-blur="atualizaPaginaDigitada()">
-                                <a href="javascript:;" ng-click="avancaPagina()"
-                                   class="btn btn-sm default next"
-                                   ng-class="{disabled: usuario.pagina >= usuario.total_paginas}"
-                                   title="Próxima página">
-                                    <i class="fa fa-angle-right"></i>
-                                </a>
-                                 de <span class="pagination-panel-total">{{usuario.total_paginas}}</span>
-                            </div>    
-                        </div>
-                        <!--PESQUISA-->
-                        <div class="col-xs-4 col-sm-4 col-md-5">
-                            <div class="row dataTables_filter">
-                                <div class="col-md-6">
-                                    <label>
-                                            <select aria-controls="datatable_products" 
-                                                    class="form-control input-sm input-inline"
-                                                    ng-model="usuario.campo_busca"
-                                                    ng-options="campo as campo.nome for campo in camposBusca | filter:{ativo:true}">
-                                            </select>
-                                    </label> 
-                                    <label>
-                                            <span class="seperator"></span>Pesquisar
-                                    </label>
-                                </div>
-                                <div class="col-md-6">
-                                    <label>
-                                        <div class="input-group input-icon right">
-                                            <i class="fa fa-times" style="right:50px;cursor:pointer"
-                                               ng-click="resetaBusca()"
-                                               ng-show="usuario.busca"></i>
-                                            <input type="text" 
-                                               class="form-control input-inline" 
-                                               placeholder="Buscar" 
-                                               ng-model="busca"
-                                               ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !busca)) && filtraUsuarios()">
-                                            <span class="input-group-addon">
-                                                <i class="fa fa-search" style="cursor:pointer"
-                                                       ng-click="filtraUsuarios()"></i>
-                                            </span>
-                                        </div> 
-                                    </label>
-                                </div>
-                            </div>
-                        </div>                            
-                    </div>  
+        <div class="portlet-body" ng-show="exibeTela"> 
+            <div class="row">
+                <!--EXIBIÇÃO-->
+                <div class="col-xs-4 col-sm-4 col-md-4">
+                    <div class="dataTables_length">
+                        <label>
+                            <span class="seperator"></span>Exibindo 
+                            <select name="datatable_products_length" aria-controls="datatable_products" 
+                                    class="form-control input-xsmall input-sm input-inline"
+                                    ng-model="filtro.itens_pagina"
+                                    ng-change="alterouItensPagina()"
+                                    ng-options="item for item in itens_pagina">                                            
+                            </select> registros de {{filtro.total_registros}}
+                        </label>
+                    </div>   
                 </div>
+                <!--PAGINAÇÃO-->
+                <div class="col-xs-4 col-sm-4 col-md-3">
+                    <div class="pagination-panel centralizarPaginacao"> Página 
+                        <a href="javascript:;" ng-click="retrocedePagina()"
+                           class="btn btn-sm default prev" 
+                           ng-class="{disabled: filtro.pagina <= 1}" 
+                           title="Página anterior">
+                                <i class="fa fa-angle-left"></i>
+                        </a>
+                        <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                               maxlength="4" style="text-align:center; margin: 0 5px;"
+                               ng-model="paginaInformada" valid-integer-number
+                               ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                               ng-blur="atualizaPaginaDigitada()">
+                            <a href="javascript:;" ng-click="avancaPagina()"
+                               class="btn btn-sm default next"
+                               ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
+                               title="Próxima página">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                            de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
+                    </div>
+                </div>  
             </div>
-            <div class="row  cuponsConciliacaoVendas">
-                <div class="col-sm-12 col-md-12">
-                    <div class="row">
-                        <!--CUPONS CARD SERVICES- CONCILIAÇÃO VENDAS-->
-                        <div class="col-sm-5 col-md-3 col-md-offset-2">
-                            <div class="row">
-                                <div class="col-sm-10 col-sm-offset-1 cuponAzulConciliacaoVendas">
-                                    <div class="row">
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            <strong>CIELO</strong>                            
+         
+        
+            <div class="table-container" style="margin-bottom:50px">
+                
+                <!--CUPONS-->
+                <div class="row cuponsRelatoriosTerminais">
+                    
+                    <!--CUPONS AZUIS-->
+                    <div class="col-md-12">                     
+                        <div class="row">
+                            <!-- 1ªCUPON-->
+                            <div class="col-md-7 col-sm-7">
+                                <div class="row">
+                                    <!--CONTEÚDO DOS CUPONS-->
+                                    <div class="col-md-7 col-md-offset-3 col-sm-8 col-sm-offset-1 cuponAzulRelatorios">
+                                        <!--TITULO-->
+                                        <div class="row tituloCuponRelatorios">                                            
+                                            <div class="col-md-12 col-sm-12">
+                                                Relatório de totais
+                                            </div>
                                         </div>
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            <strong>VIA ESTABELECIMENTO</strong>
+                                        <!--INFORMAÇÕES-->
+                                        <div class="row informacoesCuponRelatorios">
+                                            <div class="col-md-12 col-sm-12">
+                                                <!--LOCAL-->
+                                                <div class="row"> 
+                                                    <div class="col-md-12 col-sm-12">
+                                                        Posto Sumaré
+                                                    </div>
+                                                </div>
+                                                <!--ENDEREÇO-->
+                                                <div class="row">                                            
+                                                    <div class="col-md-12 col-sm-12">
+                                                        AV TRANQUEDO NEVES 1506
+                                                    </div>
+                                                </div>
+                                                <!--CIDADE-->
+                                                <div class="row">                                            
+                                                    <div class="col-md-12 col-sm-12">
+                                                        SALVADOR BA
+                                                    </div>
+                                                </div>
+                                                <!--POS-->
+                                                <div class="row">                                            
+                                                    <div class="col-md-6 col-sm-6">
+                                                        002002242475002
+                                                    </div>
+                                                    <div class="col-md-6 col-sm-16">
+                                                        /POS=0034386
+                                                    </div>
+                                                </div>
+                                                <!--DATA/HORA DA CONSULTA-- (NÃO TERÁ COMO SABER A DATA E HORA)>
+                                                <div class="row">
+                                                    <div class="col-md-6 col-sm-6">
+                                                        <label style="font-size:13px">DATA:</label>21/08/2015
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label style="font-size:13px">HORA:</label>10:30
+                                                    </div>
+                                                </div-->  
+                                            </div>
                                         </div>
-                                        <div class="col-sm-12" Style="text-align:center; margin-top:10px">
-                                             AVENIDA PAULISTA, Nº8765
+                                        <!--DATA/HORA DOS RELATÓRIOS-->
+                                        <div class="row dataHoraCuponRelatorios">
+                                            <div class="col-md-12 col-sm-12">
+                                                <!--DATA-->
+                                                <div class="row">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        <label>Relatório de:</label>21/08/2015
+                                                    </div>
+                                                </div>
+                                                <!--HORÁRIO-->
+                                                <div class="row">
+                                                    <div class="col-md-6 col-sm-6">
+                                                        <label style="font-size:13px">De:</label>09:12
+                                                    </div>
+                                                    <div class="col-md-6 col-sm-16">
+                                                        <label style="font-size:13px">Até:</label>23:40
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            SÃO PAULO
+                                        
+                                        <!--LEGENDA-->
+                                        <div class="row legendaCupomRelatorios">
+                                            <div class="col-md-12 col-sm-12">
+                                                <div class="row">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        BANDEIRA
+                                                    </div>
+                                                </div>
+                                                <div class="row">    
+                                                    <div class="col-md-5 col-sm-5">
+                                                        TIPO
+                                                    </div>
+                                                    <div class="col-md-2 col-sm-2"> 
+                                                        QTDE
+                                                    </div>
+                                                    <div class="col-md-5 col-sm-5">
+                                                        TOTAL GERAL
+                                                    </div>     
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-5 col-sm-5">
+                                                       DECRIÇÃO
+                                                    </div>
+                                                    <div class="col-md-2 col-sm-2"> 
+                                                        QTDE
+                                                    </div>
+                                                    <div class="col-md-5 col-sm-2">
+                                                        TOTAL 
+                                                    </div>    
+                                                </div>
+                                            </div>                                
                                         </div>
-                                        <div class="col-sm-12" Style="margin-top:15px">
-                                             POS=896547
+                                        
+                                        
+                                        <!--RELATÓRIOS-->
+                                        <div class="row conteudoCupomRelatorios">
+                                            <div class="col-md-12 col-sm-12">
+                                                <div class="row">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        VISA
+                                                    </div>                                                    
+                                                </div>
+                                                <div class="row">    
+                                                    <div class="col-md-5 col-sm-5">
+                                                        CRÉDITO
+                                                    </div>
+                                                    <div class="col-md-2 col-sm-2"> 
+                                                        009
+                                                    </div>
+                                                    <div class="col-md-5 col-sm-5">
+                                                        1.000,87
+                                                    </div>     
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-5 col-sm-5">
+                                                        À VISTA    
+                                                    </div>
+                                                    <div class="col-md-2 col-sm-2"> 
+                                                        009
+                                                    </div>
+                                                    <div class="col-md-5 col-sm-5">
+                                                        1.000,87
+                                                    </div>                                                     
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-md-offset-12 col-sm-6 col-sm-offset-10" 
+                                                 style="text-align:right; margin-top:15px; position:absolute">
+                                                <a href="javascript:;" class="btn btn-icon-only default">
+                                                    <i class="fa fa-check"></i>
+                                                </a>                                                         
+                                            </div>
                                         </div>
-                                        <div class="col-sm-6">
-                                            01/02/2013
+                                        <!--RÉPLICA-->
+                                        <div class="row conteudoCupomRelatorios">
+                                            <div class="col-md-12 col-sm-12">
+                                                <div class="row">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        VISA
+                                                    </div>                                                    
+                                                </div>
+                                                <div class="row">    
+                                                    <div class="col-md-5 col-sm-5">
+                                                        CRÉDITO
+                                                    </div>
+                                                    <div class="col-md-2 col-sm-2"> 
+                                                        009
+                                                    </div>
+                                                    <div class="col-md-5 col-sm-5">
+                                                        1.000,87
+                                                    </div>     
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-5 col-sm-5">
+                                                        À VISTA    
+                                                    </div>
+                                                    <div class="col-md-2 col-sm-2"> 
+                                                        009
+                                                    </div>
+                                                    <div class="col-md-5 col-sm-5">
+                                                        1.000,87
+                                                    </div>                                                     
+                                                </div>
+                                            </div>
+                                            <!--BOTÃO DE CONCILIAÇÃO--><!--NESTE CASO O BOTÃO SERÁ UTULIZADO NESTA AREA-->
+                                            <div class="col-md-6 col-md-offset-12 col-sm-6 col-sm-offset-10" 
+                                                 style="text-align:right; margin-top:15px; position:absolute">
+                                                <a href="javascript:;" class="btn btn-icon-only default">
+                                                    <i class="fa fa-check"></i>
+                                                </a>                                                         
+                                            </div>
                                         </div>
-                                        <div class="col-sm-6">
-                                            18:00
+                                        
+                                        <div class="row conteudoCupomRelatorios">
+                                            <div class="col-md-12 col-sm-12">
+                                                <div class="row">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        VISA
+                                                    </div>                                                    
+                                                </div>
+                                                <div class="row">    
+                                                    <div class="col-md-5 col-sm-5">
+                                                        CRÉDITO
+                                                    </div>
+                                                    <div class="col-md-2 col-sm-2"> 
+                                                        009
+                                                    </div>
+                                                    <div class="col-md-5 col-sm-5">
+                                                        1.000,87
+                                                    </div>     
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-5 col-sm-5">
+                                                        À VISTA    
+                                                    </div>
+                                                    <div class="col-md-2 col-sm-2"> 
+                                                        009
+                                                    </div>
+                                                    <div class="col-md-5 col-sm-5">
+                                                        1.000,87
+                                                    </div>                                                     
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-md-offset-12 col-sm-6 col-sm-offset-10" 
+                                                 style="text-align:right; margin-top:15px; position:absolute">
+                                                <a href="javascript:;" class="btn btn-icon-only default">
+                                                    <i class="fa fa-check"></i>
+                                                </a>                                                         
+                                            </div>
                                         </div>
-                                        <div class="col-sm-6">
-                                             AUT=999999
+                                        <!--TOTAIS RELATÓRIOS-->
+                                        <div class="row totaisCuponRelatorios">
+                                            <div class="col-md-12 col-sm-12">
+                                                <div class="row">
+                                                    <div class="col-md-5 col-sm-5">
+                                                        total 
+                                                    </div>    
+                                                    <!--TOTAIS DE TRANSAÇÕES-->
+                                                    <div class="col-md-2 col-sm-2">
+                                                        009
+                                                    </div>
+                                                    <!--TOTAIS EM DINHEIRO-->
+                                                    <div class="col-md-5 col-sm-5">
+                                                    1.000,87
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="col-sm-6">
-                                            DOC=123456
-                                        </div>
-                                        <div class="col-sm-12">
-                                            TERM:
-                                        </div>
-                                        <div class="col-sm-12">
-                                            9015622
-                                        </div>
-                                        <div class="col-sm-12">
-                                           MASTERCARD
-                                        </div>                        
-                                        <div class="col-sm-12">
-                                            XXXXXXXXXXXXXXX4569
-                                        </div>                        
-                                        <div class="col-sm-12">
-                                            CREDITO A VISTA
-                                        </div>                        
-                                        <div class="col-sm-6">
-                                            VALOR:
-                                        </div>
-                                        <div class="col-sm-6">
-                                            50,00
-                                        </div>                                
-                                    </div>                            
-                                </div>
-                            </div>
-                        </div>
-                        <!--BOTÃO CHECK-->
-                        <div class="col-sm-2 col-md-2 botaoCheckCociliacaoVendas">
-                            <div class="row">
-                                <div class="col-sm-10 col-sm-offset-4">
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <a href="javascript:;" class="btn btn-icon-only default">
-                                                <i class="fa fa-check"></i>
-                                             </a>
-                                        </div>
-                                    </div>                            
-                                </div>
-                            </div>
-                        </div>
-                        <!--CUPONS CARD SERVICES- CONCILIAÇÃO VENDAS-->
-                        <div class="col-sm-5 col-md-3">
-                            <div class="row">
-                                <div class="col-sm-10 col-sm-offset-1 cuponAzulConciliacaoVendas">
-                                    <div class="row">
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            <strong>CIELO</strong>                            
-                                        </div>
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            <strong>VIA ESTABELECIMENTO</strong>
-                                        </div>
-                                        <div class="col-sm-12" Style="text-align:center; margin-top:10px">
-                                             AVENIDA PAULISTA, Nº8765
-                                        </div>
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            SÃO PAULO
-                                        </div>
-                                        <div class="col-sm-12" Style="margin-top:15px">
-                                             POS=896547
-                                        </div>
-                                        <div class="col-sm-6">
-                                            01/02/2013
-                                        </div>
-                                        <div class="col-sm-6">
-                                            18:00
-                                        </div>
-                                        <div class="col-sm-6">
-                                             AUT=999999
-                                        </div>
-                                        <div class="col-sm-6">
-                                            DOC=123456
-                                        </div>
-                                        <div class="col-sm-12">
-                                            TERM:
-                                        </div>
-                                        <div class="col-sm-12">
-                                            9015622
-                                        </div>
-                                        <div class="col-sm-12">
-                                           MASTERCARD
-                                        </div>                        
-                                        <div class="col-sm-12">
-                                            XXXXXXXXXXXXXXX4569
-                                        </div>                        
-                                        <div class="col-sm-12">
-                                            CREDITO A VISTA
-                                        </div>                        
-                                        <div class="col-sm-6">
-                                            VALOR:
-                                        </div>
-                                        <div class="col-sm-6">
-                                            50,00
-                                        </div>                                
-                                    </div>                            
-                                </div>
-                            </div>
-                        </div>                
-                    </div> 
-                    <!--CUPONS LARANJAS-->
-                    <div class="row">
-                        <!--CUPONS CARD SERVICES- CONCILIAÇÃO VENDAS-->
-                        <div class="col-sm-5 col-md-3 col-md-offset-2">
-                            <div class="row">
-                                <div class="col-sm-10 col-sm-offset-1 cuponLaranjaConciliacaoVendas">
-                                    <div class="row">
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            <strong>CIELO</strong>                            
-                                        </div>
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            <strong>VIA ESTABELECIMENTO</strong>
-                                        </div>
-                                        <div class="col-sm-12" Style="text-align:center; margin-top:10px">
-                                             AVENIDA PAULISTA, Nº8765
-                                        </div>
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            SÃO PAULO
-                                        </div>
-                                        <div class="col-sm-12" Style="margin-top:15px">
-                                             POS=896547
-                                        </div>
-                                        <div class="col-sm-6">
-                                            01/02/2013
-                                        </div>
-                                        <div class="col-sm-6">
-                                            18:00
-                                        </div>
-                                        <div class="col-sm-6">
-                                             AUT=999999
-                                        </div>
-                                        <div class="col-sm-6">
-                                            DOC=123456
-                                        </div>
-                                        <div class="col-sm-12">
-                                            TERM:
-                                        </div>
-                                        <div class="col-sm-12">
-                                            9015622
-                                        </div>
-                                        <div class="col-sm-12">
-                                           MASTERCARD
-                                        </div>                        
-                                        <div class="col-sm-12">
-                                            XXXXXXXXXXXXXXX4569
-                                        </div>                        
-                                        <div class="col-sm-12">
-                                            CREDITO A VISTA
-                                        </div>                        
-                                        <div class="col-sm-6">
-                                            VALOR:
-                                        </div>
-                                        <div class="col-sm-6">
-                                            50,00
-                                        </div>                                
-                                    </div>                            
-                                </div>
-                            </div>
-                        </div>
-                        <!--BOTÃO CHECK-->
-                        <div class="col-sm-2 col-md-2 botaoCheckCociliacaoVendas">
-                            <div class="row">
-                                <div class="col-sm-10 col-sm-offset-4">
-                                    <div class="row"  style="margin-bottom:15px;">
-                                        <div class="col-sm-12">
-                                            <a href="javascript:;" class="btn btn-icon-only default">
-                                                <i class="fa fa-times"></i>
-                                             </a>
+                                        <!--RODAPÉ-->
+                                        <div class="row rodapeCupomRelatorio">
+                                            <div class="col-md-12 col-sm-12">
+                                                FIM DO RELATÓRIO
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <a href="javascript:;" class="btn btn-icon-only default">
-                                                <i class="fa fa-search"></i>
-                                             </a>
-                                        </div>
-                                    </div> 
+                                    <!--FIM CONTEÚDO DOS CUPONS-->
                                 </div>
                             </div>
-                        </div>                                
+                            <!--FIM 1ªCUPON-->
+                            
+                            <!--BOTÕES-- >                            
+                            <div class="col-sm-2 col-md-2 btnRelatoriosTerminal ">
+                                <div class="row">
+                                    <div class="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-4">
+                                        <a href="javascript:;" class="btn btn-icon-only default">
+                                            <i class="fa fa-check"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--FIM BOTÕES-->
+                            
+                            <!-- 2ªCUPON-->                            
+                            <div class="col-md-5 col-sm-5">
+                                <div class="row">
+                                    <!--CONTEÚDO DOS CUPONS-->
+                                    <div class="col-md-7 col-sm-8 cuponAzulRelatorios">
+                                        <!--TITULO-->
+                                        <div class="row tituloCuponRelatorios">                                            
+                                            <div class="col-md-12 col-sm-12">
+                                                Relatório de totais
+                                            </div>
+                                        </div>
+                                        <!--INFORMAÇÕES-->
+                                        <div class="row informacoesCuponRelatorios">
+                                            <div class="col-md-12 col-sm-12">
+                                                <!--LOCAL-->
+                                                <div class="row"> 
+                                                    <div class="col-md-12 col-sm-12">
+                                                        Posto Sumaré
+                                                    </div>
+                                                </div>
+                                                <!--ENDEREÇO-->
+                                                <div class="row">                                            
+                                                    <div class="col-md-12 col-sm-12">
+                                                        AV TRANQUEDO NEVES 1506
+                                                    </div>
+                                                </div>
+                                                <!--CIDADE-->
+                                                <div class="row">                                            
+                                                    <div class="col-md-12 col-sm-12">
+                                                        SALVADOR BA
+                                                    </div>
+                                                </div>
+                                                <!--POS-->
+                                                <div class="row">                                            
+                                                    <div class="col-md-6 col-sm-6">
+                                                        002002242475002
+                                                    </div>
+                                                    <div class="col-md-6 col-sm-6">
+                                                        /POS=0034386
+                                                    </div>
+                                                </div>
+                                                <!--DATA/HORA DA CONSULTA-- (NÃO TERÁ COMO SABER>
+                                                <div class="row">
+                                                    <div class="col-md-6 col-sm-6">
+                                                        <label style="font-size:13px">DATA:</label>21/08/2015
+                                                    </div>
+                                                    <div class="col-md-6 col-sm-6">
+                                                        <label style="font-size:13px">HORA:</label>10:30
+                                                    </div>
+                                                </div-->  
+                                            </div>
+                                        </div>
+                                        <!--DATA/HORA DOS RELATÓRIOS-->
+                                        <div class="row dataHoraCuponRelatorios">
+                                            <div class="col-md-12 col-sm-12">
+                                                <!--DATA-->
+                                                <div class="row">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        <label>Relatório de:</label>21/08/2015
+                                                    </div>
+                                                </div>
+                                                <!--HORÁRIO-->
+                                                <div class="row">
+                                                    <div class="col-md-6 col-sm-6">
+                                                        <label style="font-size:13px">De:</label>09:12
+                                                    </div>
+                                                    <div class="col-md-6 col-sm-6">
+                                                        <label style="font-size:13px">Até:</label>23:40
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!--LEGENDA-->
+                                        <div class="row legendaCupomRelatorios">
+                                            <div class="col-md-12 col-sm-12">
+                                                <div class="row">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        BANDEIRA
+                                                    </div>
+                                                </div>
+                                                <div class="row">    
+                                                    <div class="col-md-5 col-sm-5">
+                                                        TIPO
+                                                    </div>
+                                                    <div class="col-md-2 col-sm-2"> 
+                                                        QTDE
+                                                    </div>
+                                                    <div class="col-md-5 col-sm-5">
+                                                        TOTAL GERAL
+                                                    </div>     
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-5 col-sm-5">
+                                                       DECRIÇÃO
+                                                    </div>
+                                                    <div class="col-md-2 col-sm-2"> 
+                                                        QTDE
+                                                    </div>
+                                                    <div class="col-md-5 col-sm-5">
+                                                        TOTAL 
+                                                    </div>    
+                                                </div>
+                                            </div>                                
+                                        </div>
+                                        
+                                        
+                                        <!--RELATÓRIOS-->
+                                        <div class="row conteudoCupomRelatorios">
+                                            <div class="col-md-12 col-sm-12">
+                                                <div class="row">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        VISA
+                                                    </div>
+                                                </div>
+                                                <div class="row">    
+                                                    <div class="col-md-5 col-sm-5">
+                                                        CRÉDITO
+                                                    </div>
+                                                    <div class="col-md-2 col-sm-2"> 
+                                                        009
+                                                    </div>
+                                                    <div class="col-md-5 col-sm-5">
+                                                        1.000,87
+                                                    </div>     
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-5 col-sm-5">
+                                                        À VISTA    
+                                                    </div>
+                                                    <div class="col-md-2 col-sm-2"> 
+                                                        009
+                                                    </div>
+                                                    <div class="col-md-5 col-sm-5">
+                                                        1.000,87
+                                                    </div>    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--TOTAIS RELATÓRIOS-->
+                                        <div class="row totaisCuponRelatorios">
+                                            <div class="col-md-12 col-sm-12">
+                                                <div class="row">
+                                                    <div class="col-md-5 col-sm-5">
+                                                        total 
+                                                    </div>    
+                                                    <!--TOTAIS DE TRANSAÇÕES-->
+                                                    <div class="col-md-2 col-sm-2">
+                                                        009
+                                                    </div>
+                                                    <!--TOTAIS EM DINHEIRO-->
+                                                    <div class="col-md-5 col-sm-5">
+                                                    1.000,87
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--RODAPÉ-->
+                                        <div class="row rodapeCupomRelatorio">
+                                            <div class="col-md-12 col-sm-12">
+                                                FIM DO RELATÓRIO
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--FIM CONTEÚDO DOS CUPONS-->
+                                </div>
+                            </div>
+                            <!--FIM 2ªCUPON-->                            
+                        </div>   
                     </div>
+                    <!--FIM CUPONS AZUIS-->
+                    
+                    <!--CUPONS AMARELOS-->
+                    <div class="col-md-12">                     
+                        
+                    </div>
+                    <!--FIM CUPONS AMARELOS-->
+                    
                     <!--CUPONS VERMELHOS-->
-                    <div class="row">
-                        <!--CUPONS CARD SERVICES- CONCILIAÇÃO VENDAS-->
-                        <div class="col-sm-5 col-md-3 col-md-offset-2">
-                            <div class="row">
-                                <div class="col-sm-10 col-sm-offset-1 cuponVermelhoConciliacaoVendas">
-                                    <div class="row">
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            <strong>CIELO</strong>                            
-                                        </div>
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            <strong>VIA ESTABELECIMENTO</strong>
-                                        </div>
-                                        <div class="col-sm-12" Style="text-align:center; margin-top:10px">
-                                             AVENIDA PAULISTA, Nº8765
-                                        </div>
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            SÃO PAULO
-                                        </div>
-                                        <div class="col-sm-12" Style="margin-top:15px">
-                                             POS=896547
-                                        </div>
-                                        <div class="col-sm-6">
-                                            01/02/2013
-                                        </div>
-                                        <div class="col-sm-6">
-                                            18:00
-                                        </div>
-                                        <div class="col-sm-6">
-                                             AUT=999999
-                                        </div>
-                                        <div class="col-sm-6">
-                                            DOC=123456
-                                        </div>
-                                        <div class="col-sm-12">
-                                            TERM:
-                                        </div>
-                                        <div class="col-sm-12">
-                                            9015622
-                                        </div>
-                                        <div class="col-sm-12">
-                                           MASTERCARD
-                                        </div>                        
-                                        <div class="col-sm-12">
-                                            XXXXXXXXXXXXXXX4569
-                                        </div>                        
-                                        <div class="col-sm-12">
-                                            CREDITO A VISTA
-                                        </div>                        
-                                        <div class="col-sm-6">
-                                            VALOR:
-                                        </div>
-                                        <div class="col-sm-6">
-                                            50,00
-                                        </div>                                
-                                    </div>                            
-                                </div>
-                            </div>
-                        </div>
-                        <!--BOTÃO CHECK-->
-                        <div class="col-sm-2 col-md-2 botaoCheckCociliacaoVendas">
-                            <div class="row">
-                                <div class="col-sm-10 col-sm-offset-4">
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <a href="javascript:;" class="btn btn-icon-only default">
-                                                <i class="fa fa-arrow-right"></i>
-                                             </a>
-                                        </div>
-                                    </div>                            
-                                </div>
-                            </div>
-                        </div>
-                        <!--CUPONS CARD SERVICES- CONCILIAÇÃO VENDAS-->
-                        <div class="col-sm-5 col-md-3">
-                            <div class="row">
-                                <div class="col-sm-10 col-sm-offset-1 cuponVermelhoConciliacaoVendas">
-                                    <div class="row">
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            <strong>CIELO</strong>                            
-                                        </div>
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            <strong>VIA ESTABELECIMENTO</strong>
-                                        </div>
-                                        <div class="col-sm-12" Style="text-align:center; margin-top:10px">
-                                             AVENIDA PAULISTA, Nº8765
-                                        </div>
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            SÃO PAULO
-                                        </div>
-                                        <div class="col-sm-12" Style="margin-top:15px">
-                                             POS=896547
-                                        </div>
-                                        <div class="col-sm-6">
-                                            01/02/2013
-                                        </div>
-                                        <div class="col-sm-6">
-                                            18:00
-                                        </div>
-                                        <div class="col-sm-6">
-                                             AUT=999999
-                                        </div>
-                                        <div class="col-sm-6">
-                                            DOC=123456
-                                        </div>
-                                        <div class="col-sm-12">
-                                            TERM:
-                                        </div>
-                                        <div class="col-sm-12">
-                                            9015622
-                                        </div>
-                                        <div class="col-sm-12">
-                                           MASTERCARD
-                                        </div>                        
-                                        <div class="col-sm-12">
-                                            XXXXXXXXXXXXXXX4569
-                                        </div>                        
-                                        <div class="col-sm-12">
-                                            CREDITO A VISTA
-                                        </div>                        
-                                        <div class="col-sm-6">
-                                            VALOR:
-                                        </div>
-                                        <div class="col-sm-6">
-                                            50,00
-                                        </div>                                
-                                    </div>                            
-                                </div>
-                            </div>
-                        </div>                
+                    <div class="col-md-12">                     
+                        
+                    </div>
+                    <!--FIM CUPONS VERMELHOS-->
+                </div>    
+                <!--FIM CUPONS-->
+                
+                <!--TOTAIS -- >
+                <div class="row" style="margin-top:30px">
+                    <!-- RECEBIMENTO PARCELA -- >
+                    <div class="col-md-5 col-sm-5" style="text-align:center">
+                        <label style="font-weight:bolder">
+                            TOTAL:&nbsp;{{totais.totalRecebimentosParcela | currency:'R$'}}
+                        </label>    
+                    </div>
+                    <!-- ESPAÇO DOS BOTOÕES -- >
+                    <div class="col-md-2 col-sm-2">
+                    </div>
+                    <!-- EXTRATO BANCÁRIO -- >
+                    <div class="col-md-5 col-sm-5" style="text-align:center">
+                        <label style="font-weight:bolder">
+                            TOTAL:&nbsp;{{totais.totalExtrato | currency:'R$'}}
+                        </label>
                     </div>
                 </div>
+                <!--FIM TOTAIS -->
+                
             </div>
-            <!--CUPONS AZUIS-->
-            <!--RODAPÉ-->
+
+            <!-- RODAPÉ : Exibição dos resultados e paginação -->
             <div class="row">
                 <div class="col-xs-4 col-sm-4 col-md-4">
-                    <div class="dataTables_info" 
-                         id="sample_editable_1_info" 
-                         role="status"
-                         aria-live="polite">
-                        <strong class="ng-binding">Exibindo os registros 1-10</strong>
+                    <div class="dataTables_info" role="status" aria-live="polite">
+                        <strong>Exibindo os registros {{filtro.faixa_registros}}</strong>
                     </div>
                 </div>
                 <!--PAGINAÇÃO-RODAPÉ-->
                 <div class="col-xs-4 col-sm-4 col-md-3">
                     <div class="pagination-panel centralizarPaginacao"> Página 
-                        <a href="javascript:;" 
-                           ng-click="retrocedePagina()" 
-                           class="btn btn-sm default prev disabled" 
-                           ng-class="{disabled: usuario.pagina <= 1}" 
+                        <a href="javascript:;" ng-click="retrocedePagina()"
+                           class="btn btn-sm default prev" 
+                           ng-class="{disabled: filtro.pagina <= 1}" 
                            title="Página anterior">
                                 <i class="fa fa-angle-left"></i>
                         </a>
-                        <input type="text" 
-                               class="pagination-panel-input form-control input-mini input-inline input-sms"
-                               maxlength="4" 
-                               style="text-align:center; margin: 0 5px;" 
-                               ng-model="paginaInformada"
-                               valid-integer-number=""
+                        <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                               maxlength="4" style="text-align:center; margin: 0 5px;"
+                               ng-model="paginaInformada" valid-integer-number
                                ng-keypress="($event.which === 13) ? alteraPagina() : 0"
                                ng-blur="atualizaPaginaDigitada()">
-                        <a href="javascript:;" 
-                           ng-click="avancaPagina()"
-                           class="btn btn-sm default next" 
-                           ng-class="{disabled: usuario.pagina >= usuario.total_paginas}" 
-                           title="Próxima página">
-                            <i class="fa fa-angle-right"></i>
-                        </a>
-                         de <span class="pagination-panel-total ng-binding">4</span>
+                            <a href="javascript:;" ng-click="avancaPagina()"
+                               class="btn btn-sm default next"
+                               ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
+                               title="Próxima página">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                            de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
                     </div>
                 </div>
                 <!-- FIM PAGINAÇÃO -->
-            </div>
-        </div>
-        
+            </div>   
+        </div>       
     </div>
 </div>
