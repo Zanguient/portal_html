@@ -14,36 +14,47 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
         
         var monitor = this;
 
+        //jQuery.support.cors = true;
+        
         //Hub setup
         var hub = new Hub("ServerAtosCapital", {
+            
+            rootPath : 'http://localhost:55007/signalr',
+            
             listeners: {
                 'notifyCarga': function (mudancas) {
                     console.log("NOTIFY CARGA");console.log(mudancas);
-                    $scope.$broadcast("notifyMonitor", mudancas);
+                    $rootScope.$broadcast("notifyMonitor", mudancas);
                 }
             },
-            rootPath : 'http://localhost:55007/signalr',
-            
+
             methods: ['conectado'],
-            errorHandler: function (error) {
-                //console.log("ERRO");
-                //console.log(error);
+            
+            queryParams:{
+                'token': $rootScope.token
             },
-            hubDisconnected: function () {
+            
+            errorHandler: function (error) {
+                console.log("ERRO");
+                console.log(error);
+            },
+            /*hubDisconnected: function () {
                 if (hub.connection.lastError) {
                     hub.connection.start();
                 }
-            },
-            transport: 'webSockets',
+            },*/
+            transport: 'webSockets', //'longPolling'
             logging: false,
             
-            /*stateChanged: function(state){
+            stateChanged: function(state){
                 switch (state.newState) {
                     case $.signalR.connectionState.connecting:
+                        //console.log($rootScope.token);
                         console.log("CONECTANDO...");
                         break;
                     case $.signalR.connectionState.connected:
                         console.log("CONECTADO!");
+                        monitor.conectado();
                         break;
                     case $.signalR.connectionState.reconnecting:
                         console.log("RECONECTANDO...");
@@ -52,14 +63,14 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
                         console.log("DESCONECTADO!");
                         break;
                 }
-            }*/
+            }
         });
 
         /**
           * Função que notifica ao servidor que está monitorando
           */
         monitor.conectado = function () {
-            hub.conectado($scope.token); //Calling a server method
+            hub.conectado($rootScope.token); //Calling a server method
         };
         /**
           *
@@ -67,14 +78,12 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
         monitor.desconectar = function(){
             hub.connection.stop();    
         };
-        /*monitor.send = function (userName, chatMessage) {
-            hub.send(userName, chatMessage);
-        }*/
         
         return monitor;
     }])
 
 .controller("administrativo-monitor-cargasCtrl", ['$scope',
+                                            '$rootScope',
                                             '$state',
                                             '$http',
                                             /*'$campos',*/
@@ -82,7 +91,7 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
                                             '$apis',
                                             '$filter', 
                                             'monitorService',      
-                                            function($scope,$state,$http,/*$campos,*/
+                                            function($scope,$rootScope,$state,$http,/*$campos,*/
                                                      $webapi,$apis,$filter,monitorService){ 
    
     $scope.monitor = monitorService;                                         
@@ -110,7 +119,7 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
             $scope.monitor.desconectar();
             $state.go(state, params);
         });
-        $scope.$on('notifyMonitor', function(event, mudancas){
+        $rootScope.$on('notifyMonitor', function(event, mudancas){
             console.log("RECEBEU MUDANÇAS");
             console.log(mudancas);
             //$rootScope.$apply();
