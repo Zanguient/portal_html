@@ -19,11 +19,11 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
         //Hub setup
         var hub = new Hub("ServerAtosCapital", {
             
-            rootPath : 'http://localhost:55007/signalr',
+            rootPath : 'http://localhost:50780/signalr',
             
             listeners: {
                 'notifyCarga': function (mudancas) {
-                    console.log("NOTIFY CARGA");console.log(mudancas);
+                    //console.log("NOTIFY CARGA");console.log(mudancas);
                     $rootScope.$broadcast("notifyMonitor", mudancas);
                 }
             },
@@ -43,6 +43,7 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
                     hub.connection.start();
                 }
             },*/
+            jsonp : true,
             transport: 'webSockets', //'longPolling'
             logging: false,
             
@@ -65,12 +66,23 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
                 }
             }
         });
+        
+        monitor.data = "";
+        
+        var getAnoMesCorrente = function(){
+            var dt = new Date();
+            var mes = dt.getMonth() + 1;
+            var ano = dt.getFullYear();
+            if(mes < 10) return ano + "0" + mes;
+            return ano + "" + mes;    
+        }
 
         /**
           * Função que notifica ao servidor que está monitorando
           */
         monitor.conectado = function () {
-            hub.conectado($rootScope.token); //Calling a server method
+            if(!monitor.data || monitor.data.length < 6) monitor.data = getAnoMesCorrente();
+            hub.conectado(monitor.data); //Calling a server method
         };
         /**
           *
@@ -131,7 +143,8 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
             // ...
         });
         // Acessou a tela
-        $scope.$emit("acessouTela");
+        //$scope.$emit("acessouTela");
+        $scope.exibeTela = true;
     } 
     
     
