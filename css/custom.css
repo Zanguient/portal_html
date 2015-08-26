@@ -766,3 +766,22 @@ padding-top: 16%;
 }
 
 /*FIM ESTILO CUPONS RELATÓRIOS TÉRMINAIS LÓGICOS*/
+
+
+/* ESTILO DA TELA DE CADASTRO DE TÉRMINAL LÓGICO */
+
+
+.conteudoFormularioCadastroTerminal{
+    margin-top: 10px;
+}
+
+.formularioCadastroTerminal{
+    padding:15px ;
+}
+
+.tituloFormularioCadastroTerminal{
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* FIM ESTILO DA TELA DE CADASTRO DE TÉRMINAL LÓGICO */
