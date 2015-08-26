@@ -24,16 +24,110 @@ Não é necessário nenhum outro módulo externo.
   * Evento "acessoDeTelaNotificado", proveniente do "appCtrl", para de fato exibir a tela e fazer requisições 
 	=> importante para o log correto de requisições HTTP, ao qual identifica corretamente a (tela de) origem
   * APIS:
-    -  
-	
+    - cliente/empresa
+    - pos/operadora
+
+
+### Interação com a WEB API ###
+ 
+  * cliente/empresa
+    - GET : listagem das filiais (coleção 0)
+			[
+			  { nu_cnpj : string,
+				ds_fantasia : string,
+				filial : string ou null,
+				id_grupo : int
+			  }
+			]
+			Filtro de id_grupo pode ser enviado ou não para filtrar as filiais por grupo empresa
+			
+  * pos/operadora
+    - GET : listagem das adquirentes (coleção 0)
+			[
+			  { id : int,
+				nmOperadora : string,
+				idGrupoEmpresa : int
+			  }
+			]	
+			Filtro de cnpj pode ser enviado  com  300 + código do cnpj - 100 
  
  
- ### Interação com a WEB API ###
+ 
  
 
+### IMessage ### 
+ 
+  * Interage com o IMessage via websocket
+  * Um serviço (factory) é usado no script para manter a conexão ativa e interagir com o HUB
+  * O controller se comunica com o serviço através das seguintes mensagens:
+	- "notifyMonitorConnectionStatus" : Recebe um novo status da conexão com o IMessage através do socket
+	- "notifyMonitorLista" : Foi recebido a lista completa para monitorar as cargas, baseado no filtro.
+							  [{ id : int, // idLoginOperadora
+								status : string, // status da senha
+								logExecution : 
+											[{
+												id = int,
+												dtaFiltroTransacoes = datetime,
+												statusExecution = string, // 0 = Em execução; 1 = Executado com Sucesso; 2 = Erro na Execução; 3 = Re-Executar; 7 = Elegivel
+												dtaExecucaoFim = datetime ou null,
+												dtaExecucaoProxima = datetime ou null,
+											}]
+								ultimaDataExecucaoFim : datetime ou null,
+								empresa : {
+                                            nu_cnpj = string,
+                                            ds_fantasia = string,
+                                            filial = string,
+                                        },
+								operadora : {
+                                            id = int,
+                                            nmOperadora = string
+                                        },
+							  
+							  }]
+    - "notifyMonitorMudancas" : Foi recebido pelo socket uma lista com mudanças ocorridas na base
+								{
+								    NotificationInfo : string, // 
+									objetos = [{ id : int, // idLoginOperadora
+												 status : string, // status da senha
+												 logExecution : 
+															[{
+																id = int,
+																dtaFiltroTransacoes = datetime,
+																statusExecution = string, // 0 = Em execução; 1 = Executado com Sucesso; 2 = Erro na Execução; 3 = Re-Executar; 7 = Elegivel
+																dtaExecucaoFim = datetime ou null,
+																dtaExecucaoProxima = datetime ou null,
+															}]
+												 ultimaDataExecucaoFim : datetime ou null,
+												 empresa : {
+															nu_cnpj = string,
+															ds_fantasia = string,
+															filial = string,
+														},
+												 operadora : {
+															id = int,
+															nmOperadora = string
+														},
+							  
+											  }]
+							    }
+  * O serviço provê quatro funções:
+	- conectar() : estabelece comunicação com o IMessage. A resposta é enviada através da mensagem "notifyMonitorConnectionStatus"
+	- desconectar() : desfaz a comunicação com o IMessage. A resposta é enviada através da mensagem "notifyMonitorConnectionStatus"
+	- getTotalDiasMesFiltrado() : retorna o total de dias do mês e ano usado no filtro
+	- isConnected() : retorna true se a conexão está ativa
+	- obtemLista(filtro) : Solicita ao servidor a lista completa para o filtro informado, que deve seguir o modelo
+												{ data : string, // 6 dígitos: 'AAAAMM'
+												  status : int,
+												  idGrupo : int,
+												  nuCnpj: string,
+												  cdAdquirente : int }
+						   A resposta é enviada através da mensagem "notifyMonitorLista".
  
    
 
+   
+   
+   
    
 ### Desenvolvedores ###
 

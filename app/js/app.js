@@ -1835,11 +1835,14 @@ angular.module("AtosCapital", ['ui.router',
    /**
       * Retorna a string aceita para filtro de data
       */
-   $scope.getFiltroData = function(data){
+   $scope.getFiltroData = function(data, semdia){
         var ano = data.getFullYear(); 
         var mes = (data.getMonth() + 1); 
         var dia = data.getDate(); 
-        return $scope.getFiltroDataString(ano, mes, dia);
+        var valor = $scope.getFiltroDataString(ano, mes, dia);
+       
+        if(semdia) valor.substr(0, 6);
+        return valor;
     };     
                             
                             
@@ -1851,6 +1854,13 @@ angular.module("AtosCapital", ['ui.router',
         var nome = filial.ds_fantasia;
         if(filial.filial && filial.filial !== null) nome += ' ' + filial.filial;
         return nome.toUpperCase();
+    }
+    
+    /** 
+      * Retorna o nome fantasia da filial seguido do campo filial seguido de '-' e o nome da operadora
+      */
+    $scope.getNomeLoginOperadoraAmigavel = function(filial, operadora){
+        return $scope.getNomeAmigavelFilial(filial) + ' - ' + operadora.nmOperadora.toUpperCase();        
     }
     
     /**

@@ -20,8 +20,8 @@
         </li>
     </ul>
     <!-- END PAGE BREADCRUMB -->
-    <!-- BEGIN PAGE CONTENT INNER -->
-
+    
+    <!-- FILTROS -->
     <div class="row">
         <div class="col-md-12">
             <!-- BEGIN TABLE PORTLET-->
@@ -31,7 +31,7 @@
                 <div class="portlet-title">
                     <div class="caption">
                         <!--i class="fa fa-cogs font-green-sharp"></i-->
-                        <span class="caption-subject font-green-sharp bold uppercase">Importação XML</span>
+                        <span class="caption-subject font-green-sharp bold uppercase">Filtros</span>
                     </div>
                     <div class="actions">
                         <!-- OPÇÕES -->
@@ -64,180 +64,155 @@
                 </div>
                 <!-- CORPO  -->
                 <div class="portlet-body" ng-show="exibeTela">                    
-                    <!-- LAYOUT AQUI -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            <!-- BEGIN TABLE PORTLET-->
-                            <div class="portlet light">
-                                <div class="portlet-body" ng-show="exibeTela">
-                                    <!-- PORTLET BODY FILTRO INSIDE -->
-                                    <div class="dataTables_wrapper dataTables_extended_wrapper no-footer">
-                                        
-                                        <!-- TABELA FILTRO -->
-                                        <div class="table-scrollable">
-                                            <table class="table table-striped table-bordered table-hover dataTable no-footer" id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
-                                                <thead>
-                                                    <tr role="row" class="heading">
-                                                        <th width="8%" tabindex="0" 
-                                                            aria-controls="datatable_ajax" 
-                                                            rowspan="1" colspan="1">
-                                                             Data de Emissão
-                                                        </th>
-                                                        <th width="12%" tabindex="1" 
-                                                            aria-controls="datatable_ajax" 
-                                                            rowspan="1" colspan="1">
-                                                             Destinatário 
-                                                        </th>
-                                                        <th width="8%" tabindex="2" 
-                                                            aria-controls="datatable_ajax" 
-                                                            rowspan="1" colspan="1">
-                                                             Emitente
-                                                        </th>
-                                                        <th width="8%" tabindex="3" 
-                                                            aria-controls="datatable_ajax" 
-                                                            rowspan="1" colspan="1">
-                                                             Status
-                                                        </th>
-                                                        <th width="1%" tabindex="5" 
-                                                            aria-controls="datatable_ajax" 
-                                                            rowspan="1" colspan="1">
-                                                             Ações de filtro
-                                                        </th>
-                                                    </tr>
-                                                    <!-- CONTEUDO DO FILTRO -->
-                                                    <tr role="row" class="filter">
-                                                        <!-- DATA -->
-                                                        <td rowspan="1" colspan="1">                                    
-                                                            <div class="input-group date date-picker margin-bottom-5"
-                                                                 data-date-format="dd/mm/yyyy">
-                                                                <input type="text" 
-                                                                       class="form-control form-filter input-sm" 
-                                                                       readonly="" 
-                                                                       style="cursor: pointer" 
-                                                                       ng-click="exibeCalendarioDataMin($event)" 
-                                                                       placeholder="Início" 
-                                                                       ng-model="filtro.datamin" 
-                                                                       ng-change="alterouDataMin()" 
-                                                                       datepicker-append-to-body="true" 
-                                                                       datepicker-popup="dd MMMM yyyy" 
-                                                                       is-open="abrirCalendarioDataMin" 
-                                                                       ng-required="true" 
-                                                                       show-button-bar="false" 
-                                                                       show-weeks="false" 
-                                                                       required="required">
-                                                                <span class="input-group-btn">
-                                                                    <button class="btn btn-sm default" 
-                                                                        type="button" 
-                                                                        ng-click="exibeCalendarioDataMin($event)">
-                                                                        <i class="fa fa-calendar"></i>
-                                                                    </button>
-                                                                </span>
-                                                            </div>
-                                                            <div class="input-group"> <!--  date date-picker margin-bottom-5" -->
-                                                                <input type="text" 
-                                                                       class="form-control form-filter input-sm" 
-                                                                       readonly="" 
-                                                                       style="cursor: pointer" 
-                                                                       ng-click="exibeCalendarioDataMax($event)" 
-                                                                       placeholder="Fim" 
-                                                                       ng-model="filtro.datamax" 
-                                                                       ng-change="alterouDataMax()" 
-                                                                       datepicker-popup="dd MMMM yyyy" 
-                                                                       is-open="abrirCalendarioDataMax" 
-                                                                       datepicker-append-to-body="true"
-                                                                       ng-required="false" 
-                                                                       current-text="Hoje" 
-                                                                       clear-text="Limpar" 
-                                                                       close-text="Fechar" 
-                                                                       show-button-bar="true" 
-                                                                       show-weeks="false">
-                                                                <span class="input-group-btn">
-                                                                    <button class="btn btn-sm default" 
-                                                                            type="button" 
-                                                                            ng-click="exibeCalendarioDataMax($event)">
-                                                                        <i class="fa fa-calendar"></i>
-                                                                    </button>
-                                                                </span>
-                                                            </div>                                            
-                                                        </td>
-                                                        <!-- DESTINATÁRIO -->
-                                                        <td rowspan="1" colspan="1" style="text-align: center">
-                                                            <input type="text" class="form-control"
-                                                                   id="buscaDestinatario"
-                                                                   ng-class="{'spinner' : buscaDestinatario}"
-                                                                   placeholder="Destinatário" 
-                                                                   ng-model="filtro.destinatario"
-                                                                   ng-blur="validaBanco()"
-                                                                   onfocus="this.select();" 
-                                                                   onmouseup="return false;"
-                                                                   typeahead-on-select="selecionouDestinatario()"
-                                                                   typeahead-focus-first=false
-                                                                   typeahead-min-length='3'
-                                                                   typeahead-wait-ms="500"
-                                                                   typeahead="banco as exibeBanco(banco) for banco in buscaBancos($viewValue)" />
-                                                        </td>
-                                                        <!-- EMITENTE -->
-                                                         <td rowspan="1" colspan="1" style="text-align: center">
-                                                            <input type="text" class="form-control"
-                                                                   id="buscaEmitente"
-                                                                   ng-class="{'spinner' : buscaEmitente}"
-                                                                   placeholder="Emitente" 
-                                                                   ng-model="filtro.emitente"
-                                                                   ng-blur="validaemitente()"
-                                                                   onfocus="this.select();" 
-                                                                   onmouseup="return false;"
-                                                                   typeahead-on-select="selecionouDEmitente()"
-                                                                   typeahead-focus-first=false
-                                                                   typeahead-min-length='3'
-                                                                   typeahead-wait-ms="500"
-                                                                   typeahead="banco as exibeBanco(banco) for banco in buscaBancos($viewValue)" />
-                                                        </td>
-                                                        <!-- STATUS -->
-                                                        <td rowspan="1" colspan="1" style="text-align: center">
-                                                            <select class="form-control form-filter input-sm comboBoxFiltros"
-                                                                    ng-options="status as (status.desstatus | uppercase) for status in status">
-                                                                <option value="">TODAS</option>
-                                                                <option value="1">MANIFESTO</option>
-                                                                <option value="2">ERP</option>
-                                                            </select>
-                                                        </td>
-                                                        <!-- AÇÕES -->
-                                                        <td rowspan="1" colspan="1" style="text-align:center">
-                                                            <div class="margin-bottom-5">
-                                                                <!-- BOTÃO BUSCAR -->
-                                                                <button class="btn btn-sm red filter-submit margin-bottom" 
-                                                                        ng-click="buscaRelatorio()">
-                                                                    <i class="fa fa-search"></i> 
-                                                                    Buscar
-                                                                </button>
-                                                            </div>
-                                                            <!-- BOTÃO LIMPAR -->
-                                                            <button class="btn btn-sm grey filter-cancel"
-                                                                    ng-click="limpaFiltros()">
-                                                                <i class="fa fa-times"></i> 
-                                                                Limpar
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
-                                        <!-- END TABELA FILTRO -->
-                                    </div>
-                                    <!-- END PORTLET BODY FILTRO INSIDE -->
-                                </div>  
-                                <!-- END PORTLET BODY FILTRO -->
-                            </div>
-                            <!-- END TABLE PORTLET-->
+                    <!-- PORTLET BODY FILTRO INSIDE -->
+                    <div class="dataTables_wrapper dataTables_extended_wrapper no-footer">
+
+                        <!-- TABELA FILTRO -->
+                        <div class="table-scrollable">
+                            <table class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
+                                <thead>
+                                    <tr role="row" class="heading">
+                                        <th width="20%" tabindex="0"  
+                                            rowspan="1" colspan="1">
+                                             Data de Emissão
+                                        </th>
+                                        <th width="25%" tabindex="1" 
+                                            rowspan="1" colspan="1">
+                                             Destinatário 
+                                        </th>
+                                        <th width="25%" tabindex="2" 
+                                            rowspan="1" colspan="1">
+                                             Emitente
+                                        </th>
+                                        <th width="20%" tabindex="3"  
+                                            rowspan="1" colspan="1">
+                                             Status Manifesto
+                                        </th>
+                                        <th width="10%" tabindex="4" 
+                                            rowspan="1" colspan="1">
+                                             Ações de filtro
+                                        </th>
+                                    </tr>
+                                    <!-- CONTEUDO DO FILTRO -->
+                                    <tr role="row" class="filter">
+                                        <!-- DATA -->
+                                        <td rowspan="1" colspan="1">                                    
+                                            <div class="input-group date date-picker margin-bottom-5"
+                                                 data-date-format="dd/mm/yyyy">
+                                                <input type="text" 
+                                                       class="form-control form-filter input-sm" 
+                                                       readonly="" 
+                                                       style="cursor: pointer" 
+                                                       ng-click="exibeCalendarioDataMin($event)" 
+                                                       placeholder="Início" 
+                                                       ng-model="filtro.datamin" 
+                                                       ng-change="alterouDataMin()" 
+                                                       datepicker-append-to-body="true" 
+                                                       datepicker-popup="dd MMMM yyyy" 
+                                                       is-open="abrirCalendarioDataMin" 
+                                                       ng-required="true" 
+                                                       show-button-bar="false" 
+                                                       show-weeks="false" 
+                                                       required="required">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-sm default" 
+                                                        type="button" 
+                                                        ng-click="exibeCalendarioDataMin($event)">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                            <div class="input-group"> <!--  date date-picker margin-bottom-5" -->
+                                                <input type="text" 
+                                                       class="form-control form-filter input-sm" 
+                                                       readonly="" 
+                                                       style="cursor: pointer" 
+                                                       ng-click="exibeCalendarioDataMax($event)" 
+                                                       placeholder="Fim" 
+                                                       ng-model="filtro.datamax" 
+                                                       ng-change="alterouDataMax()" 
+                                                       datepicker-popup="dd MMMM yyyy" 
+                                                       is-open="abrirCalendarioDataMax" 
+                                                       datepicker-append-to-body="true"
+                                                       ng-required="false" 
+                                                       current-text="Hoje" 
+                                                       clear-text="Limpar" 
+                                                       close-text="Fechar" 
+                                                       show-button-bar="true" 
+                                                       show-weeks="false">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-sm default" 
+                                                            type="button" 
+                                                            ng-click="exibeCalendarioDataMax($event)">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </button>
+                                                </span>
+                                            </div>                                            
+                                        </td>
+                                        <!-- DESTINATÁRIO -->
+                                        <td rowspan="1" colspan="1" style="text-align: center">
+                                            <select class="form-control form-filter input-sm comboBoxFiltros"
+                                                    ng-disabled="filiais.length == 0"
+                                                    ng-model="filtro.destinatario"
+                                                    ng-change="alterouDestinatario()"
+                                                    ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
+                                                <option value="">TODAS</option>
+                                            </select>
+                                            <i class="fa fa-question-circle"
+                                               ng-show="!usuariologado.grupoempresa"
+                                               popover-placement="bottom"
+                                               popover="É necessário selecionar uma empresa"
+                                               popover-trigger="mouseenter"></i>
+                                        </td>
+                                        <!-- EMITENTE -->
+                                         <td rowspan="1" colspan="1" style="text-align: center">
+                                            <input type="text" class="form-control"
+                                                   placeholder="Emitente" 
+                                                   ng-model="filtro.emitente"
+                                                   onfocus="this.select();" 
+                                                   onmouseup="return false;" />
+                                        </td>
+                                        <!-- STATUS -->
+                                        <td rowspan="1" colspan="1" style="text-align: center">
+                                            <select class="form-control form-filter input-sm comboBoxFiltros"
+                                                    ng-model="filtro.statusmanifesto"
+                                                    ng-disabled="statusmanifesto.length === 0"
+                                                    ng-options="status as (status.nome | uppercase) for status in statusmanifesto">
+                                                <option value="">TODOS</option>
+                                            </select>
+                                        </td>
+                                        <!-- AÇÕES -->
+                                        <td rowspan="1" colspan="1" style="text-align:center">
+                                            <div class="margin-bottom-5">
+                                                <!-- BOTÃO BUSCAR -->
+                                                <button class="btn btn-sm red filter-submit margin-bottom" 
+                                                        ng-click="busca()">
+                                                    <i class="fa fa-search"></i> 
+                                                    Buscar
+                                                </button>
+                                            </div>
+                                            <!-- BOTÃO LIMPAR -->
+                                            <button class="btn btn-sm grey filter-cancel"
+                                                    ng-click="limpaFiltros()">
+                                                <i class="fa fa-times"></i> 
+                                                Limpar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </thead>
+                            </table>
                         </div>
-                    </div>                    
+                        <!-- END TABELA FILTRO -->
+                    </div>
+                    <!-- END PORTLET BODY FILTRO INSIDE -->
                 </div>  
-                
                 <!-- END TABLE PORTLET BODY -->
             </div>
             <!-- END TABLE PORTLET-->
         </div>
     </div>
+    
+    <!-- CONTEUDO -->
     <div class="row">
         <div class="col-md-12">
             <!-- BEGIN TABLE PORTLET-->
@@ -282,8 +257,8 @@
                 <!-- CORPO -->
                 <div class="portlet-body" ng-show="exibeTela">
                     <div class="row paddingDivs">
-                        <!--EXIBIÇÃO-->
-                        <div class="col-xs-4 col-sm-4">
+                       <!--EXIBIÇÃO-->
+                        <div class="col-xs-4 col-sm-4 col-md-4">
                             <div class="dataTables_length">
                                 <label>
                                     <span class="seperator"></span>Exibindo 
@@ -292,11 +267,11 @@
                                             ng-model="filtro.itens_pagina"
                                             ng-change="alterouItensPagina()"
                                             ng-options="item for item in itens_pagina">                                            
-                                    </select> registros de 
+                                    </select> registros de {{filtro.total_registros}}
                                 </label>
-                            </div>
-                        </div> 
-                        <!--PAGINAÇÃO-TOPO-->
+                            </div>   
+                        </div>
+                        <!--PAGINAÇÃO-->
                         <div class="col-xs-4 col-sm-4 col-md-3">
                             <div class="pagination-panel centralizarPaginacao"> Página 
                                 <a href="javascript:;" ng-click="retrocedePagina()"
@@ -316,278 +291,223 @@
                                        title="Próxima página">
                                         <i class="fa fa-angle-right"></i>
                                     </a>
-                                    de <span class="pagination-panel-total"></span>
+                                    de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
                             </div>
-                        </div>                            
-                        <!-- FIM PAGINAÇÃO -->                                  
+                        </div>                                   
                     </div>
                     
                     <!-- TABELA EXTERNA -->
                     <div class="table scrollable">
-                    <table class="table table-striped table-bordered table-hover dataTable no-footer">
-                        <thead>
-                            <tr>
-                                <th colspan="5" class="cabecalhoTheadTabelas">
-                                    DADOS EMITENTE
-                                </th>
-                            </tr>
-                            <tr>
-                                <th width="5%">
-                                </th>
-                                <th width="20" style="text-align: center;">
-                                    CNPJ
-                                </th>
-                                <th width="30%" style="text-align: center;">
-                                    Razão Social
-                                </th>
-                                <th width="10%" style="text-align: center;">
-                                    UF
-                                </th>
-                                <th width="10%" style="text-align: center;">
-                                    Total NF-e
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                        <table class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
+                            <thead>
                                 <tr>
-                                    <td width="5%" style="text-align: center;">
-                                        <i class="fa fa-plus-square"></i>   
-                                    </td>
-                                    <td width="20%">
-                                        928.937.746/98
-                                    </td>
-                                    <td width="30%">
-                                            Petrox Mania
-                                    </td>
-                                    <td width="10%">
-                                        SE
-                                    </td>
-                                    <td width="10%">
-                                        32
-                                    </td>
+                                    <th colspan="5" class="cabecalhoTheadTabelas">
+                                        DADOS EMITENTE
+                                    </th>
                                 </tr>
                                 <tr>
+                                    <th width="5%">
+                                    </th>
+                                    <th width="20" style="text-align: center;">
+                                        CNPJ
+                                    </th>
+                                    <th width="30%" style="text-align: center;">
+                                        Razão Social
+                                    </th>
+                                    <th width="10%" style="text-align: center;">
+                                        UF
+                                    </th>
+                                    <th width="10%" style="text-align: center;">
+                                        Total NF-e
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat-start="emitente in emitentes">
                                     <td width="5%" style="text-align: center;">
-                                        <i class="fa fa-plus-square"></i>   
+                                        <a href="javascript:;" ng-click="toggle(emitente)">
+                                            <i class="fa"
+                                               ng-class="{'fa-plus-square' : !isExpanded(emitente), 'fa-minus-square' : isExpanded(emitente)}"
+                                               style="margin-top: -3px;"> 
+                                            </i> 
+                                        </a>
                                     </td>
                                     <td width="20%">
-                                        928.937.746/98
+                                        {{emitente.nrEmitenteCNPJCPF}}
                                     </td>
                                     <td width="30%">
-                                            Petrox Mania
+                                        {{emitente.nmEmitente | uppercase}}
                                     </td>
                                     <td width="10%">
-                                        SE
+                                        {{(emitente.UF | uppercase) || ''}}
                                     </td>
                                     <td width="10%">
-                                        32
+                                        {{emitente.notas.length || '0'}}
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td colspan="5" class="formatacaoLinhaDaTabelaInterna">
+                                <tr ng-repeat-end ng-show="isExpanded(emitente)"> 
+                                    <td colspan="5">
                                         <!-- TABELA INTERNA -->
-                                        <!-- SUB TABELA -->
-                                        <table class="table table-striped table-bordered table-hover dataTable no-footer formatacaoSubTabelaMaior">
-                                            <tr>
-                                                <td width="80%" class="formatacaoSubTabelaMenorEsquerda">
-                                                    <!-- SUB TABELA DADOS NF-e -->
-                                                    <table class="table table-striped table-bordered table-hover dataTable no-footer">
-                                                        <thead> 
-                                                            <tr>
-                                                                <th colspan="6" class="cabecalhoTheadTabelas">
-                                                                    DADOS NF-e
-                                                                </th>
-                                                            </tr>
-                                                            <tr>
-                                                                <th width="10%">
-                                                                    Data Emissão
-                                                                </th>
-                                                                <th width="10%" style="text-align: center;">
-                                                                    Modelo
-                                                                </th>
-                                                                <th width="10%" style="text-align: center;">
-                                                                    Número
-                                                                </th>
-                                                                <th width="10%" style="text-align: center;">
-                                                                    Série
-                                                                </th>
-                                                                <th width="10%" style="text-align: center;">
-                                                                    Valor Total NF
-                                                                </th>
+                                        <table class="table table-striped table-bordered table-hover dataTable no-footer">
+                                            <thead> 
+                                                <tr>
+                                                    <th colspan="6" class="cabecalhoTheadTabelas">
+                                                        DADOS NF-e
+                                                    </th>
+                                                    <th colspan="3" class="cabecalhoTheadTabelas">
+                                                        STATUS
+                                                    </th>
+                                                    <th rowspan="1" colspan="1" 
+                                                        class="cabecalhoTheadTabelas">
+                                                        AÇÕES
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <!-- DADOS NFE -->
+                                                    <th width="5%">
+                                                        Emissão
+                                                    </th>
+                                                    <th width="5%" style="text-align: center;">
+                                                        Modelo
+                                                    </th>
+                                                    <th width="7%" style="text-align: center;">
+                                                        Número
+                                                    </th>
+                                                    <th width="5%" style="text-align: center;">
+                                                        Série
+                                                    </th>
+                                                    <th width="10%" style="text-align: center;">
+                                                        Valor NF
+                                                    </th>
 
-                                                                <th width="20%" style="text-align: center;">
-                                                                    Chave Acesso
-                                                                </th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                             <tr>
-                                                                <td width="10%">
-                                                                    Data Emissão
-                                                                </td>
-                                                                <td width="10%">
-                                                                    Modelo
-                                                                </td>
-                                                                <td width="10%">
-                                                                    Número
-                                                                </td>
-                                                                <td width="10%">
-                                                                    Série
-                                                                </td>
-                                                                <td width="10%">
-                                                                    Valor Total NF
-                                                                </td>
-                                                                <td width="20%">
-                                                                    Chave Acesso
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td width="10%">
-                                                                    Data Emissão
-                                                                </td>
-                                                                <td width="10%">
-                                                                    Modelo
-                                                                </td>
-                                                                <td width="10%">
-                                                                    Número
-                                                                </td>
-                                                                <td width="10%">
-                                                                    Série
-                                                                </td>
-                                                                <td width="10%">
-                                                                    Valor Total NF
-                                                                </td>
-                                                                <td width="20%">
-                                                                    Chave Acesso
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                        </table>
-                                                </td>
-                                                <td width="20%" class="formatacaoSubTabelaMenorDireita">
-                                                    <!-- SUB TABELA STATUS -->
-                                                    <table class="table table-striped table-bordered table-hover dataTable no-footer">
-                                                        <thead>
-                                                            <tr>
-                                                                <th colspan="3" class="cabecalhoTheadTabelas">
-                                                                    STATUS
-                                                                </th>
-                                                            </tr>
-                                                            <tr>
-                                                               <th width="5%" style="text-align: center;">
-                                                                    NF-e
-                                                                </th>
-                                                                <th width="5%" style="text-align: center;">
-                                                                    Manifesto
-                                                                </th>
-                                                                <th width="5%" style="text-align: center;">
-                                                                    ERP
-                                                                </th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        <tr>
-                                                            <td width="5%">
-                                                                2938471
-                                                            </td>
-                                                            <td width="5%">
-                                                                manifesto
-                                                            </td>
-                                                            <td width="5%">
-                                                                erp
-                                                            </td>
-                                                        </tr>
-                                                            <tr>
-                                                            <td width="5%">
-                                                                2938471
-                                                            </td>
-                                                            <td width="5%">
-                                                                manifesto
-                                                            </td>
-                                                            <td width="5%">
-                                                                erp
-                                                            </td>
-                                                        </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </td>
-                                            </tr>
+                                                    <th width="20%" style="text-align: center;">
+                                                        Chave Acesso
+                                                    </th>
+                                                    <!-- STATUS -->
+                                                    <th width="10%" style="text-align: center;">
+                                                        NF-e
+                                                    </th>
+                                                    <th width="16%" style="text-align: center;">
+                                                        Manifesto
+                                                    </th>
+                                                    <th width="15%" style="text-align: center;">
+                                                        ERP
+                                                    </th>
+                                                    <!-- BOTÃO -->
+                                                    <th width="7%"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                 <!-- DADOS NFE -->
+                                                 <tr ng-repeat="nota in emitente.notas">
+                                                    <td ng-bind="getDataString(nota.dtEmissao)">
+                                                    </td>
+                                                    <td>
+                                                        {{nota.modelo}}
+                                                    </td>
+                                                    <td>
+                                                        {{nota.numero}}
+                                                    </td>
+                                                    <td>
+                                                        {{nota.serie}}
+                                                    </td>
+                                                    <td>
+                                                        {{nota.vlNFe | currency:'R$'}}
+                                                    </td>
+                                                    <td>
+                                                        {{nota.nrChave}}
+                                                    </td>
+                                                    <!-- STATUS -->
+                                                    <td>
+                                                        {{nota.nfe}}
+                                                    </td>
+                                                    <td>
+                                                        {{nota.dsSituacaoManifesto | uppercase}}
+                                                    </td>
+                                                    <td>
+                                                        {{nota.dsSituacaoErp | uppercase}}
+                                                    </td>
+                                                    <!-- BOTÃO -->
+                                                    <td>
+                                                        <div class="btn-group" dropdown dropdown-append-to-body>
+                                                            <a class="btn btn-default btn-circle" 
+                                                               href="javascript:;" dropdown-toggle>
+                                                                <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
+                                                            </a>
+                                                            <ul class="dropdown-menu dropDownAtos">
+                                                                <li>
+                                                                    <a href="javascript:;" 
+                                                                       ng-click="downloadDAMFE(emitente, $index)">
+                                                                        DAMFE
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="javascript:;" 
+                                                                       ng-click="detalhar(emitente, $index)">
+                                                                        Detalhes
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="javascript:;" 
+                                                                       ng-click="imprimir(emitente, $index)">
+                                                                        Imprimir
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="javascript:;" 
+                                                                       ng-click="downloadXML(emitente, $index)">
+                                                                        XML
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
                                         </table> 
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td width="5%" style="text-align: center;">
-                                        <i class="fa fa-plus-square"></i>   
-                                    </td>
-                                    <td width="20%">
-                                        928.937.746/98
-                                    </td>
-                                    <td width="30%">
-                                            Petrox Mania
-                                    </td>
-                                    <td width="10%">
-                                        SE
-                                    </td>
-                                    <td width="10%">
-                                        32
-                                    </td>
-                                </tr>
-                        </tbody>
-                           </table>
+                            </tbody>
+                        </table>
                     </div>
                     <!-- FIM CORPO -->
-                    <!-- PAGINAÇÃO RODAPÉ -->
-                    <div class="row" style="margin: 10px 0 20px 0">
+                    
+                    <!-- RODAPÉ : Exibição dos resultados e paginação -->
+                    <div class="row">
                         <div class="col-xs-4 col-sm-4 col-md-4">
                             <div class="dataTables_info" role="status" aria-live="polite">
-                                <strong>Exibindo os registros 
-                                    <span ng-show="tabIs(0)">{{filtro.terminal.faixa_registros}}</span>
-                                    <span ng-show="tabIs(1)">{{filtro.sintetico.faixa_registros}}</span>
-                                    <span ng-show="tabIs(2)">{{filtro.analitico.faixa_registros}}</span>
-                                </strong>
-                            </div> 
+                                <strong>Exibindo os registros {{filtro.faixa_registros}}</strong>
+                            </div>
                         </div>
-                        <!--RODAPÉ-->
+                        <!--PAGINAÇÃO-RODAPÉ-->
                         <div class="col-xs-4 col-sm-4 col-md-3">
                             <div class="pagination-panel centralizarPaginacao"> Página 
                                 <a href="javascript:;" ng-click="retrocedePagina()"
                                    class="btn btn-sm default prev" 
-                                   ng-class="{disabled: (tabIs(0) && filtro.terminal.pagina <= 1) || (tabIs(1) && filtro.sintetico.pagina  <= 1) || (tabIs(2) && filtro.analitico.pagina <= 1)}" 
+                                   ng-class="{disabled: filtro.pagina <= 1}" 
                                    title="Página anterior">
                                         <i class="fa fa-angle-left"></i>
                                 </a>
-                                <input type="text" 
-                                       class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
                                        maxlength="4" style="text-align:center; margin: 0 5px;"
                                        ng-model="paginaInformada" valid-integer-number
                                        ng-keypress="($event.which === 13) ? alteraPagina() : 0"
                                        ng-blur="atualizaPaginaDigitada()">
-                                <a href="javascript:;" ng-click="avancaPagina()"
-                                   class="btn btn-sm default next"
-                                   ng-class="{disabled: (tabIs(0) && filtro.terminal.pagina >= filtro.terminal.total_paginas) || (tabIs(1) && filtro.sintetico.pagina >= filtro.sintetico.total_paginas) || (tabIs(2) && filtro.analitico.pagina >= filtro.analitico.total_paginas)}"
-                                   title="Próxima página">
-                                    <i class="fa fa-angle-right"></i>
-                                </a>
-                                 de 
-                                <span class="pagination-panel-total" ng-show="tabIs(0)">
-                                    {{filtro.terminal.total_paginas}}
-                                </span>
-                                <span class="pagination-panel-total" ng-show="tabIs(1)">
-                                    {{filtro.sintetico.total_paginas}}
-                                </span>
-                                <span class="pagination-panel-total" ng-show="tabIs(2)">
-                                    {{filtro.analitico.total_paginas}}
-                                </span>    
+                                    <a href="javascript:;" ng-click="avancaPagina()"
+                                       class="btn btn-sm default next"
+                                       ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
+                                       title="Próxima página">
+                                        <i class="fa fa-angle-right"></i>
+                                    </a>
+                                    de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
                             </div>
                         </div>
-                    </div>
-                    <!-- FIM RODAPÉ -->
+                        <!-- FIM PAGINAÇÃO -->
+                    </div> 
                 </div>
             </div>
             <!--FIM TABLE PORTLET-->
         </div>
-    </div>
-    
-        
+    </div>  
 </div>
 <!-- END PAGE CONTENT INNER -->

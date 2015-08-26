@@ -77,7 +77,7 @@ angular.module("card-services-consolidacao-relatorios", [])
                 if($scope.usuariologado.grupoempresa){ 
                     // Reseta seleção de filtro específico de empresa
                     $scope.filtro.filial = $scope.filtro.adquirente = $scope.filtro.bandeira = $scope.filtro.terminallogico = null;
-                    buscaFiliais(true);
+                    buscaFiliais();
                 }else{ // reseta tudo e não faz buscas 
                     $scope.filiais = []; 
                     $scope.adquirentes = [];
@@ -90,7 +90,7 @@ angular.module("card-services-consolidacao-relatorios", [])
         $scope.$on('acessoDeTelaNotificado', function(event){
             $scope.exibeTela = true;
             // Carrega filiais
-            if($scope.usuariologado.grupoempresa) buscaFiliais(true);
+            if($scope.usuariologado.grupoempresa) buscaFiliais();
         }); 
         // Acessou a tela
         $scope.$emit("acessouTela");
