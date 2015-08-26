@@ -51,22 +51,19 @@
                     <table class="table table-striped table-bordered table-hover dataTable no-footer conteudoTabelas" id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
                         <thead>
                             <tr role="row" class="heading">
-                                <th width="8%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                <th width="8%" class="" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
                                      Data
                                 </th>
-                                <th width="11%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                <th width="8%" class="" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
                                      Filiais 
                                 </th>
-                                <th width="5%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                <th width="8%" class="" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
                                      Adquirentes
                                 </th>
-                                <th width="8%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                <th width="8%" class="" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
                                      Bandeiras
                                 </th>
-                                <th width="8%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
-                                     Status
-                                </th>
-                                <th width="1%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                <th width="1%" class="" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
                                      Opções
                                 </th>
                             </tr>
@@ -91,36 +88,6 @@
                                         <button class="btn btn-sm default" type="button" ng-click="exibeCalendarioDataMin($event)"><i class="fa fa-calendar"></i></button>
                                         </span>
                                     </div>
-                                    <div class="input-group date date-picker margin-bottom-5" data-date-format="dd/mm/yyyy">
-                                        <input type="text" class="form-control form-filter input-sm" 
-                                               readonly style="cursor: pointer" 
-                                               ng-click="exibeCalendarioDataMax($event)"
-                                               placeholder="Fim" 
-                                               ng-model="datamax" 
-                                               ng-change="alterouDataMax()"
-                                               datepicker-popup="dd MMMM yyyy" 
-                                               is-open="abrirCalendarioDataMax" 
-                                               datepicker-append-to-body=true
-                                               min-date="2000-01-01"
-                                               ng-required="false" 
-                                               current-text="Hoje" 
-                                               clear-text="Limpar" 
-                                               close-text="Fechar" 
-                                               show-button-bar="true"
-                                               show-weeks="false" />
-                                        <span class="input-group-btn">
-                                        <button class="btn btn-sm default" type="button" ng-click="exibeCalendarioDataMax($event)"><i class="fa fa-calendar"></i></button>
-                                        </span>
-                                    </div>                                            
-                                </td>
-                                <td rowspan="1" colspan="1">
-                                    <select name="order_status" class="form-control form-filter input-sm">
-                                        <option value="">Todas</option>
-                                        <option value="pending">Pending</option>
-                                        <option value="closed">Closed</option>
-                                        <option value="hold">On Hold</option>
-                                        <option value="fraud">Fraud</option>
-                                    </select>
                                 </td>
                                 <td rowspan="1" colspan="1">
                                     <select name="order_status" class="form-control form-filter input-sm">
@@ -258,153 +225,129 @@
                 <!--CUPONS-->
                 <div class="row cuponsRelatoriosTerminais">
                     
-                    <!--CUPONS AZUIS-->
+                    <!--FORMULÁRIO DE CADASTRO-->
                     <div class="col-md-12">                     
                         <div class="row">
-                            <!-- 1ªCUPON-->
-                            <div class="col-md-7 col-sm-7">
+                            <!-- FORMULÁRIO-->
+                            <div class="col-md-6 col-sm-6">
                                 <div class="row">
-                                    <!--CONTEÚDO DOS CUPONS-->
-                                    <div class="col-md-7 col-md-offset-3 col-sm-8 col-sm-offset-1 uponAzulRelatorios" style="widh:275px; border: solid 1px #eaeaea;">
+                                    <div class="col-md-8 col-md-offset-3 col-sm-offset-0 formularioCadastroTerminal" style="border: solid 1px #eaeaea">
+                                        
                                         <!--TITULO-->
-                                        <div class="row tituloCuponRelatorios">                                            
+                                        <div class="row tituloFormularioCadastroTerminal">
                                             <div class="col-md-12 col-sm-12">
-                                                <label>Adquirente</label>
-                                                <select class="form-control">
-												    <option>Selecione a Adquirente</option>
-											    </select>
-                                            </div>
-                                        </div>
-                                        <!--INFORMAÇÕES-->
-                                        <div class="row informacoesCuponRelatorios">
-                                            <div class="col-md-12 col-sm-12">
-                                                <!--LOCAL-->
-                                                <div class="row"> 
-                                                    <div class="col-md-12 col-sm-12">
-                                                       <label>Filial</label>
-                                                        <select class="form-control">
-                                                            <option>Selecione a Filial</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                  
-                                            </div>
-                                        </div>
-                                        <!--DATA/HORA DOS RELATÓRIOS-->
-                                        <div class="row dataHoraCuponRelatorios">
-                                            <div class="col-md-12 col-sm-12">
-                                                <!--DATA/HORÁRIO-->
-                                                <div class="row">
-                                                    <div class="col-md-6 input-group date date-picker margin-bottom-5"
-                                                        data-date-format="dd/mm/yyyy">
-                                                        <input type="text" 
-                                                               class="form-control form-filter input-sm" 
-                                                               readonly="" 
-                                                               style="cursor: pointer" 
-                                                               ng-click="exibeCalendarioDataMin($event)" 
-                                                               placeholder="Início" 
-                                                               ng-model="filtro.datamin" 
-                                                               ng-change="alterouDataMin()" 
-                                                               datepicker-append-to-body="true" 
-                                                               datepicker-popup="dd MMMM yyyy" 
-                                                               is-open="abrirCalendarioDataMin" 
-                                                               ng-required="true" 
-                                                               show-button-bar="false" 
-                                                               show-weeks="false" 
-                                                               required="required">
-                                                        <span class="input-group-btn">
-                                                            <button class="btn btn-sm default" 
-                                                                type="button" 
-                                                                ng-click="exibeCalendarioDataMin($event)">
-                                                                <i class="fa fa-calendar"></i>
-                                                            </button>
-                                                        </span>
-                                                    </div>
-                                                    <div class="col-md-6 input-group"> <!--  date date-picker margin-bottom-5" -->
-                                                        <input type="text" 
-                                                               class="form-control form-filter input-sm" 
-                                                               readonly="" 
-                                                               style="cursor: pointer" 
-                                                               ng-click="exibeCalendarioDataMax($event)" 
-                                                               placeholder="Fim" 
-                                                               ng-model="filtro.datamax" 
-                                                               ng-change="alterouDataMax()" 
-                                                               datepicker-popup="dd MMMM yyyy" 
-                                                               is-open="abrirCalendarioDataMax" 
-                                                               datepicker-append-to-body="true"
-                                                               ng-required="false" 
-                                                               current-text="Hoje" 
-                                                               clear-text="Limpar" 
-                                                               close-text="Fechar" 
-                                                               show-button-bar="true" 
-                                                               show-weeks="false">
-                                                        <span class="input-group-btn">
-                                                            <button class="btn btn-sm default" 
-                                                                    type="button" 
-                                                                    ng-click="exibeCalendarioDataMax($event)">
-                                                                <i class="fa fa-calendar"></i>
-                                                            </button>
-                                                        </span>
-                                                    </div>
-                                                </div>
+                                                Formulário de Cadastro
                                             </div>
                                         </div>
                                         
-                                        <!--LEGENDA-->
-                                        <div class="row legendaCupomRelatorios">
-                                            <div class="col-md-12 col-sm-12">
-                                                <div class="row">
-                                                    <!--BANDEIRA-->
-                                                    <div class="col-md-12 col-sm-12">
-                                                        <label>Bandeira</label>
-                                                        <select class="form-control">
-                                                            <option>VISA</option>
-                                                            <option>ELO</option>
-                                                            <option>MASTER</option>
-                                                        </select>
-                                                    </div>  
-                                                </div>
-                                                <div class="row">    
-                                                    <!--TIPO-->
-                                                    <div class="col-md-12 col-sm-12">
-                                                        <label>TIPO</label>
-                                                        <select class="form-control">
-                                                            <option>Crédito</option>
-                                                            <option>Débito</option>
-                                                        </select>
-                                                    </div>  
-                                                    <!--QUANTIDADE-->
-                                                    <div class="col-md-12 col-sm-12">
-                                                        <label>Quantidade</label>
-                                                        <select class="form-control">
-                                                            <option> </option>
-                                                        </select>
-                                                    </div>  
-                                                    <!--VALOR TOTAL-->
-                                                    <div class="col-md-12 col-sm-12">
-                                                        <label>Valor total</label>
-                                                        <select class="form-control">
-                                                            <option> </option>
-                                                        </select>
-                                                    </div>       
-                                                </div>                                                
-                                            </div>                                
+                                        <!--TÉRMINAL LÓGICO-->
+                                        <div class="row conteudoFormularioCadastroTerminal">
+                                            <label class="col-md-4 col-sm-4">Términal Lógico</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                <select class="form-control">
+                                                    <option></option>                                                    
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                        <!--ADQUIRENTE-->
+                                        <div class="row conteudoFormularioCadastroTerminal">
+                                            <label class="col-md-4 col-sm-4">Adquirente</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                <select class="form-control">
+                                                    <option>BANESECARD</option>
+                                                    <option>CIELO</option>
+                                                    <option>REDE</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12" 
+                                                 style="margin-top:30px; margin-bottom:20px;border-bottom: solid 1px #eaeaea; width:90%;margin-left:15px; text-align:center">
+                                            
+                                            </div>
+                                        </div>
+                                        
+                                        <!--BANDEIRA-->
+                                        <div class="row conteudoFormularioCadastroTerminal">
+                                            <label class="col-md-4 col-sm-4">Bandeira</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                <select class="form-control">
+                                                    <option></option>
+                                                </select>
+                                            </div>
                                         </div>                                       
+                                        
+                                        <!--TIPO-->
+                                        <div class="row conteudoFormularioCadastroTerminal">
+                                            <label class="col-md-4 col-sm-4">Tipo</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                <select class="form-control">
+                                                    <option>Crédito</option>
+                                                    <option>Débito</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                        <!--DESCRIÇÃO-->
+                                        <div class="row conteudoFormularioCadastroTerminal">
+                                            <label class="col-md-4 col-sm-4">Descrição</label>
+                                            <label class="col-md-4 col-sm-4"  style="text-align:center">Quantidade</label>
+                                            <label class="col-md-4 col-sm-4"  style="text-align:center">Total</label>
+                                        </div>
+                                        <!--Á VISTA-->
+                                        <div class="row conteudoFormularioCadastroTerminal">
+                                            <label class="col-md-4 col-sm-4">À Vista</label>
+                                            <div class="col-md-4 col-sm-4">
+                                                <input class="form-control">
+                                            </div>
+                                            <div class="col-md-4 col-sm-4">
+                                                <input class="form-control">
+                                            </div>
+                                        </div>
+                                        <!--À PRAZO-->
+                                        <div class="row conteudoFormularioCadastroTerminal">
+                                            <label class="col-md-4 col-sm-4">À Prazo</label>
+                                            <div class="col-md-4 col-sm-4">
+                                                <input class="form-control">
+                                            </div>
+                                            <div class="col-md-4 col-sm-4">
+                                                <input class="form-control">
+                                            </div>
+                                        </div>
+                                        
+                                        <!--BOTÕES-->
+                                        <div class="row">
+                                            <!--BOTÃO INCLUIR-->
+                                            <div class="col-md-4 col-md-offset-8 col-sm-4 col-sm-offset-8 " style="text-align:right;margin-top:15px">
+                                                <button class=" btn btn-sm red filter-submit margin-bottom">
+                                                    <i class="fa fa-plus"></i>
+                                                    Incluir
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <!--FIM CONTEÚDO DOS CUPONS-->
+                                    <!--BOTÃO SALVAR-->
+                                    <div class="col-md-6 col-md-offset-9 col-sm-6 col-sm-offset-9">
+                                        <button class="btn btn-sm blue filter-submit margin-bottom" style="font-size:15px; margin-top:15px">
+                                            <!--i class="fa fa-plus"></i-->
+                                            Salvar
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                            <!--FIM 1ªCUPON-->
+                            <!--FIM FORMULÁRIO-->
                             
-                            <!-- 2ªCUPON-->                            
-                            <div class="col-md-5 col-sm-5">
+                            <!--CUPON PARA VISUALIZAÇÃO-->                            
+                            <div class="col-md-6 col-sm-6">
                                 <div class="row">
                                     <!--CONTEÚDO DOS CUPONS-->
-                                    <div class="col-md-7 col-sm-8 cuponAzulRelatorios">
-                                        <!--TITULO-->
+                                    <div class="col-md-7 col-md-offset-3 col-sm-7 col-sm-offset-2 cuponAzulRelatorios">
+                                        <!--ADQUIRENTE-->
                                         <div class="row tituloCuponRelatorios">                                            
                                             <div class="col-md-12 col-sm-12">
-                                                Relatório de totais
+                                                CIELO
                                             </div>
                                         </div>
                                         <!--INFORMAÇÕES-->
@@ -419,7 +362,7 @@
                                                 <!--ENDEREÇO-->
                                                 <div class="row">                                            
                                                     <div class="col-md-12 col-sm-12">
-                                                        AV TRANQUEDO NEVES 1506
+                                                        AV TANCREDO NEVES 1506
                                                     </div>
                                                 </div>
                                                 <!--CIDADE-->
@@ -455,15 +398,6 @@
                                                 <div class="row">
                                                     <div class="col-md-12 col-sm-12">
                                                         <label>Relatório de:</label>21/08/2015
-                                                    </div>
-                                                </div>
-                                                <!--HORÁRIO-->
-                                                <div class="row">
-                                                    <div class="col-md-6 col-sm-6">
-                                                        <label style="font-size:13px">De:</label>09:12
-                                                    </div>
-                                                    <div class="col-md-6 col-sm-6">
-                                                        <label style="font-size:13px">Até:</label>23:40
                                                     </div>
                                                 </div>
                                             </div>
