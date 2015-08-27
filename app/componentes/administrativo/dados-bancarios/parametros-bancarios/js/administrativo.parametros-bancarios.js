@@ -34,7 +34,7 @@ angular.module("administrativo-parametros-bancarios", [])
     var divPortletBodyParametrosPos = 1;                                             
     // Modal Parâmetro
     $scope.modalParametro = { titulo : '', banco : undefined, dsTipo : '',
-                              adquirente : undefined, dsMemo: '',
+                              adquirente : undefined, dsMemo: '', flVisivel : true,
                               textoConfirma : '', funcaoConfirma : function(){} };
     var old = null;    
     
@@ -298,6 +298,8 @@ angular.module("administrativo-parametros-bancarios", [])
         // Filtro  
         var filtros = obtemFiltrosBusca();
         
+        //console.log(filtros);
+        
         //$scope.hideProgress(divPortletBodyFiltrosPos);
         //$scope.hideProgress(divPortletBodyParametrosPos);
            
@@ -454,12 +456,15 @@ angular.module("administrativo-parametros-bancarios", [])
         
         old = parametro;
         
+        //console.log(parametro);
+        
         $scope.modalParametro.titulo = 'Altera Parâmetro Bancário';
         $scope.modalParametro.textoConfirma = 'Alterar';
         $scope.modalParametro.funcaoConfirma = alterarParametroBancario;
         $scope.modalParametro.banco = parametro.banco;
         $scope.modalParametro.dsMemo = parametro.dsMemo;
         $scope.modalParametro.dsTipo = parametro.dsTipo.toUpperCase();
+        $scope.modalParametro.flVisivel = parametro.flVisivel;
         if(parametro.adquirente === null) $scope.modalParametro.adquirente = undefined;
         else $scope.modalParametro.adquirente = $filter('filter')($scope.adquirentes, function(a) {return a.cdAdquirente === parametro.adquirente.cdAdquirente;})[0];
         

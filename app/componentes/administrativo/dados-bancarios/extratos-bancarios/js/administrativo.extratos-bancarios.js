@@ -365,60 +365,70 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
             uploadEmProgresso = true;
             $scope.type = 'info';
             $scope.progresso = 0;
-            $scope.total = files.length;
-            $scope.current = 0;
+            //$scope.total = files.length;
+            //$scope.current = 0;
             // Loading progress
             $scope.showProgress(divPortletBodyFiltrosPos);
             $scope.showProgress(divPortletBodyExtratosPos);
-            for (var i = 0; i < $scope.total; i++) {
-                var file = files[i];
-                // Avalia a extensão
-                var index = file.name.lastIndexOf('.');
-                if(index === -1 || file.name.substr(index + 1) !== 'ofx'){ 
-                    // Extensão não é OFX
-                    //console.log("ARQUIVO '" + file.name + "' NÃO É UM .ofx");
-                    $scope.showAlert("O arquivo deve ser do tipo .ofx!", true, 'warning', true, false);
-                    if(++$scope.current === $scope.total){
-                        $scope.type = 'danger';
-                        $scope.progresso = 100;
-                        uploadEmProgresso = false;
-                        $scope.hideProgress(divPortletBodyFiltrosPos);
-                        $scope.hideProgress(divPortletBodyExtratosPos);
-                    }
-                    continue;
-                }
-                Upload.upload({
-                    url: $apis.getUrl($apis.card.tbextrato, $scope.token, 
-                                      {id: /*$campos.card.tbextrato.cdContaCorrente*/ 101, 
-                                       valor: $scope.filtro.conta.cdContaCorrente}),
-                    file: file,
-                    method: 'PATCH'
-                }).progress(function (evt) {
-                    $scope.progresso = parseInt(100.0 * evt.loaded / evt.total);
-                }).success(function (data, status, headers, config) {
-                    $timeout(function() {
-                        if(++$scope.current === $scope.total){
-                            $scope.type = 'success';
-                            uploadEmProgresso = false;
-                            $scope.hideProgress(divPortletBodyFiltrosPos);
-                            $scope.hideProgress(divPortletBodyExtratosPos);
-                        }
-                        // Relista o extrato corrente
-                        buscaExtrato();
-                    });
-                }).error(function (data, status, headers, config){
-                     if(status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
-                     else if(status === 503 || status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                     else if(status === 500) $scope.showModalAlerta("Extrato '" + files[$scope.current].name + "' não corresponde a conta " + $scope.getNomeAmigavelConta($scope.filtro.conta));
-                     else $scope.showAlert("Houve uma falha ao fazer upload do extrato '" + files[$scope.current] + "' (" + status + ")", true, 'danger', true, false);
-                    if(++$scope.current === $scope.total){
-                        $scope.type = 'danger';
-                        uploadEmProgresso = false;
-                        $scope.hideProgress(divPortletBodyFiltrosPos);
-                        $scope.hideProgress(divPortletBodyExtratosPos);
-                    }
-                });
+            //for (var i = 0; i < $scope.total; i++) {
+            var file = files[0];
+            // Avalia a extensão
+            var index = file.name.lastIndexOf('.');
+            if(index === -1 || file.name.substr(index + 1) !== 'ofx'){ 
+                // Extensão não é OFX
+                //console.log("ARQUIVO '" + file.name + "' NÃO É UM .ofx");
+                $scope.showAlert("O arquivo deve ser do tipo .ofx!", true, 'warning', true, false);
+                //if(++$scope.current === $scope.total){
+                $scope.type = 'danger';
+                $scope.progresso = 100;
+                uploadEmProgresso = false;
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+                $scope.hideProgress(divPortletBodyExtratosPos);
+                //}
+                //continue;
             }
+            Upload.upload({
+                url: $apis.getUrl($apis.card.tbextrato, $scope.token, 
+                                  {id: /*$campos.card.tbextrato.cdContaCorrente*/ 101, 
+                                   valor: $scope.filtro.conta.cdContaCorrente}),
+                file: file,
+                method: 'PATCH'
+            }).progress(function (evt) {
+                $scope.progresso = parseInt(100.0 * evt.loaded / evt.total);
+            }).success(function (data, status, headers, config) {
+                $timeout(function() {
+                    //if(++$scope.current === $scope.total){
+                    $scope.type = 'success';
+                    uploadEmProgresso = false;
+                    $scope.hideProgress(divPortletBodyFiltrosPos);
+                    $scope.hideProgress(divPortletBodyExtratosPos);
+                    //}
+                    //console.log(data);
+                    // Recebeu o mês e ano do extrato
+                    if(data && data !== null){
+                        if(data.mes > 0 && data.ano > 0){
+                            $scope.filtro.ano = data.ano;
+                            $scope.filtro.mes = data.mes - 1;
+                            $scope.tab = data.mes;
+                            ajustaTabs();
+                        }
+                    }
+                    // Relista o extrato corrente
+                    buscaExtrato();
+                });
+            }).error(function (data, status, headers, config){
+                 if(status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(status === 503 || status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else if(status === 500) $scope.showModalAlerta("Extrato '" + files[$scope.current].name + "' não corresponde a conta " + $scope.getNomeAmigavelConta($scope.filtro.conta));
+                 else $scope.showAlert("Houve uma falha ao fazer upload do extrato '" + files[$scope.current] + "' (" + status + ")", true, 'danger', true, false);
+                //if(++$scope.current === $scope.total){
+                $scope.type = 'danger';
+                uploadEmProgresso = false;
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+                $scope.hideProgress(divPortletBodyExtratosPos);
+                //}
+            });
+            //}
         }
     };                                             
                                                  
