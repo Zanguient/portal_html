@@ -221,13 +221,466 @@
                 <!-- MODAL DETALHES -->
                 <div class="modal fade bs-modal-sm modal-input" 
                     id="modalDetalhes" aria-hidden="true">
-                   <div class="modal-dialog modal-sm" style="width:400px">
+                   <div class="modal-dialog modal-sm" style="width:1200px">
                        <div class="modal-content">
                            <div class="modal-header">
                                <h4 class="modal-title modal-cabecalho">Detalhes da Nota</h4>
                            </div>
                            <div class="modal-body modal-corpo" style="text-align: left">
                                <!-- LAYOUT AQUI -->
+                               
+                               <!-- TABS -->
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <tabset vertical="" type="pills">
+                                            <tab heading="NF-e" select="setTab(1)" active="true"></tab>
+                                            <tab heading="Emitente" select="setTab(2)"></tab>
+                                            <tab heading="Destinatário" select="setTab(3)"></tab>
+                                            <tab heading="Produtos e Serviços" select="setTab(4)"></tab>
+                                            <tab heading="Totais" select="setTab(5)"></tab>
+                                            <tab heading="Transporte" select="setTab(6)"></tab>
+                                            <tab heading="Cobrança" select="setTab(7)"></tab>
+                                            <tab heading="Informações Adicionais" select="setTab(8)"></tab>
+                                        </tabset>
+                                    </div>
+                                    <!-- CONTEÚDO -->
+                                    <div class="col-sm-12">
+                                        
+                                        <!-- NF-e -->
+                                        <div class="panel" ng-show="tabIs(1)">
+                                            <!--CONTEÚDO-->
+                                            <div class="row conteudos-detalhe-nota">
+                                                <div class="col-md-12">
+                                                    <!--TITULO-->
+                                                    <div class="row headDetalhesNota">
+                                                        <div class="col-md-12">
+                                                            Dados da NF-e
+                                                        </div>
+                                                    </div>
+                                                    <!--BODY CAMPOS-->
+                                                    <div class="row campos-detalhe-nota">
+                                                        <div class="col-md-1">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Modelo
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                55 
+                                                            </div>                                              
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Série
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                3 
+                                                            </div> 
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Número
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                1123543
+                                                            </div> 
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Data de Emissão
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                27/08/2015 23:36:00-03:00
+                                                            </div> 
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Data/Hora de Saída ou da Entrada
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                27/08/2015 22:40:00-04:00  
+                                                            </div> 
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Valor Total da Nota Fiscal
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                234,54 
+                                                            </div> 
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!--EMITENTE-->
+                                                    <div class="row titulos-campos-detalhes-nota">
+                                                        <div class="col-md-6">
+                                                            <label>Emitente</label>                                              
+                                                        </div>
+                                                    </div>
+                                                    <div class="row campos-detalhe-nota">
+                                                        <div class="col-md-3">
+                                                           <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                CNPJ
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                12.321.111/0004-43
+                                                            </div> 
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                           <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Nome/Razão Social
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                LIMINAR CMO. IND. DE ALIM. LTDA - FAB-CAI
+                                                            </div> 
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                           <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Inscrição Estadual
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                2332654443
+                                                            </div> 
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                UF
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                BA
+                                                            </div> 
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!--DESTINATÁRIO-->
+                                                    <!--TITULO-->
+                                                    <div class="row titulos-campos-detalhes-nota">
+                                                        <div class="col-md-6">
+                                                            <label>Destinatário</label>                                           
+                                                        </div>
+                                                    </div>
+                                                    <!--CORPO-->
+                                                    <div class="row campos-detalhe-nota">
+                                                        <div class="col-md-12">
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        CNPJ
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        12.321.111/0004-43
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Nome/Razão Social
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        PETROX COMERCIA LTDA
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Inscrição Estadual
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        2332654443
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        UF
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        SE
+                                                                    </div> 
+                                                                </div>
+                                                            </div> 
+                                                            <div class="row espacamento-linhas-dados">
+                                                                <div class="col-md-3">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Destino da operação
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        2-Operação Interestadual
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Consumidor Final
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        0-Normal
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Presença~do Comprador
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        0-Não se aplica
+                                                                    </div> 
+                                                                </div>
+                                                            </div>    
+                                                        </div>                                                      
+                                                    </div>
+                                                    
+                                                    
+                                                    <!--EMISSÃO-->
+                                                    <div class="row titulos-campos-detalhes-nota">
+                                                        <div class="col-md-6">
+                                                            <label>Emissão</label>                                           
+                                                        </div>
+                                                    </div>
+                                                    <div class="row campos-detalhe-nota">
+                                                        <div class="col-md-12">
+                                                            <div class="row">
+                                                                <div class="col-md-4">
+                                                                   <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Processo
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        0-Com alplicativo do Contribuinte
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Versão do Processo
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        v12323222
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota"> 
+                                                                        Tipo de Emissão
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        1-Normal
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Finalidade
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        1-Normal
+                                                                    </div> 
+                                                                </div>
+                                                            </div>
+                                                            <div class="row espacamento-linhas-dados">
+                                                                <div class="col-md-4">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Natureza da Operação
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        2341-Venda de Prod c/ Subst Tributria
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Tipo de Operação 
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        1-Saída
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Forma de Pagamento
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        2-Outros
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        <i>Digest</i> Value da NF-e
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        WX+/4kXMi5W8CrT9PaWmeATB9Ow=
+                                                                    </div> 
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!--Situação Atual:-->  
+                                                    <div class="row titulos-campos-detalhes-nota">
+                                                        <div class="col-md-6">
+                                                            <label>
+                                                                Situação Atual:  AUTORIZADA (Ambiente de autorização: produção)
+                                                            </label>                                           
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="row campos-detalhe-nota">
+                                                        <div class="col-md-4">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Eventos da NF-e
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                               Autorização de Uso (Cód.:2211113)
+                                                            </div> 
+                                                            <div class="col-md-12 espacamento-linhas-dados informacoes-detalhe-nota"> 
+                                                               Ciência da Operação pelo Destinatário (Cód.: 210210)
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Protocolo
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                129150069560681   
+                                                            </div> 
+                                                            <div class="col-md-12 espacamento-linhas-dados informacoes-detalhe-nota"> 
+                                                               891150584090327
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Data / Hora
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                26/07/2015 às 23:36:39-03:00
+                                                            </div>
+                                                            <div class="col-md-12 espacamento-linhas-dados informacoes-detalhe-nota"> 
+                                                               Autorização de Uso (Cód.:2211113)
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Data / Hora AN
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                26/07/2015 às 23:46:17
+                                                            </div> 
+                                                            <div class="col-md-12 espacamento-linhas-dados informacoes-detalhe-nota"> 
+                                                               Autorização de Uso (Cód.:2211113)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- EMITENTE -->
+                                        <div class="panel" ng-show="tabIs(2)">
+                                            <!--CONTEÚDO-->
+                                            <div class="row conteudos-detalhe-nota">
+                                                <div class="col-md-12">
+                                                    <!--TITULO-->
+                                                    <div class="row headDetalhesNota">
+                                                        <div class="col-md-12">
+                                                            Dados do Emitente
+                                                        </div>
+                                                    </div>
+                                                    <!--BODY CAMPOS-->
+                                                    <div class="row campos-detalhe-nota">
+                                                        <div class="col-md-6">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Modelo
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        55 
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Modelo
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        55 
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Modelo
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        55 
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Modelo
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        55 
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Modelo
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        55 
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Modelo
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        55 
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="row">
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                        
+                                                    
+                                                </div>
+                                            </div>    
+                                        </div>
+                                        
+                                        <!-- DESTINATÁRIO -->
+                                        <div class="panel" ng-show="tabIs(3)">
+                                        3    
+                                        </div>
+                                        
+                                        <!-- PRODUTOS E SERVIÇOS -->
+                                        <div class="panel" ng-show="tabIs(4)">
+                                        4    
+                                        </div>
+                                        
+                                        <!-- TOTAIS -->
+                                        <div class="panel" ng-show="tabIs(5)">
+                                        5   
+                                        </div>
+                                        
+                                        <!-- TRANSPORTE -->
+                                        <div class="panel" ng-show="tabIs(6)">
+                                        6   
+                                        </div>
+                                        
+                                        <!-- COBRANÇA -->
+                                        <div class="panel" ng-show="tabIs(7)">
+                                        7    
+                                        </div>
+                                        
+                                        <!-- INFORMAÇÕES ADICIONAIS -->
+                                        <div class="panel" ng-show="tabIs(8)">
+                                        8   
+                                        </div>
+                                        
+                                   </div>
+                                </div>
                            </div>
                            <div class="modal-footer">
                                <div class="col-sm-6 col-sm-offset-2">
