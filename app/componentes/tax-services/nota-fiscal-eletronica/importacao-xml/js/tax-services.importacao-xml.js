@@ -271,6 +271,7 @@ angular.module("tax-services-importacao-xml", [])
         var nota = emitente.notas[indexNota];
         console.log("DETALHAR " + emitente.nmEmitente.toUpperCase());
         console.log(nota);
+        $('#modalDetalhes').modal('show');
     }
     $scope.imprimir = function(emitente, indexNota){
         var nota = emitente.notas[indexNota];
