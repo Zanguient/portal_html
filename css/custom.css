@@ -472,6 +472,14 @@ tbody.conteudotabelasCentralizadas > tr > td{
     width: 200px;
 }
 
+.linhaVermelhaTabela{
+    background-color : red !important;
+}
+
+.linhaAmarelaTabela{
+    background-color : yellow !important;
+}
+
 .linhaselecionada {
     background-color: aqua;
 }

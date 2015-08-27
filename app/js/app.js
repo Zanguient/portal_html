@@ -36,6 +36,7 @@ angular.module("AtosCapital", ['ui.router',
                                'card-services-conciliacao-bancaria',
                                'card-services-conciliacao-vendas',
                                'card-services-conciliacao-terminal-logico',
+                               'card-services-conciliacao-vendas-dia',
                                'card-services-consolidacao-relatorios',
                                'card-services-cadastro-codigo-autorizacao',
                                'card-services-cadastro-terminal-logico',
@@ -265,6 +266,15 @@ angular.module("AtosCapital", ['ui.router',
         }
       })
     
+      .state('card-services-conciliacao-conciliacao-vendas-dia', {
+        url: prefixo + 'card-services/conciliacao-vendas-dia',
+        templateUrl: 'componentes/card-services/conciliacao/conciliacao-vendas-dia/index.html',
+        controller: "card-services-conciliacao-vendas-diaCtrl",
+        data: {
+            titulo: 'Card Services'
+        }
+      })
+    
       .state('card-services-consolidacao-relatorios', {
         url: prefixo + 'card-services/consolidacao-relatorios',
         templateUrl: 'componentes/card-services/consolidacao/relatorios/index.html',
@@ -414,7 +424,8 @@ angular.module("AtosCapital", ['ui.router',
     var controllerCardServicesCashFlowRelatorios = undefined;
     var controllerCardServicesConciliacaoBancaria = undefined;
     var controllerCardServicesConciliacaoVendas = undefined;
-    var controllerCardServicesConciliacaoTerminalLogico = undefined;                                                
+    var controllerCardServicesConciliacaoTerminalLogico = undefined; 
+    var controllerCardServicesConciliacaoVendasDia = undefined;                        
     var controllerCardServicesConsolidacaoRelatorios = undefined;
     var controllerCardServicesCadastroCodigoAutorizacao = undefined; 
     var controllerCardServicesCadastroTerminalLogico = undefined;                        
@@ -449,7 +460,8 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO = false;
     $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_BANCARIA = false;
     $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_VENDAS = false;
-    $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_TERMINAL_LOGICO = false;                        
+    $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_TERMINAL_LOGICO = false;  
+    $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_VENDAS_DIA = false;                        
     $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO = false;
     $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_RELATORIOS = false; 
     $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_CADASTRO_CODIGO_AUTORIZACAO = false;   
@@ -687,6 +699,13 @@ angular.module("AtosCapital", ['ui.router',
     $scope.goCardServicesConciliacaoTerminalLogico = function(params){
         controllerAtual = controllerCardServicesConciliacaoTerminalLogico;
         go('card-services-conciliacao-conciliacao-terminal-logico', params);
+    }; 
+    /**
+      * Exibe como conteúdo a Conciliação Conciliação de Vendas Dia, de Card Services
+      */
+    $scope.goCardServicesConciliacaoVendasDia = function(params){
+        controllerAtual = controllerCardServicesConciliacaoVendasDia;
+        go('card-services-conciliacao-conciliacao-vendas-dia', params);
     };                         
     /**
       * Exibe como conteúdo a Consolidação Relatórios, de Card Services
@@ -916,8 +935,17 @@ angular.module("AtosCapital", ['ui.router',
                 // Não possui permissão!
                 event.preventDefault();
                 $scope.goUsuarioSemPrivilegios();
-            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'CONCILIAÇÃO DE VENDAS')
+            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'CONCILIAÇÃO TERMINAL LÓGICO')
                      controllerAtual.id_controller !== controllerCardServicesConciliacaoTerminalLogico.id_controller)
+                $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual 
+        }else if(url === $state.get('card-services-conciliacao-conciliacao-vendas-dia').url){ 
+            // Card Services > Conciliação > Conciliação de Vendas
+            if(!$scope.PERMISSAO_CARD_SERVICES || !$scope.PERMISSAO_CARD_SERVICES_CONCILIACAO || !$scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_VENDAS_DIA){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.goUsuarioSemPrivilegios();
+            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'CONCILIAÇÃO VENDAS DIA')
+                     controllerAtual.id_controller !== controllerCardServicesConciliacaoVendasDia.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual 
         }else if(url === $state.get('card-services-consolidacao-relatorios').url){ 
             // Card Services > Consolidação > Relatórios
@@ -1061,7 +1089,12 @@ angular.module("AtosCapital", ['ui.router',
                 if($location.path() === $state.get('card-services-conciliacao-conciliacao-terminal-logico').url) 
                     controllerAtual = controller;
                 controllerCardServicesConciliacaoTerminalLogico = controller;
-                return $scope.goCardServicesConciliacaoTerminalLogico;    
+                return $scope.goCardServicesConciliacaoTerminalLogico;   
+            case 'CONCILIAÇÃO VENDAS DIA': 
+                if($location.path() === $state.get('card-services-conciliacao-conciliacao-vendas-dia').url) 
+                    controllerAtual = controller;
+                controllerCardServicesConciliacaoVendasDia = controller;
+                return $scope.goCardServicesConciliacaoVendasDia;    
             case 'CADASTRO CÓDIGO AUTORIZAÇÃO': 
                 if($location.path() === $state.get('card-services-consolidacao-cadastro-codigo-autorizacao').url) 
                     controllerAtual = controller;
@@ -1137,6 +1170,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'CONCILIAÇÃO BANCÁRIA': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_BANCARIA = true; break;
             case 'CONCILIAÇÃO DE VENDAS': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_VENDAS = true; break;
             case 'CONCILIAÇÃO TERMINAL LÓGICO': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_TERMINAL_LOGICO = true; break;    
+            case 'CONCILIAÇÃO VENDAS DIA': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_VENDAS_DIA = true; break;    
             case 'CONSOLIDAÇÃO': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO = true; break;   
             case 'CADASTRO CÓDIGO AUTORIZAÇÃO': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_CADASTRO_CODIGO_AUTORIZACAO = true; break;
             case 'CADASTRO TERMINAL LÓGICO': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_CADASTRO_TERMINAL_LOGICO = true; break;    
@@ -1209,7 +1243,8 @@ angular.module("AtosCapital", ['ui.router',
             // Card Services
             case 'CONCILIAÇÃO BANCÁRIA': return state == 'conciliacao-bancaria';
             case 'CONCILIAÇÃO DE VENDAS': return state == 'conciliacao-vendas';
-            case 'CONCILIAÇÃO TERMINAL LÓGICO': return state == 'conciliacao-terminal-logico';    
+            case 'CONCILIAÇÃO TERMINAL LÓGICO': return state == 'conciliacao-terminal-logico';
+            case 'CONCILIAÇÃO DE VENDAS DIA': return state == 'conciliacao-vendas-dia';   
             case 'CADASTRO CÓDIGO AUTORIZAÇÃO': return state == 'cadastro-codigo-autorizacao';
             case 'CADASTRO TERMINAL LÓGICO': return state == 'cadastro-terminal-logico';   
                 
@@ -1847,7 +1882,7 @@ angular.module("AtosCapital", ['ui.router',
         var dia = data.getDate(); 
         var valor = $scope.getFiltroDataString(ano, mes, dia);
        
-        if(semdia) valor.substr(0, 6);
+        if(semdia) return valor.substr(0, 6);
         return valor;
     };     
                             
