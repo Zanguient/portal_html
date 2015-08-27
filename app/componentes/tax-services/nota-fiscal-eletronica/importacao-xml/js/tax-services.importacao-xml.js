@@ -32,6 +32,7 @@ angular.module("tax-services-importacao-xml", [])
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyRelatorioPos = 1; // posição da div que vai receber o loading progress                             
     // flags
+    $scope.tab = 1;
     $scope.exibeTela = false;   
     $scope.abrirCalendarioDataMin = false;
     $scope.abrirCalendarioDataMax = false;                                                            
@@ -283,6 +284,20 @@ angular.module("tax-services-importacao-xml", [])
         console.log("DOWNLOAD XML " + emitente.nmEmitente.toUpperCase());
         console.log(nota);
     }
-                                                
+    
+    
+    //TAB
+    /**
+      * Retorna true se a tab informada corresponde a tab em exibição
+      */
+    $scope.tabIs = function (tab){
+        return $scope.tab === tab;
+    }
+    /**
+      * Altera a tab em exibição
+      */
+    $scope.setTab = function (tab){
+        if (tab >= 1 && tab <= 8) $scope.tab = tab;        
+    }
 
 }])

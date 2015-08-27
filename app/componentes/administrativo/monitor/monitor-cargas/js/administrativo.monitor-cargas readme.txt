@@ -68,11 +68,15 @@ Não é necessário nenhum outro módulo externo.
 											[{
 												id = int,
 												dtaFiltroTransacoes = datetime,
-												statusExecution = string, // 0 = Em execução; 1 = Executado com Sucesso; 2 = Erro na Execução; 3 = Re-Executar; 7 = Elegivel
+												statusExecution = string, // 0 = Em execução; 1 = Executado com Sucesso; 2 = Erro na Execução; 3 = Re-Executar; 4 = Erro de Senha; 7 = Elegivel
 												dtaExecucaoFim = datetime ou null,
 												dtaExecucaoProxima = datetime ou null,
 											}]
 								ultimaDataExecucaoFim : datetime ou null,
+								grupoempresa : {
+											id_grupo : int,
+											ds_nome : string
+								 },
 								empresa : {
                                             nu_cnpj = string,
                                             ds_fantasia = string,
@@ -86,12 +90,12 @@ Não é necessário nenhum outro módulo externo.
 							  }]
     - "notifyMonitorMudancas" : Foi recebido pelo socket uma lista com mudanças ocorridas na base
 								{
-								    NotificationInfo : string, // 
-									objetos = [{ id : int, // idLoginOperadora
+								    NotificationInfo : string, // INSERT, DELETE, UPDATE
+									objetos : [{ id : int, // idLoginOperadora
 												 status : string, // status da senha
 												 logExecution : 
 															[{
-																id = int,
+																id : int,
 																dtaFiltroTransacoes : datetime,
 																statusExecution : string, // 0 = Em execução; 1 = Executado com Sucesso; 2 = Erro na Execução; 3 = Re-Executar; 7 = Elegivel
 																dtaExecucaoFim : datetime ou null,

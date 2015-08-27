@@ -119,14 +119,19 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
           */
         monitor.obtemLista = function (filtro) {
             if(filtro && filtro !== null){
+                // Data
                 if(filtro.data && filtro.data.length === 6) filtroMonitorCargas.data = filtro.data;
                 else filtroMonitorCargas.data = getAnoMesCorrente();
+                // Grupo
                 if(typeof filtro.idGrupo === 'number') filtroMonitorCargas.idGrupo = filtro.idGrupo;
                 else filtroMonitorCargas.idGrupo = 0;
+                // Filial
                 if(typeof filtro.nuCnpj === 'string') filtroMonitorCargas.nuCnpj = filtro.nuCnpj;
                 else filtroMonitorCargas.nuCnpj = '';
-                if(typeof filtro.status === 'number') filtroMonitorCargas.status = filtro.status;
-                else filtroMonitorCargas.status = 0;
+                // Status
+                if(typeof filtro.status === 'string') filtroMonitorCargas.status = filtro.status;
+                else filtroMonitorCargas.status = '';
+                // Adquirente
                 if(typeof filtro.cdAdquirente === 'number') filtroMonitorCargas.cdAdquirente = filtro.cdAdquirente;
                 else filtroMonitorCargas.cdAdquirente = 0;
             }
@@ -151,9 +156,10 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
                                             '$webapi',
                                             '$apis',
                                             '$filter', 
+                                            '$timeout',      
                                             'monitorService',      
                                             function($scope,$rootScope,$state,$http,/*$campos,*/
-                                                     $webapi,$apis,$filter,monitorService){ 
+                                                     $webapi,$apis,$filter,$timeout,monitorService){ 
    
     $scope.monitor = monitorService;                                         
     $scope.monitorCargas = [];   
@@ -163,10 +169,13 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyMonitorPos = 1; // posição da div que vai receber o loading progress
     $scope.itens_pagina = [50, 100, 150, 200];
-    $scope.statuscarga = [{id: 1, nome: 'NÃO CARREGADO'},
-                          {id: 2, nome: 'CARREGADO COM SUCESSO'},
-                          {id: 3, nome: 'CARREGADO COM ERRO'},
-                          {id: 4, nome: 'ERRO DE SENHA'}];
+    $scope.statuscarga = [{id: '2', nome: 'CARREGADO COM ERRO'},
+                          {id: '1', nome: 'CARREGADO COM SUCESSO'},
+                          {id: '7', nome : 'ELEGÍVEL'},
+                          {id: '0', nome: 'EM EXECUÇÃO'},
+                          {id: '4', nome: 'ERRO DE SENHA'},
+                          /*{id: '-1', nome: 'NÃO CARREGADO'},*/
+                          {id: '3', nome: 'RE-EXECUÇÃO'}];
     $scope.filtro = { data : new Date(), status : null,
                       filial : null, adquirente : null,
                       itens_pagina : $scope.itens_pagina[0], pagina : 1,
@@ -203,15 +212,17 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
                     $scope.adquirentes = [];
                     $scope.filtro.filial = $scope.filtro.adquirente = null;
                 }
-                obtendoLista = true;
-                $scope.showProgress(divPortletBodyFiltrosPos, 10000);
-                $scope.showProgress(divPortletBodyMonitorPos);
-                $scope.monitor.obtemLista(obtemFiltroBusca());
+                if($scope.monitor.isConnected()){
+                    obtendoLista = true;
+                    $scope.showProgress(divPortletBodyFiltrosPos, 10000);
+                    $scope.showProgress(divPortletBodyMonitorPos);
+                    $scope.monitor.obtemLista(obtemFiltroBusca());
+                }
             }
         }); 
         $rootScope.$on('notifyMonitorMudancas', function(event, mudancas){
-            console.log("RECEBEU MUDANÇAS");
-            console.log(mudancas);
+            //console.log("RECEBEU MUDANÇAS");
+            //console.log(mudancas);
             mudancasNaListaMonitorCargas(mudancas);
             //$rootScope.$apply();
         });
@@ -267,13 +278,16 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
     
     var obtemFiltroBusca = function(){
         var filtro = {data : $scope.getFiltroData($scope.filtro.data, true),
-                      status : 0,
+                      status : '',
                       idGrupo : 0,
                       nuCnpj: '',
                       cdAdquirente : 0 };
+        
+        //console.log(filtro);
+        
         // Status
         if($scope.filtro.status && $scope.filtro.status !== null) 
-            filtro.status = $scope.filtor.status.id; 
+            filtro.status = $scope.filtro.status.id; 
         // Grupo Empresa
         if($scope.usuariologado.grupoempresa && $scope.usuariologado.grupoempresa !== null)
             filtro.idGrupo = $scope.usuariologado.grupoempresa.id_grupo;
@@ -409,6 +423,10 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
                                                 
                                                 
     // MONITOR DE CARGAS
+    $scope.buscaListaMonitor = function(){
+        obtemListaMonitorCargas();        
+    }
+                                                
     var obtemListaMonitorCargas = function(){
         if($scope.monitor && $scope.monitor !== null){
             $scope.showProgress(divPortletBodyFiltrosPos, 10000);
@@ -425,6 +443,8 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
         /*var oldlist = [];
         angular.copy(lista, oldlist);
         console.log("LISTA");console.log(oldlist);*/
+        
+        if(!lista || lista === null) return;
         
         var totalDias = $scope.totalDiasMesFiltrado();
         
@@ -476,23 +496,72 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
         }
 
         // Verifica se a página atual é maior que o total de páginas
-        if($scope.filtro.pagina > $scope.filtro.total_paginas)
-            setPagina(1); // volta para a primeira página e refaz a busca
+        //if($scope.filtro.pagina > $scope.filtro.total_paginas)
+        //    setPagina(1); // volta para a primeira página e refaz a busca
         
-        $rootScope.$apply();
+        // Atualiza página
+        //$rootScope.$apply();
+        if(!$scope.$$phase) $scope.$apply();
     }
     
     var mudancasNaListaMonitorCargas = function(mudancas){
-        var k = 0;
-        for(k = 0; k < $scope.moduloSelecionado.data.methods.length; k++){
-            if(newMethod.ds_method < $scope.moduloSelecionado.data.methods[k].ds_method){
-                $scope.moduloSelecionado.data.methods.splice(k, 0, newMethod);
-                break;    
+        
+        if(!mudancas || mudancas === null) return;
+        
+        var linhasPromovidas = 0;
+        
+        // Atualiza
+        for(var k = 0; k < mudancas.objetos.length; k++){
+            var obj = mudancas.objetos[k];
+            var loginoperadora = $filter('filter')($scope.monitorCargas, function(l){return l.id === obj.id})[0];
+            var promoveLoginOperadora = false;
+            if(loginoperadora){
+                for(var j = 0; j < obj.logExecution.length; j++){
+                    var logExecution = obj.logExecution[j];
+                    var dt = $scope.getDataString(logExecution.dtaFiltroTransacoes);
+                    var dia = parseInt(dt.substr(0, dt.indexOf('/')));
+                    
+                    if(mudancas.NotificationInfo === 'DELETE'){
+                        // "Deleta"
+                        loginoperadora.logExecution[dia - 1] = {}; 
+                        promoveLoginOperadora = true;
+                    }else if(mudancas.NotificationInfo === 'INSERT' || mudancas.NotificationInfo === 'UPDATE'){
+                        // Novo registro ou Alteração
+                        //loginoperadora.status = obj.status;
+                        loginoperadora.logExecution[dia - 1] = logExecution; 
+                        promoveLoginOperadora = true;    
+                    }
+                }
+                // Promover ?
+                if(promoveLoginOperadora){
+                    linhasPromovidas++;
+                    // Remove da posição corrente
+                    var index =  $scope.monitorCargas.indexOf(loginoperadora);
+                    $scope.monitorCargas.splice(index, 1);
+                    // Adiciona no topo
+                    $scope.monitorCargas.splice(0, 0, loginoperadora);
+                    // Atualiza página com efeito
+                    /*if(linhasPromovidas % 2 !== 0){
+                        if(!linha.hasClass('linhaVermelha')) linha.addClass('linhaVermelha');
+                    }else if(!linha.hasClass('linhaAmarela')) linha.addClass('linhaAmarela');*/
+                    //$('#tabelaMonitorCargas > tr').eq(0).css("background-color", linhasPromovidas % 2 === 0 ? "#ffff00 !important" : "#ff0000 !important");   
+                    if(!$scope.$$phase) $scope.$apply();
+                }
             }
         }
-        if(k == $scope.moduloSelecionado.data.methods.length)
-            // Não adicionou => Adiciona ao final 
-            $scope.moduloSelecionado.data.methods.splice(k, 0, newMethod);    
+        // Efeito nas linhas afetadas
+        for(var k = 0; k < linhasPromovidas; k++){
+            $('#tabelaMonitorCargas > tr').eq(k).css("background-color", "#ccff00 !important");   
+        }
+        if(!$scope.$$phase) $scope.$apply();
+        
+        // Espera 5 segundos para retirar as cores
+        $timeout(function(){
+                    for(var k = 0; k < $scope.monitorCargas.length; k++){
+                        $('#tabelaMonitorCargas > tr').eq(k).css("background-color", k % 2 === 0 ? "#ffffff !important" : "#f9f9f9 !important");
+                    }
+                    if(!$scope.$$phase) $scope.$apply();
+                 }, 5000);
     }
                                                 
                                                 

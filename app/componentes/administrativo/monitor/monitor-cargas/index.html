@@ -55,16 +55,16 @@
                             <table class="table table-striped table-bordered table-hover dataTable no-footer conteudoTabelas" id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
                                 <thead>
                                     <tr role="row" class="heading">
-                                        <th tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="11%">
+                                        <th tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="15%">
                                              Mês/Ano
                                         </th>
-                                        <th tabindex="1" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="10%">
+                                        <th tabindex="1" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="30%">
                                              Status 
                                         </th>
-                                        <th tabindex="2" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="22%">
+                                        <th tabindex="2" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="30%">
                                              Filial
                                         </th>
-                                        <th tabindex="3" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="13%">
+                                        <th tabindex="3" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="15%">
                                              Adquirente
                                         </th>
                                         <th tabindex="4" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="10%">
@@ -104,7 +104,7 @@
                                         </td>
                                         <!--STATUS-->
                                         <td rowspan="1" colspan="1">
-                                            <select style="width: 100%;" class="form-control input-sm input-inline"
+                                            <select style="width: 90%;" class="form-control input-sm input-inline"
                                                     ng-model="filtro.status"
                                                     ng-options="status as status.nome for status in statuscarga">
                                                 <option value="">TODOS</option>
@@ -144,7 +144,7 @@
                                         <td rowspan="1" colspan="1">
                                             <div class="margin-bottom-5">
                                                 <button class="btn btn-sm red filter-submit margin-bottom"
-                                                        ng-click="busca()">
+                                                        ng-click="buscaListaMonitor()">
                                                     <i class="fa fa-search"></i>
                                                     Buscar
                                                 </button>
@@ -221,48 +221,6 @@
                 </div>
                 <!-- CORPO -->
                 <div class="portlet-body" ng-show="exibeTela">
-                    <div class="row paddingDivs">
-                        <!--EXIBIÇÃO-->
-                        <div class="col-xs-4 col-sm-4">
-                            <div class="dataTables_length">
-                                <label>
-                                    <span class="seperator"></span>Exibindo 
-                                    <select name="datatable_products_length" aria-controls="datatable_products" 
-                                            class="form-control input-xsmall input-sm input-inline"
-                                            ng-model="filtro.itens_pagina"
-                                            ng-change="alterouItensPagina()"
-                                            ng-options="item for item in itens_pagina">                                            
-                                    </select> registros de 
-                                </label>
-                            </div>
-                        </div> 
-                        <!--PAGINAÇÃO-TOPO-->
-                        <div class="col-xs-4 col-sm-4 col-md-3">
-                            <div class="pagination-panel centralizarPaginacao"> Página 
-                                <a href="javascript:;" ng-click="retrocedePagina()"
-                                   class="btn btn-sm default prev" 
-                                   ng-class="{disabled: filtro.pagina <= 1}" 
-                                   title="Página anterior">
-                                        <i class="fa fa-angle-left"></i>
-                                </a>
-                                <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
-                                       maxlength="4" style="text-align:center; margin: 0 5px;"
-                                       ng-model="paginaInformada" valid-integer-number
-                                       ng-keypress="($event.which === 13) ? alteraPagina() : 0"
-                                       ng-blur="atualizaPaginaDigitada()">
-                                    <a href="javascript:;" ng-click="avancaPagina()"
-                                       class="btn btn-sm default next"
-                                       ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
-                                       title="Próxima página">
-                                        <i class="fa fa-angle-right"></i>
-                                    </a>
-                                    de <span class="pagination-panel-total"></span>
-                            </div>
-                        </div>                            
-                        <!-- FIM PAGINAÇÃO -->                                  
-                    </div>
-
-                    <!-- CONTEÚDO DA TABELA -->
                     <div class="table-scrollable">
                         <table class="table table-striped table-hover table-bordered dataTable no-footer" role="grid">
                             <thead class="fonteTabelaMonitoramentoCargas">
@@ -278,7 +236,7 @@
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody class="fonteTabelaMonitoramentoCargas">
+                            <tbody class="fonteTabelaMonitoramentoCargas" id="tabelaMonitorCargas">
                                 <tr role="row" class="odd conteudoTabelas"
                                     ng-repeat="loginoperadora in monitorCargas">
                                     <!-- GRUPO EMPRESA -->
@@ -293,67 +251,20 @@
                                         <!--i class="fa fa-key" style="color: #daa520"></i-->
                                         <i ng-show="logExecution.statusExecution"
                                            class="fa"
-                                           ng-class="{'fa-spin fa-spinner' : logExecution.statusExecution === '0', 'fa-check-square' : logExecution.statusExecution === '1', 'fa-key' : logExecution.statusExecution === '2' && !loginoperadora.status, 'fa-times-circle' : logExecution.statusExecution === '2' && loginoperadora.status, 'fa-rotate-right' : logExecution.statusExecution === '3', 'fa-upload' : logExecution.statusExecution === '7'}"
-                                           title="{{logExecution.statusExecution === '0' ? 'Em execução' : logExecution.statusExecution === '1' ? 'Executado com sucesso em ' + getDataTimeString(logExecution.dtaExecucaoFim) : logExecution.statusExecution === '2' && !loginoperadora.status ? 'Execução com erro de senha em ' + getDataTimeString(logExecution.dtaExecucaoFim) : logExecution.statusExecution === '2' && loginoperadora.status ? 'Execução com erro em ' + getDataTimeString(logExecution.dtaExecucaoFim) : logExecution.statusExecution === '3' ? 'Execução será reprocessada' : logExecution.statusExecution === '7' ? 'Pronto para execução' : ''}}">
+                                           ng-class="{'fa-spin fa-spinner' : logExecution.statusExecution === '0', 'fa-check-square' : logExecution.statusExecution === '1', 'fa-times-circle' : logExecution.statusExecution === '2', 'fa-rotate-right' : logExecution.statusExecution === '3', 'fa-key' : logExecution.statusExecution === '4', 'fa-upload' : logExecution.statusExecution === '7'}"
+                                           title="{{logExecution.statusExecution === '0' ? 'Em execução' : logExecution.statusExecution === '1' ? 'Executado com sucesso em ' + getDataTimeString(logExecution.dtaExecucaoFim) :  logExecution.statusExecution === '2' ? 'Execução com erro em ' + getDataTimeString(logExecution.dtaExecucaoFim) : logExecution.statusExecution === '3' ? 'Execução será reprocessada' : logExecution.statusExecution === '4' ? 'Execução com erro de senha em ' + getDataTimeString(logExecution.dtaExecucaoFim) : logExecution.statusExecution === '7' ? 'Pronto para execução' : ''}}">
                                         </i>
                                     </td>
                             <!-- 'fa-spin fa-spinner': status === '0' // em execução
                                  'fa-check-square' : statusExecution === '1' // executado com sucesso
-                                 'fa-times-circle' : statusExecution === '2' & statusSenha // executado com erro
-                                 'fa-key' : statusExecution === '2' && !statusSenha // executado com erro de senha
+                                 'fa-times-circle' : statusExecution === '2' // executado com erro
                                  'fa-rotate-right' : statusExecution === '3' // re-executar
+                                 'fa-key' : statusExecution === '4' // executado com erro de senha
                                  'fa-upload' : statusExecution === '7' // elegível -->
                                 </tr>
                             </tbody>
                         </table>
                     </div> 
-                     <!-- FIM CORPO -->
-                    <!-- PAGINAÇÃO RODAPÉ -->
-                    <div class="row" style="margin: 10px 0 20px 0">
-                        <div class="col-xs-4 col-sm-4 col-md-4">
-                            <div class="dataTables_info" role="status" aria-live="polite">
-                                <strong>Exibindo os registros 
-                                    <span ng-show="tabIs(0)">{{filtro.terminal.faixa_registros}}</span>
-                                    <span ng-show="tabIs(1)">{{filtro.sintetico.faixa_registros}}</span>
-                                    <span ng-show="tabIs(2)">{{filtro.analitico.faixa_registros}}</span>
-                                </strong>
-                            </div> 
-                        </div>
-                        <!--RODAPÉ-->
-                        <div class="col-xs-4 col-sm-4 col-md-3">
-                            <div class="pagination-panel centralizarPaginacao"> Página 
-                                <a href="javascript:;" ng-click="retrocedePagina()"
-                                   class="btn btn-sm default prev" 
-                                   ng-class="{disabled: (tabIs(0) && filtro.terminal.pagina <= 1) || (tabIs(1) && filtro.sintetico.pagina  <= 1) || (tabIs(2) && filtro.analitico.pagina <= 1)}" 
-                                   title="Página anterior">
-                                        <i class="fa fa-angle-left"></i>
-                                </a>
-                                <input type="text" 
-                                       class="pagination-panel-input form-control input-mini input-inline input-sm" 
-                                       maxlength="4" style="text-align:center; margin: 0 5px;"
-                                       ng-model="paginaInformada" valid-integer-number
-                                       ng-keypress="($event.which === 13) ? alteraPagina() : 0"
-                                       ng-blur="atualizaPaginaDigitada()">
-                                <a href="javascript:;" ng-click="avancaPagina()"
-                                   class="btn btn-sm default next"
-                                   ng-class="{disabled: (tabIs(0) && filtro.terminal.pagina >= filtro.terminal.total_paginas) || (tabIs(1) && filtro.sintetico.pagina >= filtro.sintetico.total_paginas) || (tabIs(2) && filtro.analitico.pagina >= filtro.analitico.total_paginas)}"
-                                   title="Próxima página">
-                                    <i class="fa fa-angle-right"></i>
-                                </a>
-                                 de 
-                                <span class="pagination-panel-total" ng-show="tabIs(0)">
-                                    {{filtro.terminal.total_paginas}}
-                                </span>
-                                <span class="pagination-panel-total" ng-show="tabIs(1)">
-                                    {{filtro.sintetico.total_paginas}}
-                                </span>
-                                <span class="pagination-panel-total" ng-show="tabIs(2)">
-                                    {{filtro.analitico.total_paginas}}
-                                </span>    
-                            </div>
-                        </div>
-                    </div>
-                    <!-- FIM RODAPÉ -->
                 </div>
             </div>
             <!--FIM TABLE PORTLET-->

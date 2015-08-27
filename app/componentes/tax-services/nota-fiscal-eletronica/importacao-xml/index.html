@@ -6,20 +6,19 @@
  *
  */
 -->
-<div class="container" ng-controller="card-services-conciliacao-vendas-diaCtrl" 
-     ng-init="cardServices_conciliacaoVendasDiaInit()">    
+<div class="container" ng-controller="tax-services-importacao-xmlCtrl" ng-init="taxServices_importacaoXMLInit()">   
+    
     <!-- BEGIN PAGE BREADCRUMB -->
     <ul class="page-breadcrumb breadcrumb">
         <li>
             <a href="javascript:;" ng-click="goHome()">Início</a><i class="fa fa-circle"></i>
         </li>
         <li class="active">
-             Card Services<i class="fa fa-caret-right"></i>
-             Conciliação<i class="fa fa-caret-right"></i>
-             Conciliação Vendas Dia
+             Tax Services<i class="fa fa-caret-right"></i>
+             Nota Fiscal Eletrônica<i class="fa fa-caret-right"></i>
+             Importação XML
         </li>
     </ul>
-
     <!-- END PAGE BREADCRUMB -->
     
     <!-- FILTROS -->
@@ -75,23 +74,19 @@
                                     <tr role="row" class="heading">
                                         <th width="20%" tabindex="0"  
                                             rowspan="1" colspan="1">
-                                             Período
+                                             Data de Emissão
                                         </th>
                                         <th width="25%" tabindex="1" 
                                             rowspan="1" colspan="1">
-                                             Filial 
+                                             Destinatário 
                                         </th>
-                                        <th width="20%" tabindex="2" 
+                                        <th width="25%" tabindex="2" 
                                             rowspan="1" colspan="1">
-                                             Adquirente
-                                        </th>
-                                        <th width="20%" tabindex="3"  
-                                            rowspan="1" colspan="1">
-                                             Bandeira
+                                             Emitente
                                         </th>
                                         <th width="20%" tabindex="3"  
                                             rowspan="1" colspan="1">
-                                             Tipo
+                                             Status Manifesto
                                         </th>
                                         <th width="10%" tabindex="4" 
                                             rowspan="1" colspan="1">
@@ -100,10 +95,10 @@
                                     </tr>
                                     <!-- CONTEUDO DO FILTRO -->
                                     <tr role="row" class="filter">
-                                        <!-- PERIODO -->
+                                        <!-- DATA -->
                                         <td rowspan="1" colspan="1">                                    
                                             <div class="input-group date date-picker margin-bottom-5"
-                                                 data-date-format="mm/yyyy">
+                                                 data-date-format="dd/mm/yyyy">
                                                 <input type="text" 
                                                        class="form-control form-filter input-sm" 
                                                        readonly="" 
@@ -113,7 +108,7 @@
                                                        ng-model="filtro.datamin" 
                                                        ng-change="alterouDataMin()" 
                                                        datepicker-append-to-body="true" 
-                                                       datepicker-popup="MMMM yyyy" 
+                                                       datepicker-popup="dd MMMM yyyy" 
                                                        is-open="abrirCalendarioDataMin" 
                                                        ng-required="true" 
                                                        show-button-bar="false" 
@@ -126,38 +121,62 @@
                                                         <i class="fa fa-calendar"></i>
                                                     </button>
                                                 </span>
-                                            </div>                                       
+                                            </div>
+                                            <div class="input-group"> <!--  date date-picker margin-bottom-5" -->
+                                                <input type="text" 
+                                                       class="form-control form-filter input-sm" 
+                                                       readonly="" 
+                                                       style="cursor: pointer" 
+                                                       ng-click="exibeCalendarioDataMax($event)" 
+                                                       placeholder="Fim" 
+                                                       ng-model="filtro.datamax" 
+                                                       ng-change="alterouDataMax()" 
+                                                       datepicker-popup="dd MMMM yyyy" 
+                                                       is-open="abrirCalendarioDataMax" 
+                                                       datepicker-append-to-body="true"
+                                                       ng-required="false" 
+                                                       current-text="Hoje" 
+                                                       clear-text="Limpar" 
+                                                       close-text="Fechar" 
+                                                       show-button-bar="true" 
+                                                       show-weeks="false">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-sm default" 
+                                                            type="button" 
+                                                            ng-click="exibeCalendarioDataMax($event)">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </button>
+                                                </span>
+                                            </div>                                            
                                         </td>
-                                        <!-- FILIAL -->
+                                        <!-- DESTINATÁRIO -->
                                         <td rowspan="1" colspan="1" style="text-align: center">
                                             <select class="form-control form-filter input-sm comboBoxFiltros"
+                                                    ng-disabled="filiais.length == 0"
                                                     ng-model="filtro.destinatario"
                                                     ng-change="alterouDestinatario()"
                                                     ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
                                                 <option value="">TODAS</option>
                                             </select>
+                                            <i class="fa fa-question-circle"
+                                               ng-show="!usuariologado.grupoempresa"
+                                               popover-placement="bottom"
+                                               popover="É necessário selecionar uma empresa"
+                                               popover-trigger="mouseenter"></i>
                                         </td>
-                                        <!-- ADQUIRENTE -->
+                                        <!-- EMITENTE -->
                                          <td rowspan="1" colspan="1" style="text-align: center">
-                                            <select class="form-control form-filter input-sm comboBoxFiltros"
-                                                    ng-model="filtro.destinatario"
-                                                    ng-change="alterouDestinatario()"
-                                                    ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
-                                                <option value="">TODAS</option>
-                                            </select>
+                                            <input type="text" class="form-control"
+                                                   placeholder="Emitente" 
+                                                   ng-model="filtro.emitente"
+                                                   onfocus="this.select();" 
+                                                   onmouseup="return false;" />
                                         </td>
-                                        <!-- BANDEIRA -->
+                                        <!-- STATUS -->
                                         <td rowspan="1" colspan="1" style="text-align: center">
                                             <select class="form-control form-filter input-sm comboBoxFiltros"
                                                     ng-model="filtro.statusmanifesto"
-                                                    ng-options="status as (status.nome | uppercase) for status in statusmanifesto">
-                                                <option value="">TODOS</option>
-                                            </select>
-                                        </td>
-                                         <!-- TIPO -->
-                                        <td rowspan="1" colspan="1" style="text-align: center">
-                                            <select class="form-control form-filter input-sm comboBoxFiltros"
-                                                    ng-model="filtro.statusmanifesto"
+                                                    ng-disabled="statusmanifesto.length === 0"
                                                     ng-options="status as (status.nome | uppercase) for status in statusmanifesto">
                                                 <option value="">TODOS</option>
                                             </select>
@@ -199,16 +218,469 @@
             <!-- BEGIN TABLE PORTLET-->
             <div class="portlet light">
                 
-                <!-- MODAL DETALHES --> <!--
+                <!-- MODAL DETALHES -->
                 <div class="modal fade bs-modal-sm modal-input" 
                     id="modalDetalhes" aria-hidden="true">
-                   <div class="modal-dialog modal-sm" style="width:400px">
+                   <div class="modal-dialog modal-sm" style="width:1200px">
                        <div class="modal-content">
                            <div class="modal-header">
                                <h4 class="modal-title modal-cabecalho">Detalhes da Nota</h4>
                            </div>
-                           <div class="modal-body modal-corpo" style="text-align: left"> -->
-                               <!-- LAYOUT AQUI --> <!--
+                           <div class="modal-body modal-corpo" style="text-align: left">
+                               <!-- LAYOUT AQUI -->
+                               
+                               <!-- TABS -->
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <tabset vertical="" type="pills">
+                                            <tab heading="NF-e" select="setTab(1)" active="true"></tab>
+                                            <tab heading="Emitente" select="setTab(2)"></tab>
+                                            <tab heading="Destinatário" select="setTab(3)"></tab>
+                                            <tab heading="Produtos e Serviços" select="setTab(4)"></tab>
+                                            <tab heading="Totais" select="setTab(5)"></tab>
+                                            <tab heading="Transporte" select="setTab(6)"></tab>
+                                            <tab heading="Cobrança" select="setTab(7)"></tab>
+                                            <tab heading="Informações Adicionais" select="setTab(8)"></tab>
+                                        </tabset>
+                                    </div>
+                                    <!-- CONTEÚDO -->
+                                    <div class="col-sm-12">
+                                        
+                                        <!-- NF-e -->
+                                        <div class="panel" ng-show="tabIs(1)">
+                                            <!--CONTEÚDO-->
+                                            <div class="row conteudos-detalhe-nota">
+                                                <div class="col-md-12">
+                                                    <!--TITULO-->
+                                                    <div class="row headDetalhesNota">
+                                                        <div class="col-md-12">
+                                                            Dados da NF-e
+                                                        </div>
+                                                    </div>
+                                                    <!--BODY CAMPOS-->
+                                                    <div class="row campos-detalhe-nota">
+                                                        <div class="col-md-1">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Modelo
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                55 
+                                                            </div>                                              
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Série
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                3 
+                                                            </div> 
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Número
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                1123543
+                                                            </div> 
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Data de Emissão
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                27/08/2015 23:36:00-03:00
+                                                            </div> 
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Data/Hora de Saída ou da Entrada
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                27/08/2015 22:40:00-04:00  
+                                                            </div> 
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Valor Total da Nota Fiscal
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                234,54 
+                                                            </div> 
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!--EMITENTE-->
+                                                    <div class="row titulos-campos-detalhes-nota">
+                                                        <div class="col-md-6">
+                                                            <label>Emitente</label>                                              
+                                                        </div>
+                                                    </div>
+                                                    <div class="row campos-detalhe-nota">
+                                                        <div class="col-md-3">
+                                                           <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                CNPJ
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                12.321.111/0004-43
+                                                            </div> 
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                           <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Nome/Razão Social
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                LIMINAR CMO. IND. DE ALIM. LTDA - FAB-CAI
+                                                            </div> 
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                           <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Inscrição Estadual
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                2332654443
+                                                            </div> 
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                UF
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                BA
+                                                            </div> 
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!--DESTINATÁRIO-->
+                                                    <!--TITULO-->
+                                                    <div class="row titulos-campos-detalhes-nota">
+                                                        <div class="col-md-6">
+                                                            <label>Destinatário</label>                                           
+                                                        </div>
+                                                    </div>
+                                                    <!--CORPO-->
+                                                    <div class="row campos-detalhe-nota">
+                                                        <div class="col-md-12">
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        CNPJ
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        12.321.111/0004-43
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Nome/Razão Social
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        PETROX COMERCIA LTDA
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Inscrição Estadual
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        2332654443
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        UF
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        SE
+                                                                    </div> 
+                                                                </div>
+                                                            </div> 
+                                                            <div class="row espacamento-linhas-dados">
+                                                                <div class="col-md-3">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Destino da operação
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        2-Operação Interestadual
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Consumidor Final
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        0-Normal
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Presença~do Comprador
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        0-Não se aplica
+                                                                    </div> 
+                                                                </div>
+                                                            </div>    
+                                                        </div>                                                      
+                                                    </div>
+                                                    
+                                                    
+                                                    <!--EMISSÃO-->
+                                                    <div class="row titulos-campos-detalhes-nota">
+                                                        <div class="col-md-6">
+                                                            <label>Emissão</label>                                           
+                                                        </div>
+                                                    </div>
+                                                    <div class="row campos-detalhe-nota">
+                                                        <div class="col-md-12">
+                                                            <div class="row">
+                                                                <div class="col-md-4">
+                                                                   <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Processo
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        0-Com alplicativo do Contribuinte
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Versão do Processo
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        v12323222
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota"> 
+                                                                        Tipo de Emissão
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        1-Normal
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Finalidade
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        1-Normal
+                                                                    </div> 
+                                                                </div>
+                                                            </div>
+                                                            <div class="row espacamento-linhas-dados">
+                                                                <div class="col-md-4">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Natureza da Operação
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        2341-Venda de Prod c/ Subst Tributria
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Tipo de Operação 
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        1-Saída
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Forma de Pagamento
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        2-Outros
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        <i>Digest</i> Value da NF-e
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        WX+/4kXMi5W8CrT9PaWmeATB9Ow=
+                                                                    </div> 
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!--Situação Atual:-->  
+                                                    <div class="row titulos-campos-detalhes-nota">
+                                                        <div class="col-md-6">
+                                                            <label>
+                                                                Situação Atual:  AUTORIZADA (Ambiente de autorização: produção)
+                                                            </label>                                           
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="row campos-detalhe-nota">
+                                                        <div class="col-md-4">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Eventos da NF-e
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                               Autorização de Uso (Cód.:2211113)
+                                                            </div> 
+                                                            <div class="col-md-12 espacamento-linhas-dados informacoes-detalhe-nota"> 
+                                                               Ciência da Operação pelo Destinatário (Cód.: 210210)
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Protocolo
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                129150069560681   
+                                                            </div> 
+                                                            <div class="col-md-12 espacamento-linhas-dados informacoes-detalhe-nota"> 
+                                                               891150584090327
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Data / Hora
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                26/07/2015 às 23:36:39-03:00
+                                                            </div>
+                                                            <div class="col-md-12 espacamento-linhas-dados informacoes-detalhe-nota"> 
+                                                               Autorização de Uso (Cód.:2211113)
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Data / Hora AN
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                26/07/2015 às 23:46:17
+                                                            </div> 
+                                                            <div class="col-md-12 espacamento-linhas-dados informacoes-detalhe-nota"> 
+                                                               Autorização de Uso (Cód.:2211113)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- EMITENTE -->
+                                        <div class="panel" ng-show="tabIs(2)">
+                                            <!--CONTEÚDO-->
+                                            <div class="row conteudos-detalhe-nota">
+                                                <div class="col-md-12">
+                                                    <!--TITULO-->
+                                                    <div class="row headDetalhesNota">
+                                                        <div class="col-md-12">
+                                                            Dados do Emitente
+                                                        </div>
+                                                    </div>
+                                                    <!--BODY CAMPOS-->
+                                                    <div class="row campos-detalhe-nota">
+                                                        <div class="col-md-6">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Modelo
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        55 
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Modelo
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        55 
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Modelo
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        55 
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Modelo
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        55 
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Modelo
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        55 
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Modelo
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        55 
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="row">
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                        
+                                                    
+                                                </div>
+                                            </div>    
+                                        </div>
+                                        
+                                        <!-- DESTINATÁRIO -->
+                                        <div class="panel" ng-show="tabIs(3)">
+                                        3    
+                                        </div>
+                                        
+                                        <!-- PRODUTOS E SERVIÇOS -->
+                                        <div class="panel" ng-show="tabIs(4)">
+                                        4    
+                                        </div>
+                                        
+                                        <!-- TOTAIS -->
+                                        <div class="panel" ng-show="tabIs(5)">
+                                        5   
+                                        </div>
+                                        
+                                        <!-- TRANSPORTE -->
+                                        <div class="panel" ng-show="tabIs(6)">
+                                        6   
+                                        </div>
+                                        
+                                        <!-- COBRANÇA -->
+                                        <div class="panel" ng-show="tabIs(7)">
+                                        7    
+                                        </div>
+                                        
+                                        <!-- INFORMAÇÕES ADICIONAIS -->
+                                        <div class="panel" ng-show="tabIs(8)">
+                                        8   
+                                        </div>
+                                        
+                                   </div>
+                                </div>
                            </div>
                            <div class="modal-footer">
                                <div class="col-sm-6 col-sm-offset-2">
@@ -219,13 +691,13 @@
                            </div>
                        </div>
                    </div>
-               </div> -->
+               </div>
                 <!-- FIM - MODAL DETALHES -->
                 
                 <!--TITULO-->
                 <div class="portlet-title">
                     <div class="caption">								
-                        <span class="caption-subject font-green-sharp bold uppercase">Consulta Vendas Dia</span>
+                        <span class="caption-subject font-green-sharp bold uppercase">Consulta NF-e</span>
                     </div>
                     <div class="actions">
                         <a class="btn btn-circle btn-icon-only btn-default fullscreen" 
@@ -306,32 +778,29 @@
                         <table class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
                             <thead>
                                 <tr>
-                                    <th colspan="6" class="cabecalhoTheadTabelas">
-                                        VALOR BRUTO
+                                    <th colspan="5" class="cabecalhoTheadTabelas">
+                                        DADOS EMITENTE
                                     </th>
                                 </tr>
                                 <tr>
                                     <th width="5%">
                                     </th>
-                                    <th width="15%" style="text-align: center;">
-                                        Bandeira
+                                    <th width="20" style="text-align: center;">
+                                        CNPJ
                                     </th>
-                                    <th width="15%" style="text-align: center;">
-                                        CardServices
-                                    </th>
-                                    <th width="15%" style="text-align: center;">
-                                        Controle Cliente
+                                    <th width="30%" style="text-align: center;">
+                                        Razão Social
                                     </th>
                                     <th width="10%" style="text-align: center;">
-                                        Diferença
+                                        UF
                                     </th>
                                     <th width="10%" style="text-align: center;">
-                                        Status
+                                        Total NF-e
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <tr ng-repeat-start="emitente in emitentes">
                                     <td width="5%" style="text-align: center;">
                                         <a href="javascript:;" ng-click="toggle(emitente)">
                                             <i class="fa"
@@ -340,117 +809,139 @@
                                             </i> 
                                         </a>
                                     </td>
-                                    <td width="15%">
-                                        REDE
+                                    <td width="20%">
+                                        {{emitente.nrEmitenteCNPJCPF}}
                                     </td>
-                                    <td width="15%">
-                                        R$ 150,00
-                                    </td>
-                                    <td width="15%">
-                                        R$ 150,00
+                                    <td width="30%">
+                                        {{emitente.nmEmitente | uppercase}}
                                     </td>
                                     <td width="10%">
-                                        R$ 150,00
+                                        {{(emitente.UF | uppercase) || ''}}
                                     </td>
                                     <td width="10%">
-                                        Conciliado
+                                        {{emitente.notas.length || '0'}}
                                     </td>
                                 </tr>
-                                    <tr>
-                                    <td colspan="6">
+                                <tr ng-repeat-end ng-show="isExpanded(emitente)"> 
+                                    <td colspan="5">
                                         <!-- TABELA INTERNA -->
-                                        <div class="tab-content">
-                                        <!--REFERENCIAS DAS ABAS DE NAVEGAÇÃO-->
-                                        <div class="portlet-title tabbable-line">							
-                                            <ul class="nav nav-tabs">                                            
-                                                <li ng-class="{active : tabIs(0)}">
-                                                    <a href="javascript:;" 
-                                                       data-toggle="tab-pane" 
-                                                       ng-click="setTab(0)">
-                                                    Terminal Lógico </a>
-                                                </li>                                          
-                                                <li ng-class="{active : tabIs(1)}">
-                                                    <a href="javascript:;" 
-                                                       data-toggle="tab"
-                                                       ng-click="setTab(1)">
-                                                    Sintético </a>
-                                                </li>
-                                                <li ng-class="{active : tabIs(2)}">
-                                                    <a href="javascript:;" 
-                                                       data-toggle="tab"
-                                                       ng-click="setTab(2)">
-                                                    Analítico </a>
-                                                </li>
-                                            </ul>
-                                        </div>
                                         <table class="table table-striped table-bordered table-hover dataTable no-footer">
                                             <thead> 
                                                 <tr>
-                                                    <th colspan="8" class="cabecalhoTheadTabelas">
-                                                        VALOR BRUTO
+                                                    <th colspan="6" class="cabecalhoTheadTabelas">
+                                                        DADOS NF-e
+                                                    </th>
+                                                    <th colspan="3" class="cabecalhoTheadTabelas">
+                                                        STATUS
+                                                    </th>
+                                                    <th rowspan="1" colspan="1" 
+                                                        class="cabecalhoTheadTabelas">
+                                                        AÇÕES
                                                     </th>
                                                 </tr>
                                                 <tr>
                                                     <!-- DADOS NFE -->
-                                                    <th width="15%">
-                                                        Filial
+                                                    <th width="5%">
+                                                        Emissão
+                                                    </th>
+                                                    <th width="5%" style="text-align: center;">
+                                                        Modelo
+                                                    </th>
+                                                    <th width="7%" style="text-align: center;">
+                                                        Número
+                                                    </th>
+                                                    <th width="5%" style="text-align: center;">
+                                                        Série
                                                     </th>
                                                     <th width="10%" style="text-align: center;">
-                                                        Bandeira
+                                                        Valor NF
                                                     </th>
-                                                    <th width="10%" style="text-align: center;">
-                                                        Venda
+
+                                                    <th width="20%" style="text-align: center;">
+                                                        Chave Acesso
                                                     </th>
+                                                    <!-- STATUS -->
                                                     <th width="10%" style="text-align: center;">
-                                                        Terminal Lógico
+                                                        NF-e
                                                     </th>
-                                                    <th width="10%" style="text-align: center;">
-                                                        CardServices
+                                                    <th width="16%" style="text-align: center;">
+                                                        Manifesto
                                                     </th>
-                                                    <th width="10%" style="text-align: center;">
-                                                        Controle Cliente
-                                                    </th>
-                                                    <th width="10%" style="text-align: center;">
-                                                        Diferença
-                                                    </th>
-                                                    <th width="10%" style="text-align: center;">
-                                                        Status
+                                                    <th width="15%" style="text-align: center;">
+                                                        ERP
                                                     </th>
                                                     <!-- BOTÃO -->
+                                                    <th width="7%"></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                  <!-- DADOS NFE -->
-                                                 <tr>
-                                                    <td>
-                                                        Petrox - Mania
+                                                 <tr ng-repeat="nota in emitente.notas">
+                                                    <td ng-bind="getDataString(nota.dtEmissao)">
                                                     </td>
                                                     <td>
-                                                        REDE
+                                                        {{nota.modelo}}
                                                     </td>
                                                     <td>
-                                                        11/08/2015
+                                                        {{nota.numero}}
                                                     </td>
                                                     <td>
-                                                        Terminal
+                                                        {{nota.serie}}
                                                     </td>
                                                     <td>
-                                                        R$ 1.150,00
+                                                        {{nota.vlNFe | currency:'R$'}}
                                                     </td>
                                                     <td>
-                                                        R$ 1.150,00
+                                                        {{nota.nrChave}}
+                                                    </td>
+                                                    <!-- STATUS -->
+                                                    <td>
+                                                        {{nota.nfe}}
                                                     </td>
                                                     <td>
-                                                        R$ 150,00
+                                                        {{nota.dsSituacaoManifesto | uppercase}}
                                                     </td>
                                                     <td>
-                                                        Conciliado
+                                                        {{nota.dsSituacaoErp | uppercase}}
                                                     </td>
                                                     <!-- BOTÃO -->
+                                                    <td>
+                                                        <div class="btn-group" dropdown dropdown-append-to-body>
+                                                            <a class="btn btn-default btn-circle" 
+                                                               href="javascript:;" dropdown-toggle>
+                                                                <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
+                                                            </a>
+                                                            <ul class="dropdown-menu dropDownAtos">
+                                                                <li>
+                                                                    <a href="javascript:;" 
+                                                                       ng-click="downloadDAMFE(emitente, $index)">
+                                                                        DAMFE
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="javascript:;" 
+                                                                       ng-click="detalhar(emitente, $index)">
+                                                                        Detalhes
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="javascript:;" 
+                                                                       ng-click="imprimir(emitente, $index)">
+                                                                        Imprimir
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="javascript:;" 
+                                                                       ng-click="downloadXML(emitente, $index)">
+                                                                        XML
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table> 
-                                      </div>
                                     </td>
                                 </tr>
                             </tbody>

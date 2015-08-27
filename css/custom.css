@@ -472,6 +472,14 @@ tbody.conteudotabelasCentralizadas > tr > td{
     width: 200px;
 }
 
+.linhaVermelhaTabela{
+    background-color : red !important;
+}
+
+.linhaAmarelaTabela{
+    background-color : yellow !important;
+}
+
 .linhaselecionada {
     background-color: aqua;
 }
@@ -785,3 +793,65 @@ padding-top: 16%;
 }
 
 /* FIM ESTILO DA TELA DE CADASTRO DE TÉRMINAL LÓGICO */
+
+/*ESTILOS MODAL DETALHES DA NOTA*/
+.campos-detalhe-nota{
+    border:solid 1px #808080; 
+    margin:10px;
+    background:#eaeaea;
+    padding-top:5px;
+    padding-bottom: 10px;    
+}
+
+.conteudos-detalhe-nota{
+    border: solid 1px #e5e5e5;
+    margin:0 1px 0 1px;
+    font-size: 11px;
+    
+}
+
+.conteudos-detalhe-nota label{
+    font-size: 11px;
+}
+
+.espacamento-linhas-dados{
+    margin-top: 5px;
+}
+
+.headDetalhesNota{
+    border-bottom: solid 1px #e5e5e5;
+    text-align: center;
+    margin-top: 10px;
+    padding-bottom: 10px;
+}
+
+.headDetalhesNota label{
+
+}
+
+.informacoes-detalhe-nota{
+    border:solid 1px #808080;
+    background:#fff;
+    padding-left:4px;
+    height: 20px;
+}
+
+.informacoes-detalhe-nota label{
+    padding-left: 4px;
+}
+
+.titulos-campos-detalhes-nota{
+    margin-left: 1px;
+}
+
+.titulos-campos-detalhes-nota label{
+    font-size: 16px;
+    color: #7e1416;
+    font-weight: bold;    
+}
+
+.titulos-dados-detalhes-nota{
+    padding-left: 4px;
+}
+
+/*FIM ESTILOS MODAL DETALHES DA NOTA*/
