@@ -92,20 +92,24 @@ Não é necessário nenhum outro módulo externo.
 												 logExecution : 
 															[{
 																id = int,
-																dtaFiltroTransacoes = datetime,
-																statusExecution = string, // 0 = Em execução; 1 = Executado com Sucesso; 2 = Erro na Execução; 3 = Re-Executar; 7 = Elegivel
-																dtaExecucaoFim = datetime ou null,
-																dtaExecucaoProxima = datetime ou null,
+																dtaFiltroTransacoes : datetime,
+																statusExecution : string, // 0 = Em execução; 1 = Executado com Sucesso; 2 = Erro na Execução; 3 = Re-Executar; 7 = Elegivel
+																dtaExecucaoFim : datetime ou null,
+																dtaExecucaoProxima : datetime ou null,
 															}]
 												 ultimaDataExecucaoFim : datetime ou null,
+												 grupoempresa : {
+															id_grupo : int,
+															ds_nome : string
+												 },
 												 empresa : {
-															nu_cnpj = string,
-															ds_fantasia = string,
-															filial = string,
+															nu_cnpj : string,
+															ds_fantasia : string,
+															filial : string,
 														},
 												 operadora : {
-															id = int,
-															nmOperadora = string
+															id : int,
+															nmOperadora : string
 														},
 							  
 											  }]

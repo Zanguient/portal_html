@@ -55,7 +55,7 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
             stateChanged: function(state){
                 switch (state.newState) {
                     case $.signalR.connectionState.connecting:
-                        console.log("CONECTANDO...");
+                        //console.log("CONECTANDO...");
                         conectado = false;
                         break;
                     case $.signalR.connectionState.connected:
@@ -65,7 +65,7 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
                         //monitor.conectado();
                         break;
                     case $.signalR.connectionState.reconnecting:
-                        console.log("RECONECTANDO...");
+                        //console.log("RECONECTANDO...");
                         conectado = false;
                         break;
                     case $.signalR.connectionState.disconnected:
@@ -120,10 +120,15 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
         monitor.obtemLista = function (filtro) {
             if(filtro && filtro !== null){
                 if(filtro.data && filtro.data.length === 6) filtroMonitorCargas.data = filtro.data;
+                else filtroMonitorCargas.data = getAnoMesCorrente();
                 if(typeof filtro.idGrupo === 'number') filtroMonitorCargas.idGrupo = filtro.idGrupo;
+                else filtroMonitorCargas.idGrupo = 0;
                 if(typeof filtro.nuCnpj === 'string') filtroMonitorCargas.nuCnpj = filtro.nuCnpj;
+                else filtroMonitorCargas.nuCnpj = '';
                 if(typeof filtro.status === 'number') filtroMonitorCargas.status = filtro.status;
+                else filtroMonitorCargas.status = 0;
                 if(typeof filtro.cdAdquirente === 'number') filtroMonitorCargas.cdAdquirente = filtro.cdAdquirente;
+                else filtroMonitorCargas.cdAdquirente = 0;
             }
             //hub.conectado(monitor.data); //Calling a server method
             hub.obtemLista(filtroMonitorCargas);
@@ -153,14 +158,15 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
     $scope.monitor = monitorService;                                         
     $scope.monitorCargas = [];   
     $scope.filiais = [];
-    $scope.adquirentes = [];                                            
+    $scope.adquirentes = []; 
+    $scope.diasMesFiltrado = [];                                            
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyMonitorPos = 1; // posição da div que vai receber o loading progress
     $scope.itens_pagina = [50, 100, 150, 200];
-    $scope.statuscarga = [{id: 1, valor: 'NÃO CARREGADO'},
-                          {id: 2, valor: 'CARREGADO COM SUCESSO'},
-                          {id: 3, valor: 'CARREGADO COM ERRO'},
-                          {id: 4, valor: 'ERRO DE SENHA'}];
+    $scope.statuscarga = [{id: 1, nome: 'NÃO CARREGADO'},
+                          {id: 2, nome: 'CARREGADO COM SUCESSO'},
+                          {id: 3, nome: 'CARREGADO COM ERRO'},
+                          {id: 4, nome: 'ERRO DE SENHA'}];
     $scope.filtro = { data : new Date(), status : null,
                       filial : null, adquirente : null,
                       itens_pagina : $scope.itens_pagina[0], pagina : 1,
@@ -193,17 +199,20 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
                     $scope.filtro.filial = $scope.filtro.adquirente = null;
                     buscaFiliais();
                 }else{ // reseta tudo e não faz buscas 
-                    $scope.monitorCargas = []; 
                     $scope.filiais = [];
                     $scope.adquirentes = [];
                     $scope.filtro.filial = $scope.filtro.adquirente = null;
                 }
-                
+                obtendoLista = true;
+                $scope.showProgress(divPortletBodyFiltrosPos, 10000);
+                $scope.showProgress(divPortletBodyMonitorPos);
+                $scope.monitor.obtemLista(obtemFiltroBusca());
             }
         }); 
         $rootScope.$on('notifyMonitorMudancas', function(event, mudancas){
             console.log("RECEBEU MUDANÇAS");
             console.log(mudancas);
+            mudancasNaListaMonitorCargas(mudancas);
             //$rootScope.$apply();
         });
         $rootScope.$on('notifyMonitorLista', function(event, lista){
@@ -219,7 +228,7 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
         $rootScope.$on('notifyMonitorConnectionStatus', function(event, conectado){
             conectando = false;
             if(conectado){ 
-                console.log("CONECTADO");
+                //console.log("CONECTADO");
                 obtendoLista = true;
                 $scope.monitor.obtemLista(obtemFiltroBusca());
             }else console.log("NÃO CONECTADO!"); 
@@ -408,11 +417,20 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
             else $scope.monitor.conectar();
         }
     }
-    
+    /**
+      * A partir da lista recebida do filtro,
+      * processa os logExecutions para todos os dias do mês
+      */
     var atualizaListaMonitorCargas = function(lista){
-        var oldlist = [];
+        /*var oldlist = [];
         angular.copy(lista, oldlist);
-        console.log("LISTA");console.log(oldlist);
+        console.log("LISTA");console.log(oldlist);*/
+        
+        var totalDias = $scope.totalDiasMesFiltrado();
+        
+        $scope.diasMesFiltrado = [];
+        for(var k = 1; k <= totalDias; k++) $scope.diasMesFiltrado.push(k);
+        
         for(var k = 0; k < lista.length; k++){
             var loginoperadora = lista[k];
             //console.log(loginoperadora);
@@ -424,7 +442,7 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
             var dt = $scope.getDataString(logExecution.dtaFiltroTransacoes);
             var dia = parseInt(dt.substr(0, dt.indexOf('/')));
             //console.log("DIA L: " + dia);
-            for(var d = 1; d <= 31; d++){
+            for(var d = 1; d <= totalDias; d++){
                  //console.log("DIA: " + d + " ? A " + dia);   
                  if(d === dia){
                      logs.push(logExecution);
@@ -444,7 +462,7 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
             loginoperadora.logExecution = logs;
         }
         $scope.monitorCargas = lista;
-        console.log("MONITOR CARGAS");console.log($scope.monitorCargas);
+        //console.log("MONITOR CARGAS");console.log($scope.monitorCargas);
         
         // Set valores de exibição
         $scope.filtro.total_registros = $scope.monitorCargas.length;
@@ -462,6 +480,19 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
             setPagina(1); // volta para a primeira página e refaz a busca
         
         $rootScope.$apply();
+    }
+    
+    var mudancasNaListaMonitorCargas = function(mudancas){
+        var k = 0;
+        for(k = 0; k < $scope.moduloSelecionado.data.methods.length; k++){
+            if(newMethod.ds_method < $scope.moduloSelecionado.data.methods[k].ds_method){
+                $scope.moduloSelecionado.data.methods.splice(k, 0, newMethod);
+                break;    
+            }
+        }
+        if(k == $scope.moduloSelecionado.data.methods.length)
+            // Não adicionou => Adiciona ao final 
+            $scope.moduloSelecionado.data.methods.splice(k, 0, newMethod);    
     }
                                                 
                                                 

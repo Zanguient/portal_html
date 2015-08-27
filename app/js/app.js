@@ -1811,6 +1811,12 @@ angular.module("AtosCapital", ['ui.router',
                    ' ' + data.substr(11,8);
         return '';
    };
+   $scope.getTimeString = function(data){
+        // 2015-07-21T10:51:15.917  
+        if(typeof data !== 'undefined' && data !== null) 
+            return data.substr(11,8);
+        return '';
+   };                         
    /**
       * Retorna a string aceita para filtro de data
       * OBS: ano é obrigatório

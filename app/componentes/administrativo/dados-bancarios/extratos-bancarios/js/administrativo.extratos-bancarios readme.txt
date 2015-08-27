@@ -73,6 +73,12 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				dsArquivo : string,
 			}
 		  ]
+		  
+     - PATCH: upload do extrato através do arquivo ofx. Recebe como retorno
+					{
+					  ano : int,
+					  mes : int
+					} // se ambos forem igual a 0 então não teve nada armazenado!
  
  
    
