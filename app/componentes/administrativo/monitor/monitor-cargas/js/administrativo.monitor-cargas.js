@@ -6,7 +6,7 @@
  */
 
 // App
-angular.module("administrativo-monitor-cargas", ['SignalR']) 
+angular.module("administrativo-monitor-cargas", ['SignalR','ngLocale']) 
 
 .factory('monitorService',
     ["$http", "$rootScope", "$location", "Hub", "$timeout",
@@ -20,7 +20,7 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
         
         var options = {
             
-            rootPath : 'http://localhost:50780/signalr',
+            rootPath : $rootScope.signalRRootPath,//'http://localhost:50780/signalr',
             
             listeners: {
                 'enviaMudancas': function (mudancas) {
@@ -49,7 +49,7 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
                 }
             },*/
             jsonp : true,
-            transport: 'webSockets', //'longPolling'
+            //transport: 'webSockets', //'longPolling'
             logging: false,
             
             stateChanged: function(state){
@@ -114,6 +114,10 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
             return 28;
         }
         
+        monitor.getMesAnoFiltrado = function(){
+            return filtroMonitorCargas.data;    
+        }
+        
         /**
           * Função que notifica ao servidor que está monitorando
           */
@@ -156,10 +160,11 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
                                             '$webapi',
                                             '$apis',
                                             '$filter', 
-                                            '$timeout',      
+                                            '$timeout', 
+                                            '$locale',
                                             'monitorService',      
                                             function($scope,$rootScope,$state,$http,/*$campos,*/
-                                                     $webapi,$apis,$filter,$timeout,monitorService){ 
+                                                     $webapi,$apis,$filter,$timeout,$locale,monitorService){ 
    
     $scope.monitor = monitorService;                                         
     $scope.monitorCargas = [];   
@@ -242,7 +247,7 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
                 //console.log("CONECTADO");
                 obtendoLista = true;
                 $scope.monitor.obtemLista(obtemFiltroBusca());
-            }else console.log("NÃO CONECTADO!"); 
+            }//else console.log("NÃO CONECTADO!"); 
             //$rootScope.$apply();
         });
         // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
@@ -274,6 +279,13 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
     
     $scope.totalDiasMesFiltrado = function(){
         return $scope.monitor.getTotalDiasMesFiltrado();    
+    }
+    
+    $scope.getAnoMesFiltrado = function(){
+        var periodo = $scope.monitor.getMesAnoFiltrado(); 
+        var ano = parseInt(periodo.substr(0, 4));
+        var mes = parseInt(periodo.substr(4, 2));
+        return $locale.DATETIME_FORMATS.MONTH[mes - 1] + ' de ' + ano;
     }
     
     var obtemFiltroBusca = function(){
@@ -551,7 +563,7 @@ angular.module("administrativo-monitor-cargas", ['SignalR'])
         }
         // Efeito nas linhas afetadas
         for(var k = 0; k < linhasPromovidas; k++){
-            $('#tabelaMonitorCargas > tr').eq(k).css("background-color", "#ccff00 !important");   
+            $('#tabelaMonitorCargas > tr').eq(k).css("background-color", "#e4b9c0 !important");//"#ccff00 !important");   
         }
         if(!$scope.$$phase) $scope.$apply();
         

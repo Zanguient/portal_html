@@ -373,10 +373,11 @@ angular.module("AtosCapital", ['ui.router',
                         '$autenticacao',
                         '$apis',
                         '$webapi',
+                        '$sce',
                         '$empresa',
                         /*'$campos',*/
                         function($scope,$rootScope,$window,$location,$state,$stateParams,$http,$timeout,$filter,
-                                 $autenticacao,$apis,$webapi,$empresa/*,$campos*/){ 
+                                 $autenticacao,$apis,$webapi,$sce,$empresa/*,$campos*/){ 
     // Título da página                            
     $scope.pagina = {'titulo': 'Home', 'subtitulo': ''};
     // Usuário
@@ -384,8 +385,8 @@ angular.module("AtosCapital", ['ui.router',
     $scope.nome_usuario = 'Usuário';
     // Dados da empresa
     $scope.empresa = $empresa;
-    $scope.signalRRootPath = $autenticacao.getUrlBase() + "/signalr";
-    $scope.signalRHubsPath = $scope.signalRRootPath + "/hubs";
+    $rootScope.signalRRootPath = $scope.signalRRootPath = $autenticacao.getUrlBaseIMessage() + "/signalr";
+    $scope.signalRHubsPath = $sce.trustAsResourceUrl($scope.signalRRootPath + "/hubs");
     // Grupo empresa selecionado
     var empresaId = -1; // se > 0 indica que já estava associado a um grupo empresa
     $scope.usuariologado = { grupoempresa : undefined, empresa : undefined } ; // grupo empresa em uso
