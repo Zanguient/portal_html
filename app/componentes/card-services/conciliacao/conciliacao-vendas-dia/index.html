@@ -198,488 +198,6 @@
         <div class="col-md-12">
             <!-- BEGIN TABLE PORTLET-->
             <div class="portlet light">
-                
-                <!-- MODAL DETALHES --> <!--
-                <div class="modal fade bs-modal-sm modal-input" 
-                    id="modalDetalhes" aria-hidden="true">
-                   <div class="modal-dialog modal-sm" style="width:1200px">
-                       <div class="modal-content">
-                           <div class="modal-header">
-                               <h4 class="modal-title modal-cabecalho">Detalhes da Nota</h4>
-                           </div>
-<<<<<<< HEAD
-                           <div class="modal-body modal-corpo" style="text-align: left"> -->
-                               <!-- LAYOUT AQUI --> <!--
-=======
-                           <div class="modal-body modal-corpo" style="text-align: left">
-                               <!-- LAYOUT AQUI -->
-                               
-                               <!-- TABS -->
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <tabset vertical="" type="pills">
-                                            <tab heading="NF-e" select="setTab(1)" active="true"></tab>
-                                            <tab heading="Emitente" select="setTab(2)"></tab>
-                                            <tab heading="Destinatário" select="setTab(3)"></tab>
-                                            <tab heading="Produtos e Serviços" select="setTab(4)"></tab>
-                                            <tab heading="Totais" select="setTab(5)"></tab>
-                                            <tab heading="Transporte" select="setTab(6)"></tab>
-                                            <tab heading="Cobrança" select="setTab(7)"></tab>
-                                            <tab heading="Informações Adicionais" select="setTab(8)"></tab>
-                                        </tabset>
-                                    </div>
-                                    <!-- CONTEÚDO -->
-                                    <div class="col-sm-12">
-                                        
-                                        <!-- NF-e -->
-                                        <div class="panel" ng-show="tabIs(1)">
-                                            <!--CONTEÚDO-->
-                                            <div class="row conteudos-detalhe-nota">
-                                                <div class="col-md-12">
-                                                    <!--TITULO-->
-                                                    <div class="row headDetalhesNota">
-                                                        <div class="col-md-12">
-                                                            Dados da NF-e
-                                                        </div>
-                                                    </div>
-                                                    <!--BODY CAMPOS-->
-                                                    <div class="row campos-detalhe-nota">
-                                                        <div class="col-md-1">
-                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                Modelo
-                                                            </label>
-                                                            <div class="col-md-12 informacoes-detalhe-nota">
-                                                                55 
-                                                            </div>                                              
-                                                        </div>
-                                                        <div class="col-md-1">
-                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                Série
-                                                            </label>
-                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                                3 
-                                                            </div> 
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                Número
-                                                            </label>
-                                                            <div class="col-md-12 informacoes-detalhe-nota">
-                                                                1123543
-                                                            </div> 
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                Data de Emissão
-                                                            </label>
-                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                                27/08/2015 23:36:00-03:00
-                                                            </div> 
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                Data/Hora de Saída ou da Entrada
-                                                            </label>
-                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                                27/08/2015 22:40:00-04:00  
-                                                            </div> 
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                Valor Total da Nota Fiscal
-                                                            </label>
-                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                                234,54 
-                                                            </div> 
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <!--EMITENTE-->
-                                                    <div class="row titulos-campos-detalhes-nota">
-                                                        <div class="col-md-6">
-                                                            <label>Emitente</label>                                              
-                                                        </div>
-                                                    </div>
-                                                    <div class="row campos-detalhe-nota">
-                                                        <div class="col-md-3">
-                                                           <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                CNPJ
-                                                            </label>
-                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                                12.321.111/0004-43
-                                                            </div> 
-                                                        </div>
-                                                        <div class="col-md-5">
-                                                           <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                Nome/Razão Social
-                                                            </label>
-                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                                LIMINAR CMO. IND. DE ALIM. LTDA - FAB-CAI
-                                                            </div> 
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                           <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                Inscrição Estadual
-                                                            </label>
-                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                                2332654443
-                                                            </div> 
-                                                        </div>
-                                                        <div class="col-md-1">
-                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                UF
-                                                            </label>
-                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                                BA
-                                                            </div> 
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <!--DESTINATÁRIO-->
-                                                    <!--TITULO-->
-                                                    <div class="row titulos-campos-detalhes-nota">
-                                                        <div class="col-md-6">
-                                                            <label>Destinatário</label>                                           
-                                                        </div>
-                                                    </div>
-                                                    <!--CORPO-->
-                                                    <div class="row campos-detalhe-nota">
-                                                        <div class="col-md-12">
-                                                            <div class="row">
-                                                                <div class="col-md-3">
-                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                        CNPJ
-                                                                    </label>
-                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                                        12.321.111/0004-43
-                                                                    </div> 
-                                                                </div>
-                                                                <div class="col-md-5">
-                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                        Nome/Razão Social
-                                                                    </label>
-                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                                        PETROX COMERCIA LTDA
-                                                                    </div> 
-                                                                </div>
-                                                                <div class="col-md-3">
-                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                        Inscrição Estadual
-                                                                    </label>
-                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                                        2332654443
-                                                                    </div> 
-                                                                </div>
-                                                                <div class="col-md-1">
-                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                        UF
-                                                                    </label>
-                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                                        SE
-                                                                    </div> 
-                                                                </div>
-                                                            </div> 
-                                                            <div class="row espacamento-linhas-dados">
-                                                                <div class="col-md-3">
-                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                        Destino da operação
-                                                                    </label>
-                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                                        2-Operação Interestadual
-                                                                    </div> 
-                                                                </div>
-                                                                <div class="col-md-5">
-                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                        Consumidor Final
-                                                                    </label>
-                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                                        0-Normal
-                                                                    </div> 
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                        Presença~do Comprador
-                                                                    </label>
-                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                                        0-Não se aplica
-                                                                    </div> 
-                                                                </div>
-                                                            </div>    
-                                                        </div>                                                      
-                                                    </div>
-                                                    
-                                                    
-                                                    <!--EMISSÃO-->
-                                                    <div class="row titulos-campos-detalhes-nota">
-                                                        <div class="col-md-6">
-                                                            <label>Emissão</label>                                           
-                                                        </div>
-                                                    </div>
-                                                    <div class="row campos-detalhe-nota">
-                                                        <div class="col-md-12">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                   <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                        Processo
-                                                                    </label>
-                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                                        0-Com alplicativo do Contribuinte
-                                                                    </div> 
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                        Versão do Processo
-                                                                    </label>
-                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                                        v12323222
-                                                                    </div> 
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <label class="col-md-12 titulos-dados-detalhes-nota"> 
-                                                                        Tipo de Emissão
-                                                                    </label>
-                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                                        1-Normal
-                                                                    </div> 
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                        Finalidade
-                                                                    </label>
-                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                                        1-Normal
-                                                                    </div> 
-                                                                </div>
-                                                            </div>
-                                                            <div class="row espacamento-linhas-dados">
-                                                                <div class="col-md-4">
-                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                        Natureza da Operação
-                                                                    </label>
-                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                                        2341-Venda de Prod c/ Subst Tributria
-                                                                    </div> 
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                        Tipo de Operação 
-                                                                    </label>
-                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                                        1-Saída
-                                                                    </div> 
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                        Forma de Pagamento
-                                                                    </label>
-                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                                        2-Outros
-                                                                    </div> 
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                        <i>Digest</i> Value da NF-e
-                                                                    </label>
-                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                                        WX+/4kXMi5W8CrT9PaWmeATB9Ow=
-                                                                    </div> 
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <!--Situação Atual:-->  
-                                                    <div class="row titulos-campos-detalhes-nota">
-                                                        <div class="col-md-6">
-                                                            <label>
-                                                                Situação Atual:  AUTORIZADA (Ambiente de autorização: produção)
-                                                            </label>                                           
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="row campos-detalhe-nota">
-                                                        <div class="col-md-4">
-                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                Eventos da NF-e
-                                                            </label>
-                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                               Autorização de Uso (Cód.:2211113)
-                                                            </div> 
-                                                            <div class="col-md-12 espacamento-linhas-dados informacoes-detalhe-nota"> 
-                                                               Ciência da Operação pelo Destinatário (Cód.: 210210)
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                Protocolo
-                                                            </label>
-                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                                129150069560681   
-                                                            </div> 
-                                                            <div class="col-md-12 espacamento-linhas-dados informacoes-detalhe-nota"> 
-                                                               891150584090327
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                Data / Hora
-                                                            </label>
-                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                                26/07/2015 às 23:36:39-03:00
-                                                            </div>
-                                                            <div class="col-md-12 espacamento-linhas-dados informacoes-detalhe-nota"> 
-                                                               Autorização de Uso (Cód.:2211113)
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                Data / Hora AN
-                                                            </label>
-                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                                26/07/2015 às 23:46:17
-                                                            </div> 
-                                                            <div class="col-md-12 espacamento-linhas-dados informacoes-detalhe-nota"> 
-                                                               Autorização de Uso (Cód.:2211113)
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <!-- EMITENTE -->
-                                        <div class="panel" ng-show="tabIs(2)">
-                                            <!--CONTEÚDO-->
-                                            <div class="row conteudos-detalhe-nota">
-                                                <div class="col-md-12">
-                                                    <!--TITULO-->
-                                                    <div class="row headDetalhesNota">
-                                                        <div class="col-md-12">
-                                                            Dados do Emitente
-                                                        </div>
-                                                    </div>
-                                                    <!--BODY CAMPOS-->
-                                                    <div class="row campos-detalhe-nota">
-                                                        <div class="col-md-6">
-                                                            <div class="row">
-                                                                <div class="col-md-12">
-                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                        Modelo
-                                                                    </label>
-                                                                    <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        55 
-                                                                    </div>                                              
-                                                                </div>    
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-md-12">
-                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                        Modelo
-                                                                    </label>
-                                                                    <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        55 
-                                                                    </div>                                              
-                                                                </div>    
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-md-12">
-                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                        Modelo
-                                                                    </label>
-                                                                    <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        55 
-                                                                    </div>                                              
-                                                                </div>    
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-md-12">
-                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                        Modelo
-                                                                    </label>
-                                                                    <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        55 
-                                                                    </div>                                              
-                                                                </div>    
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-md-12">
-                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                        Modelo
-                                                                    </label>
-                                                                    <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        55 
-                                                                    </div>                                              
-                                                                </div>    
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-md-12">
-                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                                        Modelo
-                                                                    </label>
-                                                                    <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        55 
-                                                                    </div>                                              
-                                                                </div>    
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="row">
-                                                                
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                        
-                                                    
-                                                </div>
-                                            </div>    
-                                        </div>
-                                        
-                                        <!-- DESTINATÁRIO -->
-                                        <div class="panel" ng-show="tabIs(3)">
-                                        3    
-                                        </div>
-                                        
-                                        <!-- PRODUTOS E SERVIÇOS -->
-                                        <div class="panel" ng-show="tabIs(4)">
-                                        4    
-                                        </div>
-                                        
-                                        <!-- TOTAIS -->
-                                        <div class="panel" ng-show="tabIs(5)">
-                                        5   
-                                        </div>
-                                        
-                                        <!-- TRANSPORTE -->
-                                        <div class="panel" ng-show="tabIs(6)">
-                                        6   
-                                        </div>
-                                        
-                                        <!-- COBRANÇA -->
-                                        <div class="panel" ng-show="tabIs(7)">
-                                        7    
-                                        </div>
-                                        
-                                        <!-- INFORMAÇÕES ADICIONAIS -->
-                                        <div class="panel" ng-show="tabIs(8)">
-                                        8   
-                                        </div>
-                                        
-                                   </div>
-                                </div>
->>>>>>> origin/master
-                           </div>
-                           <div class="modal-footer">
-                               <div class="col-sm-6 col-sm-offset-2">
-                                   <button type="button" class="btn default" data-dismiss="modal">
-                                       Fechar
-                                   </button>
-                               </div>                           
-                           </div>
-                       </div>
-                   </div>
-               </div> -->
-                <!-- FIM - MODAL DETALHES -->
-                
                 <!--TITULO-->
                 <div class="portlet-title">
                     <div class="caption">								
@@ -756,7 +274,16 @@
                                     </a>
                                     de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
                             </div>
-                        </div>                                   
+                        </div> 
+                        <div class="col-xs-4 col-sm-4 col-md-3 alinhamentoDados">
+                            <div class="dataTables_length">
+                                <button class="btn btn-primary" 
+                                   ng-disabled="!temElementosPreConciliados()"
+                                   ng-click="conciliaPreConciliados()">
+                                   Conciliar Pré-Conciliados
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     
                     <!-- TABELA EXTERNA -->
@@ -817,98 +344,404 @@
                                     <tr>
                                     <td colspan="6">
                                         <!-- TABELA INTERNA -->
-                                        <div class="tab-content">
-                                        <!--REFERENCIAS DAS ABAS DE NAVEGAÇÃO-->
-                                        <div class="portlet-title tabbable-line">							
-                                            <ul class="nav nav-tabs">                                            
-                                                <li ng-class="{active : tabIs(0)}">
-                                                    <a href="javascript:;" 
-                                                       data-toggle="tab-pane" 
-                                                       ng-click="setTab(0)">
-                                                    Terminal Lógico </a>
-                                                </li>                                          
-                                                <li ng-class="{active : tabIs(1)}">
-                                                    <a href="javascript:;" 
-                                                       data-toggle="tab"
-                                                       ng-click="setTab(1)">
-                                                    Sintético </a>
-                                                </li>
-                                                <li ng-class="{active : tabIs(2)}">
-                                                    <a href="javascript:;" 
-                                                       data-toggle="tab"
-                                                       ng-click="setTab(2)">
-                                                    Analítico </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <table class="table table-striped table-bordered table-hover dataTable no-footer">
-                                            <thead> 
-                                                <tr>
-                                                    <th colspan="8" class="cabecalhoTheadTabelas">
-                                                        VALOR BRUTO
-                                                    </th>
-                                                </tr>
-                                                <tr>
-                                                    <!-- DADOS NFE -->
-                                                    <th width="15%">
-                                                        Filial
-                                                    </th>
-                                                    <th width="10%" style="text-align: center;">
-                                                        Bandeira
-                                                    </th>
-                                                    <th width="10%" style="text-align: center;">
-                                                        Venda
-                                                    </th>
-                                                    <th width="10%" style="text-align: center;">
-                                                        Terminal Lógico
-                                                    </th>
-                                                    <th width="10%" style="text-align: center;">
-                                                        CardServices
-                                                    </th>
-                                                    <th width="10%" style="text-align: center;">
-                                                        Controle Cliente
-                                                    </th>
-                                                    <th width="10%" style="text-align: center;">
-                                                        Diferença
-                                                    </th>
-                                                    <th width="10%" style="text-align: center;">
-                                                        Status
-                                                    </th>
-                                                    <!-- BOTÃO -->
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                 <!-- DADOS NFE -->
-                                                 <tr>
-                                                    <td>
-                                                        Petrox - Mania
-                                                    </td>
-                                                    <td>
-                                                        REDE
-                                                    </td>
-                                                    <td>
-                                                        11/08/2015
-                                                    </td>
-                                                    <td>
-                                                        Terminal
-                                                    </td>
-                                                    <td>
-                                                        R$ 1.150,00
-                                                    </td>
-                                                    <td>
-                                                        R$ 1.150,00
-                                                    </td>
-                                                    <td>
-                                                        R$ 150,00
-                                                    </td>
-                                                    <td>
-                                                        Conciliado
-                                                    </td>
-                                                    <!-- BOTÃO -->
-                                                </tr>
-                                            </tbody>
-                                        </table> 
-                                      </div>
+                                            <!-- Begin: life time stats -->
+                                            <div class="portlet light">
+                                                <!--REFERENCIAS DAS ABAS DE NAVEGAÇÃO-->
+                                                <div class="portlet-title tabbable-line">							
+                                                    <ul class="nav nav-tabs">                                            
+                                                        <li ng-class="{active : tabIs(0)}">
+                                                            <a href="javascript:;" 
+                                                               data-toggle="tab-pane" 
+                                                               ng-click="setTab(0)">
+                                                            Terminal Lógico </a>
+                                                        </li>                                          
+                                                        <li ng-class="{active : tabIs(1)}">
+                                                            <a href="javascript:;" 
+                                                               data-toggle="tab"
+                                                               ng-click="setTab(1)">
+                                                            Sintético </a>
+                                                        </li>
+                                                        <li ng-class="{active : tabIs(2)}">
+                                                            <a href="javascript:;" 
+                                                               data-toggle="tab"
+                                                               ng-click="setTab(2)">
+                                                            Analítico </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <!--CONTEUDO DA NAVEGAÇÃO-->
+                                                <div class="portlet-body" ng-show="exibeTela">
+                                                    <div class="tab-content">
+                                                        <!--CONTEÚDO DO TERMINAL LÓGICO-->
+                                                        <div class="tab-pane conteudoNavegacao"
+                                                             ng-class="{active : tabIs(0)}">
+                                                            <!--TABELA TÉRMINAL LÓGICO-->
+                                                            <div class="table-scrollable">
+                                                                <table class="table table-striped table-hover table-bordered dataTable no-footer conteudoTabelas" role="grid">
+                                                                    <thead class="centralizarVerticalTitulos">
+                                                                        <tr role="row">
+                                                                            <th tabindex="0" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 25%;">
+                                                                                Filial
+                                                                            </th>
+                                                                            <th tabindex="2" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 10%;">
+                                                                                Bandeira
+                                                                            </th>
+                                                                            <th tabindex="1" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 10%;">
+                                                                                Venda
+                                                                            </th>
+                                                                            <th tabindex="3" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 15%;">
+                                                                                Terminal
+                                                                            </th>
+                                                                            <th tabindex="4" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 10%;">
+                                                                                CardServices
+                                                                            </th>
+                                                                            <th tabindex="5" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 15%;">
+                                                                                Controle Cliente
+                                                                            </th>
+                                                                            <th tabindex="6" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 15%;">
+                                                                                Diferença
+                                                                            </th> 
+                                                                            <th tabindex="7" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 15%;">
+                                                                                Status
+                                                                            </th>                                        
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr role="row" class="odd">
+                                                                            <!-- FILIAL -->
+                                                                            <td style="text-align:left;">
+                                                                                 Petrox - Mania
+                                                                            </td>
+                                                                            <!-- BANDEIRA -->
+                                                                            <td style="text-align:left;">
+                                                                                 REDE
+                                                                            </td>
+                                                                            <!-- DATA DA VENDA -->
+                                                                            <td>
+                                                                                 11/08/2015
+                                                                            </td>
+                                                                            <!-- TERMINAL LÓGICO -->
+                                                                            <td>
+                                                                                 Terminal
+                                                                            </td>
+                                                                            <!-- CARD SERVICES -->
+                                                                            <td>
+                                                                                 R$ 1.500,00
+                                                                            </td>
+                                                                            <!-- CONTROLE CLIENTE -->
+                                                                            <td>
+                                                                                 R$ 1.500,00
+                                                                            </td>
+                                                                            <!-- DIFERENÇA -->
+                                                                            <td>
+                                                                                 R$ 1.500,00
+                                                                            </td>
+                                                                            <!-- STATUS -->
+                                                                            <td>
+                                                                                 Conciliado
+                                                                            </td>
+
+                                                                        <tr role="row" class="odd linhaTotalRelatorios"
+                                                                            style="font-weight : bolder">
+                                                                            <td colspan="4" style="text-align:right;">
+                                                                                Total Exibido
+                                                                            </td>
+                                                                            <td>
+                                                                                R$ 1.500,00
+                                                                            </td>
+                                                                            <td>
+                                                                                R$ 1.500,00
+                                                                            </td>
+                                                                            <td>
+                                                                                R$ 1.500,00
+                                                                            </td>
+                                                                            <td>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr role="row" class="odd linhaTotalRelatorios"
+                                                                            style="font-weight : bolder">
+                                                                            <td colspan="4" style="text-align:right;">
+                                                                                Total Filtrado
+                                                                            </td>
+                                                                            <td>
+                                                                                 R$ 1.500,00
+                                                                            </td>
+                                                                            <td>
+                                                                                 R$ 1.500,00
+                                                                            </td>
+                                                                            <td>
+                                                                                R$ 1.500,00
+                                                                            </td>
+                                                                            <td>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+
+                                                                </table>
+                                                            </div>
+
+                                                        </div>
+                                                        <!--FIM CONTEÚDO DA NAVEGAÇÃO-->
+
+                                                        <!--CONTEÚDO DO RELATÓRIO SINTÉTICO-->
+                                                        <div class="tab-pane conteudoNavegacao"
+                                                             ng-class="{active : tabIs(1)}">
+                                                            <!--TABELA RELATÓRIO SINTÉTICO-->
+                                                            <div class="table-scrollable">
+                                                                <table class="table table-striped table-hover 
+                                                                              table-bordered dataTable no-footer conteudoTabelas" role="grid">
+                                                                    <thead class="centralizarVerticalTitulos">
+                                                                        <th tabindex="0" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 25%;">
+                                                                                Filial
+                                                                            </th>
+                                                                            <th tabindex="2" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 15%;">
+                                                                                Bandeira
+                                                                            </th>
+                                                                            <th tabindex="1" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 10%;">
+                                                                                Venda
+                                                                            </th>
+                                                                            
+                                                                            <th tabindex="4" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 15%;">
+                                                                                CardServices
+                                                                            </th>
+                                                                            <th tabindex="5" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 15%;">
+                                                                                Controle Cliente
+                                                                            </th>
+                                                                            <th tabindex="6" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 15%;">
+                                                                                Diferença
+                                                                            </th> 
+                                                                            <th tabindex="6" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 10%;">
+                                                                                Status
+                                                                            </th>                                        
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr role="row" class="odd">
+                                                                            <!-- FILIAL -->
+                                                                            <td style="text-align:left;">
+                                                                                 Petrox - Mania
+                                                                            </td>
+                                                                            <!-- BANDEIRA -->
+                                                                            <td style="text-align:left;">
+                                                                                 REDE
+                                                                            </td>
+                                                                            <!-- DATA DA VENDA -->
+                                                                            <td>
+                                                                                11/08/2015
+                                                                            </td>
+                                                                            
+                                                                            <!-- CARD SERVICES -->
+                                                                            <td>
+                                                                                 R$ 3.718,88
+                                                                            </td>
+                                                                            <!-- CONTROLE CLIENTE -->
+                                                                            <td>
+                                                                                 R$ 3.718,88
+                                                                            </td>
+                                                                            <!-- DIFERENÇA -->
+                                                                            <td>
+                                                                                 R$ 3.718,88
+                                                                            </td>
+                                                                            <!-- STATUS -->
+                                                                            <td>
+                                                                                 Conciliado
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr role="row" class="odd linhaTotalRelatorios" 
+                                                                            style="font-weight:bolder">
+                                                                            <td style="text-align:right;" colspan="3">
+                                                                                 Total Filtrado
+                                                                            </td>
+                                                                            <td>
+                                                                                 R$ 3.718,88
+                                                                            </td>
+                                                                            <td>
+                                                                                 R$ 3.718,88
+                                                                            </td>
+                                                                            <td>
+                                                                                 R$ 3.718,88
+                                                                            </td>
+                                                                            <td>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr role="row" class="odd linhaTotalRelatorios" 
+                                                                            style="font-weight:bolder">
+                                                                            <td style="text-align:right;" colspan="3">
+                                                                                 Total Filtrado
+                                                                            </td>
+                                                                            <td>
+                                                                                 R$ 3.718,88
+                                                                            </td>
+                                                                            <td>
+                                                                                 R$ 3.718,88
+                                                                            </td>
+                                                                            <td>
+                                                                                 R$ 3.718,88
+                                                                            </td>
+                                                                            <td>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <!--FIM CONTEÚDO DO RELATÓRIO SINTÉTICO-->
+
+                                                        <!--CONTEÚDO DO RELATÓRIO ANALÍTICO-->
+                                                        <div class="tab-pane conteudoNavegacao"
+                                                             ng-class="{active : tabIs(2)}">
+                                                            <div class="table-scrollable">
+                                                                <table class="table table-striped table-hover table-bordered dataTable no-footer conteudoTabelas" role="grid">
+                                                                    <thead class="centralizarVerticalTitulos">
+                                                                        <tr role="row">
+                                                                            <th tabindex="0" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 25%;">
+                                                                                Filial
+                                                                            </th>
+                                                                            <th tabindex="2" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 10%;">
+                                                                                Bandeira
+                                                                            </th>
+                                                                            <th tabindex="1" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 10%;">
+                                                                                Venda
+                                                                            </th>
+                                                                            <th tabindex="3" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 15%;">
+                                                                                Terminal
+                                                                            </th>
+                                                                            <th tabindex="4" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 10%;">
+                                                                                CardServices
+                                                                            </th>
+                                                                            <th tabindex="5" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 15%;">
+                                                                                Controle Cliente
+                                                                            </th>
+                                                                            <th tabindex="6" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 15%;">
+                                                                                Diferença
+                                                                            </th> 
+                                                                            <th tabindex="7" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 15%;">
+                                                                                Status
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr role="row" class="odd">
+                                                                            <!-- FILIAL -->
+                                                                            <td style="text-align:left;">
+                                                                                 Petrox - Mania
+                                                                            </td>
+                                                                            <!-- BANDEIRA -->
+                                                                            <td style="text-align:left;">
+                                                                                 REDE
+                                                                            </td>
+                                                                            <!-- DATA DA VENDA -->
+                                                                            <td>
+                                                                                11/08/2015
+                                                                            </td>
+                                                                            <!-- TERMINAL LÓGICO -->
+                                                                            <td>
+                                                                                 Terminal
+                                                                            </td>
+                                                                            <!-- CARD SERVICES -->
+                                                                            <td>
+                                                                                 R$ 2.200,56
+                                                                            </td>
+                                                                            <!-- CONTROLE CLIENTE -->
+                                                                            <td>
+                                                                                 R$ 2.200,56
+                                                                            </td>
+                                                                            <!-- DIFERENÇA -->
+                                                                            <td>
+                                                                                 R$ 2.200,56
+                                                                            </td>
+                                                                            <!-- STATUS -->
+                                                                            <td>
+                                                                                 Conciliado
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr role="row" class="odd linhaTotalRelatorios">
+                                                                            <td colspan="4" style="text-align:right;">
+                                                                                 Total Exibido
+                                                                            </td>                                                     
+                                                                            <td>
+                                                                                 R$ 2.200,56
+                                                                            </td> 
+                                                                            <td>
+                                                                                 R$ 2.200,56
+                                                                            </td>
+                                                                            <td>
+                                                                                 R$ 2.200,56
+                                                                            </td>
+                                                                            <td>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr role="row" class="odd linhaTotalRelatorios">
+                                                                            <td colspan="4" style="text-align:right;">
+                                                                                 Total Filtrado
+                                                                            </td>                                                     
+                                                                            <td>
+                                                                                 R$ 2.200,56
+                                                                            </td> 
+                                                                            <td>
+                                                                                 R$ 2.200,56
+                                                                            </td>
+                                                                            <td>
+                                                                                 R$ 2.200,56
+                                                                            </td>
+                                                                            <td>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>    
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                         <!--FIM CONTEÚDO DO RELATÓRIO ANALÍTICO-->
+                                                    </div>
+                                                </div>
+                                                <!--FIM CONTEUDO DA NAVEGAÇÃO-->
+                                            </div>
                                     </td>
                                 </tr>
                             </tbody>
@@ -949,7 +782,6 @@
                         <!-- FIM PAGINAÇÃO -->
                     </div> 
                 </div>
-            </div>
             <!--FIM TABLE PORTLET-->
         </div>
     </div>  
