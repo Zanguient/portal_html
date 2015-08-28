@@ -267,6 +267,10 @@ angular.module("tax-services-importacao-xml", [])
         var nota = emitente.notas[indexNota];
         console.log("DOWNLOAD DAMFE " + emitente.nmEmitente.toUpperCase());
         console.log(nota);
+        
+        // get => $apis.util.utilnfe (coleção 2) => coleção 3 vem um zip com todos os pdfs
+        // {id : /* $campos.tax.tbManifesto.idManifesto */ 100, valor : nota.idManifesto}
+        // Retorna o arquivo para fazer o download
     }
     $scope.detalhar = function(emitente, indexNota){
         var nota = emitente.notas[indexNota];
@@ -283,6 +287,10 @@ angular.module("tax-services-importacao-xml", [])
         var nota = emitente.notas[indexNota];
         console.log("DOWNLOAD XML " + emitente.nmEmitente.toUpperCase());
         console.log(nota);
+        
+        // get => $apis.util.utilnfe (coleção 0) => coleção 1 vem um zip com todos os xmls
+        // {id : /* $campos.tax.tbManifesto.idManifesto */ 100, valor : nota.idManifesto}
+        // Retorna o arquivo para fazer o download
     }
     
     

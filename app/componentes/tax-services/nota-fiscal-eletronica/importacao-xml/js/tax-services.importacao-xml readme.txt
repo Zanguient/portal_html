@@ -25,13 +25,31 @@ Não é necessário nenhum outro módulo externo.
   * Evento "acessoDeTelaNotificado", proveniente do "appCtrl", para de fato exibir a tela e fazer requisições 
 	=> importante para o log correto de requisições HTTP, ao qual identifica corretamente a (tela de) origem
   * APIS:
-    - 
+    - tax/tbmanifesto
 	
  
  
  ### Interação com a WEB API ###
  
-  *  
+  * tax/tbmanifesto
+    - GET : obtém os registros agrupados por emitente (coleção 4)
+		{	nrEmitenteCNPJCPF : string,
+			nmEmitente : string,
+			UF : string,
+			notas = [{	dtEmissao : datetime ou null,
+						//modelo = 0,
+						//numero = 0,
+						//serie = 0,
+						vlNFe : double,
+						nrChave : string,
+						//nfe = "",
+						dsSituacaoManifesto : string,
+						dsSituacaoErp : string,
+						xmlNFe : string,
+
+					}] // ordenado por dtEmissao
+		
+		}
    
 
    

@@ -300,6 +300,35 @@ margin-top:170px;
 
 /*FIM Estilos dos cumpons de conciliação bancária*/
 
+/* Estilos de Monitor de Cargas */
+
+.iconeMonitorCargasEmExecucao{
+    color: #000;
+}
+
+.iconeMonitorCargasSucesso{
+    color: #0e830e;
+}
+
+.iconeMonitorCargasErro{
+    color: #e50003;
+}
+
+.iconeMonitorCargasReExecucao{
+    color: #a9a9a9;
+}
+
+.iconeMonitorCargasSenha{
+    color: #daa520;
+}
+
+
+.iconeMonitorCargasElegivel{
+    color: #2771b9;
+}
+
+/* FIM Estilos de Monitor de Cargas */
+
 .conteudoFiliais{
     margin:8px 10px 0 0;
     color: #6f6e6e;
@@ -470,14 +499,6 @@ tbody.conteudotabelasCentralizadas > tr > td{
 
 .large-popover > .popover{
     width: 200px;
-}
-
-.linhaVermelhaTabela{
-    background-color : red !important;
-}
-
-.linhaAmarelaTabela{
-    background-color : yellow !important;
 }
 
 .linhaselecionada {

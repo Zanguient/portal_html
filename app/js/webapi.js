@@ -275,6 +275,30 @@ angular.module('webapi', ['utils'])
             idOperadora : 102    
         }
       },
+      tax : {
+        tbManifesto : {
+            idManifesto : 100,
+            nrChave : 101,
+            nrNSU : 102,
+            cdGrupo : 103,
+            nrCNPJ : 104,
+            nrEmitenteCNPJCPF : 105,
+            nmEmitente : 106,
+            nrEmitenteIE : 107,
+            dtEmissao : 108,
+            tpOperacao : 109, 
+            vlNFe : 110,
+            dtRecebimento : 111,
+            cdSituacaoNFe : 112,
+            cdSituacaoManifesto : 113,
+            dsSituacaoManifesto : 114,
+            nrProtocoloManifesto : 115,
+            xmlNFe : 115,
+            nrProtocoloDownload : 116,
+            cdSituacaoDownload : 117,
+            dsSituacaoDownload : 118,
+        },    
+      },
       util : {
         bancos : {
             Codigo : 100,
@@ -372,8 +396,12 @@ angular.module('webapi', ['utils'])
         recebimentoparcela: $autenticacao.getUrlBase() + '/pos/recebimentoparcela/',
         terminallogico : $autenticacao.getUrlBase() + '/pos/terminallogico/'
     },
-    utils : {
-        bancos : $autenticacao.getUrlBase() + '/utils/bancos/',    
+    tax : {
+        tbManifesto : $autenticacao.getUrlBase() + '/tax/tbmanifesto/',    
+    },
+    util : {
+        bancos : $autenticacao.getUrlBase() + '/util/bancos/',   
+        utilnfe : $autenticacao.getUrlBase() + '/util/utilnfe/',   
     }
   }
 }])

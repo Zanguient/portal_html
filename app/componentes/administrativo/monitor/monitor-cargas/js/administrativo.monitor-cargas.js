@@ -552,11 +552,7 @@ angular.module("administrativo-monitor-cargas", ['SignalR','ngLocale'])
                     $scope.monitorCargas.splice(index, 1);
                     // Adiciona no topo
                     $scope.monitorCargas.splice(0, 0, loginoperadora);
-                    // Atualiza página com efeito
-                    /*if(linhasPromovidas % 2 !== 0){
-                        if(!linha.hasClass('linhaVermelha')) linha.addClass('linhaVermelha');
-                    }else if(!linha.hasClass('linhaAmarela')) linha.addClass('linhaAmarela');*/
-                    //$('#tabelaMonitorCargas > tr').eq(0).css("background-color", linhasPromovidas % 2 === 0 ? "#ffff00 !important" : "#ff0000 !important");   
+                    // Atualiza página 
                     if(!$scope.$$phase) $scope.$apply();
                 }
             }

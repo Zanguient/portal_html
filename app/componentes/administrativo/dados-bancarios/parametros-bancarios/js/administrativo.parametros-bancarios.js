@@ -178,9 +178,9 @@ angular.module("administrativo-parametros-bancarios", [])
     $scope.buscaBancos = function(texto){
         $scope.buscandoBancos = true;
         
-        return $http.get($apis.getUrl($apis.utils.bancos, 
-                                [$scope.token, 0, /*$campos.utils.bancos.NomeExtenso*/ 102, 0, 10, 1],
-                                {id: /*$campos.utils.bancos.NomeExtenso*/ 102, valor: texto + '%'}))
+        return $http.get($apis.getUrl($apis.util.bancos, 
+                                [$scope.token, 0, /*$campos.util.bancos.NomeExtenso*/ 102, 0, 10, 1],
+                                {id: /*$campos.util.bancos.NomeExtenso*/ 102, valor: texto + '%'}))
                  .then(function(dados){
                         $scope.buscandoBancos = false;
                         return dados.data.Registros;
