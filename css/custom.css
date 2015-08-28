@@ -826,13 +826,14 @@ padding-top: 16%;
 
 .conteudos-detalhe-nota{
     border: solid 1px #e5e5e5;
-    margin:0 1px 0 1px;
+    margin:0 -1px 0 -1px;
     font-size: 11px;
+    margin-top:-11px;
     
 }
 
 .conteudos-detalhe-nota label{
-    font-size: 11px;
+    font-size: 11px;   
 }
 
 .espacamento-linhas-dados{
@@ -842,8 +843,12 @@ padding-top: 16%;
 .headDetalhesNota{
     border-bottom: solid 1px #e5e5e5;
     text-align: center;
-    margin-top: 10px;
+    margin-top: px;
     padding-bottom: 10px;
+    font-size: 16px;
+    color: #7e1415;
+    font-weight: bolder;
+    background: #eaeaea;       
 }
 
 .headDetalhesNota label{
@@ -854,7 +859,7 @@ padding-top: 16%;
     border:solid 1px #808080;
     background:#fff;
     padding-left:4px;
-    height: 20px;
+    min-height: 20px;
 }
 
 .informacoes-detalhe-nota label{

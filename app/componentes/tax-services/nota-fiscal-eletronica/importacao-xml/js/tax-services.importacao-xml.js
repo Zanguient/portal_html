@@ -307,5 +307,6 @@ angular.module("tax-services-importacao-xml", [])
     $scope.setTab = function (tab){
         if (tab >= 1 && tab <= 8) $scope.tab = tab;        
     }
-
+       
+    
 }])
