@@ -543,10 +543,10 @@ angular.module("card-services-consolidacao-relatorios", [])
                                   );
             return;   
         }
-        if($scope.filtro.filial === null){
+        /*if($scope.filtro.filial === null){
            $scope.showModalAlerta('É necessário selecionar uma filial!');
            return;
-       }
+        }*/
         // Intervalo de data
         if($scope.filtro.datamax){
             var timeDiff = Math.abs($scope.filtro.datamax.getTime() - $scope.filtro.datamin.getTime());
