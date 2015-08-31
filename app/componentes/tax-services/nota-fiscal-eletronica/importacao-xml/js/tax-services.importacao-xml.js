@@ -14,13 +14,15 @@ angular.module("tax-services-importacao-xml", [])
                                             /*'$campos',*/
                                             '$webapi',
                                             '$apis',
+                                            '$http',
                                             '$filter', 
+                                            '$timeout',    
                                             function($scope,$state,$http,/*$campos,*/
-                                                     $webapi,$apis,$filter){ 
+                                                     $webapi,$apis,$filter,$timeout){ 
    
     $scope.paginaInformada = 1; // página digitada pelo privilégio
     $scope.filiais = [];   
-    $scope.emitentes = [];                                            
+    $scope.manifestos = [];                                            
     $scope.itens_pagina = [50, 100, 150, 200];
     $scope.statusmanifesto = [/*{id: 1, nome : 'MANIFESTO'},
                                 {id: 2, nome : 'ERP'}*/];                                        
@@ -28,10 +30,11 @@ angular.module("tax-services-importacao-xml", [])
                       statusmanifesto : null, destinatario : null, emitente : '',
                       itens_pagina : $scope.itens_pagina[0], pagina : 1,
                       total_registros : 0, faixa_registros : '0-0', total_paginas : 0}; 
-                                                
+    $scope.total = { nfe : 0 };                                            
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
-    var divPortletBodyRelatorioPos = 1; // posição da div que vai receber o loading progress                             
+    var divPortletBodyManifestoPos = 1; // posição da div que vai receber o loading progress                             
     // flags
+    var ultimoFiltroBusca = undefined;
     $scope.tab = 1;
     $scope.exibeTela = false;   
     $scope.abrirCalendarioDataMin = false;
@@ -63,47 +66,12 @@ angular.module("tax-services-importacao-xml", [])
         $scope.$on('acessoDeTelaNotificado', function(event){
             $scope.exibeTela = true;
             // Carrega filiais
-            if($scope.usuariologado.grupoempresa) buscaFiliais();
+            buscaFiliais();
         }); 
         // Acessou a tela
         //$scope.$emit("acessouTela");
         $scope.exibeTela = true;
-        
-        $scope.emitentes.push({nrEmitenteCNPJCPF : '11111111',
-                               nmEmitente : 'Emitente 1',
-                               UF : 'SE',
-                               notas : [{dtEmissao : '2015-08-20 00:00:00',
-                                         modelo : 55,
-                                         numero : 12345,
-                                         serie : 1,
-                                         vlNFe : 200.57,
-                                         nrChave : 'Q123123asdasxcz0812',
-                                         nfe : '2938471',
-                                         dsSituacaoManifesto: 'Confirmado',
-                                         dsSituacaoErp : 'Não Importado'}, 
-                                        {dtEmissao : '2015-08-21 00:00:00',
-                                         modelo : 66,
-                                         numero : 6789,
-                                         serie : 2,
-                                         vlNFe : 399.01,
-                                         nrChave : 'XXYYZZWW',
-                                         nfe : '0092138',
-                                         dsSituacaoManifesto: 'Ciente',
-                                         dsSituacaoErp : 'Não Importado'}]});
-        
-        
-        $scope.emitentes.push({nrEmitenteCNPJCPF : '222222',
-                               nmEmitente : 'Emitente 2',
-                               UF : 'BA',
-                               notas : [{dtEmissao : '2015-08-20 00:00:00',
-                                         modelo : 77,
-                                         numero : 98765,
-                                         serie : 4,
-                                         vlNFe : 321.09,
-                                         nrChave : 'POIYJKLMN',
-                                         nfe : '090909',
-                                         dsSituacaoManifesto: 'Desconhecido',
-                                         dsSituacaoErp : 'Não Importado'}]});
+        buscaFiliais();
     };                                           
                                                 
                                             
@@ -157,6 +125,39 @@ angular.module("tax-services-importacao-xml", [])
         
                                                 
    /* FILTRO */
+                                                
+   /**
+      * Obtém os filtros de busca
+      */
+    var obtemFiltrosBusca = function(){
+        var filtros = [];
+        
+       // Data
+       var filtroData = {id: /*$campos.tax.tbmanifesto.dtEmissao*/ 108,
+                         valor: $scope.getFiltroData($scope.filtro.datamin)}; 
+       if($scope.filtro.datamax)
+           filtroData.valor = filtroData.valor + '|' + $scope.getFiltroData($scope.filtro.datamax);
+       filtros.push(filtroData);
+        
+       // Destinatário
+       if($scope.filtro.destinatario && $scope.filtro.destinatario !== null){
+           filtros.push({id: /*$campos.tax.tbmanifesto.nrCNPJ*/ 104, 
+                         valor: $scope.filtro.destinatario.nu_cnpj});  
+       }
+        
+        // Emitente
+        if($scope.filtro.emitente && $scope.filtro.emitente !== ''){
+            filtros.push({id: /*$campos.card.tbbancoparametro.nmEmitente */ 106,
+                          valor: '%' + $scope.filtro.emitente});
+        }
+        
+        // Status Manifesto
+        if($scope.filtro.statusmanifesto && $scope.filtro.statusmanifesto !== null){
+            filtros.push({id: /*$campos.tax.tbmanifesto.cdSituacaoManifesto */ 113,
+                          valor: $scope.filtro.statusmanifesto.id}); 
+        }
+        return filtros.length > 0 ? filtros : undefined;
+    }                                             
     
     /**
       * Limpa os filtros
@@ -165,6 +166,8 @@ angular.module("tax-services-importacao-xml", [])
         
         $scope.filtro.datamin = new Date();
         $scope.filtro.datamax = ''; 
+        
+        ultimoFiltroBusca = undefined;
         
         $scope.filtro.destinatario = $scope.filtro.statusmanifesto = null; 
         
@@ -211,6 +214,8 @@ angular.module("tax-services-importacao-xml", [])
       */
     var buscaFiliais = function(nu_cnpj){
         
+        if(!$scope.usuariologado.grupoempresa || $scope.usuariologado.grupoempresa === null) return;
+        
        $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
         
        var filtros = undefined;
@@ -244,54 +249,323 @@ angular.module("tax-services-importacao-xml", [])
       */
     $scope.alterouDestinatario = function(){
         //console.log($scope.filtro.destinatario); 
-    };          
+    }; 
                                                 
                                                 
                                                 
-    // EMITENTE
-    $scope.toggle = function(emitente){
-        if(!emitente || emitente === null) return;
-        if(emitente.collapsed) emitente.collapsed = false;
-        else emitente.collapsed = true;
+    
+                                                
+    // MANIFESTO
+    $scope.incrementaTotalNFes = function(totalNotas){
+        if(typeof totalNotas === 'number') $scope.total.nfe += totalNotas;    
     }
-    $scope.isExpanded = function(emitente){
-        if(!emitente || emitente === null) return;
-        return emitente.collapsed;
+    /**
+      * Obtem os manifestos a partir dos filtros
+      */
+    $scope.buscaManifestos = function(){
+        // Avalia se há um grupo empresa selecionado
+        if(!$scope.usuariologado.grupoempresa){
+            $scope.showModalAlerta('Por favor, selecione uma empresa', 'Atos Capital', 'OK', 
+                                   function(){
+                                         $timeout(function(){$scope.setVisibilidadeBoxGrupoEmpresa(true);}, 300);
+                                    }
+                                  );
+            return;   
+        }
+        /*if($scope.filtro.filial === null){
+           $scope.showModalAlerta('É necessário selecionar uma filial!');
+           return;
+        }*/
+        // Intervalo de data
+        if($scope.filtro.datamax){
+            var timeDiff = Math.abs($scope.filtro.datamax.getTime() - $scope.filtro.datamin.getTime());
+            var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+            if(diffDays > 31){
+                var periodo = diffDays <= 366 ? diffDays + ' dias' : 'mais de um ano';
+                $scope.showModalAlerta('Por favor, selecione um intervalo de data de no máximo 31 dias. (Sua seleção consta ' + periodo + ')', 'Atos Capital', 'OK', 
+                                   function(){
+                                         $timeout(function(){$scope.exibeCalendarioDataMax();}, 300);
+                                    }
+                                  );
+                return; 
+            }
+        }
+        // Nova busca
+        buscaManifestos();
+    }
+                                                
+                                                
+    var buscaManifestos = function(){
+       $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
+       $scope.showProgress(divPortletBodyManifestoPos);
+        
+       // Filtros    
+       var filtros = obtemFiltrosBusca();
+           
+       //console.log(filtros);
+       
+       $webapi.get($apis.getUrl($apis.tax.tbmanifesto, 
+                                [$scope.token, 5, /* $campos.tax.tbmanifesto.dtemissao */108, 0, 
+                                 $scope.filtro.itens_pagina, $scope.filtro.pagina],
+                                filtros)) 
+            .then(function(dados){
+                // Guarda o último filtro utilizado
+                ultimoFiltroBusca = filtros;
+           
+                // Reseta total de manifestos
+                $scope.total.nfe = 0;
+                // Obtém os dados
+                $scope.manifestos = dados.Registros;
+           
+                // Set valores de exibição
+                $scope.filtro.total_registros = dados.TotalDeRegistros;
+                $scope.filtro.total_paginas = Math.ceil($scope.filtro.total_registros / $scope.filtro.itens_pagina);
+                if($scope.manifestos.length === 0) $scope.faixa_registros = '0-0';
+                else{
+                    var registroInicial = ($scope.filtro.pagina - 1)*$scope.filtro.itens_pagina + 1;
+                    var registroFinal = registroInicial - 1 + $scope.filtro.itens_pagina;
+                    if(registroFinal > $scope.filtro.total_registros) registroFinal = $scope.filtro.total_registros;
+                    $scope.filtro.faixa_registros =  registroInicial + '-' + registroFinal;
+                }
+                // Verifica se a página atual é maior que o total de páginas
+                if($scope.filtro.pagina > $scope.filtro.total_paginas)
+                    setPagina(1); // volta para a primeira página e refaz a busca
+           
+                // Fecha os progress
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+                $scope.hideProgress(divPortletBodyManifestoPos);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter manifestos (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+                 $scope.hideProgress(divPortletBodyManifestoPos);
+              });           
+    }
+                                                
+                                                
+                                                
+    // TABELA EXPANSÍVEL
+    $scope.toggle = function(manifesto){
+        if(!manifesto || manifesto === null) return;
+        if(manifesto.collapsed) manifesto.collapsed = false;
+        else manifesto.collapsed = true;
+    }
+    $scope.isExpanded = function(manifesto){
+        if(!manifesto || manifesto === null) return;
+        return manifesto.collapsed;
     }
     
     
     
     
     // AÇÕES
-    $scope.downloadDAMFE = function(emitente, indexNota){
-        var nota = emitente.notas[indexNota];
-        console.log("DOWNLOAD DAMFE " + emitente.nmEmitente.toUpperCase());
-        console.log(nota);
-        
-        // get => $apis.util.utilnfe (coleção 2) => coleção 3 vem um zip com todos os pdfs
-        // {id : /* $campos.tax.tbManifesto.idManifesto */ 100, valor : nota.idManifesto}
-        // Retorna o arquivo para fazer o download
+    /** 
+      * Download DAMFE
+      */
+    $scope.downloadDAMFE = function(manifesto, indexNota){
+        var filtro = undefined;
+        var colecao = 3; // default : todas
+        var filename = manifesto.nrEmitenteCNPJCPF + '.zip';
+        if(typeof indexNota === 'number'){
+            // Apenas uma nota
+            var nota = manifesto.notas[indexNota];
+            //console.log("DOWNLOAD DAMFE " + manifesto.nmEmitente.toUpperCase());
+            //console.log(nota);
+            colecao = 2;
+            // filtro
+            filtro = {id : /* $campos.tax.tbManifesto.idManifesto */ 100,
+                      valor : nota.idManifesto};
+            filename = nota.nrChave + '.pdf';
+        }else{ 
+            // Todas as notas  
+            if(ultimoFiltroBusca){
+                filtro = [];
+                angular.copy(ultimoFiltroBusca, filtro);
+                filtro.push({id : /*$campos.tax.tbmanifesto.nrEmitenteCNPJCPF*/105,
+                             valor: manifesto.nrEmitenteCNPJCPF});
+            }else
+                filtro = {id : /*$campos.tax.tbmanifesto.nrEmitenteCNPJCPF*/105,
+                          valor: manifesto.nrEmitenteCNPJCPF};
+        }
+        download($apis.getUrl($apis.util.utilnfe, [$scope.token, colecao, /*$campos.tax.tbmanifesto.dtEmissao*/ 108], filtro),
+                 filename);
     }
-    $scope.detalhar = function(emitente, indexNota){
-        var nota = emitente.notas[indexNota];
-        console.log("DETALHAR " + emitente.nmEmitente.toUpperCase());
+    /** 
+      * Detalha a nota
+      */
+    $scope.detalhar = function(manifesto, indexNota){
+        var nota = manifesto.notas[indexNota];
+        console.log("DETALHAR " + manifesto.nmEmitente.toUpperCase());
         console.log(nota);
         $('#modalDetalhes').modal('show');
     }
-    $scope.imprimir = function(emitente, indexNota){
-        var nota = emitente.notas[indexNota];
-        console.log("IMPRIMIR " + emitente.nmEmitente.toUpperCase());
+    /** 
+      * Imprime a nota
+      */
+    $scope.imprimir = function(manifesto, indexNota){
+        var nota = manifesto.notas[indexNota];
+        console.log("IMPRIMIR " + manifesto.nmEmitente.toUpperCase());
         console.log(nota);
     }
-    $scope.downloadXML = function(emitente, indexNota){
-        var nota = emitente.notas[indexNota];
-        console.log("DOWNLOAD XML " + emitente.nmEmitente.toUpperCase());
-        console.log(nota);
+    /** 
+      * Download XML
+      */
+    $scope.downloadXML = function(manifesto, indexNota){
+        var filtro = undefined;
+        var colecao = 1; // default : todas
+        var filename = manifesto.nrEmitenteCNPJCPF + '.zip';
+        if(typeof indexNota === 'number'){
+            // Apenas uma nota
+            var nota = manifesto.notas[indexNota];
+            //console.log(nota);
+            //console.log("DOWNLOAD XML " + manifesto.nmEmitente.toUpperCase());
+            //console.log(nota);
+            colecao = 0;
+            // filtro
+            filtro = {id : /* $campos.tax.tbManifesto.idManifesto */ 100,
+                      valor : nota.idManifesto};
+            filename = nota.nrChave + '.xml';
+        }else{ 
+            // Todas as notas  
+            if(ultimoFiltroBusca){
+                filtro = [];
+                angular.copy(ultimoFiltroBusca, filtro);
+                filtro.push({id : /*$campos.tax.tbmanifesto.nrEmitenteCNPJCPF*/105,
+                             valor: manifesto.nrEmitenteCNPJCPF});
+            }else
+                filtro = {id : /*$campos.tax.tbmanifesto.nrEmitenteCNPJCPF*/105,
+                          valor: manifesto.nrEmitenteCNPJCPF};
+        }
+        download($apis.getUrl($apis.util.utilnfe, [$scope.token, colecao, /*$campos.tax.tbmanifesto.dtEmissao*/ 108], filtro),
+                 filename);
+    }
+    
+    /** 
+      * Requisita o download
+      */
+    var download = function(url, arquivo){
+        $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
+        $scope.showProgress(divPortletBodyManifestoPos);
         
-        // get => $apis.util.utilnfe (coleção 0) => coleção 1 vem um zip com todos os xmls
-        // {id : /* $campos.tax.tbManifesto.idManifesto */ 100, valor : nota.idManifesto}
-        // Retorna o arquivo para fazer o download
+        $http.get(url, {responseType: 'arraybuffer'}) 
+            .success(function(data, status, headers, config){
+                //console.log(dados);
+            
+                var octetStreamMime = 'application/octet-stream';
+                var success = false;
+
+                // Get the headers
+                headers = headers();
+            
+                //console.log(headers);
+
+                // Get the filename from the x-filename header or default to "download.bin"
+                var filename = headers['x-filename'] || arquivo;
+            
+                // Determine the content type from the header or default to "application/octet-stream"
+                var contentType = headers['content-type'] || octetStreamMime;
+
+                try
+                {
+                    // Try using msSaveBlob if supported
+                    //console.log("Trying saveBlob method ...");
+                    var blob = new Blob([data], { type: contentType });
+                    if(navigator.msSaveBlob)
+                        navigator.msSaveBlob(blob, filename);
+                    else {
+                        // Try using other saveBlob implementations, if available
+                        var saveBlob = navigator.webkitSaveBlob || navigator.mozSaveBlob || navigator.saveBlob;
+                        if(saveBlob === undefined) throw "Not supported";
+                        saveBlob(blob, filename);
+                    }
+                    //console.log("saveBlob succeeded");
+                    success = true;
+                } catch(ex)
+                {
+                    //console.log("saveBlob method failed with the following exception:");
+                    //console.log(ex);
+                }
+            
+                if(!success)
+                {
+                    // Get the blob url creator
+                    var urlCreator = window.URL || window.webkitURL || window.mozURL || window.msURL;
+                    if(urlCreator)
+                    {
+                        // Try to use a download link
+                        var link = document.createElement('a');
+                        if('download' in link)
+                        {
+                            // Try to simulate a click
+                            try
+                            {
+                                // Prepare a blob URL
+                                //console.log("Trying download link method with simulated click ...");
+                                var blob = new Blob([data], { type: contentType });
+                                var url = urlCreator.createObjectURL(blob);
+                                link.setAttribute('href', url);
+
+                                // Set the download attribute (Supported in Chrome 14+ / Firefox 20+)
+                                link.setAttribute("download", filename);
+
+                                // Simulate clicking the download link
+                                var event = document.createEvent('MouseEvents');
+                                event.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
+                                link.dispatchEvent(event);
+                                //console.log("Download link method with simulated click succeeded");
+                                success = true;
+
+                            } catch(ex) {
+                                //console.log("Download link method with simulated click failed with the following exception:");
+                                //console.log(ex);
+                            }
+                        }
+
+                        if(!success)
+                        {
+                            // Fallback to window.location method
+                            try
+                            {
+                                // Prepare a blob URL
+                                // Use application/octet-stream when using window.location to force download
+                                //console.log("Trying download link method with window.location ...");
+                                var blob = new Blob([data], { type: octetStreamMime });
+                                var url = urlCreator.createObjectURL(blob);
+                                window.location = url;
+                                //console.log("Download link method with window.location succeeded");
+                                success = true;
+                            } catch(ex) {
+                                //console.log("Download link method with window.location failed with the following exception:");
+                                //console.log(ex);
+                            }
+                        }
+
+                    }
+                }
+
+                if(!success)
+                {
+                    // Fallback to window.open method
+                    //console.log("No methods worked for saving the arraybuffer, using last RESORT window.open");
+                    window.open(url, '_blank', '');
+                }
+
+            
+                // Fecha os progress
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+                $scope.hideProgress(divPortletBodyManifestoPos);
+            }).error(function(data, status, headers, config){
+                 if(status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(status === 503 || status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao realizar o download (' + status + ')', true, 'danger', true);
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+                 $scope.hideProgress(divPortletBodyManifestoPos);
+            });           
     }
+        
+        
     
     
     //TAB

@@ -276,7 +276,7 @@ angular.module('webapi', ['utils'])
         }
       },
       tax : {
-        tbManifesto : {
+        tbmanifesto : {
             idManifesto : 100,
             nrChave : 101,
             nrNSU : 102,
@@ -397,11 +397,11 @@ angular.module('webapi', ['utils'])
         terminallogico : $autenticacao.getUrlBase() + '/pos/terminallogico/'
     },
     tax : {
-        tbManifesto : $autenticacao.getUrlBase() + '/tax/tbmanifesto/',    
+        tbmanifesto : $autenticacao.getUrlBase() + '/tax/tbmanifesto/',    
     },
     util : {
         bancos : $autenticacao.getUrlBase() + '/util/bancos/',   
-        utilnfe : $autenticacao.getUrlBase() + '/util/utilnfe/',   
+        utilnfe : $autenticacao.getUrlBaseDownload() + '/util/utilnfe/',   
     }
   }
 }])

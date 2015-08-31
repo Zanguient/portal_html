@@ -145,14 +145,17 @@ angular.module('utils', [ ])
   //var urlBase = 'http://192.168.0.100/ws/proxy';  // proxy: versão mais atualizada da webapi 
   var urlBase = 'http://ws.atoscapital.com.br/proxy';
   // IMessage
-  //var urlBaseIMessage = 'http://localhost:50780';
-  var urlBaseIMessage = 'http://imessage.atoscapital.com.br';
+  var urlBaseIMessage = 'http://localhost:50780';
+  // Download
+  var urlBaseDownload = 'http://apiportal.atoscapital.com.br';
+  //var urlBaseIMessage = 'http://imessage.atoscapital.com.br';
   // Tempo em horas máximos definido de inatividade para requerer novo login, caso LEMBRAR não tenha sido marcado
   const HORAS_NOVO_LOGIN = 2;
     
   return {
     getUrlBase : function(){ return urlBase },
     getUrlBaseIMessage : function(){ return urlBaseIMessage },
+    getUrlBaseDownload : function(){ return urlBaseDownload },
     apiStatus: urlBase + '/login/status/',
     // URL + keys da local storage  
     autenticacao: { 

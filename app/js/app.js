@@ -1720,7 +1720,10 @@ angular.module("AtosCapital", ['ui.router',
                             
                             
    // MODAL ALERTA
-    $scope.alerta = {titulo : '', mensagem : '', textoOk : 'Ok', funcaoOk: function(){}};                                       
+    $scope.alerta = {titulo : '', mensagem : '', textoOk : 'Ok', funcaoOk: function(){}};
+    var fechaModalAlerta = function(){
+        $('#modalAlerta').modal('hide');    
+    }; 
     /**
       * Exibe modal com a mensagem de alerta
       */
@@ -1735,9 +1738,7 @@ angular.module("AtosCapital", ['ui.router',
         $('#modalAlerta').modal('show');
         if(!$scope.$$phase) $scope.$apply();
     }
-    var fechaModalAlerta = function(){
-        $('#modalAlerta').modal('hide');    
-    }; 
+    
                             
     // MODAL INPUT
     $scope.input = {titulo : '', mensagem : '', text : '', textoCancela : 'Cancelar',
