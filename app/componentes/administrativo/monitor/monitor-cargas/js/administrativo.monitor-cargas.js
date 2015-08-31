@@ -99,7 +99,8 @@ angular.module("administrativo-monitor-cargas", ['SignalR','ngLocale'])
         }
         
         // Filtros
-        var filtroMonitorCargas = {data : getAnoMesCorrente(),
+        var filtroMonitorCargas = {//token : $rootScope.token,
+                                   data : getAnoMesCorrente(),
                                    status : 0,
                                    idGrupo : 0,
                                    nuCnpj: '',
