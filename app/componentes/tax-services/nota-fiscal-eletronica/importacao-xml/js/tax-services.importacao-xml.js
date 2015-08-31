@@ -30,7 +30,8 @@ angular.module("tax-services-importacao-xml", [])
                       statusmanifesto : null, destinatario : null, emitente : '',
                       itens_pagina : $scope.itens_pagina[0], pagina : 1,
                       total_registros : 0, faixa_registros : '0-0', total_paginas : 0}; 
-    $scope.total = { nfe : 0 };                                            
+    $scope.total = { nfe : 0 };  
+    $scope.notadetalhada = undefined;                                            
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyManifestoPos = 1; // posição da div que vai receber o loading progress                             
     // flags
@@ -362,87 +363,6 @@ angular.module("tax-services-importacao-xml", [])
     
     // AÇÕES
     /** 
-      * Download DAMFE
-      */
-    $scope.downloadDAMFE = function(manifesto, indexNota){
-        var filtro = undefined;
-        var colecao = 3; // default : todas
-        var filename = manifesto.nrEmitenteCNPJCPF + '.zip';
-        if(typeof indexNota === 'number'){
-            // Apenas uma nota
-            var nota = manifesto.notas[indexNota];
-            //console.log("DOWNLOAD DAMFE " + manifesto.nmEmitente.toUpperCase());
-            //console.log(nota);
-            colecao = 2;
-            // filtro
-            filtro = {id : /* $campos.tax.tbManifesto.idManifesto */ 100,
-                      valor : nota.idManifesto};
-            filename = nota.nrChave + '.pdf';
-        }else{ 
-            // Todas as notas  
-            if(ultimoFiltroBusca){
-                filtro = [];
-                angular.copy(ultimoFiltroBusca, filtro);
-                filtro.push({id : /*$campos.tax.tbmanifesto.nrEmitenteCNPJCPF*/105,
-                             valor: manifesto.nrEmitenteCNPJCPF});
-            }else
-                filtro = {id : /*$campos.tax.tbmanifesto.nrEmitenteCNPJCPF*/105,
-                          valor: manifesto.nrEmitenteCNPJCPF};
-        }
-        download($apis.getUrl($apis.util.utilnfe, [$scope.token, colecao, /*$campos.tax.tbmanifesto.dtEmissao*/ 108], filtro),
-                 filename);
-    }
-    /** 
-      * Detalha a nota
-      */
-    $scope.detalhar = function(manifesto, indexNota){
-        var nota = manifesto.notas[indexNota];
-        console.log("DETALHAR " + manifesto.nmEmitente.toUpperCase());
-        console.log(nota);
-        $('#modalDetalhes').modal('show');
-    }
-    /** 
-      * Imprime a nota
-      */
-    $scope.imprimir = function(manifesto, indexNota){
-        var nota = manifesto.notas[indexNota];
-        console.log("IMPRIMIR " + manifesto.nmEmitente.toUpperCase());
-        console.log(nota);
-    }
-    /** 
-      * Download XML
-      */
-    $scope.downloadXML = function(manifesto, indexNota){
-        var filtro = undefined;
-        var colecao = 1; // default : todas
-        var filename = manifesto.nrEmitenteCNPJCPF + '.zip';
-        if(typeof indexNota === 'number'){
-            // Apenas uma nota
-            var nota = manifesto.notas[indexNota];
-            //console.log(nota);
-            //console.log("DOWNLOAD XML " + manifesto.nmEmitente.toUpperCase());
-            //console.log(nota);
-            colecao = 0;
-            // filtro
-            filtro = {id : /* $campos.tax.tbManifesto.idManifesto */ 100,
-                      valor : nota.idManifesto};
-            filename = nota.nrChave + '.xml';
-        }else{ 
-            // Todas as notas  
-            if(ultimoFiltroBusca){
-                filtro = [];
-                angular.copy(ultimoFiltroBusca, filtro);
-                filtro.push({id : /*$campos.tax.tbmanifesto.nrEmitenteCNPJCPF*/105,
-                             valor: manifesto.nrEmitenteCNPJCPF});
-            }else
-                filtro = {id : /*$campos.tax.tbmanifesto.nrEmitenteCNPJCPF*/105,
-                          valor: manifesto.nrEmitenteCNPJCPF};
-        }
-        download($apis.getUrl($apis.util.utilnfe, [$scope.token, colecao, /*$campos.tax.tbmanifesto.dtEmissao*/ 108], filtro),
-                 filename);
-    }
-    
-    /** 
       * Requisita o download
       */
     var download = function(url, arquivo){
@@ -563,6 +483,143 @@ angular.module("tax-services-importacao-xml", [])
                  $scope.hideProgress(divPortletBodyFiltrosPos);
                  $scope.hideProgress(divPortletBodyManifestoPos);
             });           
+    }
+    /** 
+      * Download DAMFE
+      */
+    $scope.downloadDAMFE = function(manifesto, indexNota){
+        var filtro = undefined;
+        var colecao = 3; // default : todas
+        var filename = manifesto.nrEmitenteCNPJCPF + '.zip';
+        if(typeof indexNota === 'number'){
+            // Apenas uma nota
+            var nota = manifesto.notas[indexNota];
+            //console.log("DOWNLOAD DAMFE " + manifesto.nmEmitente.toUpperCase());
+            //console.log(nota);
+            colecao = 2;
+            // filtro
+            filtro = {id : /* $campos.tax.tbManifesto.idManifesto */ 100,
+                      valor : nota.idManifesto};
+            filename = nota.nrChave + '.pdf';
+        }else{ 
+            // Todas as notas  
+            if(ultimoFiltroBusca){
+                filtro = [];
+                angular.copy(ultimoFiltroBusca, filtro);
+                filtro.push({id : /*$campos.tax.tbmanifesto.nrEmitenteCNPJCPF*/105,
+                             valor: manifesto.nrEmitenteCNPJCPF});
+            }else
+                filtro = {id : /*$campos.tax.tbmanifesto.nrEmitenteCNPJCPF*/105,
+                          valor: manifesto.nrEmitenteCNPJCPF};
+        }
+        download($apis.getUrl($apis.util.utilnfe, [$scope.token, colecao, /*$campos.tax.tbmanifesto.dtEmissao*/ 108], filtro),
+                 filename);
+    }
+    /** 
+      * Download XML
+      */
+    $scope.downloadXML = function(manifesto, indexNota){
+        var filtro = undefined;
+        var colecao = 1; // default : todas
+        var filename = manifesto.nrEmitenteCNPJCPF + '.zip';
+        if(typeof indexNota === 'number'){
+            // Apenas uma nota
+            var nota = manifesto.notas[indexNota];
+            //console.log(nota);
+            //console.log("DOWNLOAD XML " + manifesto.nmEmitente.toUpperCase());
+            //console.log(nota);
+            colecao = 0;
+            // filtro
+            filtro = {id : /* $campos.tax.tbManifesto.idManifesto */ 100,
+                      valor : nota.idManifesto};
+            filename = nota.nrChave + '.xml';
+        }else{ 
+            // Todas as notas  
+            if(ultimoFiltroBusca){
+                filtro = [];
+                angular.copy(ultimoFiltroBusca, filtro);
+                filtro.push({id : /*$campos.tax.tbmanifesto.nrEmitenteCNPJCPF*/105,
+                             valor: manifesto.nrEmitenteCNPJCPF});
+            }else
+                filtro = {id : /*$campos.tax.tbmanifesto.nrEmitenteCNPJCPF*/105,
+                          valor: manifesto.nrEmitenteCNPJCPF};
+        }
+        download($apis.getUrl($apis.util.utilnfe, [$scope.token, colecao, /*$campos.tax.tbmanifesto.dtEmissao*/ 108], filtro),
+                 filename);
+    }
+    
+    
+    
+    
+    
+    
+    // DETALHES
+    /**
+      * Obtém string com '<código> - <descricao/nome>'
+      */
+    $scope.getCodigoTracoDescricao = function(obj){
+        var text = '';
+        if(obj.codigo){ 
+            text = obj.codigo + '';
+            if(obj.descricao) text += ' - ' + obj.descricao;
+            else if(obj.nome) text += ' - ' + obj.nome;
+        }else if(obj.descricao) text = obj.descricao;
+        else if(obj.nome) text = obj.nome;
+        return text.toUpperCase();
+    }
+    
+    /**
+      * Requisita informações detalhadas da nota fiscal eletrônica
+      */
+    var obtemDetalhesNota = function(idManifesto, funcaoSucesso){
+       $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
+       $scope.showProgress(divPortletBodyManifestoPos);
+        
+       // Filtros    
+       var filtro = {id : /*$campos.tax.tbmanifesto.idManifesto*/ 100,
+                     valor : idManifesto};
+           
+       //console.log(filtros);
+       
+       $webapi.get($apis.getUrl($apis.tax.tbmanifesto, [$scope.token, 4], filtro)) 
+            .then(function(dados){
+                // Obtém os dados
+                $scope.notadetalhada = undefined;
+           
+                if(dados.Registros.length > 0) $scope.notadetalhada = dados.Registros[0].notas[0];
+
+                if(typeof funcaoSucesso === 'function') funcaoSucesso();
+           
+                // Fecha os progress
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+                $scope.hideProgress(divPortletBodyManifestoPos);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter detalhes da NF-e (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+                 $scope.hideProgress(divPortletBodyManifestoPos);
+              });     
+    }
+    
+    /** 
+      * Detalha a nota
+      */
+    $scope.detalhar = function(manifesto, indexNota){
+        var nota = manifesto.notas[indexNota];
+        //console.log("DETALHAR " + manifesto.nmEmitente.toUpperCase());
+        //console.log(nota);
+        obtemDetalhesNota(nota.idManifesto, function(){$('#modalDetalhes').modal('show');});
+    }
+    /** 
+      * Imprime a nota
+      */
+    $scope.imprimir = function(manifesto, indexNota){
+        var nota = manifesto.notas[indexNota];
+        console.log("IMPRIMIR " + manifesto.nmEmitente.toUpperCase());
+        console.log(nota);
+        //obtemDetalhesNota(nota.idManifesto, function(){ /* abre nova aba */});
     }
         
         
