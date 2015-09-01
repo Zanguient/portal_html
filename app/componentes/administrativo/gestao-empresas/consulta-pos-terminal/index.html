@@ -52,13 +52,13 @@
                                 <thead>
                                     <tr role="row" class="heading">
                                         <th width="10%" tabindex="0" rowspan="1" colspan="1">
-                                             Filiais 
+                                             Filial
                                         </th>
                                         <th width="8%" tabindex="1" rowspan="1" colspan="1">
-                                             Adquirentes
+                                             Adquirente
                                         </th>
                                         <th width="8%" tabindex="2" rowspan="1" colspan="1">
-                                             Status da senha
+                                             Status
                                         </th>
                                         <th width="2%" tabindex="3" rowspan="1" colspan="1">
                                              Opções
@@ -252,22 +252,22 @@
                                                     <th tabindex="0" 
                                                         rowspan="1" colspan="1" 
                                                         style="width: 188px; text-align:center">
-                                                        Adquirente
+                                                        Filial
                                                     </th>
                                                     <th tabindex="1" 
                                                         rowspan="1" colspan="1" 
                                                         style="width: 237px;">
-                                                        Login
+                                                        Adquirente
                                                     </th>
                                                     <th tabindex="2" 
                                                         rowspan="1" colspan="1" 
                                                         style="width: 237px;">
-                                                        Estabelecimento
+                                                        Número do Terminal
                                                     </th>
                                                     <th tabindex="3" 
                                                         rowspan="1" colspan="1" 
                                                         style="width: 128px;">
-                                                        Senha
+                                                        Status
                                                     </th>
                                                     <th tabindex="4" 
                                                         rowspan="1" colspan="1" 
@@ -276,100 +276,31 @@
                                                     </th>                                        
                                                 </tr>
                                             </thead>
-                                            <tbody class="conteudotabelasCentralizadas">
-                                                <tr role="row" class="odd" ng-show="exibePrimeiraLinha">
-                                                    <!-- ADQUIRENTE -->
-                                                    <td>
-                                                         <select class="form-control form-filter input-sm"
-                                                                ng-model="cadastro.adquirente"
-                                                                ng-change="alterouAdquirenteCadastro()"
-                                                                ng-options="adquirente as (adquirente.descricao | uppercase) for adquirente in adquirentescadastro">
-                                                            <option value=""></option>
-                                                        </select>
-                                                    </td>
-                                                    <!-- LOGIN -->
-                                                    <td>
-                                                         <input type="text" 
-                                                                class="form-control" 
-                                                                placeholder="Login"
-                                                                ng-model="cadastro.login">
-                                                    </td>
-                                                    <!-- ESTABELECIMENTO -->
-                                                    <td>
-                                                         <input type="text" 
-                                                                class="form-control" 
-                                                                placeholder="Estabelecimento"
-                                                                ng-model="cadastro.estabelecimento">
-                                                    </td>
-                                                    <!-- SENHA -->
-                                                    <td>
-                                                        <input type="text" class="form-control" 
-                                                                placeholder="Senha"
-                                                                ng-model="cadastro.senha">
-                                                    </td>
-                                                    <!-- BOTÕES-->
-                                                    <td class="center btnacoes">
-                                                        <div class="row">
-                                                            <div class="col-sm-12 col-md-5">
-                                                                <button class="btn btn-primary"
-                                                                        ng-click="salvarDadosAcesso()"
-                                                                        >
-                                                                    Salvar
-                                                                </button>
-                                                            </div>    
-                                                            <div class="col-sm-12 col-md-7" style="margin-top:2px">    
-                                                                <button class="btn btn-default"
-                                                                        ng-click="cancelar()"
-                                                                       >
-                                                                    Cancelar
-                                                                </button>
-                                                            </div> 
-                                                        </div>    
-                                                    </td> 
-                                                    <!--FIM BOTÃO-->
-                                                </tr> 
+                                            <tbody class="conteudotabelasCentralizadas">                                        
                                                 <!-- DADOS DE ACESSO -->
-                                                <tr role="row" class="odd"
-                                                    ng-repeat="dadoacesso in dadosAcesso">
+                                                <tr role="row" class="odd">
+                                                    <!--ADQUIRENTE-->
                                                     <td>
-                                                         {{dadoacesso.operadora.desOperadora | uppercase}}
+                                                        Cielo 
                                                     </td>
+                                                    <!--FILIAL-->
                                                     <td style="text-align:center">
-                                                         <span ng-hide="alterando && alteracao.id === dadoacesso.id">
-                                                             {{dadoacesso.login}}
-                                                         </span>
-                                                         <input type="text" 
-                                                                class="form-control" 
-                                                                placeholder="Estabelecimento"
-                                                                ng-show="alterando && alteracao.id === dadoacesso.id"
-                                                                ng-model="alteracao.login">  
+                                                        A Suprema Matriz
                                                     </td>
+                                                    <!--NUMERO TERMINAL-->
                                                     <td style="text-align:center">
-                                                        <span ng-hide="alterando && alteracao.id === dadoacesso.id">
-                                                         {{dadoacesso.estabelecimento ||  ''}}
-                                                        </span>
-                                                        <input type="text" 
-                                                                class="form-control" 
-                                                                placeholder="Estabelecimento"
-                                                                ng-show="alterando && alteracao.id === dadoacesso.id"
-                                                                ng-model="alteracao.estabelecimento">
+                                                        73783    
                                                     </td>
+                                                    <!--STATUS-->
                                                     <td style="text-align:center">
-                                                         <span ng-class="{ 'StatusSenhaValida' : dadoacesso.status, 
-                                                                           'StatusSenhaInvalida' : !dadoacesso.status}"
-                                                               ng-hide="alterando && alteracao.id === dadoacesso.id">
-                                                             {{dadoacesso.senha}}
-                                                        </span>
-                                                        <input type="text" 
-                                                                class="form-control" 
-                                                                placeholder="Senha"
-                                                                ng-show="alterando && alteracao.id === dadoacesso.id"
-                                                                ng-model="alteracao.senha">
+                                                        <span class="status-ativo-pos-terminal">
+                                                            Ativo    
+                                                        </span>                                                        
                                                     </td>
                                                     <!-- BOTÃO AÇÕES-->
                                                     <td class="center btnacoes">
                                                         <div class="btn-group" dropdown dropdown-append-to-body
-                                                             ng-hide="(!usuarioPodeAlterarDadosAcesso() && !usuarioPodeExcluirDadosAcesso()) || alterando && alteracao.id === dadoacesso.id">
+                                                             ng-hide="">
                                                             <a class="btn btn-default btn-circle" 
                                                                href="javascript:;" dropdown-toggle>
                                                                 <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
@@ -377,31 +308,27 @@
                                                             <ul class="dropdown-menu dropDownAtos">
                                                                 <li>
                                                                     <a href="javascript:;" 
-                                                                       ng-click="editarDadosAcesso(dadoacesso)"
-                                                                       ng-show="usuarioPodeAlterarDadosAcesso()">
+                                                                       ng-click="excluirDadosAcesso(dadoacesso)"
+                                                                       ng-show="usuarioPodeExcluirDadosAcesso()">
                                                                         Editar
                                                                     </a>
-                                                                </li>
-                                                                <!--li>
+                                                                </li> 
+                                                                <li>
                                                                     <a href="javascript:;" 
                                                                        ng-click="excluirDadosAcesso(dadoacesso)"
                                                                        ng-show="usuarioPodeExcluirDadosAcesso()">
                                                                         Excluir
                                                                     </a>
-                                                                </li--> 
+                                                                </li> 
+                                                                <li>
+                                                                    <a href="javascript:;" 
+                                                                       ng-click="excluirDadosAcesso(dadoacesso)"
+                                                                       ng-show="usuarioPodeExcluirDadosAcesso()">
+                                                                        Alterar
+                                                                    </a>
+                                                                </li>
                                                             </ul>
-                                                        </div>
-                                                        <!-- BOTÕES ALTERAÇÃO-->
-                                                        <div ng-show="alterando && alteracao.id === dadoacesso.id">
-                                                            <button class="btn btn-primary"
-                                                                    ng-click="alteraDadosAcesso(dadoacesso)">
-                                                                Salvar
-                                                            </button>
-                                                            <button class="btn btn-default"
-                                                                    ng-click="cancelaAlteracao()">
-                                                                Cancelar
-                                                            </button>
-                                                        </div> 
+                                                        </div>                                                        
                                                         <!--FIM BOTÃO ALTERAÇÃO-->
                                                     </td> 
                                                     <!--FIM BOTÃO AÇÕES-->
