@@ -896,3 +896,24 @@ padding-top: 16%;
 }
 
 /*FIM ESTILOS MODAL DETALHES DA NOTA*/
+
+
+/*ESTILOS CONSULTA POS/TERMINAL*/
+
+.status-ativo-pos-terminal{
+    background-color: #45B6AF;  
+    color: #fff; 
+    padding: 3px 6px 3px 6px;
+    text-align: center;
+    border-radius: .25em; 
+}
+
+.status-ativo-pos-terminal{
+    background-color: #F3565D;  
+    color: #fff;  
+    padding: 3px 6px 3px 6px;
+    text-align: center;
+    border-radius: .25em;
+}
+
+/*FIM ESTILOS CONSULTA POS/TERMINAL*/
