@@ -11,13 +11,14 @@ angular.module("tax-services-importacao-xml", [])
 .controller("tax-services-importacao-xmlCtrl", ['$scope',   
                                             '$state',
                                             '$http',
+                                            '$window',
                                             /*'$campos',*/
                                             '$webapi',
                                             '$apis',
                                             '$http',
                                             '$filter', 
                                             '$timeout',    
-                                            function($scope,$state,$http,/*$campos,*/
+                                            function($scope,$state,$http,$window,/*$campos,*/
                                                      $webapi,$apis,$filter,$timeout){ 
    
     $scope.paginaInformada = 1; // página digitada pelo privilégio
@@ -37,7 +38,7 @@ angular.module("tax-services-importacao-xml", [])
     // flags
     var ultimoFiltroBusca = undefined;
     $scope.tab = 1;
-    $scope.exibeTela = false;   
+    $scope.exibeTela = false;                                         
     $scope.abrirCalendarioDataMin = false;
     $scope.abrirCalendarioDataMax = false;                                                            
                                                 
@@ -622,8 +623,9 @@ angular.module("tax-services-importacao-xml", [])
       */
     $scope.imprimir = function(manifesto, indexNota){
         var nota = manifesto.notas[indexNota];
-        console.log("IMPRIMIR " + manifesto.nmEmitente.toUpperCase());
-        console.log(nota);
+        //console.log("IMPRIMIR " + manifesto.nmEmitente.toUpperCase());
+        //console.log(nota);
+        $window.open('views/impressao-nfe#?k=' + nota.nrChave + '&t='+$scope.token, '_blank');
         //obtemDetalhesNota(nota.idManifesto, function(){ /* abre nova aba */});
     }
         
