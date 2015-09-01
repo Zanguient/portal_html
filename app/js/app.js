@@ -1843,9 +1843,13 @@ angular.module("AtosCapital", ['ui.router',
    };
    $scope.getDataTimeString = function(data){
         // 2015-07-21T10:51:15.917  
-        if(typeof data !== 'undefined' && data !== null) 
-            return data.substr(8, 2) + '/' + data.substr(5, 2) + '/' + data.substr(0, 4) + 
-                   ' ' + data.substr(11,8);
+        if(typeof data !== 'undefined' && data !== null){ 
+            var dt = data.substr(8, 2) + '/' + data.substr(5, 2) + '/' + data.substr(0, 4) + 
+                     ' ' + data.substr(11,8);
+            var index = dt.indexOf('-');
+            if(index > -1) dt = dt.substr(0, index);
+            return dt;
+        }
         return '';
    };
    $scope.getTimeString = function(data){

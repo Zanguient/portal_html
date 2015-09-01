@@ -227,8 +227,6 @@
                                <h4 class="modal-title modal-cabecalho">Detalhes da Nota</h4>
                            </div>
                            <div class="modal-body modal-corpo" style="text-align: left">
-                               <!-- LAYOUT AQUI -->
-                               
                                <!-- TABS -->
                                 <div class="row">
                                     <div class="col-sm-12">
@@ -245,7 +243,6 @@
                                     </div>
                                     <!-- CONTEÚDO -->
                                     <div class="col-sm-12">
-                                        
                                         <!-- NF-e -->
                                         <div class="panel" ng-show="tabIs(1)">
                                             <!--CONTEÚDO-->
@@ -287,8 +284,8 @@
                                                             <label class="col-md-12 titulos-dados-detalhes-nota">
                                                                 Data de Emissão
                                                             </label>
-                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                                27/08/2015 23:36:00-03:00
+                                                            <div class="col-md-12 informacoes-detalhe-nota"
+                                                                 ng-bind="getDataTimeString(notadetalhada.nfe.dtEmissao)">
                                                             </div> 
                                                         </div>
                                                         <div class="col-md-3">
@@ -296,7 +293,7 @@
                                                                 Data/Hora de Saída ou da Entrada
                                                             </label>
                                                             <div class="col-md-12 informacoes-detalhe-nota"
-                                                                 ng-bind="getDataTimeString(notadetalhada.nfe.dtSaiEnt)">
+                                                                 ng-bind="getDataString(notadetalhada.nfe.dtSaiEnt) !== '01/01/0001' ? getDataTimeString(notadetalhada.nfe.dtSaiEnt) : ''">
                                                             </div> 
                                                         </div>
                                                         <div class="col-md-2">
@@ -318,10 +315,10 @@
                                                     <div class="row campos-detalhe-nota">
                                                         <div class="col-md-3">
                                                            <label class="col-md-12 titulos-dados-detalhes-nota"
-                                                                  ng-bind="notadetalhada.emitente.CPF !== null ? 'CPF' : 'CNPJ'">
+                                                                  ng-bind="notadetalhada.emitente.CPF && notadetalhada.emitente.CPF !== null ? 'CPF' : 'CNPJ'">
                                                             </label>
                                                             <div class="col-md-12 informacoes-detalhe-nota"
-                                                                 ng-bind="notadetalhada.emitente.CPF !== null ? notadetalhada.emitente.CPF : notadetalhada.emitente.CNPJ">
+                                                                 ng-bind="notadetalhada.emitente.CPF && notadetalhada.emitente.CPF !== null ? notadetalhada.emitente.CPF : notadetalhada.emitente.CNPJ">
                                                             </div> 
                                                         </div>
                                                         <div class="col-md-5">
@@ -363,10 +360,10 @@
                                                             <div class="row">
                                                                 <div class="col-md-3">
                                                                     <label class="col-md-12 titulos-dados-detalhes-nota"
-                                                                          ng-bind="notadetalhada.destinatario.CPF !== null ? 'CPF' : 'CNPJ'">
+                                                                          ng-bind="notadetalhada.destinatario.CPF && notadetalhada.destinatario.CPF !== null ? 'CPF' : 'CNPJ'">
                                                                     </label>
                                                                     <div class="col-md-12 informacoes-detalhe-nota"
-                                                                         ng-bind="notadetalhada.destinatario.CPF !== null ? notadetalhada.destinatario.CPF : notadetalhada.destinatario.CNPJ">
+                                                                         ng-bind="notadetalhada.destinatario.CPF && notadetalhada.destinatario.CPF !== null ? notadetalhada.destinatario.CPF : notadetalhada.destinatario.CNPJ">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-5">
@@ -413,7 +410,7 @@
                                                                 </div>
                                                                 <div class="col-md-4">
                                                                     <label class="col-md-12 titulos-dados-detalhes-nota">  
-                                                                        Presença~do Comprador
+                                                                        Presença do Comprador
                                                                     </label>
                                                                     <div class="col-md-12 informacoes-detalhe-nota" 
                                                                          ng-bind="getCodigoTracoDescricao(notadetalhada.nfe.presencaComprador)">
@@ -590,10 +587,10 @@
                                                             <div class="row">
                                                                 <div class="col-md-12">
                                                                     <label class="col-md-12 titulos-dados-detalhes-nota"
-                                                                           ng-bind="notadetalhada.emitente.CPF !== null ? 'CPF' : 'CNPJ'">
+                                                                           ng-bind="notadetalhada.emitente.CPF && notadetalhada.emitente.CPF !== null ? 'CPF' : 'CNPJ'">
                                                                     </label>
                                                                     <div class="col-md-12 informacoes-detalhe-nota"
-                                                                         ng-bind="notadetalhada.emitente.CPF !== null ? notadetalhada.emitente.CPF : notadetalhada.emitente.CNPJ">
+                                                                         ng-bind="notadetalhada.emitente.CPF && notadetalhada.emitente.CPF !== null ? notadetalhada.emitente.CPF : notadetalhada.emitente.CNPJ">
                                                                     </div>                                              
                                                                 </div>    
                                                             </div>
@@ -779,10 +776,10 @@
                                                                     <div class="row">
                                                                         <div class="col-md-12">
                                                                             <label class="col-md-12 titulos-dados-detalhes-nota"
-                                                                                   ng-bind="notadetalhada.destinatario.CPF !== null ? 'CPF' : 'CNPJ'">
+                                                                                   ng-bind="notadetalhada.destinatario.CPF && notadetalhada.destinatario.CPF !== null ? 'CPF' : 'CNPJ'">
                                                                             </label>
                                                                             <div class="col-md-12 informacoes-detalhe-nota"
-                                                                                 ng-bind="notadetalhada.destinatario.CPF !== null ? notadetalhada.destinatario.CPF : notadetalhada.destinatario.CNPJ">
+                                                                                 ng-bind="notadetalhada.destinatario.CPF && notadetalhada.destinatario.CPF !== null ? notadetalhada.destinatario.CPF : notadetalhada.destinatario.CNPJ">
                                                                             </div> 
                                                                         </div>
                                                                         <div class="col-md-12">
@@ -846,7 +843,7 @@
                                                                                 CEP
                                                                             </label>
                                                                             <div class="col-md-12 informacoes-detalhe-nota">
-                                                                                {{{{notadetalhada.destinatario.endereco.cep | uppercase}}
+                                                                                {{notadetalhada.destinatario.endereco.cep | uppercase}}
                                                                             </div>
                                                                         </div><div class="col-md-12">
                                                                             <label class="col-md-12 titulos-dados-detalhes-nota">
@@ -1178,7 +1175,7 @@
 
                                                                                             </label>
                                                                                             <div class="col-md-12 informacoes-detalhe-nota">
-                                                                                                NÃO ACHEI!
+                                                                                        {{produto.imposto.valorAproximadoTributos | currency:'R$'}}
                                                                                             </div>                                              
                                                                                         </div>
                                                                                     </div>
@@ -1210,8 +1207,7 @@
                                                                                                                 Origem da Mercadoria
 
                                                                                                             </label>
-                                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
-                                                                                                                0 - Nacional
+                                                                                                            <div class="col-md-12 informacoes-detalhe-nota" ng-bind="getCodigoTracoDescricao(produto.imposto.ICMS.origem)">
                                                                                                             </div>                                              
                                                                                                         </div>
                                                                                                         <div class="col-md-4">
@@ -1220,7 +1216,7 @@
 
                                                                                                             </label>
                                                                                                             <div class="col-md-12 informacoes-detalhe-nota">        
-                                                                                                                10 - Tributada e com cobrança do ICMS por substituição tributária
+                                                                                                    {{produto.imposto.ICMS.CST}}
                                                                                                             </div>                                              
                                                                                                         </div>
                                                                                                         <div class="col-md-4">
@@ -1228,8 +1224,7 @@
                                                                                                                 Modalidade Definição da BC ICMS NORMAL
 
                                                                                                             </label>
-                                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
-                                                                                                                3 - Valor da Operação
+                                                                                                            <div class="col-md-12 informacoes-detalhe-nota" ng-bind="getCodigoTracoDescricao(produto.imposto.ICMS.modalidadeBC)">
                                                                                                             </div>                                              
                                                                                                         </div>
                                                                                                     </div>
@@ -1241,7 +1236,7 @@
 
                                                                                                             </label>
                                                                                                             <div class="col-md-12 informacoes-detalhe-nota">
-                                                                                                                130,00
+                                                                                    {{produto.imposto.ICMS.baseCalculoICMSNormal | currency:'R$'}}
                                                                                                             </div>                                              
                                                                                                         </div>
                                                                                                         <div class="col-md-4">
@@ -1250,7 +1245,7 @@
 
                                                                                                             </label>
                                                                                                             <div class="col-md-12 informacoes-detalhe-nota">        
-                                                                                                                12,0000 
+                                                                                        {{produto.imposto.ICMS.aliquotaICMSNormal | currency:'R$'}}
                                                                                                             </div>                                              
                                                                                                         </div>
                                                                                                         <div class="col-md-4">
@@ -1259,7 +1254,7 @@
 
                                                                                                             </label>
                                                                                                             <div class="col-md-12 informacoes-detalhe-nota">
-                                                                                                                15,60
+                                                                                           {{produto.imposto.ICMS.valorICMSNormal | currency:'R$'}}
                                                                                                             </div>                                              
                                                                                                         </div>
                                                                                                     </div>
@@ -1271,7 +1266,7 @@
 
                                                                                                             </label>
                                                                                                             <div class="col-md-12 informacoes-detalhe-nota">
-                                                                                                                156,00
+                                                                                         {{produto.imposto.ICMS.baseCalculoICMSST | currency:'R$'}}
                                                                                                             </div>                                              
                                                                                                         </div>
                                                                                                         <div class="col-md-4">
@@ -1280,7 +1275,7 @@
 
                                                                                                             </label>
                                                                                                             <div class="col-md-12 informacoes-detalhe-nota">        
-                                                                                                                17,0000 
+                                                                                            {{produto.imposto.ICMS.aliquotaICMSST | currency:'R$'}}
                                                                                                             </div>                                              
                                                                                                         </div>
                                                                                                         <div class="col-md-4">
@@ -1289,7 +1284,7 @@
 
                                                                                                             </label>
                                                                                                             <div class="col-md-12 informacoes-detalhe-nota">
-                                                                                                                10,92
+                                                                                               {{produto.imposto.ICMS.valorICMSST | currency:'R$'}}
                                                                                                             </div>                                              
                                                                                                         </div>
                                                                                                     </div>
@@ -1301,7 +1296,7 @@
 
                                                                                                             </label>
                                                                                                             <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                                                          {{produto.imposto.ICMS.percentualICMSST | currency:'R$'}}
                                                                                                             </div>                                              
                                                                                                         </div>
                                                                                                         <div class="col-md-4">
@@ -1310,7 +1305,7 @@
 
                                                                                                             </label>
                                                                                                             <div class="col-md-12 informacoes-detalhe-nota">        
-                                                                                                                20,0000 
+                                                                                       {{produto.imposto.ICMS.percentualMVAICMSST | currency:'R$'}}
                                                                                                             </div>                                              
                                                                                                         </div>
                                                                                                         <div class="col-md-4">
@@ -1318,8 +1313,7 @@
                                                                                                                 Modalidade Definição da BC ICMS ST
 
                                                                                                             </label>
-                                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
-                                                                                                                4 - Margem Valor Agregado (%)
+                                                                                                            <div class="col-md-12 informacoes-detalhe-nota" ng-bind="getCodigoTracoDescricao(produto.imposto.ICMS.modalidadeBCICMSST)">
                                                                                                             </div>                                              
                                                                                                         </div>
                                                                                                     </div>
@@ -1345,7 +1339,7 @@
 
                                                                                                             </label>
                                                                                                             <div class="col-md-12 informacoes-detalhe-nota">
-                                                                                                                04 - Operação Tributável (tributação monofásica (alíquota zero))
+                                                                                                      {{produto.imposto.PIS.CST}}
                                                                                                             </div>                                              
                                                                                                         </div>
                                                                                                     </div>
@@ -1371,7 +1365,7 @@
 
                                                                                                             </label>
                                                                                                             <div class="col-md-12 informacoes-detalhe-nota">
-                                                                                                                04 - Operação Tributável (tributação monofásica (alíquota zero))
+                                                                                                   {{produto.imposto.COFINS.CST}}
                                                                                                             </div>                                              
                                                                                                         </div>
                                                                                                     </div>
@@ -1391,6 +1385,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <!-- FIM TAB PRODUTOS E SERVIÇOS -->
                                         
                                         <!-- TOTAIS -->
                                         <div class="panel" ng-show="tabIs(5)">
@@ -1416,7 +1411,7 @@
                                                                         Base de Cálculo ICMS
                                                                     </label>
                                                                     <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        130,00 
+                                                                        {{notadetalhada.totais.ICMS.valorBaseCalculoICMS | currency:'R$'}} 
                                                                     </div>                                              
                                                                 </div>  
                                                                 <div class="col-md-3">
@@ -1424,7 +1419,7 @@
                                                                         Valor do ICMS
                                                                     </label>
                                                                     <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        15,60 
+                                                                        {{notadetalhada.totais.ICMS.valorICMS | currency:'R$'}}  
                                                                     </div>                                              
                                                                 </div>  
                                                                 <div class="col-md-3">
@@ -1432,7 +1427,7 @@
                                                                         Valor do ICMS Desonerado
                                                                     </label>
                                                                     <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        0,00
+                                                                        {{notadetalhada.totais.ICMS.valorICMSDesonerado | currency:'R$'}} 
                                                                     </div>                                              
                                                                 </div>  
                                                                 <div class="col-md-3">
@@ -1440,7 +1435,7 @@
                                                                         Base de Cálculo ICMS ST
                                                                     </label>
                                                                     <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        156,00 
+                                                                        {{notadetalhada.totais.ICMS.valorBaseCalculoICMSST | currency:'R$'}} 
                                                                     </div>                                              
                                                                 </div>  
                                                             </div>
@@ -1451,7 +1446,7 @@
                                                                         Valor ICMS Substituição
                                                                     </label>
                                                                     <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        10,92 
+                                                                        {{notadetalhada.totais.ICMS.valorICMSST | currency:'R$'}} 
                                                                     </div>                                              
                                                                 </div>  
                                                                 <div class="col-md-3">
@@ -1459,7 +1454,7 @@
                                                                         Valor Total dos Produtos
                                                                     </label>
                                                                     <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        130,00 
+                                                                        {{notadetalhada.totais.ICMS.valorProdutos | currency:'R$'}}  
                                                                     </div>                                              
                                                                 </div>  
                                                                 <div class="col-md-3">
@@ -1467,7 +1462,7 @@
                                                                         Valor do Frete
                                                                     </label>
                                                                     <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        0,00
+                                                                        {{notadetalhada.totais.ICMS.valorProdutos | currency:'R$'}}  
                                                                     </div>                                              
                                                                 </div>  
                                                                 <div class="col-md-3">
@@ -1475,7 +1470,7 @@
                                                                         Valor do Seguro
                                                                     </label>
                                                                     <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        0,00 
+                                                                        {{notadetalhada.totais.ICMS.valorSeguro | currency:'R$'}}  
                                                                     </div>                                              
                                                                 </div>  
                                                             </div>
@@ -1486,7 +1481,7 @@
                                                                         Outras Despesas Acessórias
                                                                     </label>
                                                                     <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        0,00 
+                                                                        {{notadetalhada.totais.ICMS.valorOutrasDespesas | currency:'R$'}} 
                                                                     </div>                                              
                                                                 </div>  
                                                                 <div class="col-md-3">
@@ -1494,7 +1489,7 @@
                                                                         Valor Total do IPI
                                                                     </label>
                                                                     <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        0,00
+                                                                        {{notadetalhada.totais.ICMS.valorIPI | currency:'R$'}} 
                                                                     </div>                                              
                                                                 </div>  
                                                                 <div class="col-md-3">
@@ -1502,7 +1497,7 @@
                                                                         Valor Total da NFe
                                                                     </label>
                                                                     <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        140,92
+                                                                        {{notadetalhada.totais.ICMS.valorNF | currency:'R$'}}
                                                                     </div>                                              
                                                                 </div>  
                                                                 <div class="col-md-3">
@@ -1510,7 +1505,7 @@
                                                                         Valor Total dos Descontos
                                                                     </label>
                                                                     <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        0,00 
+                                                                        {{notadetalhada.totais.ICMS.valorDesconto | currency:'R$'}} 
                                                                     </div>                                              
                                                                 </div>  
                                                             </div>
@@ -1521,7 +1516,7 @@
                                                                         Valor Total do II
                                                                     </label>
                                                                     <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        0,00 
+                                                                        {{notadetalhada.totais.ICMS.valorII | currency:'R$'}}  
                                                                     </div>                                              
                                                                 </div>  
                                                                 <div class="col-md-3">
@@ -1529,7 +1524,7 @@
                                                                         Valor do PIS
                                                                     </label>
                                                                     <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        0,00
+                                                                        {{notadetalhada.totais.ICMS.valorPIS | currency:'R$'}}
                                                                     </div>                                              
                                                                 </div>  
                                                                 <div class="col-md-3">
@@ -1537,7 +1532,7 @@
                                                                         Valor da COFINS
                                                                     </label>
                                                                     <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        140,92
+                                                                        {{notadetalhada.totais.ICMS.valorCOFINS | currency:'R$'}}
                                                                     </div>                                              
                                                                 </div>  
                                                                 <div class="col-md-3">
@@ -1545,7 +1540,7 @@
                                                                         Valor Aproximado dos Tributos
                                                                     </label>
                                                                     <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        0,00 
+                                                                        {{notadetalhada.totais.ICMS.valorTributos | currency:'R$'}} 
                                                                     </div>                                              
                                                                 </div>  
                                                             </div>
@@ -1554,6 +1549,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <!-- FIM TAB TOTAIS -->
                                         
                                         <!-- TRANSPORTE -->
                                         <div class="panel" ng-show="tabIs(6)">
@@ -1573,8 +1569,8 @@
                                                                     <label class="col-md-12 titulos-dados-detalhes-nota">
                                                                         Modalidade do Frete
                                                                     </label>
-                                                                    <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        1 - Por Conta do Destintário 
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"
+                                                                         ng-bind="getCodigoTracoDescricao(notadetalhada.transporte.modalidade)"> 
                                                                     </div>                                              
                                                                 </div>
                                                             </div>
@@ -1583,6 +1579,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <!-- FIM TAB TRANSPORTE -->
                                         
                                         <!-- COBRANÇA -->
                                         <div class="panel" ng-show="tabIs(7)">
@@ -1608,7 +1605,7 @@
                                                                         Número
                                                                     </label>
                                                                     <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        1186154/1 
+                                                                        {{notadetalhada.cobranca.fatura.numero}} 
                                                                     </div>                                              
                                                                 </div>
                                                                 <div class="col-md-4">
@@ -1616,7 +1613,7 @@
                                                                         Valor Original
                                                                     </label>
                                                                     <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        140,92 
+                                                                        {{notadetalhada.cobranca.fatura.valorOriginal | currency:'R$'}}  
                                                                     </div>                                              
                                                                 </div>
                                                                 <div class="col-md-4">
@@ -1624,7 +1621,7 @@
                                                                         Valor do Desconto
                                                                     </label>
                                                                     <div class="col-md-12 informacoes-detalhe-nota">
-                                                                         
+                                                                        {{notadetalhada.cobranca.fatura.valorDesconto | currency:'R$'}}   
                                                                     </div>                                              
                                                                 </div>
                                                                 <div class="col-md-4">
@@ -1632,7 +1629,7 @@
                                                                         Valor Líquido
                                                                     </label>
                                                                     <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        140,92 
+                                                                        {{notadetalhada.cobranca.fatura.valorLiquido | currency:'R$'}}   
                                                                     </div>                                              
                                                                 </div>
                                                             </div>
@@ -1645,21 +1642,22 @@
                                                     </div>
                                                     <div class="row campos-detalhe-nota">
                                                         <div class="col-md-12">
-                                                            <div class="row">
+                                                            <div class="row" 
+                                                                 ng-repeat="duplicata in notadetalhada.cobranca.duplicatas">
                                                                 <div class="col-md-4">
                                                                     <label class="col-md-12 titulos-dados-detalhes-nota">
                                                                         Número
                                                                     </label>
                                                                     <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        1186154/1 
+                                                                        {{duplicata.numero}}
                                                                     </div>                                              
                                                                 </div>
                                                                 <div class="col-md-4">
                                                                     <label class="col-md-12 titulos-dados-detalhes-nota">
                                                                        Vencimento
                                                                     </label>
-                                                                    <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        10/08/2015 
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"
+                                                                         ng-bind="getDataString(duplicata.dataVencimento)"> 
                                                                     </div>                                              
                                                                 </div>
                                                                 <div class="col-md-4">
@@ -1667,7 +1665,7 @@
                                                                         Valor
                                                                     </label>
                                                                     <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        134,34 
+                                                                        {{duplicata.valor | currency:'R$'}}    
                                                                     </div>                                              
                                                                 </div>
                                                             </div>
@@ -1676,6 +1674,7 @@
                                                 </div>
                                             </div>    
                                         </div>
+                                        <!-- FIM TAB COBRANÇA -->
                                         
                                         <!-- INFORMAÇÕES ADICIONAIS -->
                                         <div class="panel" ng-show="tabIs(8)">
@@ -1695,21 +1694,23 @@
                                                                     <label class="col-md-12 titulos-dados-detalhes-nota">
                                                                         Formato de Impressão DANFE
                                                                     </label>
-                                                                    <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        1 - DANFE normal, retrato 
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"
+                                                                         ng-bind="getCodigoTracoDescricao(notadetalhada.nfe.formatoImpressaoDANFE)">
                                                                     </div>                                              
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="row titulos-campos-detalhes-nota">
+                                                    <div class="row titulos-campos-detalhes-nota"
+                                                         ng-show="notadetalhada.infoAdicional.obsContribuinte.length > 0">
                                                         <div class="col-md-6">
                                                             <label>
                                                                 Informações Complementares de Interesse do Contribuinte
                                                             </label>                                              
                                                         </div>
                                                     </div>
-                                                    <div class="row campos-detalhe-nota">
+                                                    <div class="row campos-detalhe-nota"
+                                                         ng-repeat="obs in notadetalhada.infoAdicional.obsContribuinte">
                                                         <div class="col-md-12">
                                                             <div class="row">
                                                                 <div class="col-md-12">
@@ -1717,7 +1718,7 @@
                                                                         Descrição
                                                                     </label>
                                                                     <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        Valor Aproximado dos Tributos: 15,60 Pedido: 55760 Mov.: 1562558 
+                                                                        {{obs.conteudo}}
                                                                     </div>                                              
                                                                 </div>
                                                             </div>
@@ -1726,6 +1727,7 @@
                                                 </div>
                                             </div>    
                                         </div>
+                                        <!-- FIM TAB INFORMAÇÕES ADICIONAIS -->
                                     </div>
                                 </div>
                            </div>
@@ -1738,7 +1740,7 @@
                            </div>
                        </div>
                    </div>
-               </div>
+                </div>
                 <!-- FIM - MODAL DETALHES -->
                 
                 <!--TITULO-->

@@ -26,6 +26,7 @@ Não é necessário nenhum outro módulo externo.
 	=> importante para o log correto de requisições HTTP, ao qual identifica corretamente a (tela de) origem
   * APIS:
     - tax/tbmanifesto
+	- util/utilnfe
 	
  
  
@@ -69,6 +70,11 @@ Não é necessário nenhum outro módulo externo.
 							dtEmissao : datetime,
 							dtSaiEnt : datetime,
 							vlNFe : double,
+							formatoImpressaoDANFE : 
+							{
+								codigo : int,
+								descricao : string,
+							},
 							destinoOperacao : 
 							{
 								codigo : int,
@@ -132,7 +138,7 @@ Não é necessário nenhum outro módulo externo.
 									codigo : int,
 									nome : string,
 								},
-								uf : string,
+								UF : string,
 								pais : 
 								{
 									codigo : int,
@@ -168,7 +174,7 @@ Não é necessário nenhum outro módulo externo.
 									codigo : int,
 									nome : string,
 								},
-								uf : string,
+								UF : string,
 								pais : 
 								{
 									codigo : int,
@@ -238,7 +244,7 @@ Não é necessário nenhum outro módulo externo.
 							},
 							imposto : 
 							{
-								valorAproximadoPedido : double,
+								valorAproximadoTributos : double,
 								ICMS : 
 								{
 									origem : 
@@ -514,15 +520,13 @@ Não é necessário nenhum outro módulo externo.
 						},
 					}]					
 		}	
-		
-	- GET : download
+	
+    * util/utilnfe	
+	   - GET : Recebe um conjunto de bytes para realização do download de um arquivo
 			-> Coleção 0: XML de uma única nota
 			-> Coleção 1: XMLs de um conjunto de notas (arquivo ZIP contendo XMLs)
 			-> Coleção 2: DAMFE de uma única nota (arquivo PDF) 
 			-> Coleção 3: DAMFEs de um conjunto de notas (arquivo ZIP contendo PDFs)
-				{	filename : string, // nome do arquivo,
-					bytes : array // array de bytes do arquivo a ser baixado
-				}	
    
 
    

@@ -559,13 +559,15 @@ angular.module("tax-services-importacao-xml", [])
       */
     $scope.getCodigoTracoDescricao = function(obj){
         var text = '';
-        if(obj.codigo){ 
-            text = obj.codigo + '';
-            if(obj.descricao) text += ' - ' + obj.descricao;
-            else if(obj.nome) text += ' - ' + obj.nome;
-        }else if(obj.descricao) text = obj.descricao;
-        else if(obj.nome) text = obj.nome;
-        return text.toUpperCase();
+        if(obj){
+            if(typeof obj.codigo === 'number' || typeof obj.codigo === 'string'){ 
+                text = obj.codigo + '';
+                if(typeof obj.descricao === 'string') text += ' - ' + obj.descricao;
+                else if(typeof obj.nome === 'string') text += ' - ' + obj.nome;
+            }else if(typeof obj.descricao === 'string') text = obj.descricao;
+            else if(typeof obj.nome === 'string') text = obj.nome;
+        }
+        return text;//.toUpperCase();
     }
     
     /**
@@ -610,7 +612,10 @@ angular.module("tax-services-importacao-xml", [])
         var nota = manifesto.notas[indexNota];
         //console.log("DETALHAR " + manifesto.nmEmitente.toUpperCase());
         //console.log(nota);
-        obtemDetalhesNota(nota.idManifesto, function(){$('#modalDetalhes').modal('show');});
+        if(!$scope.notadetalhada || $scope.notadetalhada.idManifesto !== nota.idManifesto)
+            obtemDetalhesNota(nota.idManifesto, function(){$('#modalDetalhes').modal('show');});
+        else
+            $('#modalDetalhes').modal('show');
     }
     /** 
       * Imprime a nota
