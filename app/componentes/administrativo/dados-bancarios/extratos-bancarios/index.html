@@ -78,7 +78,7 @@
                             
                                             <div class="col-sm-12">
                                                 <button class="btn btn-primary" ngf-select ngf-change="upload($files)" 
-                                                        ngf-multiple="false" accept=".ofx"
+                                                        ngf-multiple="false" accept=".ofx,.pdf"
                                                         ng-disabled="uploadEmProgresso()"
                                                         ng-show="filtro.conta && $filtro.conta !== null">
                                                     <i class="fa fa-spin fa-spinner" 
@@ -309,7 +309,7 @@
                                                          ngf-change="upload($files)"
                                                          ngf-allow-dir="true"
                                                          ng-disabled="uploadEmProgresso()"
-                                                         accept=".ofx">
+                                                         accept=".ofx,.pdf">
                                                         Arraste até aqui o extrato ou clique aqui para selecioná-lo
                                                     </div>
                                                 </td>

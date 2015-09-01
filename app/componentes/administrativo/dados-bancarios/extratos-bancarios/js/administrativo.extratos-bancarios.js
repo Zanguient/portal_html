@@ -374,16 +374,17 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
             var file = files[0];
             // Avalia a extensão
             var index = file.name.lastIndexOf('.');
-            if(index === -1 || file.name.substr(index + 1) !== 'ofx'){ 
-                // Extensão não é OFX
+            if(index === -1 || (file.name.substr(index + 1) !== 'ofx' && file.name.substr(index + 1) !== 'pdf')){ 
+                // Extensão não é OFX e PDF
                 //console.log("ARQUIVO '" + file.name + "' NÃO É UM .ofx");
-                $scope.showAlert("O arquivo deve ser do tipo .ofx!", true, 'warning', true, false);
+                $scope.showAlert("O arquivo deve ser do tipo .ofx ou .pdf!", true, 'warning', true, false);
                 //if(++$scope.current === $scope.total){
                 $scope.type = 'danger';
                 $scope.progresso = 100;
                 uploadEmProgresso = false;
                 $scope.hideProgress(divPortletBodyFiltrosPos);
                 $scope.hideProgress(divPortletBodyExtratosPos);
+                return;
                 //}
                 //continue;
             }
@@ -419,7 +420,7 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
             }).error(function (data, status, headers, config){
                  if(status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else if(status === 503 || status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                 else if(status === 500) $scope.showModalAlerta("Extrato '" + files[$scope.current].name + "' não corresponde a conta " + $scope.getNomeAmigavelConta($scope.filtro.conta));
+                 else if(status === 500) $scope.showModalAlerta("Só são aceitos arquivos PDF de contas do SANTANDER! Se o extrato subido não foi um pdf, então o extrato '" + files[$scope.current].name + "' não corresponde a conta " + $scope.getNomeAmigavelConta($scope.filtro.conta));
                  else $scope.showAlert("Houve uma falha ao fazer upload do extrato '" + files[$scope.current] + "' (" + status + ")", true, 'danger', true, false);
                 //if(++$scope.current === $scope.total){
                 $scope.type = 'danger';

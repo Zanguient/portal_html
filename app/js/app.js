@@ -31,6 +31,7 @@ angular.module("AtosCapital", ['ui.router',
                                'administrativo-acesso-usuarios',
                                'administrativo-acoes-usuarios',
                                'administrativo-monitor-cargas',
+                               'administrativo-consulta-pos-terminal',
                                'dashboard', 
                                'card-services-cash-flow-relatorios',
                                'card-services-conciliacao-bancaria',
@@ -39,7 +40,7 @@ angular.module("AtosCapital", ['ui.router',
                                'card-services-conciliacao-vendas-dia',
                                'card-services-consolidacao-relatorios',
                                'card-services-cadastro-codigo-autorizacao',
-                               'card-services-cadastro-terminal-logico',
+                               'card-services-cadastro-pos-terminal',
                                'tax-services-importacao-xml',
                                'conta',
                                'conta-alterar-senha',
@@ -170,6 +171,15 @@ angular.module("AtosCapital", ['ui.router',
         }
       })
     
+      .state('administrativo-gestao-empresas-consulta-pos-terminal', {
+        url: prefixo + 'administrativo/consulta-pos-terminal',
+        templateUrl: 'componentes/administrativo/gestao-empresas/consulta-pos-terminal/index.html',
+        controller: "administrativo-consulta-pos-terminalCtrl",
+        data: {
+            titulo: 'Administrativo'
+        }
+      })
+    
       .state('administrativo-dados-bancarios-contas-correntes', {
         url: prefixo + 'administrativo/contas-correntes',
         templateUrl: 'componentes/administrativo/dados-bancarios/contas-correntes/index.html',
@@ -293,10 +303,10 @@ angular.module("AtosCapital", ['ui.router',
         }
       })
     
-      .state('card-services-consolidacao-cadastro-terminal-logico', {
-        url: prefixo + 'card-services/cadastro-terminal-logico',
-        templateUrl: 'componentes/card-services/consolidacao/cadastro-terminal-logico/index.html',
-        controller: "card-services-cadastro-terminal-logicoCtrl",
+      .state('card-services-consolidacao-cadastro-pos-terminal', {
+        url: prefixo + 'card-services/cadastro-pos-terminal',
+        templateUrl: 'componentes/card-services/consolidacao/cadastro-pos-terminal/index.html',
+        controller: "card-services-cadastro-pos-terminalCtrl",
         data: {
             titulo: 'Card Services'
         }
@@ -421,6 +431,7 @@ angular.module("AtosCapital", ['ui.router',
     var controllerAdministrativoAcessoUsuarios = undefined;
     var controllerAdministrativoAcoesUsuarios = undefined;
     var controllerAdministrativoMonitorCargas = undefined;
+    var controllerAdministrativoConsultaPOSTerminal = undefined;
     var controllerDashboard = undefined;
     var controllerCardServicesCashFlowRelatorios = undefined;
     var controllerCardServicesConciliacaoBancaria = undefined;
@@ -429,7 +440,7 @@ angular.module("AtosCapital", ['ui.router',
     var controllerCardServicesConciliacaoVendasDia = undefined;                        
     var controllerCardServicesConsolidacaoRelatorios = undefined;
     var controllerCardServicesCadastroCodigoAutorizacao = undefined; 
-    var controllerCardServicesCadastroTerminalLogico = undefined;                        
+    var controllerCardServicesCadastroPOSTerminal = undefined;                        
     var controllerTaxServicesImportacaoXML = undefined;                        
     var controllerMinhaConta = {id_controller : 91, ds_controller : 'Minha Conta', methods : []};
     // Permissões
@@ -445,6 +456,7 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_FILIAIS = false;
     $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_DADOS_ACESSO = false; 
     $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_SENHAS_INVALIDAS = false; 
+    $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_CONSULTA_POS_TERMINAL = false;                         
     $scope.PERMISSAO_ADMINISTRATIVO_DADOS_BANCARIOS = false;
     $scope.PERMISSAO_ADMINISTRATIVO_DADOS_BANCARIOS_CONTAS_CORRENTES = false;    
     $scope.PERMISSAO_ADMINISTRATIVO_DADOS_BANCARIOS_EXTRATOS_BANCARIOS = false;  
@@ -466,7 +478,7 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO = false;
     $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_RELATORIOS = false; 
     $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_CADASTRO_CODIGO_AUTORIZACAO = false;   
-    $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_CADASTRO_TERMINAL_LOGICO = false;                         
+    $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_CADASTRO_POS_TERMINAL = false;                         
     $scope.PERMISSAO_TAX_SERVICES = false;
     $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA = false;   
     $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_IMPORTACAO_XML = false;                        
@@ -618,6 +630,13 @@ angular.module("AtosCapital", ['ui.router',
         go('administrativo-gestao-empresas-senhas-invalidas', params);
     };
     /**
+      * Exibe como conteúdo a Consulta POS/Terminal Gestão de Empresas, de Administrativo
+      */
+    $scope.goAdministrativoConsultaPOSTerminal = function(params){
+        controllerAtual = controllerAdministrativoConsultaPOSTerminal;
+        go('administrativo-gestao-empresas-consulta-pos-terminal', params);
+    };                        
+    /**
       * Exibe como conteúdo a Contas Correntes Dados Bancários, de Administrativo
       */
     $scope.goAdministrativoContasCorrentes = function(params){
@@ -725,9 +744,9 @@ angular.module("AtosCapital", ['ui.router',
     /**
       * Exibe como conteúdo a Consolidação Cadastro de Terminal Lógico, de Card Services
       */
-    $scope.goCardServicesCadastroTerminalLogico = function(params){
-        controllerAtual = controllerCardServicesCadastroTerminalLogico;
-        go('card-services-consolidacao-cadastro-terminal-logico', params);
+    $scope.goCardServicesCadastroPOSTerminal = function(params){
+        controllerAtual = controllerCardServicesCadastroPOSTerminal;
+        go('card-services-consolidacao-cadastro-pos-terminal', params);
     };                          
     /**
       * Exibe como conteúdo a Nota Fiscal Eletrônica Importação XML, de Tax Services
@@ -839,8 +858,16 @@ angular.module("AtosCapital", ['ui.router',
                 // Não possui permissão!
                 event.preventDefault();
                 $scope.goUsuarioSemPrivilegios();
+            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'DADOS DE ACESSO')
+                     controllerAtual.id_controller !== controllerAdministrativoDadosAcesso.id_controller)
+                $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual  
+        }else if(url === $state.get('administrativo-gestao-empresas-consulta-pos-terminal').url){ 
+            if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_CONSULTA_POS_TERMINAL){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.goUsuarioSemPrivilegios();
             }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'SENHAS INVÁLIDAS')
-                     controllerAtual.id_controller !== controllerAdministrativoSenhasInvalidas.id_controller)
+                     controllerAtual.id_controller !== controllerAdministrativoConsultaPOSTerminal.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual  
         }else if(url === $state.get('administrativo-dados-bancarios-contas-correntes').url || 
                  url === $state.get('administrativo-dados-bancarios-contas-correntes-vigencias').url){ 
@@ -966,14 +993,14 @@ angular.module("AtosCapital", ['ui.router',
             }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'RELATÓRIOS') // problem!
                      controllerAtual.id_controller !== controllerCardServicesCadastroCodigoAutorizacao.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
-        }else if(url === $state.get('card-services-consolidacao-cadastro-terminal-logico').url){ 
+        }else if(url === $state.get('card-services-consolidacao-cadastro-pos-terminal').url){ 
             // Card Services > Consolidação > Relatórios
-            if(!$scope.PERMISSAO_CARD_SERVICES || !$scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO || !$scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_CADASTRO_TERMINAL_LOGICO){
+            if(!$scope.PERMISSAO_CARD_SERVICES || !$scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO || !$scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_CADASTRO_POS_TERMINAL){
                 // Não possui permissão!
                 event.preventDefault();
                 $scope.goUsuarioSemPrivilegios();
             }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'RELATÓRIOS') // problem!
-                     controllerAtual.id_controller !== controllerCardServicesCadastroTerminalLogico.id_controller)
+                     controllerAtual.id_controller !== controllerCardServicesCadastroPOSTerminal.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
         }else if(url === $state.get('tax-services-nota-fiscal-eletronica-importacao-xml').url){ 
             // Tax Services > Nota Fiscal Eletrônica > Importação XML
@@ -1039,6 +1066,11 @@ angular.module("AtosCapital", ['ui.router',
                     controllerAtual = controller;
                 controllerAdministrativoSenhasInvalidas = controller;
                 return $scope.goAdministrativoSenhasInvalidas;
+            case 'CONSULTA POS/TERMINAL':
+                 if($location.path() === $state.get('administrativo-gestao-empresas-consulta-pos-terminal').url) 
+                    controllerAtual = controller;
+                controllerAdministrativoConsultaPOSTerminal = controller;
+                return $scope.goAdministrativoConsultaPOSTerminal;    
             case 'CONTAS CORRENTES':
                  if($location.path() === $state.get('administrativo-dados-bancarios-contas-correntes').url || 
                     $location.path() === $state.get('administrativo-dados-bancarios-contas-correntes-vigencias').url) 
@@ -1101,11 +1133,11 @@ angular.module("AtosCapital", ['ui.router',
                     controllerAtual = controller;
                 controllerCardServicesCadastroCodigoAutorizacao = controller;
                 return $scope.goCardServicesCadastroCodigoAutorizacao; 
-            case 'CADASTRO TERMINAL LÓGICO': 
-                if($location.path() === $state.get('card-services-consolidacao-cadastro-terminal-logico').url) 
+            case 'CADASTRO POS/TERMINAL': 
+                if($location.path() === $state.get('card-services-consolidacao-cadastro-pos-terminal').url) 
                     controllerAtual = controller;
-                controllerCardServicesCadastroTerminalLogico = controller;
-                return $scope.goCardServicesCadastroTerminalLogico;     
+                controllerCardServicesCadastroPOSTerminal = controller;
+                return $scope.goCardServicesCadastroPOSTerminal;     
             // Tax Services
             case 'IMPORTAÇÃO XML': 
                 if($location.path() === $state.get('tax-services-nota-fiscal-eletronica-importacao-xml').url) 
@@ -1149,6 +1181,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'FILIAIS' : $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_FILIAIS = true; break;  
             case 'DADOS DE ACESSO': $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_DADOS_ACESSO = true; break; 
             case 'SENHAS INVÁLIDAS': $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_SENHAS_INVALIDAS = true; break;
+            case 'CONSULTA POS/TERMINAL': $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS_CONSULTA_POS_TERMINAL = true; break;
             case 'DADOS BANCÁRIOS': $scope.PERMISSAO_ADMINISTRATIVO_DADOS_BANCARIOS = true; break;
             case 'CONTAS CORRENTES': $scope.PERMISSAO_ADMINISTRATIVO_DADOS_BANCARIOS_CONTAS_CORRENTES = true; break; 
             case 'EXTRATOS BANCÁRIOS': $scope.PERMISSAO_ADMINISTRATIVO_DADOS_BANCARIOS_EXTRATOS_BANCARIOS = true; break;
@@ -1174,7 +1207,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'CONCILIAÇÃO VENDAS DIA': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_VENDAS_DIA = true; break;    
             case 'CONSOLIDAÇÃO': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO = true; break;   
             case 'CADASTRO CÓDIGO AUTORIZAÇÃO': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_CADASTRO_CODIGO_AUTORIZACAO = true; break;
-            case 'CADASTRO TERMINAL LÓGICO': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_CADASTRO_TERMINAL_LOGICO = true; break;    
+            case 'CADASTRO POS/TERMINAL': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_CADASTRO_POS_TERMINAL = true; break;    
                 
             // AMBÍGUOS    
             case 'RELATÓRIOS': controllerpai.ds_controller.toUpperCase() === 'CASH FLOW' ? 
@@ -1233,6 +1266,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'FILIAIS' :  return state == 'filiais' || state == 'cadastro-filiais';
             case 'DADOS DE ACESSO': return state == 'dados-acesso';
             case 'SENHAS INVÁLIDAS': return state == 'senhas-invalidas';
+            case 'CONSULTA POS/TERMINAL': return state == 'consulta-pos-terminal';
             case 'CONTAS CORRENTES': return state == 'contas-correntes' || state == 'conta-corrente-vigencias';
             case 'EXTRATOS BANCÁRIOS': return state == 'extratos-bancarios';
             case 'PARÂMETROS BANCÁRIOS': return state == 'parametros-bancarios';
@@ -1247,7 +1281,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'CONCILIAÇÃO TERMINAL LÓGICO': return state == 'conciliacao-terminal-logico';
             case 'CONCILIAÇÃO DE VENDAS DIA': return state == 'conciliacao-vendas-dia';   
             case 'CADASTRO CÓDIGO AUTORIZAÇÃO': return state == 'cadastro-codigo-autorizacao';
-            case 'CADASTRO TERMINAL LÓGICO': return state == 'cadastro-terminal-logico';   
+            case 'CADASTRO POS/TERMINAL': return state == 'cadastro-pos-terminal';   
                 
             // AMBÍGUOS    
             case 'RELATÓRIOS': return titulopai.toUpperCase() === 'CASH FLOW' ? 

@@ -6,9 +6,9 @@
  */
 
 // App
-angular.module("card-services-cadastro-terminal-logico", []) 
+angular.module("card-services-cadastro-pos-terminal", []) 
 
-.controller("card-services-cadastro-terminal-logicoCtrl", ['$scope','$state',function($scope,$state){ 
+.controller("card-services-cadastro-pos-terminalCtrl", ['$scope','$state',function($scope,$state){ 
     
     // flags
     $scope.exibeTela = false;
@@ -19,10 +19,10 @@ angular.module("card-services-cadastro-terminal-logico", [])
     $scope.abrirCalendarioDataMax = false;
     
     // Inicialização do controller
-    $scope.cardServices_cadastroTerminalLogicoInit = function(){
+    $scope.cardServices_cadastroPOSTerminalInit = function(){
         // Título da página 
         $scope.pagina.titulo = 'Card Services';                          
-        $scope.pagina.subtitulo = 'Cadastro de Terminal Lógico';
+        $scope.pagina.subtitulo = 'Cadastro POS/Terminal';
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);

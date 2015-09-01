@@ -1,12 +1,12 @@
 # README #
 
 Módulo que:
- - gerencia o layout da tela de cadastro de terminal lógico da Consolidação (app/componentes/card-services/consolidacao/cadastro-terminal-logico/index.html);
+ - gerencia o layout da tela de cadastro de POS/Terminal da Consolidação (app/componentes/card-services/consolidacao/cadastro-pos-terminal/index.html);
  
 
 ### Pra Que Serve Este Módulo? ###
 
-Gerenciar completamente a tela de cadastro de terminal lógico da Consolidação (Card Services).  
+Gerenciar completamente a tela de cadastro de POS/Terminal da Consolidação (Card Services).  
 
 
 
