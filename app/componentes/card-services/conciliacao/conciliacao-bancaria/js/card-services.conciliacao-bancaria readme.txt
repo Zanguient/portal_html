@@ -80,12 +80,14 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 	- PUT : seta os itens recebimento parcela para apontar para determinado extrato ou desassociar de um extrato
 			[{ 
 				idExtrato : int, // set -1 para desassociar de um extrato
+				data : datetime,
 				idsRecebimento: [int]
 			}]
   
   * pos/recebimentoparcela
     - PUT : altera a data de recibimento de um determinado grupo
-			{   dtaRecebimento : datetime,
+			{   dtaRecebimentoAtual : datetime,
+				dtaRecebimentoNova : datetime,
 				idsRecebimento: [int]
 			}
 	

@@ -457,7 +457,7 @@ angular.module("administrativo-usuarios-cadastro", [])
         if($scope.old.roles.length > 0){ 
             if($scope.old.roles[0].RoleId !== $scope.roleSelecionada.RoleId){
                 r.push({RoleId : $scope.roleSelecionada.RoleId, RolePrincipal: true});  // adiciona a nova
-                r.push({UserId: -1, RoleId : $scope.old.roles[0].RoleId, RolePrincipal : false}); // remove a anterior
+                r.push({UserId: -1, RoleId : $scope.old.roles[0].RoleId, RolePrincipal : true}); // remove a anterior
             }
         }else r.push({RoleId : $scope.roleSelecionada.RoleId, RolePrincipal: true}); // adiciona a nova
         
