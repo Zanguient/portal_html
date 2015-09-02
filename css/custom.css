@@ -800,9 +800,9 @@ padding-top: 16%;
 /* ESTILO DA TELA DE CADASTRO DE TÉRMINAL LÓGICO */
 
 .btn-alterar{
-    font-size:25px; 
+    font-size:30px; 
     color: #1f897f;
-    margin-top: 30px;
+    margin-top: 25px;
     cursor: pointer;    
 }
 
@@ -908,7 +908,7 @@ padding-top: 16%;
     border-radius: .25em; 
 }
 
-.status-ativo-pos-terminal{
+.status-inativo-pos-terminal{
     background-color: #F3565D;  
     color: #fff;  
     padding: 3px 6px 3px 6px;

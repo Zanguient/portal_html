@@ -262,7 +262,7 @@
                                                     <th tabindex="2" 
                                                         rowspan="1" colspan="1" 
                                                         style="width: 237px;">
-                                                        Número do Terminal
+                                                        POS/Terminal
                                                     </th>
                                                     <th tabindex="3" 
                                                         rowspan="1" colspan="1" 
@@ -293,8 +293,8 @@
                                                     </td>
                                                     <!--STATUS-->
                                                     <td style="text-align:center">
-                                                        <span class="status-ativo-pos-terminal">
-                                                            Ativo    
+                                                        <span class="status-ativo-pos-terminal"><!--CASO SEJA INATIVO USA A CLASSE: status-inativo-pos-terminal-->
+                                                            Ativo  
                                                         </span>                                                        
                                                     </td>
                                                     <!-- BOTÃO AÇÕES-->
@@ -310,14 +310,21 @@
                                                                     <a href="javascript:;" 
                                                                        ng-click="excluirDadosAcesso(dadoacesso)"
                                                                        ng-show="usuarioPodeExcluirDadosAcesso()">
-                                                                        Editar
+                                                                       Desativar 
                                                                     </a>
                                                                 </li> 
+                                                                <!--li>(CASO O STATUS ESTEJA INATIVO APARECE A OPÇÃO ATIVAR)
+                                                                    <a href="javascript:;" 
+                                                                       ng-click="excluirDadosAcesso(dadoacesso)"
+                                                                       ng-show="usuarioPodeExcluirDadosAcesso()">
+                                                                        Ativar
+                                                                    </a>
+                                                                </li--> 
                                                                 <li>
                                                                     <a href="javascript:;" 
                                                                        ng-click="excluirDadosAcesso(dadoacesso)"
                                                                        ng-show="usuarioPodeExcluirDadosAcesso()">
-                                                                        Excluir
+                                                                        Editar
                                                                     </a>
                                                                 </li> 
                                                                 <li>
