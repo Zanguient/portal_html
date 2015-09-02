@@ -145,7 +145,7 @@
                                             ng-model="filtro.adquirente"
                                             ng-change="alterouAdquirente()"
                                             ng-options="adquirente as (adquirente.nmOperadora | uppercase) for adquirente in adquirentes">
-                                        <option value="">TODAS</option>
+                                        <option style="display:none" value=""></option>
                                     </select>
                                      <i class="fa fa-question-circle"
                                         ng-show="!usuariologado.grupoempresa || !filtro.filial || filtro.filial === null"

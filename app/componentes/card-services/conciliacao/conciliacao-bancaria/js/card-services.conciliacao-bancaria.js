@@ -536,11 +536,14 @@ angular.module("card-services-conciliacao-bancaria", [])
         var jsonConciliacaoBancaria = [];
         for(var k = 0; k < dadosConciliacao.length ; k++){
             var dado = dadosConciliacao[k];
+            //console.log("DADO");console.log(dado);
             var json = { idExtrato : parseInt(dado.ExtratoBancario[0].Id), 
+                         data : $scope.getDataFromString($scope.getDataString(dado.Data)),
                          idsRecebimento : []
                        };
             for(var j = 0; j < dado.RecebimentosParcela.length; j++)
                 json.idsRecebimento.push(dado.RecebimentosParcela[j].Id);
+            //console.log("JSON");console.log(json);
             // Adiciona
             jsonConciliacaoBancaria.push(json);
         }
@@ -597,7 +600,8 @@ angular.module("card-services-conciliacao-bancaria", [])
         $scope.showProgress(divPortletBodyDadosPos);
         
         // Obtém o json
-        var jsonRecebimentoParcela = { dtaRecebimento : $scope.getDataFromString($scope.modalDataRecebimento.data),
+        var jsonRecebimentoParcela = { dtaRecebimentoNova : $scope.getDataFromString($scope.modalDataRecebimento.data),
+                                       dtaRecebimentoAtual : $scope.getDataFromString($scope.getDataString($scope.modalDataRecebimento.dado.Data)),
                                        idsRecebimento : []
                                      };
         for(var k = 0; k < $scope.modalDataRecebimento.dado.RecebimentosParcela.length; k++)

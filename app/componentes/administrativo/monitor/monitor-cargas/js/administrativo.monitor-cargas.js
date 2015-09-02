@@ -521,6 +521,8 @@ angular.module("administrativo-monitor-cargas", ['SignalR','ngLocale'])
         
         if(!mudancas || mudancas === null) return;
         
+        //console.log(mudancas);
+        
         var linhasPromovidas = 0;
         
         // Atualiza
