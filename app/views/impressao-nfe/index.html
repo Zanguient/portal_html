@@ -101,14 +101,13 @@
                                             Dados da NF-e
                                         </div>
                                     </div>
-                                    <!--BODY CAMPOS-->
                                     <div class="row campos-detalhe-nota">
                                         <div class="col-md-1">
                                             <label class="col-md-12 titulos-dados-detalhes-nota">
                                                 Modelo
                                             </label>
                                             <div class="col-md-12 informacoes-detalhe-nota">
-                                                55 
+                                                {{notadetalhada.nfe.modelo || ''}} 
                                             </div>                                              
                                         </div>
                                         <div class="col-md-1">
@@ -116,7 +115,7 @@
                                                 Série
                                             </label>
                                             <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                3 
+                                                {{notadetalhada.nfe.serie || ''}} 
                                             </div> 
                                         </div>
                                         <div class="col-md-2">
@@ -124,23 +123,23 @@
                                                 Número
                                             </label>
                                             <div class="col-md-12 informacoes-detalhe-nota">
-                                                1123543
+                                                {{notadetalhada.nfe.numero || ''}}
                                             </div> 
                                         </div>
                                         <div class="col-md-3">
                                             <label class="col-md-12 titulos-dados-detalhes-nota">
                                                 Data de Emissão
                                             </label>
-                                            <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                27/08/2015 23:36:00-03:00
+                                            <div class="col-md-12 informacoes-detalhe-nota"
+                                                 ng-bind="getDataTimeString(notadetalhada.nfe.dtEmissao)">
                                             </div> 
                                         </div>
                                         <div class="col-md-3">
                                             <label class="col-md-12 titulos-dados-detalhes-nota">
                                                 Data/Hora de Saída ou da Entrada
                                             </label>
-                                            <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                27/08/2015 22:40:00-04:00  
+                                            <div class="col-md-12 informacoes-detalhe-nota"
+                                                 ng-bind="getDataString(notadetalhada.nfe.dtSaiEnt) !== '01/01/0001' ? getDataTimeString(notadetalhada.nfe.dtSaiEnt) : ''">
                                             </div> 
                                         </div>
                                         <div class="col-md-2">
@@ -148,7 +147,7 @@
                                                 Valor Total da Nota Fiscal
                                             </label>
                                             <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                234,54 
+                                                {{(notadetalhada.nfe.vlNFe | currency:'R$') || ''}}
                                             </div> 
                                         </div>
                                     </div>
@@ -161,11 +160,11 @@
                                     </div>
                                     <div class="row campos-detalhe-nota">
                                         <div class="col-md-3">
-                                           <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                CNPJ
+                                            <label class="col-md-12 titulos-dados-detalhes-nota"
+                                                  ng-bind="notadetalhada.emitente.CPF && notadetalhada.emitente.CPF !== null ? 'CPF' : 'CNPJ'">
                                             </label>
-                                            <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                12.321.111/0004-43
+                                            <div class="col-md-12 informacoes-detalhe-nota"
+                                                 ng-bind="notadetalhada.emitente.CPF && notadetalhada.emitente.CPF !== null ? notadetalhada.emitente.CPF : notadetalhada.emitente.CNPJ">
                                             </div> 
                                         </div>
                                         <div class="col-md-5">
@@ -173,7 +172,7 @@
                                                 Nome/Razão Social
                                             </label>
                                             <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                LIMINAR CMO. IND. DE ALIM. LTDA - FAB-CAI
+                                                {{notadetalhada.emitente.razaoSocial | uppercase}}
                                             </div> 
                                         </div>
                                         <div class="col-md-3">
@@ -181,7 +180,7 @@
                                                 Inscrição Estadual
                                             </label>
                                             <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                2332654443
+                                                {{notadetalhada.emitente.inscricaoEstadual}}
                                             </div> 
                                         </div>
                                         <div class="col-md-1">
@@ -189,7 +188,7 @@
                                                 UF
                                             </label>
                                             <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                BA
+                                                {{notadetalhada.emitente.endereco.UF | uppercase}}
                                             </div> 
                                         </div>
                                     </div>
@@ -201,24 +200,23 @@
                                             <label>Destinatário</label>                                           
                                         </div>
                                     </div>
-                                    <!--CORPO-->
                                     <div class="row campos-detalhe-nota">
                                         <div class="col-md-12">
                                             <div class="row">
                                                 <div class="col-md-3">
-                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                        CNPJ
+                                                    <label class="col-md-12 titulos-dados-detalhes-nota"
+                                                           ng-bind="notadetalhada.destinatario.CPF && notadetalhada.destinatario.CPF !== null ? 'CPF' : 'CNPJ'">
                                                     </label>
-                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                        12.321.111/0004-43
-                                                    </div> 
+                                                    <div class="col-md-12 informacoes-detalhe-nota"
+                                                         ng-bind="notadetalhada.destinatario.CPF && notadetalhada.destinatario.CPF !== null ? notadetalhada.destinatario.CPF : notadetalhada.destinatario.CNPJ">
+                                                </div>
                                                 </div>
                                                 <div class="col-md-5">
                                                     <label class="col-md-12 titulos-dados-detalhes-nota">
                                                         Nome/Razão Social
                                                     </label>
                                                     <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                        PETROX COMERCIA LTDA
+                                                        {{notadetalhada.destinatario.razaoSocial | uppercase}}
                                                     </div> 
                                                 </div>
                                                 <div class="col-md-3">
@@ -226,7 +224,7 @@
                                                         Inscrição Estadual
                                                     </label>
                                                     <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                        2332654443
+                                                        {{notadetalhada.destinatario.inscricaoEstadual}}
                                                     </div> 
                                                 </div>
                                                 <div class="col-md-1">
@@ -234,7 +232,7 @@
                                                         UF
                                                     </label>
                                                     <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                        SE
+                                                        {{notadetalhada.destinatario.endereco.UF | uppercase}}
                                                     </div> 
                                                 </div>
                                             </div> 
@@ -243,24 +241,24 @@
                                                     <label class="col-md-12 titulos-dados-detalhes-nota">
                                                         Destino da operação
                                                     </label>
-                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                        2-Operação Interestadual
+                                                    <div class="col-md-12 informacoes-detalhe-nota"
+                                                         ng-bind="getCodigoTracoDescricao(notadetalhada.nfe.destinoOperacao)">
                                                     </div> 
                                                 </div>
                                                 <div class="col-md-5">
                                                     <label class="col-md-12 titulos-dados-detalhes-nota">
                                                         Consumidor Final
                                                     </label>
-                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                        0-Normal
+                                                    <div class="col-md-12 informacoes-detalhe-nota" 
+                                                         ng-bind="getCodigoTracoDescricao(notadetalhada.nfe.consumidorFinal)">
                                                     </div> 
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label class="col-md-12 titulos-dados-detalhes-nota">
                                                         Presença~do Comprador
                                                     </label>
-                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                        0-Não se aplica
+                                                    <div class="col-md-12 informacoes-detalhe-nota" 
+                                                         ng-bind="getCodigoTracoDescricao(notadetalhada.nfe.presencaComprador)">
                                                     </div> 
                                                 </div>
                                             </div>    
@@ -281,8 +279,8 @@
                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
                                                         Processo
                                                     </label>
-                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                        0-Com alplicativo do Contribuinte
+                                                    <div class="col-md-12 informacoes-detalhe-nota" 
+                                                         ng-bind="getCodigoTracoDescricao(notadetalhada.nfe.emissao.processo)">
                                                     </div> 
                                                 </div>
                                                 <div class="col-md-2">
@@ -290,23 +288,23 @@
                                                         Versão do Processo
                                                     </label>
                                                     <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                        v12323222
+                                                        {{notadetalhada.nfe.emissao.versaoProcesso}}
                                                     </div> 
                                                 </div>
                                                 <div class="col-md-2">
                                                     <label class="col-md-12 titulos-dados-detalhes-nota"> 
                                                         Tipo de Emissão
                                                     </label>
-                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                        1-Normal
+                                                    <div class="col-md-12 informacoes-detalhe-nota" 
+                                                        ng-bind="getCodigoTracoDescricao(notadetalhada.nfe.emissao.tipoEmissao)">
                                                     </div> 
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label class="col-md-12 titulos-dados-detalhes-nota">
                                                         Finalidade
                                                     </label>
-                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                        1-Normal
+                                                    <div class="col-md-12 informacoes-detalhe-nota" 
+                                                         ng-bind="getCodigoTracoDescricao(notadetalhada.nfe.emissao.finalidade)">
                                                     </div> 
                                                 </div>
                                             </div>
@@ -316,23 +314,23 @@
                                                         Natureza da Operação
                                                     </label>
                                                     <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                        2341-Venda de Prod c/ Subst Tributria
+                                                        {{notadetalhada.nfe.emissao.naturezaOperacao}}
                                                     </div> 
                                                 </div>
                                                 <div class="col-md-2">
                                                     <label class="col-md-12 titulos-dados-detalhes-nota">
                                                         Tipo de Operação 
                                                     </label>
-                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                        1-Saída
+                                                    <div class="col-md-12 informacoes-detalhe-nota" 
+                                                         ng-bind="getCodigoTracoDescricao(notadetalhada.nfe.emissao.tipoOperacao)">
                                                     </div> 
                                                 </div>
                                                 <div class="col-md-2">
                                                     <label class="col-md-12 titulos-dados-detalhes-nota">
                                                         Forma de Pagamento
                                                     </label>
-                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                        2-Outros
+                                                    <div class="col-md-12 informacoes-detalhe-nota" 
+                                                         ng-bind="getCodigoTracoDescricao(notadetalhada.nfe.emissao.formaPagamento)">
                                                     </div> 
                                                 </div>
                                                 <div class="col-md-4">
@@ -340,14 +338,14 @@
                                                         <i>Digest</i> Value da NF-e
                                                     </label>
                                                     <div class="col-md-12 informacoes-detalhe-nota"> 
-                                                        WX+/4kXMi5W8CrT9PaWmeATB9Ow=
+                                                        {{notadetalhada.nfe.emissao.digestValue}}
                                                     </div> 
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <!--Situação Atual:-->  
+                                    <!--Situação Atual:-- >  
                                     <div class="row titulos-campos-detalhes-nota">
                                         <div class="col-md-6">
                                             <label>
@@ -355,7 +353,6 @@
                                             </label>                                           
                                         </div>
                                     </div>
-
                                     <div class="row campos-detalhe-nota">
                                         <div class="col-md-4">
                                             <label class="col-md-12 titulos-dados-detalhes-nota">
@@ -401,20 +398,18 @@
                                                Autorização de Uso (Cód.:2211113)
                                             </div>
                                         </div>
-                                    </div>
+                                    </div-->
                                 </div>
                             </div>
 
-                            <!--CIÊNCIA DA OPERAÇÃO -->
+                            <!--CIÊNCIA DA OPERAÇÃO -- >
                             <div class="row conteudos-detalhe-nota">
                                 <div class="col-md-12">
-                                    <!--TITULO-->
                                     <div class="row headDetalhesNota">
                                         <div class="col-md-12">
                                             Ciência da Operação
                                         </div>
                                     </div>
-                                    <!--BODY CAMPOS-->
                                     <div class="row campos-detalhe-nota">
                                         <div class="col-md-7">
                                             <label class="col-md-12 titulos-dados-detalhes-nota">
@@ -486,7 +481,7 @@
                                         </div>
                                     </div>
 
-                                    <!--DETALHES DO EVENTO-->
+                                    <!--DETALHES DO EVENTO-- >
                                     <div class="row titulos-campos-detalhes-nota">
                                         <div class="col-md-6">
                                             <label>Detalhes do Evento</label>                                              
@@ -521,18 +516,17 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div-->
 
-                            <!--AUTORIZAÇÃO PELA SEFAZ-->
+                            <!--AUTORIZAÇÃO PELA SEFAZ-- >
                             <div class="row conteudos-detalhe-nota">
                                 <div class="col-md-12">
-                                    <!--TITULO-->
+                                    <!--TITULO-- >
                                     <div class="row headDetalhesNota">
                                         <div class="col-md-12">
                                             Autorização pela SEFAZ
                                         </div>
                                     </div>
-                                    <!--BODY CAMPOS-->
                                     <div class="row campos-detalhe-nota">
                                         <div class="col-md-5">
                                             <label class="col-md-12 titulos-dados-detalhes-nota">
@@ -560,9 +554,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div-->
 
-                            <!--DADOS DO EMITENTE-->
+                            <!--EMITENTE-->
                             <div class="row conteudos-detalhe-nota">
                                 <div class="col-md-12">
                                     <!--TITULO-->
@@ -580,7 +574,7 @@
                                                 Nome / Razão Social
                                             </label>
                                             <div class="col-md-12 informacoes-detalhe-nota">
-                                                LIMIAR COM. IND. DE ALIM. LTDA - FAB-CIA
+                                                {{notadetalhada.emitente.razaoSocial | uppercase}}
                                             </div>                                              
                                         </div>
                                         <div class="col-md-6">
@@ -588,26 +582,30 @@
                                                 Nome Fantasia
                                             </label>
                                             <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                {{notadetalhada.emitente.nomeFantasia | uppercase}} 
                                             </div>                                              
                                         </div>
 
                                         <!--2ª LINHA-->
                                         <div class="col-md-6">
-                                            <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                CNPJ
+                                            <label class="col-md-12 titulos-dados-detalhes-nota"
+                                                   ng-bind="notadetalhada.emitente.CPF && notadetalhada.emitente.CPF !== null ? 'CPF' : 'CNPJ'">
                                             </label>
-                                            <div class="col-md-12 informacoes-detalhe-nota">
-                                                13.237.300/0001-30
-                                            </div>                                              
+                                            <div class="col-md-12 informacoes-detalhe-nota"
+                                                 ng-bind="notadetalhada.emitente.CPF && notadetalhada.emitente.CPF !== null ? notadetalhada.emitente.CPF : notadetalhada.emitente.CNPJ">
+                                            </div>                                   
                                         </div>
                                         <div class="col-md-6">
                                             <label class="col-md-12 titulos-dados-detalhes-nota">
                                                 Endereço
                                             </label>
                                             <div class="col-md-12 informacoes-detalhe-nota">
-                                                ROD. BA - 526, 1.046,  0 
-                                            </div>                                              
+                                                {{notadetalhada.emitente.endereco.logradouro | uppercase}}
+                                                ,&nbsp;
+                                                {{notadetalhada.emitente.endereco.numero | uppercase}}
+                                                ,&nbsp;
+                                                {{notadetalhada.emitente.endereco.complemento | uppercase}}
+                                            </div>                                               
                                         </div>
 
                                         <!--3ª LINHA-->
@@ -616,7 +614,7 @@
                                                 Bairro / Distrito
                                             </label>
                                             <div class="col-md-12 informacoes-detalhe-nota">
-                                                CASSANGE
+                                                {{notadetalhada.emitente.endereco.bairro | uppercase}}
                                             </div>                                              
                                         </div>
                                         <div class="col-md-6">
@@ -624,7 +622,7 @@
                                                 CEP
                                             </label>
                                             <div class="col-md-12 informacoes-detalhe-nota">
-                                                41505-220
+                                                {{notadetalhada.emitente.endereco.cep | uppercase}}
                                             </div>                                              
                                         </div>
 
@@ -633,8 +631,8 @@
                                             <label class="col-md-12 titulos-dados-detalhes-nota">
                                                 Município
                                             </label>
-                                            <div class="col-md-12 informacoes-detalhe-nota">
-                                                2927408 - SALVADOR
+                                            <div class="col-md-12 informacoes-detalhe-nota" 
+                                                 ng-bind="getCodigoTracoDescricao(notadetalhada.emitente.endereco.municipio)">
                                             </div>                                              
                                         </div>
                                         <div class="col-md-6">
@@ -642,7 +640,7 @@
                                                 Telefone
                                             </label>
                                             <div class="col-md-12 informacoes-detalhe-nota">
-                                                (71)3198-4400
+                                                {{notadetalhada.emitente.telefone}}
                                             </div>                                              
                                         </div>
 
@@ -652,15 +650,15 @@
                                                 UF
                                             </label>
                                             <div class="col-md-12 informacoes-detalhe-nota">
-                                                BA
+                                                {{notadetalhada.emitente.endereco.UF | uppercase}}
                                             </div>                                              
                                         </div>
                                         <div class="col-md-6">
                                             <label class="col-md-12 titulos-dados-detalhes-nota">
                                                 País
                                             </label>
-                                            <div class="col-md-12 informacoes-detalhe-nota">
-                                                1058 - Brasil
+                                            <div class="col-md-12 informacoes-detalhe-nota" 
+                                                 ng-bind="getCodigoTracoDescricao(notadetalhada.emitente.endereco.pais)">
                                             </div>                                              
                                         </div>
 
@@ -670,7 +668,7 @@
                                                 Inscrição Estadual
                                             </label>
                                             <div class="col-md-12 informacoes-detalhe-nota">
-                                                23638738
+                                                {{notadetalhada.emitente.inscricaoEstadual | uppercase}} 
                                             </div>                                              
                                         </div>
                                         <div class="col-md-6">
@@ -678,7 +676,7 @@
                                                 Inscrição Estadual do Substituto Tributário
                                             </label>
                                             <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                {{notadetalhada.emitente.IEST}}
                                             </div>                                              
                                         </div>
 
@@ -688,7 +686,7 @@
                                                 Inscrição Municipal
                                             </label>
                                             <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                {{notadetalhada.emitente.inscricaoMunicipal | uppercase}}
                                             </div>                                              
                                         </div>
                                         <div class="col-md-6">
@@ -696,7 +694,7 @@
                                                 Município da Ocorrência do Fato Gerador do ICMS
                                             </label>
                                             <div class="col-md-12 informacoes-detalhe-nota">
-                                                2927408
+                                                {{notadetalhada.emitente.endereco.municipio.codigo}}
                                             </div>                                              
                                         </div>
 
@@ -706,22 +704,22 @@
                                                 CNAE Fiscal
                                             </label>
                                             <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                {{notadetalhada.emitente.CNAE | uppercase}} 
                                             </div>                                              
                                         </div>
                                         <div class="col-md-6">
                                             <label class="col-md-12 titulos-dados-detalhes-nota">
                                                Código de Regime Tributário
                                             </label>
-                                            <div class="col-md-12 informacoes-detalhe-nota">
-                                                3 - Regime Normal
+                                            <div class="col-md-12 informacoes-detalhe-nota" 
+                                                 ng-bind="getCodigoTracoDescricao(notadetalhada.emitente.CRT)">
                                             </div>                                              
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!--DADOS DO DESTINATÁRIO-->
+                            <!--DESTINATÁRIO-->
                             <div class="row conteudos-detalhe-nota">
                                 <div class="col-md-12">
                                     <!--TITULO-->
@@ -740,7 +738,7 @@
                                                     Nome / Razão Social
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                    PETROX COMERCIAL LTDA
+                                                    {{notadetalhada.destinatario.razaoSocial | uppercase}}
                                                 </div>                                              
                                             </div>
                                         </div>
@@ -748,19 +746,23 @@
                                         <!--2ª LINHA-->
                                         <div class="row campos-imprimir-documento">
                                             <div class="col-md-6">
-                                                <label class="col-md-12 titulos-dados-detalhes-nota">
-                                                    CNPJ
+                                                <label class="col-md-12 titulos-dados-detalhes-nota"
+                                                       ng-bind="notadetalhada.destinatario.CPF && notadetalhada.destinatario.CPF !== null ? 'CPF' : 'CNPJ'">
                                                 </label>
-                                                <div class="col-md-12 informacoes-detalhe-nota">
-                                                    05.297.480/0001-18
-                                                </div>                                              
+                                                <div class="col-md-12 informacoes-detalhe-nota"
+                                                     ng-bind="notadetalhada.destinatario.CPF && notadetalhada.destinatario.CPF !== null ? notadetalhada.destinatario.CPF : notadetalhada.destinatario.CNPJ">
+                                                </div>                                           
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="col-md-12 titulos-dados-detalhes-nota">
                                                     Endereço
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                    R URQUIZA LEAL 118,  0 
+                                                    {{notadetalhada.destinatario.endereco.logradouro | uppercase}}
+                                                    ,&nbsp;
+                                                    {{notadetalhada.destinatario.endereco.numero | uppercase}}
+                                                    ,&nbsp;
+                                                    {{notadetalhada.destinatario.endereco.complemento | uppercase}} 
                                                 </div>                                              
                                             </div>
                                         </div>
@@ -772,7 +774,7 @@
                                                     Bairro / Distrito
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                    SALGADO FILHO
+                                                    {{notadetalhada.destinatario.endereco.bairro | uppercase}}
                                                 </div>                                              
                                             </div>
                                             <div class="col-md-6">
@@ -780,7 +782,7 @@
                                                     CEP
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                    49020-490
+                                                    {{notadetalhada.destinatario.endereco.cep | uppercase}}
                                                 </div>                                              
                                             </div>
                                         </div>
@@ -791,8 +793,8 @@
                                                 <label class="col-md-12 titulos-dados-detalhes-nota">
                                                     Município
                                                 </label>
-                                                <div class="col-md-12 informacoes-detalhe-nota">
-                                                    2800308 - ARACAJU
+                                                <div class="col-md-12 informacoes-detalhe-nota" 
+                                                     ng-bind="getCodigoTracoDescricao(notadetalhada.destinatario.endereco.municipio)">
                                                 </div>                                              
                                             </div>
                                             <div class="col-md-6">
@@ -800,7 +802,7 @@
                                                     Telefone
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                    3246-0600
+                                                    {{notadetalhada.destinatario.telefone}}
                                                 </div>                                              
                                             </div>
                                         </div>
@@ -813,15 +815,15 @@
                                                     UF
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                    SE
+                                                    {{notadetalhada.destinatario.endereco.UF | uppercase}} 
                                                 </div>                                              
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="col-md-12 titulos-dados-detalhes-nota">
                                                     País
                                                 </label>
-                                                <div class="col-md-12 informacoes-detalhe-nota">
-                                                    1058 - Brasil
+                                                <div class="col-md-12 informacoes-detalhe-nota" 
+                                                     ng-bind="getCodigoTracoDescricao(notadetalhada.destinatario.endereco.pais)">
                                                 </div>                                              
                                             </div>
                                         </div>
@@ -832,8 +834,8 @@
                                                 <label class="col-md-12 titulos-dados-detalhes-nota">
                                                     Indicador IE
                                                 </label>
-                                                <div class="col-md-12 informacoes-detalhe-nota">
-                                                    01 - Contribuinte ICMS (informar a IE do destinatário)
+                                                <div class="col-md-12 informacoes-detalhe-nota" 
+                                                     ng-bind="getCodigoTracoDescricao(notadetalhada.destinatario.indicadorIE)">
                                                 </div>                                              
                                             </div>
                                             <div class="col-md-3">
@@ -841,7 +843,7 @@
                                                     Inscrição Estadual
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                    271066687
+                                                    {{notadetalhada.destinatario.inscricaoEstadual | uppercase}} 
                                                 </div>                                              
                                             </div>
                                             <div class="col-md-6">
@@ -849,7 +851,7 @@
                                                     Inscrição SUFRAMA
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                    {{notadetalhada.destinatario.inscricaoSUFRAMA}}
                                                 </div>                                              
                                             </div>
                                         </div>
@@ -860,7 +862,7 @@
                                                     IM
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                    {{notadetalhada.destinatario.inscricaoMunicipal}}
                                                 </div>                                              
                                             </div>
                                             <div class="col-md-9">
@@ -868,7 +870,7 @@
                                                     E-mail
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                    {{notadetalhada.destinatario.email | lowercase}}
                                                 </div>                                              
                                             </div>
                                         </div>        
@@ -876,26 +878,26 @@
                                 </div>
                             </div>
 
-                            <!--DADOS DOS PRODUTOS E SERVIÇOS-->
+                            <!--PRODUTOS E SERVIÇOS-->
                             <div class="row conteudos-detalhe-nota">
                                 <div class="col-md-12">
                                     <!--TITULO-->
                                     <div class="row headDetalhesNota">
                                         <div class="col-md-12">
-                                            Dados dos Produtos e Serviços
+                                            Produtos e Serviços
                                         </div>
                                     </div>
-                                    <!--BODY CAMPOS-->
                                     <div class="row campos-detalhe-nota"> 
 
                                         <!--1ª LINHA-->
-                                        <div class="row campos-imprimir-documento">
+                                        <div class="row campos-imprimir-documento"
+                                             ng-repeat-start="produto in notadetalhada.produtos">
                                             <div class="col-md-1">
                                                 <label class="col-md-12 titulos-dados-detalhes-nota">
                                                     Num.
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                    1
+                                                    {{produto.produto.num}}
                                                 </div>                                              
                                             </div>
                                             <div class="col-md-5">
@@ -903,7 +905,7 @@
                                                     Descrição
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                    PAO FRANCES TRADICIONAL CONG 50G
+                                                    {{produto.produto.descricao | uppercase}}
                                                 </div>                                              
                                             </div>
                                             <div class="col-md-2">
@@ -911,7 +913,7 @@
                                                     Qtd.
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                    40,0000
+                                                    {{produto.produto.qtdComercial | currency:''}}
                                                 </div>                                              
                                             </div>                                    
                                             <div class="col-md-2">
@@ -919,7 +921,7 @@
                                                     Unidade Comercial
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                    KG
+                                                    {{produto.produto.unidadeComercial}}
                                                 </div>                                              
                                             </div>                                    
                                             <div class="col-md-2">
@@ -927,12 +929,12 @@
                                                     Valor(R$)
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                    130,00
+                                                    {{produto.produto.valor | currency:'R$'}}
                                                 </div>                                              
                                             </div>
                                         </div>
                                         <!--DESCRIÇÕES DOS PRODUTOS-->
-                                        <div class="row">
+                                        <div class="row" ng-repeat-end>
                                             <div class="col-md-12"> 
 
                                                 <!--1º GRUPO-->
@@ -946,7 +948,7 @@
                                                                     Código do Produto
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                                    1001
+                                                                    {{produto.produto.codigo}}
                                                                 </div>                                              
                                                             </div>
                                                             <div class="col-md-4">
@@ -954,7 +956,7 @@
                                                                     Código NCM
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                                    19059090
+                                                                    {{produto.produto.codNCM}}
                                                                 </div>                                              
                                                             </div>
                                                         </div>
@@ -966,7 +968,7 @@
                                                                     Código EX da TIPI
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                                    {{produto.produto.codEXTIPI}}
                                                                 </div>                                              
                                                             </div>
                                                             <div class="col-md-4">
@@ -974,7 +976,7 @@
                                                                     CFOP
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                                    {{produto.produto.CFOP}}
                                                                 </div>                                              
                                                             </div>
                                                             <div class="col-md-4">
@@ -982,7 +984,7 @@
                                                                     Outras Despesas Acessórias
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                                    {{produto.produto.outrasDespesas | currency:'R$'}}
                                                                 </div>                                              
                                                             </div>
                                                         </div>
@@ -994,7 +996,7 @@
                                                                     Valor do Desconto
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                                    {{produto.produto.valorDesconto | currency:'R$'}}
                                                                 </div>                                              
                                                             </div>
                                                             <div class="col-md-4">
@@ -1002,7 +1004,7 @@
                                                                     Valor Total do Frete
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                                    {{produto.produto.valorTotalFrete | currency:'R$'}}
                                                                 </div>                                              
                                                             </div>
                                                             <div class="col-md-4">
@@ -1010,7 +1012,7 @@
                                                                     Valor do Seguro
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                                    {{produto.produto.valorSeguro | currency:'R$'}} 
                                                                 </div>                                              
                                                             </div>
                                                         </div>
@@ -1028,8 +1030,8 @@
                                                                 <label class="col-md-12 titulos-dados-detalhes-nota">
                                                                     Indicador de Composição do Valor Total da NF-e
                                                                 </label>
-                                                                <div class="col-md-12 informacoes-detalhe-nota">
-                                                                    1 - O valor do item (vProd) compõe o valor total da NF-e (vProd)
+                                                                <div class="col-md-12 informacoes-detalhe-nota"
+                                                                     ng-bind="getCodigoTracoDescricao(produto.produto.indicadorComposicao)">
                                                                 </div>                                              
                                                             </div>
                                                         </div>
@@ -1041,7 +1043,7 @@
                                                                     Código EAN Comercial
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                                    7898253580164
+                                                                    {{produto.produto.codigoEANComercial}}
                                                                 </div>                                              
                                                             </div>
                                                             <div class="col-md-4">
@@ -1049,7 +1051,7 @@
                                                                     Unidade Comercial
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                                    KG
+                                                                    {{produto.produto.unidadeComercial}}
                                                                 </div>                                              
                                                             </div>
                                                             <div class="col-md-4">
@@ -1057,7 +1059,7 @@
                                                                     Quantidade Comercial
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                                    33,000
+                                                                    {{produto.produto.qtdComercial | currency:''}}
                                                                 </div>                                              
                                                             </div>
                                                         </div>
@@ -1069,7 +1071,7 @@
                                                                     Código EAN Tributável
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                                    7898253580164
+                                                                    {{produto.produto.codigoEANTributario}} 
                                                                 </div>                                              
                                                             </div>
                                                             <div class="col-md-4">
@@ -1077,7 +1079,7 @@
                                                                     Unidade Tributável
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                                    KG
+                                                                    {{produto.produto.unidadeTributaria}}
                                                                 </div>                                              
                                                             </div>
                                                             <div class="col-md-4">
@@ -1085,7 +1087,7 @@
                                                                     Quantidade Tributável
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                                    33,000
+                                                                    {{produto.produto.qtdTributario | currency:''}}
                                                                 </div>                                              
                                                             </div>
                                                         </div>
@@ -1097,7 +1099,7 @@
                                                                     Valor unitário de comercialização
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                                    3,2500000000
+                                                                    {{produto.produto.valorUnitarioComercializacao | currency:'R$'}}
                                                                 </div>                                              
                                                             </div>
                                                             <div class="col-md-4">
@@ -1105,7 +1107,7 @@
                                                                    Valor unitário de tributação
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                                    3,2500000000
+                                                                    {{produto.produto.valorUnitarioTributacao | currency:'R$'}}
                                                                 </div>                                              
                                                             </div>
                                                         </div>
@@ -1117,7 +1119,7 @@
                                                                     Número do pedido de compra
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                                    {{produto.produto.numPedidoCompra}}
                                                                 </div>                                              
                                                             </div>
                                                             <div class="col-md-4">
@@ -1125,7 +1127,7 @@
                                                                     Item do pedido de compra
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                                    {{produto.produto.itemPedidoCompra}}
                                                                 </div>                                              
                                                             </div>
                                                             <div class="col-md-4">
@@ -1133,7 +1135,7 @@
                                                                     Valor Aproximado dos Tributos
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                                    {{produto.imposto.valorAproximadoTributos | currency:'R$'}}
                                                                 </div>                                              
                                                             </div>
                                                         </div>
@@ -1145,7 +1147,7 @@
                                                                     Número da FCI
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                                    {{produto.produto.FCI}}
                                                                 </div>                                              
                                                             </div>
                                                         </div>
@@ -1157,7 +1159,7 @@
                                                     <div class="col-md-12">
                                                         <div class="row titulos-campos-detalhes-nota">
                                                             <div class="col-md-6">
-                                                                <label>ICMS Normal e ST</label>                                     
+                                                                <label>ICMS Normal e ST</label>
                                                             </div>
                                                         </div>
                                                         <!--1ª LINHA-->
@@ -1166,8 +1168,8 @@
                                                                 <label class="col-md-12 titulos-dados-detalhes-nota">
                                                                     Origem da Mercadoria
                                                                 </label>
-                                                                <div class="col-md-12 informacoes-detalhe-nota">
-                                                                    0 - Nacional
+                                                                <div class="col-md-12 informacoes-detalhe-nota"
+                                                                     ng-bind="getCodigoTracoDescricao(produto.imposto.ICMS.origem)">
                                                                 </div>                                              
                                                             </div>
                                                             <div class="col-md-4">
@@ -1175,15 +1177,15 @@
                                                                     Tributação do ICMS
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                                    10 - Tributada e com cobrança do ICMS por substituição tributária
+                                                                    {{produto.imposto.ICMS.CST}}
                                                                 </div>                                              
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <label class="col-md-12 titulos-dados-detalhes-nota">
                                                                     Modalidade Definição da BC ICMS NORMAL
                                                                 </label>
-                                                                <div class="col-md-12 informacoes-detalhe-nota">
-                                                                    3 - Valor da Operação
+                                                                <div class="col-md-12 informacoes-detalhe-nota" 
+                                                                     ng-bind="getCodigoTracoDescricao(produto.imposto.ICMS.modalidadeBC)">
                                                                 </div>                                              
                                                             </div>
                                                         </div>
@@ -1195,7 +1197,7 @@
                                                                     Base de Cálculo do ICMS Normal
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                                    113,00
+                                                                    {{produto.imposto.ICMS.baseCalculoICMSNormal | currency:'R$'}}
                                                                 </div>                                              
                                                             </div>
                                                             <div class="col-md-4">
@@ -1203,7 +1205,7 @@
                                                                     Alíquota do ICMS Normal
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                                    200,00
+                                                                    {{produto.imposto.ICMS.aliquotaICMSNormal | currency:''}}%
                                                                 </div>                                              
                                                             </div>
                                                             <div class="col-md-4">
@@ -1211,7 +1213,7 @@
                                                                     Valor do ICMS Normal
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                                    33,99
+                                                                    {{produto.imposto.ICMS.valorICMSNormal | currency:'R$'}}
                                                                 </div>                                              
                                                             </div>
                                                         </div>
@@ -1223,7 +1225,7 @@
                                                                     Base de Cálculo do ICMS ST
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                                    122,00
+                                                                    {{produto.imposto.ICMS.baseCalculoICMSST | currency:'R$'}}
                                                                 </div>                                              
                                                             </div>
                                                             <div class="col-md-4">
@@ -1231,7 +1233,7 @@
                                                                     Alíquota do ICMS ST
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                                    45,00
+                                                                    {{produto.imposto.ICMS.aliquotaICMSST | currency:''}}%
                                                                 </div>                                              
                                                             </div>
                                                             <div class="col-md-4">
@@ -1239,7 +1241,7 @@
                                                                     Valor do ICMS ST
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                                    66,00
+                                                                   {{produto.imposto.ICMS.valorICMSST | currency:'R$'}}
                                                                 </div>                                              
                                                             </div>
                                                         </div>
@@ -1251,7 +1253,7 @@
                                                                     Percentual Redução de BC do ICMS ST
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                                    {{produto.imposto.ICMS.percentualICMSST | currency:''}}%
                                                                 </div>                                              
                                                             </div>
                                                             <div class="col-md-4">
@@ -1259,15 +1261,15 @@
                                                                     Percentual do MVA do ICMS ST
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                                    45,00
+                                                                    {{produto.imposto.ICMS.percentualMVAICMSST | currency:''}}%
                                                                 </div>                                              
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <label class="col-md-12 titulos-dados-detalhes-nota">
                                                                     Modalidade Definição da BC ICMS ST
                                                                 </label>
-                                                                <div class="col-md-12 informacoes-detalhe-nota">
-                                                                    4 - Margem Valor Agregado (%)
+                                                                <div class="col-md-12 informacoes-detalhe-nota"
+                                                                     ng-bind="getCodigoTracoDescricao(produto.imposto.ICMS.modalidadeBCICMSST)">
                                                                 </div>                                              
                                                             </div>
                                                         </div>
@@ -1289,7 +1291,7 @@
                                                                     CST
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                                    04 - Operação Tributável (tributação monofásica (alíquota zero))
+                                                                    {{produto.imposto.PIS.CST}}
                                                                 </div>                                              
                                                             </div>
                                                         </div>
@@ -1312,7 +1314,7 @@
                                                                     CST
                                                                 </label>
                                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                                    04 - Operação Tributável (tributação monofásica (alíquota zero))
+                                                                    {{produto.imposto.COFINS.CST}}
                                                                 </div>                                              
                                                             </div>
                                                         </div>
@@ -1348,7 +1350,7 @@
                                                     Base de Cálculo ICMS
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                    1
+                                                    {{notadetalhada.totais.ICMS.valorBaseCalculoICMS | currency:'R$'}} 
                                                 </div>                                              
                                             </div>
                                             <div class="col-md-3">
@@ -1356,7 +1358,7 @@
                                                     Valor do ICMS
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                    1
+                                                    {{notadetalhada.totais.ICMS.valorICMS | currency:'R$'}}
                                                 </div>                                              
                                             </div>
                                             <div class="col-md-3">
@@ -1364,7 +1366,7 @@
                                                     Valor do ICMS Desonerado
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                    1
+                                                    {{notadetalhada.totais.ICMS.valorICMSDesonerado | currency:'R$'}}
                                                 </div>                                              
                                             </div>
                                             <div class="col-md-3">
@@ -1372,7 +1374,7 @@
                                                     Base de Cálculo ICMS ST
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                    1
+                                                    {{notadetalhada.totais.ICMS.valorBaseCalculoICMSST | currency:'R$'}}
                                                 </div>                                              
                                             </div>
                                         </div>
@@ -1384,7 +1386,7 @@
                                                     Valor ICMS Substituição
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                    1
+                                                    {{notadetalhada.totais.ICMS.valorICMSST | currency:'R$'}}
                                                 </div>                                              
                                             </div>
                                             <div class="col-md-3">
@@ -1392,7 +1394,7 @@
                                                     Valor Total dos Produtos
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                    1
+                                                    {{notadetalhada.totais.ICMS.valorProdutos | currency:'R$'}}
                                                 </div>                                              
                                             </div>
                                             <div class="col-md-3">
@@ -1400,7 +1402,7 @@
                                                     Valor do Frete
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                    1
+                                                    {{notadetalhada.totais.ICMS.valorProdutos | currency:'R$'}}
                                                 </div>                                              
                                             </div>
                                             <div class="col-md-3">
@@ -1408,7 +1410,7 @@
                                                     Valor do Seguro
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                    1
+                                                    {{notadetalhada.totais.ICMS.valorSeguro | currency:'R$'}}
                                                 </div>                                              
                                             </div>
                                         </div>
@@ -1420,7 +1422,7 @@
                                                     Outras Despesas Acessórias
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                    1
+                                                    {{notadetalhada.totais.ICMS.valorOutrasDespesas | currency:'R$'}}
                                                 </div>                                              
                                             </div>
                                             <div class="col-md-3">
@@ -1428,7 +1430,7 @@
                                                    Valor Total do IPI
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                    1
+                                                    {{notadetalhada.totais.ICMS.valorIPI | currency:'R$'}} 
                                                 </div>                                              
                                             </div>
                                             <div class="col-md-3">
@@ -1436,7 +1438,7 @@
                                                     Valor Total da NFe
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                    1
+                                                    {{notadetalhada.totais.ICMS.valorNF | currency:'R$'}}
                                                 </div>                                              
                                             </div>
                                             <div class="col-md-3">
@@ -1444,7 +1446,7 @@
                                                     Valor Total dos Descontos
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                    1
+                                                    {{notadetalhada.totais.ICMS.valorDesconto | currency:'R$'}}
                                                 </div>                                              
                                             </div>
                                         </div>
@@ -1456,7 +1458,7 @@
                                                    Valor Total do II
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                    1
+                                                    {{notadetalhada.totais.ICMS.valorII | currency:'R$'}}
                                                 </div>                                              
                                             </div>
                                             <div class="col-md-3">
@@ -1464,7 +1466,7 @@
                                                     Valor do PIS
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                    1
+                                                    {{notadetalhada.totais.ICMS.valorPIS | currency:'R$'}}
                                                 </div>                                              
                                             </div>
                                             <div class="col-md-3">
@@ -1472,7 +1474,7 @@
                                                    Valor da COFINS
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                    1
+                                                    {{notadetalhada.totais.ICMS.valorCOFINS | currency:'R$'}}
                                                 </div>                                              
                                             </div>
                                             <div class="col-md-3">
@@ -1480,7 +1482,7 @@
                                                     Valor Aproximado dos Tributos
                                                 </label>
                                                 <div class="col-md-12 informacoes-detalhe-nota">
-                                                    1
+                                                    {{notadetalhada.totais.ICMS.valorTributos | currency:'R$'}}
                                                 </div>                                              
                                             </div>
                                         </div>
@@ -1488,7 +1490,7 @@
                                 </div>
                             </div>
 
-                            <!--DADOS DE TRANSPORTE-->
+                            <!--TRANSPORTE-->
                             <div class="row conteudos-detalhe-nota">
                                 <div class="col-md-12">
                                     <!--TITULO-->
@@ -1505,8 +1507,8 @@
                                                 <label class="col-md-12 titulos-dados-detalhes-nota">
                                                     Modalidade do Frete
                                                 </label>
-                                                <div class="col-md-12 informacoes-detalhe-nota">
-                                                    1 - Por Conta do Destintário
+                                                <div class="col-md-12 informacoes-detalhe-nota"
+                                                     ng-bind="getCodigoTracoDescricao(notadetalhada.transporte.modalidade)">
                                                 </div>                                              
                                             </div>
                                         </div>
@@ -1514,7 +1516,7 @@
                                 </div>
                             </div>
 
-                            <!--DADOS DE COBRANÇA-->
+                            <!--COBRANÇA-->
                             <div class="row conteudos-detalhe-nota">
                                 <div class="col-md-12">
                                     <!--TITULO-->
@@ -1541,7 +1543,7 @@
                                                             Número
                                                         </label>
                                                         <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                            {{notadetalhada.cobranca.fatura.numero}}
                                                         </div>                                              
                                                     </div>
                                                     <div class="col-md-4">
@@ -1549,7 +1551,7 @@
                                                             Valor Original
                                                         </label>
                                                         <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                            {{notadetalhada.cobranca.fatura.valorOriginal | currency:'R$'}} 
                                                         </div>                                              
                                                     </div>
                                                     <div class="col-md-4">
@@ -1557,7 +1559,7 @@
                                                             Valor do Desconto
                                                         </label>
                                                         <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                            {{notadetalhada.cobranca.fatura.valorDesconto | currency:'R$'}}
                                                         </div>                                              
                                                     </div>
                                                 </div>
@@ -1569,7 +1571,7 @@
                                                             Valor Líquido
                                                         </label>
                                                         <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                            {{notadetalhada.cobranca.fatura.valorLiquido | currency:'R$'}}  
                                                         </div>                                              
                                                     </div>
                                                 </div>
@@ -1586,13 +1588,14 @@
                                                     </div>
                                                 </div>
                                                 <!--1ª LINHA-->
-                                                <div class="row campos-imprimir-documento">
+                                                <div class="row campos-imprimir-documento"
+                                                     ng-repeat="duplicata in notadetalhada.cobranca.duplicatas">
                                                     <div class="col-md-4">
                                                         <label class="col-md-12 titulos-dados-detalhes-nota">
                                                             Número
                                                         </label>
                                                         <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                            {{duplicata.numero}}
                                                         </div>                                              
                                                     </div>
 
@@ -1600,15 +1603,16 @@
                                                         <label class="col-md-12 titulos-dados-detalhes-nota">
                                                             Vencimento
                                                         </label>
-                                                        <div class="col-md-12 informacoes-detalhe-nota">
-                                                            23/09/2015
+                                                        <div class="col-md-12 informacoes-detalhe-nota"
+                                                             ng-bind="getDataString(duplicata.dataVencimento)">
                                                         </div>                                              
-                                                    </div><div class="col-md-4">
+                                                    </div>
+                                                    <div class="col-md-4">
                                                         <label class="col-md-12 titulos-dados-detalhes-nota">
                                                             Valor
                                                         </label>
                                                         <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                            {{duplicata.valor | currency:'R$'}}
                                                         </div>                                              
                                                     </div>
                                                 </div>
@@ -1639,8 +1643,8 @@
                                                         <label class="col-md-12 titulos-dados-detalhes-nota">
                                                             Formato de Impressão DANFE
                                                         </label>
-                                                        <div class="col-md-12 informacoes-detalhe-nota">
-                                                            1 - DANFE normal, retrato
+                                                        <div class="col-md-12 informacoes-detalhe-nota"
+                                                             ng-bind="getCodigoTracoDescricao(notadetalhada.nfe.formatoImpressaoDANFE)">
                                                         </div>                                              
                                                     </div>
                                                 </div>
@@ -1648,7 +1652,7 @@
                                         </div>
 
                                         <!--2º GRUPO-->
-                                        <div class="row" 
+                                        <div class="row" ng-show="notadetalhada.infoAdicional.obsContribuinte.length > 0"
                                              style="border:solid 1px black; margin: 10px 15px 0 15px; padding-bottom:10px">
                                             <div class="col-md-12">
                                                 <div class="row titulos-campos-detalhes-nota">
@@ -1657,13 +1661,14 @@
                                                     </div>
                                                 </div>
                                                 <!--1ª LINHA-->
-                                                <div class="row campos-imprimir-documento">
+                                                <div class="row campos-imprimir-documento"
+                                                     ng-repeat="obs in notadetalhada.infoAdicional.obsContribuinte">
                                                     <div class="col-md-12">
                                                         <label class="col-md-12 titulos-dados-detalhes-nota">
                                                             Descrição
                                                         </label>
                                                         <div class="col-md-12 informacoes-detalhe-nota">
-                                                            Valor Aproximado dos Tributos: 15,60 Pedido: 55760 Mov.: 1562558
+                                                            {{obs.conteudo}}
                                                         </div>                                              
                                                     </div>
                                                 </div>
@@ -1692,7 +1697,7 @@
                                                         CNPJ
                                                     </label>
                                                     <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                        {{notadetalhada.avulsa.CNPJ}}
                                                     </div>                                              
                                                 </div>
                                             </div>
@@ -1704,7 +1709,7 @@
                                                         Repartição Fiscal do Emitente
                                                     </label>
                                                     <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                        {{notadetalhada.avulsa.reparticaoEmitente}}
                                                     </div>                                              
                                                 </div>
 
@@ -1713,7 +1718,7 @@
                                                         Matrícula do Funcionário
                                                     </label>
                                                     <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                        {{notadetalhada.avulsa.matriculaAgente}}
                                                     </div>                                              
                                                 </div>
                                             </div>
@@ -1725,7 +1730,7 @@
                                                         Nome do Funcionário
                                                     </label>
                                                     <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                        {{notadetalhada.avulsa.nomeAgente}}
                                                     </div>                                              
                                                 </div>
                                                 <div class="col-md-6">
@@ -1733,7 +1738,7 @@
                                                         Fone / Fax
                                                     </label>
                                                     <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                        {{notadetalhada.avulsa.telefone}}
                                                     </div>                                              
                                                 </div>
                                             </div>
@@ -1745,7 +1750,7 @@
                                                        UF
                                                     </label>
                                                     <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                        {{notadetalhada.avulsa.UF | uppercase}}
                                                     </div>                                              
                                                 </div>
                                                 <div class="col-md-6">
@@ -1753,7 +1758,7 @@
                                                        Número do Documento Arrecadação
                                                     </label>
                                                     <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                        {{notadetalhada.avulsa.numDAR}}
                                                     </div>                                              
                                                 </div>
                                             </div>
@@ -1765,15 +1770,15 @@
                                                         Valor Total do Documento Arrecadação
                                                     </label>
                                                     <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                        {{notadetalhada.avulsa.valorDAR | currency:'R$'}}
                                                     </div>                                              
                                                 </div>                                            
                                                 <div class="col-md-6">
                                                     <label class="col-md-12 titulos-dados-detalhes-nota">
                                                         Data de Emissão do Documento Arrecadação
                                                     </label>
-                                                    <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                    <div class="col-md-12 informacoes-detalhe-nota"
+                                                         ng-bind="getDataString(notadetalhada.avulsa.dtEmissao)">
                                                     </div>                                              
                                                 </div>
                                             </div>
@@ -1784,8 +1789,8 @@
                                                     <label class="col-md-12 titulos-dados-detalhes-nota">
                                                         Data do Pagamento do Documento Arrecadação
                                                     </label>
-                                                    <div class="col-md-12 informacoes-detalhe-nota">
-
+                                                    <div class="col-md-12 informacoes-detalhe-nota"
+                                                         ng-bind="getDataString(notadetalhada.avulsa.dtPagamento)">
                                                     </div>                                              
                                                 </div>
                                             </div>
@@ -1793,6 +1798,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- FIM DADOS NOTA AVULSA -->
                         </div>
                     </div>
                 </div>
@@ -1806,21 +1812,17 @@
 <script src="../../../lib/jquery.min.js" type="text/javascript"></script>
 <script src="../../../lib/jquery-migrate.min.js" type="text/javascript"></script>
 <script src="../../../lib/jquery-ui.min.js" type="text/javascript"></script>
-<script src="../../../lib/signalr/jquery.signalR.min.js" type="text/javascript"></script>
 <!-- END JQUERY --> 
 <!-- BEGIN CORE PLUGINS -->
 <script src="../../../lib/bootstrap/bootstrap.min.js" type="text/javascript"></script>
 <script src="../../../lib/bootstrap/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
-<script src="../../../lib/bootstrap/datepicker/bootstrap-datepicker.js" type="text/javascript"></script>
 <script src="../../../lib/jquery.slimscroll.min.js" type="text/javascript"></script>
 <script src="../../../lib/jquery.blockui.min.js" type="text/javascript"></script>
-<script src="../../../lib/jquery.cokie.min.js" type="text/javascript"></script>
 <script src="../../../lib/uniform/jquery.uniform.min.js" type="text/javascript"></script>
 <!-- END CORE PLUGINS --> 
 <!-- ANGULAR -->
 <script src="../../../lib/angularjs/angular.min.js" type="text/javascript"></script>
 <script src="../../../lib/angularjs/angular-locale_pt-br.js" type="text/javascript"></script>
-<script src="../../../lib/bootstrap/ui-bootstrap-tpls-0.13.0.min.js" type="text/javascript"></script>  
 <script src="../../../lib/angularjs/plugins/angular-ui-router.min.js" type="text/javascript"></script>  
 <!-- END - ANGULAR --> 
 <!-- BEGIN PAGE LEVEL SCRIPTS -->

@@ -1766,7 +1766,7 @@ angular.module("AtosCapital", ['ui.router',
         $scope.alerta.mensagem = mensagem ? mensagem : 'Mensagem';
         $scope.alerta.textoOk = textoOk ? textoOk : 'Ok';
         $scope.alerta.funcaoOk = typeof funcaoOk === 'function' ? 
-                                    function(){funcaoOk(); fechaModalAlerta()}  : 
+                                    function(){fechaModalAlerta(); funcaoOk();}  : 
                                     function(){fechaModalAlerta()};
         // Exibe o modal
         $('#modalAlerta').modal('show');

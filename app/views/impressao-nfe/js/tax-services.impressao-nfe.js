@@ -32,6 +32,9 @@ angular.module("tax-services-impressao-nfe", ['ui.router','utils', 'webapi'])
         
         if(!k || !t) return;
         
+        // Deleta o parâmetro token da url
+        $location.search('t', null);
+        
         obtemDetalhesNota(k, t, function(){ $scope.exibeTela = true; 
                                             $timeout(function(){$scope.imprime();}, 1500) });
     }     
@@ -54,6 +57,29 @@ angular.module("tax-services-impressao-nfe", ['ui.router','utils', 'webapi'])
         }
         return text;//.toUpperCase();
     }
+    
+    /**
+     * Retorna a data do tipo Date yyyy-MM-dd em string dd/MM/yyyy
+     */
+    $scope.getDataString = function(data){
+        if(typeof data !== 'undefined' && data !== null){ 
+            if(typeof data.getDate === 'function')
+                return data.getDate() + '/' + (data.getMonth() + 1) + '/' +  data.getFullYear();
+            return data.substr(8, 2) + '/' + data.substr(5, 2) + '/' + data.substr(0, 4);
+        }
+        return '';
+    };
+    $scope.getDataTimeString = function(data){
+        // 2015-07-21T10:51:15.917  
+        if(typeof data !== 'undefined' && data !== null){ 
+            var dt = data.substr(8, 2) + '/' + data.substr(5, 2) + '/' + data.substr(0, 4) + 
+                     ' ' + data.substr(11,8);
+            var index = dt.indexOf('-');
+            if(index > -1) dt = dt.substr(0, index);
+            return dt;
+        }
+        return '';
+    }; 
     
     /**
       * Requisita informações detalhadas da nota fiscal eletrônica
@@ -115,10 +141,10 @@ angular.module("tax-services-impressao-nfe", ['ui.router','utils', 'webapi'])
      */                         
    var hideProgress = function(){
         Metronic.unblockUI();
-   };   
+   };                                            
    
    // MODAL ALERTA
-    var alerta = {titulo : '', mensagem : '', textoOk : 'Ok', funcaoOk: function(){}};
+    $scope.alerta = {titulo : '', mensagem : '', textoOk : 'Ok', funcaoOk: function(){}};
     var fechaModalAlerta = function(){
         $('#modalAlerta').modal('hide');    
     }; 
@@ -126,11 +152,11 @@ angular.module("tax-services-impressao-nfe", ['ui.router','utils', 'webapi'])
       * Exibe modal com a mensagem de alerta
       */
     var showModalAlerta = function(mensagem, titulo, textoOk, funcaoOk){
-        alerta.titulo = titulo ? titulo : 'Info';
-        alerta.mensagem = mensagem ? mensagem : 'Mensagem';
-        alerta.textoOk = textoOk ? textoOk : 'Ok';
-        alerta.funcaoOk = typeof funcaoOk === 'function' ? 
-                                    function(){funcaoOk(); fechaModalAlerta()}  : 
+        $scope.alerta.titulo = titulo ? titulo : 'Info';
+        $scope.alerta.mensagem = mensagem ? mensagem : 'Mensagem';
+        $scope.alerta.textoOk = textoOk ? textoOk : 'Ok';
+        $scope.alerta.funcaoOk = typeof funcaoOk === 'function' ? 
+                                    function(){fechaModalAlerta(); funcaoOk();}  :  
                                     function(){fechaModalAlerta()};
         // Exibe o modal
         $('#modalAlerta').modal('show');

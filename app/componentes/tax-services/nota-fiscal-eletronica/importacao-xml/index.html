@@ -673,7 +673,7 @@
                                                                         Endereço
                                                                     </label>
                                                                     <div class="col-md-12 informacoes-detalhe-nota">
-                                                                       {{notadetalhada.emitente.endereco.logradouro | uppercase}}
+                                                                        {{notadetalhada.emitente.endereco.logradouro | uppercase}}
                                                                         ,&nbsp;
                                                                         {{notadetalhada.emitente.endereco.numero | uppercase}}
                                                                         ,&nbsp;
@@ -948,7 +948,7 @@
                                                                         Qtd.
                                                                     </label>
                                                                     <div class="col-md-12 informacoes-detalhe-nota">
-                                                                        {{produto.produto.qtdComercial | currency:'R$'}}
+                                                                        {{produto.produto.qtdComercial | currency:''}}
                                                                     </div>                                              
                                                                 </div>
                                                                 <div class="col-md-2">
@@ -1094,7 +1094,7 @@
 
                                                                                             </label>
                                                                                             <div class="col-md-12 informacoes-detalhe-nota">
-                                                                                                {{produto.produto.qtdComercial | currency:'R$'}} 
+                                                                                                {{produto.produto.qtdComercial | currency:''}} 
                                                                                             </div>                                              
                                                                                         </div>
                                                                                     </div>
@@ -1124,7 +1124,7 @@
 
                                                                                             </label>
                                                                                             <div class="col-md-12 informacoes-detalhe-nota">
-                                                                                                {{produto.produto.qtdTributario | currency:'R$'}}
+                                                                                                {{produto.produto.qtdTributario | currency:''}}
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
@@ -1245,7 +1245,7 @@
 
                                                                                                             </label>
                                                                                                             <div class="col-md-12 informacoes-detalhe-nota">        
-                                                                                        {{produto.imposto.ICMS.aliquotaICMSNormal | currency:'R$'}}
+                                                                                        {{produto.imposto.ICMS.aliquotaICMSNormal | currency:''}}%
                                                                                                             </div>                                              
                                                                                                         </div>
                                                                                                         <div class="col-md-4">
@@ -1275,7 +1275,7 @@
 
                                                                                                             </label>
                                                                                                             <div class="col-md-12 informacoes-detalhe-nota">        
-                                                                                            {{produto.imposto.ICMS.aliquotaICMSST | currency:'R$'}}
+                                                                                            {{produto.imposto.ICMS.aliquotaICMSST | currency:''}}%
                                                                                                             </div>                                              
                                                                                                         </div>
                                                                                                         <div class="col-md-4">
@@ -1296,7 +1296,7 @@
 
                                                                                                             </label>
                                                                                                             <div class="col-md-12 informacoes-detalhe-nota">
-                                                                                          {{produto.imposto.ICMS.percentualICMSST | currency:'R$'}}
+                                                                                          {{produto.imposto.ICMS.percentualICMSST | currency:''}}%
                                                                                                             </div>                                              
                                                                                                         </div>
                                                                                                         <div class="col-md-4">
@@ -1305,7 +1305,7 @@
 
                                                                                                             </label>
                                                                                                             <div class="col-md-12 informacoes-detalhe-nota">        
-                                                                                       {{produto.imposto.ICMS.percentualMVAICMSST | currency:'R$'}}
+                                                                                       {{produto.imposto.ICMS.percentualMVAICMSST | currency:''}}%
                                                                                                             </div>                                              
                                                                                                         </div>
                                                                                                         <div class="col-md-4">

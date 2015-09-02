@@ -284,7 +284,7 @@ angular.module("card-services-conciliacao-bancaria", [])
             .then(function(dados){
                 $scope.adquirentes = dados.Registros;
                 // Reseta
-                if(!idOperadora) $scope.filtro.adquirente = null;
+                if(!idOperadora) $scope.filtro.adquirente = $scope.adquirentes[0]; //null; 
                 else $scope.filtro.adquirente = $filter('filter')($scope.adquirentes, function(a) {return a.id === idOperadora;})[0];
                 $scope.hideProgress(divPortletBodyFiltrosPos);
               },

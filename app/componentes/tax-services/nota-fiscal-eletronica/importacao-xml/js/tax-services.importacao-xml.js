@@ -14,12 +14,10 @@ angular.module("tax-services-importacao-xml", [])
                                             '$window',
                                             /*'$campos',*/
                                             '$webapi',
-                                            '$apis',
-                                            '$http',
-                                            '$filter', 
+                                            '$apis', 
                                             '$timeout',    
                                             function($scope,$state,$http,$window,/*$campos,*/
-                                                     $webapi,$apis,$filter,$timeout){ 
+                                                     $webapi,$apis,$timeout){ 
    
     $scope.paginaInformada = 1; // página digitada pelo privilégio
     $scope.filiais = [];   
@@ -269,7 +267,7 @@ angular.module("tax-services-importacao-xml", [])
         if(!$scope.usuariologado.grupoempresa){
             $scope.showModalAlerta('Por favor, selecione uma empresa', 'Atos Capital', 'OK', 
                                    function(){
-                                         $timeout(function(){$scope.setVisibilidadeBoxGrupoEmpresa(true);}, 300);
+                                         $timeout(function(){ $scope.setVisibilidadeBoxGrupoEmpresa(true);}, 300);
                                     }
                                   );
             return;   

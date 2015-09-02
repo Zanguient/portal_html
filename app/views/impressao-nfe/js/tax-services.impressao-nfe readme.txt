@@ -487,6 +487,20 @@ Gerenciar completamente a tela de impressão de uma NF-e.
 								indicadorOrigem : string
 							}],
 						},
+						avulsa :
+						{
+							CNPJ : string,
+							dtEmissao : datetime,
+							dtPagamento : datetime,
+							telefone : string,
+							matriculaAgente : string,
+							numDAR : string,
+							reparticaoEmitente : string,
+							UF : string,
+							valorDAR : double,
+							nomeAgente : string,
+							orgaoEmitente : string,
+						}
 					}]					
 		}	
 	

@@ -518,6 +518,20 @@ Não é necessário nenhum outro módulo externo.
 								indicadorOrigem : string
 							}],
 						},
+						avulsa :
+						{
+							CNPJ : string,
+							dtEmissao : datetime,
+							dtPagamento : datetime,
+							telefone : string,
+							matriculaAgente : string,
+							numDAR : string,
+							reparticaoEmitente : string,
+							UF : string,
+							valorDAR : double,
+							nomeAgente : string,
+							orgaoEmitente : string,
+						}
 					}]					
 		}	
 	
