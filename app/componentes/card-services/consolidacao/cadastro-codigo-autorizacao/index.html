@@ -7,8 +7,8 @@
  
     Card Services > Consolidação > Cadastro Código de Autorização
 
-
     Versão 1.0 - 03/09/2015
+        -Criação da tela Cadastro Código de Autorização, modelagem do Formulário de Cadastro
 -->
 
 <div class="container" ng-controller="card-services-cadastro-codigo-autorizacaoCtrl" 
@@ -215,436 +215,194 @@
             </div>
         </div>
         <div class="portlet-body" ng-show="exibeTela">
-            <div class="table-container">
-                <div id="datatable_products_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">
-                    
-                    <!--EXIBIÇÃO E PESQUISA-->
-                    <div class="row">
-                        <!--EXIBIÇÃO-->
-                        <div class="col-xs-4 col-sm-4 col-md-4">
-                            <div class="dataTables_length">
-                                <label>
-                                    <span class="seperator"></span>Exibindo 
-                                    <select name="datatable_products_length" aria-controls="datatable_products" 
-                                            class="form-control input-xsmall input-sm input-inline"
-                                            ng-model="usuario.itens_pagina"
-                                            ng-change="alterouItensPagina()"
-                                            ng-options="item for item in itens_pagina">                                            
-                                    </select> registros de {{usuario.total_registros}}
-                                </label>
-                            </div>   
-                        </div>
-                        <!--PAGINAÇÃO-->
-                        <div class="col-xs-4 col-sm-4 col-md-3">
-                            <div class="pagination-panel centralizarPaginacao"> Página 
-                                <a href="javascript:;" ng-click="retrocedePagina()"
-                                   class="btn btn-sm default prev" 
-                                   ng-class="{disabled: usuario.pagina <= 1}" 
-                                   title="Página anterior">
-                                        <i class="fa fa-angle-left"></i>
-                                </a>
-                                <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
-                                       maxlength="4" style="text-align:center; margin: 0 5px;"
-                                       ng-model="paginaInformada" valid-integer-number
-                                       ng-keypress="($event.which === 13) ? alteraPagina() : 0"
-                                       ng-blur="atualizaPaginaDigitada()">
-                                <a href="javascript:;" ng-click="avancaPagina()"
-                                   class="btn btn-sm default next"
-                                   ng-class="{disabled: usuario.pagina >= usuario.total_paginas}"
-                                   title="Próxima página">
-                                    <i class="fa fa-angle-right"></i>
-                                </a>
-                                 de <span class="pagination-panel-total">{{usuario.total_paginas}}</span>
-                            </div>    
-                        </div>
-                        <!--PESQUISA-->
-                        <div class="col-xs-4 col-sm-4 col-md-5">
-                            <div class="row dataTables_filter">
-                                <div class="col-md-6">
-                                    <label>
-                                            <select aria-controls="datatable_products" 
-                                                    class="form-control input-sm input-inline"
-                                                    ng-model="usuario.campo_busca"
-                                                    ng-options="campo as campo.nome for campo in camposBusca | filter:{ativo:true}">
-                                            </select>
-                                    </label> 
-                                    <label>
-                                            <span class="seperator"></span>Pesquisar
-                                    </label>
-                                </div>
-                                <div class="col-md-6">
-                                    <label>
-                                        <div class="input-group input-icon right">
-                                            <i class="fa fa-times" style="right:50px;cursor:pointer"
-                                               ng-click="resetaBusca()"
-                                               ng-show="usuario.busca"></i>
-                                            <input type="text" 
-                                               class="form-control input-inline" 
-                                               placeholder="Buscar" 
-                                               ng-model="busca"
-                                               ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !busca)) && filtraUsuarios()">
-                                            <span class="input-group-addon">
-                                                <i class="fa fa-search" style="cursor:pointer"
-                                                       ng-click="filtraUsuarios()"></i>
-                                            </span>
-                                        </div> 
-                                    </label>
-                                </div>
-                            </div>
-                        </div>                            
-                    </div>  
+            <!--EXIBIÇÃO E PESQUISA-->
+            <div class="row">
+                <!--EXIBIÇÃO-->
+                <div class="col-md-4 col-sm-4">
+                    <div class="dataTables_length">
+                        <label>
+                            <span class="seperator"></span>Exibindo 
+                            <select name="datatable_products_length" aria-controls="datatable_products" 
+                                    class="form-control input-xsmall input-sm input-inline"
+                                    ng-model="usuario.itens_pagina"
+                                    ng-change="alterouItensPagina()"
+                                    ng-options="item for item in itens_pagina">                                            
+                            </select> registros de {{usuario.total_registros}}
+                        </label>
+                    </div>   
                 </div>
+                <!--PAGINAÇÃO-->
+                <div class="col-md-3 col-sm-3">
+                    <div class="pagination-panel centralizarPaginacao"> Página 
+                        <a href="javascript:;" ng-click="retrocedePagina()"
+                           class="btn btn-sm default prev" 
+                           ng-class="{disabled: usuario.pagina <= 1}" 
+                           title="Página anterior">
+                                <i class="fa fa-angle-left"></i>
+                        </a>
+                        <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                               maxlength="4" style="text-align:center; margin: 0 5px;"
+                               ng-model="paginaInformada" valid-integer-number
+                               ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                               ng-blur="atualizaPaginaDigitada()">
+                        <a href="javascript:;" ng-click="avancaPagina()"
+                           class="btn btn-sm default next"
+                           ng-class="{disabled: usuario.pagina >= usuario.total_paginas}"
+                           title="Próxima página">
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                         de <span class="pagination-panel-total">{{usuario.total_paginas}}</span>
+                    </div>    
+                </div>
+                <!--PESQUISA-- >
+                <div class="col-xs-4 col-sm-4 col-md-5">
+                    <div class="row dataTables_filter">
+                        <div class="col-md-6">
+                            <label>
+                                    <select aria-controls="datatable_products" 
+                                            class="form-control input-sm input-inline"
+                                            ng-model="usuario.campo_busca"
+                                            ng-options="campo as campo.nome for campo in camposBusca | filter:{ativo:true}">
+                                    </select>
+                            </label> 
+                            <label>
+                                    <span class="seperator"></span>Pesquisar
+                            </label>
+                        </div>
+                        <div class="col-md-6">
+                            <label>
+                                <div class="input-group input-icon right">
+                                    <i class="fa fa-times" style="right:50px;cursor:pointer"
+                                       ng-click="resetaBusca()"
+                                       ng-show="usuario.busca"></i>
+                                    <input type="text" 
+                                       class="form-control input-inline" 
+                                       placeholder="Buscar" 
+                                       ng-model="busca"
+                                       ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !busca)) && filtraUsuarios()">
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-search" style="cursor:pointer"
+                                               ng-click="filtraUsuarios()"></i>
+                                    </span>
+                                </div> 
+                            </label>
+                        </div>
+                    </div>
+                </div-->                            
             </div>
-            <div class="row  cuponsConciliacaoVendas">
-                <div class="col-sm-12 col-md-12">
-                    <div class="row">
-                        <!--CUPONS CARD SERVICES- CONCILIAÇÃO VENDAS-->
-                        <div class="col-sm-5 col-md-3 col-md-offset-2">
-                            <div class="row">
-                                <div class="col-sm-10 col-sm-offset-1 cuponAzulConciliacaoVendas">
-                                    <div class="row">
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            <strong>CIELO</strong>                            
+            
+            <!--CONTEUDO-->
+            <div class="table-container" style="margin-bottom:50px">            
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                        
+                        <div class="row">
+                            <!--FORMULÁRIO DE CADASTRO-->
+                            <div class="col-md-6 col-sm-6">
+                                
+                                <!--CONTEUDO FORMULÁRIO-->
+                                <div class="row">
+                                    <div class="col-md-7 col-md-offset-3 col-sm-8 form-cadastro-cod-auto">
+                                        
+                                        <!--TITULO-->
+                                        <div class="row titulo-form-cadastro-cod-auto">
+                                            <div class="col-md-12 col-sm-12">
+                                                <label>Formulário de Cadastro</label>
+                                            </div>
                                         </div>
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            <strong>VIA ESTABELECIMENTO</strong>
+                                        <!--ADQUIRENTE-->
+                                        <div class="row conteudos-form-cadastro-cod-auto">
+                                            <label class="col-md-5 col-sm-5">Adquirente</label>
+                                            <div class="col-md-7 col-sm-7">
+                                                <select class="form-control">
+                                                    <option></option>
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div class="col-sm-12" Style="text-align:center; margin-top:10px">
-                                             AVENIDA PAULISTA, Nº8765
+                                        <!--POS/TERMINAL-->
+                                        <div class="row conteudos-form-cadastro-cod-auto">                                       
+                                            <label class="col-md-5 col-sm-5">POS/Termial</label>
+                                            <div class="col-md-7 col-sm-7">
+                                                <input class="form-control">
+                                                    
+                                                </input>
+                                            </div>
                                         </div>
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            SÃO PAULO
-                                        </div>
-                                        <div class="col-sm-12" Style="margin-top:15px">
-                                             POS=896547
-                                        </div>
-                                        <div class="col-sm-6">
-                                            01/02/2013
-                                        </div>
-                                        <div class="col-sm-6">
-                                            18:00
-                                        </div>
-                                        <div class="col-sm-6">
-                                             AUT=999999
-                                        </div>
-                                        <div class="col-sm-6">
-                                            DOC=123456
-                                        </div>
-                                        <div class="col-sm-12">
-                                            TERM:
-                                        </div>
-                                        <div class="col-sm-12">
-                                            9015622
-                                        </div>
-                                        <div class="col-sm-12">
-                                           MASTERCARD
-                                        </div>                        
-                                        <div class="col-sm-12">
-                                            XXXXXXXXXXXXXXX4569
-                                        </div>                        
-                                        <div class="col-sm-12">
-                                            CREDITO A VISTA
-                                        </div>                        
-                                        <div class="col-sm-6">
-                                            VALOR:
-                                        </div>
-                                        <div class="col-sm-6">
-                                            50,00
-                                        </div>                                
-                                    </div>                            
-                                </div>
-                            </div>
-                        </div>
-                        <!--BOTÃO CHECK-->
-                        <div class="col-sm-2 col-md-2 botaoCheckCociliacaoVendas">
-                            <div class="row">
-                                <div class="col-sm-10 col-sm-offset-4">
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <a href="javascript:;" class="btn btn-icon-only default">
-                                                <i class="fa fa-check"></i>
-                                             </a>
-                                        </div>
-                                    </div>                            
-                                </div>
-                            </div>
-                        </div>
-                        <!--CUPONS CARD SERVICES- CONCILIAÇÃO VENDAS-->
-                        <div class="col-sm-5 col-md-3">
-                            <div class="row">
-                                <div class="col-sm-10 col-sm-offset-1 cuponAzulConciliacaoVendas">
-                                    <div class="row">
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            <strong>CIELO</strong>                            
-                                        </div>
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            <strong>VIA ESTABELECIMENTO</strong>
-                                        </div>
-                                        <div class="col-sm-12" Style="text-align:center; margin-top:10px">
-                                             AVENIDA PAULISTA, Nº8765
-                                        </div>
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            SÃO PAULO
-                                        </div>
-                                        <div class="col-sm-12" Style="margin-top:15px">
-                                             POS=896547
-                                        </div>
-                                        <div class="col-sm-6">
-                                            01/02/2013
-                                        </div>
-                                        <div class="col-sm-6">
-                                            18:00
-                                        </div>
-                                        <div class="col-sm-6">
-                                             AUT=999999
-                                        </div>
-                                        <div class="col-sm-6">
-                                            DOC=123456
-                                        </div>
-                                        <div class="col-sm-12">
-                                            TERM:
-                                        </div>
-                                        <div class="col-sm-12">
-                                            9015622
-                                        </div>
-                                        <div class="col-sm-12">
-                                           MASTERCARD
-                                        </div>                        
-                                        <div class="col-sm-12">
-                                            XXXXXXXXXXXXXXX4569
-                                        </div>                        
-                                        <div class="col-sm-12">
-                                            CREDITO A VISTA
-                                        </div>                        
-                                        <div class="col-sm-6">
-                                            VALOR:
-                                        </div>
-                                        <div class="col-sm-6">
-                                            50,00
-                                        </div>                                
-                                    </div>                            
-                                </div>
-                            </div>
-                        </div>                
-                    </div> 
-                    <!--CUPONS LARANJAS-->
-                    <div class="row">
-                        <!--CUPONS CARD SERVICES- CONCILIAÇÃO VENDAS-->
-                        <div class="col-sm-5 col-md-3 col-md-offset-2">
-                            <div class="row">
-                                <div class="col-sm-10 col-sm-offset-1 cuponLaranjaConciliacaoVendas">
-                                    <div class="row">
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            <strong>CIELO</strong>                            
-                                        </div>
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            <strong>VIA ESTABELECIMENTO</strong>
-                                        </div>
-                                        <div class="col-sm-12" Style="text-align:center; margin-top:10px">
-                                             AVENIDA PAULISTA, Nº8765
-                                        </div>
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            SÃO PAULO
-                                        </div>
-                                        <div class="col-sm-12" Style="margin-top:15px">
-                                             POS=896547
-                                        </div>
-                                        <div class="col-sm-6">
-                                            01/02/2013
-                                        </div>
-                                        <div class="col-sm-6">
-                                            18:00
-                                        </div>
-                                        <div class="col-sm-6">
-                                             AUT=999999
-                                        </div>
-                                        <div class="col-sm-6">
-                                            DOC=123456
-                                        </div>
-                                        <div class="col-sm-12">
-                                            TERM:
-                                        </div>
-                                        <div class="col-sm-12">
-                                            9015622
-                                        </div>
-                                        <div class="col-sm-12">
-                                           MASTERCARD
-                                        </div>                        
-                                        <div class="col-sm-12">
-                                            XXXXXXXXXXXXXXX4569
-                                        </div>                        
-                                        <div class="col-sm-12">
-                                            CREDITO A VISTA
-                                        </div>                        
-                                        <div class="col-sm-6">
-                                            VALOR:
-                                        </div>
-                                        <div class="col-sm-6">
-                                            50,00
-                                        </div>                                
-                                    </div>                            
-                                </div>
-                            </div>
-                        </div>
-                        <!--BOTÃO CHECK-->
-                        <div class="col-sm-2 col-md-2 botaoCheckCociliacaoVendas">
-                            <div class="row">
-                                <div class="col-sm-10 col-sm-offset-4">
-                                    <div class="row"  style="margin-bottom:15px;">
-                                        <div class="col-sm-12">
-                                            <a href="javascript:;" class="btn btn-icon-only default">
-                                                <i class="fa fa-times"></i>
-                                             </a>
+                                        <!--BOTÃO INCLUIR-->
+                                        <div class="row conteudos-form-cadastro-cod-auto">
+                                            <div class="col-md-3 col-md-offset-8 col-sm-3 col-sm-offset-8">
+                                                <button class=" btn btn-sm red filter-submit margin-bottom">
+                                                    <i class="fa fa-plus"></i>
+                                                    Incluir
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <a href="javascript:;" class="btn btn-icon-only default">
-                                                <i class="fa fa-search"></i>
-                                             </a>
-                                        </div>
-                                    </div> 
+                                </div>
+                                <!--BOTÃO SALVAR-->
+                                <div class="row btn-salvar-form-cadastro-cod-auto">
+                                    <div class="col-md-3 col-md-offset-8 col-sm-3 col-sm-offset-8">
+                                        <button class=" btn btn-sm blue filter-submit margin-bottom">
+                                            Salvar
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>                                
-                    </div>
-                    <!--CUPONS VERMELHOS-->
-                    <div class="row">
-                        <!--CUPONS CARD SERVICES- CONCILIAÇÃO VENDAS-->
-                        <div class="col-sm-5 col-md-3 col-md-offset-2">
-                            <div class="row">
-                                <div class="col-sm-10 col-sm-offset-1 cuponVermelhoConciliacaoVendas">
-                                    <div class="row">
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            <strong>CIELO</strong>                            
+                            
+                            <!--CUPOM PARA VISUALIZAÇÃO-->
+                            <div class="col-md-6 col-sm-6">
+                                
+                                <!--CONTEUDO FORMULÁRIO-->
+                                <div class="row">
+                                    <div class="col-md-7 col-md-offset-2 col-sm-8 form-cadastro-cod-auto"> 
+                                        
+                                        <!--EXEMPLO:APAGAR-->
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                conteudo exemplo
+                                            </div>
                                         </div>
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            <strong>VIA ESTABELECIMENTO</strong>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                conteudo exemplo
+                                            </div>
                                         </div>
-                                        <div class="col-sm-12" Style="text-align:center; margin-top:10px">
-                                             AVENIDA PAULISTA, Nº8765
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                conteudo exemplo
+                                            </div>
                                         </div>
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            SÃO PAULO
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                conteudo exemplo
+                                            </div>
                                         </div>
-                                        <div class="col-sm-12" Style="margin-top:15px">
-                                             POS=896547
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                conteudo exemplo
+                                            </div>
                                         </div>
-                                        <div class="col-sm-6">
-                                            01/02/2013
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                conteudo exemplo
+                                            </div>
                                         </div>
-                                        <div class="col-sm-6">
-                                            18:00
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                conteudo exemplo
+                                            </div>
                                         </div>
-                                        <div class="col-sm-6">
-                                             AUT=999999
-                                        </div>
-                                        <div class="col-sm-6">
-                                            DOC=123456
-                                        </div>
-                                        <div class="col-sm-12">
-                                            TERM:
-                                        </div>
-                                        <div class="col-sm-12">
-                                            9015622
-                                        </div>
-                                        <div class="col-sm-12">
-                                           MASTERCARD
-                                        </div>                        
-                                        <div class="col-sm-12">
-                                            XXXXXXXXXXXXXXX4569
-                                        </div>                        
-                                        <div class="col-sm-12">
-                                            CREDITO A VISTA
-                                        </div>                        
-                                        <div class="col-sm-6">
-                                            VALOR:
-                                        </div>
-                                        <div class="col-sm-6">
-                                            50,00
-                                        </div>                                
-                                    </div>                            
+                                        
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <!--BOTÃO CHECK-->
-                        <div class="col-sm-2 col-md-2 botaoCheckCociliacaoVendas">
-                            <div class="row">
-                                <div class="col-sm-10 col-sm-offset-4">
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <a href="javascript:;" class="btn btn-icon-only default">
-                                                <i class="fa fa-arrow-right"></i>
-                                             </a>
-                                        </div>
-                                    </div>                            
-                                </div>
-                            </div>
-                        </div>
-                        <!--CUPONS CARD SERVICES- CONCILIAÇÃO VENDAS-->
-                        <div class="col-sm-5 col-md-3">
-                            <div class="row">
-                                <div class="col-sm-10 col-sm-offset-1 cuponVermelhoConciliacaoVendas">
-                                    <div class="row">
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            <strong>CIELO</strong>                            
-                                        </div>
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            <strong>VIA ESTABELECIMENTO</strong>
-                                        </div>
-                                        <div class="col-sm-12" Style="text-align:center; margin-top:10px">
-                                             AVENIDA PAULISTA, Nº8765
-                                        </div>
-                                        <div class="col-sm-12" Style="text-align:center">
-                                            SÃO PAULO
-                                        </div>
-                                        <div class="col-sm-12" Style="margin-top:15px">
-                                             POS=896547
-                                        </div>
-                                        <div class="col-sm-6">
-                                            01/02/2013
-                                        </div>
-                                        <div class="col-sm-6">
-                                            18:00
-                                        </div>
-                                        <div class="col-sm-6">
-                                             AUT=999999
-                                        </div>
-                                        <div class="col-sm-6">
-                                            DOC=123456
-                                        </div>
-                                        <div class="col-sm-12">
-                                            TERM:
-                                        </div>
-                                        <div class="col-sm-12">
-                                            9015622
-                                        </div>
-                                        <div class="col-sm-12">
-                                           MASTERCARD
-                                        </div>                        
-                                        <div class="col-sm-12">
-                                            XXXXXXXXXXXXXXX4569
-                                        </div>                        
-                                        <div class="col-sm-12">
-                                            CREDITO A VISTA
-                                        </div>                        
-                                        <div class="col-sm-6">
-                                            VALOR:
-                                        </div>
-                                        <div class="col-sm-6">
-                                            50,00
-                                        </div>                                
-                                    </div>                            
-                                </div>
-                            </div>
-                        </div>                
                     </div>
-                </div>
+                </div>    
             </div>
-            <!--CUPONS AZUIS-->
             <!--RODAPÉ-->
             <div class="row">
-                <div class="col-xs-4 col-sm-4 col-md-4">
+                <div class="col-md-4 col-sm-4 ">
                     <div class="dataTables_info" 
                          id="sample_editable_1_info" 
                          role="status"
@@ -653,7 +411,7 @@
                     </div>
                 </div>
                 <!--PAGINAÇÃO-RODAPÉ-->
-                <div class="col-xs-4 col-sm-4 col-md-3">
+                <div class="col-md-3 col-sm-3">
                     <div class="pagination-panel centralizarPaginacao"> Página 
                         <a href="javascript:;" 
                            ng-click="retrocedePagina()" 
@@ -683,6 +441,5 @@
                 <!-- FIM PAGINAÇÃO -->
             </div>
         </div>
-        
     </div>
 </div>

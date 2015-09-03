@@ -4,7 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ * 
  *  Versão: 1.0 - 03/09/2015
+ *      -Criação dos estilos da tela de cadastro de código de autorização.
  *
  */
 
@@ -927,3 +929,28 @@ padding-top: 16%;
 }
 
 /*FIM ESTILOS CONSULTA POS/TERMINAL*/
+
+/*ESTILOS CADASTRO DE CÓDIGO DE AUTORIZAÇÃO*/
+
+.btn-salvar-form-cadastro-cod-auto{
+    margin-top: 20px;
+}
+
+.conteudos-form-cadastro-cod-auto{
+    margin-bottom: 20px;
+}
+
+.form-cadastro-cod-auto{
+    margin-top:40px ;
+    border: solid 2px #a6e1ec;
+    background:#eef7fb;
+    color: #31708f;
+    width: 330px;
+}
+.titulo-form-cadastro-cod-auto{
+    margin:20px 0 20px 0;
+    text-align: center;
+    border-bottom: solid 1px #a6e1ec; 
+}
+
+/*FIM ESTILOS CADASTRO DE CÓDIGO DE AUTORIZAÇÃO*/
