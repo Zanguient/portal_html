@@ -1,0 +1,159 @@
+<!-- 
+
+    Atos Capital - www.atoscapital.com.br
+   
+    suporte@atoscapital.com.br
+ 
+ 
+    Tax Services > Nota Fiscal Eletrônica > Cadastro de Certificado Digital
+
+
+    Versão 1.0 - 03/09/2015
+-->
+
+<div class="container" ng-controller="tax-services-cadastro-certificado-digitalCtrl" 
+     ng-init="taxServices_cadastroCertificadoDigitalInit()">   
+    
+    <!-- BEGIN PAGE BREADCRUMB -->
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href="javascript:;" ng-click="goHome()">Início</a><i class="fa fa-circle"></i>
+        </li>
+        <li class="active">
+             Tax Services<i class="fa fa-caret-right"></i>
+             Nota Fiscal Eletrônica<i class="fa fa-caret-right"></i>
+             Cadastro de Certificado Digital
+        </li>
+    </ul>
+    <!-- END PAGE BREADCRUMB -->
+    
+    <!-- CONTEUDO -->
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN TABLE PORTLET-->
+            <div class="portlet light">
+                
+                <!--TITULO-->
+                <div class="portlet-title">
+                    <div class="caption">								
+                        <span class="caption-subject font-green-sharp bold uppercase">CNPJs Base</span>
+                    </div>
+                    <div class="actions">
+                        <a class="btn btn-circle btn-icon-only btn-default fullscreen" 
+                           href="javascript:;" 
+                           ng-click="fullScreenClick()"
+                           title="{{telaEstaEmFullScreen() ? 'Tela Normal' : 'Tela Cheia'}}"></a>
+                        <div class="btn-group element-hidden"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -->
+                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
+                            <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to Excel </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to CSV </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to XML </a>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Print Invoices </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- CORPO -->
+                <div class="portlet-body" ng-show="exibeTela">
+                    <div class="row paddingDivs">
+                       <!--EXIBIÇÃO-->
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class="dataTables_length">
+                                <label>
+                                    <span class="seperator"></span>Exibindo 
+                                    <select name="datatable_products_length" aria-controls="datatable_products" 
+                                            class="form-control input-xsmall input-sm input-inline"
+                                            ng-model="filtro.itens_pagina"
+                                            ng-change="alterouItensPagina()"
+                                            ng-options="item for item in itens_pagina">                                            
+                                    </select> registros de {{filtro.total_registros}}
+                                </label>
+                            </div>   
+                        </div>
+                        <!--PAGINAÇÃO-->
+                        <div class="col-xs-4 col-sm-4 col-md-3">
+                            <div class="pagination-panel centralizarPaginacao"> Página 
+                                <a href="javascript:;" ng-click="retrocedePagina()"
+                                   class="btn btn-sm default prev" 
+                                   ng-class="{disabled: filtro.pagina <= 1}" 
+                                   title="Página anterior">
+                                        <i class="fa fa-angle-left"></i>
+                                </a>
+                                <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                       maxlength="4" style="text-align:center; margin: 0 5px;"
+                                       ng-model="paginaInformada" valid-integer-number
+                                       ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                                       ng-blur="atualizaPaginaDigitada()">
+                                    <a href="javascript:;" ng-click="avancaPagina()"
+                                       class="btn btn-sm default next"
+                                       ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
+                                       title="Próxima página">
+                                        <i class="fa fa-angle-right"></i>
+                                    </a>
+                                    de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
+                            </div>
+                        </div>                                   
+                    </div>
+                    
+                    <!-- TABELA EXTERNA -->
+                    <div class="table scrollable">
+                        <!-- TABELA AQUI -- >
+                    </div>
+                    <!-- FIM CORPO -->
+                    
+                    <!-- RODAPÉ : Exibição dos resultados e paginação -->
+                    <div class="row">
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class="dataTables_info" role="status" aria-live="polite">
+                                <strong>Exibindo os registros {{filtro.faixa_registros}}</strong>
+                            </div>
+                        </div>
+                        <!--PAGINAÇÃO-RODAPÉ-->
+                        <div class="col-xs-4 col-sm-4 col-md-3">
+                            <div class="pagination-panel centralizarPaginacao"> Página 
+                                <a href="javascript:;" ng-click="retrocedePagina()"
+                                   class="btn btn-sm default prev" 
+                                   ng-class="{disabled: filtro.pagina <= 1}" 
+                                   title="Página anterior">
+                                        <i class="fa fa-angle-left"></i>
+                                </a>
+                                <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                       maxlength="4" style="text-align:center; margin: 0 5px;"
+                                       ng-model="paginaInformada" valid-integer-number
+                                       ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                                       ng-blur="atualizaPaginaDigitada()">
+                                    <a href="javascript:;" ng-click="avancaPagina()"
+                                       class="btn btn-sm default next"
+                                       ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
+                                       title="Próxima página">
+                                        <i class="fa fa-angle-right"></i>
+                                    </a>
+                                    de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
+                            </div>
+                        </div>
+                        <!-- FIM PAGINAÇÃO -->
+                    </div> 
+                </div>
+            </div>
+            <!--FIM TABLE PORTLET-->
+        </div>
+    </div>  
+</div>
+<!-- END PAGE CONTENT INNER -->

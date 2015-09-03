@@ -3,6 +3,9 @@
  *  
  *  suporte@atoscapital.com.br
  *
+ *
+ *  Versão: 1.0 - 03/09/2015
+ *
  */
 
 // App
@@ -85,7 +88,7 @@ angular.module("tax-services-importacao-xml", [])
     var setPagina = function(pagina){
        if(pagina >= 1 && pagina <= $scope.filtro.total_paginas){ 
            $scope.filtro.pagina = pagina;
-           //$scope.buscaPrivilegios(); 
+           buscaManifestos(); 
        }
        $scope.atualizaPaginaDigitada();    
     };
@@ -118,7 +121,7 @@ angular.module("tax-services-importacao-xml", [])
       * Notifica que o total de itens por página foi alterado
       */                                            
     $scope.alterouItensPagina = function(){
-        //$scope.buscaPrivilegios();   
+        if($scope.manifestos.length > 0) buscaManifestos();    
     };
                                                 
                                                 

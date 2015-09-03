@@ -3,6 +3,9 @@
  *  
  *  suporte@atoscapital.com.br
  *
+ *
+ *  Versão: 1.0 - 03/09/2015
+ *
  */
 
 // App
@@ -18,10 +21,17 @@ angular.module("administrativo-acoes-usuarios", [])
                                             function($scope,$state,$http,/*$campos,*/
                                                      $webapi,$apis,$filter){ 
    
-    var divPortletBodyLogsPos = 0; // posição da div que vai receber o loading progress
+    var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
+    var divPortletBodyLogsPos = 1; // posição da div que vai receber o loading progress
     $scope.paginaInformada = 1; // página digitada pelo privilégio
     $scope.modalLog = { log : null };                                               
     $scope.logs = [];
+    $scope.acoes = ['DELETE', 'GET', 'PATCH', 'POST', 'PUT'];
+    $scope.aplicacoes = [{id: 'M', nome: 'MOBILE'}, {id: 'P', nome : 'PORTAL'}];
+    $scope.respostas = [{id : 200, nome: '200 - OK'}, 
+                        {id : 401, nome: '401 - NÃO AUTORIZADO'}, 
+                        {id : 404, nome: '404 - NÃO ENCONTRADO'}, 
+                        {id : 500, nome: '500 - ERRO INTERNO'}];
     $scope.camposBusca = [{
                             /*id: $campos.administracao.tblogacessousuario.webpagesusers + 
                                   $campos.administracao.webpagesusers.ds_login - 100,*/
@@ -33,9 +43,16 @@ angular.module("administrativo-acoes-usuarios", [])
                             id: 102,//$campos.administracao.tblogacessousuario.dsUrl,
                             ativo: true,  
                             nome: "URL"
+                          },
+                          {
+                            id: 110,//$campos.administracao.tblogacessousuario.dsJson,
+                            ativo: true,  
+                            nome: "JSON"
                           }];
     $scope.itens_pagina = [50, 100, 150, 200];
-    $scope.filtro = {busca:'', campo_busca : $scope.camposBusca[0], 
+    $scope.filtro = { datamin : '', datamax : '',
+                      aplicacao : null, acao : '', resposta : null,
+                      busca:'', campo_busca : $scope.camposBusca[0], 
                       itens_pagina : $scope.itens_pagina[0], pagina : 1,
                       total_registros : 0, faixa_registros : '0-0', total_paginas : 0, 
                       campo_ordenacao : {id: 107,//$campos.administracao.tblogacessousuario.dtAcesso, 
@@ -56,18 +73,18 @@ angular.module("administrativo-acoes-usuarios", [])
         });
         // Quando houver alteração do grupo empresa na barra administrativa                                           
         $scope.$on('alterouGrupoEmpresa', function(event){
-            if($scope.exibeTela) $scope.buscaLogs();
+            if($scope.exibeTela) buscaLogs();
         }); 
         // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
         $scope.$on('acessoDeTelaNotificado', function(event){
             $scope.exibeTela = true;
             // Busca Logs
-            $scope.buscaLogs();
+            buscaLogs();
         });
         // Acessou a tela
         $scope.$emit("acessouTela");
         // Busca Logs
-        //$scope.buscaLogs();
+        //buscaLogs();
     }; 
                                                 
                                                 
@@ -83,7 +100,7 @@ angular.module("administrativo-acoes-usuarios", [])
             }else
                 // Inverte a ordenação: ASCENDENTE => DESCENDENTE e vice-versa                                
                 $scope.filtro.campo_ordenacao.order = $scope.filtro.campo_ordenacao.order === 0 ? 1 : 0;                                
-            $scope.buscaLogs(); 
+            buscaLogs(); 
         }
     };
     /**
@@ -116,7 +133,7 @@ angular.module("administrativo-acoes-usuarios", [])
     var setPagina = function(pagina){
        if(pagina >= 1 && pagina <= $scope.filtro.total_paginas){ 
            $scope.filtro.pagina = pagina;
-           $scope.buscaLogs(); 
+           buscaLogs(); 
        }
        $scope.atualizaPaginaDigitada();    
     };
@@ -149,34 +166,133 @@ angular.module("administrativo-acoes-usuarios", [])
       * Notifica que o total de itens por página foi alterado
       */                                            
     $scope.alterouItensPagina = function(){
-        if($scope.logs.length > 0) $scope.buscaLogs();   
+        if($scope.logs.length > 0) buscaLogs();   
     };
      
+                                                
+    /* FILTRO */
+    
+    /**
+      * Limpa os filtros
+      */
+    $scope.limpaFiltros = function(){
+        // Limpar datas
+        $scope.filtro.datamin = '';
+        $scope.filtro.datamax = ''; 
+        
+        $scope.filtro.acao = ''; 
+        $scope.filtro.resposta = $scope.filtro.aplicacao = null; 
+    }
+    
+     /**
+      * Retorna os filtros para ser usado junto a url para requisição via webapi
+      */
+    var obtemFiltroDeBusca = function(){
+       var filtros = [];
+    
+       if($scope.filtro.datamin){    
+           // Data
+           var filtroData = {id: /*$campos.administracao.tblogacessousuario.dtAcesso*/ 106,
+                             valor: $scope.getFiltroData($scope.filtro.datamin)}; 
+           if($scope.filtro.datamax)
+               filtroData.valor = filtroData.valor + '|' + $scope.getFiltroData($scope.filtro.datamax);
+           filtros.push(filtroData);
+       }
+    
+       // Aplicação
+       if($scope.filtro.aplicacao && $scope.filtro.aplicacao !== null){
+           var filtroAplicacao = {id: /*$campos.administracao.tblogacessousuario.dsAplicacao*/ 107, 
+                               valor: $scope.filtro.aplicacao.id};
+           filtros.push(filtroAplicacao);  
+       }
+        
+       // Resposta
+       if($scope.filtro.resposta && $scope.filtro.resposta !== null){
+           var filtroResposta = {id: /*$campos.administracao.tblogacessousuario.codResposta*/ 108, 
+                                   valor: $scope.filtro.resposta.id};
+           filtros.push(filtroResposta);
+       } 
+        
+       // Ação
+       if($scope.filtro.acao && $scope.filtro.acao !== null){
+           var filtroAcao = {id: /*$campos.administracao.tblogacessousuario.dsMethod*/112, 
+                             valor: $scope.filtro.acao};
+           filtros.push(filtroAcao);
+       }
+        
+       // Retorna    
+       return filtros;
+    };
+    
+    // DATA
+    var ajustaIntervaloDeData = function(){
+      // Verifica se é necessário reajustar a data max para ser no mínimo igual a data min
+      if($scope.filtro.datamax && $scope.filtro.datamax < $scope.filtro.datamin) $scope.filtro.datamax = $scope.filtro.datamin;
+      if(!$scope.$$phase) $scope.$apply();
+    };
+    // Data MIN
+    $scope.exibeCalendarioDataMin = function($event) {
+        if($event){
+            $event.preventDefault();
+            $event.stopPropagation();
+        }
+        $scope.abrirCalendarioDataMin = !$scope.abrirCalendarioDataMin;
+        $scope.abrirCalendarioDataMax = false;
+    };
+    $scope.alterouDataMin = function(){
+       if($scope.filtro.datamin === null){ 
+           $scope.filtro.datamin = '';
+           $scope.filtro.datamax = '';
+       }else ajustaIntervaloDeData();
+    };
+    // Data MAX
+    $scope.exibeCalendarioDataMax = function($event) {
+        if($event){
+            $event.preventDefault();
+            $event.stopPropagation();
+        }
+        $scope.abrirCalendarioDataMax = !$scope.abrirCalendarioDataMax;
+        $scope.abrirCalendarioDataMin = false;
+      };
+    $scope.alterouDataMax = function(){
+       if($scope.filtro.datamax === null) $scope.filtro.datamax = '';
+       else ajustaIntervaloDeData();
+    };
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
     // BUSCA
+    $scope.buscaLogs = function(){
+        buscaLogs();    
+    }
     $scope.resetaBusca = function(){
         $scope.filtro.busca = '';
-        $scope.buscaLogs();
+        buscaLogs();
     };                                             
     $scope.filtraLogs = function(){
         //$scope.filtro.busca = filtro;
-        $scope.buscaLogs();
+        buscaLogs();
     };
-    $scope.buscaLogs = function(){
+    var buscaLogs = function(){
+        
+       $scope.showProgress(divPortletBodyFiltrosPos, 10000); 
        $scope.showProgress(divPortletBodyLogsPos);    
         
-       var filtros = undefined;
+       var filtros = obtemFiltroDeBusca();
        
        // Só considera busca de filtro a partir de três caracteres    
-       if($scope.filtro.busca.length > 0) filtros = {id: $scope.filtro.campo_busca.id, valor: $scope.filtro.busca + '%'};        
+       if($scope.filtro.busca.length > 0) 
+           filtros.push({id: $scope.filtro.campo_busca.id, valor: $scope.filtro.busca + '%'});        
+       
        // Filtro do grupo empresa => barra administrativa
        if($scope.usuariologado.grupoempresa){
-            var filtroGrupoEmpresa = {/*id: $campos.administracao.tblogacessousuario.webpagesusers + 
+            filtros.push({/*id: $campos.administracao.tblogacessousuario.webpagesusers + 
                                           $campos.administracao.webpagesusers.id_grupo - 100, */
                                       id: 203,
-                                      valor: $scope.usuariologado.grupoempresa.id_grupo};
-            if(filtros) filtros = [filtros, filtroGrupoEmpresa];
-            else filtros = [filtroGrupoEmpresa];
-           
+                                      valor: $scope.usuariologado.grupoempresa.id_grupo});
            if($scope.usuariologado.empresa){
                 filtros.push({/*id: $campos.administracao.tblogacessousuario.webpagesusers + 
                                           $campos.administracao.webpagesusers.nu_cnpj - 100, */
@@ -201,16 +317,19 @@ angular.module("administrativo-acoes-usuarios", [])
                     if(registroFinal > $scope.filtro.total_registros) registroFinal = $scope.filtro.total_registros;
                     $scope.filtro.faixa_registros =  registroInicial + '-' + registroFinal;
                 }
-                $scope.hideProgress(divPortletBodyLogsPos);
                 // Verifica se a página atual é maior que o total de páginas
                 if($scope.filtro.pagina > $scope.filtro.total_paginas)
                     setPagina(1); // volta para a primeira página e refaz a busca
+           
+                $scope.hideProgress(divPortletBodyLogsPos);
+                $scope.hideProgress(divPortletBodyFiltrosPos);
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else $scope.showAlert('Houve uma falha ao requisitar logs (' + failData.status + ')', true, 'danger', true);
                  $scope.hideProgress(divPortletBodyLogsPos);
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
               }); 
     };
         

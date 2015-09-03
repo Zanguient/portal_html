@@ -3,6 +3,9 @@
  *  
  *  suporte@atoscapital.com.br
  *
+ *
+ *  Versão: 1.0 - 03/09/2015
+ *
  */
 
 // App
@@ -42,6 +45,7 @@ angular.module("AtosCapital", ['ui.router',
                                'card-services-cadastro-codigo-autorizacao',
                                'card-services-cadastro-pos-terminal',
                                'tax-services-importacao-xml',
+                               'tax-services-cadastro-certificado-digital',
                                'conta',
                                'conta-alterar-senha',
                                'usuario-sem-link']) 
@@ -324,6 +328,15 @@ angular.module("AtosCapital", ['ui.router',
         }
       })
     
+      .state('tax-services-nota-fiscal-eletronica-cadastro-certificado-digital', {
+        url: prefixo + 'tax-services/cadastro-certificado-digital',
+        templateUrl: 'componentes/tax-services/nota-fiscal-eletronica/cadastro-certificado-digital/index.html',
+        controller: "tax-services-cadastro-certificado-digitalCtrl",
+        data: {
+            titulo: 'Tax Services'
+        }
+      })
+    
     
     
       // CONTA
@@ -441,7 +454,8 @@ angular.module("AtosCapital", ['ui.router',
     var controllerCardServicesConsolidacaoRelatorios = undefined;
     var controllerCardServicesCadastroCodigoAutorizacao = undefined; 
     var controllerCardServicesCadastroPOSTerminal = undefined;                        
-    var controllerTaxServicesImportacaoXML = undefined;                        
+    var controllerTaxServicesImportacaoXML = undefined; 
+    var controllerTaxServicesCadastroCertificadoDigital = undefined;                           
     var controllerMinhaConta = {id_controller : 91, ds_controller : 'Minha Conta', methods : []};
     // Permissões
     //$scope.usuarioTemAcesso = false;                      
@@ -481,8 +495,8 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_CADASTRO_POS_TERMINAL = false;                         
     $scope.PERMISSAO_TAX_SERVICES = false;
     $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA = false;   
-    $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_IMPORTACAO_XML = false;                        
-                            
+    $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_IMPORTACAO_XML = false;      
+    $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_CADASTRO_CERTIFICADO_DIGITAL = false;                                                
                             
     
     // Fullscreen 
@@ -754,7 +768,14 @@ angular.module("AtosCapital", ['ui.router',
     $scope.goTaxServicesImportacaoXML = function(params){
         controllerAtual = controllerTaxServicesImportacaoXML;
         go('tax-services-nota-fiscal-eletronica-importacao-xml', params);
-    };                         
+    }; 
+    /**
+      * Exibe como conteúdo a Nota Fiscal Eletrônica Cadastro Certificado Digital, de Tax Services
+      */
+    $scope.goTaxServicesCadastroCertificadoDigital = function(params){
+        controllerAtual = controllerTaxServicesCadastroCertificadoDigital;
+        go('tax-services-nota-fiscal-eletronica-cadastro-certificado-digital', params);
+    };                        
     /**
       * Exibe a tela de perfil de conta
       */
@@ -990,7 +1011,7 @@ angular.module("AtosCapital", ['ui.router',
                 // Não possui permissão!
                 event.preventDefault();
                 $scope.goUsuarioSemPrivilegios();
-            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'RELATÓRIOS') // problem!
+            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'CADASTRO CÓDIGO AUTORIZAÇÃO')
                      controllerAtual.id_controller !== controllerCardServicesCadastroCodigoAutorizacao.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
         }else if(url === $state.get('card-services-consolidacao-cadastro-pos-terminal').url){ 
@@ -999,7 +1020,7 @@ angular.module("AtosCapital", ['ui.router',
                 // Não possui permissão!
                 event.preventDefault();
                 $scope.goUsuarioSemPrivilegios();
-            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'RELATÓRIOS') // problem!
+            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'CADASTRO POS/TERMINAL') 
                      controllerAtual.id_controller !== controllerCardServicesCadastroPOSTerminal.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
         }else if(url === $state.get('tax-services-nota-fiscal-eletronica-importacao-xml').url){ 
@@ -1008,8 +1029,17 @@ angular.module("AtosCapital", ['ui.router',
                 // Não possui permissão!
                 event.preventDefault();
                 $scope.goUsuarioSemPrivilegios();
-            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'RELATÓRIOS') // problem!
+            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'IMPORTÇÃO XML')
                      controllerAtual.id_controller !== controllerTaxServicesImportacaoXML.id_controller)
+                $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
+        }else if(url === $state.get('tax-services-nota-fiscal-eletronica-cadastro-certificado-digital').url){ 
+            // Tax Services > Nota Fiscal Eletrônica > Cadastro Certificado Digital
+            if(!$scope.PERMISSAO_TAX_SERVICES || !$scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA || !$scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_CADASTRO_CERTIFICADO_DIGITAL){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.goUsuarioSemPrivilegios();
+            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'CADASTRO CERTIFICADO DIGITAL')
+                     controllerAtual.id_controller !== controllerTaxServicesCadastroCertificadoDigital.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
         }
         //else event.preventDefault();//console.log("VAI PARA ONDE?");
@@ -1144,7 +1174,12 @@ angular.module("AtosCapital", ['ui.router',
                     controllerAtual = controller;
                 controllerTaxServicesImportacaoXML = controller;
                 return $scope.goTaxServicesImportacaoXML;    
-                
+            case 'CADASTRO CERTIFICADO DIGITAL': 
+                if($location.path() === $state.get('tax-services-nota-fiscal-eletronica-cadastro-certificado-digital').url) 
+                    controllerAtual = controller;
+                controllerTaxServicesCadastroCertificadoDigital = controller;
+                return $scope.goTaxServicesCadastroCertificadoDigital;    
+                 
             // AMBÍGUOS    
             case 'RELATÓRIOS': 
                 if(controllerpai.ds_controller.toUpperCase() === 'CASH FLOW'){
@@ -1197,6 +1232,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'TAX SERVICES' : $scope.PERMISSAO_TAX_SERVICES = true; break;
             case 'NOTA FISCAL ELETRÔNICA': $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA = true; break;
             case 'IMPORTAÇÃO XML':  $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_IMPORTACAO_XML = true; break;
+            case 'CADASTRO CERTIFICADO DIGITAL': $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_CADASTRO_CERTIFICADO_DIGITAL = true;
             // Card Services
             case 'CARD SERVICES': $scope.PERMISSAO_CARD_SERVICES = true; break;
             case 'CASH FLOW' : $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW = true; break;
@@ -1274,7 +1310,8 @@ angular.module("AtosCapital", ['ui.router',
             case 'AÇÕES DE USUÁRIOS': return state == 'acoes-usuarios';
             case 'MONITOR DE CARGAS': return state == 'monitor-cargas';
             // Tax Services
-            case 'IMPORTAÇÃO XML': return state == 'importacao-xml';    
+            case 'IMPORTAÇÃO XML': return state == 'importacao-xml';
+            case 'CADASTRO CERTIFICADO DIGITAL': return state == 'cadastro-certificado-digital';
             // Card Services
             case 'CONCILIAÇÃO BANCÁRIA': return state == 'conciliacao-bancaria';
             case 'CONCILIAÇÃO DE VENDAS': return state == 'conciliacao-vendas';

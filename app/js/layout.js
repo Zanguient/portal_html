@@ -1,3 +1,13 @@
+/*
+ *  Atos Capital - www.atoscapital.com.br
+ *  
+ *  suporte@atoscapital.com.br
+ *
+ *
+ *  Versão: 1.0 - 03/09/2015
+ *
+ */
+
 /**
 Core script to handle the entire theme and core functions
 **/
