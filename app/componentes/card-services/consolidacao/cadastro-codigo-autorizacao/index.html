@@ -7,6 +7,10 @@
  
     Card Services > Consolidação > Cadastro Código de Autorização
 
+
+    Versão 1.0.1 - 04/09/2015
+        -Remodulação da tela mudando o conceito de formulário pra tabela de exibição.
+
     Versão 1.0 - 03/09/2015
         -Criação da tela Cadastro Código de Autorização, modelagem do Formulário de Cadastro
 -->
@@ -36,41 +40,25 @@
             </div>
         </div>
         <div class="portlet-body" ng-show="exibeTela">
-            <div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">
-                <div class="row">                       
-                    <div class="col-md-8 col-sm-12">
-                        <div class="dataTables_paginate paging_bootstrap_extended" id="datatable_ajax_paginate">
-                        </div>
-                        <div class="dataTables_info" id="datatable_ajax_info" role="status" aria-live="polite">
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-12">
-                        <div class="table-group-actions pull-right">
-                        <span> </span>
-                        </div>
-                    </div>
-                </div>
+            <div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">                
                 <!--div class="table-scrollable"-->
                 <div class="table-scrollable">
                     <table class="table table-striped table-bordered table-hover dataTable no-footer conteudoTabelas" id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
                         <thead>
                             <tr role="row" class="heading">
-                                <th width="8%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                <th width="10%" class="" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
                                      Data
                                 </th>
-                                <th width="11%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
-                                     Filiais 
+                                <th width="10%" class="" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                     Filial
                                 </th>
-                                <th width="5%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
-                                     Adquirentes
+                                <th width="10%" class="" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                     Adquirente
                                 </th>
-                                <th width="8%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
-                                     Bandeiras
-                                </th>
-                                <th width="8%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
-                                     Status
-                                </th>
-                                <th width="1%" class="sorting" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                <th width="10%" class="" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                     PDV
+                                </th>                                
+                                <th width="1%" class="" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
                                      Opções
                                 </th>
                             </tr>
@@ -94,65 +82,24 @@
                                         <span class="input-group-btn">
                                         <button class="btn btn-sm default" type="button" ng-click="exibeCalendarioDataMin($event)"><i class="fa fa-calendar"></i></button>
                                         </span>
-                                    </div>
-                                    <div class="input-group date date-picker margin-bottom-5" data-date-format="dd/mm/yyyy">
-                                        <input type="text" class="form-control form-filter input-sm" 
-                                               readonly style="cursor: pointer" 
-                                               ng-click="exibeCalendarioDataMax($event)"
-                                               placeholder="Fim" 
-                                               ng-model="datamax" 
-                                               ng-change="alterouDataMax()"
-                                               datepicker-popup="dd MMMM yyyy" 
-                                               is-open="abrirCalendarioDataMax" 
-                                               datepicker-append-to-body=true
-                                               min-date="2000-01-01"
-                                               ng-required="false" 
-                                               current-text="Hoje" 
-                                               clear-text="Limpar" 
-                                               close-text="Fechar" 
-                                               show-button-bar="true"
-                                               show-weeks="false" />
-                                        <span class="input-group-btn">
-                                        <button class="btn btn-sm default" type="button" ng-click="exibeCalendarioDataMax($event)"><i class="fa fa-calendar"></i></button>
-                                        </span>
-                                    </div>                                            
+                                    </div>                                                                                
                                 </td>
                                 <td rowspan="1" colspan="1">
                                     <select name="order_status" class="form-control form-filter input-sm">
-                                        <option value="">Todas</option>
-                                        <option value="pending">Pending</option>
-                                        <option value="closed">Closed</option>
-                                        <option value="hold">On Hold</option>
-                                        <option value="fraud">Fraud</option>
+                                        <option value=""></option>                                        
                                     </select>
                                 </td>
                                 <td rowspan="1" colspan="1">
                                     <select name="order_status" class="form-control form-filter input-sm">
-                                        <option value="">Todas</option>
-                                        <option value="pending">Pending</option>
-                                        <option value="closed">Closed</option>
-                                        <option value="hold">On Hold</option>
-                                        <option value="fraud">Fraud</option>
+                                        <option value=""></option>
+                                        
                                     </select>
                                 </td>
                                 <td rowspan="1" colspan="1">
                                     <select name="order_status" class="form-control form-filter input-sm">
-                                        <option value="">Todas</option>
-                                        <option value="pending">Pending</option>
-                                        <option value="closed">Closed</option>
-                                        <option value="hold">On Hold</option>
-                                        <option value="fraud">Fraud</option>
+                                        <option value=""></option>                                        
                                     </select>
-                                </td>
-                                <td rowspan="1" colspan="1">
-                                    <select name="order_status" class="form-control form-filter input-sm">
-                                        <option value="">Todas</option>
-                                        <option value="pending">Pending</option>
-                                        <option value="closed">Closed</option>
-                                        <option value="hold">On Hold</option>
-                                        <option value="fraud">Fraud</option>
-                                    </select>
-                                </td>
+                                </td>                                
                                 <td rowspan="1" colspan="1">
                                     <div class="margin-bottom-5">
                                         <button class="btn btn-sm red filter-submit margin-bottom" ng-click="showModalConfirmacao('Meu titulo')"><i class="fa fa-search"></i> Buscar</button>
@@ -164,17 +111,7 @@
                         <tbody>
                         </tbody>
                     </table>
-                </div>
-                <div class="row">
-                    <div class="col-md-8 col-sm-12">
-                        <div class="dataTables_paginate paging_bootstrap_extended">
-                        </div>
-                        <div class="dataTables_info">
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-12">
-                    </div>
-                </div>
+                </div>                
             </div>
         </div>
     </div>
@@ -215,230 +152,197 @@
             </div>
         </div>
         <div class="portlet-body" ng-show="exibeTela">
-            <!--EXIBIÇÃO E PESQUISA-->
-            <div class="row">
-                <!--EXIBIÇÃO-->
-                <div class="col-md-4 col-sm-4">
-                    <div class="dataTables_length">
-                        <label>
-                            <span class="seperator"></span>Exibindo 
-                            <select name="datatable_products_length" aria-controls="datatable_products" 
-                                    class="form-control input-xsmall input-sm input-inline"
-                                    ng-model="usuario.itens_pagina"
-                                    ng-change="alterouItensPagina()"
-                                    ng-options="item for item in itens_pagina">                                            
-                            </select> registros de {{usuario.total_registros}}
-                        </label>
-                    </div>   
-                </div>
-                <!--PAGINAÇÃO-->
-                <div class="col-md-3 col-sm-3">
-                    <div class="pagination-panel centralizarPaginacao"> Página 
-                        <a href="javascript:;" ng-click="retrocedePagina()"
-                           class="btn btn-sm default prev" 
-                           ng-class="{disabled: usuario.pagina <= 1}" 
-                           title="Página anterior">
-                                <i class="fa fa-angle-left"></i>
-                        </a>
-                        <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
-                               maxlength="4" style="text-align:center; margin: 0 5px;"
-                               ng-model="paginaInformada" valid-integer-number
-                               ng-keypress="($event.which === 13) ? alteraPagina() : 0"
-                               ng-blur="atualizaPaginaDigitada()">
-                        <a href="javascript:;" ng-click="avancaPagina()"
-                           class="btn btn-sm default next"
-                           ng-class="{disabled: usuario.pagina >= usuario.total_paginas}"
-                           title="Próxima página">
-                            <i class="fa fa-angle-right"></i>
-                        </a>
-                         de <span class="pagination-panel-total">{{usuario.total_paginas}}</span>
-                    </div>    
-                </div>
-                <!--PESQUISA-- >
-                <div class="col-xs-4 col-sm-4 col-md-5">
-                    <div class="row dataTables_filter">
-                        <div class="col-md-6">
-                            <label>
-                                    <select aria-controls="datatable_products" 
-                                            class="form-control input-sm input-inline"
-                                            ng-model="usuario.campo_busca"
-                                            ng-options="campo as campo.nome for campo in camposBusca | filter:{ativo:true}">
-                                    </select>
-                            </label> 
-                            <label>
-                                    <span class="seperator"></span>Pesquisar
-                            </label>
-                        </div>
-                        <div class="col-md-6">
-                            <label>
-                                <div class="input-group input-icon right">
-                                    <i class="fa fa-times" style="right:50px;cursor:pointer"
-                                       ng-click="resetaBusca()"
-                                       ng-show="usuario.busca"></i>
-                                    <input type="text" 
-                                       class="form-control input-inline" 
-                                       placeholder="Buscar" 
-                                       ng-model="busca"
-                                       ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !busca)) && filtraUsuarios()">
-                                    <span class="input-group-addon">
-                                        <i class="fa fa-search" style="cursor:pointer"
-                                               ng-click="filtraUsuarios()"></i>
-                                    </span>
-                                </div> 
-                            </label>
-                        </div>
-                    </div>
-                </div-->                            
-            </div>
-            
-            <!--CONTEUDO-->
-            <div class="table-container" style="margin-bottom:50px">            
+            <!-- TABELA -->
+            <div class="dataTables_wrapper no-footer">
+                <!-- EXIBIÇÃO E PESQUISA -->                      
                 <div class="row">
-                    <div class="col-md-12 col-sm-12">
-                        
+                    <!--EXIBIÇÃO-->
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class="dataTables_length">
+                            <label>
+                                <span class="seperator"></span>Exibindo 
+                                <select name="datatable_products_length" aria-controls="datatable_products" 
+                                        class="form-control input-xsmall input-sm input-inline"
+                                        ng-model="usuario.itens_pagina"
+                                        ng-change="alterouItensPagina()"
+                                        ng-options="item for item in itens_pagina">                                            
+                                </select> registros de {{usuario.total_registros}}
+                            </label>
+                        </div>   
+                    </div>
+                    <!--PAGINAÇÃO-->
+                    <div class="col-xs-4 col-sm-4 col-md-3">
+                        <div class="pagination-panel centralizarPaginacao"> Página 
+                            <a href="javascript:;" ng-click="retrocedePagina()"
+                               class="btn btn-sm default prev" 
+                               ng-class="{disabled: usuario.pagina <= 1}" 
+                               title="Página anterior">
+                                    <i class="fa fa-angle-left"></i>
+                            </a>
+                            <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                   maxlength="4" style="text-align:center; margin: 0 5px;"
+                                   ng-model="paginaInformada" valid-integer-number
+                                   ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                                   ng-blur="atualizaPaginaDigitada()">
+                            <a href="javascript:;" ng-click="avancaPagina()"
+                               class="btn btn-sm default next"
+                               ng-class="{disabled: usuario.pagina >= usuario.total_paginas}"
+                               title="Próxima página">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                             de <span class="pagination-panel-total">{{usuario.total_paginas}}</span>
+                        </div>    
+                    </div>
+                    <!--BOTÃO SALVAR GERAL-->                    
+                    <div class="col-md-5" >
                         <div class="row">
-                            <!--FORMULÁRIO DE CADASTRO-->
-                            <div class="col-md-6 col-sm-6">
-                                
-                                <!--CONTEUDO FORMULÁRIO-->
-                                <div class="row">
-                                    <div class="col-md-7 col-md-offset-3 col-sm-8 form-cadastro-cod-auto">
-                                        
-                                        <!--TITULO-->
-                                        <div class="row titulo-form-cadastro-cod-auto">
-                                            <div class="col-md-12 col-sm-12">
-                                                <label>Formulário de Cadastro</label>
-                                            </div>
-                                        </div>
-                                        <!--ADQUIRENTE-->
-                                        <div class="row conteudos-form-cadastro-cod-auto">
-                                            <label class="col-md-5 col-sm-5">Adquirente</label>
-                                            <div class="col-md-7 col-sm-7">
-                                                <select class="form-control">
-                                                    <option></option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <!--POS/TERMINAL-->
-                                        <div class="row conteudos-form-cadastro-cod-auto">                                       
-                                            <label class="col-md-5 col-sm-5">POS/Termial</label>
-                                            <div class="col-md-7 col-sm-7">
-                                                <input class="form-control">
-                                                    
-                                                </input>
-                                            </div>
-                                        </div>
-                                        <!--BOTÃO INCLUIR-->
-                                        <div class="row conteudos-form-cadastro-cod-auto">
-                                            <div class="col-md-3 col-md-offset-8 col-sm-3 col-sm-offset-8">
-                                                <button class=" btn btn-sm red filter-submit margin-bottom">
-                                                    <i class="fa fa-plus"></i>
-                                                    Incluir
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--BOTÃO SALVAR-->
-                                <div class="row btn-salvar-form-cadastro-cod-auto">
-                                    <div class="col-md-3 col-md-offset-8 col-sm-3 col-sm-offset-8">
-                                        <button class=" btn btn-sm blue filter-submit margin-bottom">
-                                            Salvar
-                                        </button>
-                                    </div>
-                                </div>
+                            <div class="col-md-6 col-md-offset-5">
+                                <label style="margin-top:7px; font-weight:bold">Salvar Grupo</label>
+                                <button class="btn blue" style="float:right">
+                                    Salvar
+                                </button>
                             </div>
-                            
-                            <!--CUPOM PARA VISUALIZAÇÃO-->
-                            <div class="col-md-6 col-sm-6">
-                                
-                                <!--CONTEUDO FORMULÁRIO-->
-                                <div class="row">
-                                    <div class="col-md-7 col-md-offset-2 col-sm-8 form-cadastro-cod-auto"> 
-                                        
-                                        <!--EXEMPLO:APAGAR-->
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                conteudo exemplo
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                conteudo exemplo
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                conteudo exemplo
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                conteudo exemplo
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                conteudo exemplo
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                conteudo exemplo
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                conteudo exemplo
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
-                                </div>
+                        </div>                       
+                    </div>                    
+                    <!--PESQUISA-- >
+                    <div class="col-xs-4 col-sm-4 col-md-5">
+                        <div class="row dataTables_filter">
+                            <div class="col-md-6">
+                                <label>
+                                        <select aria-controls="datatable_products" 
+                                                class="form-control input-sm input-inline"
+                                                ng-model="usuario.campo_busca"
+                                                ng-options="campo as campo.nome for campo in camposBusca | filter:{ativo:true}">
+                                        </select>
+                                </label> 
+                                <label>
+                                        <span class="seperator"></span>Pesquisar
+                                </label>
+                            </div>
+                            <div class="col-md-6">
+                                <label>
+                                    <div class="input-group input-icon right">
+                                        <i class="fa fa-times" style="right:50px;cursor:pointer"
+                                           ng-click="resetaBusca()"
+                                           ng-show="usuario.busca"></i>
+                                        <input type="text" 
+                                           class="form-control input-inline" 
+                                           placeholder="Buscar" 
+                                           ng-model="busca"
+                                           ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !busca)) && filtraUsuarios()">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-search" style="cursor:pointer"
+                                                   ng-click="filtraUsuarios()"></i>
+                                        </span>
+                                    </div> 
+                                </label>
                             </div>
                         </div>
+                    </div-->                            
+                </div> 
+
+                 <!--TABELA-->
+                    <div class="dataTables_wrapper no-footer">
+                       <div class="table-scrollable">
+                            <table class="table table-striped table-hover table-bordered dataTable no-footer conteudoTabelas" role="grid">
+                                <thead>
+                                    <tr role="row">
+                                        <th tabindex="0" rowspan="1" colspan="1" style="width: 10%;">
+                                            PDV
+                                        </th>
+                                        <th tabindex="1" rowspan="1" colspan="1" style="width: 10%;">
+                                            Bandeira/Sacado
+                                        </th>
+                                        <th tabindex="2" rowspan="1" colspan="1" style="width: 10%;">
+                                            Data
+                                        </th>
+                                        <th tabindex="3" rowspan="1" colspan="1" style="width: 10%;">
+                                            Hora
+                                        </th>
+                                        <th tabindex="4" rowspan="1" colspan="1" style="width: 10%;">
+                                            Valor
+                                        </th>
+                                        <th tabindex="5" rowspan="1" colspan="1" style="width: 10%;">
+                                            Código de Autorização
+                                        </th>   
+                                        <th tabindex="5" rowspan="1" colspan="1" style="width: 10%;">
+                                            Opções
+                                        </th> 
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr role="row" class="odd ng-scope">
+                                        <!-- PDV -->
+                                        <td>
+                                            -
+                                        </td>
+                                        <!-- BANDEIRA/SACADO -->
+                                        <td>
+                                            -
+                                        </td>
+                                        <!-- DATA -->
+                                        <td>
+                                            -
+                                        </td>
+                                        <!-- HORA -->
+                                        <td>
+                                            -
+                                        </td>
+                                        <!-- VALOR -->
+                                        <td>
+                                            -
+                                        </td>
+                                        <!-- CÓDIGO DE AUTORIZAÇÃO -->
+                                        <td>
+                                            <input class="form-control">
+                                        </td>
+                                        <!-- BOTÃO SALVAR -->
+                                        <td class="center btnacoes">
+                                            <div class="btn-group">
+                                                <a class="btn blue">
+                                                    Salvar 
+                                                </a>
+                                            </div>
+                                        </td> 
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div> 
+                    </div> 
+                    <!--FIM TABELA-->
+                <!-- RODAPÉ : Exibição dos resultados e paginação -->
+                <div class="row">
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class="dataTables_info" id="sample_editable_1_info" role="status" aria-live="polite">
+                            <strong>Exibindo os registros {{usuario.faixa_registros}}</strong>
+                        </div>
                     </div>
-                </div>    
-            </div>
-            <!--RODAPÉ-->
-            <div class="row">
-                <div class="col-md-4 col-sm-4 ">
-                    <div class="dataTables_info" 
-                         id="sample_editable_1_info" 
-                         role="status"
-                         aria-live="polite">
-                        <strong class="ng-binding">Exibindo os registros 1-10</strong>
+                    <!--PAGINAÇÃO-RODAPÉ-->
+                    <div class="col-xs-4 col-sm-4 col-md-3">
+                        <div class="pagination-panel centralizarPaginacao"> Página 
+                            <a href="javascript:;" ng-click="retrocedePagina()"
+                               class="btn btn-sm default prev" 
+                               ng-class="{disabled: usuario.pagina <= 1}" 
+                               title="Página anterior">
+                                    <i class="fa fa-angle-left"></i>
+                            </a>
+                            <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                   maxlength="4" style="text-align:center; margin: 0 5px;"
+                                   ng-model="paginaInformada" valid-integer-number
+                                   ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                                   ng-blur="atualizaPaginaDigitada()">
+                            <a href="javascript:;" ng-click="avancaPagina()"
+                               class="btn btn-sm default next"
+                               ng-class="{disabled: usuario.pagina >= usuario.total_paginas}"
+                               title="Próxima página">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                             de <span class="pagination-panel-total">{{usuario.total_paginas}}</span>
+                        </div>
                     </div>
+                    <!-- FIM PAGINAÇÃO -->
                 </div>
-                <!--PAGINAÇÃO-RODAPÉ-->
-                <div class="col-md-3 col-sm-3">
-                    <div class="pagination-panel centralizarPaginacao"> Página 
-                        <a href="javascript:;" 
-                           ng-click="retrocedePagina()" 
-                           class="btn btn-sm default prev disabled" 
-                           ng-class="{disabled: usuario.pagina <= 1}" 
-                           title="Página anterior">
-                                <i class="fa fa-angle-left"></i>
-                        </a>
-                        <input type="text" 
-                               class="pagination-panel-input form-control input-mini input-inline input-sms"
-                               maxlength="4" 
-                               style="text-align:center; margin: 0 5px;" 
-                               ng-model="paginaInformada"
-                               valid-integer-number=""
-                               ng-keypress="($event.which === 13) ? alteraPagina() : 0"
-                               ng-blur="atualizaPaginaDigitada()">
-                        <a href="javascript:;" 
-                           ng-click="avancaPagina()"
-                           class="btn btn-sm default next" 
-                           ng-class="{disabled: usuario.pagina >= usuario.total_paginas}" 
-                           title="Próxima página">
-                            <i class="fa fa-angle-right"></i>
-                        </a>
-                         de <span class="pagination-panel-total ng-binding">4</span>
-                    </div>
-                </div>
-                <!-- FIM PAGINAÇÃO -->
+                <!-- FIM RODAPÉ -->
             </div>
         </div>
     </div>
