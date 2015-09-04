@@ -86,6 +86,9 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				operadora : { id : int,
 							  desOperadora : string
 							},
+				empresa : { nu_cnpj : string,
+							ds_fantasia : string,
+							filial : string },
 				estabelecimento : string (ou null)
 			  }
 			]

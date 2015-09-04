@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.1 - 04/09/2015
+ *  - Correção: só busca filiais se tiver grupo empresa associado
+ *
  *  Versão: 1.0 - 03/09/2015
  *
  */
@@ -349,17 +352,22 @@ angular.module("administrativo-monitor-cargas", ['SignalR','ngLocale'])
       * Busca as filiais
       */
     var buscaFiliais = function(nu_cnpj, idOperadora){
+
+        if(!$scope.usuariologado.grupoempresa){ 
+            $scope.filiais = [];
+            $scope.adquirentes = [];
+            $scope.filtro.filial = $scope.filtro.adquirente = null;
+            return; 
+        }
         
        $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
         
        var filtros = undefined;
 
        // Filtro do grupo empresa => barra administrativa
-       if($scope.usuariologado.grupoempresa){ 
-           filtros = [{id: /*$campos.cliente.empresa.id_grupo*/ 116, valor: $scope.usuariologado.grupoempresa.id_grupo}];
-           if($scope.usuariologado.empresa) filtros.push({id: /*$campos.cliente.empresa.nu_cnpj*/ 100, 
+       filtros = [{id: /*$campos.cliente.empresa.id_grupo*/ 116, valor: $scope.usuariologado.grupoempresa.id_grupo}];
+       if($scope.usuariologado.empresa) filtros.push({id: /*$campos.cliente.empresa.nu_cnpj*/ 100, 
                                                           valor: $scope.usuariologado.empresa.nu_cnpj});
-       }
        
        $webapi.get($apis.getUrl($apis.cliente.empresa, 
                                 [$scope.token, 0, /*$campos.cliente.empresa.ds_fantasia*/ 104],

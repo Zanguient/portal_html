@@ -31,9 +31,13 @@ Além deles, é necessária a importação dos seguintes módulos externos.
   * Emite evento "acessouTela" no init do controller para que seja feito o log de acesso de tela
   * Evento "acessoDeTelaNotificado", proveniente do "appCtrl", para de fato exibir a tela e fazer requisições 
 	=> importante para o log correto de requisições HTTP, ao qual identifica corretamente a (tela de) origem
+  * $scope.grupoempresa, do "appCtrl" : grupo empresa informado pelo usuário na barra administrativa
+  * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
   * APIS:
     - card/tbbancoparametro
-	- card/tbloginadquirenteempresa
+	- card/tbadquirente
+	- cliente/empresa
+	- pos/loginoperadora
 	- utils/bancos
 	
  
@@ -58,6 +62,37 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				hrExecucao = datetime,
 			  }
 			]	
+			
+  * cliente/empresa
+	- GET : listagem das filiais (com respectivos estabelecimentos) (coleção 3)
+			[
+			  { nu_cnpj : string,
+				ds_fantasia : string,
+				filial : string,
+				estabelecimentos : [{ estabelecimento : string, 
+									  operadora : { id : int, 
+													nmOperadora : string
+												  }
+									}]
+			  }
+			]
+	
+  * pos/loginoperadora   
+	- GET : listagem dos dados de acesso (coleção 3) => envia estabelecimento como filtro
+			[
+			  { id : int,
+				login : string,
+				senha : string,
+				status : boolean,
+				operadora : { id : int,
+							  desOperadora : string
+							},
+				empresa : { nu_cnpj : string,
+							ds_fantasia : string,
+							filial : string },
+				estabelecimento : string (ou null)
+			  }
+			]
 	
   * card/tbbancoparametro
     - DELETE : exclui um parâmetro bancário
@@ -70,24 +105,19 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				flVisivel : bool,
 				banco : { Codigo : string, 
 						  NomeExtenso : string},
+				empresa : null ou { nu_cnpj : string, ds_fantasia : string } 
 			  }
 			]	
-	- POST : adiciona um novo parâmetro bancário
+	- PUT : altera parâmetro(s) bancário(s) existente
 			[
-			  { cdBanco : string, 
-				dsMemo : string,
-				dsTipo : string,
-				cdAdquirente : int, // set -1 para deixar indefinido
-			  }
-			]	
-	- PUT : altera um parâmetro bancário existente
-			[
-			  { cdBanco : string, // não altera
-				dsMemo : string, // não altera
-				dsTipo : string,
-				cdAdquirente : int, // set -1 para deixar indefinido
-				flVisivel : bool, 
-			  }
+			  cdAdquirente : int,
+			  nrCnpj : string,
+			  flVisivel : bool, // obrigatório!
+			  deletar : bool, // obrigatório!
+			  parametros : [{ cdBanco : string,
+							  dsMemo : string,
+							  dsTipo : string,
+							}]
 			]			
    
 

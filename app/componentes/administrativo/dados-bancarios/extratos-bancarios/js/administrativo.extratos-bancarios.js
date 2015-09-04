@@ -179,7 +179,7 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
             return;   
         }
         
-        $scope.showProgress(divPortletBodyFiltrosPos);
+        $scope.showProgress(divPortletBodyFiltrosPos, 10000);
         
         // Filtro  
         var filtros = {id: /*$campos.card.tbcontacorrente.cdGrupo*/ 101,
@@ -371,7 +371,7 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
             //$scope.total = files.length;
             //$scope.current = 0;
             // Loading progress
-            $scope.showProgress(divPortletBodyFiltrosPos);
+            $scope.showProgress(divPortletBodyFiltrosPos, 10000);
             $scope.showProgress(divPortletBodyExtratosPos);
             //for (var i = 0; i < $scope.total; i++) {
             var file = files[0];

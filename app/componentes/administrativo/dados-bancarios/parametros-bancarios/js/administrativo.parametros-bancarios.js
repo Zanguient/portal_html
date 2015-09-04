@@ -4,6 +4,13 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *
+ *  Versão: 1.0.2 - 04/09/2015
+ *  - Associação a uma filial
+ *
+ *  Versão: 1.0.1 - 03/09/2015
+ *  - Seleção Múltipla
+ *
  *  Versão: 1.0 - 03/09/2015
  *
  */
@@ -27,8 +34,10 @@ angular.module("administrativo-parametros-bancarios", [])
     $scope.paginaInformada = 1; // página digitada pelo usuário                                             
     // Dados    
     $scope.parametros = [];
-    $scope.adquirentes = [];                                            
-    $scope.filtro = {banco : undefined, tipo : '', adquirente : undefined, semadquirentes : false,
+    $scope.adquirentes = []; 
+    $scope.filiais = [];                                             
+    $scope.filtro = {banco : undefined, tipo : '', adquirente : undefined, 
+                     filial : undefined, selecao : false, semadquirentes : false,
                      itens_pagina : $scope.itens_pagina[0], order : 0,
                      pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0
                     };  
@@ -36,11 +45,15 @@ angular.module("administrativo-parametros-bancarios", [])
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyParametrosPos = 1;                                             
     // Modal Parâmetro
-    $scope.modalParametro = { titulo : '', banco : undefined, dsTipo : '',
+    $scope.modalParametro = { titulo : '', banco : undefined, dsTipo : '', filial : undefined,
                               adquirente : undefined, dsMemo: '', flVisivel : true,
                               textoConfirma : '', funcaoConfirma : function(){} };
     var old = null;    
-    
+    // Modal Associa Adquirente
+    $scope.modalSelecionaAdquirente = { adquirente : null };                                             
+    // Modal Associa Filial
+    $scope.modalSelecionaFilial = { filial : null };
+                                                 
     // Permissões                                           
     var permissaoAlteracao = false;
     var permissaoCadastro = false;
@@ -61,6 +74,21 @@ angular.module("administrativo-parametros-bancarios", [])
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
         });
+        // Quando houver alteração do grupo empresa na barra administrativa                                           
+        $scope.$on('alterouGrupoEmpresa', function(event){ 
+            if($scope.exibeTela){
+                // Avalia grupo empresa
+                if($scope.usuariologado.grupoempresa){ 
+                    // Reseta seleção de filtro específico de empresa
+                    $scope.filtro.filial = null;
+                    buscaFiliais();
+                }else{ // reseta tudo e não faz buscas 
+                    $scope.filiais = [];
+                    $scope.filtro.filial = null;
+                }
+                
+            }
+        });
         // Obtém as permissões
         if($scope.methodsDoControllerCorrente){
             permissaoAlteracao = $scope.methodsDoControllerCorrente['atualização'] ? true : false;   
@@ -71,7 +99,7 @@ angular.module("administrativo-parametros-bancarios", [])
         $scope.$on('acessoDeTelaNotificado', function(event){
             $scope.exibeTela = true;
             // Carrega adquirentes
-            buscaAdquirentes(false, true);
+            buscaAdquirentes(false, true, true);
         });
         // Acessou a tela
         $scope.$emit("acessouTela");
@@ -196,7 +224,48 @@ angular.module("administrativo-parametros-bancarios", [])
                      return [];
               });          
     }
-         
+    
+    
+    
+    
+    // FILIAIS
+    /**
+      * Busca as filiais
+      */
+    var buscaFiliais = function(buscaParametrosBancarios){
+        
+        if(!$scope.usuariologado.grupoempresa){
+            $scope.filtro.filial = null;
+            $scope.filiais = [];
+            if(buscaParametrosBancarios) buscaParametros();
+            return;
+        }
+        
+       $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
+        
+       var filtros = undefined;
+
+       // Filtro do grupo empresa => barra administrativa
+       filtros = [{id: /*$campos.cliente.empresa.id_grupo*/ 116, valor: $scope.usuariologado.grupoempresa.id_grupo}];
+       if($scope.usuariologado.empresa) filtros.push({id: /*$campos.cliente.empresa.nu_cnpj*/ 100, 
+                                                          valor: $scope.usuariologado.empresa.nu_cnpj});
+       
+       $webapi.get($apis.getUrl($apis.cliente.empresa, 
+                                [$scope.token, 0, /*$campos.cliente.empresa.ds_fantasia*/ 104],
+                                filtros)) 
+            .then(function(dados){
+                $scope.filiais = dados.Registros;
+                // Esconde progress
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+                if(buscaParametrosBancarios) buscaParametros();
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter filiais (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+              });     
+    };     
     
     
     // ADQUIRENTES
@@ -212,11 +281,11 @@ angular.module("administrativo-parametros-bancarios", [])
     /**
       * Busca as adquirentes
       */
-    var buscaAdquirentes = function(progressoemexecucao, buscaParametrosBancarios){
+    var buscaAdquirentes = function(progressoemexecucao, buscaParametrosBancarios, buscarFiliais){
         var filtros = {id : /*$campos.card.tbadquirente.stAdquirente*/ 103,
                        valor : 1};
         
-        if(!progressoemexecucao) $scope.showProgress(divPortletBodyFiltrosPos);
+        if(!progressoemexecucao) $scope.showProgress(divPortletBodyFiltrosPos, 10000);
         
         $webapi.get($apis.getUrl($apis.card.tbadquirente, 
                                 [$scope.token, 1, /*$campos.card.tbadquirente.dsAdquirente*/ 102, 0],
@@ -226,7 +295,8 @@ angular.module("administrativo-parametros-bancarios", [])
                 $scope.adquirentes = dados.Registros;
                 // Fecha o progress
                 $scope.hideProgress(divPortletBodyFiltrosPos);
-                if(buscaParametrosBancarios) buscaParametros();
+                if(buscarFiliais) buscaFiliais(buscaParametrosBancarios);
+                else if(buscaParametrosBancarios) buscaParametros();
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
@@ -294,7 +364,7 @@ angular.module("administrativo-parametros-bancarios", [])
     var buscaParametros = function(progressosemexecucao){
 
         if(!progressosemexecucao){
-            $scope.showProgress(divPortletBodyFiltrosPos);
+            $scope.showProgress(divPortletBodyFiltrosPos, 10000);
             $scope.showProgress(divPortletBodyParametrosPos);
         }
         
@@ -420,11 +490,14 @@ angular.module("administrativo-parametros-bancarios", [])
         
         // Obtém o JSON
         var cdAdquirente = $scope.modalParametro.adquirente && $scope.modalParametro.adquirente !== null ? 
-                              $scope.modalParametro.adquirente.cdAdquirente : -1;  
+                              $scope.modalParametro.adquirente.cdAdquirente : -1; 
+        var nrCnpj = $scope.modalParametro.filial && $scope.modalParametro.filial !== null ?
+                       $scope.modalParametro.filial.nu_cnpj : '';
         var jsonParametro = { cdBanco : $scope.modalParametro.banco.Codigo, 
                               dsMemo : $scope.modalParametro.dsMemo,
                               dsTipo : $scope.modalParametro.dsTipo,
-                              cdAdquirente : cdAdquirente
+                              cdAdquirente : cdAdquirente,
+                              nrCnpj : nrCnpj
                             };
         //console.log(jsonParametro);
         
@@ -500,11 +573,16 @@ angular.module("administrativo-parametros-bancarios", [])
         // Obtém o JSON
         var cdAdquirente = $scope.modalParametro.adquirente && $scope.modalParametro.adquirente !== null ? 
                               $scope.modalParametro.adquirente.cdAdquirente : -1;  
-        var jsonParametro = { cdBanco : $scope.modalParametro.banco.Codigo, 
-                              dsMemo : $scope.modalParametro.dsMemo,
-                              dsTipo : $scope.modalParametro.dsTipo,
+        var nrCnpj = $scope.modalParametro.filial && $scope.modalParametro.filial !== null ?
+                       $scope.modalParametro.filial.nu_cnpj : '';
+        var jsonParametro = { parametros : [{ cdBanco : $scope.modalParametro.banco.Codigo, 
+                                              dsMemo : $scope.modalParametro.dsMemo,
+                                              dsTipo : $scope.modalParametro.dsTipo
+                                            }],
+                              nrCnpj : nrCnpj,
                               cdAdquirente : cdAdquirente,
-                              flVisivel : $scope.modalParametro.flVisivel
+                              flVisivel : $scope.modalParametro.flVisivel,
+                              deletar : false
                             };
         //console.log(jsonParametro);
         
@@ -545,7 +623,7 @@ angular.module("administrativo-parametros-bancarios", [])
       */
     var excluiParametroBancario = function(json){
          // Exclui
-         $scope.showProgress(divPortletBodyFiltrosPos);
+         $scope.showProgress(divPortletBodyFiltrosPos, 10000);
          $scope.showProgress(divPortletBodyParametrosPos);
          $webapi.delete($apis.getUrl($apis.card.tbbancoparametro, undefined,
                                      [{id: 'token', valor: $scope.token},
@@ -571,19 +649,21 @@ angular.module("administrativo-parametros-bancarios", [])
      * Solicita confirmação para ocultar o parâmetro bancário
      */
     $scope.ocultaParametroBancario = function(parametro){
+        
         $scope.showModalConfirmacao('Confirmação', 
                                     'Tem certeza que deseja ocultar o parâmetro bancário?',
                                      ocultaParametroBancario, 
-                                    {cdBanco : parametro.banco.Codigo,
-                                     dsMemo: parametro.dsMemo,
-                                     flVisivel : false}, 'Sim', 'Não');  
+                                    { parametros : [{cdBanco : parametro.banco.Codigo,
+                                                     dsMemo: parametro.dsMemo}],
+                                      deletar : false,
+                                      flVisivel : false}, 'Sim', 'Não');  
     };                   
     /**
       * Efetiva a exclusão do parâmetro bancário
       */
     var ocultaParametroBancario = function(jsonParametro){
          // Oculta
-         $scope.showProgress(divPortletBodyFiltrosPos);
+         $scope.showProgress(divPortletBodyFiltrosPos, 10000);
          $scope.showProgress(divPortletBodyParametrosPos);
          $webapi.update($apis.getUrl($apis.card.tbbancoparametro, undefined,
                                  {id : 'token', valor : $scope.token}), jsonParametro) 
@@ -600,6 +680,257 @@ angular.module("administrativo-parametros-bancarios", [])
                  $scope.hideProgress(divPortletBodyFiltrosPos);
                  $scope.hideProgress(divPortletBodyParametrosPos);
               });  
+    }
+    
+    
+    
+    
+    
+    // SELEÇÃO MÚLTIPLA
+    /**
+      * Marca ou desmarca tudo
+      */
+    $scope.alterouSelecaoParametros = function(){
+        for(var k = 0; k < $scope.parametros.length; k++)
+            $scope.parametros[k].selecionado = $scope.filtro.selecao;
+    }
+    
+    /**
+      * Exibe modal para selecionar adquirente
+      */
+    $scope.exibeModalSelecionaAdquirente = function(){
+        if($filter('filter')($scope.parametros, function(p){ return p.selecionado; }).length > 0){
+            $scope.modalSelecionaAdquirente.adquirente = null;
+            $('#modalSelecionaAdquirente').modal('show');  
+        }else
+            $scope.showModalAlerta('Não há parâmetros selecionados!');
+    }
+    
+    var fechaModalSelecionaAdquirente = function(){
+        $('#modalSelecionaAdquirente').modal('hide');
+    }
+    
+    /**
+      * Associa os parâmetros bancários selecionados à adquirente
+      */
+    $scope.associaAdquirenteParametrosSelecionados = function(){        
+        // Obtém o JSON
+        var cdAdquirente = $scope.modalSelecionaAdquirente.adquirente && $scope.modalSelecionaAdquirente.adquirente !== null ? 
+                           $scope.modalSelecionaAdquirente.adquirente.cdAdquirente : -1;  
+        
+        var jsonParametro = { parametros : [],
+                              cdAdquirente : cdAdquirente,
+                              flVisivel : true,
+                              deletar : false,
+                            };  
+        // Adiciona no json os parâmetros selecionados
+        var parametrosSelecionados = $filter('filter')($scope.parametros, function(p){ return p.selecionado; });
+        
+        if(parametrosSelecionados.length === 0){ 
+            fechaModalSelecionaAdquirente();
+            return;
+        }
+        
+        for(var k = 0; k < parametrosSelecionados.length; k++){
+            var parametro = parametrosSelecionados[k];
+            jsonParametro.parametros.push({ cdBanco : parametro.banco.Codigo, 
+                                            dsMemo : parametro.dsMemo });
+        }
+        
+        // Update
+        $scope.showProgress();
+        $webapi.update($apis.getUrl($apis.card.tbbancoparametro, undefined,
+                                 {id : 'token', valor : $scope.token}), jsonParametro) 
+            .then(function(dados){           
+                //$scope.showAlert('Parâmetro(s) bancário(s) associado(s) a adquirente com sucesso!', true, 'success', true);
+                $scope.hideProgress();
+                // Fecha o modal
+                fechaModalSelecionaAdquirente();
+                // Relista
+                buscaParametros();
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao associar parâmetro(s) bancário(s) a adquirente (' + failData.status + ')', true, 'danger', true);
+                 // Fecha os progress
+                 $scope.hideProgress();
+              }); 
+    }
+    
+    
+
+    /**
+     * Solicita confirmação para excluir o(s) parâmetro(s) bancário(s)
+     */
+    $scope.excluirParametrosSelecionados = function(parametro){
+        var parametrosSelecionados = $filter('filter')($scope.parametros, function(p){ return p.selecionado; });
+        var total = parametrosSelecionados.length;
+        if(total === 0){
+            $scope.showModalAlerta('Não há parâmetros selecionados!');
+            return;
+        }
+        // texto inteligente
+        var text = '';
+        if(total === 1) text = 'o parâmetro bancário selecionado';
+        else  text = 'os parâmetros bancários selecionados';
+        
+        // JSON
+        var jsonParametro = { parametros : [],
+                              deletar : true
+                            };          
+        for(var k = 0; k < total; k++){
+            var parametro = parametrosSelecionados[k];
+            jsonParametro.parametros.push({ cdBanco : parametro.banco.Codigo, 
+                                            dsMemo : parametro.dsMemo });
+        }
+        
+        $scope.showModalConfirmacao('Confirmação', 
+                                    'Tem certeza que deseja excluir ' + text + '?',
+                                     excluirParametrosSelecionados, jsonParametro, 'Sim', 'Não');  
+    };                   
+    /**
+      * Efetiva a exclusão do(s) parâmetro(s) bancário(s)
+      */
+    var excluirParametrosSelecionados = function(jsonParametro){
+         // Exclui vários
+         $scope.showProgress(divPortletBodyFiltrosPos, 10000);
+         $scope.showProgress(divPortletBodyParametrosPos);
+         $webapi.update($apis.getUrl($apis.card.tbbancoparametro, undefined,
+                                     {id : 'token', valor : $scope.token}), jsonParametro) 
+            .then(function(dados){           
+                $scope.showAlert('Parâmetro(s) bancário(s) excluído(s) com sucesso!', true, 'success', true);
+                // Relista
+                buscaParametros(true);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao excluir parâmetro(s) bancário(s) (' + failData.status + ')', true, 'danger', true);
+                 // Fecha os progress
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+                 $scope.hideProgress(divPortletBodyParametrosPos);
+              });        
+    }
+    
+    
+    /**
+     * Solicita confirmação para ocultar o(s) parâmetro(s) bancário(s)
+     */
+    $scope.ocultaParametrosSelecionados = function(parametro){
+        var parametrosSelecionados = $filter('filter')($scope.parametros, function(p){ return p.selecionado; });
+        var total = parametrosSelecionados.length;
+        if(total === 0){
+            $scope.showModalAlerta('Não há parâmetros selecionados!');
+            return;
+        }
+        // texto inteligente
+        var text = '';
+        if(total === 1) text = 'o parâmetro bancário selecionado';
+        else  text = 'os parâmetros bancários selecionados';
+        
+        // JSON
+        var jsonParametro = { parametros : [],
+                              deletar : false,
+                              flVisivel : false
+                            };          
+        for(var k = 0; k < total; k++){
+            var parametro = parametrosSelecionados[k];
+            jsonParametro.parametros.push({ cdBanco : parametro.banco.Codigo, 
+                                            dsMemo : parametro.dsMemo });
+        }
+        
+        $scope.showModalConfirmacao('Confirmação', 
+                                    'Tem certeza que deseja ocultar ' + text + '?',
+                                     ocultaParametrosSelecionados, jsonParametro, 'Sim', 'Não');  
+    };                   
+    /**
+      * Efetiva ocultamento do(s) parâmetro(s) bancário(s)
+      */
+    var ocultaParametrosSelecionados = function(jsonParametro){
+         // Exclui vários
+         $scope.showProgress(divPortletBodyFiltrosPos, 10000);
+         $scope.showProgress(divPortletBodyParametrosPos);
+         $webapi.update($apis.getUrl($apis.card.tbbancoparametro, undefined,
+                                     {id : 'token', valor : $scope.token}), jsonParametro) 
+            .then(function(dados){           
+                //$scope.showAlert('Parâmetro(s) bancário(s) ocultado(s) com sucesso!', true, 'success', true);
+                // Relista
+                buscaParametros(true);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao ocultar parâmetro(s) bancário(s) (' + failData.status + ')', true, 'danger', true);
+                 // Fecha os progress
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+                 $scope.hideProgress(divPortletBodyParametrosPos);
+              });        
+    }
+    
+    
+    
+    /**
+      * Exibe modal para selecionar a filial
+      */
+    $scope.exibeModalSelecionaFilial = function(){
+        if($filter('filter')($scope.parametros, function(p){ return p.selecionado; }).length > 0){
+            $scope.modalSelecionaAdquirente.adquirente = null;
+            $('#modalSelecionaFilial').modal('show');  
+        }else
+            $scope.showModalAlerta('Não há parâmetros selecionados!');
+    }
+    
+    var fechaModalSelecionaFilial = function(){
+        $('#modalSelecionaFilial').modal('hide');
+    }
+    
+    /**
+      * Associa os parâmetros bancários selecionados à filial
+      */
+    $scope.associaFilialParametrosSelecionados = function(){        
+        // Obtém o JSON
+        var nrCnpj = $scope.modalSelecionaFilial.filial && $scope.modalSelecionaFilial.filial !== null ?
+                       $scope.modalSelecionaFilial.filial.nu_cnpj : '';
+        
+        var jsonParametro = { parametros : [],
+                              nrCnpj : nrCnpj,
+                              flVisivel : true,
+                              deletar : false,
+                            };  
+        // Adiciona no json os parâmetros selecionados
+        var parametrosSelecionados = $filter('filter')($scope.parametros, function(p){ return p.selecionado; });
+        
+        if(parametrosSelecionados.length === 0){ 
+            fechaModalSelecionaFilial();
+            return;
+        }
+        
+        for(var k = 0; k < parametrosSelecionados.length; k++){
+            var parametro = parametrosSelecionados[k];
+            jsonParametro.parametros.push({ cdBanco : parametro.banco.Codigo, 
+                                            dsMemo : parametro.dsMemo });
+        }
+        
+        // Update
+        $scope.showProgress();
+        $webapi.update($apis.getUrl($apis.card.tbbancoparametro, undefined,
+                                 {id : 'token', valor : $scope.token}), jsonParametro) 
+            .then(function(dados){           
+                //$scope.showAlert('Parâmetro(s) bancário(s) associado(s) a adquirente com sucesso!', true, 'success', true);
+                $scope.hideProgress();
+                // Fecha o modal
+                fechaModalSelecionaFilial();
+                // Relista
+                buscaParametros();
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao associar parâmetro(s) bancário(s) a filial (' + failData.status + ')', true, 'danger', true);
+                 // Fecha os progress
+                 $scope.hideProgress();
+              }); 
     }
     
 }]);

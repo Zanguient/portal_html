@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão: 1.0.1 - 04/09/2015
+ *  - Movimentações bancárias não pré-conciliadas podem ser associadas manualmente com um grupo de Recebimentos
+ *
  *  Versão: 1.0 - 03/09/2015
  *
  */
@@ -41,6 +44,13 @@ angular.module("card-services-conciliacao-bancaria", [])
                      pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0
                     };  
     
+    $scope.associacaoManual = { selecionandoRecebimentos : false,
+                                extrato : null,
+                                dtExtrato : '',
+                                valorExtrato : 0.0,
+                                adquirenteExtrato : '',
+                                recebimentos : null
+                              }; 
                                                  
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyDadosPos = 1;  
@@ -51,7 +61,8 @@ angular.module("card-services-conciliacao-bancaria", [])
     // Permissões                                           
     var permissaoAlteracao = false;
     var permissaoCadastro = false;
-    var permissaoRemocao = false;                                          
+    var permissaoRemocao = false;     
+    // flags                                                  
     $scope.exibeTela = false;    
     $scope.abrirCalendarioDataMin = $scope.abrirCalendarioDataVendaMin = false;
     $scope.abrirCalendarioDataMax = $scope.abrirCalendarioDataVendaMax = false; 
@@ -428,7 +439,10 @@ angular.module("card-services-conciliacao-bancaria", [])
                                  $scope.filtro.itens_pagina, $scope.filtro.pagina],
                                 filtros)) 
             .then(function(dados){           
-
+            
+                // Desassocia possível conciliação manual não finalizada
+                $scope.desassociaExtratoBancario();
+            
                 $scope.totais.contExtrato = $scope.totais.contRecebimentosParcela = totalPreConciliados = 0;
             
                 // Obtém os dados
@@ -551,20 +565,21 @@ angular.module("card-services-conciliacao-bancaria", [])
             jsonConciliacaoBancaria.push(json);
         }
         
-        //console.log(jsonConciliacaoBancaria);
-        //$scope.hideProgress(divPortletBodyFiltrosPos);
-        //$scope.hideProgress(divPortletBodyDadosPos);
-
         $webapi.update($apis.getUrl($apis.card.conciliacaobancaria, undefined,
                        {id: 'token', valor: $scope.token}), jsonConciliacaoBancaria)
             .then(function(dados){
                     //$scope.showAlert('Conciliação bancária realizada com sucesso!', true, 'success', true);
-                    // Altera o status da conciliação
-                    for(var k = 0; k < dadosConciliacao.length; k++) dadosConciliacao[k].Conciliado = 1;  
-                    if(!$scope.$$phase) $scope.$apply();
-                    // Esconde o progress
-                    $scope.hideProgress(divPortletBodyFiltrosPos);
-                    $scope.hideProgress(divPortletBodyDadosPos);
+                    if($scope.associacaoManual.extrato && $scope.associacaoManual.extrato !== null &&
+                       $scope.associacaoManual.recebimentos && $scope.associacaoManual.recebimentos !== null){
+                        buscaDadosConciliacaoBancaria(true);
+                    }else{
+                        // Altera o status da conciliação
+                        for(var k = 0; k < dadosConciliacao.length; k++) dadosConciliacao[k].Conciliado = 1;  
+                        if(!$scope.$$phase) $scope.$apply();
+                        // Esconde o progress
+                        $scope.hideProgress(divPortletBodyFiltrosPos);
+                        $scope.hideProgress(divPortletBodyDadosPos);
+                    }
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
                      else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
@@ -654,5 +669,68 @@ angular.module("card-services-conciliacao-bancaria", [])
             }
         }else $scope.modalDataRecebimento.dataValida = false;
     };
-    
+                                                 
+                                                 
+                                                 
+                                                 
+                                                 
+    // ASSOCIAÇÃO MANUAL   
+    /**
+      * Selecionou movimentação bancária para conciliar manualmente
+      */
+    $scope.associaExtratoBancario = function(dado){
+        $scope.associacaoManual.selecionandoRecebimentos = true;
+        $scope.associacaoManual.extrato = dado.ExtratoBancario;
+        $scope.associacaoManual.dtExtrato = dado.Data;
+        $scope.associacaoManual.recebimentos = null;
+        $scope.associacaoManual.valorExtrato = dado.ValorTotalExtrato;
+        $scope.associacaoManual.adquirenteExtrato = dado.Adquirente;
+    }
+    /**
+      * Desistiu da conciliação manual
+      */
+    $scope.desassociaExtratoBancario = function(){
+        $scope.associacaoManual.selecionandoRecebimentos = false;
+        $scope.associacaoManual.extrato = null;
+        $scope.associacaoManual.dtExtrato = '';
+        $scope.associacaoManual.recebimentos = null;
+        $scope.associacaoManual.valorExtrato = 0.0;
+        $scope.associacaoManual.adquirenteExtrato = '';
+    }
+    /**
+      * Retorna true se o dado informado corresponde ao extrato selecionado para conciliação manual
+      */
+    $scope.isExtratoSelecionado = function(dado){
+        if(!dado || !$scope.associacaoManual.extrato || dado === null || $scope.associacaoManual.extrato === null) 
+            return false;
+        return dado.ExtratoBancario[0].Id === $scope.associacaoManual.extrato[0].Id;
+    }
+    /**
+      * Retorna true se o dado informado corresponde ao extrato selecionado para conciliação manual
+      */
+    $scope.isMesmaDataEAdquirenteExtratoSelecionado = function(dado){
+        if(!dado || !$scope.associacaoManual.extrato || dado === null || 
+           $scope.associacaoManual.extrato === null || !$scope.associacaoManual.dtExtrato ||
+           !$scope.associacaoManual.adquirenteExtrato) 
+            return false;
+        return $scope.getDataString(dado.Data) === $scope.getDataString($scope.associacaoManual.dtExtrato) && 
+               $scope.associacaoManual.adquirenteExtrato === dado.Adquirente;
+    }
+    /**
+      * Selecionou o grupo de recebimentos para conciliar com o extrato selecionado para conciliação manual
+      * Solicita confirmação ao usuário
+      */
+    $scope.associaRecebimentos = function(dado){
+        $scope.associacaoManual.recebimentos = dado.RecebimentosParcela;
+        
+        var d = { ExtratoBancario : $scope.associacaoManual.extrato, 
+                  RecebimentosParcela : $scope.associacaoManual.recebimentos,
+		          Data : $scope.associacaoManual.dtExtrato
+                };
+        
+        var carga = $scope.associacaoManual.recebimentos.length > 1 ? "as cargas" : "a carga";
+        $scope.showModalConfirmacao('Confirmação', 
+            "Uma vez confirmada a conciliação, a movimentação e " + carga + " não poderão se envolver em outra conciliação bancária. Confirma essa conciliação de movimentação com valor de " + $filter('currency')($scope.associacaoManual.valorExtrato, 'R$', 2) + ' e ' + carga + ' com valor total de ' + $filter('currency')(dado.ValorTotalRecebimento, 'R$', 2) + '?',
+            concilia, [d], 'Sim', 'Não');
+    }
 }]);

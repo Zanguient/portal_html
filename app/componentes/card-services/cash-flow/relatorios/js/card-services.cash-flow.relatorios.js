@@ -177,7 +177,7 @@ angular.module("card-services-cash-flow-relatorios", [])
       */
     var buscaFiliais = function(nu_cnpj, idBandeira){
         
-       $scope.showProgress(divPortletBodyFiltrosPos);    
+       $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
         
        var filtros = undefined;
 
@@ -229,7 +229,7 @@ angular.module("card-services-cash-flow-relatorios", [])
            return;
        }    
         
-       if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos);    
+       if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
         
        var filtros = undefined;
 
@@ -279,7 +279,7 @@ angular.module("card-services-cash-flow-relatorios", [])
            return;
        }    
         
-       if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos);    
+       if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
         
        var filtros = undefined;
 

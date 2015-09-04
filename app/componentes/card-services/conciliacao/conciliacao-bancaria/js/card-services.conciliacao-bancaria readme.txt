@@ -53,6 +53,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 							   Documento : string,
 							   Valor : double,
 							   Bandeira : string,
+							   DataVenda : datetime
 							 }],
 		  Adquirente : string, 
 		  Bandeira : string,
@@ -80,7 +81,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 	- PUT : seta os itens recebimento parcela para apontar para determinado extrato ou desassociar de um extrato
 			[{ 
 				idExtrato : int, // set -1 para desassociar de um extrato
-				data : datetime,
+				data : datetime, // data dos recebimentos parcelas tem que ser IGUAL ao da movimentação bancária
 				idsRecebimento: [int]
 			}]
   

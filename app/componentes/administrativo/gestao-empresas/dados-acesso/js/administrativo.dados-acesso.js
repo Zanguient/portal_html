@@ -143,7 +143,7 @@ angular.module("administrativo-dados-acesso", [])
       */
     var buscaFiliais = function(){
         
-       $scope.showProgress(divPortletBodyFiltrosPos);    
+       $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
         
        var filtros = undefined;
 
@@ -195,7 +195,7 @@ angular.module("administrativo-dados-acesso", [])
            return;
        }    
         
-       if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos);    
+       if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
         
        var filtros = undefined;
 
