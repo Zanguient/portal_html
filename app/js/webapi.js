@@ -127,6 +127,8 @@ angular.module('webapi', ['utils'])
             dsMemo : 101,
             cdAdquirente : 102,
             dsTipo : 103,
+            flVisivel : 104,
+            nrCnpj : 105,
             // Relacionamentos
             tbadquirentes : 200
         },

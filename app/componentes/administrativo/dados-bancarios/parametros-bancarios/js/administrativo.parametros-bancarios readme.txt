@@ -105,7 +105,8 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				flVisivel : bool,
 				banco : { Codigo : string, 
 						  NomeExtenso : string},
-				empresa : null ou { nu_cnpj : string, ds_fantasia : string } 
+				empresa : null ou { nu_cnpj : string, ds_fantasia : string }
+				grupoempresa : null ou { id_grupo : int, ds_nome : string }
 			  }
 			]	
 	- PUT : altera parâmetro(s) bancário(s) existente

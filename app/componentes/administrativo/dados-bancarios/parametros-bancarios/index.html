@@ -108,17 +108,17 @@
                                 <!-- ADQUIRENTE -->
                                 <td rowspan="1" colspan="1">
                                     <div class="row">
-																			<div class="col-md-12">
-                                        <select style="width: 100%;"
-																								aria-controls="datatable_products" 
-                                                class="form-control input-sm input-inline"
-                                                ng-model="filtro.adquirente"
-                                                ng-disabled="filtro.semadquirentes"
-                                                ng-change="alterouAdquirente()"
-                                                ng-options="adquirente as (adquirente.dsAdquirente | uppercase) for adquirente in adquirentes"> 
-                                            <option value="">TODAS</option>
-                                        </select>
-																			</div>
+										<div class="col-md-12">
+                                            <select style="width: 100%;"
+                                                    aria-controls="datatable_products" 
+                                                    class="form-control input-sm input-inline"
+                                                    ng-model="filtro.adquirente"
+                                                    ng-disabled="filtro.semadquirentes"
+                                                    ng-change="alterouAdquirente()"
+                                                    ng-options="adquirente as (adquirente.dsAdquirente | uppercase) for adquirente in adquirentes"> 
+                                                <option value=""></option>
+                                            </select>
+										</div>
                                     </div>
                                     <div class="row" style="margin-top:10px;">
                                         <div class="col-sm-3 col-md-3" style="margin-right: -15px;">
@@ -132,18 +132,32 @@
                                 </td>
                                 <!-- FILIAL -->
                                 <td rowspan="1" colspan="1">
-                                    <select class="form-control form-filter input-sm comboBoxFiltros"
-                                            ng-disabled="filiais.length == 0"
-                                            ng-model="filtro.filial"
-                                            ng-change="alterouFilial()"
-                                            ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
-                                        <option style="display:none" value=""></option>
-                                    </select>
-                                    <i class="fa fa-question-circle"
-                                        ng-show="!usuariologado.grupoempresa"
-                                        popover-placement="bottom"
-                                        popover="É necessário selecionar uma empresa"
-                                        popover-trigger="mouseenter"></i> 
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <select class="form-control form-filter input-sm comboBoxFiltros"
+                                                    ng-disabled="filiais.length == 0 || filtro.semfiliais"
+                                                    ng-model="filtro.filial"
+                                                    ng-change="alterouFilial()"
+                                                    ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
+                                                <option value=""></option>
+                                            </select>
+                                            <i class="fa fa-question-circle"
+                                                ng-show="!usuariologado.grupoempresa"
+                                                popover-placement="bottom"
+                                                popover="É necessário selecionar uma empresa"
+                                                popover-trigger="mouseenter"></i> 
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top:10px;">
+                                        <div class="col-sm-3 col-md-3" style="margin-right: -15px;">
+                                            <checkbox normal ng-model="filtro.semfiliais"
+                                                      ng-change="selecionouCheckboxFilial()"
+                                                      ng-disabled="filiais.length == 0"></checkbox>
+                                        </div>
+                                        <div class="col-sm-9 col-md-9" style="text-align:left;">
+                                            <label>Exibir somente os registros sem filial associada</label>
+                                        </div>
+                                    </div>
                                 </td>
                                 <!--AÇÕES-->
                                 <td rowspan="1" colspan="1">
@@ -182,7 +196,7 @@
     <!-- PORTLET TABELA -->
     <div class="portlet light">
         
-        <!-- MODAL PARÂMETRO BANCÁRIO -->
+       <!-- MODAL PARÂMETRO BANCÁRIO -->
        <div class="modal fade bs-modal-sm modal-input" 
             id="modalParametroBancario" aria-hidden="true">
            <div class="modal-dialog modal-sm" style="width:600px">
@@ -268,6 +282,34 @@
                                         <option value=""></option>
                                     </select>
                                 </div>
+                               <!-- CONSULTA ESTABELECIMENTO -->
+                                <div class="col-sm-12" ng-show="usuariologado.grupoempresa">
+                                    <div class="col-sm-3">
+                                        <label>Estabelecimento</label>
+                                    </div>
+                                    <div class="col-sm-9" ng-show="usuariologado.grupoempresa">
+                                        <div class="input-group" style="width:80%">
+                                           <input type="text" class="form-control" 
+                                                  placeholder="Buscar" 
+                                                  ng-disabled="filiais.length == 0"
+                                                  ng-model="modalParametro.estabelecimento"
+                                                  ng-keyup="$event.keyCode == 13"
+                                                  typeahead-focus-first=false
+                                                  typeahead-on-select="selecionaEstabelecimento($item, true)"
+                                                  typeahead-min-length='1'
+                                                  typeahead-wait-ms="500"
+                                                  typeahead="estabelecimento as getEstabelecimentoAmigavel(estabelecimento, estabelecimento.ds_fantasia, estabelecimento.filial) for estabelecimento in buscaEstabelecimentos($viewValue)"/>
+                                        </div>
+                                    </div>
+                                </div>
+                           </div>
+                           <!-- ESTABELECIMENTOS DA FILIAL -->
+                           <div class="col-sm-12" ng-class="{'element-hidden' : !modalParametro.filial || modalParametro.filial === null || modalParametro.filial.estabelecimentos.length === 0}">
+                               <label>Estabelecimentos da Filial</label>
+                           </div>
+                           <div class="col-sm-12" 
+                                ng-repeat="estabelecimento in modalParametro.filial.estabelecimentos">
+                               <label ng-bind="getEstabelecimentoAmigavel(estabelecimento)"></label>
                            </div>
                        </div>
                    </div>
@@ -290,25 +332,72 @@
        </div>
        <!-- END MODAL PARÂMETRO BANCÁRIO -->
         
-        <!-- MODAL SELECIONA ADQUIRENTE -->
+        <!-- MODAL SELECIONA ADQUIRENTE/FILIAL -->
        <div class="modal fade bs-modal-sm modal-input" 
-            id="modalSelecionaAdquirente" aria-hidden="true">
-           <div class="modal-dialog modal-sm" style="width:300px">
+            id="modalSelecionaAdquirenteFilial" aria-hidden="true">
+           <div class="modal-dialog modal-sm" style="width:350px">
                <div class="modal-content">
                    <div class="modal-header">
-                       <h4 class="modal-title modal-cabecalho">Associa Adquirente</h4>
+                       <h4 class="modal-title modal-cabecalho">Associa Adquirente/Filial</h4>
                    </div>
                    <div class="modal-body modal-corpo modalAcessoDeUsuarios" style="text-align: left">
                        <div class="row">
                            <!-- ADQUIRENTE -->
                            <div class="col-sm-12 col-sm-offset-1">
-                                <!-- ADQUIRENTE -->
-                                <select aria-controls="datatable_products" style="width:80%"
-                                        class="form-control input-sm input-inline"
-                                        ng-model="modalSelecionaAdquirente.adquirente"
-                                        ng-options="adquirente as (adquirente.dsAdquirente | uppercase) for adquirente in adquirentes"> 
-                                    <option value=""></option>  
-                                </select>
+                               <div class="col-sm-12">
+                                   <label>Adquirente</label>
+                               </div>
+                               <div class="col-sm-12">
+
+                                    <select aria-controls="datatable_products" style="width:80%"
+                                            class="form-control input-sm input-inline"
+                                            ng-model="modalSelecionaAdquirenteFilial.adquirente"
+                                            ng-options="adquirente as (adquirente.dsAdquirente | uppercase) for adquirente in adquirentes"> 
+                                        <option value=""></option>  
+                                    </select>
+                               </div>
+                           </div>
+                           <!-- FILIAL -->
+                           <div class="col-sm-12 col-sm-offset-1"
+                                ng-show="usuariologado.grupoempresa">
+                               <!-- CONSULTA ESTABELECIMENTO -->
+                               <div class="col-sm-12">
+                                   <label>Estabelecimento</label>
+                               </div>
+                               <div class="col-sm-12">
+                                    <div class="input-group" style="width:80%">
+                                       <input type="text" class="form-control" 
+                                              placeholder="Buscar" 
+                                              ng-disabled="filiais.length == 0"
+                                              ng-model="modalSelecionaAdquirenteFilial.estabelecimento"
+                                              ng-keyup="$event.keyCode == 13"
+                                              typeahead-focus-first=false
+                                              typeahead-on-select="selecionaEstabelecimento($item)"
+                                              typeahead-min-length='1'
+                                              typeahead-wait-ms="500"
+                                              typeahead="estabelecimento as getEstabelecimentoAmigavel(estabelecimento, estabelecimento.ds_fantasia, estabelecimento.filial) for estabelecimento in buscaEstabelecimentos($viewValue)"/>
+                                    </div>
+                               </div>
+                               <!-- FILIAL -->
+                               <div class="col-sm-12">
+                                    <label>Filial</label>
+                               </div>
+                               <div class="col-sm-12">
+                                    <select class="form-control form-filter input-sm comboBoxFiltros"
+                                            ng-disabled="filiais.length == 0"
+                                            ng-model="modalSelecionaAdquirenteFilial.filial"
+                                            ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
+                                        <option value=""></option>
+                                    </select>
+                               </div>
+                               <!-- ESTABELECIMENTOS DA FILIAL -->
+                               <div class="col-sm-12" ng-class="{'element-hidden' : !modalSelecionaFilial.filial || modalSelecionaFilial.filial === null || modalSelecionaAdquirenteFilial.filial.estabelecimentos.length === 0}">
+                                   <label>Estabelecimentos da Filial</label>
+                               </div>
+                               <div class="col-sm-12" 
+                                    ng-repeat="estabelecimento in modalSelecionaAdquirenteFilial.filial.estabelecimentos">
+                                   <label ng-bind="getEstabelecimentoAmigavel(estabelecimento)"></label>
+                               </div>
                            </div>
                        </div>
                    </div>
@@ -320,7 +409,7 @@
                        </div>                           
                        <div class="col-sm-4 col-sm-offset-2">
                            <button type="button" class="btn green"
-                                   ng-click="associaAdquirenteParametrosSelecionados()">
+                                   ng-click="associaAdquirenteFilialParametrosSelecionados()">
                                Associa
                            </button>                                
                        </div>
@@ -328,46 +417,7 @@
                </div>
            </div>
        </div>
-       <!-- END MODAL SELECIONA ADQUIRENTE -->
-        
-        <!-- MODAL SELECIONA FILIAL -->
-       <div class="modal fade bs-modal-sm modal-input" 
-            id="modalSelecionaFilial" aria-hidden="true">
-           <div class="modal-dialog modal-sm" style="width:300px">
-               <div class="modal-content">
-                   <div class="modal-header">
-                       <h4 class="modal-title modal-cabecalho">Associa Filial</h4>
-                   </div>
-                   <div class="modal-body modal-corpo modalAcessoDeUsuarios" style="text-align: left">
-                       <div class="row">
-                           <div class="col-sm-12 col-sm-offset-1">
-                                <!-- FILIAL -->
-                                <select class="form-control form-filter input-sm comboBoxFiltros"
-                                        ng-disabled="filiais.length == 0"
-                                        ng-model="modalSelecionaFilial.filial"
-                                        ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
-                                    <option value=""></option>
-                                </select>
-                           </div>
-                       </div>
-                   </div>
-                   <div class="modal-footer">
-                       <div class="col-sm-3 col-sm-offset-1">
-                           <button type="button" class="btn default" data-dismiss="modal">
-                               Cancelar
-                           </button>
-                       </div>                           
-                       <div class="col-sm-4 col-sm-offset-2">
-                           <button type="button" class="btn green"
-                                   ng-click="associaFilialParametrosSelecionados()">
-                               Associa
-                           </button>                                
-                       </div>
-                   </div>
-               </div>
-           </div>
-       </div>
-       <!-- END MODAL SELECIONA FILIAL -->
+       <!-- END MODAL SELECIONA ADQUIRENTE/FILIAL -->
         
         
         <div class="portlet-title">
@@ -473,8 +523,8 @@
                             <ul class="dropdown-menu dropDownAtos">
                                 <li ng-show="usuarioPodeAlterarParametros()">
                                     <a href="javascript:;" 
-                                       ng-click="exibeModalSelecionaAdquirente()">
-                                        Associar adquirente
+                                       ng-click="exibeModalSelecionaAdquirenteFilial()">
+                                        Associar adquirente/filial
                                     </a>
                                 </li>
                                 <li ng-show="usuarioPodeExcluirParametros()">
@@ -504,19 +554,22 @@
                                 <checkbox normal ng-model="filtro.selecao"
                                           ng-change="alterouSelecaoParametros()"></checkbox>
                             </th>
-                            <th tabindex="1" rowspan="1" colspan="1" style="width: 30%;">
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 25%;">
                                Banco
                             </th>
-                            <th tabindex="2" rowspan="1" colspan="1" style="width: 15%;">
+                            <th tabindex="2" rowspan="1" colspan="1" style="width: 7%;">
                                Tipo 
                             </th>
-                            <th tabindex="3" rowspan="1" colspan="1" style="width: 30%;">
+                            <th tabindex="3" rowspan="1" colspan="1" style="width: 25%;">
                                Descrição
                             </th>
-                            <th tabindex="4" rowspan="1" colspan="1" style="width: 10%;">
+                            <th tabindex="4" rowspan="1" colspan="1" style="width: 8%;">
                                Adquirente
                             </th>
-                            <th tabindex="5" rowspan="1" colspan="1" style="width: 10%;">
+                            <th tabindex="5" rowspan="1" colspan="1" style="width: 25%;">
+                               Filial
+                            </th>
+                            <th tabindex="6" rowspan="1" colspan="1" style="width: 10%;">
                                Ação
                             </th>                                        
                         </tr>
@@ -543,6 +596,9 @@
                             <!--ADQUIRENTE-->
                             <td>
                                 {{(parametro.adquirente.dsAdquirente | uppercase) || ''}}
+                            </td>
+                            <!--FILIAL-->
+                            <td ng-bind="getNomeAmigavelEmpresaFilial(parametro.grupoempresa, parametro.empresa)">
                             </td>
                             <!-- BOTÃO AÇÕES -->
                             <td class="center btnacoes">

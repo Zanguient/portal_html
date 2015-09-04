@@ -1985,7 +1985,7 @@ angular.module("AtosCapital", ['ui.router',
       * Exibe o código do banco seguido do nome (reduzido ou extenso)
       */
     $scope.exibeBanco = function(banco, reduzido){
-        if(typeof banco === 'undefined') return '';
+        if(typeof banco === 'undefined' || banco === null) return '';
         var text = banco.Codigo + '    ';
         if(reduzido) text += banco.NomeReduzido;   
         else text += banco.NomeExtenso;
