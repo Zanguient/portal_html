@@ -11,6 +11,8 @@
 
     Versão: 1.0.2 - 04/09/2015
     - Associação a uma filial
+    - Exibição do nome do grupo antes da filial
+    - Consulta Estabelecimento
  
     Versão: 1.0.1 - 03/09/2015
     - Seleção Múltipla
@@ -145,14 +147,15 @@
                                                 ng-show="!usuariologado.grupoempresa"
                                                 popover-placement="bottom"
                                                 popover="É necessário selecionar uma empresa"
-                                                popover-trigger="mouseenter"></i> 
+                                                popover-trigger="mouseenter"
+                                                popover-append-to-body="true"></i> 
                                         </div>
                                     </div>
                                     <div class="row" style="margin-top:10px;">
                                         <div class="col-sm-3 col-md-3" style="margin-right: -15px;">
                                             <checkbox normal ng-model="filtro.semfiliais"
-                                                      ng-change="selecionouCheckboxFilial()"
-                                                      ng-disabled="filiais.length == 0"></checkbox>
+                                                      ng-change="selecionouCheckboxFilial()">
+                                            </checkbox>
                                         </div>
                                         <div class="col-sm-9 col-md-9" style="text-align:left;">
                                             <label>Exibir somente os registros sem filial associada</label>
@@ -360,6 +363,18 @@
                            <!-- FILIAL -->
                            <div class="col-sm-12 col-sm-offset-1"
                                 ng-show="usuariologado.grupoempresa">
+                               <!-- FILIAL -->
+                               <div class="col-sm-12">
+                                    <label>Filial</label>
+                               </div>
+                               <div class="col-sm-12">
+                                    <select class="form-control form-filter input-sm comboBoxFiltros"
+                                            ng-disabled="filiais.length == 0"
+                                            ng-model="modalSelecionaAdquirenteFilial.filial"
+                                            ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
+                                        <option value=""></option>
+                                    </select>
+                               </div>
                                <!-- CONSULTA ESTABELECIMENTO -->
                                <div class="col-sm-12">
                                    <label>Estabelecimento</label>
@@ -377,18 +392,6 @@
                                               typeahead-wait-ms="500"
                                               typeahead="estabelecimento as getEstabelecimentoAmigavel(estabelecimento, estabelecimento.ds_fantasia, estabelecimento.filial) for estabelecimento in buscaEstabelecimentos($viewValue)"/>
                                     </div>
-                               </div>
-                               <!-- FILIAL -->
-                               <div class="col-sm-12">
-                                    <label>Filial</label>
-                               </div>
-                               <div class="col-sm-12">
-                                    <select class="form-control form-filter input-sm comboBoxFiltros"
-                                            ng-disabled="filiais.length == 0"
-                                            ng-model="modalSelecionaAdquirenteFilial.filial"
-                                            ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
-                                        <option value=""></option>
-                                    </select>
                                </div>
                                <!-- ESTABELECIMENTOS DA FILIAL -->
                                <div class="col-sm-12" ng-class="{'element-hidden' : !modalSelecionaFilial.filial || modalSelecionaFilial.filial === null || modalSelecionaAdquirenteFilial.filial.estabelecimentos.length === 0}">
@@ -419,6 +422,81 @@
        </div>
        <!-- END MODAL SELECIONA ADQUIRENTE/FILIAL -->
         
+        <!-- MODAL ESTABELECIMENTO -->
+       <div class="modal fade bs-modal-sm modal-input" 
+            id="modalEstabelecimento" aria-hidden="true">
+           <div class="modal-dialog modal-sm" style="width:450px">
+               <div class="modal-content">
+                   <div class="modal-header">
+                       <h4 class="modal-title modal-cabecalho">Consulta Estabelecimento</h4>
+                   </div>
+                   <div class="modal-body modal-corpo modalAcessoDeUsuarios" style="text-align: left">
+                       <div class="row">
+                           <div class="col-sm-12 col-sm-offset-1">
+                               <div class="input-group" style="width:80%">
+                                   <input type="text" class="form-control" 
+                                          ng-class="{'spinner' : buscandoestabelecimento}"
+                                          placeholder="Buscar"
+                                          ng-model="modalEstabelecimento.estabelecimento"
+                                          ng-keyup="$event.keyCode == 13"
+                                          typeahead-focus-first=false
+                                          typeahead-on-select="selecionaLoginOperadora($item)"
+                                          typeahead-min-length='3'
+                                          typeahead-wait-ms="500"
+                                          typeahead="loginoperadora as getEstabelecimentoLoginOperadoraAmigavel(loginoperadora) for loginoperadora in buscaLoginOperadora($viewValue)"/>
+                               </div>
+                           </div>
+                           <!-- EXIBE RESULTADOS -->
+                           <div class="col-sm-12" 
+                                ng-show="modalEstabelecimento.loginoperadora && modalEstabelecimento.loginoperadora !== null">
+                                <!-- GRUPO -->
+                                <div class="col-sm-12">
+                                    <div class="col-sm-3">
+                                        <label>Empresa</label>    
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <label style="font-weight:normal">
+                                            {{(modalEstabelecimento.loginoperadora.grupoempresa.ds_nome | uppercase) || ''}}
+                                        </label>
+                                    </div>
+                               </div>
+                               <!-- FILIAL -->
+                                <div class="col-sm-12">
+                                    <div class="col-sm-3">
+                                        <label>Filial</label>    
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <label style="font-weight:normal"
+                                               ng-bind="getNomeAmigavelFilial(modalEstabelecimento.loginoperadora.empresa)">
+                                        </label>    
+                                    </div>
+                               </div>
+                               <!-- OPERADORA -->
+                                <div class="col-sm-12">
+                                    <div class="col-sm-3">
+                                        <label>Adquirente</label>    
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <label style="font-weight:normal">
+                                            {{(modalEstabelecimento.loginoperadora.operadora.desOperadora | uppercase) || ''}}
+                                        </label>     
+                                    </div>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="modal-footer">
+                       <div class="col-sm-7">
+                           <button type="button" class="btn default" data-dismiss="modal">
+                               Fechar
+                           </button>
+                       </div>                          
+                   </div>
+               </div>
+           </div>
+       </div>
+       <!-- END MODAL ESTABELECIMENTO -->
+            
         
         <div class="portlet-title">
             <div class="caption">								
@@ -512,8 +590,9 @@
                 <!-- FIM PAGINAÇÃO -->
                 <div class="col-xs-4 col-sm-4">
                     <!-- AÇÃO DE SELEÇÃO -->
-                    <td class="center btnacoes">
-                        <div class="btn-group" dropdown dropdown-append-to-body>
+                    <div class="col-sm-6">
+                        <div class="btn-group" dropdown dropdown-append-to-body
+                             ng-class="{'element-hidden' : !usuarioPodeAlterarParametros() && !usuarioPodeExcluirParametros()}">
                             <a class="btn btn-default btn-circle" 
                                href="javascript:;" dropdown-toggle>
                                 <i class="fa fa-pencil"></i>
@@ -521,15 +600,16 @@
                                 <i class="fa fa-angle-down"></i>
                             </a>
                             <ul class="dropdown-menu dropDownAtos">
-                                <li ng-show="usuarioPodeAlterarParametros()">
-                                    <a href="javascript:;" 
-                                       ng-click="exibeModalSelecionaAdquirenteFilial()">
+                                <li ng-show="usuarioPodeAlterarParametros()"
+                                    ng-class="{'disabled': filiais.length === 0}"
+                                    title="{{filiais.length === 0 ? 'Selecione uma empresa para habilitar essa funcionalidade' : ''}}">
+                                    <a href="javascript:;"
+                                       ng-click="filiais.length > 0 ? exibeModalSelecionaAdquirenteFilial() : 0">
                                         Associar adquirente/filial
                                     </a>
                                 </li>
                                 <li ng-show="usuarioPodeExcluirParametros()">
-                                    <a href="javascript:;" 
-                                       ng-click="excluirParametrosSelecionados()">
+                                    <a href="javascript:;" ng-click="excluirParametrosSelecionados()">
                                         Excluir
                                     </a>
                                 </li> 
@@ -541,7 +621,15 @@
                                 </li> 
                             </ul>
                         </div>
-                    </td> 
+                    </div>
+                    <!-- BOTÃO CONSULTA ESTABELECIMENTO -->
+                    <div class="col-sm-6">
+                         <button class="btn btn-primary" 
+                                 ng-class="{'element-hidden' : !PERMISSAO_FILTRO_EMPRESA || !PERMISSAO_ADMINISTRATIVO}"
+                                 ng-click="consultaEstabelecimento()">
+                           Consulta Estabelecimento
+                        </button>
+                    </div>
                 </div>
             </div>
             
@@ -567,7 +655,7 @@
                                Adquirente
                             </th>
                             <th tabindex="5" rowspan="1" colspan="1" style="width: 25%;">
-                               Filial
+                               Empresa / Filial
                             </th>
                             <th tabindex="6" rowspan="1" colspan="1" style="width: 10%;">
                                Ação
@@ -597,8 +685,13 @@
                             <td>
                                 {{(parametro.adquirente.dsAdquirente | uppercase) || ''}}
                             </td>
-                            <!--FILIAL-->
-                            <td ng-bind="getNomeAmigavelEmpresaFilial(parametro.grupoempresa, parametro.empresa)">
+                            <!--EMPRESA / FILIAL-->
+                            <td>
+                                <span ng-show="parametro.grupoempresa">
+                                    {{(parametro.grupoempresa.ds_nome | uppercase) || ''}}
+                                    &nbsp;/&nbsp;
+                                </span>
+                                <span ng-bind="getNomeAmigavelFilial(parametro.empresa)" style="font-weight:bolder"></span>
                             </td>
                             <!-- BOTÃO AÇÕES -->
                             <td class="center btnacoes">

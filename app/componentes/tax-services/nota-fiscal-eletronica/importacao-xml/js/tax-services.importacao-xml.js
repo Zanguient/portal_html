@@ -35,7 +35,7 @@ angular.module("tax-services-importacao-xml", [])
     $scope.total = { nfe : 0 };  
     $scope.notadetalhada = undefined;                                            
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
-    var divPortletBodyManifestoPos = 1; // posição da div que vai receber o loading progress                             
+    var divPortletBodyManifestoPos = 1; // posição da div que vai receber o loading progress                                         
     // flags
     var ultimoFiltroBusca = undefined;
     $scope.tab = 1;
@@ -487,16 +487,16 @@ angular.module("tax-services-importacao-xml", [])
             });           
     }
     /** 
-      * Download DAMFE
+      * Download DANFE
       */
-    $scope.downloadDAMFE = function(manifesto, indexNota){
+    $scope.downloadDANFE = function(manifesto, indexNota){
         var filtro = undefined;
         var colecao = 3; // default : todas
         var filename = manifesto.nrEmitenteCNPJCPF + '.zip';
         if(typeof indexNota === 'number'){
             // Apenas uma nota
             var nota = manifesto.notas[indexNota];
-            //console.log("DOWNLOAD DAMFE " + manifesto.nmEmitente.toUpperCase());
+            //console.log("DOWNLOAD DANFE " + manifesto.nmEmitente.toUpperCase());
             //console.log(nota);
             colecao = 2;
             // filtro

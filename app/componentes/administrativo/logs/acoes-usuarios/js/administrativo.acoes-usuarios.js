@@ -55,7 +55,7 @@ angular.module("administrativo-acoes-usuarios", [])
                       busca:'', campo_busca : $scope.camposBusca[0], 
                       itens_pagina : $scope.itens_pagina[0], pagina : 1,
                       total_registros : 0, faixa_registros : '0-0', total_paginas : 0, 
-                      campo_ordenacao : {id: 107,//$campos.administracao.tblogacessousuario.dtAcesso, 
+                      campo_ordenacao : {id: 106,//$campos.administracao.tblogacessousuario.dtAcesso, 
                                          order : 1}};    
     
     // flags

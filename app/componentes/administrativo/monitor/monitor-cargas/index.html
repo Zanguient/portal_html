@@ -8,6 +8,9 @@
     Administrativo > Monitor > Monitor de Cargas
 
 
+    Versão 1.0.1 - 08/09/2015
+    - Nome da adquirente vem em destaque
+
     Versão 1.0 - 03/09/2015
 -->
 
@@ -250,8 +253,10 @@
                                         {{(loginoperadora.grupoempresa.ds_nome | uppercase) || ''}}
                                     </td>
                                     <!-- FILIAL / OPERADORA -->
-                                    <td style="text-align:left"
-                                        ng-bind="getNomeLoginOperadoraAmigavel(loginoperadora.empresa, loginoperadora.operadora)">
+                                    <td style="text-align:left">
+                                        <span ng-bind="getNomeAmigavelFilial(loginoperadora.empresa)"></span>
+                                        &nbsp;/&nbsp;
+                                        <span style="font-weight:bolder">{{loginoperadora.operadora.nmOperadora}}</span>
                                     </td>
                                     <td ng-repeat="logExecution in loginoperadora.logExecution">
                                         <!--i class="fa fa-key" style="color: #daa520"></i-->

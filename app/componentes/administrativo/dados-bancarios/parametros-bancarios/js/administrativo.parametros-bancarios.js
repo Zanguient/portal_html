@@ -7,6 +7,7 @@
  *
  *  Versão: 1.0.2 - 04/09/2015
  *  - Associação a uma filial
+ *  - Consulta Estabelecimento
  *
  *  Versão: 1.0.1 - 03/09/2015
  *  - Seleção Múltipla
@@ -53,13 +54,17 @@ angular.module("administrativo-parametros-bancarios", [])
     $scope.modalSelecionaAdquirenteFilial = { adquirente : null,
                                              filial : null, 
                                              estabelecimento : '' };
+    // Modal Consulta Estabelecimento
+    $scope.modalEstabelecimento = { estabelecimento : '', loginoperadora : null };
                                                  
     // Permissões                                           
     var permissaoAlteracao = false;
     var permissaoCadastro = false;
     var permissaoRemocao = false;
     // Flags
-    $scope.buscandoBancos = false; 
+    var lastFiltroAdquirente = -1;                                             
+    $scope.buscandoBancos = false;
+    $scope.buscandoestabelecimento = false;
     $scope.exibeTela = false;                                             
                                                  
                                                  
@@ -81,11 +86,12 @@ angular.module("administrativo-parametros-bancarios", [])
                 if($scope.usuariologado.grupoempresa){ 
                     // Reseta seleção de filtro específico de empresa
                     $scope.filtro.filial = null;
-                    buscaFiliais();
-                }else{ // reseta tudo e não faz buscas 
+                    buscaFiliais(true);
+                }else{ // reseta filiais e refaz a busca dos parâmetros 
                     $scope.filiais = [];
                     $scope.filtro.filial = null;
-                    $scope.filtro.semfiliais = true;
+                    //$scope.filtro.semfiliais = true;
+                    buscaParametros();
                 }
                 
             }
@@ -249,15 +255,16 @@ angular.module("administrativo-parametros-bancarios", [])
       */
     var buscaFiliais = function(buscaParametrosBancarios){
         
-        if(!$scope.usuariologado.grupoempresa){
+       if(!$scope.usuariologado.grupoempresa){
             $scope.filtro.filial = null;
             $scope.filiais = [];
-            $scope.filtro.semfiliais = true;
+            //$scope.filtro.semfiliais = true;
             if(buscaParametrosBancarios) buscaParametros();
             return;
-        }
+       }
         
        $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
+       if(buscaParametrosBancarios) $scope.showProgress(divPortletBodyParametrosPos);    
         
        var filtros = undefined;
 
@@ -296,10 +303,13 @@ angular.module("administrativo-parametros-bancarios", [])
         var result = '';
         
         if(ds_fantasia) result = ds_fantasia.toUpperCase() + ' - ';
-        if(filial) result = filial.toUpperCase() + ' - ';
+        if(filial) result += filial.toUpperCase() + ' - ';
         
-        return result + estabelecimento.operadora.nmOperadora.toUpperCase() + ' (' + estabelecimento.estabelecimento + ')';
+        return result + estabelecimento.operadora.nmOperadora.toUpperCase() + ' (' + (estabelecimento.estabelecimento !== null ? estabelecimento.estabelecimento : '') + ')';
     }
+    /**
+      * Procura pelo estabelecimento nas filiais
+      */
     $scope.buscaEstabelecimentos = function(estabelecimento){
         
         var result = [];
@@ -312,12 +322,13 @@ angular.module("administrativo-parametros-bancarios", [])
             var filial = $scope.filiais[k];
             for(var j = 0; j < filial.estabelecimentos.length; j++){
                 var estab = filial.estabelecimentos[j];
-                if(estab.estabelecimento.toLowerCase().contains(estabelecimento) || 
-                  estabelecimento.contains(estab.estabelecimento.toLowerCase())){
+                if(estab.estabelecimento === null) continue;
+                var e = estab.estabelecimento.toLowerCase();
+                if(e.contains(estabelecimento) || estabelecimento.contains(e)){
                     result.push({ nu_cnpj : filial.nu_cnpj,
                                   ds_fantasia : filial.ds_fantasia,
                                   filial : filial.filial,
-                                  estabelecimento : estab.estabelecimento, 
+                                  estabelecimento : e, 
                                   operadora : estab.operadora
                                  });
                 }
@@ -463,6 +474,9 @@ angular.module("administrativo-parametros-bancarios", [])
                                 filtros)) 
             .then(function(dados){           
 
+                // Armazena ultimo filtro de adquirente
+                lastFiltroAdquirente = $scope.filtro.adquirente ? $scope.filtro.adquirente.cdAdquirente : -1;
+            
                 // Obtém os dados
                 $scope.parametros = dados.Registros;
                 
@@ -514,7 +528,6 @@ angular.module("administrativo-parametros-bancarios", [])
     var fechaModalParametroBancario = function(){
         $('#modalParametroBancario').modal('hide');       
     }
-                                                 
                                                  
     /**
       * Exibe o input para cadastro de novo parâmetro bancario
@@ -901,7 +914,8 @@ angular.module("administrativo-parametros-bancarios", [])
       */
     $scope.exibeModalSelecionaAdquirenteFilial = function(){
         if($filter('filter')($scope.parametros, function(p){ return p.selecionado; }).length > 0){
-            $scope.modalSelecionaAdquirenteFilial.adquirente = null;
+            if(lastFiltroAdquirente === -1) $scope.modalSelecionaAdquirenteFilial.adquirente = null;
+            else $scope.modalSelecionaAdquirenteFilial.adquirente = $filter('filter')($scope.adquirentes, function(a){return a.cdAdquirente === lastFiltroAdquirente})[0];
             $scope.modalSelecionaAdquirenteFilial.estabelecimento = '';
             $scope.modalSelecionaAdquirenteFilial.filial = null;
             $('#modalSelecionaAdquirenteFilial').modal('show');  
@@ -965,6 +979,56 @@ angular.module("administrativo-parametros-bancarios", [])
                  // Fecha os progress
                  $scope.hideProgress();
               }); 
+    }
+    
+    
+    
+    
+    // CONSULTA ESTABELECIMENTO
+    /**
+      * Exibe o modal de consulta estabelecimento
+      */
+    $scope.consultaEstabelecimento = function(){
+        $scope.modalEstabelecimento.estabelecimento = '';
+        $scope.modalEstabelecimento.loginoperadora = null;
+        $('#modalEstabelecimento').modal('show');    
+    }
+    /**
+      * Nome amigável a partir do estabelecimento do loginoperadora
+      */
+    $scope.getEstabelecimentoLoginOperadoraAmigavel = function(loginoperadora){
+        if(!loginoperadora || loginoperadora === null || typeof loginoperadora === 'string') return '';
+        loginoperadora.operadora.nmOperadora = loginoperadora.operadora.desOperadora;
+        return '(' + loginoperadora.estabelecimento + ') ' + $scope.getNomeLoginOperadoraAmigavel(loginoperadora.empresa, loginoperadora.operadora, loginoperadora.grupoempresa);
+    }
+    /**
+      * Ação ao selecionar um loginoperadora sugerido
+      */
+    $scope.selecionaLoginOperadora = function(loginoperadora){
+        $scope.modalEstabelecimento.loginoperadora = loginoperadora;  
+        if($scope.modalEstabelecimento.loginoperadora && $scope.modalEstabelecimento.loginoperadora !== null)
+            $scope.modalEstabelecimento.estabelecimento = $scope.modalEstabelecimento.loginoperadora.estabelecimento;
+        else 
+            $scope.modalEstabelecimento.estabelecimento = '';
+    }
+    
+    $scope.buscaLoginOperadora = function(estabelecimento){
+        $scope.buscandoestabelecimento = true;
+        
+        return $http.get($apis.getUrl($apis.pos.loginoperadora, 
+                                [$scope.token, 3, /*$campos.pos.loginoperadora.estabelecimento */ 108, 0, 10, 1],
+                                {id: /*$campos.pos.loginoperadora.estabelecimento */ 108, valor: estabelecimento + '%'}))
+                 .then(function(dados){
+                        $scope.buscandoestabelecimento = false;
+                        return dados.data.Registros;
+                  },function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                     else $scope.showAlert('Houve uma falha ao consultar estabelecimento (' + failData.status + ')', true, 'danger', true);
+
+                     $scope.buscandoestabelecimento = false;
+                     return [];
+              });     
     }
     
 }]);

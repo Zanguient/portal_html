@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.2 - 08/09/2015
+ *  - Tratamento de erro ao obter lista => evento "notifyMonitorFalha"
+ *
  *  Versão 1.0.1 - 04/09/2015
  *  - Correção: só busca filiais se tiver grupo empresa associado
  *
@@ -30,10 +33,11 @@ angular.module("administrativo-monitor-cargas", ['SignalR','ngLocale'])
             
             listeners: {
                 'enviaMudancas': function (mudancas) {
-                    //console.log("NOTIFY CARGA");console.log(mudancas);
+                    //console.log("NOTIFY MUDANÇAS");console.log(mudancas);
                     $rootScope.$broadcast("notifyMonitorMudancas", mudancas);
                 },
                 'enviaLista': function (lista) {
+                    //console.log("NOTIFY LISTA");
                     $rootScope.$broadcast("notifyMonitorLista", lista);
                 }
             },
@@ -49,14 +53,16 @@ angular.module("administrativo-monitor-cargas", ['SignalR','ngLocale'])
                 console.log(error);
                 conectado = false;
             },
-            /*hubDisconnected: function () {
+            hubDisconnected: function () {
                 if (hub.connection.lastError) {
+                    console.log("LAST ERROR: " + hub.connection.lastError.message);
+                    // Reconecta
                     hub.connection.start();
                 }
-            },*/
+            },
             jsonp : true,
             //transport: 'webSockets', //'longPolling'
-            logging: false,
+            logging: false, //true,
             
             stateChanged: function(state){
                 switch (state.newState) {
@@ -146,8 +152,10 @@ angular.module("administrativo-monitor-cargas", ['SignalR','ngLocale'])
                 if(typeof filtro.cdAdquirente === 'number') filtroMonitorCargas.cdAdquirente = filtro.cdAdquirente;
                 else filtroMonitorCargas.cdAdquirente = 0;
             }
-            //hub.conectado(monitor.data); //Calling a server method
-            hub.obtemLista(filtroMonitorCargas);
+            // Invoca o método do lado do servidor
+            hub.obtemLista(filtroMonitorCargas).fail(function(error) { 
+                $rootScope.$broadcast("notifyMonitorFalha", error); 
+            });
         };
         /**
           *
@@ -232,6 +240,15 @@ angular.module("administrativo-monitor-cargas", ['SignalR','ngLocale'])
                 }
             }
         }); 
+        $rootScope.$on('notifyMonitorFalha', function(event, error){
+            console.log("FALHA AO OBTER LISTA");
+            console.log(error);
+            // Esconde Progress
+            $scope.hideProgress(divPortletBodyFiltrosPos);
+            $scope.hideProgress(divPortletBodyMonitorPos);
+            // Exibe mensagem de erro
+            $scope.showAlert('Houve uma falha ao obter dados de monitor de cargas', true, 'danger', true);
+        });
         $rootScope.$on('notifyMonitorMudancas', function(event, mudancas){
             //console.log("RECEBEU MUDANÇAS");
             //console.log(mudancas);
@@ -263,18 +280,21 @@ angular.module("administrativo-monitor-cargas", ['SignalR','ngLocale'])
             // Busca
             buscaFiliais();
             // Conecta e obtém lista
-            //$scope.showProgress(divPortletBodyFiltrosPos, 10000);
+            $scope.exibeTela = true;
+            buscaFiliais();
+            $scope.showProgress(divPortletBodyFiltrosPos, 10000);
             $scope.showProgress(divPortletBodyMonitorPos);
-            $scope.monitor.conectar();
+            conectando = true;
+            $scope.monitor.conectar(); 
         });
         // Acessou a tela
-        //$scope.$emit("acessouTela");
-        $scope.exibeTela = true;
+        $scope.$emit("acessouTela");
+        /*$scope.exibeTela = true;
         buscaFiliais();
         $scope.showProgress(divPortletBodyFiltrosPos, 10000);
         $scope.showProgress(divPortletBodyMonitorPos);
         conectando = true;
-        $scope.monitor.conectar(); 
+        $scope.monitor.conectar(); */
     } 
     
     

@@ -90,6 +90,8 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				empresa : { nu_cnpj : string,
 							ds_fantasia : string,
 							filial : string },
+				grupoempresa : { id_grupo : int,
+								 ds_nome : string},
 				estabelecimento : string (ou null)
 			  }
 			]

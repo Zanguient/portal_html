@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão: 1.0.1 - 08/09/2015
+ *  - administracao/tbempresa
+ *
  *  Versão: 1.0 - 03/09/2015
  *
  */
@@ -31,6 +34,27 @@ angular.module('webapi', ['utils'])
             dt_nascimento : 102,
             nu_telefone : 103,
             nu_ramal : 104
+        },
+        tbempresa : {
+            nrCNPJBase : 100,
+            dsCertificadoDigital : 101,
+            dsCertificadoDigitalSenha : 102,
+            cdEmpresaGrupo : 103,
+            dtCadastro : 104,
+            dtValidade : 105,
+            flSenhaValida : 106,
+            // Relacionamentos
+            tbEmpresaGrupo : 200,
+        },
+        tbempresagrupo : {
+            cdEmpresaGrupo : 100,
+            dsEmpresaGrupo : 101,
+            dtCadastro : 102,
+            flCardServices : 103,
+            flTaxServices : 104,
+            flProinfo : 105,
+            cdVendedor : 106,
+            flAtivo : 107
         },
         tblogacessousuario : {
             idLogAcessoUsuario : 100,
@@ -368,6 +392,7 @@ angular.module('webapi', ['utils'])
     administracao : {
         logacesso : $autenticacao.getUrlBase() + '/administracao/logacesso/',   
         pessoa : $autenticacao.getUrlBase() + '/administracao/pessoa/',
+        tbempresa : $autenticacao.getUrlBase() + '/administracao/tbempresa/',
         tblogacessousuario : $autenticacao.getUrlBase() + '/administracao/tblogacessousuario/',
         webpagescontrollers : $autenticacao.getUrlBase() + '/administracao/webpagescontrollers/',
         webpagesmembership : $autenticacao.getUrlBase() + '/administracao/webpagesmembership/',

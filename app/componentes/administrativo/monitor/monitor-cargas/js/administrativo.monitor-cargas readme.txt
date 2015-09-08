@@ -61,6 +61,7 @@ Não é necessário nenhum outro módulo externo.
   * Um serviço (factory) é usado no script para manter a conexão ativa e interagir com o HUB
   * O controller se comunica com o serviço através das seguintes mensagens:
 	- "notifyMonitorConnectionStatus" : Recebe um novo status da conexão com o IMessage através do socket
+	- "notifyMonitorFalha" : Recebe o erro obtido ao tentar obter a lista completa para monitorar as cargas
 	- "notifyMonitorLista" : Foi recebido a lista completa para monitorar as cargas, baseado no filtro.
 							  [{ id : int, // idLoginOperadora
 								status : string, // status da senha

@@ -74,7 +74,8 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 			}
 		  ]
 		  
-     - PATCH: upload do extrato através do arquivo ofx. Recebe como retorno
+     - PATCH: upload do extrato através do arquivo ofx. Envia como filtro o idContaCorrente (código)
+			  Recebe como retorno
 					{
 					  ano : int,
 					  mes : int

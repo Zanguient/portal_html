@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão: 1.0.1 - 08/09/2015
+ *  - getNomeLoginOperadoraAmigavel também considerando o grupo empresa
+ *
  *  Versão: 1.0 - 03/09/2015
  *
  */
@@ -1977,7 +1980,8 @@ angular.module("AtosCapital", ['ui.router',
     /** 
       * Retorna o nome fantasia da filial seguido do campo filial seguido de '-' e o nome da operadora
       */
-    $scope.getNomeLoginOperadoraAmigavel = function(filial, operadora){
+    $scope.getNomeLoginOperadoraAmigavel = function(filial, operadora, empresa){
+        if(empresa) return empresa.ds_nome.toUpperCase() + ' - ' + $scope.getNomeAmigavelFilial(filial) + ' - ' + operadora.nmOperadora.toUpperCase();
         return $scope.getNomeAmigavelFilial(filial) + ' - ' + operadora.nmOperadora.toUpperCase();        
     }
     

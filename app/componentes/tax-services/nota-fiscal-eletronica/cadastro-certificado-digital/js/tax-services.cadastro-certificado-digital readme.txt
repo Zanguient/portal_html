@@ -24,6 +24,8 @@ Não é necessário nenhum outro módulo externo.
   * Emite evento "acessouTela" no init do controller para que seja feito o log de acesso de tela
   * Evento "acessoDeTelaNotificado", proveniente do "appCtrl", para de fato exibir a tela e fazer requisições 
 	=> importante para o log correto de requisições HTTP, ao qual identifica corretamente a (tela de) origem
+  * $scope.grupoempresa, do "appCtrl" : grupo empresa informado pelo usuário na barra administrativa
+  * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
   * APIS:
     - admin/tbEmpresa
 	
@@ -32,6 +34,27 @@ Não é necessário nenhum outro módulo externo.
  ### Interação com a WEB API ###
  
   * admin/tbEmpresa
+   - GET : obtém os registros (coleção 3)
+		{	nrCNPJBase : string,
+			certificadoDigitalPresente : bool,
+			senhaPresente : bool,
+			tbempresagrupo : { cdEmpresaGrupo = int,
+							   dsEmpresaGrupo = string },
+			dtCadastro : datetime ou null,
+			dtValidade : datetime ou null,
+			flSenhaValida : bool ou null,
+		}
+   - PATCH : altera o certificado digital e a senha. Envia como filtros nrCNPJBase e dsCertificadoDigitalSenha (códigos)
+			 Upload do arquivo PFX!
+			 Recebe como resposta o seguite JSON:
+			 {
+				cdMensagem : int,
+				dsMensagem : string,
+			 } 
+			 Ao qual cdMensagem:
+			  = 200 : Certificado Digital e Senha são válidos
+			  = 201 : Senha inválida
+			  = 202 : Certificado Digital é inválido
    
 
    

@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão: 1.0.2 - 08/09/2015
+ *  - Correção: quando empresa é desassociada, é exibido todos os valores zerados referente aos registros
+ *
  *  Versão: 1.0.1 - 04/09/2015
  *  - Movimentações bancárias não pré-conciliadas podem ser associadas manualmente com um grupo de Recebimentos
  *
@@ -90,6 +93,15 @@ angular.module("card-services-conciliacao-bancaria", [])
                     $scope.dadosconciliacao = []; 
                     $scope.filiais = [];
                     $scope.filtro.filial = $scope.filtro.adquirente = null;
+                    
+                    $scope.filtro.faixa_registros = '0-0';
+                    $scope.filtro.total_registros = 0;
+                    $scope.filtro.pagina = 1;
+                    
+                    $scope.totais.totalExtrato = 0.0;
+                    $scope.totais.totalRecebimentosParcela = 0.0;
+                    $scope.totais.contExtrato = 0;
+                    $scope.totais.contRecebimentosParcela = 0;
                 }
                 
             }
