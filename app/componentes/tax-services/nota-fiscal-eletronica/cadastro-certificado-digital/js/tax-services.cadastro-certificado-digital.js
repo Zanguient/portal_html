@@ -64,9 +64,9 @@ angular.module("tax-services-cadastro-certificado-digital", ['ngFileUpload'])
             buscaCnpjsBase();
         }); 
         // Acessou a tela
-        //$scope.$emit("acessouTela");
-        $scope.exibeTela = true;
-        buscaCnpjsBase();
+        $scope.$emit("acessouTela");
+        /*$scope.exibeTela = true;
+        buscaCnpjsBase();*/
     }; 
                                                 
                                                 

@@ -62,9 +62,7 @@ angular.module("card-services-conciliacao-bancaria", [])
     // Modal Data de Recebimento
     $scope.modalDataRecebimento = { dado : undefined, data : '', dataValida : false };  
     // Permissões                                           
-    var permissaoAlteracao = false;
-    var permissaoCadastro = false;
-    var permissaoRemocao = false;     
+    var permissaoAlteracao = false;   
     // flags                                                  
     $scope.exibeTela = false;    
     $scope.abrirCalendarioDataMin = $scope.abrirCalendarioDataVendaMin = false;
@@ -108,9 +106,7 @@ angular.module("card-services-conciliacao-bancaria", [])
         }); 
         // Obtém as permissões
         if($scope.methodsDoControllerCorrente){
-            permissaoAlteracao = $scope.methodsDoControllerCorrente['atualização'] ? true : false;   
-            permissaoCadastro = $scope.methodsDoControllerCorrente['cadastro'] ? true : false;
-            permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;
+            permissaoAlteracao = $scope.methodsDoControllerCorrente['atualização'] ? true : false; 
         }
         // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
         $scope.$on('acessoDeTelaNotificado', function(event){
@@ -125,23 +121,11 @@ angular.module("card-services-conciliacao-bancaria", [])
     
     // PERMISSÕES                                          
     /**
-      * Retorna true se o usuário pode cadastrar dados de conciliação bancária
-      */
-    $scope.usuarioPodeCadastrarDadosConciliacaoBancaria = function(){
-        return permissaoCadastro;   
-    }
-    /**
       * Retorna true se o usuário pode alterar dados de conciliação bancária
       */
     $scope.usuarioPodeAlterarDadosConciliacaoBancaria = function(){
         return permissaoAlteracao;
-    }
-    /**
-      * Retorna true se o usuário pode excluir dados de conciliação bancária
-      */
-    $scope.usuarioPodeExcluirDadosConciliacaoBancaria = function(){
-        return permissaoRemocao;
-    }    
+    } 
                                              
                                                  
     
