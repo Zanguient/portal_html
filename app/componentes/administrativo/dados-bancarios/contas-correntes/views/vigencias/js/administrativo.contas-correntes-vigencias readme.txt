@@ -85,7 +85,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 		  stLoginAdquirenteEmpresa = int
 	    }
 	 - POST : 
-	 - UPDATE : atualiza a data fim de uma vigência 
+	 - PUT : atualiza a data fim de uma vigência 
 		 {
 			associar : [
 						{ cdContaCorrente : int,

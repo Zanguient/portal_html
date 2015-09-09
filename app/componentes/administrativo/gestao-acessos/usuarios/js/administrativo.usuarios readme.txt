@@ -40,6 +40,7 @@ Não é necessário nenhum outro módulo externo.
   * api/administracao/webpagesmembership
      - PUT  : redefinir senha 
 	          { userId : idUsuario, novaSenha : '' } // novaSenha vazio => redefinir senha para a padrão
+			  
   * api/administracao/webpagesusers
 	 - GET : listagem dos usuários na tabela (coleção 2)
 			{

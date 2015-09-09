@@ -38,13 +38,13 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 	- card/tbadquirente
 	- cliente/empresa
 	- pos/loginoperadora
-	- utils/bancos
+	- util/bancos
 	
  
  
  ### Interação com a WEB API ###
  
-  * utils/bancos
+  * util/bancos
 	- GET : listagem dos bancos (coleção 0)
 			[
 			  { Codigo : string,
