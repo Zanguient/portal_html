@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão: 1.0.1 - 08/09/2015
+ *  - Upload do certificado digital junto com a senha
+ *
  *  Versão: 1.0 - 03/09/2015
  *
  */
@@ -256,11 +259,13 @@ angular.module("tax-services-cadastro-certificado-digital", ['ngFileUpload'])
                         if(data.cdMensagem === 200){
                             // Ambos são válidos
                             fechaModalCertificadoDigital();
+                            $scope.showAlert('Upload realizado com sucesso!', true, 'success', true);
                             buscaCnpjsBase(); // relista
                         }else if(data.cdMensagem === 201){
                             $scope.showModalAlerta('Senha informada é inválida!');    
                         }else if(data.cdMensagem === 202){
-                            $scope.showModalAlerta('Certificado digital é inválido!');    
+                            $scope.showModalAlerta('Certificado digital é inválido!'); 
+                            //console.log(data.dsMensagem);
                         }else{
                             $scope.showModalAlerta('Certificado e/ou senha não são válidos! (' + data.cdMensagem + ')');    
                         }

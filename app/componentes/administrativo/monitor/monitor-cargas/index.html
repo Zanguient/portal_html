@@ -256,7 +256,7 @@
                                     <td style="text-align:left">
                                         <span ng-bind="getNomeAmigavelFilial(loginoperadora.empresa)"></span>
                                         &nbsp;/&nbsp;
-                                        <span style="font-weight:bolder">{{loginoperadora.operadora.nmOperadora}}</span>
+                                        <span style="font-weight:bolder">{{(loginoperadora.operadora.nmOperadora | uppercase) || ''}}</span>
                                     </td>
                                     <td ng-repeat="logExecution in loginoperadora.logExecution">
                                         <!--i class="fa fa-key" style="color: #daa520"></i-->
