@@ -8,7 +8,11 @@
     Administrativo > Logs > Ações de Usuários
 
 
-    Versão 1.0 - 03/09/2015
+    Versão 1.0.1 - 09/09/2015
+        - Criação das classes para quebra de linhas para os dados exibidos no modal
+
+    Versão 1.0. - 03/09/2015
+        
 -->
 
 <div class="container" ng-controller="administrativo-acoes-usuariosCtrl" ng-init="administrativo_acoesUsuariosInit()">   
@@ -214,38 +218,38 @@
                                    <div class="col-sm-12">
                                         <label>Login:</label>{{modalLog.log.webpagesusers.ds_login}}    
                                    </div>
-                                   <div class="col-sm-12">
+                                   <div class="col-sm-12 campos-modal-acoes-usuarios">
                                         <label>Data de acesso:</label>
                                         <a ng-bind="getDataTimeString(modalLog.log.dtAcesso)"></a>    
                                    </div>
-                                   <div class="col-sm-12">
+                                   <div class="col-sm-12 campos-modal-acoes-usuarios">
                                         <label>Aplicação:</label>{{modalLog.log.dsAplicacao | uppercase}}    
                                    </div>
-                                   <div class="col-sm-12">
+                                   <div class="col-sm-12 campos-modal-acoes-usuarios">
                                         <label>Origem:</label>{{modalLog.log.controller.ds_controller | uppercase}}    
                                    </div> 
-                                   <div class="col-sm-12">
+                                   <div class="col-sm-12 campos-modal-acoes-usuarios">
                                         <label>Ação:</label>{{modalLog.log.dsMethod | uppercase}}   
                                    </div> 
-                                   <div class="col-sm-12">
+                                   <div class="col-sm-12 campos-modal-acoes-usuarios">
                                         <label>Resposta HTTP:</label>{{modalLog.log.codResposta}}    
                                    </div>
-                                   <div class="col-sm-12">
+                                   <div class="col-sm-12 campos-modal-acoes-usuarios">
                                         <label>URL:</label>{{modalLog.log.dsUrl | lowercase}}    
                                    </div>
-                                   <div class="col-sm-12" ng-show="modalLog.log.dsParametros">
+                                   <div class="col-sm-12 campos-modal-acoes-usuarios" ng-show="modalLog.log.dsParametros">
                                         <label>Parâmetros:</label>{{modalLog.log.dsParametros}}    
                                    </div>
-                                   <div class="col-sm-12" ng-show="modalLog.log.dsFiltros">
+                                   <div class="col-sm-12 campos-modal-acoes-usuarios" ng-show="modalLog.log.dsFiltros">
                                         <label>Filtros:</label>{{modalLog.log.dsFiltros}}    
                                    </div>
-                                   <div class="col-sm-12" ng-show="modalLog.log.dsJson && modalLog.log.dsJson !== null">
+                                   <div class="col-sm-12 campos-modal-acoes-usuarios" ng-show="modalLog.log.dsJson && modalLog.log.dsJson !== null">
                                         <label>JSON:</label>{{modalLog.log.dsJson}}    
                                    </div>
-                                   <div class="col-sm-12">
+                                   <div class="col-sm-12 campos-modal-acoes-usuarios">
                                         <label>UserAgent:</label>{{modalLog.log.dsUserAgent}}    
                                    </div>
-                                   <div class="col-sm-12" ng-show="modalLog.log.msgErro && modalLog.log.msgErro !== null">
+                                   <div class="col-sm-12 campos-modal-acoes-usuarios" ng-show="modalLog.log.msgErro && modalLog.log.msgErro !== null">
                                         <label>Mensagem de erro:</label>
                                         <span ng-bind="adicionaQuebraLinhaHtml(modalLog.log.msgErro)"></span>
                                    </div>

@@ -3,7 +3,8 @@
  *  
  *  suporte@atoscapital.com.br
  *
- *
+ *  Versão: 1.0.1 - 09/09/2015
+ *      -Criação das classes para quebra de linhas para os dados exibidos no modal na tela ações de usuários.
  * 
  *  Versão: 1.0 - 03/09/2015
  *      -Criação dos estilos da tela de cadastro de código de autorização.
@@ -534,6 +535,7 @@ tbody.conteudotabelasCentralizadas > tr > td{
   font-weight: bold;
   margin-top: 15px;
   margin-right: 5px;
+  word-wrap: break-word;
 }
 
 .modalConfig{
@@ -954,3 +956,10 @@ padding-top: 16%;
 }
 
 /*FIM ESTILOS CADASTRO DE CÓDIGO DE AUTORIZAÇÃO*/
+
+/*FIM ESTILOS TELA AÇÕES USUÁRIOS*/
+
+.campos-modal-acoes-usuarios{
+    word-wrap: break-word;
+}
+/*ESTILOS TELA AÇÕES USUÁRIOS*/
