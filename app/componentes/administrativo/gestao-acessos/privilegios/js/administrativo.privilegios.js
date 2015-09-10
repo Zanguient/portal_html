@@ -4,6 +4,10 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão: 1.0.1 - 10/09/2015
+ *  - Correção no invocamento da função atualizaPrivilegio para enviar corretamente o RoleLevel
+ *  - Fechamento do modal ao concluir operação de POST e PUT
+ *
  *  Versão: 1.0 - 03/09/2015
  *
  */
@@ -66,10 +70,10 @@ angular.module("administrativo-privilegios", [])
             $state.go(state, params);
         });
         // Obtém as permissões
-        if($scope.methodsDoControllerCorrente){// && $scope.methodsDoControllerCorrente.length > 0){
-            permissaoAlteracao = $scope.methodsDoControllerCorrente['atualização'] ? true : false;//$filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'ATUALIZAÇÃO' }).length > 0;   
-            permissaoCadastro = $scope.methodsDoControllerCorrente['cadastro'] ? true : false;//$filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'CADASTRO' }).length > 0;
-            permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;//$filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'REMOÇÃO' }).length > 0;
+        if($scope.methodsDoControllerCorrente){
+            permissaoAlteracao = $scope.methodsDoControllerCorrente['atualização'] ? true : false;   
+            permissaoCadastro = $scope.methodsDoControllerCorrente['cadastro'] ? true : false;
+            permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;
         }
         // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
         $scope.$on('acessoDeTelaNotificado', function(event){
@@ -322,12 +326,8 @@ angular.module("administrativo-privilegios", [])
                     $scope.hideProgress();
                     return;     
                 }
-                // Fecha o modal input
-                $scope.hideProgress();
-                // Fecha o modal
-                fechaModalInputPrivilegio();
                 // Atualiza
-                addPrivilegio($scope.inputCadastro.nome, $scope.inputCadastro.level.LevelId);
+                addPrivilegio($scope.inputCadastro.nome, $scope.inputCadastro.level.LevelId, true);
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
@@ -339,16 +339,18 @@ angular.module("administrativo-privilegios", [])
     /**
       * Adiciona privilégio
       */
-    var addPrivilegio = function(novoPrivilegio, roleLevel){
+    var addPrivilegio = function(novoPrivilegio, roleLevel, progressoemexecucao){
         // Envia para o banco
-        $scope.showProgress(divPortletBodyPrivilegioPos);
+        if(!progressoemexecucao) $scope.showProgress();
         $webapi.post($apis.getUrl($apis.administracao.webpagesroles, undefined, 
                                   {id: 'token', valor: $scope.token}), {RoleName : novoPrivilegio,
                                                                         RoleLevel : roleLevel})
                 .then(function(dados){
                     $scope.showAlert('Privilégio cadastrado com sucesso!', true, 'success', true);
                     // Esconde o progress
-                    $scope.hideProgress(divPortletBodyPrivilegioPos);
+                    $scope.hideProgress();
+                    // Fecha modal
+                    fechaModalInputPrivilegio();
                     // Relista os privilégios
                     $scope.buscaPrivilegios();
                   },function(failData){
@@ -357,7 +359,7 @@ angular.module("administrativo-privilegios", [])
                      else if(failData.status === 401) $scope.showModalAlerta('Você não possui privilégios para criar um privilégio com esse nível');
                      else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                      else $scope.showAlert('Houve uma falha ao cadastrar o privilégio (' + failData.status + ')', true, 'danger', true);
-                     $scope.hideProgress(divPortletBodyPrivilegioPos);
+                     $scope.hideProgress();
                   }); 
     }
     /**
@@ -366,21 +368,19 @@ angular.module("administrativo-privilegios", [])
     $scope.alteraPrivilegio = function(privilegio){
         $scope.inputCadastro.titulo = 'Alteração de privilégio';
         $scope.inputCadastro.nome = privilegio.RoleName;
-        $scope.inputCadastro.level = privilegio.RoleLevels;
+        $scope.inputCadastro.level = null;
         $scope.inputCadastro.funcao = function(){alteraPrivilegio(privilegio)};
         // Exibe o modal
         if($scope.levels.length > 0){
             if(privilegio.RoleLevels){ 
-                var l = $filter('filter')($scope.levels, function(l){ return l.LevelId === privilegio.RoleLevels.LevelId });   
-                if(l.length > 0) $scope.inputCadastro.level = l[0];
+                $scope.inputCadastro.level = $filter('filter')($scope.levels, function(l){ return l.LevelId === privilegio.RoleLevels.LevelId })[0];   
             }
             exibeModalInputPrivilegio();
         }else{
             // Obtém levels
             obtemLevels(function(){ 
-                                    if(privilegio.RoleLevels){ 
-                                        var l = $filter('filter')($scope.levels, function(l){ return l.LevelId === privilegio.RoleLevels.LevelId });   
-                                        if(l.length > 0) $scope.inputCadastro.level = l[0];
+                                    if(privilegio.RoleLevels){
+                                        $scope.inputCadastro.level = $filter('filter')($scope.levels, function(l){ return l.LevelId === privilegio.RoleLevels.LevelId })[0];  
                                     }
                                     exibeModalInputPrivilegio()
                         });
@@ -394,7 +394,7 @@ angular.module("administrativo-privilegios", [])
         if($scope.inputCadastro.nome === privilegio.RoleName && 
            $scope.inputCadastro.level.LevelId === privilegio.RoleLevels.LevelId){
             // Não alterou => Nada faz
-            $scope.fechaModalInput();
+            fechaModalInputPrivilegio();
             return;
         }
         if(!$scope.inputCadastro.level || typeof $scope.inputCadastro.level.LevelId !== 'number'){
@@ -409,11 +409,11 @@ angular.module("administrativo-privilegios", [])
             $scope.showModalAlerta('Nome muito curto!');
             return;    
         }
+        
         // Verifica se o nome é único
         if($scope.inputCadastro.nome.toUpperCase() === privilegio.RoleName.toUpperCase()){
-            $scope.fechaModalInput();
             // Atualiza
-            atualizaNomePrivilegio(privilegio, $scope.inputCadastro.nome);
+            atualizaPrivilegio(privilegio, $scope.inputCadastro.nome, $scope.inputCadastro.level.LevelId);
         }else{
             $scope.showProgress();
             $webapi.get($apis.getUrl($apis.administracao.webpagesroles, 
@@ -426,12 +426,9 @@ angular.module("administrativo-privilegios", [])
                         $scope.hideProgress();
                         return;     
                     }
-                    // Esconde o progress
-                    $scope.hideProgress();
-                    // Fecha o modal input
-                    fechaModalInputPrivilegio();
+                    
                     // Atualiza
-                    atualizaNomePrivilegio(privilegio, $scope.inputCadastro.nome, $scope.inputCadastro.level.LevelId);
+                    atualizaPrivilegio(privilegio, $scope.inputCadastro.nome, $scope.inputCadastro.level.LevelId, true);
                   },
                   function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
@@ -444,16 +441,18 @@ angular.module("administrativo-privilegios", [])
     /**
       * Atualiza efetivamente o nome do privilégio
       */
-    var atualizaNomePrivilegio = function(privilegio, novoNome, level){
-        $scope.showProgress(divPortletBodyPrivilegioPos);
+    var atualizaPrivilegio = function(privilegio, novoNome, level, progressoemexecucao){
+        if(!progressoemexecucao) $scope.showProgress();
         var jsonPrivilegio = {RoleId : privilegio.RoleId, RoleName : novoNome, RoleLevel : level};
-        //console.log(jsonPrivilegio);
+        console.log(jsonPrivilegio);
         $webapi.update($apis.getUrl($apis.administracao.webpagesroles, undefined,
                        {id: 'token', valor: $scope.token}), jsonPrivilegio)
             .then(function(dados){
                     $scope.showAlert('Privilégio alterado com sucesso!', true, 'success', true);
                     // Esconde o progress
-                    $scope.hideProgress(divPortletBodyPrivilegioPos);
+                    $scope.hideProgress();
+                    // Fecha modal
+                    fechaModalInputPrivilegio();
                     // Relista os privilégios
                     $scope.buscaPrivilegios();
                   },function(failData){
@@ -461,7 +460,7 @@ angular.module("administrativo-privilegios", [])
                      else if(failData.status === 401) $scope.showModalAlerta('Você não possui privilégios para fazer essa alteração');
                      else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login    
                      else $scope.showAlert('Houve uma falha ao alterar o privilégio (' + failData.status + ')', true, 'danger', true); 
-                     $scope.hideProgress(divPortletBodyPrivilegioPos);
+                     $scope.hideProgress();
                   });  
     };
     /**
