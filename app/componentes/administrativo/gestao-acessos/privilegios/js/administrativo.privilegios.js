@@ -444,7 +444,7 @@ angular.module("administrativo-privilegios", [])
     var atualizaPrivilegio = function(privilegio, novoNome, level, progressoemexecucao){
         if(!progressoemexecucao) $scope.showProgress();
         var jsonPrivilegio = {RoleId : privilegio.RoleId, RoleName : novoNome, RoleLevel : level};
-        console.log(jsonPrivilegio);
+        //console.log(jsonPrivilegio);
         $webapi.update($apis.getUrl($apis.administracao.webpagesroles, undefined,
                        {id: 'token', valor: $scope.token}), jsonPrivilegio)
             .then(function(dados){
