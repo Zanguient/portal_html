@@ -4,11 +4,11 @@
  *  suporte@atoscapital.com.br
  *
  *
- *  Versão: 1.0.1 - 10/09/2015
+ *  Versão 1.0.1 - 10/09/2015
  *  - Correção no invocamento da função atualizaPrivilegio para enviar corretamente o RoleLevel
  *  - Fechamento do modal ao concluir operação de POST e PUT
  *
- *  Versão: 1.0 - 03/09/2015
+ *  Versão 1.0 - 03/09/2015
  *
  */
 

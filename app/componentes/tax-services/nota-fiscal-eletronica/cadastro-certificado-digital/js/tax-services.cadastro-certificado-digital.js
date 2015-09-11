@@ -4,13 +4,13 @@
  *  suporte@atoscapital.com.br
  *
  *
- *  Versão: 1.0.2 - 11/09/2015
+ *  Versão 1.0.2 - 11/09/2015
  *  - Criptografia da senha
  *
- *  Versão: 1.0.1 - 08/09/2015
+ *  Versão 1.0.1 - 08/09/2015
  *  - Upload do certificado digital junto com a senha
  *
- *  Versão: 1.0 - 03/09/2015
+ *  Versão 1.0 - 03/09/2015
  *
  */
 

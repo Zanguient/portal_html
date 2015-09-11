@@ -5,14 +5,14 @@
  *
  *
  *
- *  Versão: 1.0.2 - 04/09/2015
+ *  Versão 1.0.2 - 04/09/2015
  *  - Associação a uma filial
  *  - Consulta Estabelecimento
  *
- *  Versão: 1.0.1 - 03/09/2015
+ *  Versão 1.0.1 - 03/09/2015
  *  - Seleção Múltipla
  *
- *  Versão: 1.0 - 03/09/2015
+ *  Versão 1.0 - 03/09/2015
  *
  */
 

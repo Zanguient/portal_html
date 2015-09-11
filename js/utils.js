@@ -4,7 +4,10 @@
  *  suporte@atoscapital.com.br
  *
  *
- *  Versão: 1.0 - 03/09/2015
+ *  Versão 1.0.1 - 11/09/2015
+ *  - Urls referente a apiRezende
+ *
+ *  Versão 1.0 - 03/09/2015
  *
  */
 
@@ -145,11 +148,14 @@ angular.module('utils', [ ])
   
   // URL base da WEBAPI
   //var urlBase = 'http://localhost:55007';
-  //var urlBase = 'http://192.168.0.100/ws/proxy';  // proxy: versão mais atualizada da webapi 
-  var urlBase = 'http://ws.atoscapital.com.br/proxy';
+  var urlBase = 'http://192.168.1.100/apiportal';  // proxy: versão mais atualizada da webapi 
+  //var urlBase = 'http://ws.atoscapital.com.br/proxy';
   // IMessage
   //var urlBaseIMessage = 'http://localhost:50780';
   var urlBaseIMessage = 'http://imessage.atoscapital.com.br';
+  // Rezende
+  var urlBaseRezende = 'http://localhost:50939';
+  //var urlBaseRezende = 'http://apirezende.atoscapital.com.br';
   // Download
   var urlBaseDownload = 'http://apiportal.atoscapital.com.br';
   // Tempo em horas máximos definido de inatividade para requerer novo login, caso LEMBRAR não tenha sido marcado
@@ -159,6 +165,7 @@ angular.module('utils', [ ])
     getUrlBase : function(){ return urlBase },
     getUrlBaseIMessage : function(){ return urlBaseIMessage },
     getUrlBaseDownload : function(){ return urlBaseDownload },
+    getUrlBaseRezende : function() { return urlBaseRezende },
     apiStatus: urlBase + '/login/status/',
     // URL + keys da local storage  
     autenticacao: { 

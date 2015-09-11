@@ -10,7 +10,7 @@
  *  Versão 1.0.1 - 04/09/2015
  *  - Correção: só busca filiais se tiver grupo empresa associado
  *
- *  Versão: 1.0 - 03/09/2015
+ *  Versão 1.0 - 03/09/2015
  *
  */
 

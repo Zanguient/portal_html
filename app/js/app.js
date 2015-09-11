@@ -4,10 +4,10 @@
  *  suporte@atoscapital.com.br
  *
  *
- *  Versão: 1.0.1 - 08/09/2015
+ *  Versão 1.0.1 - 08/09/2015
  *  - getNomeLoginOperadoraAmigavel também considerando o grupo empresa
  *
- *  Versão: 1.0 - 03/09/2015
+ *  Versão 1.0 - 03/09/2015
  *
  */
 

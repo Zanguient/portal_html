@@ -4,10 +4,13 @@
  *  suporte@atoscapital.com.br
  *
  *
- *  Versão: 1.0.1 - 08/09/2015
+ *  Versão 1.0.2 - 11/09/2015
+ *  - apiRezende : Urls referente a pgsql
+ *
+ *  Versão 1.0.1 - 08/09/2015
  *  - administracao/tbempresa
  *
- *  Versão: 1.0 - 03/09/2015
+ *  Versão 1.0 - 03/09/2015
  *
  */
 
@@ -335,6 +338,110 @@ angular.module('webapi', ['utils'])
             NomeExtenso : 102
         }
       }
+      
+      
+      // REZENDE
+      rezende : {
+        pgsql : {
+            pdvs : {
+                sequencia : 100,
+                tipo : 101,
+                data : 102,
+                hora : 103,
+                valor : 104,
+                num_autorizacao : 105,
+                cod_pdv : 106,
+                cod_pessoa : 107,
+                cod_empresa : 108,
+                // Relacionamentos
+                tab_pdv : 200,
+                tabpessoa : 300,
+                tabempresa : 400
+            },
+            tabcupomfiscal : {
+                seq_cupom : 100,
+                seq_fechamneto : 101,
+                dta_cupom : 103,
+                hra_fim : 105,
+                val_total_cupom : 111,
+                ind_cancelado : 113,
+                num_serie_ecf : 117,
+                ind_status : 121,
+                cod_empresa : 140,
+                // Relacionamentos
+                tabpagamentocupom : 300
+                tabpdv : 400
+            },
+            tabduplicatareceber : {
+                seq_fechamento : 100,
+                seq_duplicata : 101,
+                cod_pessoa_sacado : 103,
+                seq_cupom : 116,
+            },
+            tabempresa : {
+                cod_empresa : 100,
+                nom_razao_social : 103,
+                nom_fantasia : 104,
+                num_cnpj : 105,
+            },
+            tabformapagtopdv : {
+                cod_forma_pagto : 100,
+                des_forma_pagto : 101,
+                ind_tipo : 102,
+                cod_pessoa_sacado : 104,
+                ind_transacao_tef : 106,
+            },
+            tabnotafiscalsaida : {
+                seq_nota : 100,
+                cod_empresa : 101,
+                dta_emissao : 104,
+                val_total_nota : 131,
+                ind_status : 140,
+                hra_saida : 170,
+                seq_fechamento : 221,
+                cod_pdv : 222,
+                seq_cupom_nfc : 242,
+                ind_nfc_pdv : 243,
+                // Relacionamentos
+                tabpagamentonfspdv : 300,
+            },
+            tabpagamentocupom : {
+                seq_cupom : 100,
+                seq_pagamento : 101,
+                cod_forma_pagto : 102,
+                val_pagamento : 103,
+                cod_pessoa_sacado : 129,
+                num_autorizacao_pos : 132,
+                // Relacionamentos
+                tabcupomfiscal : 300,
+                tabpdv : 600,
+                tabformapagtopdv : 700,
+            },
+            tabpagamentonfspdv : {
+                seq_nota : 101,
+                seq_pagamento : 102,
+                cod_forma_pagto : 103,
+                val_pagamento : 104,
+                cod_pessoa_sacado : 130,
+                num_autorizacao_pos : 133,
+                // Relacionamentos
+                tabnotafiscalsaida : 300,
+                tabformapagtopdv : 600,
+            },
+            tabpdv : {
+                cod_pdv : 100,
+                cod_empresa : 101,
+                des_pdv : 102,
+                ind_pdv_desativado : 207,
+                num_fabricacao : 110,
+            },
+            tabpessoa : {
+                cod_pessoa : 100,
+                nom_pessoa : 101,
+                ind_administradora_cartao : 133,
+            }
+          }
+      }
    }
 }])*/
 
@@ -432,6 +539,23 @@ angular.module('webapi', ['utils'])
     util : {
         bancos : $autenticacao.getUrlBase() + '/util/bancos/',   
         utilnfe : $autenticacao.getUrlBaseDownload() + '/util/utilnfe/',   
+    },
+      
+      
+    // REZENDE
+    rezende : {
+        pgsql : {
+            pdvs : $autenticacao.getUrlBaseRezende() + '/pgsql/pdvs/',
+            //tabcupomfiscal : $autenticacao.getUrlBaseRezende() + '/pgsql/tabcupomfiscal/',
+            //tabduplicatareceber : $autenticacao.getUrlBaseRezende() + '/pgsql/tabduplicatareceber/',
+            tabempresa : $autenticacao.getUrlBaseRezende() + '/pgsql/tabempresa/',
+            //tabformapagtopdv : $autenticacao.getUrlBaseRezende() + '/pgsql/tabformapagtopdv/',
+            //tabnotafiscalsaida : $autenticacao.getUrlBaseRezende() + '/pgsql/tabnotafiscalsaida/',
+            //tabpagamentocupom : $autenticacao.getUrlBaseRezende() + '/pgsql/tabpagamentocupom/',
+            //tabpagamentonfspdv : $autenticacao.getUrlBaseRezende() + '/pgsql/tabpagamentonfspdv/',
+            tabpdv : $autenticacao.getUrlBaseRezende() + '/pgsql/tabpdv/',
+            tabpessoa : $autenticacao.getUrlBaseRezende() + '/pgsql/tabpessoa/',
+          }
     }
   }
 }])
