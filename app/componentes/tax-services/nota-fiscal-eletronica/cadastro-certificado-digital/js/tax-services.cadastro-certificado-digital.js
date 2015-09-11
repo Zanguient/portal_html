@@ -250,7 +250,7 @@ angular.module("tax-services-cadastro-certificado-digital", ['ngFileUpload', 'ba
                                   [{ id : /*administracao.tbempresa.nrCNPJBase*/ 100, 
                                       valor: $scope.modalCertificadoDigital.nrCNPJBase},
                                    { id: /*administracao.tbempresa.dsCertificadoDigitalSenha*/ 102, 
-                                     valor : $scope.modalCertificadoDigital.senha }  //$encoder.encode($scope.modalCertificadoDigital.senha) }
+                                     valor : $encoder.encode($scope.modalCertificadoDigital.senha) }
                                   ]),
                 file: $scope.modalCertificadoDigital.certificado,
                 method: 'PATCH',
