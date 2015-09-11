@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão: 1.0.2 - 11/09/2015
+ *  - Criptografia da senha
+ *
  *  Versão: 1.0.1 - 08/09/2015
  *  - Upload do certificado digital junto com a senha
  *
@@ -12,7 +15,7 @@
  */
 
 // App
-angular.module("tax-services-cadastro-certificado-digital", ['ngFileUpload']) 
+angular.module("tax-services-cadastro-certificado-digital", ['ngFileUpload', 'base64']) 
 
 .controller("tax-services-cadastro-certificado-digitalCtrl", ['$scope',   
                                             '$state',
@@ -21,8 +24,9 @@ angular.module("tax-services-cadastro-certificado-digital", ['ngFileUpload'])
                                             '$apis', 
                                             '$timeout', 
                                             'Upload',
+                                            '$encoder',
                                             function($scope,$state,/*$campos,*/
-                                                     $webapi,$apis,$timeout,Upload){ 
+                                                     $webapi,$apis,$timeout,Upload,$encoder){ 
    
     $scope.paginaInformada = 1; // página digitada pelo privilégio
     $scope.empresas = [];                                            
@@ -246,7 +250,7 @@ angular.module("tax-services-cadastro-certificado-digital", ['ngFileUpload'])
                                   [{ id : /*administracao.tbempresa.nrCNPJBase*/ 100, 
                                       valor: $scope.modalCertificadoDigital.nrCNPJBase},
                                    { id: /*administracao.tbempresa.dsCertificadoDigitalSenha*/ 102, 
-                                     valor : $scope.modalCertificadoDigital.senha }
+                                     valor : $scope.modalCertificadoDigital.senha }  //$encoder.encode($scope.modalCertificadoDigital.senha) }
                                   ]),
                 file: $scope.modalCertificadoDigital.certificado,
                 method: 'PATCH',

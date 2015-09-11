@@ -2003,6 +2003,9 @@ angular.module("AtosCapital", ['ui.router',
         if(typeof text === 'string') return text.split("\n").join(String.fromCharCode(160));
         return text;
     }*/
+    
+    
+    
 }])
 
 
