@@ -74,6 +74,11 @@ angular.module("administrativo-dados-acesso", [])
                     $scope.filiais = []; 
                     $scope.adquirentes = [];
                     $scope.bandeiras = [];
+                    // Dados de acesso
+                    $scope.dadosAcesso = [];
+                    $scope.filtro.faixa_registros = '0-0';
+                    $scope.filtro.pagina = 1;
+                    $scope.filtro.total_paginas = 0;
                 }
             }
         });

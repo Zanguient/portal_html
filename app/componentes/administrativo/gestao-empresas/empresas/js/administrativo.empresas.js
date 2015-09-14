@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.1 - 14/09/2015
+ *  - Mesmo "amarrado" a um grupo, é possível editar ele, desde que tenha permissão de filtro empresa
+ *
  *  Versão 1.0 - 03/09/2015
  *
  */
@@ -58,9 +61,9 @@ angular.module("administrativo-empresas", [])
         }); 
         // Obtém as permissões
         if($scope.methodsDoControllerCorrente){// && $scope.methodsDoControllerCorrente.length > 0){
-            permissaoAlteracao = $scope.methodsDoControllerCorrente['atualização'] ? true : false;//$filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'ATUALIZAÇÃO' }).length > 0;   
-            permissaoCadastro = $scope.methodsDoControllerCorrente['cadastro'] ? true : false;//$filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'CADASTRO' }).length > 0;
-            permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;//$filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'REMOÇÃO' }).length > 0;
+            permissaoAlteracao = $scope.methodsDoControllerCorrente['atualização'] ? true : false;   
+            permissaoCadastro = $scope.methodsDoControllerCorrente['cadastro'] ? true : false;
+            permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;
         }
         // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
         $scope.$on('acessoDeTelaNotificado', function(event){
@@ -80,7 +83,7 @@ angular.module("administrativo-empresas", [])
       * Retorna true se o usuário pode consultar outras empresas
       */
     $scope.usuarioPodeConsultarEmpresas = function(){
-        return typeof $scope.usuariologado.grupoempresa === 'undefined';    
+        return $scope.PERMISSAO_FILTRO_EMPRESA || typeof $scope.usuariologado.grupoempresa === 'undefined';    
     }                                            
     /**
       * Retorna true se o usuário pode cadastrar empresas

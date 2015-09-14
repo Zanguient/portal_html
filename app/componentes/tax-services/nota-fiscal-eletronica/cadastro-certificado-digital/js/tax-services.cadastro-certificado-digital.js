@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.3 - 14/09/2015
+ *  - Código 203: Reporta que o certificado está vencido
+ *
  *  Versão 1.0.2 - 11/09/2015
  *  - Criptografia da senha
  *
@@ -269,6 +272,9 @@ angular.module("tax-services-cadastro-certificado-digital", ['ngFileUpload', 'ba
                             $scope.showModalAlerta('Senha informada é inválida!');    
                         }else if(data.cdMensagem === 202){
                             $scope.showModalAlerta('Certificado digital é inválido!'); 
+                            //console.log(data.dsMensagem);
+                        }else if(data.cdMensagem === 203){
+                            $scope.showModalAlerta('Certificado digital expirado!'); 
                             //console.log(data.dsMensagem);
                         }else{
                             $scope.showModalAlerta('Certificado e/ou senha não são válidos! (' + data.cdMensagem + ')');    
