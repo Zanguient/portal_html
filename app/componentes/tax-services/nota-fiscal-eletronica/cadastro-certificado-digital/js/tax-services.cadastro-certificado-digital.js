@@ -4,15 +4,21 @@
  *  suporte@atoscapital.com.br
  *
  *
- *  Versão: 1.0.1 - 08/09/2015
+ *  Versão 1.0.3 - 14/09/2015
+ *  - Código 203: Reporta que o certificado está vencido
+ *
+ *  Versão 1.0.2 - 11/09/2015
+ *  - Criptografia da senha
+ *
+ *  Versão 1.0.1 - 08/09/2015
  *  - Upload do certificado digital junto com a senha
  *
- *  Versão: 1.0 - 03/09/2015
+ *  Versão 1.0 - 03/09/2015
  *
  */
 
 // App
-angular.module("tax-services-cadastro-certificado-digital", ['ngFileUpload']) 
+angular.module("tax-services-cadastro-certificado-digital", ['ngFileUpload', 'base64']) 
 
 .controller("tax-services-cadastro-certificado-digitalCtrl", ['$scope',   
                                             '$state',
@@ -21,8 +27,9 @@ angular.module("tax-services-cadastro-certificado-digital", ['ngFileUpload'])
                                             '$apis', 
                                             '$timeout', 
                                             'Upload',
+                                            '$encoder',
                                             function($scope,$state,/*$campos,*/
-                                                     $webapi,$apis,$timeout,Upload){ 
+                                                     $webapi,$apis,$timeout,Upload,$encoder){ 
    
     $scope.paginaInformada = 1; // página digitada pelo privilégio
     $scope.empresas = [];                                            
@@ -246,7 +253,7 @@ angular.module("tax-services-cadastro-certificado-digital", ['ngFileUpload'])
                                   [{ id : /*administracao.tbempresa.nrCNPJBase*/ 100, 
                                       valor: $scope.modalCertificadoDigital.nrCNPJBase},
                                    { id: /*administracao.tbempresa.dsCertificadoDigitalSenha*/ 102, 
-                                     valor : $scope.modalCertificadoDigital.senha }
+                                     valor : $encoder.encode($scope.modalCertificadoDigital.senha) }
                                   ]),
                 file: $scope.modalCertificadoDigital.certificado,
                 method: 'PATCH',
@@ -265,6 +272,9 @@ angular.module("tax-services-cadastro-certificado-digital", ['ngFileUpload'])
                             $scope.showModalAlerta('Senha informada é inválida!');    
                         }else if(data.cdMensagem === 202){
                             $scope.showModalAlerta('Certificado digital é inválido!'); 
+                            //console.log(data.dsMensagem);
+                        }else if(data.cdMensagem === 203){
+                            $scope.showModalAlerta('Certificado digital expirado!'); 
                             //console.log(data.dsMensagem);
                         }else{
                             $scope.showModalAlerta('Certificado e/ou senha não são válidos! (' + data.cdMensagem + ')');    

@@ -4,7 +4,7 @@
  *  suporte@atoscapital.com.br
  *
  *
- *  Versão: 1.0 - 03/09/2015
+ *  Versão 1.0 - 03/09/2015
  *
  */
 
@@ -22,7 +22,7 @@ angular.module("tax-services-importacao-xml", [])
                                             function($scope,$state,$http,$window,/*$campos,*/
                                                      $webapi,$apis,$timeout){ 
    
-    $scope.paginaInformada = 1; // página digitada pelo privilégio
+    $scope.paginaInformada = 1;
     $scope.filiais = [];   
     $scope.manifestos = [];                                            
     $scope.itens_pagina = [50, 100, 150, 200];
@@ -217,7 +217,7 @@ angular.module("tax-services-importacao-xml", [])
       */
     var buscaFiliais = function(nu_cnpj){
         
-        if(!$scope.usuariologado.grupoempresa || $scope.usuariologado.grupoempresa === null) return;
+       if(!$scope.usuariologado.grupoempresa || $scope.usuariologado.grupoempresa === null) return;
         
        $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
         
