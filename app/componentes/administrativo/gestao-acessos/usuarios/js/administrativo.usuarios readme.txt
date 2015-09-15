@@ -1,48 +1,48 @@
-# README #
+Ôªø# README #
 
-MÛdulo que:
- - gerencia o layout da tela de usu·rios da Gest„o de acessos (app/componentes/administrativo/gestao-acessos/usuarios/index.html);
- - exibe os usu·rios do sistema, permitindo filtros e ordenaÁ„o distintas
- - permite criaÁ„o de um novo usu·rio ou a alteraÁ„o de um existente (direcionando para a tela de cadastro, em views/cadastro/index.html)
- - permite tambÈm a exclus„o e a redefiniÁ„o de senha de um determinado usu·rio
+M√≥dulo que:
+ - gerencia o layout da tela de usu√°rios da Gest√£o de acessos (app/componentes/administrativo/gestao-acessos/usuarios/index.html);
+ - exibe os usu√°rios do sistema, permitindo filtros e ordena√ß√£o distintas
+ - permite cria√ß√£o de um novo usu√°rio ou a altera√ß√£o de um existente (direcionando para a tela de cadastro, em views/cadastro/index.html)
+ - permite tamb√©m a exclus√£o e a redefini√ß√£o de senha de um determinado usu√°rio
  
 
-### Pra Que Serve Este MÛdulo? ###
+### Pra Que Serve Este M√≥dulo? ###
 
-Gerenciar completamente a tela de usu·rios da Gest„o de acessos.  
+Gerenciar completamente a tela de usu√°rios da Gest√£o de acessos.  
 
 
 
-### O que È necess·rio para usar o mÛdulo? ###
+### O que √© necess√°rio para usar o m√≥dulo? ###
 
-Como esse È um controller filho do controller principal "appCtrl" (app.js), ele herda todos os mÛdulos importados por ele.
-N„o È necess·rio nenhum outro mÛdulo externo.
+Como esse √© um controller filho do controller principal "appCtrl" (app.js), ele herda todos os m√≥dulos importados por ele.
+N√£o √© necess√°rio nenhum outro m√≥dulo externo.
 
  
-### Outras depÍndencias ###
+### Outras dep√™ndencias ###
 
   * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
   * $scope.token do "appCtrl"
   * Emite evento "acessouTela" no init do controller para que seja feito o log de acesso de tela
-  * Evento "acessoDeTelaNotificado", proveniente do "appCtrl", para de fato exibir a tela e fazer requisiÁıes 
-	=> importante para o log correto de requisiÁıes HTTP, ao qual identifica corretamente a (tela de) origem
-  * $scope.grupoempresa, do "appCtrl" : grupo empresa informado pelo usu·rio na barra administrativa
-  * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudanÁa do $scope.grupoempresa
-  * Faz referÍncia direta ao controller de cadastro de usu·rios da Gest„o de Acessos (gestao-acessos.usuarios.cadastro.js)
-  * Quando for para alterar um usu·rio, envia como par‚metro no $state.go o JSON associado ao usu·rio
+  * Evento "acessoDeTelaNotificado", proveniente do "appCtrl", para de fato exibir a tela e fazer requisi√ß√µes 
+	=> importante para o log correto de requisi√ß√µes HTTP, ao qual identifica corretamente a (tela de) origem
+  * $scope.grupoempresa, do "appCtrl" : grupo empresa informado pelo usu√°rio na barra administrativa
+  * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudan√ßa do $scope.grupoempresa
+  * Faz refer√™ncia direta ao controller de cadastro de usu√°rios da Gest√£o de Acessos (gestao-acessos.usuarios.cadastro.js)
+  * Quando for para alterar um usu√°rio, envia como par√¢metro no $state.go o JSON associado ao usu√°rio
   * APIS:
     - administracao/webpagesmembership
 	- administracao/webpagesusers
 
  
- ### InteraÁ„o com a WEB API ###
+ ### Intera√ß√£o com a WEB API ###
  
   * api/administracao/webpagesmembership
      - PUT  : redefinir senha 
-	          { userId : idUsuario, novaSenha : '' } // novaSenha vazio => redefinir senha para a padr„o
+	          { userId : idUsuario, novaSenha : '' } // novaSenha vazio => redefinir senha para a padr√£o
 			  
   * api/administracao/webpagesusers
-	 - GET : listagem dos usu·rios na tabela (coleÁ„o 2)
+	 - GET : listagem dos usu√°rios na tabela (cole√ß√£o 2)
 			{
 				pessoa : { dt_nascimento: string, 
 						   nm_pessoa: string, 
@@ -65,7 +65,7 @@ N„o È necess·rio nenhum outro mÛdulo externo.
 				gruposvendedor : { id_grupo : int, 
 									 ds_nome : string }
 			}
-	 - DELETE : deletar um determinado usu·rio (?token=...&id_users=id_usuario)
+	 - DELETE : deletar um determinado usu√°rio (?token=...&id_users=id_usuario)
  
    
 
