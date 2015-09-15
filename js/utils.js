@@ -145,7 +145,7 @@ angular.module('utils', [ ])
   
   // URL base da WEBAPI
   //var urlBase = 'http://localhost:55007';
-  //var urlBase = 'http://192.168.0.100/ws/proxy';  // proxy: versão mais atualizada da webapi 
+  //var urlBase = 'http://192.168.1.100/ws/proxy';  // proxy: versão mais atualizada da webapi 
   var urlBase = 'http://ws.atoscapital.com.br/proxy';
   // IMessage
   //var urlBaseIMessage = 'http://localhost:50780';
