@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.3 - 18/09/2015
+ *  - Busca somente filiais ativas
+ *
  *  Versão 1.0.2 - 08/09/2015
  *  - Tratamento de erro ao obter lista => evento "notifyMonitorFalha"
  *
@@ -382,10 +385,13 @@ angular.module("administrativo-monitor-cargas", ['SignalR','ngLocale'])
         
        $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
         
-       var filtros = undefined;
+       var filtros = [];
+        
+       // Somente com status ativo
+       filtros.push({id: /*$campos.cliente.empresa.fl_ativo*/ 114, valor: 1});
 
        // Filtro do grupo empresa => barra administrativa
-       filtros = [{id: /*$campos.cliente.empresa.id_grupo*/ 116, valor: $scope.usuariologado.grupoempresa.id_grupo}];
+       filtros.push({id: /*$campos.cliente.empresa.id_grupo*/ 116, valor: $scope.usuariologado.grupoempresa.id_grupo});
        if($scope.usuariologado.empresa) filtros.push({id: /*$campos.cliente.empresa.nu_cnpj*/ 100, 
                                                           valor: $scope.usuariologado.empresa.nu_cnpj});
        

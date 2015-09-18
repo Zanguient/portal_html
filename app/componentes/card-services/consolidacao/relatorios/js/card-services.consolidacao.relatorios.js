@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.1 - 18/09/2015
+ *  - Busca somente filiais ativas
+ *
  *  Versão 1.0 - 03/09/2015
  *
  */
@@ -180,11 +183,14 @@ angular.module("card-services-consolidacao-relatorios", [])
         
        $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
         
-       var filtros = undefined;
+       var filtros = [];
+        
+       // Somente com status ativo
+       filtros.push({id: /*$campos.cliente.empresa.fl_ativo*/ 114, valor: 1});
 
        // Filtro do grupo empresa => barra administrativa
        if($scope.usuariologado.grupoempresa){ 
-           filtros = [{id: /*$campos.cliente.empresa.id_grupo*/ 116, valor: $scope.usuariologado.grupoempresa.id_grupo}];
+           filtros.push({id: /*$campos.cliente.empresa.id_grupo*/ 116, valor: $scope.usuariologado.grupoempresa.id_grupo});
            if($scope.usuariologado.empresa) filtros.push({id: /*$campos.cliente.empresa.nu_cnpj*/ 100, 
                                                           valor: $scope.usuariologado.empresa.nu_cnpj});
        }
