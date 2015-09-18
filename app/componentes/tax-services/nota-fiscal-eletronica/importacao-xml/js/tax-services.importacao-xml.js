@@ -581,7 +581,7 @@ angular.module("tax-services-importacao-xml", [])
     /**
       * Requisita informações detalhadas da nota fiscal eletrônica
       */
-    var obtemDetalhesNota = function(idManifesto, funcaoSucesso){
+    var obtemDetalhesNota = function(idManifesto, nrChave, funcaoSucesso){
        $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
        $scope.showProgress(divPortletBodyManifestoPos);
         
@@ -595,8 +595,12 @@ angular.module("tax-services-importacao-xml", [])
             .then(function(dados){
                 // Obtém os dados
                 $scope.notadetalhada = undefined;
+                console.log(dados);
            
-                if(dados.Registros.length > 0) $scope.notadetalhada = dados.Registros[0].notas[0];
+                if(dados.Registros.length > 0){ 
+                    $scope.notadetalhada = dados.Registros[0].notas[0];
+                    $scope.notadetalhada.nrChave = nrChave;
+                }
 
                 if(typeof funcaoSucesso === 'function') funcaoSucesso();
            
@@ -621,10 +625,12 @@ angular.module("tax-services-importacao-xml", [])
         //console.log("DETALHAR " + manifesto.nmEmitente.toUpperCase());
         //console.log(nota);
         if(!$scope.notadetalhada || $scope.notadetalhada.idManifesto !== nota.idManifesto)
-            obtemDetalhesNota(nota.idManifesto, function(){$('#modalDetalhes').modal('show');});
+            obtemDetalhesNota(nota.idManifesto, nota.nrChave, function(){$('#modalDetalhes').modal('show');});
         else
             $('#modalDetalhes').modal('show');
     }
+    
+    
     /** 
       * Imprime a nota
       */

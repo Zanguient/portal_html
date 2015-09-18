@@ -7,8 +7,10 @@
  
  
     Website - Tela de impressão de detalhes da NF-e
-
-
+    
+    Versão 1.0.1 - 18/09/2015
+        -Inserção do campo chave de acesso.
+    
     Versão 1.0 - 03/09/2015
 -->
 <html lang="pt-BR" class="no-js" ng-app="tax-services-impressao-nfe">
@@ -112,6 +114,14 @@
                                         </div>
                                     </div>
                                     <div class="row campos-detalhe-nota">
+                                        <div class="col-md-12">
+                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                Detalhes chave de acesso
+                                            </label>
+                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                {{notadetalhada.nrChave}}
+                                            </div>                                              
+                                        </div>
                                         <div class="col-md-1">
                                             <label class="col-md-12 titulos-dados-detalhes-nota">
                                                 Modelo

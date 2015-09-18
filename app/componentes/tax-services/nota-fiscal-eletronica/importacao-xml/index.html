@@ -101,7 +101,49 @@
                                     <!-- CONTEUDO DO FILTRO -->
                                     <tr role="row" class="filter">
                                         <!-- DATA -->
-                                        <td rowspan="1" colspan="1">                                    
+                                        <td rowspan="1" colspan="1"> 
+                                            
+                                            <!--div class="clearfix" style="text-align:center; margin-bottom:10px">
+                                                <div class="btn-group" data-toggle="buttons">
+                                                    <div class="col-md-7 col-sm-12" style="margin-bottom:5px;">
+                                                        <label class="btn" 
+                                                               ng-class="{ 'red': filtro.data === 'Recebimento', 'grey': filtro.data !== 'Recebimento'}"
+                                                               ng-model="filtro.data" 
+                                                               btn-radio="'Recebimento'">
+                                                            Recebimento
+                                                        </label> 
+                                                    </div>
+                                                    <div class="col-md-5 col-sm-12">
+                                                        <label class="btn" 
+                                                               ng-class="{ 'red': filtro.data === 'Venda', 'grey': filtro.data !== 'Venda'}"
+                                                               ng-model="filtro.data" 
+                                                               btn-radio="'Venda'">
+                                                            Venda
+                                                        </label>
+                                                    </div>    
+                                                </div>
+                                            </div-->
+                                            
+                                            <div class="clearfix" style="text-align:center; margin-bottom:10px">
+                                                <div class="btn-group" data-toggle="buttons">
+                                                    <div class="col-md-7 col-sm-12" style="margin-bottom:5px; padding-left:">
+                                                        <label class="btn red" 
+                                                               ng-class=""
+                                                               ng-model="" 
+                                                               btn-radio="">
+                                                            Recebimento
+                                                        </label> 
+                                                    </div>
+                                                    <div class="col-md-5 col-sm-12" style="text-align:center">
+                                                        <label class="btn default" 
+                                                               ng-class=""
+                                                               ng-model="" 
+                                                               btn-radio="">
+                                                            Venda
+                                                        </label>
+                                                    </div>    
+                                                </div>
+                                            </div>
                                             <div class="input-group date date-picker margin-bottom-5"
                                                  data-date-format="dd/mm/yyyy">
                                                 <input type="text" 
@@ -260,6 +302,16 @@
                                                         </div>
                                                     </div>
                                                     <!--BODY CAMPOS-->
+                                                    <div class="row campos-detalhe-nota">
+                                                        <div class="col-md-12">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Detalhes chave de acesso
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                {{notadetalhada.nrChave}}
+                                                            </div>                                              
+                                                        </div>
+                                                    </div>
                                                     <div class="row campos-detalhe-nota">
                                                         <div class="col-md-1">
                                                             <label class="col-md-12 titulos-dados-detalhes-nota">
@@ -1944,7 +1996,7 @@
                                                     </th>
 
                                                     <th width="20%" style="text-align: center;">
-                                                        Chave Acesso
+                                                        Data Recebimento
                                                     </th>
                                                     <th width="10%" style="text-align: center;">
                                                         NF-e
@@ -1983,7 +2035,7 @@
                                                     </td>
                                                     <!-- CHAVE DE ACESSO --> 
                                                     <td>
-                                                        {{nota.nrChave}}
+                                                        {{nota.dtEntrega}}
                                                     </td>
                                                     <!-- STATUS-->
                                                     <!-- NF -->
