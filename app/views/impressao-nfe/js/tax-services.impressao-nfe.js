@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.1 - 18/09/2015 
+ *      -Inserção da chave (k) na tela de impressão.
+ *
  *  Versão 1.0 - 03/09/2015
  *
  */
@@ -98,9 +101,10 @@ angular.module("tax-services-impressao-nfe", ['ui.router','utils', 'webapi'])
             .then(function(dados){
                 // Obtém os dados
                 $scope.notadetalhada = undefined;
+                 
            
                 if(dados.Registros.length > 0) $scope.notadetalhada = dados.Registros[0].notas[0];
-
+                $scope.notadetalhada.nrChave = (k); 
                 if(typeof funcaoSucesso === 'function') funcaoSucesso();
            
                 // Fecha os progress
