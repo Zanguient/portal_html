@@ -320,7 +320,7 @@ angular.module("tax-services-importacao-xml", [])
             .then(function(dados){
                 // Guarda o último filtro utilizado
                 ultimoFiltroBusca = filtros;
-           
+                console.log(dados);
                 // Reseta total de manifestos
                 $scope.total.nfe = 0;
                 // Obtém os dados
