@@ -116,6 +116,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 								desBandeira : string,
 								dtaVenda : date,
 								dtaRecebimento : date,
+								dtaRecebimentoEfetivo : date ou null,
 								codResumoVenda : string,
 								nsu : string,
 								numParcela : string,

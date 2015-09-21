@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.2 - 21/09/2015
+ *  - Correção da seleção do filtro de bandeira
+ *
  *  Versão 1.0.1 - 18/09/2015
  *  - Busca somente filiais ativas
  *
@@ -422,7 +425,7 @@ angular.module("card-services-cash-flow-relatorios", [])
        if($scope.filtro.data === 'Venda') filtroData = {//id: $campos.pos.recebimentoparcela.recebimento + $campos.pos.recebimento.dtaVenda - 100,
                           id: 605,
                           valor: $scope.getFiltroData($scope.filtro.datamin)};  
-       else filtroData = {id: /*$campos.pos.recebimentoparcela.dtaRecebimento*/ 104 ,
+       else filtroData = {id: /*$campos.pos.recebimentoparcela.dtaRecebimentoEfetivo*/ 107 ,
                           valor: $scope.getFiltroData($scope.filtro.datamin)};
            
        if($scope.filtro.datamax)
@@ -609,7 +612,7 @@ angular.module("card-services-cash-flow-relatorios", [])
                      adquirente = null;
                 }else
                     // Apenas busca a bandeira
-                    $scope.filtro.bandeira = $filter('filter')($scope.bandeiras, function(b) {return b.id === bandeira.id;})[0];
+                    $scope.filtro.bandeira = $filter('filter')($scope.bandeiras, function(b) {return b.id === relsintetico.bandeira.id;})[0];
 
                 // Faz a busca analítica
                 if(typeof ultimoFiltro === 'undefined' || !$scope.arraysAreEqual(ultimoFiltro, obtemFiltroDeBusca())) 

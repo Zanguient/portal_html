@@ -295,6 +295,8 @@ angular.module('webapi', ['utils'])
             valorParcelaLiquida : 103,
             dtaRecebimento : 104,
             valorDescontado : 105,
+            idExtrato : 106,
+            dtaRecebimentoEfetivo : 107,
             // Relacionamento
             empresa : 300,
             operadora : 400,
