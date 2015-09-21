@@ -4,6 +4,10 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.3 - 21/09/2015
+ *  - Recebendo e enviando numParcela de Recebimento Parcela
+ *  - Busca somente filiais ativas
+ *
  *  Versão 1.0.2 - 08/09/2015
  *  - Correção: quando empresa é desassociada, é exibido todos os valores zerados referente aos registros
  *
@@ -229,11 +233,14 @@ angular.module("card-services-conciliacao-bancaria", [])
         
        $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
         
-       var filtros = undefined;
+       var filtros = [];
 
+       // Somente com status ativo
+       filtros.push({id: /*$campos.cliente.empresa.fl_ativo*/ 114, valor: 1}); 
+        
        // Filtro do grupo empresa => barra administrativa
        if($scope.usuariologado.grupoempresa){ 
-           filtros = [{id: /*$campos.cliente.empresa.id_grupo*/ 116, valor: $scope.usuariologado.grupoempresa.id_grupo}];
+           filtros.push({id: /*$campos.cliente.empresa.id_grupo*/ 116, valor: $scope.usuariologado.grupoempresa.id_grupo});
            if($scope.usuariologado.empresa) filtros.push({id: /*$campos.cliente.empresa.nu_cnpj*/ 100, 
                                                           valor: $scope.usuariologado.empresa.nu_cnpj});
        }
@@ -551,11 +558,16 @@ angular.module("card-services-conciliacao-bancaria", [])
             var dado = dadosConciliacao[k];
             //console.log("DADO");console.log(dado);
             var json = { idExtrato : parseInt(dado.ExtratoBancario[0].Id), 
-                         data : $scope.getDataFromString($scope.getDataString(dado.Data)),
-                         idsRecebimento : []
+                         //data : $scope.getDataFromString($scope.getDataString(dado.Data)),
+                         //idsRecebimento : []
+                         recebimentosParcela : []
                        };
-            for(var j = 0; j < dado.RecebimentosParcela.length; j++)
-                json.idsRecebimento.push(dado.RecebimentosParcela[j].Id);
+            for(var j = 0; j < dado.RecebimentosParcela.length; j++){
+                //json.idsRecebimento.push(dado.RecebimentosParcela[j].Id);
+                var rp = dado.RecebimentosParcela[j];
+                json.recebimentosParcela.push({idRecebimento : rp.Id, 
+									           numParcela : rp.NumParcela});
+            }
             //console.log("JSON");console.log(json);
             // Adiciona
             jsonConciliacaoBancaria.push(json);
@@ -614,12 +626,18 @@ angular.module("card-services-conciliacao-bancaria", [])
         $scope.showProgress(divPortletBodyDadosPos);
         
         // Obtém o json
-        var jsonRecebimentoParcela = { dtaRecebimentoNova : $scope.getDataFromString($scope.modalDataRecebimento.data),
-                                       dtaRecebimentoAtual : $scope.getDataFromString($scope.getDataString($scope.modalDataRecebimento.dado.Data)),
-                                       idsRecebimento : []
+        var jsonRecebimentoParcela = { //dtaRecebimentoNova : $scope.getDataFromString($scope.modalDataRecebimento.data),
+                                       //dtaRecebimentoAtual : $scope.getDataFromString($scope.getDataString($scope.modalDataRecebimento.dado.Data)),
+                                       //idsRecebimento : []
+                                       dtaRecebimentoEfetivo : $scope.getDataFromString($scope.modalDataRecebimento.data),
+                                       recebimentosParcela: []
                                      };
-        for(var k = 0; k < $scope.modalDataRecebimento.dado.RecebimentosParcela.length; k++)
-            jsonRecebimentoParcela.idsRecebimento.push($scope.modalDataRecebimento.dado.RecebimentosParcela[k].Id);
+        for(var k = 0; k < $scope.modalDataRecebimento.dado.RecebimentosParcela.length; k++){
+            var rp = $scope.modalDataRecebimento.dado.RecebimentosParcela[k];
+            //jsonRecebimentoParcela.idsRecebimento.push($scope.modalDataRecebimento.dado.RecebimentosParcela[k].Id);
+            jsonRecebimentoParcela.recebimentosParcela.push({idRecebimento : rp.Id, 
+									                         numParcela : rp.NumParcela});
+        }
         
         
         //console.log(jsonRecebimentoParcela);

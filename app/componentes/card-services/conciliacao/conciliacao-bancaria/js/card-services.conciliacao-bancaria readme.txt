@@ -50,6 +50,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 							 }], 
 		  RecebimentosParcela : null ou // se null => não tem info do lado do recebimento parcela
 							[{ Id : int, 
+							   NumParcela : int,
 							   Documento : string,
 							   Valor : double,
 							   Bandeira : string,
@@ -81,15 +82,17 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 	- PUT : seta os itens recebimento parcela para apontar para determinado extrato ou desassociar de um extrato
 			[{ 
 				idExtrato : int, // set -1 para desassociar de um extrato
-				data : datetime, // data dos recebimentos parcelas tem que ser IGUAL ao da movimentação bancária
-				idsRecebimento: [int]
+				recebimentosParcela: [{ idRecebimento : int, 
+									    numParcela : int
+									  }]
 			}]
   
   * pos/recebimentoparcela
     - PUT : altera a data de recibimento de um determinado grupo
-			{   dtaRecebimentoAtual : datetime,
-				dtaRecebimentoNova : datetime,
-				idsRecebimento: [int]
+			{   dtaRecebimentoEfetivo : datetime, // nova data
+				recebimentosParcela: [{ idRecebimento : int, 
+									    numParcela : int
+									  }]
 			}
 	
 	
