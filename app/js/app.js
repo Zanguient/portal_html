@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.2 - 22/09/2015
+ *  - Função download
+ *
  *  Versão 1.0.1 - 08/09/2015
  *  - getNomeLoginOperadoraAmigavel também considerando o grupo empresa
  *
@@ -2003,6 +2006,165 @@ angular.module("AtosCapital", ['ui.router',
         if(typeof text === 'string') return text.split("\n").join(String.fromCharCode(160));
         return text;
     }*/
+    
+    
+    
+    
+    
+    
+    
+    /** 
+      * Requisita o download
+      * @param url
+      * @param arquivo : nome do arquivo
+      */
+    $scope.download = function(url, arquivo, exibirProgress, divPosPrincipal, divPosFiltro, funcaoSucesso, funcaoErro){
+        if(exibirProgress){
+            if(typeof divPosPrincipal === 'number'){
+                $scope.showProgress(divPosPrincipal); // z-index < z-index do fullscreen     
+                if(typeof divPosFiltro === 'number')
+                    $scope.showProgress(divPosFiltro, 10000);
+            }else
+                $scope.showProgress(); // sobre a página
+        }
+        
+        $http.get(url, {responseType: 'arraybuffer'}) 
+            .success(function(data, status, headers, config){
+                //console.log(dados);
+            
+                var octetStreamMime = 'application/octet-stream';
+                var success = false;
+
+                // Get the headers
+                headers = headers();
+            
+                //console.log(headers);
+
+                // Get the filename from the x-filename header or default to "download.bin"
+                var filename = headers['x-filename'] || arquivo;
+            
+                // Determine the content type from the header or default to "application/octet-stream"
+                var contentType = headers['content-type'] || octetStreamMime;
+
+                try
+                {
+                    // Try using msSaveBlob if supported
+                    //console.log("Trying saveBlob method ...");
+                    var blob = new Blob([data], { type: contentType });
+                    if(navigator.msSaveBlob)
+                        navigator.msSaveBlob(blob, filename);
+                    else {
+                        // Try using other saveBlob implementations, if available
+                        var saveBlob = navigator.webkitSaveBlob || navigator.mozSaveBlob || navigator.saveBlob;
+                        if(saveBlob === undefined) throw "Not supported";
+                        saveBlob(blob, filename);
+                    }
+                    //console.log("saveBlob succeeded");
+                    success = true;
+                } catch(ex)
+                {
+                    //console.log("saveBlob method failed with the following exception:");
+                    //console.log(ex);
+                }
+            
+                if(!success)
+                {
+                    // Get the blob url creator
+                    var urlCreator = window.URL || window.webkitURL || window.mozURL || window.msURL;
+                    if(urlCreator)
+                    {
+                        // Try to use a download link
+                        var link = document.createElement('a');
+                        if('download' in link)
+                        {
+                            // Try to simulate a click
+                            try
+                            {
+                                // Prepare a blob URL
+                                //console.log("Trying download link method with simulated click ...");
+                                var blob = new Blob([data], { type: contentType });
+                                var url = urlCreator.createObjectURL(blob);
+                                link.setAttribute('href', url);
+
+                                // Set the download attribute (Supported in Chrome 14+ / Firefox 20+)
+                                link.setAttribute("download", filename);
+
+                                // Simulate clicking the download link
+                                var event = document.createEvent('MouseEvents');
+                                event.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
+                                link.dispatchEvent(event);
+                                //console.log("Download link method with simulated click succeeded");
+                                success = true;
+
+                            } catch(ex) {
+                                //console.log("Download link method with simulated click failed with the following exception:");
+                                //console.log(ex);
+                            }
+                        }
+
+                        if(!success)
+                        {
+                            // Fallback to window.location method
+                            try
+                            {
+                                // Prepare a blob URL
+                                // Use application/octet-stream when using window.location to force download
+                                //console.log("Trying download link method with window.location ...");
+                                var blob = new Blob([data], { type: octetStreamMime });
+                                var url = urlCreator.createObjectURL(blob);
+                                window.location = url;
+                                //console.log("Download link method with window.location succeeded");
+                                success = true;
+                            } catch(ex) {
+                                //console.log("Download link method with window.location failed with the following exception:");
+                                //console.log(ex);
+                            }
+                        }
+
+                    }
+                }
+
+                if(!success)
+                {
+                    // Fallback to window.open method
+                    //console.log("No methods worked for saving the arraybuffer, using last RESORT window.open");
+                    window.open(url, '_blank', '');
+                }
+            
+                // função sucesso
+                if(typeof funcaoSucesso === 'function')
+                    funcaoSucesso();
+
+            
+                // Fecha os progress
+                if(exibirProgress){
+                    if(typeof divPosPrincipal === 'number'){
+                        $scope.hideProgress(divPosPrincipal); // z-index < z-index do fullscreen     
+                        if(typeof divPosFiltro === 'number')
+                            $scope.hideProgress(divPosFiltro);
+                    }else
+                        $scope.hideProgress(); // sobre a página
+                }
+            }).error(function(data, status, headers, config){
+                 if(status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(status === 503 || status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao realizar o download (' + status + ')', true, 'danger', true);
+            
+                 // função sucesso
+                 if(typeof funcaoErro === 'function')
+                    funcaoErro();
+            
+                 // Fecha os progress
+                 if(exibirProgress){
+                    if(typeof divPosPrincipal === 'number'){
+                        $scope.hideProgress(divPosPrincipal); // z-index < z-index do fullscreen     
+                        if(typeof divPosFiltro === 'number')
+                            $scope.hideProgress(divPosFiltro);
+                    }else
+                        $scope.hideProgress(); // sobre a página
+                 }
+            });           
+    }
     
     
     

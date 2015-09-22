@@ -301,7 +301,9 @@ angular.module('webapi', ['utils'])
             empresa : 300,
             operadora : 400,
             bandeira : 500,
-            recebimento : 600
+            recebimento : 600,
+            // EXPORTAR
+            exportar : 9999
         },
         terminallogico : {
             idTerminalLogico: 100,

@@ -4,6 +4,10 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *
+ *  Versão 1.0.3 - 22/09/2015
+ *  - Exportar para CSV
+ *
  *  Versão 1.0.2 - 21/09/2015
  *  - Correção da seleção do filtro de bandeira
  *
@@ -69,7 +73,8 @@ angular.module("card-services-cash-flow-relatorios", [])
                                  valorLiquidoFiltrado : 0, valorDescontadoFiltrado : 0}};                         
     // flag
     var ultimoFiltro = undefined;
-    $scope.exibeTela = false;                                             
+    $scope.exibeTela = false;  
+    $scope.buscandoRelatorio = false;                                             
                                             
                                                  
                                                  
@@ -418,7 +423,7 @@ angular.module("card-services-cash-flow-relatorios", [])
       * Retorna os filtros para ser usado junto a url para requisição via webapi
       */
     var obtemFiltroDeBusca = function(){
-       var filtros = undefined;
+       var filtros = [];
        // Data
        var filtroData;
         
@@ -430,7 +435,7 @@ angular.module("card-services-cash-flow-relatorios", [])
            
        if($scope.filtro.datamax)
            filtroData.valor = filtroData.valor + '|' + $scope.getFiltroData($scope.filtro.datamax);
-       filtros = [filtroData];
+       filtros.push(filtroData);
         
        // Filial
        if($scope.filtro.filial && $scope.filtro.filial !== null){
@@ -525,6 +530,8 @@ angular.module("card-services-cash-flow-relatorios", [])
        // Filtros    
        var filtros = obtemFiltroDeBusca();
            
+       $scope.buscandoRelatorio = true;    
+        
        $webapi.get($apis.getUrl($apis.pos.recebimentoparcela, 
                                 [$scope.token, 9, 
                                  //$campos.pos.recebimentoparcela.empresa + $campos.cliente.empresa.ds_fantasia - 100, 
@@ -569,6 +576,7 @@ angular.module("card-services-cash-flow-relatorios", [])
                 }
            
                 // Fecha os progress
+                $scope.buscandoRelatorio = false;
                 $scope.hideProgress(divPortletBodyFiltrosPos);
                 $scope.hideProgress(divPortletBodyRelatorioPos);
               },
@@ -576,6 +584,8 @@ angular.module("card-services-cash-flow-relatorios", [])
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else $scope.showAlert('Houve uma falha ao obter relatório sintético (' + failData.status + ')', true, 'danger', true);
+           
+                 $scope.buscandoRelatorio = false;
                  $scope.hideProgress(divPortletBodyFiltrosPos);
                  $scope.hideProgress(divPortletBodyRelatorioPos);
               });       
@@ -641,6 +651,8 @@ angular.module("card-services-cash-flow-relatorios", [])
     
        var order = $scope.filtro.data === 'Recebimento' ? /*$campos.pos.recebimentoparcela.dtaRecebimento*/ 104  :
                    605;//$campos.pos.recebimentoparcela.recebimento + $campos.pos.recebimento.dtaVenda - 100;    
+    
+       $scope.buscandoRelatorio = true;
         
        $webapi.get($apis.getUrl($apis.pos.recebimentoparcela, 
                                 [$scope.token, 8, order, 0, 
@@ -683,6 +695,7 @@ angular.module("card-services-cash-flow-relatorios", [])
                 }
            
                 // Fecha os progress
+                $scope.buscandoRelatorio = false;
                 $scope.hideProgress(divPortletBodyFiltrosPos);
                 $scope.hideProgress(divPortletBodyRelatorioPos);
               },
@@ -690,9 +703,57 @@ angular.module("card-services-cash-flow-relatorios", [])
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else $scope.showAlert('Houve uma falha ao obter relatório analítico (' + failData.status + ')', true, 'danger', true);
+                 $scope.buscandoRelatorio = false;  
                  $scope.hideProgress(divPortletBodyFiltrosPos);
                  $scope.hideProgress(divPortletBodyRelatorioPos);
               });       
+    }
+    
+    
+    
+    
+    // EXPORTAR
+    /**
+      * Exporta o conteúdo do filtro para CSV
+      */
+    $scope.exportarCSV = function(){
+        
+        if(!ultimoFiltro || ultimoFiltro === null){
+            $scope.showModalAlerta('Pelo menos uma busca deve ser realizada!');  
+            return;
+        }
+        
+        var filtros = ultimoFiltro;//obtemFiltroDeBusca();
+        
+        // Exportar
+        filtros.push({id: /*$campos.pos.recebimentoparcela.exportar*/ 9999,
+                      valor : true});
+    
+        var url = '';
+        var filename = '';
+        
+        if($scope.tabIs(0)){
+            // Sintético
+            url = $apis.getUrl($apis.pos.recebimentoparcela, 
+                                [$scope.token, 9, 
+                                 //$campos.pos.recebimentoparcela.empresa + $campos.cliente.empresa.ds_fantasia - 100, 
+                                 304, 0],
+                                filtros);
+            filename = 'Cash-Flow-Relatorio-Sintetico.csv';
+        }else if($scope.tabIs(1)){ 
+            // Analítico
+            var order = $scope.filtro.data === 'Recebimento' ? /*$campos.pos.recebimentoparcela.dtaRecebimento*/ 104  :
+                        605;//$campos.pos.recebimentoparcela.recebimento + $campos.pos.recebimento.dtaVenda - 100; 
+        
+            url = $apis.getUrl($apis.pos.recebimentoparcela, [$scope.token, 8, order, 0], filtros);
+            filename = 'Cash-Flow-Relatorio-Analitico.csv';
+        }else 
+            return;
+
+        $scope.buscandoRelatorio = true;
+        var funcao = function(){ $scope.buscandoRelatorio = false; };
+        
+        $scope.download(url, filename, true, divPortletBodyRelatorioPos, divPortletBodyFiltrosPos, funcao, funcao);        
     }
     
 }]);

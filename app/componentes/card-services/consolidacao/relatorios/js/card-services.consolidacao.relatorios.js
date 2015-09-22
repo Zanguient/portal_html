@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.2 - 22/09/2015
+ *  - Exportar para CSV
+ *
  *  Versão 1.0.1 - 18/09/2015
  *  - Busca somente filiais ativas
  *
@@ -64,7 +67,8 @@ angular.module("card-services-consolidacao-relatorios", [])
                     analitico : {valorBruto : 0, valorBrutoFiltrado : 0}};                                              
     // flag
     var ultimoFiltro = undefined;
-    $scope.exibeTela = false;                                             
+    $scope.exibeTela = false;  
+    $scope.buscandoRelatorio = false;                                             
                                                  
                                                  
     // Inicialização do controller
@@ -816,6 +820,52 @@ angular.module("card-services-consolidacao-relatorios", [])
                  $scope.hideProgress(divPortletBodyFiltrosPos);
                  $scope.hideProgress(divPortletBodyRelatorioPos);
               });       
+    }
+    
+    
+    
+    
+    // EXPORTAR
+    /**
+      * Exporta o conteúdo do filtro para CSV
+      */
+    $scope.exportarCSV = function(){
+        
+        if(!ultimoFiltro || ultimoFiltro === null){
+            $scope.showModalAlerta('Pelo menos uma busca deve ser realizada!');  
+            return;
+        }
+        
+        var filtros = ultimoFiltro;
+        
+        // Exportar
+        filtros.push({id: /*$campos.pos.recebimentoparcela.exportar*/ 9999,
+                      valor : true});
+    
+        var url = '';
+        var filename = '';
+            
+        if($scope.tabIs(0)){
+            // Terminal
+            url =$apis.getUrl($apis.pos.recebimento, [$scope.token, 3, 100, 0], filtros);
+            filename = 'Consolidacao-Relatorio-Terminal-Logico.csv';
+        }else if($scope.tabIs(1)){
+            // Sintético
+            url = $apis.getUrl($apis.pos.recebimento, [$scope.token, 4, 100, 0], filtros);
+            filename = 'Consolidacao-Relatorio-Sintetico.csv';
+        }else if($scope.tabIs(2)){ 
+            // Analítico
+            url = $apis.getUrl($apis.pos.recebimento, 
+                               [$scope.token, 5, /*$campos.pos.recebimento.dtaVenda*/ 105, 0], 
+                               filtros);
+            filename = 'Consolidacao-Relatorio-Analitico.csv';
+        }else 
+            return;
+
+        $scope.buscandoRelatorio = true;
+        var funcao = function(){ $scope.buscandoRelatorio = false; };
+        
+        $scope.download(url, filename, true, divPortletBodyRelatorioPos, divPortletBodyFiltrosPos, funcao, funcao);        
     }
     
 }]);
