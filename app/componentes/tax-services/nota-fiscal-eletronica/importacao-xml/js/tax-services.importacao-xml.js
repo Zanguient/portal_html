@@ -31,7 +31,7 @@ angular.module("tax-services-importacao-xml", [])
     $scope.itens_pagina = [50, 100, 150, 200];
     $scope.statusmanifesto = [/*{id: 1, nome : 'MANIFESTO'},
                                 {id: 2, nome : 'ERP'}*/];                                        
-    $scope.filtro = { datamin : new Date(), datamax : '',
+    $scope.filtro = { datamin : new Date(), datamax : '', data : 'Recebimento',
                       statusmanifesto : null, destinatario : null, emitente : '',
                       itens_pagina : $scope.itens_pagina[0], pagina : 1,
                       total_registros : 0, faixa_registros : '0-0', total_paginas : 0}; 
@@ -139,8 +139,11 @@ angular.module("tax-services-importacao-xml", [])
         var filtros = [];
         
        // Data
-       var filtroData = {id: /*$campos.tax.tbmanifesto.dtEmissao*/ 108,
-                         valor: $scope.getFiltroData($scope.filtro.datamin)}; 
+       if($scope.filtro.data === 'Emissão') filtroData = {id: /*$campos.tax.tbmanifesto.dtEmissao*/ 108,
+                                                          valor: $scope.getFiltroData($scope.filtro.datamin)};
+       else filtroData = {id: /*$campos.tax.tbmanifesto.dtRecebimento*/ 111,
+                          valor: $scope.getFiltroData($scope.filtro.datamin)}; 
+        
        if($scope.filtro.datamax)
            filtroData.valor = filtroData.valor + '|' + $scope.getFiltroData($scope.filtro.datamax);
        filtros.push(filtroData);

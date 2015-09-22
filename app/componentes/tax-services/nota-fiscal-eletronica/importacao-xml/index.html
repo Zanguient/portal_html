@@ -6,8 +6,12 @@
  
  
     Tax Services > Nota Fiscal Eletrônica > Importação XML
-
-
+    
+ 
+    Versão 1.0.1 - 22/09/2015
+      - Atribuição ao filtro de data para filtrar por "Recebimento" e por "Emissão".
+ 
+ 
     Versão 1.0 - 03/09/2015
 -->
 
@@ -77,9 +81,9 @@
                             <table class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
                                 <thead>
                                     <tr role="row" class="heading">
-                                        <th width="20%" tabindex="0"  
+                                        <th width="27%" tabindex="0"  
                                             rowspan="1" colspan="1">
-                                             Data de Emissão
+                                             Data {{filtro.data}}
                                         </th>
                                         <th width="25%" tabindex="1" 
                                             rowspan="1" colspan="1">
@@ -129,16 +133,16 @@
                                                     <div class="col-md-7 col-sm-12" style="margin-bottom:5px; padding-left:">
                                                         <label class="btn" 
                                                                ng-class="{ 'red': filtro.data === 'Recebimento', 'grey': filtro.data !== 'Recebimento'}"
-                                                               ng-model="" 
-                                                               btn-radio="Recebimento">
+                                                               ng-model="filtro.data" 
+                                                               btn-radio="'Recebimento'">
                                                             Recebimento
                                                         </label> 
                                                     </div>
                                                     <div class="col-md-5 col-sm-12" style="text-align:center">
                                                         <label class="btn" 
-                                                               ng-class="{ 'red': filtro.data === 'Emissao', 'grey': filtro.data !== 'Emissao'}"
-                                                               ng-model="" 
-                                                               btn-radio="'Emissao'">
+                                                               ng-class="{ 'red': filtro.data === 'Emissão', 'grey': filtro.data !== 'Emissão'}"
+                                                               ng-model="filtro.data" 
+                                                               btn-radio="'Emissão'">
                                                             Emissão
                                                         </label>
                                                     </div>    
