@@ -1999,13 +1999,13 @@
                                                         Valor NF
                                                     </th>
 
-                                                    <th width="20%" style="text-align: center;">
-                                                        Data Recebimento
+                                                    <th width="5%" style="text-align: center;">
+                                                        Recebimento
                                                     </th>
-                                                    <th width="10%" style="text-align: center;">
+                                                    <th width="15%" style="text-align: center;">
                                                         NF-e
                                                     </th>
-                                                    <th width="16%" style="text-align: center;">
+                                                    <th width="21%" style="text-align: center;">
                                                         Manifesto
                                                     </th>
                                                     <th width="15%" style="text-align: center;">
@@ -2037,9 +2037,8 @@
                                                     <td>
                                                         {{nota.vlNFe | currency:'R$'}}
                                                     </td>
-                                                    <!-- CHAVE DE ACESSO --> 
-                                                    <td>
-                                                        {{nota.dtEntrega}}
+                                                    <!-- DATA DE RECEBIMENTO --> 
+                                                    <td ng-bind="getDataString(nota.dtEntrega)">
                                                     </td>
                                                     <!-- STATUS-->
                                                     <!-- NF -->

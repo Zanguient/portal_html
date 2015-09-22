@@ -6,6 +6,7 @@
  *
  *  Versão 1.0.2 - 22/09/2015
  *  - Função download deslocada para app.js
+ *  - Filtro por data de recebimento
  *
  *  Versão 1.0.1 - 18/09/2015
  *  - Busca somente filiais ativas
@@ -142,10 +143,15 @@ angular.module("tax-services-importacao-xml", [])
         var filtros = [];
         
        // Data
-       if($scope.filtro.data === 'Emissão') filtroData = {id: /*$campos.tax.tbmanifesto.dtEmissao*/ 108,
-                                                          valor: $scope.getFiltroData($scope.filtro.datamin)};
-       else filtroData = {id: /*$campos.tax.tbmanifesto.dtRecebimento*/ 111,
-                          valor: $scope.getFiltroData($scope.filtro.datamin)}; 
+       if($scope.filtro.data === 'Emissão'){ 
+           //console.log("Emissão");
+           filtroData = {id: /*$campos.tax.tbmanifesto.dtEmissao*/ 108,
+                         valor: $scope.getFiltroData($scope.filtro.datamin)};
+       }else{ 
+           //console.log("Recebimento");
+           filtroData = {id: /*$campos.tax.tbmanifesto.dtEntrega*/ 120,
+                         valor: $scope.getFiltroData($scope.filtro.datamin)}; 
+       }
         
        if($scope.filtro.datamax)
            filtroData.valor = filtroData.valor + '|' + $scope.getFiltroData($scope.filtro.datamax);
@@ -326,7 +332,7 @@ angular.module("tax-services-importacao-xml", [])
             .then(function(dados){
                 // Guarda o último filtro utilizado
                 ultimoFiltroBusca = filtros;
-                console.log(dados);
+                //console.log(dados);
                 // Reseta total de manifestos
                 $scope.total.nfe = 0;
                 // Obtém os dados
