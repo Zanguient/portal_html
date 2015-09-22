@@ -9,6 +9,9 @@
 
 
 
+    Versão 1.0.2 - 22/09/2015
+    - Exportar para CSV
+
     Versão 1.0.1 - 21/09/2015
     - Data de recebimento efetivo
 
@@ -261,29 +264,29 @@
                         <a class="btn btn-circle btn-icon-only btn-default fullscreen" 
                            href="javascript:;" ng-click="fullScreenClick()"
                            title="{{telaEstaEmFullScreen() ? 'Tela Normal' : 'Tela Cheia'}}"></a>
-                        <!-- OPÇÕES -->
-                        <div class="btn-group element-hidden"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -->
-                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
-                            <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
+                        <!-- EXPORTAR -->
+                        <div class="btn-group">
+                            <a class="btn btn-default btn-circle" 
+                               href="javascript:;" 
+                               data-toggle="dropdown">
+                                <i class="fa fa-download"></i> 
+                                Exportar 
+                                <i class="fa fa-angle-down"></i>
                             </a>
-                            <ul class="dropdown-menu pull-right">
+                            <ul class="dropdown-menu pull-right"
+                                ng-hide="buscandoRelatorio">
                                 <li>
-                                    <a href="javascript:;">
-                                    Export to Excel </a>
+                                    <a href="javascript:;"
+                                       ng-click="exportarCSV()">
+                                    CSV </a>
                                 </li>
-                                <li>
+                                <li ng-hide="true">
                                     <a href="javascript:;">
-                                    Export to CSV </a>
+                                    Excel </a>
                                 </li>
-                                <li>
+                                <li ng-hide="true">
                                     <a href="javascript:;">
-                                    Export to XML </a>
-                                </li>
-                                <li class="divider">
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                    Print Invoices </a>
+                                    XML </a>
                                 </li>
                             </ul>
                         </div>
