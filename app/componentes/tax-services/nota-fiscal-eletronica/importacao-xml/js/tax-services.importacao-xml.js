@@ -46,6 +46,7 @@ angular.module("tax-services-importacao-xml", [])
     // flags
     var ultimoFiltroBusca = undefined;
     $scope.tab = 1;
+    $scope.tabFiltro = 1;                                            
     $scope.exibeTela = false;                                         
     $scope.abrirCalendarioDataMin = false;
     $scope.abrirCalendarioDataMax = false;                                                            
@@ -535,7 +536,7 @@ angular.module("tax-services-importacao-xml", [])
         
     
     
-    //TAB
+    //TAB MODAL
     /**
       * Retorna true se a tab informada corresponde a tab em exibição
       */
@@ -548,6 +549,21 @@ angular.module("tax-services-importacao-xml", [])
     $scope.setTab = function (tab){
         if (tab >= 1 && tab <= 8) $scope.tab = tab;        
     }
-       
+    
+    
+    //TAB FILTROS
+    /**
+      * Retorna true se a tab informada corresponde a tab em exibição
+      */
+    $scope.tabFiltroIs = function (tabFiltro){
+        return $scope.tabFiltro === tabFiltro;
+    }
+    /**
+      * Altera a tab em exibição
+      */
+    $scope.setTabFiltro = function (tabFiltro){
+        if (tabFiltro >= 1 && tabFiltro <= 2) $scope.tabFiltro = tabFiltro;        
+    }
+      
     
 }])
