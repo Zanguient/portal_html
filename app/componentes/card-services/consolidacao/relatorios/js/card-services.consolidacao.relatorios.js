@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.3 - 22/09/2015
+ *  - Ajuste da exportação: não aciona o ws
+ *
  *  Versão 1.0.2 - 22/09/2015
  *  - Exportar para CSV
  *
@@ -24,8 +27,9 @@ angular.module("card-services-consolidacao-relatorios", [])
                                              /*'$campos',*/
                                              '$webapi',
                                              '$apis',
+                                             '$autenticacao',             
                                              function($scope,$state,$filter,$timeout,
-                                                      /*$campos,*/$webapi,$apis){ 
+                                                      /*$campos,*/$webapi,$apis,$autenticacao){ 
     
     // Exibição
     $scope.itens_pagina = [50, 100, 150, 200]; 
@@ -862,6 +866,9 @@ angular.module("card-services-consolidacao-relatorios", [])
         }else 
             return;
 
+        // Seta para a url de download
+        url = url.replace($autenticacao.getUrlBase(), $autenticacao.getUrlBaseDownload());
+        
         $scope.buscandoRelatorio = true;
         var funcao = function(){ $scope.buscandoRelatorio = false; };
         
