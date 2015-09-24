@@ -247,7 +247,11 @@
                                         <tr role="row" class="filter">
                                             <!-- CHAVE DE ACESSO -->
                                             <td rowspan="1" colspan="1">                                           
-                                                <input class="form-control">                                            
+                                                <input class="form-control"
+                                                      placeholder="Chave de Acesso" 
+                                                        ng-model="filtro.chaveAcesso"
+                                                       onfocus="this.select();" 
+                                                       onmouseup="return false;">                                            
                                             </td>                                                                         
                                             <!-- AÇÕES -->
                                             <td rowspan="1" colspan="1" style="text-align:center">

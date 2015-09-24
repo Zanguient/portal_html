@@ -40,7 +40,7 @@ angular.module("tax-services-importacao-xml", [])
     $scope.filtro = { datamin : new Date(), datamax : '', data : 'Recebimento',
                       statusmanifesto : null, destinatario : null, emitente : '',
                       itens_pagina : $scope.itens_pagina[0], pagina : 1,
-                      total_registros : 0, faixa_registros : '0-0', total_paginas : 0}; 
+                      total_registros : 0, faixa_registros : '0-0', total_paginas : 0, chaveAcesso : null}; 
     $scope.total = { nfe : 0 };  
     $scope.notadetalhada = undefined;                                            
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
@@ -145,38 +145,48 @@ angular.module("tax-services-importacao-xml", [])
     var obtemFiltrosBusca = function(){
         var filtros = [];
         
-       // Data
-       if($scope.filtro.data === 'Emissão'){ 
-           //console.log("Emissão");
-           filtroData = {id: /*$campos.tax.tbmanifesto.dtEmissao*/ 108,
-                         valor: $scope.getFiltroData($scope.filtro.datamin)};
-       }else{ 
-           //console.log("Recebimento");
-           filtroData = {id: /*$campos.tax.tbmanifesto.dtEntrega*/ 120,
-                         valor: $scope.getFiltroData($scope.filtro.datamin)}; 
+        // Filtros Por Data
+       if($scope.tabFiltro === 1)
+       {
+           // Data
+           if($scope.filtro.data === 'Emissão'){ 
+               //console.log("Emissão");
+               filtroData = {id: /*$campos.tax.tbmanifesto.dtEmissao*/ 108,
+                             valor: $scope.getFiltroData($scope.filtro.datamin)};
+           }else{ 
+               //console.log("Recebimento");
+               filtroData = {id: /*$campos.tax.tbmanifesto.dtEntrega*/ 120,
+                             valor: $scope.getFiltroData($scope.filtro.datamin)}; 
+           }
+
+           if($scope.filtro.datamax)
+               filtroData.valor = filtroData.valor + '|' + $scope.getFiltroData($scope.filtro.datamax);
+           filtros.push(filtroData);
+
+           // Destinatário
+           if($scope.filtro.destinatario && $scope.filtro.destinatario !== null){
+               filtros.push({id: /*$campos.tax.tbmanifesto.nrCNPJ*/ 104, 
+                             valor: $scope.filtro.destinatario.nu_cnpj});  
+           }
+
+            // Emitente
+            if($scope.filtro.emitente && $scope.filtro.emitente !== ''){
+                filtros.push({id: /*$campos.card.tbbancoparametro.nmEmitente */ 106,
+                              valor: '%' + $scope.filtro.emitente});
+            }
+
+            // Status Manifesto
+            if($scope.filtro.statusmanifesto && $scope.filtro.statusmanifesto !== null){
+                filtros.push({id: /*$campos.tax.tbmanifesto.cdSituacaoManifesto */ 113,
+                              valor: $scope.filtro.statusmanifesto.id}); 
+            }
+       }else
+       {
+           if($scope.filtro.chaveAcesso && $scope.filtro.chaveAcesso !== null){
+               filtros.push({id: /*$campos.tax.tbmanifesto.nrCNPJ*/ 101, 
+                             valor: $scope.filtro.chaveAcesso}); 
+           }
        }
-        
-       if($scope.filtro.datamax)
-           filtroData.valor = filtroData.valor + '|' + $scope.getFiltroData($scope.filtro.datamax);
-       filtros.push(filtroData);
-        
-       // Destinatário
-       if($scope.filtro.destinatario && $scope.filtro.destinatario !== null){
-           filtros.push({id: /*$campos.tax.tbmanifesto.nrCNPJ*/ 104, 
-                         valor: $scope.filtro.destinatario.nu_cnpj});  
-       }
-        
-        // Emitente
-        if($scope.filtro.emitente && $scope.filtro.emitente !== ''){
-            filtros.push({id: /*$campos.card.tbbancoparametro.nmEmitente */ 106,
-                          valor: '%' + $scope.filtro.emitente});
-        }
-        
-        // Status Manifesto
-        if($scope.filtro.statusmanifesto && $scope.filtro.statusmanifesto !== null){
-            filtros.push({id: /*$campos.tax.tbmanifesto.cdSituacaoManifesto */ 113,
-                          valor: $scope.filtro.statusmanifesto.id}); 
-        }
         return filtros.length > 0 ? filtros : undefined;
     }                                             
     
@@ -193,6 +203,10 @@ angular.module("tax-services-importacao-xml", [])
         $scope.filtro.destinatario = $scope.filtro.statusmanifesto = null; 
         
         $scope.filtro.emitente = '';
+        
+        $scope.filtro.chaveAcesso = '';
+        
+        
 
     }
     
@@ -320,6 +334,7 @@ angular.module("tax-services-importacao-xml", [])
                                                 
                                                 
     var buscaManifestos = function(){
+        // Abre os progress
        $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
        $scope.showProgress(divPortletBodyManifestoPos);
         
@@ -327,45 +342,56 @@ angular.module("tax-services-importacao-xml", [])
        var filtros = obtemFiltrosBusca();
            
        //console.log(filtros);
-       
-       $webapi.get($apis.getUrl($apis.tax.tbmanifesto, 
-                                [$scope.token, 5, /* $campos.tax.tbmanifesto.dtemissao */108, 0, 
-                                 $scope.filtro.itens_pagina, $scope.filtro.pagina],
-                                filtros)) 
-            .then(function(dados){
-                // Guarda o último filtro utilizado
-                ultimoFiltroBusca = filtros;
-                //console.log(dados);
-                // Reseta total de manifestos
-                $scope.total.nfe = 0;
-                // Obtém os dados
-                $scope.manifestos = dados.Registros;
-           
-                // Set valores de exibição
-                $scope.filtro.total_registros = dados.TotalDeRegistros;
-                $scope.filtro.total_paginas = Math.ceil($scope.filtro.total_registros / $scope.filtro.itens_pagina);
-                if($scope.manifestos.length === 0) $scope.faixa_registros = '0-0';
-                else{
-                    var registroInicial = ($scope.filtro.pagina - 1)*$scope.filtro.itens_pagina + 1;
-                    var registroFinal = registroInicial - 1 + $scope.filtro.itens_pagina;
-                    if(registroFinal > $scope.filtro.total_registros) registroFinal = $scope.filtro.total_registros;
-                    $scope.filtro.faixa_registros =  registroInicial + '-' + registroFinal;
-                }
-                // Verifica se a página atual é maior que o total de páginas
-                if($scope.filtro.pagina > $scope.filtro.total_paginas)
-                    setPagina(1); // volta para a primeira página e refaz a busca
-           
+       if( filtros !=  undefined)
+       {
+           $webapi.get($apis.getUrl($apis.tax.tbmanifesto, 
+                                    [$scope.token, 5, /* $campos.tax.tbmanifesto.dtemissao */108, 0, 
+                                     $scope.filtro.itens_pagina, $scope.filtro.pagina],
+                                    filtros)) 
+                .then(function(dados){
+                    // Guarda o último filtro utilizado
+                    ultimoFiltroBusca = filtros;
+                    //console.log(dados);
+                    // Reseta total de manifestos
+                    $scope.total.nfe = 0;
+                    // Obtém os dados
+                    $scope.manifestos = dados.Registros;
+
+                    // Set valores de exibição
+                    $scope.filtro.total_registros = dados.TotalDeRegistros;
+                    $scope.filtro.total_paginas = Math.ceil($scope.filtro.total_registros / $scope.filtro.itens_pagina);
+                    if($scope.manifestos.length === 0) $scope.faixa_registros = '0-0';
+                    else{
+                        var registroInicial = ($scope.filtro.pagina - 1)*$scope.filtro.itens_pagina + 1;
+                        var registroFinal = registroInicial - 1 + $scope.filtro.itens_pagina;
+                        if(registroFinal > $scope.filtro.total_registros) registroFinal = $scope.filtro.total_registros;
+                        $scope.filtro.faixa_registros =  registroInicial + '-' + registroFinal;
+                    }
+                    // Verifica se a página atual é maior que o total de páginas
+                    if($scope.filtro.pagina > $scope.filtro.total_paginas)
+                        setPagina(1); // volta para a primeira página e refaz a busca
+
+                    // Fecha os progress
+                    $scope.hideProgress(divPortletBodyFiltrosPos);
+                    $scope.hideProgress(divPortletBodyManifestoPos);
+                  },
+                  function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                     else $scope.showAlert('Houve uma falha ao obter manifestos (' + failData.status + ')', true, 'danger', true);
+                     $scope.hideProgress(divPortletBodyFiltrosPos);
+                     $scope.hideProgress(divPortletBodyManifestoPos);
+                  });           
+       }
+        else if( $scope.tabFiltro === 2 ) // Quando a busca for por chave de acesso, força o usuário digitar a Chave de Acesso
+        {
                 // Fecha os progress
                 $scope.hideProgress(divPortletBodyFiltrosPos);
                 $scope.hideProgress(divPortletBodyManifestoPos);
-              },
-              function(failData){
-                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
-                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                 else $scope.showAlert('Houve uma falha ao obter manifestos (' + failData.status + ')', true, 'danger', true);
-                 $scope.hideProgress(divPortletBodyFiltrosPos);
-                 $scope.hideProgress(divPortletBodyManifestoPos);
-              });           
+                
+                // Exibe o modal informando a obrigatoriedade da chave de acesso
+                $scope.showModalAlerta('Por favor, digite a Chave de Acesso', 'Atos Capital', 'OK', function(){} );
+        }
     }
                                                 
                                                 
