@@ -6,7 +6,10 @@
  
  
     Tax Services > Nota Fiscal Eletrônica > Importação XML
-    
+ 
+     Versão 1.0.2 - 23/09/2015
+      -Atribuição do filtro por Chave de acesso(sem as funcionalidades). 
+ 
  
     Versão 1.0.1 - 22/09/2015
       - Atribuição ao filtro de data para filtrar por "Recebimento" e por "Emissão".
@@ -34,56 +37,28 @@
     <div class="row">
         <div class="col-md-12">
             <!-- BEGIN TABLE PORTLET-->
-            <div class="portlet light">  
+            <div class="portlet light filtro">  
 
-                <!-- TOPO : Nome 'Importação XML' e botões de 'Opções' e FullScreen -->
-                <div class="portlet-title">
+                <!-- TOPO : Nome 'Importação XML' e botões de 'Opções' e FullScreen -->                
+                <div class="portlet-title tabbable-line" >
                     <div class="caption">
                         <!--i class="fa fa-cogs font-green-sharp"></i-->
                         <span class="caption-subject font-green-sharp bold uppercase">Filtros</span>
                     </div>
                     <!--REFERENCIAS DAS ABAS DE NAVEGAÇÃO-->
-                    <div class="portlet-title tabbable-line" >							
-                        <ul class="nav nav-tabs" style="float:right">                                            
-                            <li ng-class="{active : tabFiltroIs(1)}">
-                                <a ng-click="setTabFiltro(1)">
-                                Por Data </a>
-                            </li>
-                            <li ng-class="{active : tabFiltroIs(2)}">
-                                <a ng-click="setTabFiltro(2)">
-                                Por Chave  </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="actions">
-                        <!-- OPÇÕES -->
-                        <div class="btn-group element-hidden"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -->
-                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
-                            <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
-                            </a>
-                            <ul class="dropdown-menu pull-right">
-                                <li>
-                                    <a href="javascript:;">
-                                    Export to Excel </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                    Export to CSV </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                    Export to XML </a>
-                                </li>
-                                <li class="divider">
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                    Print Invoices </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+
+                    <ul class="nav nav-tabs" style="float:right">                                            
+                        <li ng-class="{active : tabFiltroIs(1)}">
+                            <a ng-click="setTabFiltro(1)">
+                            Por Data </a>
+                        </li>
+                        <li ng-class="{active : tabFiltroIs(2)}">
+                            <a ng-click="setTabFiltro(2)">
+                            Por Chave  </a>
+                        </li>
+                    </ul>
+                </div>                   
+                
                 <!-- CORPO  -->
                 <div class="portlet-body" ng-show="exibeTela">
                     <!-- PORTLET BODY FILTRO INSIDE -->

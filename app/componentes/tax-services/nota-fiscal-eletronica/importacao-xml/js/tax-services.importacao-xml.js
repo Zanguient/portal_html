@@ -3,6 +3,8 @@
  *  
  *  suporte@atoscapital.com.br
  *
+ *  Versão 1.0.3 - 23/09/2015
+ *  -Filtro por Chave de acesso (Inserção na div sem as funcionalidades).  
  *
  *  Versão 1.0.2 - 22/09/2015
  *  - Função download deslocada para app.js
