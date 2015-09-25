@@ -188,7 +188,10 @@
                                                        placeholder="Emitente" 
                                                        ng-model="filtro.emitente"
                                                        onfocus="this.select();" 
-                                                       onmouseup="return false;" />
+                                                       onmouseup="return false;"
+                                                       maxlength="44"
+                                                       ng-pattern="/\(\d{2}\)\d{8}\d?/"
+                                                       valid-integer-number/>
                                             </td>
                                             <!-- STATUS -->
                                             <td rowspan="1" colspan="1" style="text-align: center">
