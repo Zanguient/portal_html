@@ -23,6 +23,7 @@ angular.module("tax-services-recebimento-nfe", [])
                                             function($scope,$state,$http,$window,/*$campos,*/
                                                      $webapi,$apis,$timeout,$filter){ 
    
+    $scope.confirmRecebimento = false;
     $scope.paginaInformada = 1;                                          
     $scope.itens_pagina = [50, 100, 150, 200];                                      
     $scope.filtro = { itens_pagina : $scope.itens_pagina[0], pagina : 1,
@@ -124,19 +125,12 @@ angular.module("tax-services-recebimento-nfe", [])
                filtros.push({id: /*$campos.tax.tbmanifesto.nrCNPJ*/ 101, 
                              valor: $scope.filtro.chaveAcesso}); 
            }
-        console.log(filtros);
-        
          return filtros.length > 0 ? filtros : undefined;
     }
     
     
-    /* MANIFESTO
-    $scope.incrementaTotalNFes = function(totalNotas){
-        if(typeof totalNotas === 'number') $scope.total.nfe += totalNotas;    
-    }*/
-    
     /**
-      * Obtem os manifestos a partir dos filtros
+      * Obtem o manifesto a partir da Chave de Acesso
       */
     $scope.buscaManifestos = function(){
         // Avalia se há um grupo empresa selecionado
@@ -157,7 +151,6 @@ angular.module("tax-services-recebimento-nfe", [])
         buscaManifestos();
     }
                                                 
-                                                
     var buscaManifestos = function(){
         // Abre os progress
        $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
@@ -170,18 +163,18 @@ angular.module("tax-services-recebimento-nfe", [])
        if( filtros !=  undefined)
        {
            $webapi.get($apis.getUrl($apis.tax.tbmanifesto, 
-                                    [$scope.token, 6, /* $campos.tax.tbmanifesto.dtemissao */101, 0, 
-                                     $scope.filtro.itens_pagina, $scope.filtro.pagina],
+                                    [$scope.token, 6, /* $campos.tax.tbmanifesto.dtemissao */101],
                                     filtros)) 
                 .then(function(dados){
                     // Guarda o último filtro utilizado
                     ultimoFiltroBusca = filtros;
-                    //console.log(dados);
-                    // Reseta total de manifestos
-                    $scope.total.nfe = 0;
+
                     // Obtém os dados
                     $scope.manifestos = dados.Registros;
-
+                    
+                   if( $scope.manifestos.length > 0)
+                       $scope.confirmRecebimento = true;
+               
                     // Set valores de exibição
                     $scope.filtro.total_registros = dados.TotalDeRegistros;
                     $scope.filtro.total_paginas = Math.ceil($scope.filtro.total_registros / $scope.filtro.itens_pagina);
@@ -215,6 +208,43 @@ angular.module("tax-services-recebimento-nfe", [])
                   });           
        }
         
+    }
+    
+    /**
+      * Confirma Recebimento da NF-e
+      */
+    $scope.confirmaVirgencia = function(){
+        console.log($scope.manifestos.length);
+        // Verifica se a busca foi executada, se houve resultado e a confirmação já ocorreu
+        if( $scope.manifestos.length === 0 && $scope.confirmRecebimento === false)  return;
+        
+        // Parametros 
+        var jsonRecebimento = {
+                                  idManifesto: $scope.manifestos[0].idManifesto,
+                                  cdGrupo: $scope.manifestos[0].cdGrupo,
+                                  flEntrega: true
+                                };; 
+        
+        
+        // UPDATE
+        $scope.showProgress();
+        $webapi.update($apis.getUrl($apis.tax.tbmanifesto, undefined,
+                                 {id : 'token', valor : $scope.token}), jsonRecebimento) 
+            .then(function(dados){           
+                $scope.showAlert('Recebimento de NF-e confirmado com sucesso!', true, 'success', true);
+                // Fecha os progress
+                $scope.hideProgress();
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else if(failData.status === 500) $scope.showAlert('Houve uma falha ao confirmar o recebimento da NF-e (' + failData.status + ')', true, 'danger', true);
+                 else $scope.showAlert('Houve uma falha ao confirmar o recebimento da NF-e (' + failData.status + ')', true, 'danger', true);
+                 // Fecha os progress
+                 $scope.hideProgress();
+              });   
+        
+        $scope.confirmRecebimento = false;
     }
     
 }])
