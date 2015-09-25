@@ -27,9 +27,10 @@ angular.module("tax-services-importacao-xml", [])
                                             /*'$campos',*/
                                             '$webapi',
                                             '$apis', 
-                                            '$timeout',    
+                                            '$timeout',
+                                            '$filter',
                                             function($scope,$state,$http,$window,/*$campos,*/
-                                                     $webapi,$apis,$timeout){ 
+                                                     $webapi,$apis,$timeout,$filter){ 
    
     $scope.paginaInformada = 1;
     $scope.filiais = [];   
@@ -205,8 +206,6 @@ angular.module("tax-services-importacao-xml", [])
         $scope.filtro.emitente = '';
         
         $scope.filtro.chaveAcesso = '';
-        
-        
 
     }
     
