@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.1 - 25/09/2015
+ *  - Correção: função inexistente no escopo estava sendo invocada
+ *
  *  Versão 1.0 - 03/09/2015
  *
  */
@@ -33,8 +36,6 @@ angular.module("conta-alterar-senha", [])
         // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
         $scope.$on('acessoDeTelaNotificado', function(event){
             $scope.exibeTela = true;
-            // Obtém os dados do usuário logado
-            buscaUsuarioLogado();
         });
         // Acessou a tela
         $scope.$emit("acessouTela");
