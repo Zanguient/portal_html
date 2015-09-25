@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.3 - 25/09/2015
+ *  - Tax Services > Nota Fiscal Eletrônica > Recebimento NFE
+ *
  *  Versão 1.0.2 - 22/09/2015
  *  - Função download
  *
@@ -52,6 +55,7 @@ angular.module("AtosCapital", ['ui.router',
                                'card-services-cadastro-pos-terminal',
                                'tax-services-importacao-xml',
                                'tax-services-cadastro-certificado-digital',
+                               'tax-services-recebimento-nfe',
                                'conta',
                                'conta-alterar-senha',
                                'usuario-sem-link']) 
@@ -343,6 +347,15 @@ angular.module("AtosCapital", ['ui.router',
         }
       })
     
+      .state('tax-services-nota-fiscal-eletronica-recebimento-nfe', {
+        url: prefixo + 'tax-services/recebimento-nfe',
+        templateUrl: 'componentes/tax-services/nota-fiscal-eletronica/recebimento-nfe/index.html',
+        controller: "tax-services-recebimento-nfeCtrl",
+        data: {
+            titulo: 'Tax Services'
+        }
+      })
+    
     
     
       // CONTA
@@ -461,7 +474,8 @@ angular.module("AtosCapital", ['ui.router',
     var controllerCardServicesCadastroCodigoAutorizacao = undefined; 
     var controllerCardServicesCadastroPOSTerminal = undefined;                        
     var controllerTaxServicesImportacaoXML = undefined; 
-    var controllerTaxServicesCadastroCertificadoDigital = undefined;                           
+    var controllerTaxServicesCadastroCertificadoDigital = undefined;   
+    var controllerTaxServicesRecebimentoNfe = undefined;                          
     var controllerMinhaConta = {id_controller : 91, ds_controller : 'Minha Conta', methods : []};
     // Permissões
     //$scope.usuarioTemAcesso = false;                      
@@ -502,7 +516,8 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_TAX_SERVICES = false;
     $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA = false;   
     $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_IMPORTACAO_XML = false;      
-    $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_CADASTRO_CERTIFICADO_DIGITAL = false;                                                
+    $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_CADASTRO_CERTIFICADO_DIGITAL = false; 
+    $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_RECEBIMENTO_NFE = false;                        
                             
     
     // Fullscreen 
@@ -781,7 +796,14 @@ angular.module("AtosCapital", ['ui.router',
     $scope.goTaxServicesCadastroCertificadoDigital = function(params){
         controllerAtual = controllerTaxServicesCadastroCertificadoDigital;
         go('tax-services-nota-fiscal-eletronica-cadastro-certificado-digital', params);
-    };                        
+    };  
+    /**
+      * Exibe como conteúdo a Nota Fiscal Eletrônica Recebimento Nfe, de Tax Services
+      */
+    $scope.goTaxServicesRecebimentoNfe = function(params){
+        controllerAtual = controllerTaxServicesRecebimentoNfe;
+        go('tax-services-nota-fiscal-eletronica-recebimento-nfe', params);
+    };                         
     /**
       * Exibe a tela de perfil de conta
       */
@@ -1047,6 +1069,15 @@ angular.module("AtosCapital", ['ui.router',
             }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'CADASTRO CERTIFICADO DIGITAL')
                      controllerAtual.id_controller !== controllerTaxServicesCadastroCertificadoDigital.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
+        }else if(url === $state.get('tax-services-nota-fiscal-eletronica-recebimento-nfe').url){ 
+            // Tax Services > Nota Fiscal Eletrônica > Recebimento NFE
+            if(!$scope.PERMISSAO_TAX_SERVICES || !$scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA || !$scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_RECEBIMENTO_NFE){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.goUsuarioSemPrivilegios();
+            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'RECEBIMENTO NF-E')
+                     controllerAtual.id_controller !== controllerTaxServicesRecebimentoNfe.id_controller)
+                $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
         }
         //else event.preventDefault();//console.log("VAI PARA ONDE?");
      });
@@ -1184,7 +1215,12 @@ angular.module("AtosCapital", ['ui.router',
                 if($location.path() === $state.get('tax-services-nota-fiscal-eletronica-cadastro-certificado-digital').url) 
                     controllerAtual = controller;
                 controllerTaxServicesCadastroCertificadoDigital = controller;
-                return $scope.goTaxServicesCadastroCertificadoDigital;    
+                return $scope.goTaxServicesCadastroCertificadoDigital;  
+            case 'RECEBIMENTO NF-E': 
+                if($location.path() === $state.get('tax-services-nota-fiscal-eletronica-recebimento-nfe').url) 
+                    controllerAtual = controller;
+                controllerTaxServicesRecebimentoNfe = controller;
+                return $scope.goTaxServicesRecebimentoNfe;  
                  
             // AMBÍGUOS    
             case 'RELATÓRIOS': 
@@ -1239,6 +1275,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'NOTA FISCAL ELETRÔNICA': $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA = true; break;
             case 'IMPORTAÇÃO XML':  $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_IMPORTACAO_XML = true; break;
             case 'CADASTRO CERTIFICADO DIGITAL': $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_CADASTRO_CERTIFICADO_DIGITAL = true;
+            case 'RECEBIMENTO NF-E': $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_RECEBIMENTO_NFE = true; break;
             // Card Services
             case 'CARD SERVICES': $scope.PERMISSAO_CARD_SERVICES = true; break;
             case 'CASH FLOW' : $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW = true; break;
@@ -1318,6 +1355,7 @@ angular.module("AtosCapital", ['ui.router',
             // Tax Services
             case 'IMPORTAÇÃO XML': return state == 'importacao-xml';
             case 'CADASTRO CERTIFICADO DIGITAL': return state == 'cadastro-certificado-digital';
+            case 'RECEBIMENTO NF-E': return state == 'recebimento-nfe';
             // Card Services
             case 'CONCILIAÇÃO BANCÁRIA': return state == 'conciliacao-bancaria';
             case 'CONCILIAÇÃO DE VENDAS': return state == 'conciliacao-vendas';

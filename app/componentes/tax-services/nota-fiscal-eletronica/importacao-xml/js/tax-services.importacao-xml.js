@@ -3,8 +3,12 @@
  *  
  *  suporte@atoscapital.com.br
  *
+ *
+ *  Versão 1.0.4 - 25/09/2015
+ *  - Notifica acesso de tela 
+ *
  *  Versão 1.0.3 - 23/09/2015
- *  -Filtro por Chave de acesso (Inserção na div sem as funcionalidades).  
+ *  - Filtro por Chave de acesso (Inserção na div sem as funcionalidades).  
  *
  *  Versão 1.0.2 - 22/09/2015
  *  - Função download deslocada para app.js
@@ -83,9 +87,9 @@ angular.module("tax-services-importacao-xml", [])
             buscaFiliais();
         }); 
         // Acessou a tela
-        //$scope.$emit("acessouTela");
-        $scope.exibeTela = true;
-        buscaFiliais();
+        $scope.$emit("acessouTela");
+        //$scope.exibeTela = true;
+        //buscaFiliais();
     };                                           
                                                 
                                             
