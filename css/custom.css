@@ -3,6 +3,9 @@
  *  
  *  suporte@atoscapital.com.br
  *
+ *  Versão 1.0.2 - 24/09/2015
+ *      -Criação dos Estilos das divs dos filtros.
+ *
  *  Versão 1.0.1 - 09/09/2015
  *      -Criação das classes para quebra de linhas para os dados exibidos no modal na tela ações de usuários.
  * 
@@ -957,9 +960,17 @@ padding-top: 16%;
 
 /*FIM ESTILOS CADASTRO DE CÓDIGO DE AUTORIZAÇÃO*/
 
-/*FIM ESTILOS TELA AÇÕES USUÁRIOS*/
+/*ESTILOS TELA AÇÕES USUÁRIOS*/
 
 .campos-modal-acoes-usuarios{
     word-wrap: break-word;
 }
-/*ESTILOS TELA AÇÕES USUÁRIOS*/
+/*FIM ESTILOS TELA AÇÕES USUÁRIOS*/
+
+/*ESTILOS DOS FILTROS*/
+
+.filtro{
+    min-height: 300px;
+}
+
+/*ESTILOS DOS FILTROS*/

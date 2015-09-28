@@ -1,0 +1,70 @@
+# README #
+
+Módulo que:
+ - gerencia o layout da tela de recebimento Nfe da Nota Fiscal Eletrônica (app/componentes/tax-services/nota-fiscal-eletronica/recebimento-nfe/index.html);
+
+ 
+ 
+### Pra Que Serve Este Módulo? ###
+
+Gerenciar completamente a tela de recebimento Nfe da Nota Fiscal Eletrônica.  
+
+
+
+### O que é necessário para usar o módulo? ###
+
+Como esse é um controller filho do controller principal "appCtrl" (app.js), ele herda todos os módulos importados por ele.
+Não é necessário nenhum outro módulo externo.
+
+ 
+### Outras depêndencias ###
+
+  * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
+  * $scope.token do "appCtrl"
+  * Emite evento "acessouTela" no init do controller para que seja feito o log de acesso de tela
+  * Evento "acessoDeTelaNotificado", proveniente do "appCtrl", para de fato exibir a tela e fazer requisições 
+	=> importante para o log correto de requisições HTTP, ao qual identifica corretamente a (tela de) origem
+  * $scope.grupoempresa, do "appCtrl" : grupo empresa informado pelo usuário na barra administrativa
+  * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
+  * APIS:
+    - tax/tbmanifesto
+	- util/utilnfe
+	
+ 
+ 
+ ### Interação com a WEB API ###
+ 
+  * tax/tbmanifesto
+    - GET : obtém os registros agrupados por emitente (coleção 5)
+		{	nrEmitenteCNPJCPF : string,
+			nmEmitente : string,
+			UF : string,
+			notas : [{	dtEmissao : datetime ou null,
+						modelo : int,
+						serie : int,
+						numero : int,
+						vlNFe : double,
+						nrChave : string,
+						// STATUS
+						nfe : string,
+						dsSituacaoManifesto : string,
+						dsSituacaoErp : string
+					}] // ordenado por dtEmissao
+		
+		}
+		
+	
+    * util/utilnfe	
+	   - GET : Recebe um conjunto de bytes para realização do download de um arquivo
+			-> Coleção 0: XML de uma única nota
+			-> Coleção 1: XMLs de um conjunto de notas (arquivo ZIP contendo XMLs)
+			-> Coleção 2: DAMFE de uma única nota (arquivo PDF) 
+			-> Coleção 3: DAMFEs de um conjunto de notas (arquivo ZIP contendo PDFs)
+   
+
+   
+   
+   
+### Desenvolvedores ###
+
+Deivid Marinho - deividgfmarinho@gmail.com
