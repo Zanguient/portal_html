@@ -162,6 +162,9 @@ angular.module("tax-services-recebimento-nfe", [])
        //console.log(filtros);
        if( filtros !=  undefined)
        {
+           $scope.manifestos = undefined;
+           $scope.confirmRecebimento = false;
+           
            $webapi.get($apis.getUrl($apis.tax.tbmanifesto, 
                                     [$scope.token, 6, /* $campos.tax.tbmanifesto.dtemissao */101],
                                     filtros)) 
@@ -171,8 +174,8 @@ angular.module("tax-services-recebimento-nfe", [])
 
                     // Obtém os dados
                     $scope.manifestos = dados.Registros;
-                    
-                   if( $scope.manifestos.length > 0)
+                    console.log(!$scope.manifestos[0].flEntrega);
+                   if( ($scope.manifestos.length > 0) && (!$scope.manifestos[0].flEntrega) )
                        $scope.confirmRecebimento = true;
                
                     // Set valores de exibição
@@ -214,7 +217,7 @@ angular.module("tax-services-recebimento-nfe", [])
       * Confirma Recebimento da NF-e
       */
     $scope.confirmaVirgencia = function(){
-        console.log($scope.manifestos.length);
+        
         // Verifica se a busca foi executada, se houve resultado e a confirmação já ocorreu
         if( $scope.manifestos.length === 0 && $scope.confirmRecebimento === false)  return;
         
