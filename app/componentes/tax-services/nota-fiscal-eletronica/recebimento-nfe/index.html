@@ -149,45 +149,7 @@
                 </div>
                 <!-- CORPO -->
                 <div class="portlet-body" ng-show="exibeTela">
-                    <div class="row paddingDivs">
-                       <!--EXIBIÇÃO-->
-                        <div class="col-xs-4 col-sm-4 col-md-4">
-                            <div class="dataTables_length">
-                                <label>
-                                    <span class="seperator"></span>Exibindo 
-                                    <select name="datatable_products_length" aria-controls="datatable_products" 
-                                            class="form-control input-xsmall input-sm input-inline"
-                                            ng-model="filtro.itens_pagina"
-                                            ng-change="alterouItensPagina()"
-                                            ng-options="item for item in itens_pagina">                                            
-                                    </select> registros de {{filtro.total_registros}}
-                                </label>
-                            </div>   
-                        </div>
-                        <!--PAGINAÇÃO-->
-                        <div class="col-xs-4 col-sm-4 col-md-3">
-                            <div class="pagination-panel centralizarPaginacao"> Página 
-                                <a href="javascript:;" ng-click="retrocedePagina()"
-                                   class="btn btn-sm default prev" 
-                                   ng-class="{disabled: filtro.pagina <= 1}" 
-                                   title="Página anterior">
-                                        <i class="fa fa-angle-left"></i>
-                                </a>
-                                <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
-                                       maxlength="4" style="text-align:center; margin: 0 5px;"
-                                       ng-model="paginaInformada" valid-integer-number
-                                       ng-keypress="($event.which === 13) ? alteraPagina() : 0"
-                                       ng-blur="atualizaPaginaDigitada()">
-                                    <a href="javascript:;" ng-click="avancaPagina()"
-                                       class="btn btn-sm default next"
-                                       ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
-                                       title="Próxima página">
-                                        <i class="fa fa-angle-right"></i>
-                                    </a>
-                                    de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
-                            </div>
-                        </div>                                   
-                    </div>
+                    
                     
                     <!-- TABELA EXTERNA -->
                     <div class="table scrollable">
@@ -206,7 +168,7 @@
                                     <th width="10%" style="text-align: center; vertical-align:middle">
                                         Valor Total<br> da Nota
                                     </th>
-                                    <th width="1%" style="text-align: center; vertical-align:middle">
+                                    <th width="1%" style="text-align: center; vertical-align:middle" ng-show="confirmRecebimento">
                                         Ação
                                     </th>
                                 </tr>
@@ -215,25 +177,30 @@
                                 <tr>
                                     <!--EMITENTE-->
                                     <td style="text-align: center; vertical-align:middle;">
-                                    {{}}    
+                                    {{manifestos[0].nmEmitente}}
                                     </td>
                                     <!-- DESTINATÁRIO -->
                                     <td style="text-align: center; vertical-align:middle;">
-                                    PETROX COMERCIAL LTDA    
+                                    {{manifestos[0].nmDestinatario}}
                                     </td>
                                     <!-- DATA DE EMISSÃO -->
                                     <td style="text-align: center; vertical-align:middle;">
-                                    25/09/2015    
+                                    {{getDataString(manifestos[0].dtEmissao)}}
+                                       
                                     </td>
                                     <!-- VALOR TOTAL DA NOTA -->
                                     <td style="text-align: center; vertical-align:middle;">
-                                    <label>R$:</label>800,00    
+                                    
+                                        {{(manifestos[0].vlNFe | currency:'R$ ') || ''}}
                                     </td>                                  
                                     <!-- BOTÃO CONFIRMAR RECEBIMENTO -->
-                                    <td style="text-align: center; vertical-align:middle;">
+                                    <td style="text-align: center; vertical-align:middle;" ng-show="confirmRecebimento">
                                         <div class="btn-group">
                                             <a class="btn green" 
-                                               href="javascript:;">
+                                               href="javascript:;"
+                                               ng-show="confirmRecebimento"
+                                               ng-click="confirmaVirgencia()"
+                                               >
                                                 Confirmar Recebimento &nbsp;<i class="fa fa-check-circle"></i>
                                              
                                                 <!--div class="row">
@@ -254,38 +221,7 @@
                     </div>
                     <!-- FIM CORPO -->
                     
-                    <!-- RODAPÉ : Exibição dos resultados e paginação -->
-                    <div class="row">
-                        <div class="col-xs-4 col-sm-4 col-md-4">
-                            <div class="dataTables_info" role="status" aria-live="polite">
-                                <strong>Exibindo os registros {{filtro.faixa_registros}}</strong>
-                            </div>
-                        </div>
-                        <!--PAGINAÇÃO-RODAPÉ-->
-                        <div class="col-xs-4 col-sm-4 col-md-3">
-                            <div class="pagination-panel centralizarPaginacao"> Página 
-                                <a href="javascript:;" ng-click="retrocedePagina()"
-                                   class="btn btn-sm default prev" 
-                                   ng-class="{disabled: filtro.pagina <= 1}" 
-                                   title="Página anterior">
-                                        <i class="fa fa-angle-left"></i>
-                                </a>
-                                <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
-                                       maxlength="4" style="text-align:center; margin: 0 5px;"
-                                       ng-model="paginaInformada" valid-integer-number
-                                       ng-keypress="($event.which === 13) ? alteraPagina() : 0"
-                                       ng-blur="atualizaPaginaDigitada()">
-                                    <a href="javascript:;" ng-click="avancaPagina()"
-                                       class="btn btn-sm default next"
-                                       ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
-                                       title="Próxima página">
-                                        <i class="fa fa-angle-right"></i>
-                                    </a>
-                                    de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
-                            </div>
-                        </div>
-                        <!-- FIM PAGINAÇÃO -->
-                    </div> 
+                    
                 </div>
             </div>
             <!--FIM TABLE PORTLET-->
