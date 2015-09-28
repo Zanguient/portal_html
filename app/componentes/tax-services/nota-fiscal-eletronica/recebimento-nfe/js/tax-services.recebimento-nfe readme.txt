@@ -35,31 +35,26 @@ Não é necessário nenhum outro módulo externo.
  ### Interação com a WEB API ###
  
   * tax/tbmanifesto
-    - GET : obtém os registros agrupados por emitente (coleção 5)
-		{	nrEmitenteCNPJCPF : string,
-			nmEmitente : string,
-			UF : string,
-			notas : [{	dtEmissao : datetime ou null,
-						modelo : int,
-						serie : int,
-						numero : int,
-						vlNFe : double,
-						nrChave : string,
-						// STATUS
-						nfe : string,
-						dsSituacaoManifesto : string,
-						dsSituacaoErp : string
-					}] // ordenado por dtEmissao
-		
-		}
+    - GET : obtém os registros agrupados por emitente (coleção 6)
+		{
+      idManifesto : int,
+   
+                       nmEmitente: string,
+    
+                       dtEmissao : datetime ou null,
+    
+                       nmDestinatario : string,
+    
+                       vlNFe : double,
+    
+                       nrChave : string,
+   
+                       cdGrupo : int   
+                       flEntrega : boolean 
+                }
 		
 	
-    * util/utilnfe	
-	   - GET : Recebe um conjunto de bytes para realização do download de um arquivo
-			-> Coleção 0: XML de uma única nota
-			-> Coleção 1: XMLs de um conjunto de notas (arquivo ZIP contendo XMLs)
-			-> Coleção 2: DAMFE de uma única nota (arquivo PDF) 
-			-> Coleção 3: DAMFEs de um conjunto de notas (arquivo ZIP contendo PDFs)
+    - PUT : 
    
 
    
