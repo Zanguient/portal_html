@@ -97,7 +97,8 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 					valorBruto : double,
 					valorParcela : double,
 					valorLiquida : double,
-					valorDescontado : double
+					valorDescontado : double,
+					vlDescontadoAntecipacao : double
 				}
 			 ],
 			 Totais : {
@@ -105,7 +106,8 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 						valorBruto : double,
 						valorParcela : double,
 						valorLiquida" : double,
-						valorDescontado : double
+						valorDescontado : double,
+						vlDescontadoAntecipacao : double
 					  }	
 
        -> ANALÍTICO (coleção 8) : sempre ordenado pela data de recebimento, seguido do desBandeira
@@ -123,15 +125,16 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 								valorBruto : double,
 								valorParcela : double,
 								valorLiquida : double,
-								valorDescontado : double
-
+								valorDescontado : double,
+								vlDescontadoAntecipacao : double
 							}
 			 ],
 			Totais : {
 			            valorBruto : double,
 						valorParcelaBruta : double,
 						valorParcelaLiquida : double,
-						valorDescontado : double
+						valorDescontado : double,
+						vlDescontadoAntecipacao : double
 					  }		
  
    

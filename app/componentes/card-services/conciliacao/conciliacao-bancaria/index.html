@@ -8,6 +8,10 @@
     Card Services > Conciliação > Conciliação Bancária
 
 
+
+    Versão 1.0.2 - 28/09/2015
+    - Data Prevista exibida no modal
+
     Versão 1.0.1 - 04/09/2015
     - Movimentações bancárias não pré-conciliadas podem ser associadas manualmente com um grupo de recebimentos
     - Exibe também a data da venda no modal
@@ -222,37 +226,43 @@
        <!-- MODAL DETALHAR DOCUMENTOS -->
        <div class="modal fade bs-modal-sm modal-input" 
             id="modalDetalhes" aria-hidden="true">
-           <div class="modal-dialog modal-sm" style="width:500px">
+           <div class="modal-dialog modal-sm" style="width:650px">
                <div class="modal-content">
                    <div class="modal-header">
                        <h4 class="modal-title modal-cabecalho">Detalhes do agrupamento</h4>
                    </div>
                    <div class="modal-body modal-corpo modalAcessoDeUsuarios" style="text-align: center">
                        <div class="row">
-                           <div class="col-sm-4">
+                           <div class="col-sm-3">
                                 <label>Bandeira</label>
                            </div>
-                           <div class="col-sm-2">
+                           <div class="col-sm-3">
                                 <label>Venda</label>
                            </div>
-                           <div class="col-sm-3">
+                           <div class="col-sm-2">
                                 <label>NSU</label>
                            </div>
-                           <div class="col-sm-3">
+                           <div class="col-sm-2">
+                                <label>Data Prevista</label>
+                           </div>
+                           <div class="col-sm-2">
                                 <label>Valor</label>
                            </div>
                        </div>
                        <div class="row" ng-repeat="item in modalDetalhes.grupo">
-                           <div class="col-sm-4" style="text-align:center">
+                           <div class="col-sm-3" style="text-align:center">
                                 {{item.Bandeira | uppercase}}
                            </div>
-                           <div class="col-sm-2" style="text-align:center"
-                                ng-bind="getDataString(item.DataVenda)">
+                           <div class="col-sm-3" style="text-align:center"
+                                ng-bind="getDataTimeString(item.DataVenda)">
                            </div>
-                           <div class="col-sm-3" style="text-align:center">
+                           <div class="col-sm-2" style="text-align:center">
                                 {{item.Documento | uppercase}}
                            </div>
-                           <div class="col-sm-3" style="text-align:center">
+                           <div class="col-sm-2" style="text-align:center"
+                                ng-bind="getDataString(item.DataPrevista)">
+                           </div>
+                           <div class="col-sm-2" style="text-align:center">
                                 {{item.Valor | currency:'R$'}}
                            </div>
                        </div>
