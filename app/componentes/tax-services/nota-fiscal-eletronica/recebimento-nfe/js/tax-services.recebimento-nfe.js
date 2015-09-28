@@ -124,14 +124,13 @@ angular.module("tax-services-recebimento-nfe", [])
                filtros.push({id: /*$campos.tax.tbmanifesto.nrCNPJ*/ 101, 
                              valor: $scope.filtro.chaveAcesso}); 
            }
-        console.log(filtros);
-        
+                
          return filtros.length > 0 ? filtros : undefined;
     }
     
     
     /* MANIFESTO
-    $scope.incrementaTotalNFes = function(totalNotas){
+    $scope.incrementaTotals = function(totalNotas){
         if(typeof totalNotas === 'number') $scope.total.nfe += totalNotas;    
     }*/
     
@@ -170,15 +169,12 @@ angular.module("tax-services-recebimento-nfe", [])
        if( filtros !=  undefined)
        {
            $webapi.get($apis.getUrl($apis.tax.tbmanifesto, 
-                                    [$scope.token, 6, /* $campos.tax.tbmanifesto.dtemissao */101, 0, 
-                                     $scope.filtro.itens_pagina, $scope.filtro.pagina],
+                                    [$scope.token, 6, /* $campos.tax.tbmanifesto.dtemissao */101],
                                     filtros)) 
                 .then(function(dados){
                     // Guarda o último filtro utilizado
                     ultimoFiltroBusca = filtros;
-                    //console.log(dados);
-                    // Reseta total de manifestos
-                    $scope.total.nfe = 0;
+                    
                     // Obtém os dados
                     $scope.manifestos = dados.Registros;
 
