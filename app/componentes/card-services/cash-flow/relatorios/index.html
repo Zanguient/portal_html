@@ -9,6 +9,9 @@
 
 
 
+    Versão 1.0.3 - 28/09/2015
+    - Valor Desconto por Antecipação
+
     Versão 1.0.2 - 22/09/2015
     - Exportar para CSV
 
@@ -414,7 +417,7 @@
                                                             <tr role="row">
                                                                 <th tabindex="0" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 15%">
+                                                                    style="width: 20%">
                                                                     Filial
                                                                 </th>
                                                                 <th tabindex="1" 
@@ -424,27 +427,32 @@
                                                                 </th>
                                                                 <th tabindex="2" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 5%">
+                                                                    style="width: 10%">
                                                                     Transações
                                                                 </th>
                                                                 <th tabindex="4" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 5%">
+                                                                    style="width: 10%">
                                                                     VL Parcela
                                                                 </th>
                                                                 <th tabindex="5" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 5%;">
+                                                                    style="width: 10%;">
                                                                     VL Descontado
-                                                                </th>                                                        
+                                                                </th>
                                                                 <th tabindex="6" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 5%;">
-                                                                    VL Líquido
-                                                                </th>                                                       
+                                                                    style="width: 15%;">
+                                                                    VL Desc. Antecipacao
+                                                                </th>
                                                                 <th tabindex="7" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 5%;">
+                                                                    style="width: 10%;">
+                                                                    VL Líquido
+                                                                </th>                                                       
+                                                                <th tabindex="8" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 10%;">
                                                                     Detalhar
                                                                 </th>                                        
                                                             </tr>
@@ -471,6 +479,10 @@
                                                                 <!-- VALOR DESCONTADO -->
                                                                 <td ng-init="total.sintetico.valorDescontado = total.sintetico.valorDescontado + relsintetico.valorDescontado">
                                                                      {{relsintetico.valorDescontado | currency:'R$'}}
+                                                                </td>
+                                                                <!-- VALOR DESCONTADO POR ANTECIPAÇÃO -->
+                                                                <td ng-init="total.sintetico.vlDescontadoAntecipacao = total.sintetico.vlDescontadoAntecipacao + relsintetico.vlDescontadoAntecipacao">
+                                                                    {{relsintetico.vlDescontadoAntecipacao | currency:'R$'}}
                                                                 </td>
                                                                 <!-- VALOR LÍQUIDO -->
                                                                 <td ng-init="total.sintetico.valorLiquido = total.sintetico.valorLiquido + relsintetico.valorLiquida">
@@ -503,6 +515,9 @@
                                                                      {{total.sintetico.valorDescontado | currency:'R$'}}
                                                                 </td>
                                                                 <td>
+                                                                    {{total.sintetico.vlDescontadoAntecipacao | currency:'R$'}}
+                                                                </td>
+                                                                <td>
                                                                      {{total.sintetico.valorLiquido | currency:'R$'}}
                                                                 </td>
                                                                 <!-- BOTÃO DETALHAR -->
@@ -522,6 +537,9 @@
                                                                 </td>
                                                                 <td>
                                                                      {{total.sintetico.valorDescontadoFiltrado | currency:'R$'}}
+                                                                </td>
+                                                                <td>
+                                                                    {{total.analitico.vlDescontadoAntecipacaoFiltrado | currency:'R$'}} 
                                                                 </td>
                                                                 <td>
                                                                      {{total.sintetico.valorLiquidoFiltrado | currency:'R$'}}
@@ -551,7 +569,7 @@
                                                                 </th>
                                                                 <th tabindex="1" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 15%;">
+                                                                    style="width: 10%;">
                                                                     Bandeira
                                                                 </th>
                                                                 <th tabindex="2" 
@@ -561,52 +579,57 @@
                                                                 </th>
                                                                 <th tabindex="3" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 10%;">
+                                                                    style="width: 5%;">
                                                                     Recebimento<br>Previsto
                                                                 </th>
                                                                 <th tabindex="4" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 10%;">
+                                                                    style="width: 5%;">
                                                                     Recebimento<br>Efetivo
                                                                 </th>
                                                                 <th tabindex="5" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 10%;">
+                                                                    style="width: 5%;">
                                                                    Resumo<br>Vendas
                                                                 </th>
                                                                 <th tabindex="6" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 10%;">
+                                                                    style="width: 5%;">
                                                                     NSU
                                                                 </th> 
                                                                 <th tabindex="7" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 10%;">
+                                                                    style="width: 5%;">
                                                                     Parcela
                                                                 </th>
                                                                 <th tabindex="8" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 10%;">
+                                                                    style="width: 5%;">
                                                                     VL <br>Bruto
                                                                 </th>
                                                                 <th tabindex="9" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 10%;">
+                                                                    style="width: 5%;">
                                                                     VL<br> Parcela
                                                                 </th>
                                                                 <th tabindex="10" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 10%;">
+                                                                    style="width: 5%;">
                                                                     VL<br> Descontado
                                                                 </th>
                                                                 <th tabindex="11" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 10%;">
+                                                                    style="width: 5%;">
                                                                     Taxa <br> Cashflow
                                                                 </th>
                                                                 <th tabindex="12" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 10%;">
+                                                                    style="width: 15%;">
+                                                                    VL<br> Desc.<br> Antecipacao
+                                                                </th>
+                                                                <th tabindex="13" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 5%;">
                                                                     VL<br> Líquido
                                                                 </th>
                                                             </tr>
@@ -659,6 +682,10 @@
                                                                 <td>
                                                         {{(relanalitico.valorDescontado*100)/relanalitico.valorParcela | number:2}}%
                                                                 </td>
+                                                                <!-- VALOR DESCONTADO POR ANTECIPAÇÃO -->
+                                                                <td ng-init="total.analitico.vlDescontadoAntecipacao = total.analitico.vlDescontadoAntecipacao + relanalitico.vlDescontadoAntecipacao">
+                                                                    {{relanalitico.vlDescontadoAntecipacao | currency:'R$'}}
+                                                                </td>
                                                                 <!-- VALOR LÍQUIDO -->
                                                                 <td ng-init="total.analitico.valorLiquido = total.analitico.valorLiquido + relanalitico.valorLiquida">
                                                                      {{relanalitico.valorLiquida | currency:'R$'}}
@@ -682,6 +709,9 @@
                                                         {{(total.analitico.valorDescontado*100)/total.analitico.valorParcela | number:2}}%
                                                                 </td>
                                                                 <td>
+                                                                    {{total.analitico.vlDescontadoAntecipacao | currency:'R$'}} 
+                                                                </td>
+                                                                <td>
                                                                     {{total.analitico.valorLiquido | currency:'R$'}} 
                                                                 </td>                                                    
                                                             </tr>
@@ -700,6 +730,9 @@
                                                                 </td>
                                                                 <td>
                                                         {{(total.analitico.valorDescontadoFiltrado*100)/total.analitico.valorParcelaFiltrado | number:2}}%
+                                                                </td>
+                                                                <td>
+                                                                    {{total.analitico.vlDescontadoAntecipacaoFiltrado | currency:'R$'}} 
                                                                 </td>
                                                                 <td>
                                                                     {{total.analitico.valorLiquidoFiltrado | currency:'R$'}} 

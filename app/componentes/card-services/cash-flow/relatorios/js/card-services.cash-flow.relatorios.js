@@ -5,6 +5,9 @@
  *
  *
  *
+ *  Versão 1.0.5 - 28/09/2015
+ *  - Valor Desconto por Antecipação
+ *
  *  Versão 1.0.4 - 22/09/2015
  *  - Ajuste da exportação: não aciona o ws
  *
@@ -69,12 +72,15 @@ angular.module("card-services-cash-flow-relatorios", [])
     $scope.relatorio = {sintetico : [], analitico : []};                                             
     // Totais
     $scope.total = {sintetico : {totalTransacoes : 0, valorBruto : 0, valorParcela : 0, 
-                                 valorLiquido : 0, valorDescontado : 0,
-                                totalTransacoesFiltrado : 0, valorBrutoFiltrado : 0, valorParcelaFiltrado : 0, 
-                                 valorLiquidoFiltrado : 0, valorDescontadoFiltrado : 0}, 
-                    analitico : {valorBruto : 0, valorParcela : 0, valorLiquido : 0, valorDescontado : 0,
+                                 valorLiquido : 0, valorDescontado : 0, vlDescontadoAntecipacao : 0,
+                                 totalTransacoesFiltrado : 0, valorBrutoFiltrado : 0, valorParcelaFiltrado : 0, 
+                                 valorLiquidoFiltrado : 0, valorDescontadoFiltrado : 0, 
+                                 valorDescontadoFiltrado : 0, vlDescontadoAntecipacaoFiltrado : 0}, 
+                    analitico : {valorBruto : 0, valorParcela : 0, valorLiquido : 0, 
+                                 valorDescontado : 0, vlDescontadoAntecipacao : 0,
                                  valorBrutoFiltrado : 0, valorParcelaFiltrado : 0, 
-                                 valorLiquidoFiltrado : 0, valorDescontadoFiltrado : 0}};                         
+                                 valorLiquidoFiltrado : 0, valorDescontadoFiltrado : 0, 
+                                 vlDescontadoAntecipacaoFiltrado : 0}};                         
     // flag
     var ultimoFiltro = undefined;
     $scope.exibeTela = false;  
@@ -546,13 +552,14 @@ angular.module("card-services-cash-flow-relatorios", [])
                 ultimoFiltro = filtros;
            
                 // Reseta os valores totais
-                $scope.total.sintetico.totalTransacoes = $scope.total.sintetico.valorBruto = $scope.total.sintetico.valorParcela = $scope.total.sintetico.valorLiquido = $scope.total.sintetico.valorDescontado = 0;
+                $scope.total.sintetico.totalTransacoes = $scope.total.sintetico.valorBruto = $scope.total.sintetico.valorParcela = $scope.total.sintetico.valorLiquido = $scope.total.sintetico.valorDescontado = $scope.total.sintetico.vlDescontadoAntecipacao = 0;
                 // Obtém os dados
                 $scope.relatorio.sintetico = dados.Registros;
                 // Obtém os totais
                 $scope.total.sintetico.totalTransacoesFiltrado = dados.Totais.totalTransacoes;
                 $scope.total.sintetico.valorBrutoFiltrado = dados.Totais.valorBruto;
                 $scope.total.sintetico.valorDescontadoFiltrado = dados.Totais.valorDescontado;
+                $scope.total.sintetico.vlDescontadoAntecipacaoFiltrado = dados.Totais.vlDescontadoAntecipacao;
                 $scope.total.sintetico.valorLiquidoFiltrado = dados.Totais.valorLiquida;
                 $scope.total.sintetico.valorParcelaFiltrado = dados.Totais.valorParcela;
                 
@@ -666,13 +673,14 @@ angular.module("card-services-cash-flow-relatorios", [])
                 ultimoFiltro = filtros;
            
                 // Reseta os valores totais
-                $scope.total.analitico.valorBruto = $scope.total.analitico.valorParcela = $scope.total.analitico.valorLiquido = $scope.total.analitico.valorDescontado = 0;
+                $scope.total.analitico.valorBruto = $scope.total.analitico.valorParcela = $scope.total.analitico.valorLiquido = $scope.total.analitico.valorDescontado = $scope.total.analitico.vlDescontadoAntecipacao = 0;
                 // Obtém os dados
                 $scope.relatorio.analitico = dados.Registros;
                 // Obtém os totais
                 $scope.total.analitico.valorParcelaFiltrado = dados.Totais.valorParcelaBruta;
                 $scope.total.analitico.valorBrutoFiltrado = dados.Totais.valorBruto;
                 $scope.total.analitico.valorDescontadoFiltrado = dados.Totais.valorDescontado;
+                $scope.total.analitico.vlDescontadoAntecipacaoFiltrado = dados.Totais.vlDescontadoAntecipacao;
                 $scope.total.analitico.valorLiquidoFiltrado = dados.Totais.valorParcelaLiquida;
            
                 // Set valores de exibição
