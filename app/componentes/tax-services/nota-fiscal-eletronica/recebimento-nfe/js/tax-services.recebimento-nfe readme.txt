@@ -54,7 +54,12 @@ Não é necessário nenhum outro módulo externo.
                 }
 		
 	
-    - PUT : 
+    - PUT : envia os registros confirmando se foi confirmado ou não.
+               {      idManifesto : int,
+                      cdGrupo : int,
+                      flEntrega : boolean
+               }
+ 
    
 
    
