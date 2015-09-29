@@ -172,7 +172,7 @@ angular.module("card-services-cadastro-codigo-autorizacao", [])
         $scope.abrirCalendarioData = !$scope.abrirCalendarioData;
       };
     $scope.alterouData = function(){
-      ajustaIntervaloDeData();
+      /*ajustaIntervaloDeData();*/
     };
     
     
