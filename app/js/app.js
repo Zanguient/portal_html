@@ -4,6 +4,10 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *
+ *  Versão 1.0.4 - 29/09/2015
+ *  - Administrativo > Gestão de Acessos  > Parâmetros de Notícias
+ *
  *  Versão 1.0.3 - 25/09/2015
  *  - Tax Services > Nota Fiscal Eletrônica > Recebimento NFE
  *
@@ -29,6 +33,7 @@ angular.module("AtosCapital", ['ui.router',
                                'nao-encontrado',
                                'administrativo-usuarios',
                                'administrativo-usuarios-cadastro',
+                               'administrativo-parametros-noticias',
                                'administrativo-privilegios',
                                'administrativo-modulos-funcionalidades',
                                'administrativo-empresas',
@@ -88,6 +93,15 @@ angular.module("AtosCapital", ['ui.router',
         url: prefixo + 'administrativo/usuarios',
         templateUrl: 'componentes/administrativo/gestao-acessos/usuarios/index.html',
         controller: "administrativo-usuariosCtrl",
+        data: {
+            titulo: 'Administrativo'
+        }
+      })
+    
+      .state('administrativo-gestao-acessos-parametros-noticias', {
+        url: prefixo + 'administrativo/parametros-noticias',
+        templateUrl: 'componentes/administrativo/gestao-acessos/parametros-noticias/index.html',
+        controller: "administrativo-parametros-noticiasCtrl",
         data: {
             titulo: 'Administrativo'
         }
@@ -450,6 +464,7 @@ angular.module("AtosCapital", ['ui.router',
     // Controllers
     var controllerAdministrativoUsuarios = undefined;
     //var controllerAdministrativoUsuariosCadastro = undefined;
+    var controllerAdministrativoParametrosNoticias = undefined;                    
     var controllerAdministrativoPrivilegios = undefined;
     var controllerAdministrativoModulosFuncionalidades = undefined;
     var controllerAdministrativoEmpresas = undefined;
@@ -482,6 +497,7 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_FILTRO_EMPRESA = false;                        
     $scope.PERMISSAO_ADMINISTRATIVO = false;
     $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS = false;
+    $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_PARAMETROS_NOTICIAS = false;                        
     $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_USUARIOS = false;
     $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_PRIVILEGIOS = false;
     $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_MODULOS_FUNCIONALIDADES = false; 
@@ -600,6 +616,13 @@ angular.module("AtosCapital", ['ui.router',
       */                         
     $scope.goHome = function(){
         $scope.goLinkController(controllerHome);    
+    };
+    /**
+      * Exibe como conteúdo a Gestão de Acessos Parâmetros Notícias, de Administrativo
+      */                     
+    $scope.goAdministrativoParametrosNoticias = function(params){
+        controllerAtual = controllerAdministrativoParametrosNoticias;
+        go('administrativo-gestao-acessos-parametros-noticias', params); 
     };
     /**
       * Exibe como conteúdo a Gestão de Acessos Usuários, de Administrativo
@@ -848,7 +871,7 @@ angular.module("AtosCapital", ['ui.router',
         // Avalia
         if(url === $state.get('administrativo-gestao-acessos-usuarios').url || 
            url === $state.get('administrativo-gestao-acessos-usuarios-cadastro').url){ 
-            // Gestão de Acesso > Usuários (cadastro ou não)
+            // Administrativo > Gestão de Acesso > Usuários (cadastro ou não)
             if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_USUARIOS){
                 // Não possui permissão!
                 event.preventDefault();
@@ -857,6 +880,15 @@ angular.module("AtosCapital", ['ui.router',
                      controllerAtual.id_controller !== controllerAdministrativoUsuarios.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
             
+        }else if(url === $state.get('administrativo-gestao-acessos-parametros-noticias').url){ 
+            // Administrativo > Gestão de Acesso > Parâmetros de Notícias
+            if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_PARAMETROS_NOTICIAS){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.goUsuarioSemPrivilegios();
+            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'PARÂMETROS DE NOTÍCIAS')
+                     controllerAtual.id_controller !== controllerAdministrativoParametrosNoticias.id_controller)
+                $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual   
         }else if(url === $state.get('administrativo-gestao-acessos-privilegios').url){ 
             // Gestão de Acesso > Privilégios
             if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS || !$scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_PRIVILEGIOS){
@@ -1102,6 +1134,11 @@ angular.module("AtosCapital", ['ui.router',
                     controllerAtual = controller;
                 controllerAdministrativoUsuarios = controller;
                 return $scope.goAdministrativoUsuarios;
+            case 'PARÂMETROS DE NOTÍCIAS' : 
+                if($location.path() === $state.get('administrativo-gestao-acessos-parametros-noticias').url) 
+                    controllerAtual = controller;
+                controllerAdministrativoParametrosNoticias = controller;
+                return $scope.goAdministrativoParametrosNoticias; 
             case 'PRIVILÉGIOS' : 
                 if($location.path() === $state.get('administrativo-gestao-acessos-privilegios').url) 
                     controllerAtual = controller;
@@ -1251,6 +1288,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'ADMINISTRATIVO' : $scope.PERMISSAO_ADMINISTRATIVO = true; break;
             case 'GESTÃO DE ACESSOS' : $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS = true; break;
             case 'USUÁRIOS' : $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_USUARIOS = true; break;
+            case 'PARÂMETROS DE NOTÍCIAS' : $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_PARAMETROS_NOTICIAS = true; break;
             case 'PRIVILÉGIOS' : $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_PRIVILEGIOS = true; break;
             case 'MÓDULOS E FUNCIONALIDADES' : $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_ACESSOS_MODULOS_FUNCIONALIDADES = true; break;
             case 'GESTÃO DE EMPRESAS' : $scope.PERMISSAO_ADMINISTRATIVO_GESTAO_DE_EMPRESAS = true; break;    
@@ -1339,6 +1377,7 @@ angular.module("AtosCapital", ['ui.router',
         switch(titulo.toUpperCase()){//id_controller){
             // Administrativo
             case 'USUÁRIOS' : return state == 'usuarios' || state == 'cadastro-usuarios';
+            case 'PARÂMETROS DE NOTÍCIAS' : return state == 'parametros-noticias';
             case 'PRIVILÉGIOS' : return state == 'privilegios';
             case 'MÓDULOS E FUNCIONALIDADES' : return state == 'modulos-funcionalidades';
             case 'EMPRESAS' : return state == 'empresas';
