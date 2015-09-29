@@ -517,7 +517,7 @@ angular.module("tax-services-importacao-xml", [])
             .then(function(dados){
                 // Obtém os dados
                 $scope.notadetalhada = undefined;
-                console.log(dados);
+                //console.log(dados);
            
                 if(dados.Registros.length > 0){ 
                     $scope.notadetalhada = dados.Registros[0].notas[0];
