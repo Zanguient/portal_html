@@ -6,8 +6,10 @@
  
  
     Administrativo > Gestão de Acessos > Parâmetros de Notícias
-
-
+ 
+    Versão 1.0.1 - 30/09/2015
+        - Criação dos selects lists de usuários e Assinantes (html).
+ 
     Versão 1.0 - 29/09/2015
 -->
 
@@ -114,6 +116,37 @@
                         <!--i class="fa fa-cogs font-green-sharp"></i-->
                         <span class="caption-subject font-green-sharp bold uppercase">Relação</span>
                     </div>
+                    <div class="actions">
+                        <a class="btn btn-circle btn-icon-only btn-default fullscreen" 
+                           href="javascript:;" 
+                           ng-click="fullScreenClick()"
+                           title="{{telaEstaEmFullScreen() ? 'Tela Normal' : 'Tela Cheia'}}"></a>
+                        <div class="btn-group element-hidden"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -->
+                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
+                            <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to Excel </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to CSV </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to XML </a>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Print Invoices </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>                   
                 
                 <!-- CORPO  -->
@@ -123,7 +156,58 @@
                     <div class="panel">
                         <div class="dataTables_wrapper dataTables_extended_wrapper no-footer">
                             
-                            
+                            <div class="form-group row">
+                                
+                                <!--SELECT LIST:TODOS USUÁRIOS DO GRUPO--> 
+                                <div class="col-md-4 col-md-offset-1 col-sm-5 titulos-select-noticias">
+                                    <label>Usuários</label>
+                                    <select multiple class="form-control select-noticias">
+                                        <option value="1">Option 1</option>
+                                        <option value="2">Option 2</option>
+                                        <option value="3">Option 3</option>
+                                        <option value="4">Option 4</option>
+                                        <option value="5">Option 5</option>
+                                    </select>
+                                </div>
+                                
+                                <!--BOTÕES-->
+                                <div class="col-md-2  col-sm-2">
+                                    <div class="row">
+                                        <div class="col-md-12" style="text-align:center">
+                                            <div class="row btn-noticias">
+                                                
+                                                <!--BOTÃO PARA INCLUIR UM ASSINANTE AO CATÁLAGO-->
+                                                <div class="col-md-12 col-sm-12">
+                                                    <button type="button" 
+                                                            class="btn red"
+                                                            ng-click="incluirLista()">
+                                                        <i class="fa fa-arrow-right"></i>
+                                                    </button>
+                                                </div>
+                                                
+                                                <!--BOTÃO PARA TIRAR DO GRUPO DE ASSINANTES DO CATÁLAGO-->
+                                                <div class="col-md-12 col-sm-12 btn-noticias-2">
+                                                    <button type="button" class="btn red">
+                                                        <i class="fa fa-arrow-left"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                 </div>
+                                
+                                <!--SELECT LIST: ASSINANTES DO CATÁLAGO SELECIONADO-->
+                                <div class="col-md-4 col-sm-5 titulos-select-noticias">
+                                    <label>Assinantes</label>
+                                    <select multiple class="form-control select-noticias">
+                                        <option value="1">Option 1</option>
+                                        <option value="2">Option 2</option>
+                                        <option value="3">Option 3</option>
+                                        <option value="4">Option 4</option>
+                                        <option value="5">Option 5</option>
+                                    </select>
+                                </div>
+                            </div>  
                         </div>
                     </div>
                 </div>
