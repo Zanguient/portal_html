@@ -174,7 +174,7 @@ angular.module("tax-services-recebimento-nfe", [])
 
                     // Obtém os dados
                     $scope.manifestos = dados.Registros;
-                    console.log(!$scope.manifestos[0].flEntrega);
+
                    if( ($scope.manifestos.length > 0) && (!$scope.manifestos[0].flEntrega) )
                        $scope.confirmRecebimento = true;
                
