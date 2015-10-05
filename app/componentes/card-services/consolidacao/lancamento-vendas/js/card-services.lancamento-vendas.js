@@ -3,6 +3,8 @@
  *  
  *  suporte@atoscapital.com.br
  *
+ * Versão 1.0.1 - 05/10/2015
+ *  -Alteração total da tela, tudo que era referente a cadastro pos/terminal virou: lançamento de vendas.
  *
  *  Versão 1.0 - 03/09/2015
  *
