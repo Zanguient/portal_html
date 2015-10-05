@@ -57,7 +57,7 @@ angular.module("AtosCapital", ['ui.router',
                                'card-services-conciliacao-vendas-dia',
                                'card-services-consolidacao-relatorios',
                                'card-services-cadastro-codigo-autorizacao',
-                               'card-services-cadastro-pos-terminal',
+                               'card-services-lancamento-vendas',
                                'tax-services-importacao-xml',
                                'tax-services-cadastro-certificado-digital',
                                'tax-services-recebimento-nfe',
@@ -331,10 +331,10 @@ angular.module("AtosCapital", ['ui.router',
         }
       })
     
-      .state('card-services-consolidacao-cadastro-pos-terminal', {
-        url: prefixo + 'card-services/cadastro-pos-terminal',
-        templateUrl: 'componentes/card-services/consolidacao/cadastro-pos-terminal/index.html',
-        controller: "card-services-cadastro-pos-terminalCtrl",
+      .state('card-services-consolidacao-lancamento-vendas', {
+        url: prefixo + 'card-services/lancamento-vendas',
+        templateUrl: 'componentes/card-services/consolidacao/lancamento-vendas/index.html',
+        controller: "card-services-lancamento-vendasCtrl",
         data: {
             titulo: 'Card Services'
         }
@@ -487,7 +487,7 @@ angular.module("AtosCapital", ['ui.router',
     var controllerCardServicesConciliacaoVendasDia = undefined;                        
     var controllerCardServicesConsolidacaoRelatorios = undefined;
     var controllerCardServicesCadastroCodigoAutorizacao = undefined; 
-    var controllerCardServicesCadastroPOSTerminal = undefined;                        
+    var controllerCardServicesLancamentoVendas = undefined;                        
     var controllerTaxServicesImportacaoXML = undefined; 
     var controllerTaxServicesCadastroCertificadoDigital = undefined;   
     var controllerTaxServicesRecebimentoNfe = undefined;                          
@@ -528,7 +528,7 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO = false;
     $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_RELATORIOS = false; 
     $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_CADASTRO_CODIGO_AUTORIZACAO = false;   
-    $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_CADASTRO_POS_TERMINAL = false;                         
+    $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_LANCAMENTO_VENDAS = false;                         
     $scope.PERMISSAO_TAX_SERVICES = false;
     $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA = false;   
     $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_IMPORTACAO_XML = false;      
@@ -800,11 +800,11 @@ angular.module("AtosCapital", ['ui.router',
         go('card-services-consolidacao-cadastro-codigo-autorizacao', params);
     }; 
     /**
-      * Exibe como conteúdo a Consolidação Cadastro de Terminal Lógico, de Card Services
+      * Exibe como conteúdo a Consolidação Lançamento de Vendas, de Card Services
       */
-    $scope.goCardServicesCadastroPOSTerminal = function(params){
-        controllerAtual = controllerCardServicesCadastroPOSTerminal;
-        go('card-services-consolidacao-cadastro-pos-terminal', params);
+    $scope.goCardServicesLancamentoVendas = function(params){
+        controllerAtual = controllerCardServicesLancamentoVendas;
+        go('card-services-consolidacao-lancamento-vendas', params);
     };                          
     /**
       * Exibe como conteúdo a Nota Fiscal Eletrônica Importação XML, de Tax Services
@@ -1074,14 +1074,14 @@ angular.module("AtosCapital", ['ui.router',
             }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'CADASTRO CÓDIGO AUTORIZAÇÃO')
                      controllerAtual.id_controller !== controllerCardServicesCadastroCodigoAutorizacao.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
-        }else if(url === $state.get('card-services-consolidacao-cadastro-pos-terminal').url){ 
-            // Card Services > Consolidação > Relatórios
-            if(!$scope.PERMISSAO_CARD_SERVICES || !$scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO || !$scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_CADASTRO_POS_TERMINAL){
+        }else if(url === $state.get('card-services-consolidacao-lancamento-vendas').url){ 
+            // Card Services > Consolidação > Lançamento de Vendas
+            if(!$scope.PERMISSAO_CARD_SERVICES || !$scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO || !$scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_LANCAMENTO_VENDAS){
                 // Não possui permissão!
                 event.preventDefault();
                 $scope.goUsuarioSemPrivilegios();
-            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'CADASTRO POS/TERMINAL') 
-                     controllerAtual.id_controller !== controllerCardServicesCadastroPOSTerminal.id_controller)
+            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'LANÇAMENTO DE VENDAS') 
+                     controllerAtual.id_controller !== controllerCardServicesLancamentoVendas.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
         }else if(url === $state.get('tax-services-nota-fiscal-eletronica-importacao-xml').url){ 
             // Tax Services > Nota Fiscal Eletrônica > Importação XML
@@ -1237,11 +1237,11 @@ angular.module("AtosCapital", ['ui.router',
                     controllerAtual = controller;
                 controllerCardServicesCadastroCodigoAutorizacao = controller;
                 return $scope.goCardServicesCadastroCodigoAutorizacao; 
-            case 'CADASTRO POS/TERMINAL': 
-                if($location.path() === $state.get('card-services-consolidacao-cadastro-pos-terminal').url) 
+            case 'LANÇAMENTO DE VENDAS': 
+                if($location.path() === $state.get('card-services-consolidacao-lancamento-vendas').url) 
                     controllerAtual = controller;
-                controllerCardServicesCadastroPOSTerminal = controller;
-                return $scope.goCardServicesCadastroPOSTerminal;     
+                controllerCardServicesLancamentoVendas = controller;
+                return $scope.goCardServicesLancamentoVendas;     
             // Tax Services
             case 'IMPORTAÇÃO XML': 
                 if($location.path() === $state.get('tax-services-nota-fiscal-eletronica-importacao-xml').url) 
@@ -1324,7 +1324,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'CONCILIAÇÃO VENDAS DIA': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_VENDAS_DIA = true; break;    
             case 'CONSOLIDAÇÃO': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO = true; break;   
             case 'CADASTRO CÓDIGO AUTORIZAÇÃO': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_CADASTRO_CODIGO_AUTORIZACAO = true; break;
-            case 'CADASTRO POS/TERMINAL': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_CADASTRO_POS_TERMINAL = true; break;    
+            case 'LANÇAMENTO DE VENDAS': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_LANCAMENTO_VENDAS = true; break;    
                 
             // AMBÍGUOS    
             case 'RELATÓRIOS': controllerpai.ds_controller.toUpperCase() === 'CASH FLOW' ? 
@@ -1401,7 +1401,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'CONCILIAÇÃO TERMINAL LÓGICO': return state == 'conciliacao-terminal-logico';
             case 'CONCILIAÇÃO DE VENDAS DIA': return state == 'conciliacao-vendas-dia';   
             case 'CADASTRO CÓDIGO AUTORIZAÇÃO': return state == 'cadastro-codigo-autorizacao';
-            case 'CADASTRO POS/TERMINAL': return state == 'cadastro-pos-terminal';   
+            case 'LANÇAMENTO DE VENDAS': return state == 'lancamento-vendas';   
                 
             // AMBÍGUOS    
             case 'RELATÓRIOS': return titulopai.toUpperCase() === 'CASH FLOW' ? 

@@ -9,12 +9,14 @@
  */
 
 // App
-angular.module("card-services-cadastro-pos-terminal", []) 
+angular.module('card-services-lancamento-vendas', []) 
 
-.controller("card-services-cadastro-pos-terminalCtrl", ['$scope','$state',function($scope,$state){ 
+.controller("card-services-lancamento-vendasCtrl", ['$scope','$state',function($scope,$state){ 
     
     // flags
     $scope.exibeTela = false;
+    
+    $scope.tab = 2;
     // Data
     $scope.datamin = new Date();
     $scope.datamax = null;
@@ -22,10 +24,10 @@ angular.module("card-services-cadastro-pos-terminal", [])
     $scope.abrirCalendarioDataMax = false;
     
     // Inicialização do controller
-    $scope.cardServices_cadastroPOSTerminalInit = function(){
+    $scope.cardServices_lancamentoVendasInit = function(){
         // Título da página 
         $scope.pagina.titulo = 'Card Services';                          
-        $scope.pagina.subtitulo = 'Cadastro POS/Terminal';
+        $scope.pagina.subtitulo = 'Lançamento de Vendas';
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
@@ -69,5 +71,21 @@ angular.module("card-services-cadastro-pos-terminal", [])
     $scope.limpaDataMax = function () {
         $scope.datamax = null;
       };
+    
+    
+    //TAB 
+    /**
+      * Retorna true se a tab informada corresponde a tab em exibição
+      */
+    $scope.tabIs = function (tab){
+        return $scope.tab === tab;
+    }
+    /**
+      * Altera a tab em exibição
+      */
+    $scope.setTab = function (tab){
+        if (tab >= 1 && tab <= 3) $scope.tab = tab;        
+    }
+      
     
 }]);

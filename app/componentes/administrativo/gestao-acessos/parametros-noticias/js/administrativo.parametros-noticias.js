@@ -21,6 +21,9 @@ angular.module("administrativo-parametros-noticias", [])
    
     
     $scope.itens_pagina = [50, 100, 150, 200];
+    $scope.catalogos = [];
+                                                
+    //$scope.filtro = {catalogos = null};                                            
     
     // flags
     $scope.exibeTela = false;                                            
