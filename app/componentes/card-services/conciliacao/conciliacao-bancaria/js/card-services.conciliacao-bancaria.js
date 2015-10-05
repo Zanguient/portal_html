@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.4 - 05/10/2015
+ *  - Seleção múltipla de cargas agrupadas na conciliação manual
+ *
  *  Versão 1.0.3 - 21/09/2015
  *  - Recebendo e enviando numParcela de Recebimento Parcela
  *  - Busca somente filiais ativas
@@ -699,6 +702,10 @@ angular.module("card-services-conciliacao-bancaria", [])
         $scope.associacaoManual.recebimentos = null;
         $scope.associacaoManual.valorExtrato = dado.ValorTotalExtrato;
         $scope.associacaoManual.adquirenteExtrato = dado.Adquirente;
+        
+        // todos os dados ficam desmarcados
+        for(var k = 0; k < $scope.dadosconciliacao.length; k++)
+            $scope.dadosconciliacao[k].selecionado = false;
     }
     /**
       * Desistiu da conciliação manual
@@ -734,8 +741,24 @@ angular.module("card-services-conciliacao-bancaria", [])
       * Selecionou o grupo de recebimentos para conciliar com o extrato selecionado para conciliação manual
       * Solicita confirmação ao usuário
       */
-    $scope.associaRecebimentos = function(dado){
-        $scope.associacaoManual.recebimentos = dado.RecebimentosParcela;
+    $scope.associaRecebimentosSelecionados = function(){
+        
+        var dados = $filter('filter')($scope.dadosconciliacao, function(d){return d.selecionado === true});
+        
+        if(dados.length === 0){
+            $scope.showModalAlerta('Nenhum conjunto de cargas foi selecionado!');
+            return;    
+        }
+        
+        //$scope.associacaoManual.recebimentos = dado.RecebimentosParcela;
+        var totalRecebimento = 0.0;
+        $scope.associacaoManual.recebimentos = [];
+        for(var k = 0; k < dados.length; k++){
+            var dado = dados[k];
+            totalRecebimento += dado.ValorTotalRecebimento;
+            for(var r = 0; r < dado.RecebimentosParcela.length; r++)
+               $scope.associacaoManual.recebimentos.push(dado.RecebimentosParcela[r]);      
+        }
         
         var d = { ExtratoBancario : $scope.associacaoManual.extrato, 
                   RecebimentosParcela : $scope.associacaoManual.recebimentos,
@@ -744,7 +767,7 @@ angular.module("card-services-conciliacao-bancaria", [])
         
         var carga = $scope.associacaoManual.recebimentos.length > 1 ? "as cargas" : "a carga";
         $scope.showModalConfirmacao('Confirmação', 
-            "Uma vez confirmada a conciliação, a movimentação e " + carga + " não poderão se envolver em outra conciliação bancária. Confirma essa conciliação de movimentação com valor de " + $filter('currency')($scope.associacaoManual.valorExtrato, 'R$', 2) + ' e ' + carga + ' com valor total de ' + $filter('currency')(dado.ValorTotalRecebimento, 'R$', 2) + '?',
+            "Uma vez confirmada a conciliação, a movimentação e " + carga + " não poderão se envolver em outra conciliação bancária. Confirma essa conciliação de movimentação com valor de " + $filter('currency')($scope.associacaoManual.valorExtrato, 'R$', 2) + ' e ' + carga + ' com valor total de ' + $filter('currency')(totalRecebimento, 'R$', 2) + '?',
             concilia, [d], 'Sim', 'Não');
     }
 }]);
