@@ -103,7 +103,7 @@
                                             ng-disabled="sacados.length == 0"
                                             ng-model="filtro.sacado"
                                             ng-change="alterouSacado()"
-                                            ng-options="sacado as (sacado.nom_pessoa | uppercase) for sacado in sacados">
+                                            ng-options="sacado as (sacado.des_forma_pagto | uppercase) for sacado in sacados">
                                         <option value="">TODAS</option>
                                     </select>
                                 </td>
@@ -247,25 +247,25 @@
                         <table class="table table-striped table-hover table-bordered dataTable no-footer conteudoTabelas" role="grid">
                             <thead>
                                 <tr role="row">
-                                    <th tabindex="0" rowspan="1" colspan="1" style="width: 10%;">
+                                    <th tabindex="0" rowspan="1" colspan="1" style="width: 15%;">
                                         PDV
                                     </th>
-                                    <th tabindex="1" rowspan="1" colspan="1" style="width: 10%;">
+                                    <th tabindex="1" rowspan="1" colspan="1" style="width: 20%;">
                                         Bandeira/Sacado
                                     </th>
-                                    <th tabindex="2" rowspan="1" colspan="1" style="width: 10%;">
+                                    <th tabindex="2" rowspan="1" colspan="1" style="width: 5%;">
                                         Data
                                     </th>
-                                    <th tabindex="3" rowspan="1" colspan="1" style="width: 10%;">
+                                    <th tabindex="3" rowspan="1" colspan="1" style="width: 5%;">
                                         Hora
                                     </th>
-                                    <th tabindex="4" rowspan="1" colspan="1" style="width: 10%;">
+                                    <th tabindex="4" rowspan="1" colspan="1" style="width: 5%;">
                                         Valor
                                     </th>
-                                    <th tabindex="5" rowspan="1" colspan="1" style="width: 10%;">
+                                    <th tabindex="5" rowspan="1" colspan="1" style="width: 5%;">
                                         Código de Autorização
                                     </th>   
-                                    <th tabindex="5" rowspan="1" colspan="1" style="width: 10%;">
+                                    <th tabindex="5" rowspan="1" colspan="1" style="width: 6%;">
                                         Opções
                                     </th> 
                                 </tr>
@@ -279,12 +279,12 @@
                                     </td>
                                     <!-- BANDEIRA/SACADO -->
                                     <td>
-                                        {{(autorizacao.sacado.nom_pessoa | uppercase) || ''}}
+                                        {{(autorizacao.sacado.des_forma_pagto | uppercase) || ''}}
                                         <select class="form-control form-filter input-sm comboBoxFiltros"
                                                 ng-disabled="sacados.length == 0"
-                                                ng-init="autorizacao.new_sacado = getAutorizacaoSacadoInSacados(autorizacao.sacado)"
+                                                ng-init="autorizacao.new_sacado = getAutorizacaoSacadoInSacados(autorizacao.pagto_pdv)"
                                                 ng-model="autorizacao.new_sacado"
-                                                ng-options="sacado as (sacado.nom_pessoa | uppercase) for sacado in sacados">
+                                                ng-options="sacado as (sacado.des_forma_pagto | uppercase) for sacado in sacados">
                                             <option value=""></option>
                                         </select>
                                     </td>
@@ -296,7 +296,7 @@
                                         {{autorizacao.hora || ''}}
                                     </td>
                                     <!-- VALOR -->
-                                    <td>
+                                    <td style="text-align:right;">
                                         {{(autorizacao.valor | currency:'R$') || ''}}
                                     </td>
                                     <!-- CÓDIGO DE AUTORIZAÇÃO -->
