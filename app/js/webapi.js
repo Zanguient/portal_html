@@ -553,10 +553,10 @@ angular.module('webapi', ['utils'])
             //tabcupomfiscal : $autenticacao.getUrlBaseRezende() + '/pgsql/tabcupomfiscal/',
             //tabduplicatareceber : $autenticacao.getUrlBaseRezende() + '/pgsql/tabduplicatareceber/',
             tabempresa : $autenticacao.getUrlBaseRezende() + '/pgsql/tabempresa/',
-            //tabformapagtopdv : $autenticacao.getUrlBaseRezende() + '/pgsql/tabformapagtopdv/',
+            tabformapagtopdv : $autenticacao.getUrlBaseRezende() + '/pgsql/tabformapagtopdv/',
             //tabnotafiscalsaida : $autenticacao.getUrlBaseRezende() + '/pgsql/tabnotafiscalsaida/',
             //tabpagamentocupom : $autenticacao.getUrlBaseRezende() + '/pgsql/tabpagamentocupom/',
-            //tabpagamentonfspdv : $autenticacao.getUrlBaseRezende() + '/pgsql/tabpagamentonfspdv/',
+            tabpagamentonfspdv : $autenticacao.getUrlBaseRezende() + '/pgsql/tabpagamentonfspdv/',
             tabpdv : $autenticacao.getUrlBaseRezende() + '/pgsql/tabpdv/',
             tabpessoa : $autenticacao.getUrlBaseRezende() + '/pgsql/tabpessoa/',
           }
