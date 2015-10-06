@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.2 - 05/10/2015
+ *  - Correção em buscaEmpresas
+ *
  *  Versão 1.0.1 - 18/09/2015
  *  - Busca somente filiais ativas
  *
@@ -599,7 +602,7 @@ angular.module("administrativo-usuarios-cadastro", [])
        // filtro
        var filtro = [{id:/*$campos.cliente.empresa.id_grupo*/ 116, valor: $scope.usuario.grupoempresa.id_grupo}];
        // Somente com status ativo
-       filtros.push({id: /*$campos.cliente.empresa.fl_ativo*/ 114, valor: 1});
+       filtro.push({id: /*$campos.cliente.empresa.fl_ativo*/ 114, valor: 1});
        //if(texto) filtro = [filtro, {id:/*$campos.cliente.empresa.ds_fantasia*/ 104, valor: texto + '%'}];
        // Obtém a URL     
        var url = $apis.getUrl($apis.cliente.empresa, 
