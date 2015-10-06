@@ -219,7 +219,7 @@ angular.module("card-services-cadastro-codigo-autorizacao", [])
         
        if(!progressoemexecucao) $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
         
-       $webapi.get($apis.getUrl($apis.rezende.pgsql.tabpessoa, 
+       $webapi.get($apis.getUrl($apis.rezende.pgsql.tabformapagtopdv/*$apis.rezende.pgsql.tabpessoa*/, 
                                 [$scope.token, 0, /*$campos.rezende.pgsql.tabpessoa.nom_pessoa*/ 101])) 
             .then(function(dados){
                 $scope.sacados = dados.Registros;
@@ -244,9 +244,10 @@ angular.module("card-services-cadastro-codigo-autorizacao", [])
       * Obtém o objeto sacado a partir de sacados
       */
     $scope.getAutorizacaoSacadoInSacados = function(sacado){
-        if(!sacado || sacado === null || sacado.cod_pessoa === 0 || $scope.sacados.length === 0) 
+        //console.log(sacado);
+        if(!sacado || sacado === null || sacado.cod_pessoa_sacado === 0 || $scope.sacados.length === 0) 
             return null;    
-        return $filter('filter')($scope.sacados, function(s){return s.cod_pessoa === sacado.cod_pessoa})[0];
+        return $filter('filter')($scope.sacados, function(s){return s.des_forma_pagto === sacado.des_forma_pagto})[0];
     }
     
     
@@ -275,13 +276,16 @@ angular.module("card-services-cadastro-codigo-autorizacao", [])
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else $scope.showAlert('Houve uma falha ao obter pdvs (' + failData.status + ')', true, 'danger', true);
                  $scope.hideProgress(divPortletBodyFiltrosPos);
-              });       
+              });   
+        //console.log($scope.pdvs);
     }
     /**
       * Selecionou um pdv
       */
     $scope.alterouPdv = function(){
         //console.log($scope.filtro.pdv); 
+        
+        
     }; 
     
     
@@ -358,14 +362,114 @@ angular.module("card-services-cadastro-codigo-autorizacao", [])
       * Salva as autorizacoes preenchidas
       */
     $scope.salvarAutorizacoes = function(){
-        
+        for(key in $scope.autorizacoes)
+        {
+            if($scope.autorizacoes[key].new_num_autorizacao != undefined && $scope.autorizacoes[key].new_num_autorizacao != $scope.autorizacoes[key].num_autorizacao)
+            {
+                 // Parametros 
+                    var jsonSequenciaAutorizacao = {
+                                                sequencia: $scope.autorizacoes[key].sequencia,
+                                                seq_pagamento: $scope.autorizacoes[key].seq_pagamento,
+                                                num_autorizacao: $scope.autorizacoes[key].new_num_autorizacao
+                                            }; 
+                    // UPDATE
+                    $scope.showProgress();
+
+                    if(!$scope.filtro.pdv.nfce)
+                    {
+                        $webapi.update($apis.getUrl($apis.rezende.pgsql.tabpagamentonfspdv, undefined,
+                                                 {id : 'token', valor : $scope.token}), jsonSequenciaAutorizacao) 
+                                .then(function(dados){           
+                                    $scope.showAlert('Código Autorização salvo com sucesso!', true, 'success', true);
+                                    // Fecha os progress
+                                    $scope.hideProgress();
+                                  },
+                                  function(failData){
+                                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                                     else if(failData.status === 500) $scope.showAlert('Houve uma falha ao salvar o Código Autorização (' + failData.status + ')', true, 'danger', true);
+                                     else $scope.showAlert('Houve uma falha ao salvar o Código Autorização (' + failData.status + ')', true, 'danger', true);
+                                     // Fecha os progress
+                                     $scope.hideProgress();
+                                  });   
+                    }
+                    else
+                    {
+                        $webapi.update($apis.getUrl($apis.rezende.pgsql.tabformapagtopdv, undefined,
+                                                 {id : 'token', valor : $scope.token}), jsonSequenciaAutorizacao) 
+                                .then(function(dados){           
+                                    $scope.showAlert('Código Autorização salvo com sucesso!', true, 'success', true);
+                                    // Fecha os progress
+                                    $scope.hideProgress();
+                                  },
+                                  function(failData){
+                                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                                     else if(failData.status === 500) $scope.showAlert('Houve uma falha ao salvar o Código Autorização (' + failData.status + ')', true, 'danger', true);
+                                     else $scope.showAlert('Houve uma falha ao salvar o Código Autorização (' + failData.status + ')', true, 'danger', true);
+                                     // Fecha os progress
+                                     $scope.hideProgress();
+                                  });   
+                    }
+            }
+        }
+
     }
     
     /**
       * Salva a autorização
       */
     $scope.salvaAutorizacao = function(autorizacao){
-        console.log(autorizacao);
+        
+        // Verifica se a busca foi executada, se houve resultado e a confirmação já ocorreu
+        if( autorizacao === undefined)  return;
+        
+        // Parametros 
+        var jsonSequenciaAutorizacao = {
+                                    sequencia: autorizacao.sequencia,
+                                    seq_pagamento: autorizacao.seq_pagamento,
+                                    num_autorizacao: autorizacao.new_num_autorizacao
+                                }; 
+        // UPDATE
+        $scope.showProgress();
+        
+        if(!$scope.filtro.pdv.nfce)
+        {
+            $webapi.update($apis.getUrl($apis.rezende.pgsql.tabpagamentonfspdv, undefined,
+                                     {id : 'token', valor : $scope.token}), jsonSequenciaAutorizacao) 
+                .then(function(dados){           
+                    $scope.showAlert('Código Autorização salvo com sucesso!', true, 'success', true);
+                    // Fecha os progress
+                    $scope.hideProgress();
+                  },
+                  function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                     else if(failData.status === 500) $scope.showAlert('Houve uma falha ao salvar o Código Autorização (' + failData.status + ')', true, 'danger', true);
+                     else $scope.showAlert('Houve uma falha ao salvar o Código Autorização (' + failData.status + ')', true, 'danger', true);
+                     // Fecha os progress
+                     $scope.hideProgress();
+                  });   
+        }
+        else
+        {
+            $webapi.update($apis.getUrl($apis.rezende.pgsql.tabformapagtopdv, undefined,
+                                     {id : 'token', valor : $scope.token}), jsonSequenciaAutorizacao) 
+                .then(function(dados){           
+                    $scope.showAlert('Código Autorização salvo com sucesso!', true, 'success', true);
+                    // Fecha os progress
+                    $scope.hideProgress();
+                  },
+                  function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                     else if(failData.status === 500) $scope.showAlert('Houve uma falha ao salvar o Código Autorização (' + failData.status + ')', true, 'danger', true);
+                     else $scope.showAlert('Houve uma falha ao salvar o Código Autorização (' + failData.status + ')', true, 'danger', true);
+                     // Fecha os progress
+                     $scope.hideProgress();
+                  });    
+        }
     }
+    
     
 }]);
