@@ -3,6 +3,9 @@
  *  
  *  suporte@atoscapital.com.br
  *
+ *  Versão 1.0.4 - 06/10/2015
+ *      -tamanho fixo pra uns cupons conciliação vendas.
+ *
  *  Versão 1.0.3 - 30/09/2015
  *      -Criação dos Estilos da tela parâmetros de notícias.
  *
@@ -406,6 +409,7 @@ tbody.conteudotabelasCentralizadas > tr > td{
 
 
 .cuponAzulConciliacaoVendas{
+    width: 250px;
     background-color: #eef7fb;
     border-color: #a6e1ec;
     color: #31708f;

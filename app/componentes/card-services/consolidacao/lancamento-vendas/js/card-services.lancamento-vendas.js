@@ -3,6 +3,10 @@
  *  
  *  suporte@atoscapital.com.br
  *
+ *
+ * Versão 1.0.2 - 06/10/2015
+ *  -Criação dos calendários (um pra POS e o outro pra Adquirente).
+ *
  * Versão 1.0.1 - 05/10/2015
  *  -Alteração total da tela, tudo que era referente a cadastro pos/terminal virou: lançamento de vendas.
  *
@@ -18,10 +22,14 @@ angular.module('card-services-lancamento-vendas', [])
     // flags
     $scope.exibeTela = false;
     
-    $scope.tab = 2;
+    $scope.tab = 1;
     // Data
     $scope.datamin = new Date();
     $scope.datamax = null;
+    $scope.dataAdquirente = null;
+    $scope.dataPos = null;
+    $scope.abrirCalendarioDataAdquirente = false;
+    $scope.abrirCalendarioDataPos = false;
     $scope.abrirCalendarioDataMin = false;
     $scope.abrirCalendarioDataMax = false;
     
@@ -57,9 +65,29 @@ angular.module('card-services-lancamento-vendas', [])
         $scope.abrirCalendarioDataMin = !$scope.abrirCalendarioDataMin;
         $scope.abrirCalendarioDataMax = false;
       };
-    $scope.alterouDataMin = function(){
+    
+    // Data Por Adquirente
+    $scope.exibeCalendarioDataAdquirente = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.abrirCalendarioDataAdquirente = !$scope.abrirCalendarioDataAdquirente;
+        $scope.abrirCalendarioDataMax = false;
+      };
+    $scope.alterouDataAdquirente = function(){
       ajustaIntervaloDeData();
     };
+    
+    // Data Por Pos
+    $scope.exibeCalendarioDataPos = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.abrirCalendarioDataPos = !$scope.abrirCalendarioDataPos;
+        $scope.abrirCalendarioDataMax = false;
+      };
+    $scope.alterouDataPos = function(){
+      ajustaIntervaloDeData();
+    };
+    
     // Data MAX
     $scope.exibeCalendarioDataMax = function($event) {
         $event.preventDefault();
