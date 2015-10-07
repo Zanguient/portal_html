@@ -22,7 +22,7 @@ angular.module('card-services-lancamento-vendas', [])
     // flags
     $scope.exibeTela = false;
     
-    $scope.tab = 1;
+    $scope.tab = 2;
     // Data
     $scope.datamin = new Date();
     $scope.datamax = null;
