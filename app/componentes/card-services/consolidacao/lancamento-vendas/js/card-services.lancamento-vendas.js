@@ -23,7 +23,7 @@ angular.module('card-services-lancamento-vendas', [])
 
     // flags
     $scope.exibeTela = false;
-    $scope.tab = 1;    
+    $scope.tab = 2;
     // Data
     $scope.datamin = new Date();
     $scope.datamax = null;
@@ -93,7 +93,6 @@ angular.module('card-services-lancamento-vendas', [])
         $scope.abrirCalendarioDataMin = !$scope.abrirCalendarioDataMin;
         $scope.abrirCalendarioDataMax = false;
       };
-
     // Data Por Adquirente
     $scope.exibeCalendarioDataAdquirente = function($event) {
         $event.preventDefault();
@@ -104,7 +103,6 @@ angular.module('card-services-lancamento-vendas', [])
     $scope.alterouDataAdquirente = function(){
       ajustaIntervaloDeData();
     };
-
     // Data Por Pos
     $scope.exibeCalendarioDataPos = function($event) {
         $event.preventDefault();
@@ -115,7 +113,6 @@ angular.module('card-services-lancamento-vendas', [])
     $scope.alterouDataPos = function(){
       ajustaIntervaloDeData();
     };
-
     // Data MAX
     $scope.exibeCalendarioDataMax = function($event) {
         $event.preventDefault();
@@ -130,8 +127,7 @@ angular.module('card-services-lancamento-vendas', [])
         $scope.datamax = null;
       };
 
-
-    //TAB
+    // TAB
     /**
       * Retorna true se a tab informada corresponde a tab em exibição
       */
@@ -174,11 +170,12 @@ angular.module('card-services-lancamento-vendas', [])
                 if(!nu_cnpj) $scope.filtro.filial = null;
                 else $scope.filtro.filial = $filter('filter')($scope.filiais, function(f) {return f.nu_cnpj === nu_cnpj;})[0];
                 //$scope.filtro.filial = $scope.filiais.length > 0 ? $scope.filiais[0] : null;
-                if($scope.filtro.filial && $scope.filtro.filial !== null)
-                    //buscaAdquirentes(true, idBandeira); // Busca adquirentes
+                if($scope.filtro.filial && $scope.filtro.filial !== null) {
+                    buscaAdquirentes(true, idBandeira); // Busca adquirentes
                     $scope.hideProgress(divPortletBody);
-                else
+                } else {
                     $scope.hideProgress(divPortletBody);
+                }
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
@@ -187,5 +184,59 @@ angular.module('card-services-lancamento-vendas', [])
                  $scope.hideProgress(divPortletBody);
               });
     };
+    /**
+      * Selecionou uma filial
+      */
+    $scope.alterouFilial = function(){
+        //console.log($scope.filtro.filial);
+        buscaAdquirentes(false);
+    };
+    /**
+      * Busca as adquirentes
+      */
+    var buscaAdquirentes = function(progressEstaAberto, idOperadora, idBandeira){
+
+       if(!$scope.filtro.filial || $scope.filtro.filial === null){
+           $scope.filtro.adquirente = $scope.filtro.bandeira = null;
+           return;
+       }
+
+       if(!progressEstaAberto) $scope.showProgress(divPortletBody, 10000);
+
+       var filtros = undefined;
+
+       // Filtro do grupo empresa => barra administrativa
+       filtros = {id: 305,
+                 //id: $campos.pos.operadora.empresa + $campos.cliente.empresa.nu_cnpj - 100,
+                  valor: $scope.filtro.filial.nu_cnpj};
+
+       $webapi.get($apis.getUrl($apis.card.tbadquirente,
+                                [$scope.token, 0, /*$campos.pos.operadora.nmOperadora*/ 101],
+                                filtros))
+            .then(function(dados){
+                console.log(dados);
+                $scope.adquirentes = dados.Registros;
+                // Reseta
+                if(!idOperadora) $scope.filtro.adquirente = null;
+                else $scope.filtro.adquirente = $filter('filter')($scope.adquirentes, function(a) {return a.id === idOperadora;})[0];
+                // Busca bandeiras
+                if($scope.filtro.adquirente && $scope.filtro.adquirente !== null) buscaBandeiras(true, idBandeira);
+                else $scope.hideProgress(divPortletBody);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter adquirentes (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress(divPortletBody);
+              });
+    }
+    /**
+      * Selecionou uma filial
+      */
+    $scope.alterouAdquirente = function(){
+        //console.log($scope.filtro.filial);
+        buscaTerminal(false);
+    };
+
 
 }]);

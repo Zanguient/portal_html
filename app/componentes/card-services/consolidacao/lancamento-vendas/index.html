@@ -93,7 +93,7 @@
 
         <div class="portlet-body" ng-show="exibeTela">
 
-            <!--POR TRANSAÇÃO-->
+            <!-- POR TRANSAÇÃO -->
             <div class="panel" ng-show="tabIs(1)">
                 <div class="portlet light">
                     <div class="portlet-body" ng-show="exibeTela">
@@ -500,13 +500,13 @@
                                             <div class="row conteudoFormularioCadastroTerminal">
                                                 <label class="col-md-4 col-sm-4">Filial</label>
                                                 <div class="col-md-8 col-sm-8">
-                                                  <select class="form-control form-filter input-sm comboBoxFiltros"
-                                                          ng-disabled="filiais.length == 0"
-                                                          ng-model="filtro.filial"
-                                                          ng-change="alterouFilial()"
-                                                          ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
-                                                      <option value="">TODAS</option>
-                                                  </select>
+                                                    <select class="form-control form-filter"
+                                                            ng-disabled="filiais.length == 0"
+                                                            ng-model="filtro.filial"
+                                                            ng-change="alterouFilial()"
+                                                            ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
+                                                        <option value="">Selecione uma Filial</option>
+                                                    </select>
                                                 </div>
                                             </div>
 
@@ -514,11 +514,14 @@
                                             <div class="row conteudoFormularioCadastroTerminal">
                                                 <label class="col-md-4 col-sm-4">Adquirente</label>
                                                 <div class="col-md-8 col-sm-8">
-                                                    <select class="form-control">
-                                                        <option>BANESECARD</option>
-                                                        <option>CIELO</option>
-                                                        <option>REDE</option>
-                                                    </select>
+                                                  <select class="form-control form-filter"
+                                                          ng-disabled="!filtro.filial || filtro.filial === null"
+                                                          ng-model="filtro.adquirente"
+                                                          ng-change="alterouAdquirente()"
+                                                          ng-options="adquirente as (adquirente.nmAdquirente | uppercase) for adquirente in adquirentes"
+                                                          >
+                                                      <option value="">Selecione uma Adquirente</option>
+                                                  </select>
                                                 </div>
                                             </div>
 
