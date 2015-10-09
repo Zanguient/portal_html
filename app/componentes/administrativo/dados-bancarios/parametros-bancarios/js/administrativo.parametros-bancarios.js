@@ -5,6 +5,11 @@
  *
  *
  *
+ *
+ *  Versão 1.0.4 - 09/10/2015
+ *  - Associação a uma bandeira
+ *  - Associação a um tipo de cartão: crédito/débito
+ *    
  *  Versão 1.0.3 - 18/09/2015
  *  - Busca somente filiais ativas
  * 
@@ -39,24 +44,31 @@ angular.module("administrativo-parametros-bancarios", [])
     // Dados    
     $scope.parametros = [];
     $scope.adquirentes = []; 
+    $scope.tbbandeiras = [];                                             
+    $scope.bandeiras = [];                                             
     $scope.filiais = [];                                             
-    $scope.filtro = {banco : undefined, tipo : '', adquirente : undefined, 
-                     filial : undefined, selecao : false, semadquirentes : false, semfiliais : false,
+    $scope.filtro = {banco : undefined, tipo : '', adquirente : undefined, bandeira : undefined, tipoCartao : '',
+                     filial : undefined, selecao : false, semadquirentes : false, semfiliais : false, sembandeiras : false,
                      itens_pagina : $scope.itens_pagina[0], order : 0,
                      pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0
                     };  
-    $scope.dsTipos = ['CREDIT', 'DEBIT'];                                             
+    $scope.dsTipos = ['CREDIT', 'DEBIT']; 
+    $scope.dsTiposCartao = ['CRÉDITO', 'DÉBITO'];                                             
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyParametrosPos = 1;                                             
     // Modal Parâmetro
     $scope.modalParametro = { titulo : '', banco : undefined, dsTipo : '', filial : undefined,
                               adquirente : undefined, dsMemo: '', flVisivel : true, estabelecimento : '',
+                              bandeira : undefined, dsTipoCartao : '', bandeiras : [],
                               textoConfirma : '', funcaoConfirma : function(){} };
     var old = null;    
     // Modal Associa Adquirente/Filial
     $scope.modalSelecionaAdquirenteFilial = { adquirente : null,
-                                             filial : null, 
-                                             estabelecimento : '' };
+                                              filial : null, 
+                                              bandeira : null,
+                                              tipocartao : '',
+                                              estabelecimento : '',
+                                              bandeiras : [] };
     // Modal Consulta Estabelecimento
     $scope.modalEstabelecimento = { estabelecimento : '', loginoperadora : null };
                                                  
@@ -65,7 +77,8 @@ angular.module("administrativo-parametros-bancarios", [])
     var permissaoCadastro = false;
     var permissaoRemocao = false;
     // Flags
-    var lastFiltroAdquirente = -1;                                             
+    var lastFiltroAdquirente = -1;    
+    var lastFiltroBandeira = -1;                                            
     $scope.buscandoBancos = false;
     $scope.buscandoestabelecimento = false;
     $scope.exibeTela = false;                                             
@@ -109,7 +122,7 @@ angular.module("administrativo-parametros-bancarios", [])
         $scope.$on('acessoDeTelaNotificado', function(event){
             $scope.exibeTela = true;
             // Carrega adquirentes
-            buscaAdquirentes(false, true, true);
+            buscaAdquirentes(false, true, true, true);
         });
         // Acessou a tela
         $scope.$emit("acessouTela");
@@ -191,6 +204,11 @@ angular.module("administrativo-parametros-bancarios", [])
     $scope.alterouDsTipo = function(){
         //console.log($scope.filtro.tipo);  
     }
+    
+    // TIPO CARTÃO
+    $scope.alterouDsTipoCartao = function(){
+        //console.log($scope.filtro.tipocartao);  
+    }
                                                  
     
     // BUSCA BANCOS  
@@ -256,13 +274,14 @@ angular.module("administrativo-parametros-bancarios", [])
     /**
       * Busca as filiais
       */
-    var buscaFiliais = function(buscaParametrosBancarios){
+    var buscaFiliais = function(buscaParametrosBancarios, buscarBandeiras){
         
        if(!$scope.usuariologado.grupoempresa){
             $scope.filtro.filial = null;
             $scope.filiais = [];
             //$scope.filtro.semfiliais = true;
-            if(buscaParametrosBancarios) buscaParametros();
+            if(buscarBandeiras) buscaBandeiras(buscaParametrosBancarios);
+            else if(buscaParametrosBancarios) buscaParametros();
             return;
        }
         
@@ -286,7 +305,8 @@ angular.module("administrativo-parametros-bancarios", [])
                 $scope.filiais = dados.Registros;
                 // Esconde progress
                 $scope.hideProgress(divPortletBodyFiltrosPos);
-                if(buscaParametrosBancarios) buscaParametros();
+                if(buscarBandeiras) buscaBandeiras(buscaParametrosBancarios);
+                else if(buscaParametrosBancarios) buscaParametros();
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
@@ -368,12 +388,17 @@ angular.module("administrativo-parametros-bancarios", [])
         if($scope.filtro.semadquirentes) $scope.filtro.adquirente = null;    
     }
     $scope.alterouAdquirente = function(){
-        // ....
+        if($scope.filtro.adquirente && $scope.filtro.adquirente !== null){ 
+            $scope.bandeiras = $filter('filter')($scope.tbbandeiras, function(b){return b.cdAdquirente === $scope.filtro.adquirente.cdAdquirente});
+        }else{
+            $scope.bandeiras = [];
+            $scope.filtro.bandeira = null;
+        }
     }
     /**
       * Busca as adquirentes
       */
-    var buscaAdquirentes = function(progressoemexecucao, buscaParametrosBancarios, buscarFiliais){
+    var buscaAdquirentes = function(progressoemexecucao, buscaParametrosBancarios, buscarFiliais, buscarBandeiras){
         var filtros = {id : /*$campos.card.tbadquirente.stAdquirente*/ 103,
                        valor : 1};
         
@@ -387,13 +412,59 @@ angular.module("administrativo-parametros-bancarios", [])
                 $scope.adquirentes = dados.Registros;
                 // Fecha o progress
                 $scope.hideProgress(divPortletBodyFiltrosPos);
-                if(buscarFiliais) buscaFiliais(buscaParametrosBancarios);
+                if(buscarFiliais) buscaFiliais(buscaParametrosBancarios, buscarBandeiras);
+                else if(buscarBandeiras) buscaBandeiras(buscaParametrosBancarios);
                 else if(buscaParametrosBancarios) buscaParametros();
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else $scope.showAlert('Houve uma falha ao obter adquirentes (' + failData.status + ')', true, 'danger', true);
+                 // Fecha o progress
+                 $scope.hideProgress(divPortletBodyFiltrosPos);  
+        });
+    }
+    
+    
+    
+    // BANDEIRAS
+    /**
+      * Somente os registros sem bandeira associada
+      */
+    $scope.selecionouCheckboxBandeira = function(){
+        if($scope.filtro.sembandeiras) $scope.filtro.bandeira = null;    
+    }
+    $scope.alterouBandeira = function(){
+        // ....
+    }
+    /**
+      * Busca as bandeiras
+      */
+    var buscaBandeiras = function(buscaParametrosBancarios){
+        
+        var filtros = undefined;
+        
+        /*if($scope.filtro.adquirente && $scope.filtro.adquirente === null){
+             filtros = {id : /*$campos.card.tbbandeira.cdadquirente* / 102,
+                        valor : $scope.filtro.adquirente.cdAdquirente };    
+        }*/
+        
+        $scope.showProgress(divPortletBodyFiltrosPos, 10000);
+        
+        $webapi.get($apis.getUrl($apis.card.tbbandeira, 
+                                [$scope.token, 1, /*$campos.card.tbbandeira.dsbandeira*/ 101, 0],
+                                filtros)) 
+            .then(function(dados){           
+                // Obtém os dados
+                $scope.tbbandeiras = dados.Registros;
+                // Fecha o progress
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+                if(buscaParametrosBancarios) buscaParametros();
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter bandeiras (' + failData.status + ')', true, 'danger', true);
                  // Fecha o progress
                  $scope.hideProgress(divPortletBodyFiltrosPos);  
         });
@@ -480,8 +551,9 @@ angular.module("administrativo-parametros-bancarios", [])
                                 filtros)) 
             .then(function(dados){           
 
-                // Armazena ultimo filtro de adquirente
+                // Armazena ultimo filtro de adquirente e de bandeira
                 lastFiltroAdquirente = $scope.filtro.adquirente ? $scope.filtro.adquirente.cdAdquirente : -1;
+                lastFiltroBandeira = $scope.filtro.bandeira ? $scope.filtro.bandeira.cdBandeira : -1;
             
                 // Obtém os dados
                 $scope.parametros = dados.Registros;
@@ -547,6 +619,8 @@ angular.module("administrativo-parametros-bancarios", [])
         $scope.modalParametro.dsMemo = '';
         $scope.modalParametro.dsTipo = $scope.dsTipos[0];
         $scope.modalParametro.filial = null;
+        $scope.modalParametro.bandeira = null;
+        $scope.modalParametro.dsTipoCartao = '';
         $scope.modalParametro.estabelecimento = '';
         
         old = null;
@@ -594,10 +668,16 @@ angular.module("administrativo-parametros-bancarios", [])
                               $scope.modalParametro.adquirente.cdAdquirente : -1; 
         var nrCnpj = $scope.modalParametro.filial && $scope.modalParametro.filial !== null ?
                        $scope.modalParametro.filial.nu_cnpj : '';
+        var cdBandeira = cdAdquirente === -1 || $scope.modalParametro.bandeira || $scope.modalParametro.bandeira === null ?
+                            -1 : $scope.modalParametro.bandeira.cdBandeira;
+        var dsTipoCartao = !$scope.modalParametro.dsTipoCartao || $scope.modalParametro.dsTipoCartao === null ? '' : 
+                             $scope.modalParametro.dsTipoCartao;
         var jsonParametro = { cdBanco : $scope.modalParametro.banco.Codigo, 
                               dsMemo : $scope.modalParametro.dsMemo,
                               dsTipo : $scope.modalParametro.dsTipo,
                               cdAdquirente : cdAdquirente,
+                              cdBandeira : cdBandeira,
+                              dsTipoCartao : dsTipoCartao,
                               nrCnpj : nrCnpj
                             };
         //console.log(jsonParametro);
@@ -626,6 +706,15 @@ angular.module("administrativo-parametros-bancarios", [])
     }
                                                  
     
+    $scope.alterouAdquirenteModalParametro = function(){
+        if($scope.modalParametro.adquirente && $scope.modalParametro.adquirente !== null){ 
+            $scope.modalParametro.bandeiras = $filter('filter')($scope.tbbandeiras, function(b){return b.cdAdquirente === $scope.modalParametro.adquirente.cdAdquirente});
+        }else{
+            $scope.modalParametro.bandeiras = [];
+            $scope.modalParametro.bandeira = null;
+        }
+    }
+    
     /**
       * Altera os dados do parâmetro bancário
       */
@@ -643,12 +732,21 @@ angular.module("administrativo-parametros-bancarios", [])
         $scope.modalParametro.dsTipo = parametro.dsTipo.toUpperCase();
         $scope.modalParametro.flVisivel = parametro.flVisivel;
         $scope.modalParametro.estabelecimento = '';
+        // Tipo cartão
+        $scope.modalParametro.dsTipoCartao = parametro.dsTipoCartao || parametro.dsTipoCartao === null ? '' : parametro.dsTipoCartao.toUpperCase();
         // Filial
         if(parametro.empresa === null) $scope.modalParametro.filial = undefined;
         else $scope.modalParametro.filial = $filter('filter')($scope.filiais, function(f) {return f.nu_cnpj === parametro.empresa.nu_cnpj;})[0];
-        // Adquirente
-        if(parametro.adquirente === null) $scope.modalParametro.adquirente = undefined;
-        else $scope.modalParametro.adquirente = $filter('filter')($scope.adquirentes, function(a) {return a.cdAdquirente === parametro.adquirente.cdAdquirente;})[0];
+        // Adquirente/Bandeira
+        if(parametro.adquirente === null){ 
+            $scope.modalParametro.adquirente = undefined;
+            $scope.modalParametro.bandeira = undefined;
+        }else{ 
+            $scope.modalParametro.adquirente = $filter('filter')($scope.adquirentes, function(a) {return a.cdAdquirente === parametro.adquirente.cdAdquirente;})[0];
+            $scope.alterouAdquirenteModalParametro();
+            if(parametro.bandeira === null) $scope.modalParametro.bandeira = undefined;
+            else $scope.modalParametro.bandeira = $filter('filter')($scope.modalParametro.bandeiras, function(b) {return b.cdBandeira === parametro.bandeira.cdBandeira;})[0];
+        }
         
         // Exibe o modal
         exibeModalParametroBancario();      
@@ -665,13 +763,24 @@ angular.module("administrativo-parametros-bancarios", [])
         if($scope.modalParametro.banco.Codigo === old.banco.Codigo &&
            $scope.modalParametro.dsMemo.toUpperCase() === old.dsMemo.toUpperCase() &&
            $scope.modalParametro.dsTipo.toUpperCase() === old.dsTipo.toUpperCase() &&
+           // Alterou tipo cartão?
+           (((!$scope.modalParametro.dsTipoCartao || $scope.modalParametro.dsTipoCartao === null) && old.dsTipoCartao === null) ||    ($scope.modalParametro.dsTipoCartao && $scope.modalParametro.dsTipoCartao !== null && 
+             old.dsTipoCartao && old.dsTipoCartao !== null && 
+             $scope.modalParametro.dsTipoCartao.toUpperCase() === old.dsTipoCartao.toUpperCase())) &&
            // Alterou adquirente ?
            (((!$scope.modalParametro.adquirente || $scope.modalParametro.adquirente === null) && old.adquirente === null) || 
-            ($scope.modalParametro.adquirente && $scope.modalParametro.adquirente !== null && old.adquirente !== null && 
+            ($scope.modalParametro.adquirente && $scope.modalParametro.adquirente !== null && 
+             old.adquirente && old.adquirente !== null && 
              $scope.modalParametro.adquirente.cdAdquirente === old.adquirente.cdAdquirente)) && 
+            // Alterou bandeira ?
+           (((!$scope.modalParametro.bandeira || $scope.modalParametro.bandeira === null) && old.bandeira === null) || 
+            ($scope.modalParametro.bandeira && $scope.modalParametro.bandeira !== null && 
+             old.bandeira && old.bandeira !== null && 
+             $scope.modalParametro.bandeira.cdBandeira === old.bandeira.cdBandeira)) && 
            // Alterou filial ?
            (((!$scope.modalParametro.filial || $scope.modalParametro.filial === null) && old.empresa === null) || 
-            ($scope.modalParametro.filial && $scope.modalParametro.filial !== null && old.empresa !== null && 
+            ($scope.modalParametro.filial && $scope.modalParametro.filial !== null && 
+             old.empresa && old.empresa !== null && 
              $scope.modalParametro.filial.nu_cnpj === old.empresa.nu_cnpj))){
             // Não houve alterações
             fechaModalParametroBancario();
@@ -685,12 +794,18 @@ angular.module("administrativo-parametros-bancarios", [])
                               $scope.modalParametro.adquirente.cdAdquirente : -1;  
         var nrCnpj = $scope.modalParametro.filial && $scope.modalParametro.filial !== null ?
                        $scope.modalParametro.filial.nu_cnpj : '';
+        var cdBandeira = cdAdquirente === -1 || !$scope.modalParametro.bandeira || $scope.modalParametro.bandeira === null ?
+                            -1 : $scope.modalParametro.bandeira.cdBandeira;
+        var dsTipoCartao = !$scope.modalParametro.dsTipoCartao || $scope.modalParametro.dsTipoCartao === null ? '' : 
+                             $scope.modalParametro.dsTipoCartao;
         var jsonParametro = { parametros : [{ cdBanco : $scope.modalParametro.banco.Codigo, 
                                               dsMemo : $scope.modalParametro.dsMemo,
                                               dsTipo : $scope.modalParametro.dsTipo
                                             }],
                               nrCnpj : nrCnpj,
                               cdAdquirente : cdAdquirente,
+                              cdBandeira : cdBandeira,
+                              dsTipoCartao : dsTipoCartao,
                               flVisivel : $scope.modalParametro.flVisivel,
                               deletar : false
                             };
@@ -920,10 +1035,18 @@ angular.module("administrativo-parametros-bancarios", [])
       */
     $scope.exibeModalSelecionaAdquirenteFilial = function(){
         if($filter('filter')($scope.parametros, function(p){ return p.selecionado; }).length > 0){
-            if(lastFiltroAdquirente === -1) $scope.modalSelecionaAdquirenteFilial.adquirente = null;
-            else $scope.modalSelecionaAdquirenteFilial.adquirente = $filter('filter')($scope.adquirentes, function(a){return a.cdAdquirente === lastFiltroAdquirente})[0];
+            if(lastFiltroAdquirente === -1){ 
+                $scope.modalSelecionaAdquirenteFilial.adquirente = null;
+                $scope.modalSelecionaAdquirenteFilial.bandeira = null;
+            }else{ 
+                $scope.modalSelecionaAdquirenteFilial.adquirente = $filter('filter')($scope.adquirentes, function(a){return a.cdAdquirente === lastFiltroAdquirente})[0];
+                $scope.alterouAdquirenteModalAdquirenteFilial();
+                if(lastFiltroBandeira === -1) $scope.modalSelecionaAdquirenteFilial.bandeira = null;
+                else $scope.modalSelecionaAdquirenteFilial.bandeira = $filter('filter')($scope.modalSelecionaAdquirenteFilial.bandeiras, function(b){return b.cdBandeira === lastFiltroBandeira})[0];
+            }
             $scope.modalSelecionaAdquirenteFilial.estabelecimento = '';
             $scope.modalSelecionaAdquirenteFilial.filial = null;
+            $scope.modalSelecionaAdquirenteFilial.tipocartao = '';
             $('#modalSelecionaAdquirenteFilial').modal('show');  
         }else
             $scope.showModalAlerta('Não há parâmetros selecionados!');
@@ -931,6 +1054,15 @@ angular.module("administrativo-parametros-bancarios", [])
     
     var fechaModalSelecionaAdquirenteFilial = function(){
         $('#modalSelecionaAdquirenteFilial').modal('hide');
+    }
+    
+    $scope.alterouAdquirenteModalAdquirenteFilial = function(){
+        if($scope.modalSelecionaAdquirenteFilial.adquirente && $scope.modalSelecionaAdquirenteFilial.adquirente !== null){ 
+            $scope.modalSelecionaAdquirenteFilial.bandeiras = $filter('filter')($scope.tbbandeiras, function(b){return b.cdAdquirente === $scope.modalSelecionaAdquirenteFilial.adquirente.cdAdquirente});
+        }else{
+            $scope.modalSelecionaAdquirenteFilial.bandeiras = [];
+            $scope.modalSelecionaAdquirenteFilial.bandeira = null;
+        }
     }
     
     /**
@@ -942,6 +1074,14 @@ angular.module("administrativo-parametros-bancarios", [])
                            $scope.modalSelecionaAdquirenteFilial.adquirente !== null ? 
                                 $scope.modalSelecionaAdquirenteFilial.adquirente.cdAdquirente : -1; 
         
+        var cdBandeira = $scope.modalSelecionaAdquirenteFilial.bandeira &&
+                           $scope.modalSelecionaAdquirenteFilial.bandeira !== null ? 
+                                $scope.modalSelecionaAdquirenteFilial.bandeira.cdBandeira : -1;
+        
+        var dsTipoCartao = $scope.modalSelecionaAdquirenteFilial.tipocartao && 
+                            $scope.modalSelecionaAdquirenteFilial.tipocartao !== null ?
+                                $scope.modalSelecionaAdquirenteFilial.tipocartao : '';
+        
         var nrCnpj = $scope.modalSelecionaAdquirenteFilial.filial && 
                      $scope.modalSelecionaAdquirenteFilial.filial !== null ?
                           $scope.modalSelecionaAdquirenteFilial.filial.nu_cnpj : '';
@@ -949,6 +1089,8 @@ angular.module("administrativo-parametros-bancarios", [])
         var jsonParametro = { parametros : [],
                               cdAdquirente : cdAdquirente,
                               nrCnpj : nrCnpj,
+                              cdBandeira : cdBandeira,
+                              dsTipoCartao : dsTipoCartao,
                               flVisivel : true,
                               deletar : false,
                             };  

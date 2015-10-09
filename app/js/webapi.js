@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.3 - 09/10/2015
+ *  - tbbandeira
+ *
  *  Versão 1.0.2 - 11/09/2015
  *  - apiRezende : Urls referente a pgsql
  *
@@ -158,6 +161,12 @@ angular.module('webapi', ['utils'])
             nrCnpj : 105,
             // Relacionamentos
             tbadquirentes : 200
+        },
+        tbbandeira : {
+            cdBandeira : 100,
+            dsBandeira : 101,
+            cdAdquirente : 102,
+            dsTipo : 103
         },
         tbcontacorrente: {
             cdContaCorrente : 100,
@@ -518,6 +527,7 @@ angular.module('webapi', ['utils'])
         conciliacaobancaria : $autenticacao.getUrlBase() + '/card/conciliacaobancaria/',
         tbadquirente : $autenticacao.getUrlBase() + '/card/tbadquirente/',
         tbbancoparametro : $autenticacao.getUrlBase() + '/card/tbbancoparametro/',
+        tbbandeira : $autenticacao.getUrlBase() + '/card/tbbandeira/',
         tbcontacorrente: $autenticacao.getUrlBase() + '/card/tbcontacorrente/',  
         tbcontacorrentetbloginadquirenteempresa : $autenticacao.getUrlBase() + '/card/tbcontacorrentetbloginadquirenteempresa/', 
         tbextrato : $autenticacao.getUrlBase() + '/card/tbextrato/', 

@@ -36,6 +36,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
   * APIS:
     - card/tbbancoparametro
 	- card/tbadquirente
+	- card/tbbandeira
 	- cliente/empresa
 	- pos/loginoperadora
 	- util/bancos
@@ -53,13 +54,23 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 			]
  
   * card/tbadquirente
-    - GET : listagem as adquirentes que podem ser cadastradas (coleção 1)
+    - GET : listagem das adquirentes (coleção 1)
 			[
-			  { cdAdquirente = int,
-                nmAdquirente = string,
-                dsAdquirente = string,
-                stAdquirente = int,  // igual a 1
-				hrExecucao = datetime,
+			  { cdAdquirente : int,
+                nmAdquirente : string,
+                dsAdquirente : string,
+                stAdquirente : int,  // igual a 1
+				hrExecucao : datetime,
+			  }
+			]	
+			
+  * card/tbbandeira
+    - GET : listagem das bandeiras (coleção 1)
+			[
+			  { cdBandeira : int,
+                dsBandeira : string,
+                cdAdquirente : int,  // igual a 1
+				dsTipo : string,
 			  }
 			]	
 			
