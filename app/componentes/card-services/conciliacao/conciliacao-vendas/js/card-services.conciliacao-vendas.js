@@ -19,7 +19,7 @@ angular.module("card-services-conciliacao-vendas", [])
     $scope.exibeTela = false;
     
     //tabs
-    $scope.tab = 2;
+    $scope.tab = 3;
     // Data
     $scope.datamin = new Date();
     $scope.datamax = null;

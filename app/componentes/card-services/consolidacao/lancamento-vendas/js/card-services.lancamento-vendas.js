@@ -38,13 +38,15 @@ angular.module('card-services-lancamento-vendas', [])
     $scope.adquirentes = [];
     $scope.bandeiras = [];
     $scope.filtro = {datamin : new Date(), datamax : '', data : 'Recebimento',
-                     filial : null, adquirente : null, bandeira : null,
+                     filial : null, adquirente : null, terminal: null, bandeira : null,
                      itens_pagina : 0, order : 0,
                      busca : ''
                     };
     // Loader
-    var divPortletBody = 0; // posição da div que vai receber o loading progress
-
+    var divPortletBody = 0;
+    // Objeto do Cupom da Direita
+    $scope.cupom = {};
+    $scope.exibeCupom = false;
     // Inicialização do controller
     $scope.cardServices_lancamentoVendasInit = function(){
         // Título da página
@@ -54,26 +56,11 @@ angular.module('card-services-lancamento-vendas', [])
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
         });
-        // Quando houver alteração do grupo empresa na barra administrativa
-        $scope.$on('alterouGrupoEmpresa', function(event){
-            if($scope.exibeTela){
-                // Avalia grupo empresa
-                if($scope.usuariologado.grupoempresa){
-                    // Reseta seleção de filtro específico de empresa
-                    $scope.filtro.filial = $scope.filtro.adquirente = $scope.filtro.bandeira = null;
-                    buscaFiliais(true);
-                }else{ // reseta tudo e não faz buscas
-                    $scope.filiais = [];
-                    $scope.adquirentes = [];
-                    $scope.bandeiras = [];
-                }
-            }
-        });
         // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la
         $scope.$on('acessoDeTelaNotificado', function(event){
             $scope.exibeTela = true;
-            // Carrega dados
             // Carregar filiais para 'por POS' e 'por Adquirente'
+            console.log('acessou a tela');
             if($scope.usuariologado.grupoempresa) buscaFiliais(true);
         });
         // Acessou a tela
@@ -126,8 +113,6 @@ angular.module('card-services-lancamento-vendas', [])
     $scope.limpaDataMax = function () {
         $scope.datamax = null;
       };
-
-    // TAB
     /**
       * Retorna true se a tab informada corresponde a tab em exibição
       */
@@ -140,7 +125,6 @@ angular.module('card-services-lancamento-vendas', [])
     $scope.setTab = function (tab){
         if (tab >= 1 && tab <= 3) $scope.tab = tab;
     }
-
     /**
       * Busca as filiais
       */
@@ -204,14 +188,13 @@ angular.module('card-services-lancamento-vendas', [])
        if(!progressEstaAberto) $scope.showProgress(divPortletBody, 10000);
 
        var filtros = undefined;
-
        // Filtro do grupo empresa => barra administrativa
        filtros = {id: 305,
                  //id: $campos.pos.operadora.empresa + $campos.cliente.empresa.nu_cnpj - 100,
                   valor: $scope.filtro.filial.nu_cnpj};
 
        $webapi.get($apis.getUrl($apis.card.tbadquirente,
-                                [$scope.token, 0, /*$campos.pos.operadora.nmOperadora*/ 101],
+                                [$scope.token, 0, /*$campos.card.tbadquirente.nmAdquirente*/ 101],
                                 filtros))
             .then(function(dados){
                 console.log(dados);
@@ -235,8 +218,105 @@ angular.module('card-services-lancamento-vendas', [])
       */
     $scope.alterouAdquirente = function(){
         //console.log($scope.filtro.filial);
-        buscaTerminal(false);
+        buscaTerminais(false);
     };
+    /**
+      * Busca as adquirentes
+      */
+    var buscaTerminais = function(progressEstaAberto, idOperadora, idBandeira){
 
+       if(!$scope.filtro.adquirente || $scope.filtro.adquirente === null){
+           $scope.filtro.terminal = null;
+           return;
+       }
+
+       if(!progressEstaAberto) $scope.showProgress(divPortletBody, 10000);
+
+       var filtros = [];
+       // Filtrar por Filial selecionada
+       filtros.push({id: 102, valor: $scope.filtro.filial.nu_cnpj});
+       // Filtrar por Adquirente selecionada
+       filtros.push({id: 101, valor: $scope.filtro.adquirente.cdAdquirente});
+
+       $webapi.get($apis.getUrl($apis.card.tbterminallogico,
+                                [$scope.token, 0, /*$campos.card.tbTerminalLogico.cdTerminalLogico*/ 100],
+                                filtros))
+            .then(function(dados){
+                console.log(dados);
+                $scope.terminais = dados.Registros;
+                // Reseta
+                if(!idOperadora) $scope.filtro.terminal = null;
+                else $scope.filtro.terminal = $filter('filter')($scope.terminais, function(a) {return a.id === idOperadora;})[0];
+                // Busca bandeiras
+                //if($scope.filtro.terminal && $scope.filtro.terminal !== null) buscaBandeiras(true, idBandeira);
+                //else $scope.hideProgress(divPortletBody);
+                $scope.hideProgress(divPortletBody);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter adquirentes (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress(divPortletBody);
+              });
+    }
+
+    /**
+      * Busca as Bandeiras para a adquirente selecionada
+      */
+    $scope.buscaBandeiras = function(progressEstaAberto) {
+      construirCupom();
+      // Se o terminal não tiver setado, bandeira será null
+      if(!$scope.filtro.terminal || $scope.filtro.terminal === null){
+        $scope.filtro.bandeira = null;
+        return;
+      }
+      if(!progressEstaAberto) $scope.showProgress(divPortletBody, 10000);
+      // Definindo filtros
+      var filtros = [];
+      // Filtrar a partir da adquirente selecionada
+      filtros.push({id: 102, valor: $scope.filtro.adquirente.cdAdquirente});
+      // Faz a requisição ao banco
+      $webapi.get($apis.getUrl($apis.card.tbbandeira,
+                               [$scope.token, 0, /*$campos.card.tbTerminalLogico.cdTerminalLogico*/ 101],
+                               filtros))
+        .then(function(dados){
+           console.log(dados);
+           $scope.bandeiras = dados.Registros;
+           // Reseta
+           //if(!idOperadora) $scope.filtro.terminal = null;
+           //else $scope.filtro.terminal = $filter('filter')($scope.terminais, function(a) {return a.id === idOperadora;})[0];
+           // Busca bandeiras
+           //if($scope.filtro.terminal && $scope.filtro.terminal !== null) buscaBandeiras(true, idBandeira);
+           //else $scope.hideProgress(divPortletBody);
+           $scope.hideProgress(divPortletBody);
+         },
+         function(failData){
+           if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+           else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+           else $scope.showAlert('Houve uma falha ao obter adquirentes (' + failData.status + ')', true, 'danger', true);
+           $scope.hideProgress(divPortletBody);
+         });
+
+    }
+    // Alterou Bandeira
+    $scope.alterouBandeira = function() {
+      $scope.tipo = $scope.filtro.bandeira.dsTipo;
+    }
+    /**
+      * Monta o cupom do lado direito da tela (POS)
+      */
+    var construirCupom = function() {
+      $scope.cupom = {
+        adquirente: $scope.filtro.adquirente.nmAdquirente,
+        filial: $scope.filtro.filial.ds_fantasia,
+        endereco: '',
+        cnpj: $scope.filtro.filial.nu_cnpj,
+        pos: $scope.filtro.terminal.cdTerminalLogico,
+        data: $scope.dataPos,
+        bandeiras: []
+      }
+      console.log($scope.cupom);
+      $scope.exibeCupom = true;
+    }
 
 }]);

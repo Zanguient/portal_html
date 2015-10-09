@@ -1,6 +1,6 @@
 /*
  *  Atos Capital - www.atoscapital.com.br
- *  
+ *
  *  suporte@atoscapital.com.br
  *
  *
@@ -33,7 +33,7 @@ angular.module('webapi', ['utils'])
         },
         pessoa : {
             id_pesssoa : 100,
-            nm_pessoa : 101, 
+            nm_pessoa : 101,
             dt_nascimento : 102,
             nu_telefone : 103,
             nu_ramal : 104
@@ -107,13 +107,13 @@ angular.module('webapi', ['utils'])
         webpagesrolelevels : {
             LevelId : 100,
             LevelNome : 101
-        },   
+        },
         webpagesroles : {
             RoleId : 100,
             RoleName : 101,
             RolePrincipal : 102,
             RoleLevel : 103
-        }, 
+        },
         webpagesusers : {
             id_users : 100,
             ds_login : 101,
@@ -122,7 +122,7 @@ angular.module('webapi', ['utils'])
             nu_cnpjEmpresa : 104,
             nu_cnpjBaseEmpresa : 105,
             id_pessoa : 106,
-            // Relacionamentos   
+            // Relacionamentos
             pessoa : 200,
             grupo_empresa : 300,
             empresa : 400,
@@ -135,7 +135,7 @@ angular.module('webapi', ['utils'])
       },
       card : {
         conciliacaobancaria : {
-            data = 100, 
+            data = 100,
             tipo = 101,
             id_grupo = 102,
             nu_cnpj = 103,
@@ -147,7 +147,9 @@ angular.module('webapi', ['utils'])
             nmAdquirente : 101,
             dsAdquirente : 102,
             stAdquirente : 103,
-            hrExecucao : 104
+            hrExecucao : 104,
+            // Relacionamentos
+            cnpj: 305
         },
         tbbancoparametro : {
             cdBanco : 100,
@@ -163,7 +165,7 @@ angular.module('webapi', ['utils'])
             cdContaCorrente : 100,
             cdGrupo : 101,
             nrCnpj : 102,
-            cdBanco : 103, 
+            cdBanco : 103,
             nrAgencia : 104
             nrConta : 105
         },
@@ -197,7 +199,7 @@ angular.module('webapi', ['utils'])
             cdEstabelecimento : 106,
             dtAlteracao : 107,
             stLoginAdquirente : 108,
-            stLoginAdquirenteEmpresa : 109, // controle de Bruno 
+            stLoginAdquirenteEmpresa : 109, // controle de Bruno
             // Relacionamentos
             tbadquirente : 200,
             empresa : 300
@@ -308,7 +310,7 @@ angular.module('webapi', ['utils'])
         terminallogico : {
             idTerminalLogico: 100,
             dsTerminalLogico : 101,
-            idOperadora : 102    
+            idOperadora : 102
         }
       },
       tax : {
@@ -322,7 +324,7 @@ angular.module('webapi', ['utils'])
             nmEmitente : 106,
             nrEmitenteIE : 107,
             dtEmissao : 108,
-            tpOperacao : 109, 
+            tpOperacao : 109,
             vlNFe : 110,
             dtRecebimento : 111,
             cdSituacaoNFe : 112,
@@ -333,7 +335,7 @@ angular.module('webapi', ['utils'])
             nrProtocoloDownload : 116,
             cdSituacaoDownload : 117,
             dsSituacaoDownload : 118,
-        },    
+        },
       },
       util : {
         bancos : {
@@ -342,8 +344,8 @@ angular.module('webapi', ['utils'])
             NomeExtenso : 102
         }
       }
-      
-      
+
+
       // REZENDE
       rezende : {
         pgsql : {
@@ -454,11 +456,11 @@ angular.module('webapi', ['utils'])
 
   return {
     /**
-      * Obtem a url completa, considerando os parâmetros e os filtros.  
-      * Se não for desejado utilizar filtro, apenas chamar a função usando dois argumentos em vez de três. 
+      * Obtem a url completa, considerando os parâmetros e os filtros.
+      * Se não for desejado utilizar filtro, apenas chamar a função usando dois argumentos em vez de três.
       *
-      * OBS: UPDATE E DELETE não possui parâmetros => só filtros. 
-      *      Para esse caso, enviar undefined como segundo parâmetro dessa função (parametros = undefined) 
+      * OBS: UPDATE E DELETE não possui parâmetros => só filtros.
+      *      Para esse caso, enviar undefined como segundo parâmetro dessa função (parametros = undefined)
       *
       *
       * @param api : url da web api
@@ -471,37 +473,40 @@ angular.module('webapi', ['utils'])
       *                           5) pagina : página a ser exibida
       * @param filtros : JSON ou array de JSON, ao qual cada elemento contem um 'id' e um 'valor'
       *                  OBS: Para between de data, passar {CODIGO_DATA : DATA_INICIO%DATA_FIM}
-      */  
+      */
     getUrl : function(api, parametros, filtros){
-      // Se for uma string, somente concatena ela    
+      console.log(api);
+      console.log(parametros);
+      console.log(filtros);
+      // Se for uma string, somente concatena ela
       if(parametros){
-          if(typeof parametros === 'string'){ 
+          if(typeof parametros === 'string'){
               // Se for enviado uma string vazia, não concatena
               if(parametros.length > 0) api = api.concat(parametros + '/');
-          }else{  
+          }else{
               // Objeto array => Concatena todos
               for(var k = 0; k < parametros.length; k++) api = api.concat(parametros[k] + '/');
-          }  
+          }
       }
-      
+
       // Filtros
       if(filtros){
          api = api.concat('?');
-         // Se for array, percorre todo ele  
-         if(angular.isArray(filtros)){  
-             for(var k = 0; k < filtros.length; k++){ 
+         // Se for array, percorre todo ele
+         if(angular.isArray(filtros)){
+             for(var k = 0; k < filtros.length; k++){
                  api = api.concat(filtros[k].id + '=' + filtros[k].valor);
                  if(k < filtros.length - 1) api = api.concat('&');
              }
          }else api = api.concat(filtros.id + '=' + filtros.valor); // é apenas um json
       }
-    
-      return api;      
-    },  
-      
- 
+
+      return api;
+    },
+
+
     administracao : {
-        logacesso : $autenticacao.getUrlBase() + '/administracao/logacesso/',   
+        logacesso : $autenticacao.getUrlBase() + '/administracao/logacesso/',
         pessoa : $autenticacao.getUrlBase() + '/administracao/pessoa/',
         tbempresa : $autenticacao.getUrlBase() + '/administracao/tbempresa/',
         tblogacessousuario : $autenticacao.getUrlBase() + '/administracao/tblogacessousuario/',
@@ -511,18 +516,20 @@ angular.module('webapi', ['utils'])
         webpagespermissions : $autenticacao.getUrlBase() + '/administracao/webpagespermissions/',
         webpagesrolelevels : $autenticacao.getUrlBase() + '/administracao/webpagesrolelevels/',
         webpagesroles : $autenticacao.getUrlBase() + '/administracao/webpagesroles/',
-        webpagesusers : $autenticacao.getUrlBase() + '/administracao/webpagesusers/', 
+        webpagesusers : $autenticacao.getUrlBase() + '/administracao/webpagesusers/',
         webpagesusersinroles : $autenticacao.getUrlBase() + '/administracao/webpagesusersinroles/'
     },
     card : {
         conciliacaobancaria : $autenticacao.getUrlBase() + '/card/conciliacaobancaria/',
         tbadquirente : $autenticacao.getUrlBase() + '/card/tbadquirente/',
         tbbancoparametro : $autenticacao.getUrlBase() + '/card/tbbancoparametro/',
-        tbcontacorrente: $autenticacao.getUrlBase() + '/card/tbcontacorrente/',  
-        tbcontacorrentetbloginadquirenteempresa : $autenticacao.getUrlBase() + '/card/tbcontacorrentetbloginadquirenteempresa/', 
-        tbextrato : $autenticacao.getUrlBase() + '/card/tbextrato/', 
-        tbloginadquirenteempresa : $autenticacao.getUrlBase() + '/card/tbloginadquirenteempresa/', 
-        uploadextrato : $autenticacao.getUrlBase() + '/card/testeupload/',    
+        tbbandeira : $autenticacao.getUrlBase() + '/card/tbbandeira/',
+        tbcontacorrente: $autenticacao.getUrlBase() + '/card/tbcontacorrente/',
+        tbcontacorrentetbloginadquirenteempresa : $autenticacao.getUrlBase() + '/card/tbcontacorrentetbloginadquirenteempresa/',
+        tbextrato : $autenticacao.getUrlBase() + '/card/tbextrato/',
+        tbloginadquirenteempresa : $autenticacao.getUrlBase() + '/card/tbloginadquirenteempresa/',
+        tbterminallogico: $autenticacao.getUrlBase() + '/card/tbterminallogico/',
+        uploadextrato : $autenticacao.getUrlBase() + '/card/testeupload/',
     },
     cliente: {
         empresa : $autenticacao.getUrlBase() + '/cliente/empresa/',
@@ -538,14 +545,14 @@ angular.module('webapi', ['utils'])
         terminallogico : $autenticacao.getUrlBase() + '/pos/terminallogico/'
     },
     tax : {
-        tbmanifesto : $autenticacao.getUrlBase() + '/tax/tbmanifesto/',    
+        tbmanifesto : $autenticacao.getUrlBase() + '/tax/tbmanifesto/',
     },
     util : {
-        bancos : $autenticacao.getUrlBase() + '/util/bancos/',   
-        utilnfe : $autenticacao.getUrlBaseDownload() + '/util/utilnfe/',   
+        bancos : $autenticacao.getUrlBase() + '/util/bancos/',
+        utilnfe : $autenticacao.getUrlBaseDownload() + '/util/utilnfe/',
     },
-      
-      
+
+
     // REZENDE
     rezende : {
         pgsql : {

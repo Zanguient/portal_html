@@ -28,7 +28,7 @@
         </li>
     </ul>
     <!-- END PAGE BREADCRUMB -->
-    <div class="portlet light"> 
+    <div class="portlet light hide"> 
         <div class="portlet-title">
             <div class="caption">								
                 <span class="caption-subject font-green-sharp bold uppercase">Filtros</span>						
@@ -206,7 +206,7 @@
         </div>
         <div class="portlet-body" ng-show="exibeTela">
             
-            <!-- POR TRANSAÇÃO-->
+            <!--ABA POR TRANSAÇÃO-->
             <div class="panel" ng-show="tabIs(1)">
                 <div class="table-container">
                     <div id="datatable_products_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">
@@ -677,35 +677,661 @@
                 </div>
             </div>
             
-            <!-- POR POS-->
+            <!--ABA POR POS-->
             <div class="panel" ng-show="tabIs(2)">
                 
                 <div class="row">
                     
                     <!--CUPOM ATOS-->
                     <div class="col-md-5">
-                            
+                        <div class="row">
+                            <!--CONTEÚDO DOS CUPONS-->
+                            <div class="col-md-7 col-md-offset-3 col-sm-7 col-sm-offset-2 cuponAzulRelatorios">
+                                <!--ADQUIRENTE-->
+                                <div class="row tituloCuponRelatorios">                                            
+                                    <div class="col-md-10 col-sm-10">
+                                        CIELO
+                                    </div>
+                                    <div class="col-md-2 col-sm-2">
+                                        <button class="btn btn-sm grey filter-submit" 
+                                                popover="Deseja remover o Cupom?"
+                                                popover-trigger="mouseenter"
+                                                popover-placement="bottom"
+                                                popover-append-to-body="true">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!--INFORMAÇÕES-->
+                                <div class="row informacoesCuponRelatorios">
+                                    <div class="col-md-12 col-sm-12">
+                                        <!--LOCAL-->
+                                        <div class="row"> 
+                                            <div class="col-md-12 col-sm-12">
+                                                Posto Sumaré
+                                            </div>
+                                        </div>
+                                        <!--ENDEREÇO-->
+                                        <div class="row">                                            
+                                            <div class="col-md-12 col-sm-12">
+                                                AV TANCREDO NEVES 1506
+                                            </div>
+                                        </div>
+                                        <!--CIDADE-->
+                                        <div class="row">                                            
+                                            <div class="col-md-12 col-sm-12">
+                                                SALVADOR BA
+                                            </div>
+                                        </div>
+                                        <!--POS-->
+                                        <div class="row">                                            
+                                            <div class="col-md-6 col-sm-6">
+                                                002002242475002
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                /POS=0034386
+                                            </div>
+                                        </div>
+                                        <!--DATA/HORA DA CONSULTA-- (NÃO TERÁ COMO SABER>
+                                        <div class="row">
+                                            <div class="col-md-6 col-sm-6">
+                                                <label style="font-size:13px">DATA:</label>21/08/2015
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <label style="font-size:13px">HORA:</label>10:30
+                                            </div>
+                                        </div-->  
+                                    </div>
+                                </div>
+                                <!--DATA/HORA DOS RELATÓRIOS-->
+                                <div class="row dataHoraCuponRelatorios">
+                                    <div class="col-md-12 col-sm-12">
+                                        <!--DATA-->
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12">
+                                                <label>Relatório de:</label>21/08/2015
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--LEGENDA-->
+                                <div class="row legendaCupomRelatorios">
+                                    <div class="col-md-12 col-sm-12">
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12">
+                                                BANDEIRA
+                                            </div>
+                                        </div>
+                                        <div class="row">    
+                                            <div class="col-md-5 col-sm-5">
+                                                TIPO
+                                            </div>
+                                            <div class="col-md-2 col-sm-2"> 
+                                                QTDE
+                                            </div>
+                                            <div class="col-md-5 col-sm-5">
+                                                TOTAL GERAL
+                                            </div>     
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5 col-sm-5">
+                                               DECRIÇÃO
+                                            </div>
+                                            <div class="col-md-2 col-sm-2"> 
+                                                QTDE
+                                            </div>
+                                            <div class="col-md-5 col-sm-5">
+                                                TOTAL 
+                                            </div>    
+                                        </div>
+                                    </div>                                
+                                </div>
+
+
+                                <!--RELATÓRIOS-->
+                                <div class="row conteudoCupomRelatorios">
+                                    <div class="col-md-10 col-sm-10">
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12">
+                                                VISA
+                                            </div>
+                                        </div>
+                                        <div class="row">    
+                                            <div class="col-md-5 col-sm-5">
+                                                CRÉDITO
+                                            </div>
+                                            <div class="col-md-2 col-sm-2"> 
+                                                009
+                                            </div>
+                                            <div class="col-md-5 col-sm-5">
+                                                1.000,87
+                                            </div>     
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5 col-sm-5">
+                                                À VISTA    
+                                            </div>
+                                            <div class="col-md-2 col-sm-2"> 
+                                                009
+                                            </div>
+                                            <div class="col-md-5 col-sm-5">
+                                                1.000,87
+                                            </div>    
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-2"> 
+                                        <button class="btn btn-sm grey filter-submit" 
+                                                popover="Deseja remover essa linha?"
+                                                popover-trigger="mouseenter"
+                                                popover-placement="bottom"
+                                                popover-append-to-body="true"
+                                                style="margin-top: 18px">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!--RÉPLICA-->
+                                <div class="row conteudoCupomRelatorios">
+                                    <div class="col-md-10 col-sm-10">
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12">
+                                                VISA
+                                            </div>
+                                        </div>
+                                        <div class="row">    
+                                            <div class="col-md-5 col-sm-5">
+                                                CRÉDITO
+                                            </div>
+                                            <div class="col-md-2 col-sm-2"> 
+                                                009
+                                            </div>
+                                            <div class="col-md-5 col-sm-5">
+                                                1.000,87
+                                            </div>     
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5 col-sm-5">
+                                                À VISTA    
+                                            </div>
+                                            <div class="col-md-2 col-sm-2"> 
+                                                009
+                                            </div>
+                                            <div class="col-md-5 col-sm-5">
+                                                1.000,87
+                                            </div>    
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-2"> 
+                                        <button class="btn btn-sm grey filter-submit" 
+                                                popover="Deseja remover essa linha?"
+                                                popover-trigger="mouseenter"
+                                                popover-placement="bottom"
+                                                popover-append-to-body="true"
+                                                style="margin-top: 18px">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!--TOTAIS RELATÓRIOS-->
+                                <div class="row totaisCuponRelatorios">
+                                    <div class="col-md-12 col-sm-12">
+                                        <div class="row">
+                                            <div class="col-md-5 col-sm-5">
+                                                total 
+                                            </div>    
+                                            <!--TOTAIS DE TRANSAÇÕES-->
+                                            <div class="col-md-2 col-sm-2">
+                                                009
+                                            </div>
+                                            <!--TOTAIS EM DINHEIRO-->
+                                            <div class="col-md-5 col-sm-5">
+                                            1.000,87
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--RODAPÉ-->
+                                <div class="row rodapeCupomRelatorio">
+                                    <div class="col-md-12 col-sm-12">
+                                        FIM DO RELATÓRIO
+                                    </div>
+                                </div>
+                            </div>
+                            <!--FIM CONTEÚDO DOS CUPONS-->
+                        </div>
                     </div>
                     
                     <!--BOTÃO CONCILIAR-->
-                    <div class="col-md-2">
-                    
+                    <div class="col-md-2" style="text-align:center; ">
+                        <button class="btn">
+                            <i class="fa fa-plus"></i>
+                        </button>
                     </div>
                     
                     <!--CUPOM CLIENTE-->
                     <div class="col-md-5">
-                    
+                        <div class="row">
+                            <!--CONTEÚDO DOS CUPONS-->
+                            <div class="col-md-7 col-md-offset-3 col-sm-7 col-sm-offset-2 cuponAzulRelatorios">
+                                <!--ADQUIRENTE-->
+                                <div class="row tituloCuponRelatorios">                                            
+                                    <div class="col-md-10 col-sm-10">
+                                        CIELO
+                                    </div>
+                                    <div class="col-md-2 col-sm-2">
+                                        <button class="btn btn-sm grey filter-submit" 
+                                                popover="Deseja remover o Cupom?"
+                                                popover-trigger="mouseenter"
+                                                popover-placement="bottom"
+                                                popover-append-to-body="true">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!--INFORMAÇÕES-->
+                                <div class="row informacoesCuponRelatorios">
+                                    <div class="col-md-12 col-sm-12">
+                                        <!--LOCAL-->
+                                        <div class="row"> 
+                                            <div class="col-md-12 col-sm-12">
+                                                Posto Sumaré
+                                            </div>
+                                        </div>
+                                        <!--ENDEREÇO-->
+                                        <div class="row">                                            
+                                            <div class="col-md-12 col-sm-12">
+                                                AV TANCREDO NEVES 1506
+                                            </div>
+                                        </div>
+                                        <!--CIDADE-->
+                                        <div class="row">                                            
+                                            <div class="col-md-12 col-sm-12">
+                                                SALVADOR BA
+                                            </div>
+                                        </div>
+                                        <!--POS-->
+                                        <div class="row">                                            
+                                            <div class="col-md-6 col-sm-6">
+                                                002002242475002
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                /POS=0034386
+                                            </div>
+                                        </div>
+                                        <!--DATA/HORA DA CONSULTA-- (NÃO TERÁ COMO SABER>
+                                        <div class="row">
+                                            <div class="col-md-6 col-sm-6">
+                                                <label style="font-size:13px">DATA:</label>21/08/2015
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <label style="font-size:13px">HORA:</label>10:30
+                                            </div>
+                                        </div-->  
+                                    </div>
+                                </div>
+                                <!--DATA/HORA DOS RELATÓRIOS-->
+                                <div class="row dataHoraCuponRelatorios">
+                                    <div class="col-md-12 col-sm-12">
+                                        <!--DATA-->
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12">
+                                                <label>Relatório de:</label>21/08/2015
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--LEGENDA-->
+                                <div class="row legendaCupomRelatorios">
+                                    <div class="col-md-12 col-sm-12">
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12">
+                                                BANDEIRA
+                                            </div>
+                                        </div>
+                                        <div class="row">    
+                                            <div class="col-md-5 col-sm-5">
+                                                TIPO
+                                            </div>
+                                            <div class="col-md-2 col-sm-2"> 
+                                                QTDE
+                                            </div>
+                                            <div class="col-md-5 col-sm-5">
+                                                TOTAL GERAL
+                                            </div>     
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5 col-sm-5">
+                                               DECRIÇÃO
+                                            </div>
+                                            <div class="col-md-2 col-sm-2"> 
+                                                QTDE
+                                            </div>
+                                            <div class="col-md-5 col-sm-5">
+                                                TOTAL 
+                                            </div>    
+                                        </div>
+                                    </div>                                
+                                </div>
+
+
+                                <!--RELATÓRIOS-->
+                                <div class="row conteudoCupomRelatorios">
+                                    <div class="col-md-10 col-sm-10">
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12">
+                                                VISA
+                                            </div>
+                                        </div>
+                                        <div class="row">    
+                                            <div class="col-md-5 col-sm-5">
+                                                CRÉDITO
+                                            </div>
+                                            <div class="col-md-2 col-sm-2"> 
+                                                009
+                                            </div>
+                                            <div class="col-md-5 col-sm-5">
+                                                1.000,87
+                                            </div>     
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5 col-sm-5">
+                                                À VISTA    
+                                            </div>
+                                            <div class="col-md-2 col-sm-2"> 
+                                                009
+                                            </div>
+                                            <div class="col-md-5 col-sm-5">
+                                                1.000,87
+                                            </div>    
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-2"> 
+                                        <button class="btn btn-sm grey filter-submit" 
+                                                popover="Deseja remover essa linha?"
+                                                popover-trigger="mouseenter"
+                                                popover-placement="bottom"
+                                                popover-append-to-body="true"
+                                                style="margin-top: 18px">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!--RÉPLICA-->
+                                <div class="row conteudoCupomRelatorios">
+                                    <div class="col-md-10 col-sm-10">
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12">
+                                                VISA
+                                            </div>
+                                        </div>
+                                        <div class="row">    
+                                            <div class="col-md-5 col-sm-5">
+                                                CRÉDITO
+                                            </div>
+                                            <div class="col-md-2 col-sm-2"> 
+                                                009
+                                            </div>
+                                            <div class="col-md-5 col-sm-5">
+                                                1.000,87
+                                            </div>     
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5 col-sm-5">
+                                                À VISTA    
+                                            </div>
+                                            <div class="col-md-2 col-sm-2"> 
+                                                009
+                                            </div>
+                                            <div class="col-md-5 col-sm-5">
+                                                1.000,87
+                                            </div>    
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-2"> 
+                                        <button class="btn btn-sm grey filter-submit" 
+                                                popover="Deseja remover essa linha?"
+                                                popover-trigger="mouseenter"
+                                                popover-placement="bottom"
+                                                popover-append-to-body="true"
+                                                style="margin-top: 18px">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!--TOTAIS RELATÓRIOS-->
+                                <div class="row totaisCuponRelatorios">
+                                    <div class="col-md-12 col-sm-12">
+                                        <div class="row">
+                                            <div class="col-md-5 col-sm-5">
+                                                total 
+                                            </div>    
+                                            <!--TOTAIS DE TRANSAÇÕES-->
+                                            <div class="col-md-2 col-sm-2">
+                                                009
+                                            </div>
+                                            <!--TOTAIS EM DINHEIRO-->
+                                            <div class="col-md-5 col-sm-5">
+                                            1.000,87
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--RODAPÉ-->
+                                <div class="row rodapeCupomRelatorio">
+                                    <div class="col-md-12 col-sm-12">
+                                        FIM DO RELATÓRIO
+                                    </div>
+                                </div>
+                            </div>
+                            <!--FIM CONTEÚDO DOS CUPONS-->
+                        </div>
                     </div>
                 </div>
             </div>   
             
-            <!-- POR ADQUIRENTE-->
+            <!--ABA POR ADQUIRENTE-->
             <div class="panel" ng-show="tabIs(3)">
-                teste 2
-            </div>
+                <!-- TABELA EXTERNA -->
+                <div class="table scrollable">
+                    <table class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
+                        <thead>
+                            <tr>
+                                <th colspan="6" class="cabecalhoTheadTabelas">
+                                    VALOR BRUTO
+                                </th>
+                            </tr>
+                            <tr>
+                                <th width="">
+                                </th>
+                                <th width="" style="text-align: center;">
+                                    Adquirente
+                                </th>
+                                <th width="" style="text-align: center;">
+                                    CardServices
+                                </th>
+                                <th width="" style="text-align: center;">
+                                    Controle Cliente
+                                </th>
+                                <th width="" style="text-align: center;">
+                                    Diferença
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="text-align: center;">
+                                    <a href="javascript:;" ng-click="toggle(manifesto)">
+                                        <i class="fa"
+                                           ng-class="{'fa-plus-square' : !isExpanded(manifesto), 'fa-minus-square' : isExpanded(manifesto)}"
+                                           style="margin-top: -3px;"> 
+                                        </i> 
+                                    </a>
+                                </td>
+                                <!-- ADQUIRENTE -->
+                                <td>
+                                    
+                                </td>
+                                <!-- CARDSERVICES -->
+                                <td>
+                                        
+                                </td>
+                                <!-- CONTROLE CLIENTE -->
+                                <td>
+                                    
+                                </td>
+                                <!-- DIFERENÇA -->
+                                <td>
+                                    
+                                </td>
+                            </tr>
+                            <!-- LINHA EXPANSÍVEL -->
+                            <tr ng-repeat-end ng-show="isExpanded(manifesto)"> 
+                                <td colspan="6">
+                                    <!-- TABELA INTERNA -->
+                                    <table class="table table-striped table-bordered table-hover dataTable no-footer">
+                                        <thead> 
+                                            <tr>
+                                                <th colspan="6" class="cabecalhoTheadTabelas">
+                                                    DADOS NF-e
+                                                </th>
+                                                <th colspan="3" class="cabecalhoTheadTabelas">
+                                                    STATUS
+                                                </th>
+                                                <th rowspan="1" colspan="1" 
+                                                    class="cabecalhoTheadTabelas">
+                                                    AÇÕES
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <!-- DADOS NFE -->
+                                                <th width="5%">
+                                                    Emissão
+                                                </th>
+                                                <th width="" style="text-align: center;">
+                                                    Modelo
+                                                </th>
+                                                <th width="" style="text-align: center;">
+                                                    Número
+                                                </th>
+                                                <th width="" style="text-align: center;">
+                                                    Série
+                                                </th>
+                                                <th width="" style="text-align: center;">
+                                                    Valor NF
+                                                </th>
+
+                                                <th width="" style="text-align: center;">
+                                                    Recebimento
+                                                </th>
+                                                <th width="" style="text-align: center;">
+                                                    NF-e
+                                                </th>
+                                                <th width="" style="text-align: center;">
+                                                    Manifesto
+                                                </th>
+                                                <th width="" style="text-align: center;">
+                                                    ERP
+                                                </th>
+                                                <!-- BOTÃO -->
+                                                <th width="7%"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                             <!-- DADOS NFE -->
+                                             <tr ng-repeat="nota in manifesto.notas">
+                                                <!-- DATA DE EMISSÃO -->
+                                                <td ng-bind="getDataString(nota.dtEmissao)">
+                                                </td>
+                                                <!-- MODELO -->
+                                                <td>
+                                                    {{nota.modelo}}
+                                                </td>
+                                                <!-- NÚMERO -->
+                                                <td>
+                                                    {{nota.numero}}
+                                                </td>
+                                                <!-- SÉRIE --> 
+                                                <td>
+                                                    {{nota.serie}}
+                                                </td>
+                                                <!-- VALOR NF -->  
+                                                <td>
+                                                    {{nota.vlNFe | currency:'R$'}}
+                                                </td>
+                                                <!-- DATA DE RECEBIMENTO --> 
+                                                <td ng-bind="getDataString(nota.dtEntrega)">
+                                                </td>
+                                                <!-- STATUS-->
+                                                <!-- NF -->
+                                                <td>
+                                                    {{nota.nfe}}
+                                                </td>
+                                                <!-- MANIFESTO --> 
+                                                <td>
+                                                    {{nota.dsSituacaoManifesto}}
+                                                </td>
+                                                <!-- ERP --> 
+                                                <td>
+                                                    {{nota.dsSituacaoErp}}
+                                                </td>
+                                                <!-- BOTÃO -->
+                                                <td>
+                                                    <div class="btn-group" dropdown dropdown-append-to-body>
+                                                        <a class="btn btn-default btn-circle" 
+                                                           href="javascript:;" dropdown-toggle>
+                                                            <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
+                                                        </a>
+                                                        <ul class="dropdown-menu dropDownAtos">
+                                                            <li>
+                                                                <a href="javascript:;" 
+                                                                   ng-click="downloadDANFE(manifesto, $index)">
+                                                                    DANFE
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="javascript:;" 
+                                                                   ng-click="detalhar(manifesto, $index)">
+                                                                    Detalhes
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="javascript:;" 
+                                                                   ng-click="imprimir(manifesto, $index)">
+                                                                    Imprimir
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="javascript:;" 
+                                                                   ng-click="downloadXML(manifesto, $index)">
+                                                                    XML
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table> 
+                                </td>
+                            </tr>
+                            <tr role="row" class="odd linhaTotalRelatorios">
+                                <!-- TOTAL NF-e -->
+                                <td colspan="4" style="text-align:right;">
+                                     Total Exibido
+                                </td>                                                     
+                                <td>
+                                     {{total.nfe || '0'}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- FIM CORPO -->
+           </div>
         </div>    
-        
-        
-        
     </div>
 </div>

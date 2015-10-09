@@ -90,10 +90,8 @@
                 </div-->
             </div>
         </div>
-
         <div class="portlet-body" ng-show="exibeTela">
-
-            <!-- POR TRANSAÇÃO -->
+            <!--POR TRANSAÇÃO-->
             <div class="panel" ng-show="tabIs(1)">
                 <div class="portlet light">
                     <div class="portlet-body" ng-show="exibeTela">
@@ -501,7 +499,7 @@
                                                 <label class="col-md-4 col-sm-4">Filial</label>
                                                 <div class="col-md-8 col-sm-8">
                                                     <select class="form-control form-filter"
-                                                            ng-disabled="filiais.length == 0"
+                                                            ng-disabled="filiais.length == 0 || dataPos == null"
                                                             ng-model="filtro.filial"
                                                             ng-change="alterouFilial()"
                                                             ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
@@ -527,17 +525,26 @@
 
                                             <!--TERMINAL LÓGICO-->
                                             <div class="row conteudoFormularioCadastroTerminal">
-                                                <label class="col-md-4 col-sm-4">Terminal</label>
+                                                <label class="col-md-4 col-sm-4">POS</label>
                                                 <div class="col-md-8 col-sm-8">
-                                                    <select class="form-control">
-                                                        <option></option>
-                                                    </select>
+                                                  <select class="form-control form-filter"
+                                                          ng-disabled="!filtro.adquirente || filtro.adquirente === null"
+                                                          ng-model="filtro.terminal"
+                                                          ng-change="alterouTerminal()"
+                                                          ng-options="terminal as (terminal.cdTerminalLogico | uppercase) for terminal in terminais"
+                                                          >
+                                                      <option value="">Selecione um POS</option>
+                                                  </select>
                                                 </div>
                                             </div>
 
+
                                             <!--BOTÃO CONSULTAR-->
                                                 <div class="col-md-4 col-md-offset-8 col-sm-4 col-sm-offset-8 " style="text-align:right;margin-top:15px">
-                                                    <button class=" btn btn-sm red filter-submit margin-bottom">
+                                                    <button class=" btn btn-sm red filter-submit margin-bottom"
+                                                            ng-disabled="!filtro.terminal || filtro.terminal === null"
+                                                            ng-click="buscaBandeiras()"
+                                                            >
                                                         <i class="fa fa-search"></i>
                                                         Consultar
                                                     </button>
@@ -549,14 +556,19 @@
 
                                                 </div>
                                             </div>
-
+                                          <div ng-show="exibeCupom">
                                             <!--BANDEIRA-->
                                             <div class="row conteudoFormularioCadastroTerminal">
                                                 <label class="col-md-4 col-sm-4">Bandeira</label>
                                                 <div class="col-md-8 col-sm-8">
-                                                    <select class="form-control">
-                                                        <option></option>
-                                                    </select>
+                                                  <select class="form-control form-filter"
+                                                          ng-disabled="!filtro.terminal || filtro.terminal === null"
+                                                          ng-model="filtro.bandeira"
+                                                          ng-change="alterouBandeira()"
+                                                          ng-options="bandeira as (bandeira.dsBandeira | uppercase) for bandeira in bandeiras"
+                                                          >
+                                                      <option value="">Selecione uma Bandeira</option>
+                                                  </select>
                                                 </div>
                                             </div>
 
@@ -564,9 +576,11 @@
                                             <div class="row conteudoFormularioCadastroTerminal">
                                                 <label class="col-md-4 col-sm-4">Tipo</label>
                                                 <div class="col-md-8 col-sm-8">
-                                                    <select class="form-control">
-                                                        <option>Crédito</option>
-                                                        <option>Débito</option>
+                                                    <select class="form-control"
+                                                            ng-disabled="!filtro.bandeira || filtro.bandeira === null"
+                                                            ng-model="tipo"
+                                                            >
+                                                        <option>{{ tipo }}</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -608,6 +622,7 @@
                                                     </button>
                                                 </div>
                                             </div>
+                                          </div>
                                         </div>
                                         <!--BOTÃO SALVAR-- ><!-- POSSIVELMENTE NÃO EXISTIRÁ O CONCEITO DE SALVAR -- >
                                         <div class="col-md-6 col-md-offset-9 col-sm-6 col-sm-offset-9">
@@ -621,14 +636,14 @@
                                 <!--FIM FORMULÁRIO-->
 
                                 <!--CUPON PARA VISUALIZAÇÃO-->
-                                <div class="col-md-6 col-sm-6">
+                                <div class="col-md-6 col-sm-6" ng-show="exibeCupom">
                                     <div class="row">
                                         <!--CONTEÚDO DOS CUPONS-->
                                         <div class="col-md-7 col-md-offset-3 col-sm-7 col-sm-offset-2 cuponAzulRelatorios">
                                             <!--ADQUIRENTE-->
                                             <div class="row tituloCuponRelatorios">
                                                 <div class="col-md-10 col-sm-10">
-                                                    CIELO
+                                                    {{ cupom.adquirente }}
                                                 </div>
                                                 <div class="col-md-2 col-sm-2">
                                                     <button class="btn btn-sm grey filter-submit"
@@ -646,7 +661,7 @@
                                                     <!--LOCAL-->
                                                     <div class="row">
                                                         <div class="col-md-12 col-sm-12">
-                                                            Posto Sumaré
+                                                            {{ cupom.filial }}
                                                         </div>
                                                     </div>
                                                     <!--ENDEREÇO-->
@@ -664,21 +679,12 @@
                                                     <!--POS-->
                                                     <div class="row">
                                                         <div class="col-md-6 col-sm-6">
-                                                            002002242475002
+                                                            {{ cupom.cnpj }}
                                                         </div>
                                                         <div class="col-md-6 col-sm-6">
-                                                            /POS=0034386
+                                                            /POS={{ cupom.pos }}
                                                         </div>
                                                     </div>
-                                                    <!--DATA/HORA DA CONSULTA-- (NÃO TERÁ COMO SABER>
-                                                    <div class="row">
-                                                        <div class="col-md-6 col-sm-6">
-                                                            <label style="font-size:13px">DATA:</label>21/08/2015
-                                                        </div>
-                                                        <div class="col-md-6 col-sm-6">
-                                                            <label style="font-size:13px">HORA:</label>10:30
-                                                        </div>
-                                                    </div-->
                                                 </div>
                                             </div>
                                             <!--DATA/HORA DOS RELATÓRIOS-->
@@ -687,7 +693,7 @@
                                                     <!--DATA-->
                                                     <div class="row">
                                                         <div class="col-md-12 col-sm-12">
-                                                            <label>Relatório de:</label>21/08/2015
+                                                            <label>Relatório de:</label>{{ cupom.data | date:'dd/MM/yyyy' }}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1023,7 +1029,11 @@
                                                     CIELO
                                                 </div>
                                                 <div class="col-md-2 col-sm-2">
+<<<<<<< HEAD
                                                     <button class="btn btn-sm grey filter-submit"
+=======
+                                                    <button class="btn btn-sm grey filter-submit"
+>>>>>>> Esdras
                                                             popover="Deseja remover o cupom?"
                                                             popover-trigger="mouseenter"
                                                             popover-placement="bottom"

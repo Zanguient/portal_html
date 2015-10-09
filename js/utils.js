@@ -1,6 +1,6 @@
 /*
  *  Atos Capital - www.atoscapital.com.br
- *  
+ *
  *  suporte@atoscapital.com.br
  *
  *
@@ -21,7 +21,7 @@ angular.module('utils', [ ])
       $window.sessionStorage[key] = value;
     },
     get: function(key, defaultValue) {
-     return $window.sessionStorage[key] || defaultValue;   
+     return $window.sessionStorage[key] || defaultValue;
     },
     setObject: function(key, value) {
       $window.sessionStorage[key] = JSON.stringify(value);
@@ -41,7 +41,7 @@ angular.module('utils', [ ])
       $window.localStorage[key] = value;
     },
     get: function(key, defaultValue) {
-     return $window.localStorage[key] || defaultValue;   
+     return $window.localStorage[key] || defaultValue;
     },
     setObject: function(key, value) {
       $window.localStorage[key] = JSON.stringify(value);
@@ -62,11 +62,11 @@ angular.module('utils', [ ])
   return {
     /**
       * HTTP GET que retorna um promise
-      */                
+      */
     get: function(url) {
       // Setando o promise
-      var deferido = $q.defer();      
-        
+      var deferido = $q.defer();
+
       $http.get(url)
         .success(function(dados, status, headers, config){
           deferido.resolve(dados);
@@ -77,41 +77,41 @@ angular.module('utils', [ ])
     },
     /**
       * HTTP DELETE que retorna um promise
-      */                
+      */
     delete: function(url) {
       // Setando o promise
       var deferido = $q.defer();
-        
+
       $http.delete(url)
         .success(function(dados, status, headers, config){
           deferido.resolve(dados);
         }).error(function(dados, status, headers, config){
           deferido.reject({'dados':dados,'status':status});
-        }); 
+        });
       return deferido.promise;
     },
     /**
       * HTTP PUT que retorna um promise
-      */   
+      */
     update: function(url, dadosFormulario){
       // Setando o promise
-      var deferido = $q.defer(); 
-        
+      var deferido = $q.defer();
+
       $http.put(url, dadosFormulario)
         .success(function(dados, status, headers, config){
           deferido.resolve(dados);
         }).error(function(dados, status, headers, config){
           deferido.reject({'dados':dados,'status':status});
-        });   
-      return deferido.promise; 
+        });
+      return deferido.promise;
     },
     /**
       * HTTP POST que retorna um promise
-      */   
+      */
     post: function(url, dadosFormulario){
       // Setando o promise
       var deferido = $q.defer();
-        
+
       $http.post(url, dadosFormulario)
         .success(function(dados, status, headers, config){
           deferido.resolve(dados);
@@ -145,11 +145,11 @@ angular.module('utils', [ ])
   * Autenticação
   */
 .factory('$autenticacao', ['$localstorage', function($localstorage){
-  
+
   // URL base da WEBAPI
   //var urlBase = 'http://localhost:55007';
-  //var urlBase = 'http://192.168.1.100/apiportal';  // proxy: versão mais atualizada da webapi 
-  var urlBase = 'http://ws.atoscapital.com.br/proxy';
+  var urlBase = 'http://192.168.1.100/apiportal';  // proxy: versão mais atualizada da webapi
+  //var urlBase = 'http://ws.atoscapital.com.br/proxy';
   // IMessage
   //var urlBaseIMessage = 'http://localhost:50780';
   var urlBaseIMessage = 'http://imessage.atoscapital.com.br';
@@ -160,20 +160,20 @@ angular.module('utils', [ ])
   var urlBaseDownload = 'http://apiportal.atoscapital.com.br';
   // Tempo em horas máximos definido de inatividade para requerer novo login, caso LEMBRAR não tenha sido marcado
   const HORAS_NOVO_LOGIN = 2;
-    
+
   return {
     getUrlBase : function(){ return urlBase },
     getUrlBaseIMessage : function(){ return urlBaseIMessage },
     getUrlBaseDownload : function(){ return urlBaseDownload },
     getUrlBaseRezende : function() { return urlBaseRezende },
     apiStatus: urlBase + '/login/status/',
-    // URL + keys da local storage  
-    autenticacao: { 
+    // URL + keys da local storage
+    autenticacao: {
       login: urlBase + '/login/autenticacao/',
       keyToken: 'token',
       keyLembrar: 'remember',
       keyDateTime: 'datetime'
-    },     
+    },
     // Obtém o JSON que contém a resposta do server para a última autenticação válida
     getToken: function(){
         return $localstorage.get(this.autenticacao.keyToken);
@@ -183,12 +183,12 @@ angular.module('utils', [ ])
         // Obtém dados de autenticação
         var token = this.getToken();
         // Verifica se tem token
-        if(token){ 
+        if(token){
             // Obtém os indicadores de persistir a autenticação (LEMBRAR === true)
             var lembrar = $localstorage.get(this.autenticacao.keyLembrar) || false;
             if(lembrar) return true;
             // Não foi marcado LEMBRAR => Analisa o tempo entre a última validação e o horário atual
-            var time = $localstorage.get(this.autenticacao.keyDateTime) || new Date(); 
+            var time = $localstorage.get(this.autenticacao.keyDateTime) || new Date();
             if(typeof time === 'string') time = new Date(time); // DateTime é armazenado em string no localstorage
             // Obtém DateTime atual
             var timeNow = new Date();
@@ -196,7 +196,7 @@ angular.module('utils', [ ])
             var millisBetween = timeNow.getTime() - time.getTime(); // diferença em milisegundos entre o horário atual e o armazenado
             var differenceInHours = millisBetween / millisecondsPerHour; // diferença em horas
             // Retorna true se não é necessário um novo login
-            return differenceInHours < HORAS_NOVO_LOGIN; 
+            return differenceInHours < HORAS_NOVO_LOGIN;
         }
         return false;
     },
@@ -206,7 +206,7 @@ angular.module('utils', [ ])
         $localstorage.delete(this.autenticacao.keyToken);
         $localstorage.delete(this.autenticacao.keyDateTime);
     },
-    // Atualiza o último datetime de autenticação   
+    // Atualiza o último datetime de autenticação
     atualizaDateTimeDeAutenticacao: function(datetime){
         $localstorage.set(this.autenticacao.keyDateTime, datetime);
     },
