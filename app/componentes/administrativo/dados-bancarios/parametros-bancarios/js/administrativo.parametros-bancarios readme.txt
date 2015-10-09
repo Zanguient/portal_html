@@ -105,16 +105,20 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				adquirente : null ou { cdAdquirente : int, nmAdquirente : string, dsAdquirente : string, stAdquirente : int},
 				dsTipo : string,
 				flVisivel : bool,
+				dsTipoCartao : string,
 				banco : { Codigo : string, 
 						  NomeExtenso : string},
 				empresa : null ou { nu_cnpj : string, ds_fantasia : string }
-				grupoempresa : null ou { id_grupo : int, ds_nome : string }
+				grupoempresa : null ou { id_grupo : int, ds_nome : string },
+				bandeira : null ou { cdBandeira : int, dsBandeira : string, dsTipo: string }
 			  }
 			]	
 	- PUT : altera parâmetro(s) bancário(s) existente
 			[
 			  cdAdquirente : int,
 			  nrCnpj : string,
+			  dsTipoCartao : string,
+			  cdBandeira : int,
 			  flVisivel : bool, // obrigatório!
 			  deletar : bool, // obrigatório!
 			  parametros : [{ cdBanco : string,
