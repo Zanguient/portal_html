@@ -143,14 +143,18 @@ angular.module('webapi', ['utils'])
             id_grupo = 102,
             nu_cnpj = 103,
             // Relacionamentos
-            operadora : 200
+            operadora : 200,
+            tbadquirente : 300
         },
         tbadquirente : {
             cdAdquirente : 100,
             nmAdquirente : 101,
             dsAdquirente : 102,
             stAdquirente : 103,
-            hrExecucao : 104
+            hrExecucao : 104,
+            // Relacionamentos
+            cnpj : 305,
+            id_grupo : 316
         },
         tbbancoparametro : {
             cdBanco : 100,
@@ -295,7 +299,8 @@ angular.module('webapi', ['utils'])
             operadora : 300,
             empresa : 400, // pode ser usado para buscar o id_grupo
             bandeira : 500,
-            terminallogico : 600
+            terminallogico : 600,
+            tbadquirente : 700
         },
         recebimentoparcela : {
             idRecebimento : 100,
@@ -311,6 +316,7 @@ angular.module('webapi', ['utils'])
             operadora : 400,
             bandeira : 500,
             recebimento : 600,
+            tbadquirente : 700
             // EXPORTAR
             exportar : 9999
         },

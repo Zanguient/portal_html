@@ -3,6 +3,10 @@
  *  
  *  suporte@atoscapital.com.br
  *
+ *
+ *  Versão 1.0.3 - 13/10/2015
+ *  - valorNegativo e valorPositivo  
+ *
  *  Versão 1.0.2 - 24/09/2015
  *      -Criação dos Estilos das divs dos filtros.
  *
@@ -269,7 +273,7 @@ margin-top:170px;
     border-radius: 4px 4px; 
     padding: 15px 30px 15px 15px;
     margin-top:40px;
-    height: 240px;
+    height: 245px;
     max-width:320px; 
 }
 
@@ -282,7 +286,7 @@ margin-top:170px;
     padding: 15px 30px 15px 15px;
     margin-top:40px;
     margin-top:40px;
-    height: 240px;
+    height: 245px;
     max-width:320px;  
 }
 
@@ -295,7 +299,7 @@ margin-top:170px;
     padding: 15px 30px 15px 15px;
     margin-top:40px;
     margin-top:40px;
-    height: 240px;
+    height: 245px;
     max-width:320px;  
 }
 
@@ -306,7 +310,7 @@ margin-top:170px;
 
 .tituloCumponsConciliacaoBancariaICard{
     margin-top:5px; 
-    margin-bottom:40px; 
+    margin-bottom: 15px; 
 }
 
 /*.subTituloCuponsConciliacaoBancaria{
@@ -748,6 +752,14 @@ thead.centralizarVerticalTitulos > tr > th {
 
 .teste col-xs-3{
   padding-left: -60px;
+}
+
+.valorNegativo{
+  color : red;
+}
+
+.valorPositivo{
+  color : navy;
 }
 
 /*ESTILO CUPONS RELATÓRIOS TÉRMINAIS LÓGICOS*/

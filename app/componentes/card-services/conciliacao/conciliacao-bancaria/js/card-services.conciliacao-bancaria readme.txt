@@ -55,7 +55,8 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 							   Valor : double,
 							   Bandeira : string,
 							   DataVenda : datetime,
-							   DataPrevista : datetime
+							   DataPrevista : datetime,
+							   Filial : string,
 							 }],
 		  Adquirente : string, 
 		  Bandeira : string,

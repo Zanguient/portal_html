@@ -6,9 +6,10 @@
  *
  *
  *
- *  Versão 1.0.4 - 09/10/2015
+ *  Versão 1.0.4 - 13/10/2015
  *  - Associação a uma bandeira
  *  - Associação a um tipo de cartão: crédito/débito
+ *  - Associação múltipla com opção de selecionar o que deseja modificar
  *    
  *  Versão 1.0.3 - 18/09/2015
  *  - Busca somente filiais ativas
@@ -68,7 +69,12 @@ angular.module("administrativo-parametros-bancarios", [])
                                               bandeira : null,
                                               tipocartao : '',
                                               estabelecimento : '',
-                                              bandeiras : [] };
+                                              bandeiras : [],
+                                              selecionaAdquirente : false,
+                                              selecionaTipoCartao : false,
+                                              selecionaBandeira : false,
+                                              selecionaFilial : false
+                                            };
     // Modal Consulta Estabelecimento
     $scope.modalEstabelecimento = { estabelecimento : '', loginoperadora : null };
                                                  
@@ -733,7 +739,9 @@ angular.module("administrativo-parametros-bancarios", [])
         $scope.modalParametro.flVisivel = parametro.flVisivel;
         $scope.modalParametro.estabelecimento = '';
         // Tipo cartão
-        $scope.modalParametro.dsTipoCartao = parametro.dsTipoCartao || parametro.dsTipoCartao === null ? '' : parametro.dsTipoCartao.toUpperCase();
+        $scope.modalParametro.dsTipoCartao =  '';
+        if(parametro.dsTipoCartao && parametro.dsTipoCartao !== null)
+            $scope.modalParametro.dsTipoCartao = parametro.dsTipoCartao.toUpperCase();
         // Filial
         if(parametro.empresa === null) $scope.modalParametro.filial = undefined;
         else $scope.modalParametro.filial = $filter('filter')($scope.filiais, function(f) {return f.nu_cnpj === parametro.empresa.nu_cnpj;})[0];
@@ -749,7 +757,7 @@ angular.module("administrativo-parametros-bancarios", [])
         }
         
         // Exibe o modal
-        exibeModalParametroBancario();      
+        exibeModalParametroBancario(); 
     };
     /**
       * Valida as informações alteradas e envia para o servidor
@@ -1038,12 +1046,22 @@ angular.module("administrativo-parametros-bancarios", [])
             if(lastFiltroAdquirente === -1){ 
                 $scope.modalSelecionaAdquirenteFilial.adquirente = null;
                 $scope.modalSelecionaAdquirenteFilial.bandeira = null;
+                $scope.modalSelecionaAdquirenteFilial.selecionaAdquirente = false;
+                $scope.modalSelecionaAdquirenteFilial.selecionaBandeira = false;
             }else{ 
                 $scope.modalSelecionaAdquirenteFilial.adquirente = $filter('filter')($scope.adquirentes, function(a){return a.cdAdquirente === lastFiltroAdquirente})[0];
                 $scope.alterouAdquirenteModalAdquirenteFilial();
-                if(lastFiltroBandeira === -1) $scope.modalSelecionaAdquirenteFilial.bandeira = null;
-                else $scope.modalSelecionaAdquirenteFilial.bandeira = $filter('filter')($scope.modalSelecionaAdquirenteFilial.bandeiras, function(b){return b.cdBandeira === lastFiltroBandeira})[0];
+                $scope.modalSelecionaAdquirenteFilial.selecionaAdquirente = true;
+                if(lastFiltroBandeira === -1){ 
+                    $scope.modalSelecionaAdquirenteFilial.bandeira = null;
+                    $scope.modalSelecionaAdquirenteFilial.selecionaBandeira = false;   
+                }else{ 
+                    $scope.modalSelecionaAdquirenteFilial.bandeira = $filter('filter')($scope.modalSelecionaAdquirenteFilial.bandeiras, function(b){return b.cdBandeira === lastFiltroBandeira})[0];
+                    $scope.modalSelecionaAdquirenteFilial.selecionaBandeira = true; 
+                }
             }
+            $scope.modalSelecionaAdquirenteFilial.selecionaFilial = false;
+            $scope.modalSelecionaAdquirenteFilial.selecionaTipoCartao = false;
             $scope.modalSelecionaAdquirenteFilial.estabelecimento = '';
             $scope.modalSelecionaAdquirenteFilial.filial = null;
             $scope.modalSelecionaAdquirenteFilial.tipocartao = '';
@@ -1068,7 +1086,16 @@ angular.module("administrativo-parametros-bancarios", [])
     /**
       * Associa os parâmetros bancários selecionados à adquirente e/ou filial
       */
-    $scope.associaAdquirenteFilialParametrosSelecionados = function(){        
+    $scope.associaAdquirenteFilialParametrosSelecionados = function(){  
+        
+        if(!$scope.modalSelecionaAdquirenteFilial.selecionaFilial && 
+           !$scope.modalSelecionaAdquirenteFilial.selecionaAdquirente &&
+           !$scope.modalSelecionaAdquirenteFilial.selecionaBandeira &&
+           !$scope.modalSelecionaAdquirenteFilial.selecionaTipoCartao){
+             // Fecha o modal
+             fechaModalSelecionaAdquirenteFilial();
+        }
+        
         // Obtém o JSON
         var cdAdquirente = $scope.modalSelecionaAdquirenteFilial.adquirente &&
                            $scope.modalSelecionaAdquirenteFilial.adquirente !== null ? 
@@ -1087,13 +1114,24 @@ angular.module("administrativo-parametros-bancarios", [])
                           $scope.modalSelecionaAdquirenteFilial.filial.nu_cnpj : '';
         
         var jsonParametro = { parametros : [],
-                              cdAdquirente : cdAdquirente,
-                              nrCnpj : nrCnpj,
-                              cdBandeira : cdBandeira,
-                              dsTipoCartao : dsTipoCartao,
+                              //cdAdquirente : cdAdquirente,
+                              //nrCnpj : nrCnpj,
+                              //cdBandeira : cdBandeira,
+                              //dsTipoCartao : dsTipoCartao,
                               flVisivel : true,
                               deletar : false,
                             };  
+        
+        if($scope.modalSelecionaAdquirenteFilial.selecionaFilial)
+            jsonParametro.nrCnpj = nrCnpj;
+        if($scope.modalSelecionaAdquirenteFilial.selecionaAdquirente){
+            jsonParametro.cdAdquirente = cdAdquirente;
+            if($scope.modalSelecionaAdquirenteFilial.selecionaBandeira)
+                jsonParametro.cdBandeira = cdBandeira;
+        }
+        if($scope.modalSelecionaAdquirenteFilial.selecionaTipoCartao)
+            jsonParametro.dsTipoCartao = dsTipoCartao;
+        
         // Adiciona no json os parâmetros selecionados
         var parametrosSelecionados = $filter('filter')($scope.parametros, function(p){ return p.selecionado; });
         
