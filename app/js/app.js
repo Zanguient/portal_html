@@ -802,7 +802,7 @@ angular.module("AtosCapital", ['ui.router',
       */
     $scope.goCardServicesConciliacaoRelatorios = function(params){
         controllerAtual = controllerCardServicesConciliacaoRelatorios;
-        go('card-services-conciliacao-conciliacao-relatorios', params);
+        go('card-services-conciliacao-relatorios', params);
     };                        
     /**
       * Exibe como conteúdo a Consolidação Relatórios, de Card Services
@@ -1075,7 +1075,7 @@ angular.module("AtosCapital", ['ui.router',
             }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'CONCILIAÇÃO VENDAS DIA')
                      controllerAtual.id_controller !== controllerCardServicesConciliacaoVendasDia.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
-        }else if(url === $state.get('card-services-conciliacao-conciliacao-relatorios').url){
+        }else if(url === $state.get('card-services-conciliacao-relatorios').url){
             // Card Services > Conciliação > Relatórios
             if(!$scope.PERMISSAO_CARD_SERVICES || !$scope.PERMISSAO_CARD_SERVICES_CONCILIACAO || !$scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_RELATORIOS){
                 // Não possui permissão!

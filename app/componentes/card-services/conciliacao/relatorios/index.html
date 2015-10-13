@@ -205,7 +205,7 @@
                 <!--TITULO-->
                 <div class="portlet-title">
                     <div class="caption">								
-                        <span class="caption-subject font-green-sharp bold uppercase">Consulta Vendas Dia</span>
+                        <span class="caption-subject font-green-sharp bold uppercase">Consulta Vendas Dia tela</span>
                     </div>
                     <div class="actions">
                         <a class="btn btn-circle btn-icon-only btn-default fullscreen" 
@@ -279,37 +279,44 @@
                                     de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
                             </div>
                         </div> 
-                        <div class="col-xs-4 col-sm-4 col-md-3 alinhamentoDados">
-                            <div class="dataTables_length">
-                                <button class="btn btn-primary" 
-                                   ng-disabled="!temElementosPreConciliados()"
-                                   ng-click="conciliaPreConciliados()">
-                                   Conciliar Pré-Conciliados
-                                </button>
-                            </div>
-                        </div>
                     </div>
                     
                     <!-- TABELA EXTERNA -->
                     <div class="table scrollable">
                         <table class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
-                            <thead>
-                                <tr>
-                                    <th colspan="6" class="cabecalhoTheadTabelas">
-                                        VALOR BRUTO
-                                    </th>
-                                </tr>
+                            <thead>                                
                                 <tr>
                                     <th width="5%">
+                                    </th>
+                                    <th width="5%">
+                                        Adquirente
                                     </th>
                                     <th width="15%" style="text-align: center;">
                                         Bandeira
                                     </th>
                                     <th width="15%" style="text-align: center;">
-                                        CardServices
+                                        Competência
                                     </th>
                                     <th width="15%" style="text-align: center;">
-                                        Controle Cliente
+                                        Taxa Média
+                                    </th>
+                                    <th width="10%" style="text-align: center;">
+                                        Vendas
+                                    </th>
+                                    <th width="10%" style="text-align: center;">
+                                        Taxa ADM
+                                    </th>
+                                    <th width="10%" style="text-align: center;">
+                                        Ajustes Crédito
+                                    </th>
+                                    <th width="10%" style="text-align: center;">
+                                        Ajustes Débito
+                                    </th>
+                                    <th width="10%" style="text-align: center;">
+                                        Valor Líquido
+                                    </th>
+                                    <th width="10%" style="text-align: center;">
+                                        Extratos Bancários
                                     </th>
                                     <th width="10%" style="text-align: center;">
                                         Diferença
@@ -320,434 +327,193 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td width="5%" style="text-align: center;">
-                                        <a href="javascript:;" ng-click="toggle(emitente)">
+                                <tr ng-repeat-start="adquirente in adquirentes">
+                                    <td style="text-align: center;">
+                                        <a href="javascript:;" ng-click="toggle(adquirente)">
                                             <i class="fa"
-                                               ng-class="{'fa-plus-square' : !isExpanded(emitente), 'fa-minus-square' : isExpanded(emitente)}"
+                                               ng-class="{'fa-plus-square' : !isExpanded(adquirente), 'fa-minus-square' : isExpanded(adquirente)}"
                                                style="margin-top: -3px;"> 
                                             </i> 
                                         </a>
                                     </td>
-                                    <td width="15%">
-                                        REDE
+                                    <!--ADQUIRENTE-->
+                                    <td>
+                                        {{adquirente.adquirente}}
                                     </td>
-                                    <td width="15%">
-                                        R$ 150,00
+                                    <!--BANDEIRA-->
+                                    <td>
+                                                
                                     </td>
-                                    <td width="15%">
-                                        R$ 150,00
+                                    <!--COMPETÊNCIA-->
+                                    <td>
+                                        {{adquirente.competencia}}    
                                     </td>
-                                    <td width="10%">
-                                        R$ 150,00
+                                    <!--TAXA MÉDIA-->
+                                    <td>
+                                        {{adquirente.taxaMedia}}    
                                     </td>
-                                    <td width="10%">
-                                        Conciliado
+                                    <!--VENDAS-->
+                                    <td>
+                                        {{adquirente.vendas}}    
                                     </td>
-                                </tr>
-                                    <tr>
-                                    <td colspan="6">
-                                        <!-- TABELA INTERNA -->
-                                            <!-- Begin: life time stats -->
-                                            <div class="portlet light">
-                                                <!--REFERENCIAS DAS ABAS DE NAVEGAÇÃO-->
-                                                <div class="portlet-title tabbable-line">							
-                                                    <ul class="nav nav-tabs">                                            
-                                                        <li ng-class="{active : tabIs(0)}">
-                                                            <a href="javascript:;" 
-                                                               data-toggle="tab-pane" 
-                                                               ng-click="setTab(0)">
-                                                            Terminal Lógico </a>
-                                                        </li>                                          
-                                                        <li ng-class="{active : tabIs(1)}">
-                                                            <a href="javascript:;" 
-                                                               data-toggle="tab"
-                                                               ng-click="setTab(1)">
-                                                            Sintético </a>
-                                                        </li>
-                                                        <li ng-class="{active : tabIs(2)}">
-                                                            <a href="javascript:;" 
-                                                               data-toggle="tab"
-                                                               ng-click="setTab(2)">
-                                                            Analítico </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <!--CONTEUDO DA NAVEGAÇÃO-->
-                                                <div class="portlet-body" ng-show="exibeTela">
-                                                    <div class="tab-content">
-                                                        <!--CONTEÚDO DO TERMINAL LÓGICO-->
-                                                        <div class="tab-pane conteudoNavegacao"
-                                                             ng-class="{active : tabIs(0)}">
-                                                            <!--TABELA TÉRMINAL LÓGICO-->
-                                                            <div class="table-scrollable">
-                                                                <table class="table table-striped table-hover table-bordered dataTable no-footer conteudoTabelas" role="grid">
-                                                                    <thead class="centralizarVerticalTitulos">
-                                                                        <tr role="row">
-                                                                            <th tabindex="0" 
-                                                                                rowspan="1" colspan="1" 
-                                                                                style="width: 25%;">
-                                                                                Filial
-                                                                            </th>
-                                                                            <th tabindex="2" 
-                                                                                rowspan="1" colspan="1" 
-                                                                                style="width: 10%;">
-                                                                                Bandeira
-                                                                            </th>
-                                                                            <th tabindex="1" 
-                                                                                rowspan="1" colspan="1" 
-                                                                                style="width: 10%;">
-                                                                                Venda
-                                                                            </th>
-                                                                            <th tabindex="3" 
-                                                                                rowspan="1" colspan="1" 
-                                                                                style="width: 15%;">
-                                                                                Terminal
-                                                                            </th>
-                                                                            <th tabindex="4" 
-                                                                                rowspan="1" colspan="1" 
-                                                                                style="width: 10%;">
-                                                                                CardServices
-                                                                            </th>
-                                                                            <th tabindex="5" 
-                                                                                rowspan="1" colspan="1" 
-                                                                                style="width: 15%;">
-                                                                                Controle Cliente
-                                                                            </th>
-                                                                            <th tabindex="6" 
-                                                                                rowspan="1" colspan="1" 
-                                                                                style="width: 15%;">
-                                                                                Diferença
-                                                                            </th> 
-                                                                            <th tabindex="7" 
-                                                                                rowspan="1" colspan="1" 
-                                                                                style="width: 15%;">
-                                                                                Status
-                                                                            </th>                                        
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        <tr role="row" class="odd">
-                                                                            <!-- FILIAL -->
-                                                                            <td style="text-align:left;">
-                                                                                 Petrox - Mania
-                                                                            </td>
-                                                                            <!-- BANDEIRA -->
-                                                                            <td style="text-align:left;">
-                                                                                 REDE
-                                                                            </td>
-                                                                            <!-- DATA DA VENDA -->
-                                                                            <td>
-                                                                                 11/08/2015
-                                                                            </td>
-                                                                            <!-- TERMINAL LÓGICO -->
-                                                                            <td>
-                                                                                 Terminal
-                                                                            </td>
-                                                                            <!-- CARD SERVICES -->
-                                                                            <td>
-                                                                                 R$ 1.500,00
-                                                                            </td>
-                                                                            <!-- CONTROLE CLIENTE -->
-                                                                            <td>
-                                                                                 R$ 1.500,00
-                                                                            </td>
-                                                                            <!-- DIFERENÇA -->
-                                                                            <td>
-                                                                                 R$ 1.500,00
-                                                                            </td>
-                                                                            <!-- STATUS -->
-                                                                            <td>
-                                                                                 Conciliado
-                                                                            </td>
-
-                                                                        <tr role="row" class="odd linhaTotalRelatorios"
-                                                                            style="font-weight : bolder">
-                                                                            <td colspan="4" style="text-align:right;">
-                                                                                Total Exibido
-                                                                            </td>
-                                                                            <td>
-                                                                                R$ 1.500,00
-                                                                            </td>
-                                                                            <td>
-                                                                                R$ 1.500,00
-                                                                            </td>
-                                                                            <td>
-                                                                                R$ 1.500,00
-                                                                            </td>
-                                                                            <td>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr role="row" class="odd linhaTotalRelatorios"
-                                                                            style="font-weight : bolder">
-                                                                            <td colspan="4" style="text-align:right;">
-                                                                                Total Filtrado
-                                                                            </td>
-                                                                            <td>
-                                                                                 R$ 1.500,00
-                                                                            </td>
-                                                                            <td>
-                                                                                 R$ 1.500,00
-                                                                            </td>
-                                                                            <td>
-                                                                                R$ 1.500,00
-                                                                            </td>
-                                                                            <td>
-                                                                            </td>
-                                                                        </tr>
-                                                                    </tbody>
-
-                                                                </table>
-                                                            </div>
-
-                                                        </div>
-                                                        <!--FIM CONTEÚDO DA NAVEGAÇÃO-->
-
-                                                        <!--CONTEÚDO DO RELATÓRIO SINTÉTICO-->
-                                                        <div class="tab-pane conteudoNavegacao"
-                                                             ng-class="{active : tabIs(1)}">
-                                                            <!--TABELA RELATÓRIO SINTÉTICO-->
-                                                            <div class="table-scrollable">
-                                                                <table class="table table-striped table-hover 
-                                                                              table-bordered dataTable no-footer conteudoTabelas" role="grid">
-                                                                    <thead class="centralizarVerticalTitulos">
-                                                                        <th tabindex="0" 
-                                                                                rowspan="1" colspan="1" 
-                                                                                style="width: 25%;">
-                                                                                Filial
-                                                                            </th>
-                                                                            <th tabindex="2" 
-                                                                                rowspan="1" colspan="1" 
-                                                                                style="width: 15%;">
-                                                                                Bandeira
-                                                                            </th>
-                                                                            <th tabindex="1" 
-                                                                                rowspan="1" colspan="1" 
-                                                                                style="width: 10%;">
-                                                                                Venda
-                                                                            </th>
-                                                                            
-                                                                            <th tabindex="4" 
-                                                                                rowspan="1" colspan="1" 
-                                                                                style="width: 15%;">
-                                                                                CardServices
-                                                                            </th>
-                                                                            <th tabindex="5" 
-                                                                                rowspan="1" colspan="1" 
-                                                                                style="width: 15%;">
-                                                                                Controle Cliente
-                                                                            </th>
-                                                                            <th tabindex="6" 
-                                                                                rowspan="1" colspan="1" 
-                                                                                style="width: 15%;">
-                                                                                Diferença
-                                                                            </th> 
-                                                                            <th tabindex="6" 
-                                                                                rowspan="1" colspan="1" 
-                                                                                style="width: 10%;">
-                                                                                Status
-                                                                            </th>                                        
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        <tr role="row" class="odd">
-                                                                            <!-- FILIAL -->
-                                                                            <td style="text-align:left;">
-                                                                                 Petrox - Mania
-                                                                            </td>
-                                                                            <!-- BANDEIRA -->
-                                                                            <td style="text-align:left;">
-                                                                                 REDE
-                                                                            </td>
-                                                                            <!-- DATA DA VENDA -->
-                                                                            <td>
-                                                                                11/08/2015
-                                                                            </td>
-                                                                            
-                                                                            <!-- CARD SERVICES -->
-                                                                            <td>
-                                                                                 R$ 3.718,88
-                                                                            </td>
-                                                                            <!-- CONTROLE CLIENTE -->
-                                                                            <td>
-                                                                                 R$ 3.718,88
-                                                                            </td>
-                                                                            <!-- DIFERENÇA -->
-                                                                            <td>
-                                                                                 R$ 3.718,88
-                                                                            </td>
-                                                                            <!-- STATUS -->
-                                                                            <td>
-                                                                                 Conciliado
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr role="row" class="odd linhaTotalRelatorios" 
-                                                                            style="font-weight:bolder">
-                                                                            <td style="text-align:right;" colspan="3">
-                                                                                 Total Filtrado
-                                                                            </td>
-                                                                            <td>
-                                                                                 R$ 3.718,88
-                                                                            </td>
-                                                                            <td>
-                                                                                 R$ 3.718,88
-                                                                            </td>
-                                                                            <td>
-                                                                                 R$ 3.718,88
-                                                                            </td>
-                                                                            <td>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr role="row" class="odd linhaTotalRelatorios" 
-                                                                            style="font-weight:bolder">
-                                                                            <td style="text-align:right;" colspan="3">
-                                                                                 Total Filtrado
-                                                                            </td>
-                                                                            <td>
-                                                                                 R$ 3.718,88
-                                                                            </td>
-                                                                            <td>
-                                                                                 R$ 3.718,88
-                                                                            </td>
-                                                                            <td>
-                                                                                 R$ 3.718,88
-                                                                            </td>
-                                                                            <td>
-                                                                            </td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                        <!--FIM CONTEÚDO DO RELATÓRIO SINTÉTICO-->
-
-                                                        <!--CONTEÚDO DO RELATÓRIO ANALÍTICO-->
-                                                        <div class="tab-pane conteudoNavegacao"
-                                                             ng-class="{active : tabIs(2)}">
-                                                            <div class="table-scrollable">
-                                                                <table class="table table-striped table-hover table-bordered dataTable no-footer conteudoTabelas" role="grid">
-                                                                    <thead class="centralizarVerticalTitulos">
-                                                                        <tr role="row">
-                                                                            <th tabindex="0" 
-                                                                                rowspan="1" colspan="1" 
-                                                                                style="width: 25%;">
-                                                                                Filial
-                                                                            </th>
-                                                                            <th tabindex="2" 
-                                                                                rowspan="1" colspan="1" 
-                                                                                style="width: 10%;">
-                                                                                Bandeira
-                                                                            </th>
-                                                                            <th tabindex="1" 
-                                                                                rowspan="1" colspan="1" 
-                                                                                style="width: 10%;">
-                                                                                Venda
-                                                                            </th>
-                                                                            <th tabindex="3" 
-                                                                                rowspan="1" colspan="1" 
-                                                                                style="width: 15%;">
-                                                                                Terminal
-                                                                            </th>
-                                                                            <th tabindex="4" 
-                                                                                rowspan="1" colspan="1" 
-                                                                                style="width: 10%;">
-                                                                                CardServices
-                                                                            </th>
-                                                                            <th tabindex="5" 
-                                                                                rowspan="1" colspan="1" 
-                                                                                style="width: 15%;">
-                                                                                Controle Cliente
-                                                                            </th>
-                                                                            <th tabindex="6" 
-                                                                                rowspan="1" colspan="1" 
-                                                                                style="width: 15%;">
-                                                                                Diferença
-                                                                            </th> 
-                                                                            <th tabindex="7" 
-                                                                                rowspan="1" colspan="1" 
-                                                                                style="width: 15%;">
-                                                                                Status
-                                                                            </th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        <tr role="row" class="odd">
-                                                                            <!-- FILIAL -->
-                                                                            <td style="text-align:left;">
-                                                                                 Petrox - Mania
-                                                                            </td>
-                                                                            <!-- BANDEIRA -->
-                                                                            <td style="text-align:left;">
-                                                                                 REDE
-                                                                            </td>
-                                                                            <!-- DATA DA VENDA -->
-                                                                            <td>
-                                                                                11/08/2015
-                                                                            </td>
-                                                                            <!-- TERMINAL LÓGICO -->
-                                                                            <td>
-                                                                                 Terminal
-                                                                            </td>
-                                                                            <!-- CARD SERVICES -->
-                                                                            <td>
-                                                                                 R$ 2.200,56
-                                                                            </td>
-                                                                            <!-- CONTROLE CLIENTE -->
-                                                                            <td>
-                                                                                 R$ 2.200,56
-                                                                            </td>
-                                                                            <!-- DIFERENÇA -->
-                                                                            <td>
-                                                                                 R$ 2.200,56
-                                                                            </td>
-                                                                            <!-- STATUS -->
-                                                                            <td>
-                                                                                 Conciliado
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr role="row" class="odd linhaTotalRelatorios">
-                                                                            <td colspan="4" style="text-align:right;">
-                                                                                 Total Exibido
-                                                                            </td>                                                     
-                                                                            <td>
-                                                                                 R$ 2.200,56
-                                                                            </td> 
-                                                                            <td>
-                                                                                 R$ 2.200,56
-                                                                            </td>
-                                                                            <td>
-                                                                                 R$ 2.200,56
-                                                                            </td>
-                                                                            <td>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr role="row" class="odd linhaTotalRelatorios">
-                                                                            <td colspan="4" style="text-align:right;">
-                                                                                 Total Filtrado
-                                                                            </td>                                                     
-                                                                            <td>
-                                                                                 R$ 2.200,56
-                                                                            </td> 
-                                                                            <td>
-                                                                                 R$ 2.200,56
-                                                                            </td>
-                                                                            <td>
-                                                                                 R$ 2.200,56
-                                                                            </td>
-                                                                            <td>
-                                                                            </td>
-                                                                        </tr>
-                                                                    </tbody>    
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                         <!--FIM CONTEÚDO DO RELATÓRIO ANALÍTICO-->
-                                                    </div>
-                                                </div>
-                                                <!--FIM CONTEUDO DA NAVEGAÇÃO-->
-                                            </div>
+                                    <!--TAXA ADM-->
+                                    <td>
+                                        {{adquirente.taxaAdm}}    
+                                    </td>
+                                    <!--AJUSTES CRÉDITO-->
+                                    <td>
+                                        {{adquirente.ajustesCredito}}    
+                                    </td>
+                                    <!--AJUSTES DÉBITO-->
+                                    <td>
+                                        {{adquirente.ajustesDebito}}    
+                                    </td>
+                                    <!--VALOR LÍQUIDO-->
+                                    <td>
+                                        {{adquirente.valorLiquido}}    
+                                    </td>
+                                    <!--EXTRATO BANCÁRIO-->
+                                    <td>
+                                        {{adquirente.extratoBancario}}    
+                                    </td>
+                                    <!--DIFERENÇA-->
+                                    <td>
+                                        {{adquirente.diferenca}}   
+                                    </td>
+                                    <!--STATUS-->
+                                    <td>
+                                        {{adquirente.status}}    
                                     </td>
                                 </tr>
+                                <tr>
+                                
+                                </tr>
+                                <!-- LINHA EXPANSÍVEL BANDEIRA -->
+                                <tr ng-repeat-end ng-show="isExpanded(adquirente)"> 
+                                    <td colspan="13">
+                                        <div class="table scrollable">
+                                            <table class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
+                                                <tbody>
+                                                    <tr ng-repeat-start ="bandeira in adquirente.bandeiras">
+                                                        <td>
+
+                                                        </td>
+                                                        <td style="text-align: center;">
+                                                            <a href="javascript:;" ng-click="toggle(bandeira)">
+                                                                <i class="fa"
+                                                                   ng-class="{'fa-plus-square' : !isExpanded(bandeira), 'fa-minus-square' : isExpanded(bandeira)}"
+                                                                   style="margin-top: -3px;"> 
+                                                                </i> 
+                                                            </a>
+                                                        </td>
+                                                        <!--BANDEIRA-->
+                                                        <td>
+                                                            {{bandeira.bandeira}}        
+                                                        </td>
+                                                        <!--COMPETÊNCIA-->
+                                                        <td>
+                                                             
+                                                        </td>
+                                                        <!--TAXA MÉDIA-->
+                                                        <td>
+                                                                
+                                                        </td>
+                                                        <!--VENDAS-->
+                                                        <td>
+                                                               
+                                                        </td>
+                                                        <!--TAXA ADM-->
+                                                        <td>
+                                                               
+                                                        </td>
+                                                        <!--AJUSTES CRÉDITO-->
+                                                        <td>
+                                                                
+                                                        </td>
+                                                        <!--AJUSTES DÉBITO-->
+                                                        <td>
+                                                               
+                                                        </td>
+                                                        <!--VALOR LÍQUIDO-->
+                                                        <td>
+                                                                
+                                                        </td>
+                                                        <!--EXTRATO BANCÁRIO-->
+                                                        <td>
+                                                               
+                                                        </td>
+                                                        <!--DIFERENÇA-->
+                                                        <td>
+                                                               
+                                                        </td>
+                                                        <!--STATUS-->
+                                                        <td>
+                                                                
+                                                        </td>
+                                                    </tr>
+                                                    <tr ng-repeat-end ng-show="bandeira">
+                                                        <td>
+
+                                                        </td>
+                                                        <td style="text-align: center;">
+                                                            <a href="javascript:;" ng-click="toggle(bandeira)">
+                                                                <i class="fa"
+                                                                   ng-class="{'fa-plus-square' : !isExpanded(bandeira), 'fa-minus-square' : isExpanded(bandeira)}"
+                                                                   style="margin-top: -3px;"> 
+                                                                </i> 
+                                                            </a>
+                                                        </td>
+                                                        <!--BANDEIRA-->
+                                                        <td>
+                                                            {{bandeira.bandeira}}        
+                                                        </td>
+                                                        <!--COMPETÊNCIA-->
+                                                        <td>
+                                                             
+                                                        </td>
+                                                        <!--TAXA MÉDIA-->
+                                                        <td>
+                                                                
+                                                        </td>
+                                                        <!--VENDAS-->
+                                                        <td>
+                                                               
+                                                        </td>
+                                                        <!--TAXA ADM-->
+                                                        <td>
+                                                               
+                                                        </td>
+                                                        <!--AJUSTES CRÉDITO-->
+                                                        <td>
+                                                                
+                                                        </td>
+                                                        <!--AJUSTES DÉBITO-->
+                                                        <td>
+                                                               
+                                                        </td>
+                                                        <!--VALOR LÍQUIDO-->
+                                                        <td>
+                                                                
+                                                        </td>
+                                                        <!--EXTRATO BANCÁRIO-->
+                                                        <td>
+                                                               
+                                                        </td>
+                                                        <!--DIFERENÇA-->
+                                                        <td>
+                                                               
+                                                        </td>
+                                                        <!--STATUS-->
+                                                        <td>
+                                                                
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </td>
+                                    
+                                </tr>                               
                             </tbody>
                         </table>
                     </div>

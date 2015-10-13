@@ -16,6 +16,51 @@ angular.module("card-services-conciliacao-relatorios", [])
     // flags
     $scope.exibeTela = false;
     // Data
+    $scope.adquirentes = [{
+        adquirente : 'Cielo',	
+        bandeiras: [{	
+                    bandeira: 'Master',	
+                    competencia	: 'Exemplo 1',
+                    taxaMedia : 10,	
+                    vendas : 'Exemplo 1',
+                    taxaAdm : 0, 
+                    ajustesCredito: 0,
+                    ajustesDebito : 0, 
+                    valorLiquido : 0,
+                    extratoBancario : 0,
+                    diferenca : 0, 
+                    status : 'Pré-Conciliado',
+                },
+                  {	
+                    bandeira: 'Visa',	
+                    competencia	: 'Exemplo 2',
+                    taxaMedia : 10,	
+                    vendas : 'Exemplo 2',
+                    taxaAdm : 0, 
+                    ajustesCredito: 0,
+                    ajustesDebito : 0, 
+                    valorLiquido : 0,
+                    extratoBancario : 0,
+                    diferenca : 0, 
+                    status : 'Não Conciliado',
+                }],
+                
+        competencias : [{
+                         competencia:'Exemplo 1'
+                        },
+                        {
+                         competencia:'Exemplo 2' 
+                        }],
+        taxaMedia : 10,	
+        vendas : 'Exemplo',
+        taxaAdm : 0, 
+        ajustesCredito: 0,
+        ajustesDebito : 0, 
+        valorLiquido : 0,
+        extratoBancario : 0,
+        diferenca : 0, 
+        status : 'Pré-Conciliado',
+    }];
     $scope.emitentes = [];
     $scope.datamin = new Date();
     $scope.datamax = null;
@@ -71,7 +116,31 @@ angular.module("card-services-conciliacao-relatorios", [])
         $scope.datamax = null;
       };
         
+     // LINHAS EXPANSÍVEIS
     
+    //ADQUIRENTE
+    $scope.toggle = function(adquirente){
+        if(!adquirente || adquirente === null) return;
+        if(adquirente.collapsed) adquirente.collapsed = false;
+        else adquirente.collapsed = true;
+        console.log(adquirente);
+    }
+    $scope.isExpanded = function(adquirente){
+        if(!adquirente || adquirente === null) return;
+        return adquirente.collapsed;
+    }
+    
+    //BANDEIRA
+    $scope.toggle = function(bandeira){
+        if(!bandeira || bandeira === null) return;
+        if(bandeira.collapsed) bandeira.collapsed = false;
+        else bandeira.collapsed = true;
+        console.log(bandeira);
+    }
+    $scope.isExpanded = function(bandeira){
+        if(!bandeira || bandeira === null) return;
+        return bandeira.collapsed;
+    }
     
     
 }]);
