@@ -282,7 +282,7 @@
                     </div>
                     
                     <!-- TABELA EXTERNA -->
-                    <div class="table scrollable">
+                    <div class="table-scrollable">
                         <table class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
                             <thead>                                
                                 <tr>
@@ -346,7 +346,7 @@
                                     </td>
                                     <!--COMPETÊNCIA-->
                                     <td>
-                                        {{adquirente.competencia}}    
+                                          
                                     </td>
                                     <!--TAXA MÉDIA-->
                                     <td>
@@ -391,8 +391,50 @@
                                 <!-- LINHA EXPANSÍVEL BANDEIRA -->
                                 <tr ng-repeat-end ng-show="isExpanded(adquirente)"> 
                                     <td colspan="13">
-                                        <div class="table scrollable">
+                                        <div class="table-scrollable">
                                             <table class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
+                                                <thead>                                
+                                                    <tr>
+                                                        <th width="5%">
+                                                        </th>
+                                                        <th width="5%">
+                                                            Adquirente
+                                                        </th>
+                                                        <th width="15%" style="text-align: center;">
+                                                            Bandeira
+                                                        </th>
+                                                        <th width="15%" style="text-align: center;">
+                                                            Competência
+                                                        </th>
+                                                        <th width="15%" style="text-align: center;">
+                                                            Taxa Média
+                                                        </th>
+                                                        <th width="10%" style="text-align: center;">
+                                                            Vendas
+                                                        </th>
+                                                        <th width="10%" style="text-align: center;">
+                                                            Taxa ADM
+                                                        </th>
+                                                        <th width="10%" style="text-align: center;">
+                                                            Ajustes Crédito
+                                                        </th>
+                                                        <th width="10%" style="text-align: center;">
+                                                            Ajustes Débito
+                                                        </th>
+                                                        <th width="10%" style="text-align: center;">
+                                                            Valor Líquido
+                                                        </th>
+                                                        <th width="10%" style="text-align: center;">
+                                                            Extratos Bancários
+                                                        </th>
+                                                        <th width="10%" style="text-align: center;">
+                                                            Diferença
+                                                        </th>
+                                                        <th width="10%" style="text-align: center;">
+                                                            Status
+                                                        </th>
+                                                    </tr>
+                                                </thead>
                                                 <tbody>
                                                     <tr ng-repeat-start ="bandeira in adquirente.bandeiras">
                                                         <td>
@@ -408,111 +450,157 @@
                                                         </td>
                                                         <!--BANDEIRA-->
                                                         <td>
-                                                            {{bandeira.bandeira}}        
+                                                            {{bandeira.bandeira}} 
                                                         </td>
                                                         <!--COMPETÊNCIA-->
                                                         <td>
-                                                             
+                                                            {{bandeira.competencia}}    
                                                         </td>
                                                         <!--TAXA MÉDIA-->
                                                         <td>
-                                                                
+                                                            {{bandeira.taxaMedia}}    
                                                         </td>
                                                         <!--VENDAS-->
                                                         <td>
-                                                               
+                                                            {{bandeira.vendas}}    
                                                         </td>
                                                         <!--TAXA ADM-->
                                                         <td>
-                                                               
+                                                            {{bandeira.taxaAdm}}    
                                                         </td>
                                                         <!--AJUSTES CRÉDITO-->
                                                         <td>
-                                                                
+                                                            {{bandeira.ajustesCredito}}    
                                                         </td>
                                                         <!--AJUSTES DÉBITO-->
                                                         <td>
-                                                               
+                                                            {{bandeira.ajustesDebito}}    
                                                         </td>
                                                         <!--VALOR LÍQUIDO-->
                                                         <td>
-                                                                
+                                                            {{bandeira.valorLiquido}}    
                                                         </td>
                                                         <!--EXTRATO BANCÁRIO-->
                                                         <td>
-                                                               
+                                                            {{bandeira.extratoBancario}}    
                                                         </td>
                                                         <!--DIFERENÇA-->
                                                         <td>
-                                                               
+                                                            {{bandeira.diferenca}}   
                                                         </td>
                                                         <!--STATUS-->
                                                         <td>
-                                                                
+                                                            {{bandeira.status}}    
                                                         </td>
                                                     </tr>
-                                                    <tr ng-repeat-end ng-show="bandeira">
-                                                        <td>
+                                                    <!-- LINHA EXPANSÍVEL COMPETÊNCIA -->
+                                                    <tr ng-repeat-end ng-show="isExpanded(bandeira)">
+                                                        <td colspan="13">
+                                                            <div class="table-scrollable">
+                                                                <table class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
+                                                                    <thead>                                
+                                                                        <tr>
+                                                                            <th width="5%">
+                                                                            </th>
+                                                                            <th width="5%">
+                                                                                Adquirente
+                                                                            </th>
+                                                                            <th width="15%" style="text-align: center;">
+                                                                                Bandeira
+                                                                            </th>
+                                                                            <th width="15%" style="text-align: center;">
+                                                                                Competência
+                                                                            </th>
+                                                                            <th width="15%" style="text-align: center;">
+                                                                                Taxa Média
+                                                                            </th>
+                                                                            <th width="10%" style="text-align: center;">
+                                                                                Vendas
+                                                                            </th>
+                                                                            <th width="10%" style="text-align: center;">
+                                                                                Taxa ADM
+                                                                            </th>
+                                                                            <th width="10%" style="text-align: center;">
+                                                                                Ajustes Crédito
+                                                                            </th>
+                                                                            <th width="10%" style="text-align: center;">
+                                                                                Ajustes Débito
+                                                                            </th>
+                                                                            <th width="10%" style="text-align: center;">
+                                                                                Valor Líquido
+                                                                            </th>
+                                                                            <th width="10%" style="text-align: center;">
+                                                                                Extratos Bancários
+                                                                            </th>
+                                                                            <th width="10%" style="text-align: center;">
+                                                                                Diferença
+                                                                            </th>
+                                                                            <th width="10%" style="text-align: center;">
+                                                                                Status
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr ng-repeat ="competencia in bandeira.competencias">
+                                                                            <td>
 
-                                                        </td>
-                                                        <td style="text-align: center;">
-                                                            <a href="javascript:;" ng-click="toggle(bandeira)">
-                                                                <i class="fa"
-                                                                   ng-class="{'fa-plus-square' : !isExpanded(bandeira), 'fa-minus-square' : isExpanded(bandeira)}"
-                                                                   style="margin-top: -3px;"> 
-                                                                </i> 
-                                                            </a>
-                                                        </td>
-                                                        <!--BANDEIRA-->
-                                                        <td>
-                                                            {{bandeira.bandeira}}        
-                                                        </td>
-                                                        <!--COMPETÊNCIA-->
-                                                        <td>
-                                                             
-                                                        </td>
-                                                        <!--TAXA MÉDIA-->
-                                                        <td>
-                                                                
-                                                        </td>
-                                                        <!--VENDAS-->
-                                                        <td>
-                                                               
-                                                        </td>
-                                                        <!--TAXA ADM-->
-                                                        <td>
-                                                               
-                                                        </td>
-                                                        <!--AJUSTES CRÉDITO-->
-                                                        <td>
-                                                                
-                                                        </td>
-                                                        <!--AJUSTES DÉBITO-->
-                                                        <td>
-                                                               
-                                                        </td>
-                                                        <!--VALOR LÍQUIDO-->
-                                                        <td>
-                                                                
-                                                        </td>
-                                                        <!--EXTRATO BANCÁRIO-->
-                                                        <td>
-                                                               
-                                                        </td>
-                                                        <!--DIFERENÇA-->
-                                                        <td>
-                                                               
-                                                        </td>
-                                                        <!--STATUS-->
-                                                        <td>
-                                                                
-                                                        </td>
+                                                                            </td>
+                                                                            <td style="text-align: center;">
+                                                                                
+                                                                            </td>
+                                                                            <td style="text-align: center;">
+                                                                                
+                                                                            </td>
+                                                                            <!--COMPETÊNCIA-->
+                                                                            <td>
+                                                                                {{competencia.competencia}}    
+                                                                            </td>
+                                                                            <!--TAXA MÉDIA-->
+                                                                            <td>
+                                                                                {{competencia.taxaMedia}}    
+                                                                            </td>
+                                                                            <!--VENDAS-->
+                                                                            <td>
+                                                                                {{competencia.vendas}}    
+                                                                            </td>
+                                                                            <!--TAXA ADM-->
+                                                                            <td>
+                                                                                {{competencia.taxaAdm}}    
+                                                                            </td>
+                                                                            <!--AJUSTES CRÉDITO-->
+                                                                            <td>
+                                                                                {{competencia.ajustesCredito}}    
+                                                                            </td>
+                                                                            <!--AJUSTES DÉBITO-->
+                                                                            <td>
+                                                                                {{competencia.ajustesDebito}}    
+                                                                            </td>
+                                                                            <!--VALOR LÍQUIDO-->
+                                                                            <td>
+                                                                                {{competencia.valorLiquido}}    
+                                                                            </td>
+                                                                            <!--EXTRATO BANCÁRIO-->
+                                                                            <td>
+                                                                                {{competencia.extratoBancario}}    
+                                                                            </td>
+                                                                            <!--DIFERENÇA-->
+                                                                            <td>
+                                                                                {{competencia.diferenca}}   
+                                                                            </td>
+                                                                            <!--STATUS-->
+                                                                            <td>
+                                                                                {{competencia.status}}    
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </td>    
                                                     </tr>
                                                 </tbody>
                                             </table>
                                         </div>
                                     </td>
-                                    
                                 </tr>                               
                             </tbody>
                         </table>

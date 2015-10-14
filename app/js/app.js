@@ -1984,7 +1984,7 @@ angular.module("AtosCapital", ['ui.router',
      */
    $scope.showProgress = function(divPortletBodyPos, zIndex){
         var el = getElementProgress(divPortletBodyPos);
-        console.log("ELEMENT"); console.log(el);
+        //console.log("ELEMENT"); console.log(el);
         Metronic.blockUI({
             target: el,
             animate: true,

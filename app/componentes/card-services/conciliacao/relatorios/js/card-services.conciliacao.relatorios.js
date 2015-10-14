@@ -20,45 +20,81 @@ angular.module("card-services-conciliacao-relatorios", [])
         adquirente : 'Cielo',	
         bandeiras: [{	
                     bandeira: 'Master',	
-                    competencia	: 'Exemplo 1',
-                    taxaMedia : 10,	
-                    vendas : 'Exemplo 1',
-                    taxaAdm : 0, 
-                    ajustesCredito: 0,
-                    ajustesDebito : 0, 
-                    valorLiquido : 0,
-                    extratoBancario : 0,
-                    diferenca : 0, 
+                    competencia:'SET/2015',  
+                    competencias: [{
+                                    competencia:'01/09/2015',
+                                    taxaMedia : 1,	
+                                    vendas : 2,
+                                    taxaAdm : 3, 
+                                    ajustesCredito: 4,
+                                    ajustesDebito : 5, 
+                                    valorLiquido : 6,
+                                    extratoBancario : 7,
+                                    diferenca : 8, 
+                                    status : 'Pré Conciliado',},
+                                  {
+                                    competencia:'02/09/2015',
+                                    taxaMedia : 1,	
+                                    vendas : 2,
+                                    taxaAdm : 3, 
+                                    ajustesCredito: 4,
+                                    ajustesDebito : 5, 
+                                    valorLiquido : 6,
+                                    extratoBancario : 7,
+                                    diferenca : 8, 
+                                    status : 'Pré Conciliado',},
+                                  {
+                                    competencia:'03/09/2015',
+                                    taxaMedia : 1,	
+                                    vendas : 2,
+                                    taxaAdm : 3, 
+                                    ajustesCredito: 4,
+                                    ajustesDebito : 5, 
+                                    valorLiquido : 6,
+                                    extratoBancario : 7,
+                                    diferenca : 8, 
+                                    status : 'Pré Conciliado',}],
+                    taxaMedia : 1,	
+                    vendas : 2,
+                    taxaAdm : 3, 
+                    ajustesCredito: 4,
+                    ajustesDebito : 5, 
+                    valorLiquido : 6,
+                    extratoBancario : 7,
+                    diferenca : 8, 
                     status : 'Pré-Conciliado',
                 },
                   {	
                     bandeira: 'Visa',	
-                    competencia	: 'Exemplo 2',
-                    taxaMedia : 10,	
-                    vendas : 'Exemplo 2',
-                    taxaAdm : 0, 
-                    ajustesCredito: 0,
-                    ajustesDebito : 0, 
-                    valorLiquido : 0,
-                    extratoBancario : 0,
-                    diferenca : 0, 
+                    competencia:'OUT/2015',  
+                    competencias: [{competencia:'01/10/2015',
+                                    taxaMedia : 1,	
+                                    vendas : 2,
+                                    taxaAdm : 3, 
+                                    ajustesCredito: 4,
+                                    ajustesDebito : 5, 
+                                    valorLiquido : 6,
+                                    extratoBancario : 7,
+                                    diferenca : 8,
+                                    status : 'Não Conciliado',}],
+                    taxaMedia : 1,	
+                    vendas : 2,
+                    taxaAdm : 3, 
+                    ajustesCredito: 4,
+                    ajustesDebito : 5, 
+                    valorLiquido : 6,
+                    extratoBancario : 7,
+                    diferenca : 8,
                     status : 'Não Conciliado',
                 }],
-                
-        competencias : [{
-                         competencia:'Exemplo 1'
-                        },
-                        {
-                         competencia:'Exemplo 2' 
-                        }],
-        taxaMedia : 10,	
-        vendas : 'Exemplo',
-        taxaAdm : 0, 
-        ajustesCredito: 0,
-        ajustesDebito : 0, 
-        valorLiquido : 0,
-        extratoBancario : 0,
-        diferenca : 0, 
+        taxaMedia : 1,	
+        vendas : 2,
+        taxaAdm : 3, 
+        ajustesCredito: 4,
+        ajustesDebito : 5, 
+        valorLiquido : 6,
+        extratoBancario : 7,
+        diferenca : 8,
         status : 'Pré-Conciliado',
     }];
     $scope.emitentes = [];
@@ -123,7 +159,7 @@ angular.module("card-services-conciliacao-relatorios", [])
         if(!adquirente || adquirente === null) return;
         if(adquirente.collapsed) adquirente.collapsed = false;
         else adquirente.collapsed = true;
-        console.log(adquirente);
+        //console.log(adquirente);
     }
     $scope.isExpanded = function(adquirente){
         if(!adquirente || adquirente === null) return;
@@ -142,5 +178,5 @@ angular.module("card-services-conciliacao-relatorios", [])
         return bandeira.collapsed;
     }
     
-    
+        
 }]);
