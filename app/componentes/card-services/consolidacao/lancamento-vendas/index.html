@@ -588,27 +588,19 @@
                                             <!--DESCRIÇÃO-->
                                             <div class="row conteudoFormularioCadastroTerminal">
                                                 <label class="col-md-4 col-sm-4">Descrição</label>
-                                                <label class="col-md-4 col-sm-4"  style="text-align:center; font-size:13px">Qtd transações</label>
-                                                <label class="col-md-4 col-sm-4"  style="text-align:center">Total</label>
+                                                <label class="col-md-4 col-sm-4" style="text-align:center; font-size:13px">Qtd transações</label>
+                                                <label class="col-md-4 col-sm-4" style="text-align:center">Total</label>
                                             </div>
                                             <!--Á VISTA-->
                                             <div class="row conteudoFormularioCadastroTerminal">
-                                                <label class="col-md-4 col-sm-4">À Vista</label>
+                                                <label class="col-md-4 col-sm-4" ng-show="tipo == null">A Prazo</label>
+                                                <label class="col-md-4 col-sm-4" ng-show="tipo.trim() == 'CRÉDITO'">A Prazo</label>
+                                                <label class="col-md-4 col-sm-4" ng-show="tipo.trim() == 'DÉBITO'">À Vista</label>
                                                 <div class="col-md-4 col-sm-4">
-                                                    <input class="form-control">
+                                                    <input class="form-control" ng-model="formCadastro.qtdTransacao">
                                                 </div>
                                                 <div class="col-md-4 col-sm-4">
-                                                    <input class="form-control">
-                                                </div>
-                                            </div>
-                                            <!--À PRAZO-->
-                                            <div class="row conteudoFormularioCadastroTerminal">
-                                                <label class="col-md-4 col-sm-4">À Prazo</label>
-                                                <div class="col-md-4 col-sm-4">
-                                                    <input class="form-control">
-                                                </div>
-                                                <div class="col-md-4 col-sm-4">
-                                                    <input class="form-control">
+                                                    <input class="form-control" ng-model="formCadastro.total">
                                                 </div>
                                             </div>
 
@@ -616,7 +608,7 @@
                                             <div class="row">
                                                 <!--BOTÃO INCLUIR-->
                                                 <div class="col-md-4 col-md-offset-8 col-sm-4 col-sm-offset-8 " style="text-align:right;margin-top:15px">
-                                                    <button class=" btn btn-sm red filter-submit margin-bottom">
+                                                    <button class=" btn btn-sm red filter-submit margin-bottom" ng-click="inserirDados()">
                                                         <i class="fa fa-plus"></i>
                                                         Incluir
                                                     </button>
@@ -630,7 +622,7 @@
 
                                                 Salvar
                                             </button>
-                                        </div-->
+                                        </div -->
                                     </div>
                                 </div>
                                 <!--FIM FORMULÁRIO-->
@@ -734,33 +726,22 @@
 
 
                                             <!--RELATÓRIOS-->
-                                            <div class="row conteudoCupomRelatorios">
+                                            <div class="row conteudoCupomRelatorios" ng-repeat="bandeira in cupom.bandeiras">
                                                 <div class="col-md-10 col-sm-10">
                                                     <div class="row">
                                                         <div class="col-md-12 col-sm-12">
-                                                            VISA
+                                                            {{ bandeira.dsBandeira }}
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-md-5 col-sm-5">
-                                                            CRÉDITO
+                                                            {{ bandeira.bandeiraTipo }}
                                                         </div>
                                                         <div class="col-md-2 col-sm-2">
-                                                            009
+                                                            {{ bandeira.qtTransacao }}
                                                         </div>
                                                         <div class="col-md-5 col-sm-5">
-                                                            1.000,87
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-5 col-sm-5">
-                                                            À VISTA
-                                                        </div>
-                                                        <div class="col-md-2 col-sm-2">
-                                                            009
-                                                        </div>
-                                                        <div class="col-md-5 col-sm-5">
-                                                            1.000,87
+                                                            {{ bandeira.vlVenda | currency:'R$ ' }}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -776,48 +757,6 @@
                                                 </div>
                                             </div>
 
-                                            <!--RÉPLICA-->
-                                            <div class="row conteudoCupomRelatorios">
-                                                <div class="col-md-10 col-sm-10">
-                                                    <div class="row">
-                                                        <div class="col-md-12 col-sm-12">
-                                                            VISA
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-5 col-sm-5">
-                                                            CRÉDITO
-                                                        </div>
-                                                        <div class="col-md-2 col-sm-2">
-                                                            009
-                                                        </div>
-                                                        <div class="col-md-5 col-sm-5">
-                                                            1.000,87
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-5 col-sm-5">
-                                                            À VISTA
-                                                        </div>
-                                                        <div class="col-md-2 col-sm-2">
-                                                            009
-                                                        </div>
-                                                        <div class="col-md-5 col-sm-5">
-                                                            1.000,87
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-2 col-sm-2">
-                                                    <button class="btn btn-sm grey filter-submit"
-                                                            popover="Deseja remover essa linha?"
-                                                            popover-trigger="mouseenter"
-                                                            popover-placement="bottom"
-                                                            popover-append-to-body="true"
-                                                            style="margin-top: 18px">
-                                                        <i class="fa fa-times"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
                                             <!--TOTAIS RELATÓRIOS-->
                                             <div class="row totaisCuponRelatorios">
                                                 <div class="col-md-12 col-sm-12">

@@ -528,6 +528,7 @@ angular.module('webapi', ['utils'])
         tbcontacorrentetbloginadquirenteempresa : $autenticacao.getUrlBase() + '/card/tbcontacorrentetbloginadquirenteempresa/',
         tbextrato : $autenticacao.getUrlBase() + '/card/tbextrato/',
         tbloginadquirenteempresa : $autenticacao.getUrlBase() + '/card/tbloginadquirenteempresa/',
+        tbrecebimentoresumomanual: $autenticacao.getUrlBase() + '/card/tbrecebimentoresumomanual/',
         tbterminallogico: $autenticacao.getUrlBase() + '/card/tbterminallogico/',
         uploadextrato : $autenticacao.getUrlBase() + '/card/testeupload/',
     },

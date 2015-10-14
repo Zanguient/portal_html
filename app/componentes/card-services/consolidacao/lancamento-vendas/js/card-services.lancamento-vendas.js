@@ -47,6 +47,8 @@ angular.module('card-services-lancamento-vendas', [])
     // Objeto do Cupom da Direita
     $scope.cupom = {};
     $scope.exibeCupom = false;
+    // Objeto para inserção de dados
+    $scope.formCadastro = {};
     // Inicialização do controller
     $scope.cardServices_lancamentoVendasInit = function(){
         // Título da página
@@ -214,7 +216,7 @@ angular.module('card-services-lancamento-vendas', [])
               });
     }
     /**
-      * Selecionou uma filial
+      * Selecionou uma adquirente
       */
     $scope.alterouAdquirente = function(){
         //console.log($scope.filtro.filial);
@@ -315,8 +317,39 @@ angular.module('card-services-lancamento-vendas', [])
         data: $scope.dataPos,
         bandeiras: []
       }
+
+      // Pesquisar bandeiras existentes
+      // Definindo filtros
+      var filtros = [];
+      // Filtrar a partir da adquirente selecionada
+      filtros.push({id: 102, valor: $scope.filtro.adquirente.cdAdquirente},
+                    {id: 101, valor: $scope.filtro.terminal.cdTerminalLogico});
+      // Faz a requisição ao banco
+      $webapi.get($apis.getUrl($apis.card.tbrecebimentoresumomanual,
+                               [$scope.token, 0, /*$campos.card.tbTerminalLogico.cdTerminalLogico*/ 101],
+                               filtros))
+        .then(function(dados){
+           console.log(dados);
+           $scope.cupom.bandeiras = dados.Registros;
+           $scope.hideProgress(divPortletBody);
+         },
+         function(failData){
+           if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+           else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+           else $scope.showAlert('Houve uma falha ao obter cupom (' + failData.status + ')', true, 'danger', true);
+           $scope.hideProgress(divPortletBody);
+         });
+
       console.log($scope.cupom);
       $scope.exibeCupom = true;
+    }
+
+
+    /**
+      * Inserir Dados
+      */
+    $scope.inserirDados = function() {
+      
     }
 
 }]);
