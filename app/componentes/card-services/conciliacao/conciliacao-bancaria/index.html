@@ -9,6 +9,10 @@
 
 
 
+    Versão 1.0.4 - 13/10/2015
+    - Exibição de ajustes
+    - Nos agrupamentos de recebimentos parcela, também há a informação de filial
+
     Versão 1.0.3 - 05/10/2015
     - Seleção múltipla de cargas agrupadas na conciliação manual
 
@@ -145,7 +149,7 @@
                                             ng-model="filtro.filial"
                                             ng-change="alterouFilial()"
                                             ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
-                                        <option style="display:none" value=""></option>
+                                        <option value="">TODAS</option>
                                     </select>
                                     <i class="fa fa-question-circle"
                                         ng-show="!usuariologado.grupoempresa"
@@ -156,17 +160,17 @@
                                 <!-- ADQUIRENTE -->
                                 <td rowspan="1" colspan="1">
                                     <select class="form-control form-filter input-sm comboBoxFiltros"
-                                            ng-disabled="!filtro.filial || filtro.filial === null"
+                                            ng-disabled="adquirentes.length === 0"
                                             ng-model="filtro.adquirente"
                                             ng-change="alterouAdquirente()"
-                                            ng-options="adquirente as (adquirente.nmOperadora | uppercase) for adquirente in adquirentes">
+                                            ng-options="adquirente as (adquirente.nmAdquirente | uppercase) for adquirente in adquirentes">
                                         <option style="display:none" value=""></option>
                                     </select>
-                                     <i class="fa fa-question-circle"
+                                     <!--i class="fa fa-question-circle"
                                         ng-show="!usuariologado.grupoempresa || !filtro.filial || filtro.filial === null"
                                         popover-placement="bottom"
                                         popover="É necessário selecionar uma filial"
-                                        popover-trigger="mouseenter"></i>
+                                        popover-trigger="mouseenter"></i-->
                                 </td>
                                 <!-- TIPO -->
                                 <td rowspan="1" colspan="1">
@@ -229,17 +233,20 @@
        <!-- MODAL DETALHAR DOCUMENTOS -->
        <div class="modal fade bs-modal-sm modal-input" 
             id="modalDetalhes" aria-hidden="true">
-           <div class="modal-dialog modal-sm" style="width:650px">
+           <div class="modal-dialog modal-sm" style="width:1000px">
                <div class="modal-content">
                    <div class="modal-header">
                        <h4 class="modal-title modal-cabecalho">Detalhes do agrupamento</h4>
                    </div>
                    <div class="modal-body modal-corpo modalAcessoDeUsuarios" style="text-align: center">
                        <div class="row">
-                           <div class="col-sm-3">
+                           <div class="col-sm-2">
+                                <label>Filial</label>
+                           </div>
+                           <div class="col-sm-2">
                                 <label>Bandeira</label>
                            </div>
-                           <div class="col-sm-3">
+                           <div class="col-sm-2">
                                 <label>Venda</label>
                            </div>
                            <div class="col-sm-2">
@@ -253,19 +260,26 @@
                            </div>
                        </div>
                        <div class="row" ng-repeat="item in modalDetalhes.grupo">
-                           <div class="col-sm-3" style="text-align:center">
-                                {{item.Bandeira | uppercase}}
-                           </div>
-                           <div class="col-sm-3" style="text-align:center"
-                                ng-bind="getDataTimeString(item.DataVenda)">
+                           <div class="col-sm-2" style="text-align:center">
+                                {{item.Filial | uppercase}}
                            </div>
                            <div class="col-sm-2" style="text-align:center">
+                                {{item.Bandeira | uppercase}}
+                           </div>
+                           <div class="col-sm-2" style="text-align:center"
+                                ng-bind="getDataTimeString(item.DataVenda)"
+                                ng-show="item.NumParcela >= 0">
+                           </div>
+                           <div style="text-align:center"
+                                ng-class="{'col-sm-2' : item.NumParcela >= 0, 'col-sm-6' : item.NumParcela < 0}">
                                 {{item.Documento | uppercase}}
                            </div>
                            <div class="col-sm-2" style="text-align:center"
-                                ng-bind="getDataString(item.DataPrevista)">
+                                ng-bind="getDataString(item.DataPrevista)"
+                                ng-show="item.NumParcela >= 0">
                            </div>
-                           <div class="col-sm-2" style="text-align:center">
+                           <div class="col-sm-2" style="text-align:center"
+                                ng-class="{'linhaTotalRelatorios' : item.NumParcela < 0, 'valorNegativo' : item.Valor < 0, 'valorPositivo' : item.NumParcela < 0 && item.Valor > 0}">
                                 {{item.Valor | currency:'R$'}}
                            </div>
                        </div>
@@ -435,16 +449,12 @@
                                         <!--SUBTITULO DO CUPON -->
                                         <div class="row tituloCumponsConciliacaoBancariaICard">
                                             <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
-                                                
+                                                {{dado.RecebimentosParcela[0].Filial | uppercase}} 
                                             </div>
                                         </div>                                 
                                     </div>
                                 </div>
-                                <!--BODY-->
-                                <!--CAMPO AGÊNCIA E CONTA -->
-                                <div class="row">
-                                    <!-- nothing....-->
-                                </div>                    
+                                <!--BODY-->                   
                                 <!--DIVISÓRIA DOS TIPOS DE CUPONS-->
                                 <div class="row">   
                                     <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
@@ -560,6 +570,7 @@
                                         <div class="row">
                                             <!--BANCO-->
                                             <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria"
+                                                 style="margin-top:5px"
                                                  ng-bind="exibeBanco(dado.Conta.banco)">
                                             </div>
                                         </div>                                 

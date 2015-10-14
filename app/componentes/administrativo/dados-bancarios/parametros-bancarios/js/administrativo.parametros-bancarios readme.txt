@@ -36,6 +36,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
   * APIS:
     - card/tbbancoparametro
 	- card/tbadquirente
+	- card/tbbandeira
 	- cliente/empresa
 	- pos/loginoperadora
 	- util/bancos
@@ -53,13 +54,23 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 			]
  
   * card/tbadquirente
-    - GET : listagem as adquirentes que podem ser cadastradas (coleção 1)
+    - GET : listagem das adquirentes (coleção 1)
 			[
-			  { cdAdquirente = int,
-                nmAdquirente = string,
-                dsAdquirente = string,
-                stAdquirente = int,  // igual a 1
-				hrExecucao = datetime,
+			  { cdAdquirente : int,
+                nmAdquirente : string,
+                dsAdquirente : string,
+                stAdquirente : int,  // igual a 1
+				hrExecucao : datetime,
+			  }
+			]	
+			
+  * card/tbbandeira
+    - GET : listagem das bandeiras (coleção 1)
+			[
+			  { cdBandeira : int,
+                dsBandeira : string,
+                cdAdquirente : int,  // igual a 1
+				dsTipo : string,
 			  }
 			]	
 			
@@ -105,16 +116,20 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				adquirente : null ou { cdAdquirente : int, nmAdquirente : string, dsAdquirente : string, stAdquirente : int},
 				dsTipo : string,
 				flVisivel : bool,
+				dsTipoCartao : string,
 				banco : { Codigo : string, 
 						  NomeExtenso : string},
 				empresa : null ou { nu_cnpj : string, ds_fantasia : string }
-				grupoempresa : null ou { id_grupo : int, ds_nome : string }
+				grupoempresa : null ou { id_grupo : int, ds_nome : string },
+				bandeira : null ou { cdBandeira : int, dsBandeira : string, dsTipo: string }
 			  }
 			]	
 	- PUT : altera parâmetro(s) bancário(s) existente
 			[
 			  cdAdquirente : int,
 			  nrCnpj : string,
+			  dsTipoCartao : string,
+			  cdBandeira : int,
 			  flVisivel : bool, // obrigatório!
 			  deletar : bool, // obrigatório!
 			  parametros : [{ cdBanco : string,

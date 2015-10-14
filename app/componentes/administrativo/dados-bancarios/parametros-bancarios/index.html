@@ -9,6 +9,11 @@
 
 
 
+    Versão 1.0.3 - 13/10/2015
+    - Associação a uma bandeira
+    - Associação a um tipo de cartão: crédito/débito
+    - Associação múltipla com opção de selecionar o que deseja modificar
+
     Versão 1.0.2 - 04/09/2015
     - Associação a uma filial
     - Exibição do nome do grupo antes da filial
@@ -63,20 +68,26 @@
                     <table class="table table-striped table-bordered table-hover dataTable no-footer conteudoTabelas" id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
                         <thead>
                             <tr role="row" class="heading">
-                                <th tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="30%">
+                                <th tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="20%">
                                      Banco
                                 </th>
                                 <th tabindex="1" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="10%">
                                      Tipo 
                                 </th>
-                                <th tabindex="2" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="20%">
+                                <th tabindex="2" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="15%">
                                      Adquirente
                                 </th>
-                                <th tabindex="2" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="30%">
+                                <th tabindex="3" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="15%">
+                                     Bandeira
+                                </th>
+                                <th tabindex="4" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="20%">
                                      Filial
                                 </th>
-                                <th tabindex="3" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="10%">
-                                     Ações de Filtro
+                                <th tabindex="5" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="10%">
+                                     Tipo <br> Cartão
+                                </th>
+                                <th tabindex="6" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="10%">
+                                     Ações
                                 </th>                                
                             </tr>
                             <tr role="row" class="filter">  
@@ -132,6 +143,37 @@
                                         </div>
                                     </div>
                                 </td>
+                                <!-- BANDEIRA -->
+                                <td rowspan="1" colspan="1">
+                                    <div class="row">
+										<div class="col-md-12">
+                                            <select style="width: 100%;"
+                                                    aria-controls="datatable_products" 
+                                                    class="form-control input-sm input-inline"
+                                                    ng-model="filtro.bandeira"
+                                                    ng-disabled="filtro.sembandeiras || !filtro.adquirente || filtro.adquirente === null"
+                                                    ng-change="alterouBandeira()"
+                                                    ng-options="bandeira as (bandeira.dsBandeira | uppercase) for bandeira in bandeiras"> 
+                                                <option value=""></option>
+                                            </select>
+                                            <i class="fa fa-question-circle"
+                                                ng-show="!filtro.adquirente || filtro.adquirente === null"
+                                                popover-placement="bottom"
+                                                popover="É necessário selecionar uma adquirente"
+                                                popover-trigger="mouseenter"
+                                                popover-append-to-body="true"></i> 
+										</div>
+                                    </div>
+                                    <div class="row" style="margin-top:10px;">
+                                        <div class="col-sm-3 col-md-3" style="margin-right: -15px;">
+                                            <checkbox normal ng-model="filtro.sembandeiras"
+                                                      ng-change="selecionouCheckboxBandeira()"></checkbox>
+                                        </div>
+                                        <div class="col-sm-9 col-md-9" style="text-align:left;">
+                                            <label>Exibir somente os registros sem bandeira associada</label>
+                                        </div>
+                                    </div>
+                                </td>
                                 <!-- FILIAL -->
                                 <td rowspan="1" colspan="1">
                                     <div class="row">
@@ -161,6 +203,17 @@
                                             <label>Exibir somente os registros sem filial associada</label>
                                         </div>
                                     </div>
+                                </td>
+                                <!-- TIPO CARTÃO -->
+                                <td rowspan="1" colspan="1">
+                                    <select style="width: 100%;"
+											aria-controls="datatable_products"
+                                            class="form-control input-sm input-inline"
+                                            ng-model="filtro.tipocartao"
+                                            ng-change="alterouDsTipoCartao()"
+                                            ng-options="dsTipoCartao for dsTipoCartao in dsTiposCartao">
+                                        <option value="">TODOS</option>
+                                    </select>
                                 </td>
                                 <!--AÇÕES-->
                                 <td rowspan="1" colspan="1">
@@ -211,10 +264,10 @@
                        <div class="row">
                             <!-- BANCO -->
                             <div class="col-sm-12">
-                                <div class="col-sm-2">
+                                <div class="col-sm-3">
                                     <label>Banco</label>
                                 </div>
-                                <div class="col-sm-10">
+                                <div class="col-sm-9">
                                     <input type="text" class="form-control modalContasCorrentes"
                                            id="buscabancomodal"
                                            ng-disabled="!ehCadastro()"
@@ -232,10 +285,10 @@
                            </div>
                            <!-- DESCRIÇÃO -->
                            <div class="col-sm-12">
-                               <div class="col-sm-2">
+                               <div class="col-sm-3">
                                     <label>Descrição</label>
                                </div>
-                               <div class="col-sm-10">
+                               <div class="col-sm-9">
                                     <input type="text" 
                                            ng-disabled="!ehCadastro()"
                                            class="form-control modalContasCorrentes" 
@@ -245,7 +298,7 @@
                            </div>
                            <!-- TIPO -->
                            <div class="col-sm-12">
-                                <div class="col-sm-2">
+                                <div class="col-sm-3">
                                     <label>Tipo</label>
                                 </div>
                                 <div class="col-sm-5">
@@ -257,27 +310,57 @@
                                     </select>
                                 </div>     
                            </div>
+                           <!-- TIPO CARTÃO -->
+                           <div class="col-sm-12">
+                                <div class="col-sm-3">
+                                    <label>Tipo Cartão</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <select aria-controls="datatable_products" 
+                                            class="form-control input-sm input-inline"
+                                            ng-model="modalParametro.dsTipoCartao"
+                                            ng-options="dsTipoCartao for dsTipoCartao in dsTiposCartao"> 
+                                        <option style="display: none" value=""></option>  
+                                    </select>
+                                </div>     
+                           </div>
                            <!-- ADQUIRENTE -->
                            <div class="col-sm-12">
-                                <div class="col-sm-2">
+                                <div class="col-sm-3">
                                     <label>Adquirente</label>
                                 </div>
-                                <div class="col-sm-10">
+                                <div class="col-sm-9">
                                     <select aria-controls="datatable_products" 
                                             ng-disabled="adquirentes.length === 0"
                                             class="form-control input-sm input-inline"
                                             ng-model="modalParametro.adquirente"
+                                            ng-change="alterouAdquirenteModalParametro()"
                                             ng-options="adquirente as (adquirente.dsAdquirente | uppercase) for adquirente in adquirentes"> 
+                                        <option value=""></option>  
+                                    </select>
+                               </div>
+                           </div>
+                           <!-- BANDEIRA -->
+                           <div class="col-sm-12">
+                                <div class="col-sm-3">
+                                    <label>Bandeira</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <select aria-controls="datatable_products" 
+                                            class="form-control input-sm input-inline"
+                                            ng-model="modalParametro.bandeira"
+                                            ng-disabled="modalParametro.bandeiras.length === 0 || !modalParametro.adquirente || modalParametro.adquirente === null"
+                                            ng-options="bandeira as (bandeira.dsBandeira | uppercase) for bandeira in modalParametro.bandeiras"> 
                                         <option value=""></option>  
                                     </select>
                                </div>
                            </div>
                            <!-- FILIAL -->
                            <div class="col-sm-12">
-                                <div class="col-sm-2">
+                                <div class="col-sm-3">
                                     <label>Filial</label>
                                 </div>
-                                <div class="col-sm-10">
+                                <div class="col-sm-9">
                                     <select class="form-control input-sm input-inline"
                                             ng-disabled="filiais.length === 0"
                                             ng-model="modalParametro.filial"
@@ -287,10 +370,10 @@
                                 </div>
                                <!-- CONSULTA ESTABELECIMENTO -->
                                 <div class="col-sm-12" ng-show="usuariologado.grupoempresa">
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-4">
                                         <label>Estabelecimento</label>
                                     </div>
-                                    <div class="col-sm-9" ng-show="usuariologado.grupoempresa">
+                                    <div class="col-sm-8" ng-show="usuariologado.grupoempresa">
                                         <div class="input-group" style="width:80%">
                                            <input type="text" class="form-control" 
                                                   placeholder="Buscar" 
@@ -345,17 +428,76 @@
                    </div>
                    <div class="modal-body modal-corpo modalAcessoDeUsuarios" style="text-align: left">
                        <div class="row">
-                           <!-- ADQUIRENTE -->
+                           <!-- TIPO CARTÃO -->
                            <div class="col-sm-12 col-sm-offset-1">
                                <div class="col-sm-12">
-                                   <label>Adquirente</label>
+                                   <div class="col-sm-2">
+                                       <label>
+                                            <checkbox normal ng-model="modalSelecionaAdquirenteFilial.selecionaTipoCartao">
+                                            </checkbox>
+                                       </label>
+                                   </div>
+                                   <div class="col-sm-8">
+                                        <label>Tipo Cartão</label>
+                                   </div>
                                </div>
                                <div class="col-sm-12">
 
                                     <select aria-controls="datatable_products" style="width:80%"
                                             class="form-control input-sm input-inline"
+                                            ng-disabled="!modalSelecionaAdquirenteFilial.selecionaTipoCartao"
+                                            ng-model="modalSelecionaAdquirenteFilial.tipocartao"
+                                            ng-options="dsTipoCartao for dsTipoCartao in dsTiposCartao"> 
+                                        <option value=""></option>  
+                                    </select>
+                               </div>
+                           </div>
+                           <!-- ADQUIRENTE -->
+                           <div class="col-sm-12 col-sm-offset-1">
+                               <div class="col-sm-12">
+                                   <div class="col-sm-2">
+                                        <label>
+                                            <checkbox normal ng-model="modalSelecionaAdquirenteFilial.selecionaAdquirente">
+                                            </checkbox>
+                                        </label>
+                                   </div>
+                                   <div class="col-sm-8">
+                                        <label>Adquirente</label>
+                                   </div>
+                               </div>
+                               <div class="col-sm-12">
+
+                                    <select aria-controls="datatable_products" style="width:80%"
+                                            class="form-control input-sm input-inline"
+                                            ng-disabled="!modalSelecionaAdquirenteFilial.selecionaAdquirente"
                                             ng-model="modalSelecionaAdquirenteFilial.adquirente"
+                                            ng-change="alterouAdquirenteModalAdquirenteFilial()"
                                             ng-options="adquirente as (adquirente.dsAdquirente | uppercase) for adquirente in adquirentes"> 
+                                        <option value=""></option>  
+                                    </select>
+                               </div>
+                           </div>
+                           <!-- BANDEIRA -->
+                           <div class="col-sm-12 col-sm-offset-1">
+                               <div class="col-sm-12">
+                                   <div class="col-sm-2">
+                                       <label>
+                                            <checkbox normal ng-model="modalSelecionaAdquirenteFilial.selecionaBandeira"
+                                                      ng-disabled="!modalSelecionaAdquirenteFilial.selecionaAdquirente || !modalSelecionaAdquirenteFilial.adquirente || modalSelecionaAdquirenteFilial.adquirente === null">
+                                            </checkbox>
+                                       </label>
+                                   </div>
+                                   <div class="col-sm-8">
+                                        <label>Bandeira</label>
+                                   </div>
+                               </div>
+                               <div class="col-sm-12">
+
+                                    <select aria-controls="datatable_products" style="width:80%"
+                                            class="form-control input-sm input-inline"
+                                            ng-disabled="!modalSelecionaAdquirenteFilial.selecionaBandeira || modalSelecionaAdquirenteFilial.bandeiras.length === 0 || !modalSelecionaAdquirenteFilial.adquirente || modalSelecionaAdquirenteFilial.adquirente === null"
+                                            ng-model="modalSelecionaAdquirenteFilial.bandeira"
+                                            ng-options="bandeira as (bandeira.dsBandeira | uppercase) for bandeira in modalSelecionaAdquirenteFilial.bandeiras"> 
                                         <option value=""></option>  
                                     </select>
                                </div>
@@ -365,11 +507,19 @@
                                 ng-show="usuariologado.grupoempresa">
                                <!-- FILIAL -->
                                <div class="col-sm-12">
-                                    <label>Filial</label>
+                                    <div class="col-sm-2">
+                                        <label>
+                                            <checkbox normal ng-model="modalSelecionaAdquirenteFilial.selecionaFilial">
+                                            </checkbox>
+                                        </label>
+                                   </div>
+                                   <div class="col-sm-8">
+                                        <label>Filial</label>
+                                   </div>
                                </div>
                                <div class="col-sm-12">
                                     <select class="form-control form-filter input-sm comboBoxFiltros"
-                                            ng-disabled="filiais.length == 0"
+                                            ng-disabled="!modalSelecionaAdquirenteFilial.selecionaFilial || filiais.length == 0"
                                             ng-model="modalSelecionaAdquirenteFilial.filial"
                                             ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
                                         <option value=""></option>
@@ -600,11 +750,9 @@
                                 <i class="fa fa-angle-down"></i>
                             </a>
                             <ul class="dropdown-menu dropDownAtos">
-                                <li ng-show="usuarioPodeAlterarParametros()"
-                                    ng-class="{'disabled': filiais.length === 0}"
-                                    title="{{filiais.length === 0 ? 'Selecione uma empresa para habilitar essa funcionalidade' : ''}}">
+                                <li ng-show="usuarioPodeAlterarParametros()">
                                     <a href="javascript:;"
-                                       ng-click="filiais.length > 0 ? exibeModalSelecionaAdquirenteFilial() : 0">
+                                       ng-click="exibeModalSelecionaAdquirenteFilial()">
                                         Associar adquirente/filial
                                     </a>
                                 </li>
@@ -642,22 +790,28 @@
                                 <checkbox normal ng-model="filtro.selecao"
                                           ng-change="alterouSelecaoParametros()"></checkbox>
                             </th>
-                            <th tabindex="1" rowspan="1" colspan="1" style="width: 25%;">
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 20%;">
                                Banco
                             </th>
-                            <th tabindex="2" rowspan="1" colspan="1" style="width: 7%;">
+                            <th tabindex="2" rowspan="1" colspan="1" style="width: 5%;">
                                Tipo 
                             </th>
                             <th tabindex="3" rowspan="1" colspan="1" style="width: 25%;">
                                Descrição
                             </th>
-                            <th tabindex="4" rowspan="1" colspan="1" style="width: 8%;">
+                            <th tabindex="4" rowspan="1" colspan="1" style="width: 5%;">
                                Adquirente
                             </th>
-                            <th tabindex="5" rowspan="1" colspan="1" style="width: 25%;">
+                            <th tabindex="5" rowspan="1" colspan="1" style="width: 10%;">
+                               Bandeira
+                            </th>
+                            <th tabindex="6" rowspan="1" colspan="1" style="width: 5%;">
+                               Cartão
+                            </th>
+                            <th tabindex="7" rowspan="1" colspan="1" style="width: 20%;">
                                Empresa / Filial
                             </th>
-                            <th tabindex="6" rowspan="1" colspan="1" style="width: 10%;">
+                            <th tabindex="8" rowspan="1" colspan="1" style="width: 10%;">
                                Ação
                             </th>                                        
                         </tr>
@@ -684,6 +838,14 @@
                             <!--ADQUIRENTE-->
                             <td>
                                 {{(parametro.adquirente.dsAdquirente | uppercase) || ''}}
+                            </td>
+                            <!--BANDEIRA-->
+                            <td>
+                                {{(parametro.bandeira.dsBandeira | uppercase) || ''}}
+                            </td>
+                            <!--TIPO CARTÃO-->
+                            <td>
+                                {{(parametro.dsTipoCartao | uppercase) || ''}}
                             </td>
                             <!--EMPRESA / FILIAL-->
                             <td>

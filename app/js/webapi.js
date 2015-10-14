@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.3 - 09/10/2015
+ *  - tbbandeira
+ *
  *  Versão 1.0.2 - 11/09/2015
  *  - apiRezende : Urls referente a pgsql
  *
@@ -140,14 +143,18 @@ angular.module('webapi', ['utils'])
             id_grupo = 102,
             nu_cnpj = 103,
             // Relacionamentos
-            operadora : 200
+            operadora : 200,
+            tbadquirente : 300
         },
         tbadquirente : {
             cdAdquirente : 100,
             nmAdquirente : 101,
             dsAdquirente : 102,
             stAdquirente : 103,
-            hrExecucao : 104
+            hrExecucao : 104,
+            // Relacionamentos
+            cnpj : 305,
+            id_grupo : 316
         },
         tbbancoparametro : {
             cdBanco : 100,
@@ -158,6 +165,12 @@ angular.module('webapi', ['utils'])
             nrCnpj : 105,
             // Relacionamentos
             tbadquirentes : 200
+        },
+        tbbandeira : {
+            cdBandeira : 100,
+            dsBandeira : 101,
+            cdAdquirente : 102,
+            dsTipo : 103
         },
         tbcontacorrente: {
             cdContaCorrente : 100,
@@ -286,7 +299,8 @@ angular.module('webapi', ['utils'])
             operadora : 300,
             empresa : 400, // pode ser usado para buscar o id_grupo
             bandeira : 500,
-            terminallogico : 600
+            terminallogico : 600,
+            tbadquirente : 700
         },
         recebimentoparcela : {
             idRecebimento : 100,
@@ -302,6 +316,7 @@ angular.module('webapi', ['utils'])
             operadora : 400,
             bandeira : 500,
             recebimento : 600,
+            tbadquirente : 700
             // EXPORTAR
             exportar : 9999
         },
@@ -518,6 +533,7 @@ angular.module('webapi', ['utils'])
         conciliacaobancaria : $autenticacao.getUrlBase() + '/card/conciliacaobancaria/',
         tbadquirente : $autenticacao.getUrlBase() + '/card/tbadquirente/',
         tbbancoparametro : $autenticacao.getUrlBase() + '/card/tbbancoparametro/',
+        tbbandeira : $autenticacao.getUrlBase() + '/card/tbbandeira/',
         tbcontacorrente: $autenticacao.getUrlBase() + '/card/tbcontacorrente/',  
         tbcontacorrentetbloginadquirenteempresa : $autenticacao.getUrlBase() + '/card/tbcontacorrentetbloginadquirenteempresa/', 
         tbextrato : $autenticacao.getUrlBase() + '/card/tbextrato/', 

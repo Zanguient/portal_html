@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.1 - 06/10/2015
+ *  - ** Alterações de Elton ** 
+ *
  *  Versão 1.0 - 11/09/2015
  *
  */
