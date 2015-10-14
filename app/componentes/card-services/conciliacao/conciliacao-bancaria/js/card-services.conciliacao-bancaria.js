@@ -289,12 +289,13 @@ angular.module("card-services-conciliacao-bancaria", [])
         
        if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
         
-       var filtros = undefined;
+       var filtros = [{id : /*$campos.card.tbadquirente.stAdquirente*/ 103,
+                       valor : 1}];
         
        if($scope.filtro.filial && $scope.filtro.filial !== null){
            // Filtro do grupo empresa => barra administrativa
-           filtros = {id: /*$campos.card.tbadquirente.cnpj*/ 305,
-                      valor: $scope.filtro.filial.nu_cnpj};
+           filtros.push({id: /*$campos.card.tbadquirente.cnpj*/ 305,
+                         valor: $scope.filtro.filial.nu_cnpj});
        }  
        
        
