@@ -7,7 +7,8 @@
  
     Card Services > Conciliação > Conciliação Bancária
 
-
+    Versão 1.0.5 - 14/10/2015
+    - Botão Baixa Automática
 
     Versão 1.0.4 - 13/10/2015
     - Exibição de ajustes
@@ -514,7 +515,7 @@
                                     <div class="col-md-10 col-sm-10">
                                         <label>Registros agrupados:</label>
                                     </div>
-                                    <div class="col-md-2 col-sm-2 alinhamentoDados">
+                                    <div class="col-md-1 col-sm-2 alinhamentoDados">
                                         <button class="btn btnRegistrosCupon"
                                                 ng-class="{'blue ' : dado.Conciliado === 1, 'btnPossivelConciliadoConciliacaoBancaria' : dado.Conciliado === 2, 'red': dado.Conciliado === 3}"
                                                 ng-click="detalhar(dado.RecebimentosParcela)"
@@ -522,11 +523,15 @@
                                             {{dado.RecebimentosParcela.length}}
                                         </button>
                                     </div>                                              
-                                </div> 
-                                <div class="row">
+                                </div>
+                                <!--BOTÃO BAIXA AUTOMÁTICA-->
+                                <div class="row" style="text-align:center">
                                     <div class="col-md-12">
-                                        <button class="blue">
-                                            Baixa Automática    
+                                        <button class="btn green" 
+                                                style="margin-bottom:-30px"
+                                                ng-disabled="dado.Conciliado === 2 || dado.Conciliado === 3">
+                                            Baixa Automática  <i class="fa fa-check" 
+                                                   ng-hide="dado.Conciliado === 2 || dado.Conciliado === 3"></i>  
                                         </button>
                                     </div>
                                 </div>
