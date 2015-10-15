@@ -986,3 +986,20 @@ padding-top: 16%;
 }
 
 /*ESTILOS DOS FILTROS*/
+
+
+/*ESTILOS TELA IMPORTAÇÃO XML*/
+.select-modal-importacao{
+margin-top: 20px;
+}
+
+.select-modal-importacao label{
+color: #7E1416;
+font-weight: bold;
+}
+
+.button-modal-importacao{
+margin-top: 20px;
+    text-align:right;
+}
+/* FIM ESTILOS TELA IMPORTAÇÃO XML*/

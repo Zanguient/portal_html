@@ -575,6 +575,7 @@ angular.module('webapi', ['utils'])
             tabpagamentonfspdv : $autenticacao.getUrlBaseRezende() + '/pgsql/tabpagamentonfspdv/',
             tabpdv : $autenticacao.getUrlBaseRezende() + '/pgsql/tabpdv/',
             tabpessoa : $autenticacao.getUrlBaseRezende() + '/pgsql/tabpessoa/',
+            tbalmoxarifado: $autenticacao.getUrlBaseRezende() + '/Pgsql/TabAlmoxarifado/',
           }
     }
   }
