@@ -9,6 +9,11 @@
 
 
 
+    Versão 1.0.4 - 15/10/2015
+    - Exibição dos ajustes
+    - Combo ADQUIRENTE sendo preenchida pela tabela tbAdquirente em vez de Operadora
+    - Combo BANDEIRA sendo preenchida pela tabela tbBandeira em vez de BandeiraPos
+
     Versão 1.0.3 - 28/09/2015
     - Valor Desconto por Antecipação
 
@@ -190,18 +195,18 @@
                                         <!-- ADQUIRENTES -->
                                         <td rowspan="1" colspan="1" style="text-align: center">
                                             <select class="form-control form-filter input-sm comboBoxFiltros"
-                                                    ng-disabled="!filtro.filial || filtro.filial === null"
+                                                    ng-disabled="adquirentes.length === 0"
                                                     ng-model="filtro.adquirente"
                                                     ng-change="alterouAdquirente()"
-                                                    ng-options="adquirente as (adquirente.nmOperadora | uppercase) for adquirente in adquirentes"
+                                                    ng-options="adquirente as (adquirente.nmAdquirente | uppercase) for adquirente in adquirentes"
                                                     >
                                                 <option value="">TODAS</option>
                                             </select>
-                                            <i class="fa fa-question-circle"
+                                            <!--i class="fa fa-question-circle"
                                                ng-show="!usuariologado.grupoempresa || !filtro.filial || filtro.filial === null"
                                                popover-placement="bottom"
                                                popover="É necessário selecionar uma filial"
-                                               popover-trigger="mouseenter"></i>
+                                               popover-trigger="mouseenter"></i-->
                                         </td>
                                         <!-- BANDEIRAS -->
                                         <td rowspan="1" colspan="1" style="text-align: center">
@@ -209,7 +214,7 @@
                                                     ng-disabled="filtro.adquirente === null"
                                                     ng-model="filtro.bandeira"
                                                     ng-change="alterouBandeira()"
-                                                    ng-options="bandeira as (bandeira.desBandeira | uppercase) for bandeira in bandeiras"
+                                                    ng-options="bandeira as (bandeira.dsBandeira | uppercase) for bandeira in bandeiras"
                                                     >
                                                 <option value="">TODAS</option>
                                             </select>
@@ -466,7 +471,7 @@
                                                                 </td>
                                                                 <!-- BANDEIRA -->
                                                                 <td style="text-align:left">
-                                                                     {{relsintetico.bandeira.desBandeira}}
+                                                                     {{relsintetico.bandeira.dsBandeira}}
                                                                 </td>
                                                                 <!-- TOTAL DE TRANSAÇÕES -->
                                                                 <td ng-init="total.sintetico.totalTransacoes = total.sintetico.totalTransacoes + relsintetico.totalTransacoes" >
@@ -643,7 +648,7 @@
                                                                 </td>
                                                                 <!-- BANDEIRA -->
                                                                 <td style="text-align:left">
-                                                                     {{relanalitico.desBandeira | uppercase}}
+                                                                     {{relanalitico.dsBandeira | uppercase}}
                                                                 </td>
                                                                 <!-- DATA DA VENDA -->
                                                                 <td ng-bind="getDataTimeString(relanalitico.dtaVenda)">
@@ -655,39 +660,44 @@
                                                                 <td ng-bind="getDataString(relanalitico.dtaRecebimentoEfetivo)">
                                                                 </td>
                                                                 <!-- RESUMO VENDAS -->
-                                                                <td>
+                                                                <td ng-show="relanalitico.numParcela != 0">
                                                                     {{relanalitico.codResumoVenda}}
                                                                 </td>
                                                                 <!-- NSU -->
-                                                                <td>
+                                                                <td colspan="{{relanalitico.numParcela != 0 ? 1 : 8}}">
                                                                      {{relanalitico.nsu}}
                                                                 </td>
                                                                 <!-- PARCELA -->
-                                                                <td>
+                                                                <td ng-show="relanalitico.numParcela != 0">
                                                                     {{relanalitico.numParcela}}
                                                                 </td>
                                                                 <!-- VALOR BRUTO -->
-                                                                <td ng-init="total.analitico.valorBruto = total.analitico.valorBruto + relanalitico.valorBruto">
+                                                                <td ng-init="total.analitico.valorBruto = total.analitico.valorBruto + relanalitico.valorBruto"
+                                                                    ng-show="relanalitico.numParcela != 0">
                                                                      {{relanalitico.valorBruto | currency:'R$'}}
                                                                 </td>
                                                                 <!-- VALOR PARCELA -->
-                                                                <td ng-init="total.analitico.valorParcela = total.analitico.valorParcela + relanalitico.valorParcela">
+                                                                <td ng-init="total.analitico.valorParcela = total.analitico.valorParcela + relanalitico.valorParcela"
+                                                                    ng-show="relanalitico.numParcela != 0">
                                                                     {{relanalitico.valorParcela | currency:'R$'}}
                                                                 </td>
                                                                 <!-- VALOR DESCONTADO -->
-                                                                <td ng-init="total.analitico.valorDescontado = total.analitico.valorDescontado + relanalitico.valorDescontado">
+                                                                <td ng-init="total.analitico.valorDescontado = total.analitico.valorDescontado + relanalitico.valorDescontado"
+                                                                    ng-show="relanalitico.numParcela != 0">
                                                                     {{relanalitico.valorDescontado | currency:'R$'}}
                                                                 </td>
                                                                 <!-- TAXA CASH FLOW -->
-                                                                <td>
+                                                                <td ng-show="relanalitico.numParcela != 0">
                                                         {{(relanalitico.valorDescontado*100)/relanalitico.valorParcela | number:2}}%
                                                                 </td>
                                                                 <!-- VALOR DESCONTADO POR ANTECIPAÇÃO -->
-                                                                <td ng-init="total.analitico.vlDescontadoAntecipacao = total.analitico.vlDescontadoAntecipacao + relanalitico.vlDescontadoAntecipacao">
+                                                                <td ng-init="total.analitico.vlDescontadoAntecipacao = total.analitico.vlDescontadoAntecipacao + relanalitico.vlDescontadoAntecipacao"
+                                                                    ng-show="relanalitico.numParcela != 0">
                                                                     {{relanalitico.vlDescontadoAntecipacao | currency:'R$'}}
                                                                 </td>
                                                                 <!-- VALOR LÍQUIDO -->
-                                                                <td ng-init="total.analitico.valorLiquido = total.analitico.valorLiquido + relanalitico.valorLiquida">
+                                                                <td ng-init="total.analitico.valorLiquido = total.analitico.valorLiquido + relanalitico.valorLiquida"
+                                                                    ng-class="{'linhaTotalRelatorios valorPositivo' : relanalitico.numParcela === 0 && relanalitico.valorLiquida > 0, 'linhaTotalRelatorios valorNegativo' : relanalitico.numParcela === 0 && relanalitico.valorLiquida < 0}">
                                                                      {{relanalitico.valorLiquida | currency:'R$'}}
                                                                 </td>
                                                             </tr>

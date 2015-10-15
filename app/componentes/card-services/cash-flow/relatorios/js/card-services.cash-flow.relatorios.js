@@ -5,6 +5,10 @@
  *
  *
  *
+ *  Versão 1.0.6 - 15/10/2015
+ *  - Combo ADQUIRENTE sendo preenchida pela tabela tbAdquirente em vez de Operadora
+ *  - Combo BANDEIRA sendo preenchida pela tabela tbBandeira em vez de BandeiraPos
+ *
  *  Versão 1.0.5 - 28/09/2015
  *  - Valor Desconto por Antecipação
  *
@@ -196,7 +200,7 @@ angular.module("card-services-cash-flow-relatorios", [])
     /**
       * Busca as filiais
       */
-    var buscaFiliais = function(nu_cnpj, idBandeira){
+    var buscaFiliais = function(buscarAdquirentes, nu_cnpj, cdAdquirente){
         
        $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
         
@@ -221,8 +225,9 @@ angular.module("card-services-cash-flow-relatorios", [])
                 if(!nu_cnpj) $scope.filtro.filial = null;
                 else $scope.filtro.filial = $filter('filter')($scope.filiais, function(f) {return f.nu_cnpj === nu_cnpj;})[0];
                 //$scope.filtro.filial = $scope.filiais.length > 0 ? $scope.filiais[0] : null;
-                if($scope.filtro.filial && $scope.filtro.filial !== null)
-                    buscaAdquirentes(true, idBandeira); // Busca adquirentes
+                //if($scope.filtro.filial && $scope.filtro.filial !== null)
+                if(buscarAdquirentes)
+                    buscaAdquirentes(true, cdAdquirente); // Busca adquirentes
                 else
                     $scope.hideProgress(divPortletBodyFiltrosPos);
               },
@@ -246,32 +251,31 @@ angular.module("card-services-cash-flow-relatorios", [])
     /**
       * Busca as adquirentes
       */
-    var buscaAdquirentes = function(progressEstaAberto, idOperadora, idBandeira){
+    var buscaAdquirentes = function(progressEstaAberto, cdAdquirente, cdBandeira){
  
-       if(!$scope.filtro.filial || $scope.filtro.filial === null){
-           $scope.filtro.adquirente = $scope.filtro.bandeira = null;
-           return;
-       }    
-        
        if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
         
-       var filtros = undefined;
-
-       // Filtro do grupo empresa => barra administrativa
-       filtros = {id: 300,
-                 //id: $campos.pos.operadora.empresa + $campos.cliente.empresa.nu_cnpj - 100, 
-                  valor: $scope.filtro.filial.nu_cnpj};
+       var filtros = [{id : /*$campos.card.tbadquirente.stAdquirente*/ 103,
+                       valor : 1}];
+        
+       if($scope.filtro.filial && $scope.filtro.filial !== null){
+           // Filtro do grupo empresa => barra administrativa
+           filtros.push({id: /*$campos.card.tbadquirente.cnpj*/ 305,
+                         valor: $scope.filtro.filial.nu_cnpj});
+       }     
        
-       $webapi.get($apis.getUrl($apis.pos.operadora, 
-                                [$scope.token, 0, /*$campos.pos.operadora.nmOperadora*/ 101],
+       $webapi.get($apis.getUrl($apis.card.tbadquirente, 
+                                [$scope.token, 1, /*$campos.card.tbadquirente.nmAdquirente*/ 101],
                                 filtros)) 
             .then(function(dados){
                 $scope.adquirentes = dados.Registros;
                 // Reseta
-                if(!idOperadora) $scope.filtro.adquirente = null;
-                else $scope.filtro.adquirente = $filter('filter')($scope.adquirentes, function(a) {return a.id === idOperadora;})[0];
+                if(typeof cdAdquirente === 'number' && cdAdquirente > 0) 
+                    $scope.filtro.adquirente = $filter('filter')($scope.adquirentes, function(a) {return a.cdAdquirente === cdAdquirente;})[0];
+                else $scope.filtro.adquirente = null;
                 // Busca bandeiras
-                if($scope.filtro.adquirente && $scope.filtro.adquirente !== null) buscaBandeiras(true, idBandeira);
+                $scope.filtro.bandeira = null;
+                if($scope.filtro.adquirente && $scope.filtro.adquirente !== null) buscaBandeiras(true, cdBandeira);
                 else $scope.hideProgress(divPortletBodyFiltrosPos);
               },
               function(failData){
@@ -284,10 +288,10 @@ angular.module("card-services-cash-flow-relatorios", [])
     /**
       * Selecionou uma adquirente
       */
-    $scope.alterouAdquirente = function(idBandeira, progressEstaAberto){
+    $scope.alterouAdquirente = function(cdBandeira, progressEstaAberto){
         $scope.bandeiras = []; 
         $scope.filtro.bandeira = null;
-        if($scope.filtro.adquirente !== null) buscaBandeiras(progressEstaAberto, idBandeira);
+        if($scope.filtro.adquirente !== null) buscaBandeiras(progressEstaAberto, cdBandeira);
     };
                 
                                                  
@@ -295,7 +299,7 @@ angular.module("card-services-cash-flow-relatorios", [])
     /**
       * Busca as bandeiras
       */                                             
-    var buscaBandeiras = function(progressEstaAberto, idBandeira){
+    var buscaBandeiras = function(progressEstaAberto, cdBandeira){
        
        if(!$scope.filtro.adquirente || $scope.filtro.adquirente === null){
            $scope.filtro.bandeira = null;
@@ -308,17 +312,17 @@ angular.module("card-services-cash-flow-relatorios", [])
        var filtros = undefined;
 
        // Filtro de adquirente
-       if($scope.filtro.adquirente !== null) filtros = {id: /*$campos.pos.bandeirapos.idOperadora*/ 102, 
-                                                        valor: $scope.filtro.adquirente.id};
+       if($scope.filtro.adquirente !== null) filtros = {id: /*$campos.card.tbbandeira.cdAdquirente */ 102, 
+                                                        valor: $scope.filtro.adquirente.cdAdquirente};
        
-       $webapi.get($apis.getUrl($apis.pos.bandeirapos, 
-                                [$scope.token, 0, /*$campos.pos.bandeirapos.desBandeira*/ 101],
+       $webapi.get($apis.getUrl($apis.card.tbbandeira, 
+                                [$scope.token, 1, /*$campos.card.tbbandeira.dsBandeira*/ 101],
                                 filtros)) 
             .then(function(dados){
                 $scope.bandeiras = dados.Registros;
                 // Reseta ou seta para um objeto
-                if(typeof idBandeira === 'number' && idBandeira > 0){ 
-                    $scope.filtro.bandeira = $filter('filter')($scope.bandeiras, function(b) {return b.id === idBandeira;})[0];
+                if(typeof cdBandeira === 'number' && cdBandeira > 0){ 
+                    $scope.filtro.bandeira = $filter('filter')($scope.bandeiras, function(b) {return b.cdBandeira === cdBandeira;})[0];
                     if(!$scope.filtro.bandeira) $scope.filtro.bandeira = null;
                 }else $scope.filtro.bandeira = null;
                 // Esconde o progress
@@ -456,15 +460,15 @@ angular.module("card-services-cash-flow-relatorios", [])
         
        // Adquirente
        if($scope.filtro.adquirente !== null){
-           var filtroAdquirente = {id: 400,//$campos.pos.recebimentoparcela.operadora + $campos.pos.operadora.id - 100, 
-                                   valor: $scope.filtro.adquirente.id};
+           var filtroAdquirente = {id: 700,//$campos.pos.recebimentoparcela.operadora + $campos.card.tbadquirente.cdAdquirente - 100, 
+                                   valor: $scope.filtro.adquirente.cdAdquirente};
            filtros.push(filtroAdquirente);
        } 
         
        // Bandeira
        if($scope.filtro.bandeira !== null){
-           var filtroBandeira = {id: 500,//$campos.pos.recebimentoparcela.bandeira + $campos.pos.bandeirapos.id - 100, 
-                                 valor: $scope.filtro.bandeira.id};
+           var filtroBandeira = {id: 800,//$campos.pos.recebimentoparcela.bandeira + $campos.card.tbbandeira.cdBandeira - 100, 
+                                 valor: $scope.filtro.bandeira.cdBandeira};
            filtros.push(filtroBandeira);
        }
         
@@ -499,10 +503,6 @@ angular.module("card-services-cash-flow-relatorios", [])
                                   );
             return;   
         }
-        /*if($scope.filtro.filial === null){
-           $scope.showModalAlerta('É necessário selecionar uma filial!');
-           return;
-        }*/
         // Intervalo de data
         if($scope.filtro.datamax){
             var timeDiff = Math.abs($scope.filtro.datamax.getTime() - $scope.filtro.datamin.getTime());
@@ -528,11 +528,6 @@ angular.module("card-services-cash-flow-relatorios", [])
       * Busca o relatório agrupado por bandeira
       */
     var buscaRelatorioSintetico = function(resetaRelatorioAnalitico){
-       
-       /*if($scope.filtro.filial === null){
-           $scope.showModalAlerta('É necessário selecionar uma filial!');
-           return;
-       }*/
         
        $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen    
        $scope.showProgress(divPortletBodyRelatorioPos);
@@ -611,8 +606,8 @@ angular.module("card-services-cash-flow-relatorios", [])
             $scope.filtro.filial.nu_cnpj !== relsintetico.empresa.nu_cnpj){
              // Filial diferente!
              $scope.filtro.filial = $filter('filter')($scope.filiais, function(f){return f.nu_cnpj === relsintetico.empresa.nu_cnpj;})[0]; 
-             buscaAdquirentes(false, relsintetico.bandeira.idOperadora, relsintetico.bandeira.id);
-             $scope.filtro.adquirente = {id : relsintetico.bandeira.idOperadora};
+             buscaAdquirentes(false, relsintetico.bandeira.cdAdquirente, relsintetico.bandeira.cdBandeira);
+             $scope.filtro.adquirente = {cdAdquirente : relsintetico.bandeira.cdAdquirente};
              $scope.filtro.bandeira = relsintetico.bandeira;
              
              // vai para Analítico
@@ -620,26 +615,27 @@ angular.module("card-services-cash-flow-relatorios", [])
              buscaRelatorioAnalitico(true);
          }else{
              // Mesma filial => Procura a adquirente
-             var adquirente = $filter('filter')($scope.adquirentes, function(a){return a.id === relsintetico.bandeira.idOperadora;})[0];
+             var adquirente = $filter('filter')($scope.adquirentes, function(a){return a.cdAdquirente === relsintetico.bandeira.cdAdquirente;})[0];
              if(adquirente){ 
-                 // vai para Analítico
-                 $scope.setTab(1);
                  // Verifica se a adquirente já não estava selecionada
                  if(adquirente !== $scope.filtro.adquirente){
                      $scope.filtro.adquirente = adquirente;
                      // Seta os models para refazer a busca por adquirente
-                     $scope.filtro.bandeira = bandeira;
+                     $scope.filtro.bandeira = relsintetico.bandeira;
                      // Set o flag
                      adquirente = null;
                 }else
                     // Apenas busca a bandeira
-                    $scope.filtro.bandeira = $filter('filter')($scope.bandeiras, function(b) {return b.id === relsintetico.bandeira.id;})[0];
-
+                    $scope.filtro.bandeira = $filter('filter')($scope.bandeiras, function(b) {return b.cdBandeira === relsintetico.bandeira.cdBandeira;})[0];
+                
+                // vai para Analítico
+                $scope.setTab(1); 
+                 
                 // Faz a busca analítica
                 if(typeof ultimoFiltro === 'undefined' || !$scope.arraysAreEqual(ultimoFiltro, obtemFiltroDeBusca())) 
                     buscaRelatorioAnalitico(true);
                 // Carrega o conjunto de bandeiras associadas à nova adquirente selecionada
-                if(adquirente === null) $timeout(function(){$scope.alterouAdquirente(bandeira.id, true)}, 500);
+                if(adquirente === null) $timeout(function(){$scope.alterouAdquirente(relsintetico.bandeira.cdBandeira, true)}, 500);
              }else $scope.filtro.adquirente = null;
          }
     };
@@ -648,11 +644,6 @@ angular.module("card-services-cash-flow-relatorios", [])
       * Busca o relatório agrupado por bandeira
       */
     var buscaRelatorioAnalitico = function(resetaRelatorioSintetico){
-       
-       /*if($scope.filtro.filial === null){
-           $scope.showModalAlerta('É necessário selecionar uma filial!');
-           return;
-       } */   
         
        $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen    
        $scope.showProgress(divPortletBodyRelatorioPos);

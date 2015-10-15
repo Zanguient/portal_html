@@ -316,7 +316,8 @@ angular.module('webapi', ['utils'])
             operadora : 400,
             bandeira : 500,
             recebimento : 600,
-            tbadquirente : 700
+            tbadquirente : 700,
+            tbbandeira : 800
             // EXPORTAR
             exportar : 9999
         },
