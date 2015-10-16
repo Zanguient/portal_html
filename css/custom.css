@@ -3,6 +3,17 @@
  *  
  *  suporte@atoscapital.com.br
  *
+ *  Versão 1.0.7 - 16/10/2015
+ *      -Criação dos estilos de importação de Xml.
+ *
+ *  Versão 1.0.6 - 14/10/2015
+ *      -Aumento no tamanho dos cupons de parâmetros bancários.
+ *
+ *  Versão 1.0.5 - 06/10/2015
+ *      -tamanho fixo pra uns cupons conciliação vendas.
+ *
+ *  Versão 1.0.4 - 30/09/2015
+ *      -Criação dos Estilos da tela parâmetros de notícias.
  *
  *  Versão 1.0.3 - 13/10/2015
  *  - valorNegativo e valorPositivo  
@@ -273,7 +284,7 @@ margin-top:170px;
     border-radius: 4px 4px; 
     padding: 15px 30px 15px 15px;
     margin-top:40px;
-    height: 245px;
+    height: 270px;
     max-width:320px; 
 }
 
@@ -285,8 +296,7 @@ margin-top:170px;
     border-radius: 4px 4px; 
     padding: 15px 30px 15px 15px;
     margin-top:40px;
-    margin-top:40px;
-    height: 245px;
+    height: 270px;
     max-width:320px;  
 }
 
@@ -298,9 +308,8 @@ margin-top:170px;
     border-radius: 4px 4px; 
     padding: 15px 30px 15px 15px;
     margin-top:40px;
-    margin-top:40px;
-    height: 245px;
-    max-width:320px;  
+    height: 270px;
+    max-width:320px;    
 }
 
 .tituloCumponsConciliacaoBancariaExtrato{
@@ -407,6 +416,7 @@ tbody.conteudotabelasCentralizadas > tr > td{
 
 
 .cuponAzulConciliacaoVendas{
+    width: 250px;
     background-color: #eef7fb;
     border-color: #a6e1ec;
     color: #31708f;
@@ -987,6 +997,33 @@ padding-top: 16%;
 
 /*ESTILOS DOS FILTROS*/
 
+/*ESTILOS DA TELA PARÂMETROS BANCÁRIOS*/
+
+.btn-noticias{
+    margin-top: 70px;
+}
+
+.btn-noticias-2{
+    margin-top: 30px;
+}
+
+
+.select-noticias{
+    min-height: 200px;
+}
+
+.titulos-select-noticias{
+    text-align: center;
+}
+
+.titulos-select-noticias label{
+    text-align: center;
+    color: #7e1416;
+    font-size: 20px;
+    font-weight: bolder;
+}
+
+/*FIM ESTILOS DA TELA PARÂMETROS BANCÁRIOS*/
 
 /*ESTILOS TELA IMPORTAÇÃO XML*/
 .select-modal-importacao{
