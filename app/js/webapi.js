@@ -527,7 +527,8 @@ angular.module('webapi', ['utils'])
         webpagesrolelevels : $autenticacao.getUrlBase() + '/administracao/webpagesrolelevels/',
         webpagesroles : $autenticacao.getUrlBase() + '/administracao/webpagesroles/',
         webpagesusers : $autenticacao.getUrlBase() + '/administracao/webpagesusers/', 
-        webpagesusersinroles : $autenticacao.getUrlBase() + '/administracao/webpagesusersinroles/'
+        webpagesusersinroles : $autenticacao.getUrlBase() + '/administracao/webpagesusersinroles/',
+        tbcatalogo : $autenticacao.getUrlBase() + '/administracao/tbcatalogo/'
     },
     card : {
         conciliacaobancaria : $autenticacao.getUrlBase() + '/card/conciliacaobancaria/',

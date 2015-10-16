@@ -67,11 +67,9 @@
                                             <!-- CHAVE DE ACESSO -->
                                             <td rowspan="1" colspan="1">                                           
                                                 <select class="form-control"
-                                                        ng-model="filtro.catalogo"
-                                                        >
-                                                    <option value="1">Catálogo 1</option>
-                                                    <option value="2">Catálogo 2</option>
-                                                    <option value="3">Catálogo 3</option>
+                                                        ng-model="catalogo.cdCatalogo"
+                                                        ng-options="catalogo.dsCatalogo for catalogo in catalogos">
+                                                    <option value="">Selecione o Catálogo</option>
                                                 </select>                                            
                                             </td>                                                                         
                                             <!-- AÇÕES -->
