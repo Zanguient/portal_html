@@ -21,9 +21,9 @@ angular.module("administrativo-parametros-noticias", [])
    
     
     $scope.itens_pagina = [50, 100, 150, 200];
-    $scope.catalogos = [];
-                                                
-    //$scope.filtro = {catalogos = null};                                            
+    
+    $scope.catalagos = [];                                            
+    //$scope.filtro = {catalogo = null};                                            
     
     // flags
     $scope.exibeTela = false;                                            
@@ -52,5 +52,32 @@ angular.module("administrativo-parametros-noticias", [])
         
     };
     
+        var buscaCatalogos = function(){
+        
+       $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
+        
        
+       $webapi.get($apis.getUrl($apis.cliente.empresa, 
+                                [$scope.token, 0, /*$campos.cliente.empresa.ds_fantasia*/ 104],
+                                filtros)) 
+            .then(function(dados){
+                $scope.filiais = dados.Registros;
+                // Reseta
+                if(!nu_cnpj) $scope.filtro.filial = null;
+                else $scope.filtro.filial = $filter('filter')($scope.filiais, function(f) {return f.nu_cnpj === nu_cnpj;})[0];
+                //$scope.filtro.filial = $scope.filiais.length > 0 ? $scope.filiais[0] : null;
+                if($scope.filtro.filial && $scope.filtro.filial !== null)
+                    buscaAdquirentes(true, idBandeira); // Busca adquirentes
+                else
+                    $scope.hideProgress(divPortletBodyFiltrosPos);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter filiais (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+              });     
+    }; 
+                                                
+                                                
 }])

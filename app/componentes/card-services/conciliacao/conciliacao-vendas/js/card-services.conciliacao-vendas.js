@@ -99,7 +99,7 @@ angular.module("card-services-conciliacao-vendas", [])
         if(!adquirente || adquirente === null) return;
         if(adquirente.collapsed) adquirente.collapsed = false;
         else adquirente.collapsed = true;
-        console.log(adquirente);
+        //console.log(adquirente);
     }
     $scope.isExpanded = function(adquirente){
         if(!adquirente || adquirente === null) return;
