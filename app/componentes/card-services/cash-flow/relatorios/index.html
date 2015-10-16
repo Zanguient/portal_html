@@ -211,7 +211,7 @@
                                         <!-- BANDEIRAS -->
                                         <td rowspan="1" colspan="1" style="text-align: center">
                                             <select class="form-control form-filter input-sm comboBoxFiltros"
-                                                    ng-disabled="filtro.adquirente === null"
+                                                    ng-disabled="filtro.adquirente === null || bandeiras.length === 0"
                                                     ng-model="filtro.bandeira"
                                                     ng-change="alterouBandeira()"
                                                     ng-options="bandeira as (bandeira.dsBandeira | uppercase) for bandeira in bandeiras"
@@ -687,7 +687,8 @@
                                                                     {{relanalitico.valorDescontado | currency:'R$'}}
                                                                 </td>
                                                                 <!-- TAXA CASH FLOW -->
-                                                                <td ng-show="relanalitico.numParcela != 0">
+                                                                <td ng-show="relanalitico.numParcela != 0"
+                                                                    ng-init="addTaxaCashFlow(relanalitico.numParcela === 0, (relanalitico.valorDescontado*100)/relanalitico.valorParcela)">
                                                         {{(relanalitico.valorDescontado*100)/relanalitico.valorParcela | number:2}}%
                                                                 </td>
                                                                 <!-- VALOR DESCONTADO POR ANTECIPAÇÃO -->
@@ -716,7 +717,9 @@
                                                                     {{total.analitico.valorDescontado | currency:'R$'}} 
                                                                 </td>
                                                                 <td>
-                                                        {{(total.analitico.valorDescontado*100)/total.analitico.valorParcela | number:2}}%
+                                                        <!--{{(total.analitico.valorDescontado*100)/total.analitico.valorParcela | number:2}}-->
+                                                                    
+                                                                {{total.analitico.taxaCashFlow/total.analitico.totalCashFlow | number:2}}%
                                                                 </td>
                                                                 <td>
                                                                     {{total.analitico.vlDescontadoAntecipacao | currency:'R$'}} 
@@ -739,7 +742,8 @@
                                                                     {{total.analitico.valorDescontadoFiltrado | currency:'R$'}} 
                                                                 </td>
                                                                 <td>
-                                                        {{(total.analitico.valorDescontadoFiltrado*100)/total.analitico.valorParcelaFiltrado | number:2}}%
+                                                        <!--{{(total.analitico.valorDescontadoFiltrado*100)/total.analitico.valorParcelaFiltrado | number:2}}-->
+                                                                    {{total.analitico.taxaCashFlowFiltrado| number:2}}%
                                                                 </td>
                                                                 <td>
                                                                     {{total.analitico.vlDescontadoAntecipacaoFiltrado | currency:'R$'}} 

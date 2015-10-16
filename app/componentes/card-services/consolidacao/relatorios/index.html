@@ -8,6 +8,10 @@
     Card Services > Consolidação > Relatórios
 
 
+    Versão 1.0.2 - 15/10/2015
+    - Combo ADQUIRENTE sendo preenchida pela tabela tbAdquirente em vez de Operadora
+    - Combo BANDEIRA sendo preenchida pela tabela tbBandeira em vez de BandeiraPos
+
     Versão 1.0.1 - 22/09/2015
     - Exportar para CSV
 
@@ -163,25 +167,25 @@
                                         <!-- ADQUIRENTES -->
                                         <td rowspan="1" colspan="1" style="text-align: center">
                                             <select class="form-control form-filter input-sm comboBoxFiltros"
-                                                    ng-disabled="!filtro.filial || filtro.filial === null"
+                                                    ng-disabled="adquirentes.length === 0"
                                                     ng-model="filtro.adquirente"
                                                     ng-change="alterouAdquirente()"
-                                                    ng-options="adquirente as (adquirente.nmOperadora | uppercase) for adquirente in adquirentes">
+                                                    ng-options="adquirente as (adquirente.nmAdquirente | uppercase) for adquirente in adquirentes">
                                                 <option value="">TODAS</option>
                                             </select>
-                                             <i class="fa fa-question-circle"
+                                             <!--i class="fa fa-question-circle"
                                                 ng-show="!usuariologado.grupoempresa || !filtro.filial || filtro.filial === null"
                                                 popover-placement="bottom"
                                                 popover="É necessário selecionar uma filial"
-                                                popover-trigger="mouseenter"></i>
+                                                popover-trigger="mouseenter"></i-->
                                         </td>
                                         <!-- BANDEIRAS -->
                                         <td rowspan="1" colspan="1" style="text-align: center">
                                             <select class="form-control form-filter input-sm comboBoxFiltros"
-                                                    ng-disabled="filtro.adquirente === null"
+                                                    ng-disabled="filtro.adquirente === null || bandeiras.length === 0"
                                                     ng-model="filtro.bandeira"
                                                     ng-change="alterouBandeira()"
-                                                    ng-options="bandeira as (bandeira.desBandeira | uppercase) for bandeira in bandeiras">
+                                                    ng-options="bandeira as (bandeira.dsBandeira | uppercase) for bandeira in bandeiras">
                                                 <option value="">TODAS</option>
                                             </select>
                                             <i class="fa fa-question-circle"
@@ -194,7 +198,7 @@
                                         <td rowspan="1" colspan="1" style="text-align: center">
                                             <select class="form-control form-filter input-sm comboBoxFiltros"
                                                 ng-hide="buscandoTerminaisLogicos"
-                                                ng-disabled="filtro.adquirente === null"
+                                                ng-disabled="filtro.adquirente === null || terminais.length === 0"
                                                 ng-model="filtro.terminallogico"
                                                 ng-change="alterouTerminalLogico()"
                                                 ng-options="terminal as terminal.dsTerminalLogico for terminal in terminais ">
@@ -456,7 +460,7 @@
                                                                 </td>
                                                                 <!-- BANDEIRA -->
                                                                 <td style="text-align:left;">
-                                                                     {{relterminal.bandeira.desBandeira}}
+                                                                     {{relterminal.bandeira.dsBandeira}}
                                                                 </td>
                                                                 <!-- TOTAL DE TRANSAÇÕES -->
                                                                 <td ng-init="total.terminal.totalTransacoes = total.terminal.totalTransacoes + relterminal.totalTransacoes">
@@ -471,7 +475,7 @@
                                                                     <div class="btn-group">
                                                                         <a class="btn btn-default btn-circle" 
                                                                            href="javascript:;" 
-                                                                           ng-click="detalhar(relterminal.empresa.nu_cnpj, relterminal.idOperadora, relterminal.bandeira, relterminal.terminal)">
+                                                                           ng-click="detalhar(relterminal.empresa.nu_cnpj, relterminal.bandeira, relterminal.idOperadora, relterminal.terminal)">
                                                                         
                                                                             Detalhar <i class="fa fa-angle-right"></i>
                                                                         </a>
@@ -561,7 +565,7 @@
                                                                 </td>
                                                                 <!-- BANDEIRA -->
                                                                 <td style="text-align:left;">
-                                                                     {{relsintetico.bandeira.desBandeira}}
+                                                                     {{relsintetico.bandeira.dsBandeira}}
                                                                 </td>
                                                                 <!-- TOTAL DE TRANSAÇÕES -->
                                                                 <td ng-init="total.sintetico.totalTransacoes = total.sintetico.totalTransacoes + relsintetico.totalTransacoes">
@@ -576,7 +580,7 @@
                                                                     <div class="btn-group">
                                                                         <a class="btn btn-default btn-circle" 
                                                                            href="javascript:;" 
-                                                                           ng-click="detalhar(relsintetico.empresa.nu_cnpj, relsintetico.idOperadora, relsintetico.bandeira)">
+                                                                           ng-click="detalhar(relsintetico.empresa.nu_cnpj, relsintetico.bandeira, relsintetico.idOperadora)">
                                                                         
                                                                             Detalhar <i class="fa fa-angle-right"></i>
                                                                         </a>
@@ -676,7 +680,7 @@
                                                                 </td>
                                                                 <!-- BANDEIRA -->
                                                                 <td style="text-align:left;">
-                                                                     {{relanalitico.desBandeira}}
+                                                                     {{relanalitico.dsBandeira}}
                                                                 </td>
                                                                 <!-- TERMINAL LÓGICO -->
                                                                 <td>

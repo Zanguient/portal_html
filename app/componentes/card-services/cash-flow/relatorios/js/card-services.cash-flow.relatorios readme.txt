@@ -35,8 +35,8 @@ Além deles, é necessária a importação dos seguintes módulos externos.
   * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
   * APIS:
     - cliente/empresa (filiais)
-	- card/tbbandeira (bandeiras)
-    - card/tbadquirente (adquirente)
+	- card/tbadquirente (adquirente)
+	- card/tbbandeira (bandeiras) 
 	- pos/recebimentoparcela (relatórios)
 	
  
@@ -107,7 +107,8 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 						valorParcela : double,
 						valorLiquida" : double,
 						valorDescontado : double,
-						vlDescontadoAntecipacao : double
+						vlDescontadoAntecipacao : double,
+						taxaCashFlow : double, // em %
 					  }	
 
        -> ANALÍTICO (coleção 8) : sempre ordenado pela data de recebimento, seguido do desBandeira

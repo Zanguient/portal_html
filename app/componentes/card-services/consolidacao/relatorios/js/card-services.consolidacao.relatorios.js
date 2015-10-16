@@ -4,6 +4,10 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.4 - 16/10/2015
+ *  - Combo ADQUIRENTE sendo preenchida pela tabela tbAdquirente em vez de Operadora
+ *  - Combo BANDEIRA sendo preenchida pela tabela tbBandeira em vez de BandeiraPos
+ *
  *  Versão 1.0.3 - 22/09/2015
  *  - Ajuste da exportação: não aciona o ws
  *
@@ -91,7 +95,7 @@ angular.module("card-services-consolidacao-relatorios", [])
                 if($scope.usuariologado.grupoempresa){ 
                     // Reseta seleção de filtro específico de empresa
                     $scope.filtro.filial = $scope.filtro.adquirente = $scope.filtro.bandeira = $scope.filtro.terminallogico = null;
-                    buscaFiliais();
+                    buscaFiliais(true);
                 }else{ // reseta tudo e não faz buscas 
                     $scope.filiais = []; 
                     $scope.adquirentes = [];
@@ -104,7 +108,7 @@ angular.module("card-services-consolidacao-relatorios", [])
         $scope.$on('acessoDeTelaNotificado', function(event){
             $scope.exibeTela = true;
             // Carrega filiais
-            if($scope.usuariologado.grupoempresa) buscaFiliais();
+            if($scope.usuariologado.grupoempresa) buscaFiliais(true);
         }); 
         // Acessou a tela
         $scope.$emit("acessouTela");
@@ -187,7 +191,7 @@ angular.module("card-services-consolidacao-relatorios", [])
     /**
       * Busca as filiais
       */
-    var buscaFiliais = function(nu_cnpj, idBandeira){
+    var buscaFiliais = function(buscarAdquirentes, nu_cnpj, cdAdquirente){
         
        $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
         
@@ -212,8 +216,9 @@ angular.module("card-services-consolidacao-relatorios", [])
                 if(!nu_cnpj) $scope.filtro.filial = null;
                 else $scope.filtro.filial = $filter('filter')($scope.filiais, function(f) {return f.nu_cnpj === nu_cnpj;})[0];
                 //$scope.filtro.filial = $scope.filiais.length > 0 ? $scope.filiais[0] : null;
-                if($scope.filtro.filial && $scope.filtro.filial !== null)
-                    buscaAdquirentes(true, idBandeira); // Busca adquirentes
+                //if($scope.filtro.filial && $scope.filtro.filial !== null)
+                if(buscarAdquirentes)
+                    buscaAdquirentes(true, cdAdquirente); // Busca adquirentes
                 else
                     $scope.hideProgress(divPortletBodyFiltrosPos);
               },
@@ -237,34 +242,31 @@ angular.module("card-services-consolidacao-relatorios", [])
     /**
       * Busca as adquirentes
       */
-    var buscaAdquirentes = function(progressEstaAberto, idOperadora, idBandeira, idTerminalLogico){
+    var buscaAdquirentes = function(progressEstaAberto, cdAdquirente, cdBandeira, idTerminalLogico, idOperadora){
  
-       if(!$scope.filtro.filial || $scope.filtro.filial === null){
-           $scope.filtro.adquirente = $scope.filtro.bandeira = null;
-           return;
-       }    
-        
        if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
         
-       var filtros = undefined;
+       var filtros = [{id : /*$campos.card.tbadquirente.stAdquirente*/ 103,
+                       valor : 1}];
+        
+       if($scope.filtro.filial && $scope.filtro.filial !== null){
+           // Filtro do grupo empresa => barra administrativa
+           filtros.push({id: /*$campos.card.tbadquirente.cnpj*/ 305,
+                         valor: $scope.filtro.filial.nu_cnpj});
+       }     
 
-
-       // Filtro do grupo empresa => barra administrativa
-       filtros = {id: 300,
-                 //id: $campos.pos.operadora.empresa + $campos.cliente.empresa.nu_cnpj - 100, 
-                  valor: $scope.filtro.filial.nu_cnpj};
-       
-       $webapi.get($apis.getUrl($apis.pos.operadora, 
-                                [$scope.token, 0, /*$campos.pos.operadora.nmOperadora*/ 101],
+       $webapi.get($apis.getUrl($apis.card.tbadquirente, 
+                                [$scope.token, 1, /*$campos.card.tbadquirente.nmAdquirente*/ 101],
                                 filtros)) 
             .then(function(dados){
                 $scope.adquirentes = dados.Registros;
                 // Reseta
-                if(!idOperadora) $scope.filtro.adquirente = null;
-                else $scope.filtro.adquirente = $filter('filter')($scope.adquirentes, function(a) {return a.id === idOperadora;})[0];
+                if(typeof cdAdquirente === 'number' && cdAdquirente > 0) 
+                    $scope.filtro.adquirente = $filter('filter')($scope.adquirentes, function(a) {return a.cdAdquirente === cdAdquirente;})[0];
+                else $scope.filtro.adquirente = null;
                 // Busca bandeiras
                 if($scope.filtro.adquirente && $scope.filtro.adquirente !== null) 
-                    buscaBandeiras(true, true, idBandeira, idTerminalLogico);
+                    buscaBandeiras(true, true, cdBandeira, idTerminalLogico, idOperadora);
                 else
                     $scope.hideProgress(divPortletBodyFiltrosPos);
               },
@@ -278,12 +280,12 @@ angular.module("card-services-consolidacao-relatorios", [])
     /**
       * Selecionou uma adquirente
       */
-    $scope.alterouAdquirente = function(idBandeira, idTerminalLogico, progressEstaAberto){
+    $scope.alterouAdquirente = function(cdBandeira, idTerminalLogico, progressEstaAberto, idOperadora){
         $scope.bandeiras = []; 
         $scope.terminais = [];
         $scope.filtro.bandeira = $scope.filtro.terminallogico = null;
-        if($scope.filtro.adquirente !== null)
-            buscaBandeiras(progressEstaAberto, true, idBandeira, idTerminalLogico);
+        if($scope.filtro.adquirente && $scope.filtro.adquirente !== null)
+            buscaBandeiras(progressEstaAberto, true, cdBandeira, idTerminalLogico, idOperadora);
     };
                 
                                                  
@@ -291,34 +293,33 @@ angular.module("card-services-consolidacao-relatorios", [])
     /**
       * Busca as bandeiras
       */                                             
-    var buscaBandeiras = function(progressEstaAberto, buscarTerminaisLogicos, idBandeira, idTerminalLogico){
+    var buscaBandeiras = function(progressEstaAberto, buscarTerminaisLogicos, cdBandeira, idTerminalLogico, idOperadora){
        
        if(!$scope.filtro.adquirente || $scope.filtro.adquirente === null){
            $scope.filtro.bandeira = null;
            $scope.bandeiras = [];
+           if(buscarTerminaisLogicos) buscaTerminaisLogicos(true, idTerminalLogico, idOperadora);
+           else if(progressEstaAberto) $scope.hideProgress(divPortletBodyFiltrosPos);
            return;
        }    
         
        if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
         
-       var filtros = undefined;
-
-       // Filtro de adquirente
-       if($scope.filtro.adquirente !== null) filtros = {id: /*$campos.pos.bandeirapos.idOperadora*/ 102, 
-                                                        valor: $scope.filtro.adquirente.id};
+       var filtros = {id: /*$campos.card.tbbandeira.cdAdquirente */ 102, 
+                      valor: $scope.filtro.adquirente.cdAdquirente};
        
-       $webapi.get($apis.getUrl($apis.pos.bandeirapos, 
-                                [$scope.token, 0, /*$campos.pos.bandeirapos.desBandeira*/ 101],
+       $webapi.get($apis.getUrl($apis.card.tbbandeira, 
+                                [$scope.token, 1, /*$campos.card.tbbandeira.dsBandeira*/ 101],
                                 filtros)) 
             .then(function(dados){
                 $scope.bandeiras = dados.Registros;
                 // Reseta ou seta para um objeto
-                if(typeof idBandeira === 'number' && idBandeira > 0){ 
-                    $scope.filtro.bandeira = $filter('filter')($scope.bandeiras, function(b) {return b.id === idBandeira;})[0];
+                if(typeof cdBandeira === 'number' && cdBandeira > 0){ 
+                    $scope.filtro.bandeira = $filter('filter')($scope.bandeiras, function(b) {return b.cdBandeira === cdBandeira;})[0];
                     if(!$scope.filtro.bandeira) $scope.filtro.bandeira = null;
                 }else $scope.filtro.bandeira = null;
                 // Esconde o progress
-                if(buscarTerminaisLogicos) buscaTerminaisLogicos(true, idTerminalLogico);
+                if(buscarTerminaisLogicos) buscaTerminaisLogicos(true, idTerminalLogico, idOperadora);
                 else $scope.hideProgress(divPortletBodyFiltrosPos);
               },
               function(failData){
@@ -340,21 +341,19 @@ angular.module("card-services-consolidacao-relatorios", [])
     /**
       * Busca as bandeiras
       */                                             
-    var buscaTerminaisLogicos = function(progressEstaAberto, idTerminalLogico){
+    var buscaTerminaisLogicos = function(progressEstaAberto, idTerminalLogico, idOperadora){
 
-       if(!$scope.filtro.adquirente || $scope.filtro.adquirente === null){
+       if(typeof idOperadora !== 'number' || idOperadora === 0){
            $scope.filtro.terminallogico = null;
            $scope.terminais = [];
+           if(progressEstaAberto) $scope.hideProgress(divPortletBodyFiltrosPos);
            return;
        }    
         
        if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos, 10000);
         
-       var filtros = undefined;
-
-       // Filtro de adquirente
-       if($scope.filtro.adquirente !== null) filtros = {id: 102,//$campos.pos.terminallogico.idOperadora, 
-                                                        valor: $scope.filtro.adquirente.id};
+       var filtros = {id: 102,//$campos.pos.terminallogico.idOperadora, 
+                      valor: idOperadora};
        
        $webapi.get($apis.getUrl($apis.pos.terminallogico, 
                                 [$scope.token, 2, 101],//$campos.pos.terminallogico.dsTerminalLogico],
@@ -507,28 +506,28 @@ angular.module("card-services-consolidacao-relatorios", [])
        }
         
        // Adquirente
-       if($scope.filtro.adquirente !== null){
-           var filtroAdquirente = {id: 300,//$campos.pos.recebimento.operadora + $campos.pos.operadora.id - 100, 
-                                   valor: $scope.filtro.adquirente.id};
+       if($scope.filtro.adquirente && $scope.filtro.adquirente !== null){
+           var filtroAdquirente = {id: 700,//$campos.pos.recebimento.operadora + $campos.card.tbadquirente.cdAdquirente - 100, 
+                                   valor: $scope.filtro.adquirente.cdAdquirente};
            filtros.push(filtroAdquirente);
        } 
         
        // Bandeira
-       if($scope.filtro.bandeira !== null){
-           var filtroBandeira = {id: /*$campos.pos.recebimento.idBandeira*/ 101, 
-                                 valor: $scope.filtro.bandeira.id};
+       if($scope.filtro.bandeira && $scope.filtro.bandeira !== null){
+           var filtroBandeira = {id: /*$campos.pos.recebimento.cdBandeira*/ 115, 
+                                 valor: $scope.filtro.bandeira.cdBandeira};
            filtros.push(filtroBandeira);
        }
         
        // Terminal Lógico
-       if($scope.filtro.terminallogico !== null){
+       if($scope.filtro.terminallogico && $scope.filtro.terminallogico !== null){
            var filtroTerminal = {id: /*$campos.pos.recebimento.idLogicoTerminal*/ 110, 
                                  valor: $scope.filtro.terminallogico.idTerminalLogico};
            filtros.push(filtroTerminal);
        }  
         
        // Verifica se tem algum valor para ser filtrado (NSU ou Cod. Autorizador)   
-       if($scope.filtro.busca.length > 0) 
+       if($scope.filtro.busca && $scope.filtro.busca.length > 0) 
            filtros.push({id: $scope.filtro.campo_busca.id, valor: $scope.filtro.busca + '%'});   
        
        // Retorna    
@@ -716,14 +715,14 @@ angular.module("card-services-consolidacao-relatorios", [])
     
     // ANALÍTICO
     
-     $scope.detalhar = function(nu_cnpj, idOperadora, bandeira, terminal){
+     $scope.detalhar = function(nu_cnpj, bandeira, idOperadora, terminal){
          // Tinha filial selecionada e ela era a que está para ser detalhada?
          if(!$scope.filtro.filial || $scope.filtro.filial === null || 
             $scope.filtro.filial.nu_cnpj !== nu_cnpj){
              // Filial diferente!
              $scope.filtro.filial = $filter('filter')($scope.filiais, function(f){return f.nu_cnpj === nu_cnpj;})[0]; 
-             buscaAdquirentes(false, idOperadora, bandeira.id, terminal ? terminal.idTerminalLogico : undefined);
-             $scope.filtro.adquirente = {id : idOperadora};
+             buscaAdquirentes(false, bandeira.cdAdquirente, bandeira.cdBandeira, terminal ? terminal.idTerminalLogico : undefined, idOperadora);
+             $scope.filtro.adquirente = {cdAdquirente : bandeira.cdAdquirente};
              $scope.filtro.bandeira = bandeira;
              if(terminal) $scope.filtro.terminallogico = terminal;
              
@@ -732,10 +731,8 @@ angular.module("card-services-consolidacao-relatorios", [])
              buscaRelatorioAnalitico(true, true);
          }else{
              // Procura a adquirente
-             var adquirente = $filter('filter')($scope.adquirentes, function(a){return a.id === idOperadora;})[0];
+             var adquirente = $filter('filter')($scope.adquirentes, function(a){return a.cdAdquirente === bandeira.cdAdquirente;})[0];
              if(adquirente){ 
-                 // vai para Analítico
-                 $scope.setTab(2);
                  // Verifica se a adquirente já não estava selecionada
                  if(adquirente !== $scope.filtro.adquirente){
                      $scope.filtro.adquirente = adquirente;
@@ -746,15 +743,22 @@ angular.module("card-services-consolidacao-relatorios", [])
                      adquirente = null;
                 }else{
                     // Apenas busca a bandeira e o terminal lógico (se definido)
-                    $scope.filtro.bandeira = $filter('filter')($scope.bandeiras, function(b) {return b.id === bandeira.id;})[0];
-                    if(terminal) $scope.filtro.terminallogico = $filter('filter')($scope.terminais, function(t) {return t.idTerminalLogico === terminal.idTerminalLogico;})[0]; 
+                    $scope.filtro.bandeira = $filter('filter')($scope.bandeiras, function(b) {return b.cdBandeira === bandeira.cdBandeira;})[0];
+                    if(terminal) $scope.filtro.terminallogico = terminal;
+                    //if(terminal) $scope.filtro.terminallogico = $filter('filter')($scope.terminais, function(t) {return t.idTerminalLogico === terminal.idTerminalLogico;})[0]; 
                 }
+                
+                // vai para Analítico
+                $scope.setTab(2); 
+                 
                 // Faz a busca analítica
                 if(typeof ultimoFiltro === 'undefined' || !$scope.arraysAreEqual(ultimoFiltro, obtemFiltroDeBusca())) 
                     buscaRelatorioAnalitico(true, true);//resetaTerminal, !resetaTerminal);
                 // Carrega o conjunto de bandeiras e de terminais lógicos associados à nova adquirente selecionada
                 if(adquirente === null) 
-                    $timeout(function(){$scope.alterouAdquirente(bandeira.id, terminal ? terminal.idTerminalLogico : undefined, true)}, 500);
+                    $timeout(function(){$scope.alterouAdquirente(bandeira.cdBandeira, terminal ? terminal.idTerminalLogico : undefined, true, idOperadora)}, 500);
+                else // busca terminal lógico
+                    $timeout(function(){buscaTerminaisLogicos(true, terminal ? terminal.idTerminalLogico : undefined, idOperadora)}, 500);
              }else $scope.filtro.adquirente = null;
          }
     };

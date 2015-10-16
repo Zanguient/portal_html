@@ -35,8 +35,8 @@ Além deles, é necessária a importação dos seguintes módulos externos.
   * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
   * APIS:
     - cliente/empresa (filiais)
-	- pos/bandeirapos (bandeiras)
-    - pos/operadora (adquirente)
+	- card/tbadquirente (adquirente)
+	- card/tbbandeira (bandeiras)
 	- pos/terminallogico (terminais lógicos)
 	- pos/recebimento (relatórios)
 	
@@ -55,26 +55,26 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 			]
 			Filtro de id_grupo pode ser enviado ou não para filtrar as filiais por grupo empresa
 			
-  * pos/operadora
-    - GET : listagem das adquirentes (coleção 0)
+  * card/tbadquirente : listagem das adquirentes
+	- GET : listagem das adquirentes (coleção 1)
 			[
-			  { id : int,
-				nmOperadora : string,
-				idGrupoEmpresa : int
-			  }
-			]	
-			Filtro de cnpj pode ser enviado  com  300 + código do cnpj - 100 
-				
-   * pos/bandeirapos
-    - GET : listagem das bandeiras (coleção 0)
-			[
-			  { id : int
-				desBandeira : string
-				idOperadora : int
+			  { cdAdquirente : int,
+                nmAdquirente : string,
+                dsAdquirente : string,
+                stAdquirente : int,  // igual a 1
+				hrExecucao : datetime,
 			  }
 			]
-			Filtro de idOperadora pode ser enviado ou não para filtrar as bandeiras por adquirente			
- 
+				
+   * card/tbbandeira
+    - GET : listagem das bandeiras (coleção 1)
+			[
+			  { cdBandeira : int
+				dsBandeira : string
+				cdAdquirente : int
+			  }
+			]
+			
    * pos/terminallogico
     - GET : listagem das bandeiras (coleção 2)
 			[
@@ -108,8 +108,9 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 								empresa : { nu_cnpj : string,
 											ds_fantasia : string
 										  },
-								bandeira : { id : int
-											 desBandeira : string
+								bandeira : { cdBandeira : int
+											 dsBandeira : string,
+											 cdAdquirente : int
 										   },
 								idOperadora : int,
 								totalTransacoes	: int,
@@ -128,8 +129,9 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 											ds_fantasia : string,
 											filial : string,
 										  },
-								bandeira : { id : int
-											 desBandeira : string
+								bandeira : { cdBandeira : int
+											 dsBandeira : string,
+											 cdAdquirente : int
 										   },
 								idOperadora : int,
 								totalTransacoes	: total,
@@ -148,7 +150,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 								dtaVenda : date,
 								dsFantasia : string, // ds_fantasia + filial
 								dsTerminalLogico : string,
-								desBandeira : string
+								dsBandeira : string
 								nsu	: string,
 								cdAutorizador : string,
 								valorVendaBruta : double

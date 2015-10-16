@@ -5,9 +5,10 @@
  *
  *
  *
- *  Versão 1.0.6 - 15/10/2015
+ *  Versão 1.0.6 - 16/10/2015
  *  - Combo ADQUIRENTE sendo preenchida pela tabela tbAdquirente em vez de Operadora
  *  - Combo BANDEIRA sendo preenchida pela tabela tbBandeira em vez de BandeiraPos
+ *  - Taxa CashFlow calculada considerando apenas os recebimentos
  *
  *  Versão 1.0.5 - 28/09/2015
  *  - Valor Desconto por Antecipação
@@ -81,10 +82,10 @@ angular.module("card-services-cash-flow-relatorios", [])
                                  valorLiquidoFiltrado : 0, valorDescontadoFiltrado : 0, 
                                  valorDescontadoFiltrado : 0, vlDescontadoAntecipacaoFiltrado : 0}, 
                     analitico : {valorBruto : 0, valorParcela : 0, valorLiquido : 0, 
-                                 valorDescontado : 0, vlDescontadoAntecipacao : 0,
+                                 valorDescontado : 0, vlDescontadoAntecipacao : 0, taxaCashFlow : 0, totalCashFlow : 0,
                                  valorBrutoFiltrado : 0, valorParcelaFiltrado : 0, 
                                  valorLiquidoFiltrado : 0, valorDescontadoFiltrado : 0, 
-                                 vlDescontadoAntecipacaoFiltrado : 0}};                         
+                                 vlDescontadoAntecipacaoFiltrado : 0, taxaCashFlowFiltrado : 0}};                         
     // flag
     var ultimoFiltro = undefined;
     $scope.exibeTela = false;  
@@ -304,16 +305,14 @@ angular.module("card-services-cash-flow-relatorios", [])
        if(!$scope.filtro.adquirente || $scope.filtro.adquirente === null){
            $scope.filtro.bandeira = null;
            $scope.bandeiras = [];
+           if(progressEstaAberto) $scope.hideProgress(divPortletBodyFiltrosPos);
            return;
        }    
         
        if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
         
-       var filtros = undefined;
-
-       // Filtro de adquirente
-       if($scope.filtro.adquirente !== null) filtros = {id: /*$campos.card.tbbandeira.cdAdquirente */ 102, 
-                                                        valor: $scope.filtro.adquirente.cdAdquirente};
+       var filtros = {id: /*$campos.card.tbbandeira.cdAdquirente */ 102, 
+                      valor: $scope.filtro.adquirente.cdAdquirente};
        
        $webapi.get($apis.getUrl($apis.card.tbbandeira, 
                                 [$scope.token, 1, /*$campos.card.tbbandeira.dsBandeira*/ 101],
@@ -664,7 +663,7 @@ angular.module("card-services-cash-flow-relatorios", [])
                 ultimoFiltro = filtros;
            
                 // Reseta os valores totais
-                $scope.total.analitico.valorBruto = $scope.total.analitico.valorParcela = $scope.total.analitico.valorLiquido = $scope.total.analitico.valorDescontado = $scope.total.analitico.vlDescontadoAntecipacao = 0;
+                $scope.total.analitico.valorBruto = $scope.total.analitico.valorParcela = $scope.total.analitico.valorLiquido = $scope.total.analitico.valorDescontado = $scope.total.analitico.vlDescontadoAntecipacao = $scope.total.analitico.totalCashFlow = $scope.total.analitico.taxaCashFlow = 0;
                 // Obtém os dados
                 $scope.relatorio.analitico = dados.Registros;
                 // Obtém os totais
@@ -673,6 +672,7 @@ angular.module("card-services-cash-flow-relatorios", [])
                 $scope.total.analitico.valorDescontadoFiltrado = dados.Totais.valorDescontado;
                 $scope.total.analitico.vlDescontadoAntecipacaoFiltrado = dados.Totais.vlDescontadoAntecipacao;
                 $scope.total.analitico.valorLiquidoFiltrado = dados.Totais.valorParcelaLiquida;
+                $scope.total.analitico.taxaCashFlowFiltrado = dados.Totais.taxaCashFlow;
            
                 // Set valores de exibição
                 $scope.filtro.analitico.total_registros = dados.TotalDeRegistros;
@@ -712,6 +712,12 @@ angular.module("card-services-cash-flow-relatorios", [])
               });       
     }
     
+    
+    $scope.addTaxaCashFlow = function(ehAjuste, taxa){
+        if(ehAjuste) return;
+        $scope.total.analitico.totalCashFlow++;
+        $scope.total.analitico.taxaCashFlow += taxa;
+    }
     
     
     
