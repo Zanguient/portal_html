@@ -38,7 +38,8 @@ angular.module("tax-services-importacao-xml", [])
    
     $scope.paginaInformada = 1;
     $scope.filiais = [];   
-    $scope.manifestos = [];                                            
+    $scope.manifestos = [];
+    $scope.almoxarifados = [];
     $scope.itens_pagina = [50, 100, 150, 200];
     $scope.statusmanifesto = [/*{id: 1, nome : 'MANIFESTO'},
                                 {id: 2, nome : 'ERP'}*/];                                        
@@ -539,6 +540,46 @@ angular.module("tax-services-importacao-xml", [])
               });     
     }
     
+        /**
+      * Requisita almoxarifados para importação da nota fiscal
+      */
+    var obtemAlmoxarifados = function(nrCNPJ, funcaoSucesso){
+       $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
+       $scope.showProgress(divPortletBodyManifestoPos);
+        
+       // Filtros    
+       var filtro = {id :200, valor : nrCNPJ};
+           
+       //console.log(filtros);
+       
+       $webapi.get($apis.getUrl($apis.rezende.pgsql.tbalmoxarifado, [$scope.token, 1], filtro)) 
+            .then(function(dados){
+                // Obtém os dados
+                $scope.almoxarifados = undefined;
+                //console.log(dados);
+           
+                if(dados.Registros.length > 0){ 
+                    $scope.almoxarifados = dados.Registros;
+                    //console.log(almoxarifados);
+                }
+
+                if(typeof funcaoSucesso === 'function') funcaoSucesso();
+           
+                // Fecha os progress
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+                $scope.hideProgress(divPortletBodyManifestoPos);
+              },
+              function(failData){
+           console.log(failData);
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 //else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter os almaxorifados para importação (' + failData.status + ')', true, 'danger',true);
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+                 $scope.hideProgress(divPortletBodyManifestoPos);
+              });     
+    }
+    
+    
     /** 
       * Detalha a nota
       */
@@ -552,6 +593,18 @@ angular.module("tax-services-importacao-xml", [])
             $('#modalDetalhes').modal('show');
     }
     
+        /** 
+      * Importa a nota
+      */
+    $scope.importar = function(manifesto, indexNota){
+        var nota = manifesto.notas[indexNota];
+        //console.log("DETALHAR " + manifesto.nmEmitente.toUpperCase());
+        console.log(nota);
+        //if(!$scope.notadetalhada || $scope.notadetalhada.idManifesto !== nota.idManifesto)
+            obtemAlmoxarifados(nota.nrCNPJ, function(){$('#modalImportar').modal('show');});
+        //else
+            $('#modalImportar').modal('show');
+    }
     
     /** 
       * Imprime a nota

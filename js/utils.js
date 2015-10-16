@@ -147,15 +147,15 @@ angular.module('utils', [ ])
 .factory('$autenticacao', ['$localstorage', function($localstorage){
   
   // URL base da WEBAPI
-  //var urlBase = 'http://localhost:55007';
+  var urlBase = 'http://localhost:55007';
   //var urlBase = 'http://192.168.1.100/apiportal';  // proxy: versão mais atualizada da webapi 
-  var urlBase = 'http://ws.atoscapital.com.br/proxy';
+  //var urlBase = 'http://ws.atoscapital.com.br/proxy';
   // IMessage
-  //var urlBaseIMessage = 'http://localhost:50780';
+  //var urlBaseIMessage = 'http://localhost:50939';
   var urlBaseIMessage = 'http://imessage.atoscapital.com.br';
   // Rezende
-  //var urlBaseRezende = 'http://localhost:50939';
-  var urlBaseRezende = 'http://apirezende.atoscapital.com.br';
+  var urlBaseRezende = 'http://localhost:50939';
+  //var urlBaseRezende = 'http://apirezende.atoscapital.com.br';
   // Download
   var urlBaseDownload = 'http://apiportal.atoscapital.com.br';
   // Tempo em horas máximos definido de inatividade para requerer novo login, caso LEMBRAR não tenha sido marcado

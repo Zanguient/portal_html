@@ -49,6 +49,8 @@ Não é necessário nenhum outro módulo externo.
 						nfe : string,
 						dsSituacaoManifesto : string,
 						dsSituacaoErp : string
+						xmlNFe = x.xmlNFe,
+						nrCNPJ : string,
 					}] // ordenado por dtEmissao
 		
 		}
