@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.1 - 29/09/2015
+ *   - Listagem dos Catálogos
+ *
  *  Versão 1.0 - 29/09/2015
  *
  */

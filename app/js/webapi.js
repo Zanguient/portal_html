@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.4 - 16/10/2015
+ *  - tbcatalogo
+ *
  *  Versão 1.0.3 - 09/10/2015
  *  - tbbandeira
  *
