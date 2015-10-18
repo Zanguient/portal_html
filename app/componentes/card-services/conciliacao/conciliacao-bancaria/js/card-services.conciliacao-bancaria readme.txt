@@ -103,6 +103,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 	  OBS1: Obrigatório o envio de filtro de data
 	  OBS2: Por ser um processamento "pesado", importante o filtrar o grupo empresa e usar um intervalo de data pequeno (de preferência, diário)
 	  OBS3: Usar paginação grande, 20+ itens por página
+	  OBS4: Ajuste vem com NumParcela = -1
   
 	- PUT : seta os itens recebimento parcela para apontar para determinado extrato ou desassociar de um extrato
 			[{ 
