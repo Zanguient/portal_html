@@ -35,8 +35,8 @@ Além deles, é necessária a importação dos seguintes módulos externos.
   * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
   * APIS:
     - cliente/empresa (filiais)
-	- pos/bandeirapos (bandeiras)
-    - pos/operadora (adquirente)
+	- card/tbadquirente (adquirente)
+	- card/tbbandeira (bandeiras) 
 	- pos/recebimentoparcela (relatórios)
 	
  
@@ -54,25 +54,25 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 			]
 			Filtro de id_grupo pode ser enviado ou não para filtrar as filiais por grupo empresa
 			
-  * pos/operadora
-    - GET : listagem das adquirentes (coleção 0)
+  * card/tbadquirente : listagem das adquirentes
+	- GET : listagem das adquirentes (coleção 1)
 			[
-			  { id : int,
-				nmOperadora : string,
-				idGrupoEmpresa : int
-			  }
-			]	
-			Filtro de nu_cnpj deve ser enviado para ser exibido corretamente
-				
-   * pos/bandeirapos
-    - GET : listagem das bandeiras (coleção 0)
-			[
-			  { id : int
-				desBandeira : string
-				idOperadora : int
+			  { cdAdquirente : int,
+                nmAdquirente : string,
+                dsAdquirente : string,
+                stAdquirente : int,  // igual a 1
+				hrExecucao : datetime,
 			  }
 			]
-			Filtro de idOperadora pode ser enviado ou não para filtrar as bandeiras por adquirente			
+				
+   * card/tbbandeira
+    - GET : listagem das bandeiras (coleção 1)
+			[
+			  { cdBandeira : int
+				dsBandeira : string
+				cdAdquirente : int
+			  }
+			]		
   
    * pos/recebimentoparcela
     - GET : listagem do conteúdo do relatório
@@ -89,9 +89,9 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 								ds_fantasia : string
 								filial : string,
 							  },
-					bandeira : { id : int
-								 desBandeira : string,
-								 idOperadora : int
+					bandeira : { cdBandeira : int
+								 dsBandeira : string,
+								 cdAdquirente : int
 							   },
                     totalTransacoes	: int,
 					valorBruto : double,
@@ -107,7 +107,8 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 						valorParcela : double,
 						valorLiquida" : double,
 						valorDescontado : double,
-						vlDescontadoAntecipacao : double
+						vlDescontadoAntecipacao : double,
+						taxaCashFlow : double, // em %
 					  }	
 
        -> ANALÍTICO (coleção 8) : sempre ordenado pela data de recebimento, seguido do desBandeira
@@ -115,7 +116,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 							{
 								cnpj: string,
 								dsFantasia : string, // ds_fantasia + filial
-								desBandeira : string,
+								dsBandeira : string,
 								dtaVenda : date,
 								dtaRecebimento : date,
 								dtaRecebimentoEfetivo : date ou null,
@@ -137,7 +138,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 						vlDescontadoAntecipacao : double
 					  }		
  
-   
+            OBS: ajustes é indicado como numParcela = 0, e o dsMotivo vem em nsu
 
    
 ### Desenvolvedores ###

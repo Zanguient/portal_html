@@ -295,6 +295,7 @@ angular.module('webapi', ['utils'])
             codVendaERP : 112,
             codResumoVenda : 113,
             numParcelaTotal : 114,
+            cdBandeira : 115,
             // Relacionamento
             operadora : 300,
             empresa : 400, // pode ser usado para buscar o id_grupo
@@ -316,14 +317,18 @@ angular.module('webapi', ['utils'])
             operadora : 400,
             bandeira : 500,
             recebimento : 600,
-            tbadquirente : 700
+            tbadquirente : 700,
+            tbbandeira : 800
             // EXPORTAR
             exportar : 9999
         },
         terminallogico : {
             idTerminalLogico: 100,
             dsTerminalLogico : 101,
-            idOperadora : 102    
+            idOperadora : 102,
+            // Relacionamentos
+            idGrupoEmpresa : 200,
+            cdAdquirente : 300
         }
       },
       tax : {
