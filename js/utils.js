@@ -151,7 +151,7 @@ angular.module('utils', [ ])
   //var urlBase = 'http://192.168.1.100/apiportal';  // proxy: versão mais atualizada da webapi 
   //var urlBase = 'http://ws.atoscapital.com.br/proxy';
   // IMessage
-  //var urlBaseIMessage = 'http://localhost:50780';
+  //var urlBaseIMessage = 'http://localhost:50939';
   var urlBaseIMessage = 'http://imessage.atoscapital.com.br';
   // Rezende
   //var urlBaseRezende = 'http://localhost:50939';

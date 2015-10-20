@@ -38,7 +38,10 @@ angular.module("tax-services-importacao-xml", [])
    
     $scope.paginaInformada = 1;
     $scope.filiais = [];   
-    $scope.manifestos = [];                                            
+    $scope.manifestos = [];
+    $scope.almoxarifados = [];
+    $scope.natOperacoes = [];
+    $scope.Mensagens = [];
     $scope.itens_pagina = [50, 100, 150, 200];
     $scope.statusmanifesto = [/*{id: 1, nome : 'MANIFESTO'},
                                 {id: 2, nome : 'ERP'}*/];                                        
@@ -47,7 +50,8 @@ angular.module("tax-services-importacao-xml", [])
                       itens_pagina : $scope.itens_pagina[0], pagina : 1,
                       total_registros : 0, faixa_registros : '0-0', total_paginas : 0, chaveAcesso : null}; 
     $scope.total = { nfe : 0 };  
-    $scope.notadetalhada = undefined;                                            
+    $scope.notadetalhada = undefined;  
+    $scope.nrChave = ''; //chave da nota para importação
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyManifestoPos = 1; // posição da div que vai receber o loading progress                                         
     // flags
@@ -539,6 +543,75 @@ angular.module("tax-services-importacao-xml", [])
               });     
     }
     
+        /**
+      * Requisita almoxarifados para importação da nota fiscal
+      */
+    var obtemAlmoxarifados = function(nrCNPJ, funcaoSucesso){
+       $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
+       $scope.showProgress(divPortletBodyManifestoPos);
+        
+       // Filtros    
+       var filtro = {id :200, valor : nrCNPJ};
+           
+       //console.log(filtros);
+       
+       $webapi.get($apis.getUrl($apis.rezende.pgsql.tbalmoxarifado, [$scope.token, 1,100,0], filtro)) 
+            .then(function(dados){
+                // Obtém os dados
+                $scope.almoxarifados = undefined;
+              
+                if(dados.Registros.length > 0){ 
+                    $scope.almoxarifados = dados.Registros;
+                }
+
+                if(typeof funcaoSucesso === 'function') funcaoSucesso();
+           
+                // Fecha os progress
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+                $scope.hideProgress(divPortletBodyManifestoPos);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter os almaxorifados para importação (' + failData.status + ')', true, 'danger',true);
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+                 $scope.hideProgress(divPortletBodyManifestoPos);
+              });     
+    }
+    
+            /**
+      * Requisita a natureza da operação para importação da nota fiscal
+      */
+    var obtemNatOperacoes = function(funcaoSucesso){
+       $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
+       $scope.showProgress(divPortletBodyManifestoPos);
+        
+       $webapi.get($apis.getUrl($apis.rezende.pgsql.tbnaturezaoperacao, [$scope.token, 1])) 
+            .then(function(dados){
+                // Obtém os dados
+                $scope.natOperacoes = undefined;
+                
+           
+                if(dados.Registros.length > 0){ 
+                    $scope.natOperacoes = dados.Registros;
+                    
+                }
+
+                if(typeof funcaoSucesso === 'function') funcaoSucesso();
+           
+                // Fecha os progress
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+                $scope.hideProgress(divPortletBodyManifestoPos);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter a natureza da operação para importação da NFe(' + failData.status + ')', true, 'danger',true);
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+                 $scope.hideProgress(divPortletBodyManifestoPos);
+              });     
+    }
+    
     /** 
       * Detalha a nota
       */
@@ -552,7 +625,88 @@ angular.module("tax-services-importacao-xml", [])
             $('#modalDetalhes').modal('show');
     }
     
+    /** 
+      * Obtem as informações para importar a nota
+    */
+    $scope.obterInformarcoesImportar = function(manifesto, indexNota){
+        var nota = manifesto.notas[indexNota];
+        $scope.nrChave = nota.nrChave;
+        obtemAlmoxarifados(nota.nrCNPJ, function(){$('#modalImportar').modal('show');});
+        obtemNatOperacoes(function(){$('#modalImportar').modal('show');});
+    }
+
+    /*
+    Importação da NFe
+    */
+    $scope.importarNota = function (dadosImportacao) {
+               
+        // Valida se o usuário informou os dados necessários 
+        if(!dadosImportacao || dadosImportacao === null){
+           $scope.showModalAlerta('É necessário selecionar a Natureza da Operação e o Almoxarifado!'); 
+           return;       
+       }else if(!dadosImportacao.natOperacao || dadosImportacao.natOperacao === null){
+           $scope.showModalAlerta('É necessário selecionar a Natureza da Operação!'); 
+           return;       
+       }else if(!dadosImportacao.almoxarifado || dadosImportacao.almoxarifado === null){
+           $scope.showModalAlerta('É necessário selecionar o Almoxarifado!'); 
+           return;       
+       }
+        
+        // Obtém o JSON
+        var jsonImportar = { nrChave : $scope.nrChave,
+                          codAlmoxarifado : dadosImportacao.almoxarifado.cod_almoxarifado,
+                          codNaturezaOperacao : dadosImportacao.natOperacao.cod_natureza_operacao
+                        };
+
+        // POST
+        $scope.showProgress();
+        $webapi.post($apis.getUrl($apis.rezende.pgsql.tabnotafiscalentrada, undefined,
+                                 {id : 'token', valor : $scope.token}), jsonImportar) 
+            .then(function(dados){
+                // Fecha os progress
+                $scope.hideProgress();
+            
+                    if(dados && dados != null){
+                        if(dados.cdMensagem === 200)
+                        {
+                           //Fecha o modal
+                           fechaModalImportar();
+                            $scope.showModalAlerta('Nota Fiscal incluída com sequência: '+dados.sqNota+'.');   
+                        }
+                        else{
+                        fechaModalImportar();
+                        $scope.Mensagens = dados.Mensagens; 
+                        exibeRetornoImportacao();
+                        }
+                    }else{ 
+                    // Não recebeu JSON de resposta...
+                    // Fecha o modal
+                        fechaModalImportar();
+                    }
+            
+              },
+            function(failData){
+                fechaModalImportar();
+                if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                else $scope.showAlert('Houve uma falha ao importar a NFe (' + failData.status + ')', true, 'danger', true);
+                // Fecha os progress
+                $scope.hideProgress();
+                
+            }); 
+        
+    };
+           
+    /*
+    Fecha o modal Importar
+    */                                            
+    var fechaModalImportar = function(){
+        $('#modalImportar').modal('hide');       
+    }
     
+        var exibeRetornoImportacao = function(){
+        $('#modalRetornoImportacao').modal('show');       
+    }
     /** 
       * Imprime a nota
       */

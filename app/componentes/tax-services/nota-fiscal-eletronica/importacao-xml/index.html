@@ -1831,6 +1831,86 @@
                 </div>
                 <!-- FIM - MODAL DETALHES -->
                 
+                <!-- MODAL IMPORTAÇÃO DE NOTA FISCAL-->
+                <div class="modal fade bs-modal-sm modal-input" 
+                    id="modalImportar" aria-hidden="true">
+                   <div class="modal-dialog modal-sm" style="width:800px">
+                       <div class="modal-content">
+                           <div class="modal-header">
+                               <h4 class="modal-title modal-cabecalho">Importação de Nota Fiscal Eletrônica</h4>
+                           </div>
+                           <div class="modal-body modal-corpo" style="text-align: left">
+                               <div class="row select-modal-importacao">
+                                    <div class="col-md-3">
+                                    <label>Natureza da Operação: </label>
+                                   </div>
+                                   <div class="col-md-9">
+                                        <select class="form-control form-filter input-sm"
+                                                ng-model="dadosImportacao.natOperacao"
+                                                ng-options="natOperacao.des_natureza_operacao for natOperacao in natOperacoes">
+                                            <option value=""></option>
+                                        </select>
+                                   </div>
+                               </div>
+                               <div class="row select-modal-importacao">
+                                   <div class="col-md-3">
+                                    <label>Almoxarifado: </label>
+                                   </div>
+                                   <div class="col-md-9">
+                                        <select class="form-control form-filter input-sm"
+                                                ng-model="dadosImportacao.almoxarifado"
+                                                ng-options="almoxarifado.des_almoxarifado for almoxarifado in almoxarifados">
+                                            <option value=""></option>
+                                        </select>
+                                   </div>
+                               </div>
+                                <div class="row button-modal-importacao">
+                                   <div class="col-md-12">
+                                    <button class="btn btn-sm red filter-submit margin-bottom" ng-click="importarNota(dadosImportacao);">Importar</button>
+                                   </div>
+                               </div>
+                           </div>
+                           <div class="modal-footer">
+                               <div class="col-md-1 col-md-offset-10">
+                                   <button type="button" class="btn default" data-dismiss="modal" >
+                                       Fechar
+                                   </button>
+                               </div>                           
+                           </div>
+                       </div>
+                   </div>
+                </div>
+                <!-- FIM - MODAL IMPORTAÇÃO DE NOTA FISCAL-->
+                
+                                
+                <!-- MODAL RETORNO DA IMPORTAÇÃO DE NOTA FISCAL-->
+                <div class="modal fade bs-modal-sm modal-input" 
+                    id="modalRetornoImportacao" aria-hidden="true">
+                   <div class="modal-dialog modal-sm" style="width:800px">
+                       <div class="modal-content">
+                           <div class="modal-header">
+                               <h4 class="modal-title modal-cabecalho">Erros gerados na importação da NFe</h4>
+                           </div>
+                           <div class="modal-body modal-corpo" style="text-align: left">
+
+                               <div class="row">
+                                   <div class="col-md-12" ng-repeat="mensagem in Mensagens">
+                                       {{mensagem}}<br/>
+                                   </div>
+                               </div>  
+                           </div>
+                           <div class="modal-footer">
+                               <div class="col-md-1 col-md-offset-10">
+                                   <button type="button" class="btn default" data-dismiss="modal" >
+                                       Fechar
+                                   </button>
+                               </div>                           
+                           </div>
+                       </div>
+                   </div>
+                </div>
+                <!-- FIM - MODAL IMPORTAÇÃO DE NOTA FISCAL-->
+                
                 <!--TITULO-->
                 <div class="portlet-title">
                     <div class="caption">								
@@ -2110,6 +2190,12 @@
                                                                     <a href="javascript:;" 
                                                                        ng-click="downloadXML(manifesto, $index)">
                                                                         XML
+                                                                    </a>
+                                                                </li>
+                                                                 <li>
+                                                                    <a href="javascript:;" 
+                                                                       ng-click="obterInformarcoesImportar(manifesto, $index)">
+                                                                        Importar
                                                                     </a>
                                                                 </li>
                                                             </ul>
