@@ -582,11 +582,11 @@ angular.module("tax-services-importacao-xml", [])
             /**
       * Requisita a natureza da operação para importação da nota fiscal
       */
-    var obtemNatOperacoes = function(funcaoSucesso){
+    var obtemNatOperacoes = function(colecao,funcaoSucesso){
        $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
        $scope.showProgress(divPortletBodyManifestoPos);
         
-       $webapi.get($apis.getUrl($apis.rezende.pgsql.tbnaturezaoperacao, [$scope.token, 1])) 
+       $webapi.get($apis.getUrl($apis.rezende.pgsql.tbnaturezaoperacao, [$scope.token, colecao])) 
             .then(function(dados){
                 // Obtém os dados
                 $scope.natOperacoes = undefined;
@@ -630,9 +630,16 @@ angular.module("tax-services-importacao-xml", [])
     */
     $scope.obterInformarcoesImportar = function(manifesto, indexNota){
         var nota = manifesto.notas[indexNota];
+        var uf = manifesto.UF;
+        var colecao = 1;
+        if(uf != 'SE')
+        {
+            colecao = 2;
+        }
         $scope.nrChave = nota.nrChave;
+        
         obtemAlmoxarifados(nota.nrCNPJ, function(){$('#modalImportar').modal('show');});
-        obtemNatOperacoes(function(){$('#modalImportar').modal('show');});
+        obtemNatOperacoes(colecao,function(){$('#modalImportar').modal('show');});
     }
 
     /*
@@ -683,7 +690,6 @@ angular.module("tax-services-importacao-xml", [])
                     // Fecha o modal
                         fechaModalImportar();
                     }
-            
               },
             function(failData){
                 fechaModalImportar();
