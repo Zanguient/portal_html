@@ -46,6 +46,7 @@ angular.module("AtosCapital", ['ui.router',
                                'administrativo-consulta-pos-terminal',
                                'dashboard', 
                                'card-services-cash-flow-relatorios',
+                               'card-services-recebiveis-futuros',
                                'card-services-conciliacao-bancaria',
                                'card-services-conciliacao-vendas',
                                'card-services-conciliacao-terminal-logico',
@@ -263,6 +264,15 @@ angular.module("AtosCapital", ['ui.router',
         }
       })
     
+      .state('card-services-cash-flow-recebiveis-futuros', {
+        url: prefixo + 'card-services/recebiveis-futuros',
+        templateUrl: 'componentes/card-services/cash-flow/recebiveis-futuros/index.html',
+        controller: "card-services-recebiveis-futurosCtrl",
+        data: {
+            titulo: 'Card Services'
+        }
+      })
+    
       .state('card-services-conciliacao-conciliacao-bancaria', {
         url: prefixo + 'card-services/conciliacao-bancaria',
         templateUrl: 'componentes/card-services/conciliacao/conciliacao-bancaria/index.html',
@@ -466,6 +476,7 @@ angular.module("AtosCapital", ['ui.router',
     var controllerAdministrativoConsultaPOSTerminal = undefined;
     var controllerDashboard = undefined;
     var controllerCardServicesCashFlowRelatorios = undefined;
+    var controllerCardServicesRecebiveisFuturos = undefined;                        
     var controllerCardServicesConciliacaoBancaria = undefined;
     var controllerCardServicesConciliacaoVendas = undefined;
     var controllerCardServicesConciliacaoTerminalLogico = undefined; 
@@ -503,7 +514,8 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_DASHBOARD = false;
     $scope.PERMISSAO_CARD_SERVICES = false;
     $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW = false;   
-    $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW_RELATORIOS = false;                        
+    $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW_RELATORIOS = false;       
+    $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW_RECEBIVEIS_FUTUROS = false;                         
     $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO = false;
     $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_BANCARIA = false;
     $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_VENDAS = false;
@@ -734,6 +746,13 @@ angular.module("AtosCapital", ['ui.router',
         controllerAtual = controllerCardServicesCashFlowRelatorios;
         go('card-services-cash-flow-relatorios', params);
     }; 
+    /**
+      * Exibe como conteúdo a Cash Flow Recebíveis Futuros, de Card Services
+      */
+    $scope.goCardServicesRecebiveisFuturos = function(params){
+        controllerAtual = controllerCardServicesRecebiveisFuturos;
+        go('card-services-cash-flow-recebiveis-futuros', params);
+    };                         
     /**
       * Exibe como conteúdo a Conciliação Conciliação Bancária, de Card Services
       */
@@ -988,6 +1007,15 @@ angular.module("AtosCapital", ['ui.router',
             }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'RELATÓRIOS') // problem!
                      controllerAtual.id_controller !== controllerCardServicesCashFlowRelatorios.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual 
+        }else if(url === $state.get('card-services-cash-flow-recebiveis-futuros').url){ 
+            // Card Services > Cash Flow > Recebíveis Futuros
+            if(!$scope.PERMISSAO_CARD_SERVICES || !$scope.PERMISSAO_CARD_SERVICES_CASH_FLOW || !$scope.PERMISSAO_CARD_SERVICES_CASH_FLOW_RECEBIVEIS_FUTUROS){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.goUsuarioSemPrivilegios();
+            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'RECEBÍVEIS FUTUROS')
+                     controllerAtual.id_controller !== controllerCardServicesRecebiveisFuturos.id_controller)
+                $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual 
         }else if(url === $state.get('card-services-conciliacao-conciliacao-bancaria').url){ 
             // Card Services > Conciliação > Conciliação Bancária
             if(!$scope.PERMISSAO_CARD_SERVICES || !$scope.PERMISSAO_CARD_SERVICES_CONCILIACAO || !$scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_BANCARIA){
@@ -1175,6 +1203,11 @@ angular.module("AtosCapital", ['ui.router',
                 controllerDashboard = controller;
                 return $scope.goDashboard;  
             // Card Services
+            case 'RECEBÍVEIS FUTUROS':    
+                if($location.path() === $state.get('card-services-cash-flow-recebiveis-futuros').url) 
+                    controllerAtual = controller;
+                controllerCardServicesRecebiveisFuturos = controller;
+                return $scope.goCardServicesRecebiveisFuturos;
             case 'CONCILIAÇÃO BANCÁRIA': 
                 if($location.path() === $state.get('card-services-conciliacao-conciliacao-bancaria').url) 
                     controllerAtual = controller;
@@ -1279,6 +1312,7 @@ angular.module("AtosCapital", ['ui.router',
             // Card Services
             case 'CARD SERVICES': $scope.PERMISSAO_CARD_SERVICES = true; break;
             case 'CASH FLOW' : $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW = true; break;
+            case 'RECEBÍVEIS FUTUROS':  $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW_RECEBIVEIS_FUTUROS = true; break;
             case 'CONCILIAÇÃO': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO = true; break;
             case 'CONCILIAÇÃO BANCÁRIA': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_BANCARIA = true; break;
             case 'CONCILIAÇÃO DE VENDAS': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_VENDAS = true; break;
@@ -1357,6 +1391,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'CADASTRO CERTIFICADO DIGITAL': return state == 'cadastro-certificado-digital';
             case 'RECEBIMENTO NF-E': return state == 'recebimento-nfe';
             // Card Services
+            case 'RECEBÍVEIS FUTUROS': return state == 'recebiveis-futuros';    
             case 'CONCILIAÇÃO BANCÁRIA': return state == 'conciliacao-bancaria';
             case 'CONCILIAÇÃO DE VENDAS': return state == 'conciliacao-vendas';
             case 'CONCILIAÇÃO TERMINAL LÓGICO': return state == 'conciliacao-terminal-logico';
