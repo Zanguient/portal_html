@@ -157,6 +157,7 @@ angular.module("tax-services-importacao-xml", [])
         // Filtros Por Data
        if($scope.tabFiltro === 1)
        {
+           var filtroData = undefined;
            // Data
            if($scope.filtro.data === 'Emissão'){ 
                //console.log("Emissão");
