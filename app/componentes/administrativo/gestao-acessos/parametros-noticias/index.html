@@ -67,7 +67,7 @@
                                         </tr>
                                         <!-- CONTEUDO DO FILTRO -->
                                         <tr role="row" class="filter">
-                                            <!-- CHAVE DE ACESSO -->
+                                            <!-- CATALÁGOS -->
                                             <td rowspan="1" colspan="1">                                           
                                                 <select class="form-control"
                                                         ng-model="catalogo.cdCatalogo"
@@ -164,15 +164,14 @@
                                 <!--SELECT LIST:TODOS USUÁRIOS DO GRUPO--> 
                                 <div class="col-md-4 col-md-offset-1 col-sm-5 titulos-select-noticias">
                                     <label>Usuários</label>
-                                    <select multiple class="form-control select-noticias">
-                                        <option value="1">Option 1</option>
-                                        <option value="2">Option 2</option>
-                                        <option value="3">Option 3</option>
-                                        <option value="4">Option 4</option>
-                                        <option value="5">Option 5</option>
+                                    <select multiple class="form-control select-noticias"
+                                            ng-model="usuario.id_users"
+                                            ng-options="usuario.ds_login for usuario in usuarios">
+                                        <option value=""></option>
                                     </select>
                                 </div>
                                 
+                                <!--multiple class="form-control select-noticias"-->
                                 <!--BOTÕES-->
                                 <div class="col-md-2  col-sm-2">
                                     <div class="row">
