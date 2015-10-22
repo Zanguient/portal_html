@@ -3,7 +3,8 @@
  *
  *  suporte@atoscapital.com.br
  *
- *
+ *  Versão 1.0.6 - 22/10/2015
+ *  - Tela Movimento TEF
  *
  *  Versão 1.0.5 - 19/10/2015
  *  - Nova Coluna em CardServices : TEF, e novas telas; CardServices > TEF > Movimento e CardServices > TEF >Resumo de Movimento 
@@ -60,6 +61,7 @@ angular.module("AtosCapital", ['ui.router',
                                'card-services-conciliacao-vendas-dia',
                                'card-services-conciliacao-relatorios',
                                'card-services-consolidacao-relatorios',
+                               'card-services-consolidacao-movimento-tef',
                                'card-services-cadastro-codigo-autorizacao',
                                'card-services-lancamento-vendas',
                                'card-services-movimento',
@@ -355,6 +357,15 @@ angular.module("AtosCapital", ['ui.router',
         }
       })
     
+    .state('card-services-consolidacao-movimento-tef', {
+        url: prefixo + 'card-services/movimento-tef',
+        templateUrl: 'componentes/card-services/consolidacao/movimento-tef/index.html',
+        controller: "card-services-consolidacao-movimento-tefCtrl",
+        data: {
+            titulo: 'Card Services'
+        }
+      })
+    
       .state('card-services-tef-movimento', {
         url: prefixo + 'card-services/movimento',
         templateUrl: 'componentes/card-services/tef/movimento/index.html',
@@ -520,6 +531,7 @@ angular.module("AtosCapital", ['ui.router',
     var controllerCardServicesConciliacaoVendasDia = undefined;
     var controllerCardServicesConciliacaoRelatorios = undefined;                        
     var controllerCardServicesConsolidacaoRelatorios = undefined;
+    var controllerCardServicesConsolidacaoMovimentoTef = undefined;
     var controllerCardServicesCadastroCodigoAutorizacao = undefined;
     var controllerCardServicesLancamentoVendas = undefined;
     var controllerCardServicesMovimento = undefined; 
@@ -566,6 +578,7 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_RELATORIOS = false;
     $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_CADASTRO_CODIGO_AUTORIZACAO = false;
     $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_LANCAMENTO_VENDAS = false;
+    $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_MOVIMENTO_TEF = false;
     $scope.PERMISSAO_CARD_SERVICES_TEF_MOVIMENTO = false;  
     $scope.PERMISSAO_CARD_SERVICES_TEF_RESUMO_DE_MOVIMENTO = false;                         
     $scope.PERMISSAO_TAX_SERVICES = false;
@@ -852,6 +865,13 @@ angular.module("AtosCapital", ['ui.router',
         controllerAtual = controllerCardServicesLancamentoVendas;
         go('card-services-consolidacao-lancamento-vendas', params);
     };
+    /**
+      * Exibe como conteúdo a Consolidação Movimento TEF, de Card Services
+      */
+    $scope.goCardServicesMovimentoTef = function(params){
+        controllerAtual = controllerCardServicesMovimentoTef;
+        go('card-services-consolidacao-movimento-tef', params);
+    };                        
     /**
       * Exibe como conteúdo a Movimento, de TEF
       */
@@ -1152,6 +1172,15 @@ angular.module("AtosCapital", ['ui.router',
             }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'LANÇAMENTO DE VENDAS')
                      controllerAtual.id_controller !== controllerCardServicesLancamentoVendas.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
+        }else if(url === $state.get('card-services-consolidacao-movimento-tef').url){
+            // Card Services > Consolidação > Movimento TEF
+            if(!$scope.PERMISSAO_CARD_SERVICES || !$scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO || !$scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_MOVIMENTO_TEF){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.goUsuarioSemPrivilegios();
+            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'MOVIMENTO TEF')
+                     controllerAtual.id_controller !== controllerCardServicesMovimentoTef.id_controller)
+                $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
         }else if(url === $state.get('card-services-tef-movimento').url){
             // Card Services > TEF > Movimento
             if(!$scope.PERMISSAO_CARD_SERVICES || !$scope.PERMISSAO_CARD_SERVICES_TEF || !$scope.PERMISSAO_CARD_SERVICES_TEF_MOVIMENTO){
@@ -1329,6 +1358,11 @@ angular.module("AtosCapital", ['ui.router',
                     controllerAtual = controller;
                 controllerCardServicesLancamentoVendas = controller;
                 return $scope.goCardServicesLancamentoVendas;
+            case 'MOVIMENTO TEF':
+                if($location.path() === $state.get('card-services-consolidacao-movimento-tef').url)
+                    controllerAtual = controller;
+                controllerCardServicesMovimentoTef = controller;
+                return $scope.goCardServicesMovimentoTef;    
             case 'MOVIMENTO':
                 if($location.path() === $state.get('card-services-tef-movimento').url)
                     controllerAtual = controller;
@@ -1431,6 +1465,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'LANÇAMENTO DE VENDAS': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_LANCAMENTO_VENDAS = true; break;
             case 'MOVIMENTO' : $scope.PERMISSAO_CARD_SERVICES_TEF_MOVIMENTO = true; break;
             case 'RESUMO DE MOVIMENTO' : $scope.PERMISSAO_CARD_SERVICES_TEF_RESUMO_DE_MOVIMENTO = true; break;
+            case 'MOVIMENTO TEF' : $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_MOVIMENTO_TEF = true; break;    
 
             // AMBÍGUOS
             case 'RELATÓRIOS': controllerpai.ds_controller.toUpperCase() === 'CASH FLOW' ?
@@ -1512,6 +1547,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'LANÇAMENTO DE VENDAS': return state == 'lancamento-vendas';
             case 'MOVIMENTO': return state == 'movimento';  
             case 'RESUMO DE MOVIMENTO': return state == 'resumo-de-movimento';
+            case 'MOVIMENTO TEF': return state == 'movimento-tef';
 
             // AMBÍGUOS
             case 'RELATÓRIOS': return titulopai.toUpperCase() === 'CASH FLOW' ?

@@ -68,7 +68,7 @@ angular.module("administrativo-parametros-noticias", [])
 
             if(dados.Registros.length > 0){ 
                 $scope.catalogos = dados.Registros;
-                console.log(dados);
+                //console.log(dados);
 
             }
 
@@ -97,15 +97,13 @@ angular.module("administrativo-parametros-noticias", [])
     //$scope.showProgress(divPortletBodyManifestoPos);
 
 
-    $webapi.get($apis.getUrl($apis.administracao.webpagesusers, [$scope.token, 2])) 
+    $webapi.get($apis.getUrl($apis.administracao.webpagesusers, [$scope.token, 0])) 
         .then(function(dados){
             // Obtém os dados
             $scope.usuarios = undefined;
 
             if(dados.Registros.length > 0){ 
                 $scope.usuarios = dados.Registros;
-                console.log(dados);
-
             }
 
             if(typeof funcaoSucesso === 'function') funcaoSucesso();
