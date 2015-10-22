@@ -376,8 +376,7 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
             //for (var i = 0; i < $scope.total; i++) {
             var file = files[0];
             // Avalia a extensão
-            var index = file.name.lastIndexOf('.');
-            if(index === -1 || (file.name.substr(index + 1) !== 'ofx' && file.name.substr(index + 1) !== 'pdf')){ 
+            if(index === -1 || (file.name.toLowerCase().substr(index + 1) !== 'ofx' && file.name.toLowerCase().substr(index + 1) !== 'pdf')){ 
                 // Extensão não é OFX e PDF
                 //console.log("ARQUIVO '" + file.name + "' NÃO É UM .ofx");
                 $scope.showAlert("O arquivo deve ser do tipo .ofx ou .pdf!", true, 'warning', true, false);

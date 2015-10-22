@@ -4,6 +4,10 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.2 - 22/10/2015
+ *  - Filial centralizadora
+ *  - Estabelecimento para consulta
+ *
  *  Versão 1.0.1 - 18/09/2015
  *  - Busca somente filiais ativas
  *
@@ -42,9 +46,12 @@ angular.module("administrativo-dados-acesso", [])
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyDadosPos = 1; // posição da div que vai receber o loading progress
     // Cadastro
-    $scope.cadastro = {adquirente : null, login : '', estabelecimento : '', senha : ''};                                     // Alteração
+    $scope.cadastro = {adquirente : null, login : '', estabelecimento : '', senha : '', 
+                       centralizadora : null, estabelecimentoConsulta : ''};                                       
+    // Alteração
     $scope.alterando = true;                                             
-    $scope.alteracao = {id : 0, login : '', estabelecimento : '', senha : ''};                                             
+    $scope.alteracao = {id : 0, login : '', estabelecimento : '', senha : '',
+                        centralizadora : null, estabelecimentoConsulta : ''};                                             
     // flag
     $scope.exibePrimeiraLinha = false; 
     $scope.exibeTela = false;                                             
@@ -427,6 +434,8 @@ angular.module("administrativo-dados-acesso", [])
         $scope.cadastro.login = ''; 
         $scope.cadastro.estabelecimento = '';
         $scope.cadastro.senha = '';
+        $scope.cadastro.centralizadora = null;
+        $scope.cadastro.estabelecimentoConsulta = '';
         // Exibe a linha
         $scope.exibePrimeiraLinha = true;        
     };
@@ -455,6 +464,7 @@ angular.module("administrativo-dados-acesso", [])
                return false;
            }
        }
+       // centralizadora...
        return true;
     };
     /**
@@ -471,9 +481,12 @@ angular.module("administrativo-dados-acesso", [])
            cnpj : $scope.filtro.filial.nu_cnpj,
            idGrupo : $scope.usuariologado.grupoempresa.id_grupo,
            estabelecimento : $scope.cadastro.estabelecimento ? $scope.cadastro.estabelecimento : null, 
+           nrCNPJCentralizadora : $scope.cadastro.centralizadora && $scope.cadastro.centralizadora !== null ? $scope.cadastro.centralizadora.nu_cnpj : null,
+           cdEstabelecimentoConsulta : $scope.cadastro.estabelecimentoConsulta ? $scope.cadastro.estabelecimentoConsulta : null, 
            operadora : { nmOperadora : $scope.cadastro.adquirente.nome/*descricao*/ }
        };
-       /*console.log(jsonDadoAcesso);
+       //console.log(jsonDadoAcesso);
+       /*
        $scope.exibePrimeiraLinha = false;
        $scope.hideProgress(divPortletBodyFiltrosPos);
        $scope.hideProgress(divPortletBodyDadosPos);*/
@@ -506,6 +519,9 @@ angular.module("administrativo-dados-acesso", [])
         $scope.alteracao.login = dadoacesso.login; 
         $scope.alteracao.estabelecimento = dadoacesso.estabelecimento && dadoacesso.estabelecimento !== null ? dadoacesso.estabelecimento : '';
         $scope.alteracao.senha = dadoacesso.senha;
+        $scope.alteracao.estabelecimentoConsulta = dadoacesso.cdEstabelecimentoConsulta && dadoacesso.cdEstabelecimentoConsulta !== null ? dadoacesso.cdEstabelecimentoConsulta : '';
+        console.log(dadoacesso);
+        $scope.alteracao.centralizadora = dadoacesso.empresaCentralizadora && dadoacesso.empresaCentralizadora !== null ? $filter('filter')($scope.filiais, function(f){ return f.nu_cnpj === dadoacesso.empresaCentralizadora.nu_cnpj})[0] : null;
         // Exibe na linha
         $scope.alterando = true;       
     };
@@ -529,7 +545,7 @@ angular.module("administrativo-dados-acesso", [])
             $scope.cancelaAlteracao();
             return;
        }*/
-        // PERMITE ENVIAR PARA O SERVIDOR SEM ALTERAR NADA => PODE SER UTILIZADO PARA ARMAZENAR NO LOGEXECUTION
+       // PERMITE ENVIAR PARA O SERVIDOR SEM ALTERAR NADA => PODE SER UTILIZADO PARA ARMAZENAR NO LOGEXECUTION
         
        if($scope.alteracao.login.trim().length < 3){
            $scope.showModalAlerta('Preencha um login com no mínimo 3 caracteres!');
@@ -546,7 +562,9 @@ angular.module("administrativo-dados-acesso", [])
            id : $scope.alteracao.id,
            login : $scope.alteracao.login,
            senha : $scope.alteracao.senha,
-           estabelecimento : $scope.alteracao.estabelecimento ? $scope.alteracao.estabelecimento : null
+           estabelecimento : $scope.alteracao.estabelecimento ? $scope.alteracao.estabelecimento : '',
+           nrCNPJCentralizadora : $scope.alteracao.centralizadora && $scope.alteracao.centralizadora !== null ? $scope.alteracao.centralizadora.nu_cnpj : '',
+           cdEstabelecimentoConsulta : $scope.alteracao.estabelecimentoConsulta ? $scope.alteracao.estabelecimentoConsulta : '', 
        };
        //console.log(jsonDadoAcesso);
        $webapi.update($apis.getUrl($apis.pos.loginoperadora, undefined,
