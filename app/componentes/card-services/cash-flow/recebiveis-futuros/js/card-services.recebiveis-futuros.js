@@ -63,9 +63,9 @@ angular.module("card-services-recebiveis-futuros", [])
         }); 
         $scope.filtro.datamin.setDate($scope.filtro.datamin.getDate()+1);
         // Acessou a tela
-        //$scope.$emit("acessouTela");
-        $scope.exibeTela = true;
-        buscaFiliais();
+        $scope.$emit("acessouTela");
+        //$scope.exibeTela = true;
+        //buscaFiliais();
     };                                           
                                                 
                                             
