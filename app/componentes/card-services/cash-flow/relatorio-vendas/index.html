@@ -58,7 +58,7 @@
                                 <thead>
                                     <tr role="row" class="heading">
                                         <th tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="30%">
-                                             Data da venda
+                                             Período de venda
                                         </th>
                                         <th tabindex="1" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="60%">
                                              Filial
@@ -68,21 +68,23 @@
                                         </th>                                
                                     </tr>
                                     <tr role="row" class="filter">  
-                                        <!-- DATA DA VENDA -->
+                                        <!-- PERÍODO DE VENDA -->
                                         <td rowspan="1" colspan="1">
                                             <div class="input-group date date-picker margin-bottom-5"
-                                                 data-date-format="dd/mm/yyyy">
+                                                 data-date-format="mm/yyyy">
                                                 <input type="text" 
                                                        class="form-control form-filter input-sm" 
                                                        readonly="" 
                                                        style="cursor: pointer" 
-                                                       ng-click="exibeCalendarioDataMin($event)" 
+                                                       ng-click="exibeCalendario($event)" 
                                                        placeholder="Início" 
-                                                       ng-model="filtro.datamin" 
-                                                       ng-change="alterouDataMin()" 
+                                                       ng-model="filtro.data" 
+                                                       ng-change="alterouData()" 
+                                                       datepicker-mode="'month'"
+                                                       datepicker-options="{minMode: 'month'}"
                                                        datepicker-append-to-body="true" 
-                                                       datepicker-popup="dd MMMM yyyy" 
-                                                       is-open="abrirCalendarioDataMin" 
+                                                       datepicker-popup="MMMM yyyy" 
+                                                       is-open="abrirCalendario" 
                                                        ng-required="true" 
                                                        show-button-bar="false" 
                                                        show-weeks="false" 
@@ -90,33 +92,7 @@
                                                 <span class="input-group-btn">
                                                     <button class="btn btn-sm default" 
                                                         type="button" 
-                                                        ng-click="exibeCalendarioDataMin($event)">
-                                                        <i class="fa fa-calendar"></i>
-                                                    </button>
-                                                </span>
-                                            </div>
-                                            <div class="input-group"> <!--  date date-picker margin-bottom-5" -->
-                                                <input type="text" 
-                                                       class="form-control form-filter input-sm" 
-                                                       readonly="" 
-                                                       style="cursor: pointer" 
-                                                       ng-click="exibeCalendarioDataMax($event)" 
-                                                       placeholder="Fim" 
-                                                       ng-model="filtro.datamax" 
-                                                       ng-change="alterouDataMax()" 
-                                                       datepicker-popup="dd MMMM yyyy" 
-                                                       is-open="abrirCalendarioDataMax" 
-                                                       datepicker-append-to-body="true"
-                                                       ng-required="false" 
-                                                       current-text="Hoje" 
-                                                       clear-text="Limpar" 
-                                                       close-text="Fechar" 
-                                                       show-button-bar="true" 
-                                                       show-weeks="false">
-                                                <span class="input-group-btn">
-                                                    <button class="btn btn-sm default" 
-                                                            type="button" 
-                                                            ng-click="exibeCalendarioDataMax($event)">
+                                                        ng-click="exibeCalendario($event)">
                                                         <i class="fa fa-calendar"></i>
                                                     </button>
                                                 </span>
@@ -189,7 +165,7 @@
                 <!--TITULO-->
                 <div class="portlet-title">
                     <div class="caption">								
-                        <span class="caption-subject font-green-sharp bold uppercase">Recebíveis Futuros</span>
+                        <span class="caption-subject font-green-sharp bold uppercase">Relatório de Vendas</span>
                     </div>
                     <div class="actions">
                         <a class="btn btn-circle btn-icon-only btn-default fullscreen" 

@@ -25,15 +25,14 @@ angular.module("card-services-relatorio-vendas", [])
    
     $scope.filiais = [];   
     $scope.relatorio = [];                                      
-    $scope.filtro = { datamin : new Date(), datamax : '', filial : null }; 
+    $scope.filtro = { data : new Date(), filial : null }; 
     $scope.total = { valorBruto : 0.0, valorDescontado : 0.0, valorLiquido : 0.0,
                      valorRecebido : 0.0, valorAReceber : 0.0 };  
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyRelatorioPos = 1; // posição da div que vai receber o loading progress                                         
     // flags                                   
     $scope.exibeTela = false;         
-    $scope.abrirCalendarioDataMin = $scope.abrirCalendarioDataVendaMin = false;
-    $scope.abrirCalendarioDataMax = $scope.abrirCalendarioDataVendaMax = false;                                             
+    $scope.abrirCalendarioData = false;                                             
                                                 
     // Inicialização do controller
     $scope.cardServices_relatorioVendasInit = function(){
@@ -64,11 +63,10 @@ angular.module("card-services-relatorio-vendas", [])
             // Carrega filiais
             buscaFiliais();
         }); 
-        $scope.filtro.datamin.setDate($scope.filtro.datamin.getDate() - 1);
         // Acessou a tela
-        //$scope.$emit("acessouTela");
-        $scope.exibeTela = true;
-        buscaFiliais();
+        $scope.$emit("acessouTela");
+        //$scope.exibeTela = true;
+        //buscaFiliais();
     };                                           
                                                 
                                             
@@ -84,11 +82,8 @@ angular.module("card-services-relatorio-vendas", [])
         var filtros = [];
         
         // Filtros Por Data
-        var filtroData = {id: /*$campos.card.relatoriovendas.data*/ 100,
-                          valor: $scope.getFiltroData($scope.filtro.datamin)};
-        if($scope.filtro.datamax)
-           filtroData.valor = filtroData.valor + '|' + $scope.getFiltroData($scope.filtro.datamax);
-        filtros.push(filtroData);
+        filtros.push({id: /*$campos.card.relatoriovendas.data*/ 100,
+                      valor: $scope.getFiltroData($scope.filtro.data, true)});
 
         // Filial
         if($scope.filtro.filial && $scope.filtro.filial !== null){
@@ -108,35 +103,15 @@ angular.module("card-services-relatorio-vendas", [])
     
     
     // DATA DA VENDA
-    var ajustaIntervaloDeData = function(){
-      // Verifica se é necessário reajustar a data max para ser no mínimo igual a data min
-      if($scope.filtro.datamax && $scope.filtro.datamax < $scope.filtro.datamin) $scope.filtro.datamax = $scope.filtro.datamin;
-      if(!$scope.$$phase) $scope.$apply();
-    };
-    // Data MIN
-    $scope.exibeCalendarioDataMin = function($event) {
+    $scope.exibeCalendario = function($event) {
         if($event){
             $event.preventDefault();
             $event.stopPropagation();
         }
-        $scope.abrirCalendarioDataMin = !$scope.abrirCalendarioDataMin;
-        $scope.abrirCalendarioDataMax = false;
-      };
-    $scope.alterouDataMin = function(){
-         ajustaIntervaloDeData(); 
+        $scope.abrirCalendario = !$scope.abrirCalendario;
     };
-    // Data MAX
-    $scope.exibeCalendarioDataMax = function($event) {
-        if($event){
-            $event.preventDefault();
-            $event.stopPropagation();
-        }
-        $scope.abrirCalendarioDataMax = !$scope.abrirCalendarioDataMax;
-        $scope.abrirCalendarioDataMin = false;
-    };
-    $scope.alterouDataMax = function(){
-        if($scope.filtro.datamax === null) $scope.filtro.datamax = '';
-        else ajustaIntervaloDeData(); 
+    $scope.alterouData = function(){
+        //console.log($scope.filtro.data);
     };
     
     
@@ -204,7 +179,7 @@ angular.module("card-services-relatorio-vendas", [])
                                   );
             return;   
         }
-        // Data deve ser superior ou igual a data corrente
+        /*// Data deve ser superior ou igual a data corrente
         var dtNow = new Date();
         if($scope.filtro.datamin && 
            ($scope.filtro.datamin.getFullYear() > dtNow.getFullYear() || ($scope.filtro.datamin.getFullYear() === dtNow.getFullYear() && $scope.filtro.datamin.getMonth() > dtNow.getMonth()) || ($scope.filtro.datamin.getFullYear() === dtNow.getFullYear() && $scope.filtro.datamin.getMonth() === dtNow.getMonth() && $scope.filtro.datamin.getDate() >= dtNow.getDate()))){
@@ -223,7 +198,7 @@ angular.module("card-services-relatorio-vendas", [])
                 }
               );
             return; 
-        }
+        }*/
         // Nova busca
         buscaRelatorioVendas();
     }
