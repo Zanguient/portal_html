@@ -5,13 +5,13 @@
     suporte@atoscapital.com.br
  
  
-    Card Services > Cash Flow > Recebíveis Futuros
+    Card Services > Cash Flow > Relatório de Vendas
  
 
-    Versão 1.0 - 20/10/2015
+    Versão 1.0 - 23/10/2015
 -->
 
-<div class="container" ng-controller="card-services-recebiveis-futurosCtrl" ng-init="cardServices_recebiveisFuturosInit()">   
+<div class="container" ng-controller="card-services-relatorio-vendasCtrl" ng-init="cardServices_relatorioVendasInit()">   
     
     <!-- BEGIN PAGE BREADCRUMB -->
     <ul class="page-breadcrumb breadcrumb">
@@ -21,7 +21,7 @@
         <li class="active">
              Card Services<i class="fa fa-caret-right"></i>
              Cash Flow<i class="fa fa-caret-right"></i>
-             Recebíveis Futuros
+             Relatório de Vendas
         </li>
     </ul>
     <!-- END PAGE BREADCRUMB -->
@@ -57,10 +57,10 @@
                             <table class="table table-striped table-bordered table-hover dataTable no-footer conteudoTabelas" id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
                                 <thead>
                                     <tr role="row" class="heading">
-                                        <th tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="20%">
-                                             Data inicial
+                                        <th tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="30%">
+                                             Data da venda
                                         </th>
-                                        <th tabindex="1" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="70%">
+                                        <th tabindex="1" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="60%">
                                              Filial
                                         </th>
                                         <th tabindex="6" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="10%">
@@ -68,26 +68,59 @@
                                         </th>                                
                                     </tr>
                                     <tr role="row" class="filter">  
-                                        <!-- DATA INICIAL -->
+                                        <!-- DATA DA VENDA -->
                                         <td rowspan="1" colspan="1">
                                             <div class="input-group date date-picker margin-bottom-5"
                                                  data-date-format="dd/mm/yyyy">
                                                 <input type="text" 
                                                        class="form-control form-filter input-sm" 
                                                        readonly="" 
+                                                       style="cursor: pointer" 
+                                                       ng-click="exibeCalendarioDataMin($event)" 
+                                                       placeholder="Início" 
                                                        ng-model="filtro.datamin" 
+                                                       ng-change="alterouDataMin()" 
                                                        datepicker-append-to-body="true" 
-                                                       datepicker-popup="dd MMMM yyyy"
-                                                       is-open="false"
-                                                       ng-required="true"
+                                                       datepicker-popup="dd MMMM yyyy" 
+                                                       is-open="abrirCalendarioDataMin" 
+                                                       ng-required="true" 
+                                                       show-button-bar="false" 
+                                                       show-weeks="false" 
                                                        required="required">
                                                 <span class="input-group-btn">
                                                     <button class="btn btn-sm default" 
-                                                        type="button" ng-disabled="true">
+                                                        type="button" 
+                                                        ng-click="exibeCalendarioDataMin($event)">
                                                         <i class="fa fa-calendar"></i>
                                                     </button>
                                                 </span>
-                                            </div>                     
+                                            </div>
+                                            <div class="input-group"> <!--  date date-picker margin-bottom-5" -->
+                                                <input type="text" 
+                                                       class="form-control form-filter input-sm" 
+                                                       readonly="" 
+                                                       style="cursor: pointer" 
+                                                       ng-click="exibeCalendarioDataMax($event)" 
+                                                       placeholder="Fim" 
+                                                       ng-model="filtro.datamax" 
+                                                       ng-change="alterouDataMax()" 
+                                                       datepicker-popup="dd MMMM yyyy" 
+                                                       is-open="abrirCalendarioDataMax" 
+                                                       datepicker-append-to-body="true"
+                                                       ng-required="false" 
+                                                       current-text="Hoje" 
+                                                       clear-text="Limpar" 
+                                                       close-text="Fechar" 
+                                                       show-button-bar="true" 
+                                                       show-weeks="false">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-sm default" 
+                                                            type="button" 
+                                                            ng-click="exibeCalendarioDataMax($event)">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
                                         </td>
                                         <!-- FILIAL -->
                                         <td rowspan="1" colspan="1">
@@ -113,7 +146,7 @@
                                         <td rowspan="1" colspan="1">
                                             <div class="margin-bottom-5">
                                                 <button class="btn btn-sm red filter-submit margin-bottom"
-                                                        ng-click="buscaRecebiveisFuturos()">
+                                                        ng-click="buscaRelatorioVendas()">
                                                     <i class="fa fa-search"></i>
                                                     Buscar
                                                 </button>
@@ -200,22 +233,28 @@
                                 <tr>
                                     <th colspan="3" width="5%">
                                     </th>
-                                    <th width="40" style="text-align: center;">
+                                    <th width="30%" style="text-align: center;">
                                         Competência - Adquirente - Bandeira
                                     </th>
-                                    <th width="15%" style="text-align: center;">
+                                    <th width="13%" style="text-align: center;">
                                         Valor Bruto
                                     </th>
                                     <th width="15%" style="text-align: center;">
                                         Valor Descontado
                                     </th>
-                                    <th width="25%" style="text-align: center;">
-                                        Recebíveis Futuros
+                                    <th width="13%" style="text-align: center;">
+                                        Valor Líquido
+                                    </th>
+                                    <th width="12%" style="text-align: center;" colspan="2">
+                                        Valor Recebido
+                                    </th>
+                                    <th width="12%" style="text-align: center;" colspan="2">
+                                        Valor A Receber
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat-start="competencia in recebiveis">
+                                <tr ng-repeat-start="competencia in relatorio">
                                     <td colspan="3" style="text-align: center;">
                                         <a href="javascript:;" ng-click="toggle(competencia)">
                                             <i class="fa"
@@ -226,21 +265,37 @@
                                     </td>
                                     <!-- COMPETÊNCIA -->
                                     <td>
-                                        {{competencia.competencia | uppercase}}
+                                        {{competencia.diaVenda}}
                                     </td>
                                     <!-- VALOR BRUTO -->
                                     <td class="linhaTotalRelatorios">
                                         {{competencia.valorBruto | currency:'R$'}}
                                     </td>
                                     <!-- VALOR DESCONTADO -->
-                                    <td class="linhaTotalRelatorios"
-                                        ng-class="{'valorNegativo' : competencia.valorLiquido != 0.0}">
+                                    <td class="linhaTotalRelatorios valorNegativo">
                                         {{competencia.valorDescontado | currency:'R$'}}
                                     </td>
                                     <!-- VALOR LÍQUIDO -->
-                                    <td class="linhaTotalRelatorios"
-                                        ng-class="{'valorPositivo' : competencia.valorLiquido > 0.0, 'valorNegativo' : competencia.valorLiquido < 0.0}">
+                                    <td class="linhaTotalRelatorios">
                                         {{competencia.valorLiquido | currency:'R$'}}
+                                    </td>
+                                    <!-- VALOR RECEBIDO -->
+                                    <td class="linhaTotalRelatorios"
+                                        ng-class="{'valorPositivo' : competencia.valorRecebido !== 0.0}">
+                                        {{competencia.valorRecebido | currency:'R$'}}
+                                    </td>
+                                    <!-- % RECEBIDO -->
+                                    <td class="linhaTotalRelatorios">
+                                        {{(competencia.valorRecebido*100)/competencia.valorLiquido | number:2}}%
+                                    </td>
+                                    <!-- VALOR A RECEBER -->
+                                    <td class="linhaTotalRelatorios"
+                                        ng-class="{'valorPositivo' : competencia.valorAReceber !== 0.0}">
+                                        {{competencia.valorAReceber | currency:'R$'}}
+                                    </td>
+                                    <!-- % A RECEBER -->
+                                    <td class="linhaTotalRelatorios">
+                                        {{(competencia.valorAReceber*100)/competencia.valorLiquido | number:2}}%
                                     </td>
                                 </tr>
                                 <!-- LINHA EXPANSÍVEL -->
@@ -264,14 +319,30 @@
                                         {{adquirente.valorBruto | currency:'R$'}}
                                     </td>
                                     <!-- VALOR DESCONTADO -->
-                                    <td class="linhaTotalRelatorios"
-                                        ng-class="{'valorNegativo' : adquirente.valorDescontado != 0.0}">
+                                    <td class="linhaTotalRelatorios valorNegativo">
                                         {{adquirente.valorDescontado | currency:'R$'}}
                                     </td>
                                     <!-- VALOR LÍQUIDO -->
-                                    <td class="linhaTotalRelatorios"
-                                        ng-class="{'valorPositivo' : adquirente.valorLiquido > 0.0, 'valorNegativo' : adquirente.valorLiquido < 0.0}">
+                                    <td class="linhaTotalRelatorios">
                                         {{adquirente.valorLiquido | currency:'R$'}}
+                                    </td>
+                                    <!-- VALOR RECEBIDO -->
+                                    <td class="linhaTotalRelatorios"
+                                        ng-class="{'valorPositivo' : adquirente.valorRecebido !== 0.0}">
+                                        {{adquirente.valorRecebido | currency:'R$'}}
+                                    </td>
+                                    <!-- % RECEBIDO -->
+                                    <td class="linhaTotalRelatorios">
+                                        {{(adquirente.valorRecebido*100)/adquirente.valorLiquido | number:2}}%
+                                    </td>
+                                    <!-- VALOR A RECEBER -->
+                                    <td class="linhaTotalRelatorios"
+                                        ng-class="{'valorPositivo' : adquirente.valorAReceber !== 0.0}">
+                                        {{adquirente.valorAReceber | currency:'R$'}}
+                                    </td>
+                                    <!-- % A RECEBER -->
+                                    <td class="linhaTotalRelatorios">
+                                        {{(adquirente.valorAReceber*100)/adquirente.valorLiquido | number:2}}%
                                     </td>
                                 </tr>
                                 <!-- LINHA EXPANSÍVEL -->
@@ -286,14 +357,30 @@
                                         {{bandeira.valorBruto | currency:'R$'}}
                                     </td>
                                     <!-- VALOR DESCONTADO -->
-                                    <td class="linhaTotalRelatorios"
-                                        ng-class="{'valorNegativo' : bandeira.valorDescontado != 0.0}">
+                                    <td class="linhaTotalRelatorios valorNegativo">
                                         {{bandeira.valorDescontado | currency:'R$'}}
                                     </td>
                                     <!-- VALOR LÍQUIDO -->
-                                    <td class="linhaTotalRelatorios"
-                                        ng-class="{'valorPositivo' : bandeira.valorLiquido > 0.0, 'valorNegativo' : bandeira.valorLiquido < 0.0}">
+                                    <td class="linhaTotalRelatorios">
                                         {{bandeira.valorLiquido | currency:'R$'}}
+                                    </td>
+                                    <!-- VALOR RECEBIDO -->
+                                    <td class="linhaTotalRelatorios"
+                                        ng-class="{'valorPositivo' : bandeira.valorRecebido !== 0.0}">
+                                        {{bandeira.valorRecebido | currency:'R$'}}
+                                    </td>
+                                    <!-- % RECEBIDO -->
+                                    <td class="linhaTotalRelatorios">
+                                        {{(bandeira.valorRecebido*100)/bandeira.valorLiquido | number:2}}%
+                                    </td>
+                                    <!-- VALOR A RECEBER -->
+                                    <td class="linhaTotalRelatorios"
+                                        ng-class="{'valorPositivo' : bandeira.valorAReceber !== 0.0}">
+                                        {{bandeira.valorAReceber | currency:'R$'}}
+                                    </td>
+                                    <!-- % A RECEBER -->
+                                    <td class="linhaTotalRelatorios">
+                                        {{(bandeira.valorAReceber*100)/bandeira.valorLiquido | number:2}}%
                                     </td>
                                 </tr>
                                 <tr ng-repeat-end></tr>
@@ -305,12 +392,24 @@
                                     <td>
                                          {{total.valorBruto | currency:'R$'}}
                                     </td> 
-                                    <td ng-class="{'valorNegativo' : total.valorDescontado != 0.0}">
+                                    <td ng-class="{'valorNegativo' : total.valorDescontado !== 0.0}">
                                          {{total.valorDescontado | currency:'R$'}}
                                     </td> 
-                                    <td ng-class="{'valorPositivo' : total.valorLiquido > 0.0, 'valorNegativo' : total.valorLiquido < 0.0}">
+                                    <td>
                                          {{total.valorLiquido | currency:'R$'}}
                                     </td> 
+                                    <td ng-class="{'valorPositivo' : total.valorRecebido !== 0.0}">
+                                        {{total.valorRecebido | currency:'R$'}}
+                                    </td>
+                                    <td>
+                                        {{(total.valorRecebido*100)/total.valorLiquido | number:2}}%
+                                    </td>
+                                    <td ng-class="{'valorPositivo' : total.valorAReceber !== 0.0}">
+                                        {{total.valorAReceber | currency:'R$'}}
+                                    </td>
+                                    <td>
+                                        {{(total.valorAReceber*100)/total.valorLiquido | number:2}}%
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>

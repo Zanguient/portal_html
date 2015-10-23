@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.5 - 23/10/2015
+ *  - relatoriovendas
+ *
  *  Versão 1.0.4 - 20/10/2015
  *  - recebiveisfuturos
  *
@@ -150,6 +153,11 @@ angular.module('webapi', ['utils'])
             tbadquirente : 300
         },
         recebiveisfuturos : {
+            data : 100,
+            id_grupo : 101,
+            nu_cnpj : 102,
+        },
+        relatoriovendas : {
             data : 100,
             id_grupo : 101,
             nu_cnpj : 102,
@@ -545,6 +553,7 @@ angular.module('webapi', ['utils'])
     card : {
         conciliacaobancaria : $autenticacao.getUrlBase() + '/card/conciliacaobancaria/',
         recebiveisfuturos : $autenticacao.getUrlBase() + '/card/recebiveisfuturos/',
+        relatoriovendas : $autenticacao.getUrlBase() + '/card/relatoriovendas/',
         tbadquirente : $autenticacao.getUrlBase() + '/card/tbadquirente/',
         tbbancoparametro : $autenticacao.getUrlBase() + '/card/tbbancoparametro/',
         tbbandeira : $autenticacao.getUrlBase() + '/card/tbbandeira/',

@@ -4,14 +4,14 @@
  *  suporte@atoscapital.com.br
  *
  *
- *  Versão 1.0 - 20/10/2015
+ *  Versão 1.0 - 23/10/2015
  *
  */
 
 // App
-angular.module("card-services-recebiveis-futuros", []) 
+angular.module("card-services-relatorio-vendas", []) 
 
-.controller("card-services-recebiveis-futurosCtrl", ['$scope',   
+.controller("card-services-relatorio-vendasCtrl", ['$scope',   
                                             '$state',
                                             '$http',
                                             '$window',
@@ -24,19 +24,22 @@ angular.module("card-services-recebiveis-futuros", [])
                                                      $webapi,$apis,$timeout,$filter){ 
    
     $scope.filiais = [];   
-    $scope.recebiveis = [];                                      
-    $scope.filtro = { datamin : new Date(), filial : null }; 
-    $scope.total = { valorBruto : 0.0, valorDescontado : 0.0, valorLiquido : 0.0 };  
+    $scope.relatorio = [];                                      
+    $scope.filtro = { datamin : new Date(), datamax : '', filial : null }; 
+    $scope.total = { valorBruto : 0.0, valorDescontado : 0.0, valorLiquido : 0.0,
+                     valorRecebido : 0.0, valorAReceber : 0.0 };  
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
-    var divPortletBodyRecebiveisPos = 1; // posição da div que vai receber o loading progress                                         
+    var divPortletBodyRelatorioPos = 1; // posição da div que vai receber o loading progress                                         
     // flags                                   
-    $scope.exibeTela = false;                                                      
+    $scope.exibeTela = false;         
+    $scope.abrirCalendarioDataMin = $scope.abrirCalendarioDataVendaMin = false;
+    $scope.abrirCalendarioDataMax = $scope.abrirCalendarioDataVendaMax = false;                                             
                                                 
     // Inicialização do controller
-    $scope.cardServices_recebiveisFuturosInit = function(){
+    $scope.cardServices_relatorioVendasInit = function(){
         // Título da página 
         $scope.pagina.titulo = 'Cash Flow';                          
-        $scope.pagina.subtitulo = 'Recebíveis Futuros';
+        $scope.pagina.subtitulo = 'Relatório de Vendas';
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
@@ -61,11 +64,11 @@ angular.module("card-services-recebiveis-futuros", [])
             // Carrega filiais
             buscaFiliais();
         }); 
-        $scope.filtro.datamin.setDate($scope.filtro.datamin.getDate()+1);
+        $scope.filtro.datamin.setDate($scope.filtro.datamin.getDate() - 1);
         // Acessou a tela
-        $scope.$emit("acessouTela");
-        //$scope.exibeTela = true;
-        //buscaFiliais();
+        //$scope.$emit("acessouTela");
+        $scope.exibeTela = true;
+        buscaFiliais();
     };                                           
                                                 
                                             
@@ -81,8 +84,11 @@ angular.module("card-services-recebiveis-futuros", [])
         var filtros = [];
         
         // Filtros Por Data
-        filtros.push({id: /*$campos.card.recebiveisfuturos.data*/ 100,
-                      valor: ">" + $scope.getFiltroData($scope.filtro.datamin)});
+        var filtroData = {id: /*$campos.card.relatoriovendas.data*/ 100,
+                          valor: $scope.getFiltroData($scope.filtro.datamin)};
+        if($scope.filtro.datamax)
+           filtroData.valor = filtroData.valor + '|' + $scope.getFiltroData($scope.filtro.datamax);
+        filtros.push(filtroData);
 
         // Filial
         if($scope.filtro.filial && $scope.filtro.filial !== null){
@@ -99,6 +105,39 @@ angular.module("card-services-recebiveis-futuros", [])
     $scope.limpaFiltros = function(){
         $scope.filtro.filial = null; 
     }
+    
+    
+    // DATA DA VENDA
+    var ajustaIntervaloDeData = function(){
+      // Verifica se é necessário reajustar a data max para ser no mínimo igual a data min
+      if($scope.filtro.datamax && $scope.filtro.datamax < $scope.filtro.datamin) $scope.filtro.datamax = $scope.filtro.datamin;
+      if(!$scope.$$phase) $scope.$apply();
+    };
+    // Data MIN
+    $scope.exibeCalendarioDataMin = function($event) {
+        if($event){
+            $event.preventDefault();
+            $event.stopPropagation();
+        }
+        $scope.abrirCalendarioDataMin = !$scope.abrirCalendarioDataMin;
+        $scope.abrirCalendarioDataMax = false;
+      };
+    $scope.alterouDataMin = function(){
+         ajustaIntervaloDeData(); 
+    };
+    // Data MAX
+    $scope.exibeCalendarioDataMax = function($event) {
+        if($event){
+            $event.preventDefault();
+            $event.stopPropagation();
+        }
+        $scope.abrirCalendarioDataMax = !$scope.abrirCalendarioDataMax;
+        $scope.abrirCalendarioDataMin = false;
+    };
+    $scope.alterouDataMax = function(){
+        if($scope.filtro.datamax === null) $scope.filtro.datamax = '';
+        else ajustaIntervaloDeData(); 
+    };
     
     
                                                  
@@ -151,11 +190,11 @@ angular.module("card-services-recebiveis-futuros", [])
                                                 
                                                 
     
-    // RECEBÍVEIS FUTUROS                                            
+    // RELATÓRIO DE VENDAS                                          
     /**
-      * Obtem os recebíveis a partir dos filtros
+      * Obtem o relatório a partir dos filtros
       */
-    $scope.buscaRecebiveisFuturos = function(){
+    $scope.buscaRelatorioVendas = function(){
         // Avalia se há um grupo empresa selecionado
         if(!$scope.usuariologado.grupoempresa){
             $scope.showModalAlerta('Por favor, selecione uma empresa', 'Atos Capital', 'OK', 
@@ -167,8 +206,18 @@ angular.module("card-services-recebiveis-futuros", [])
         }
         // Data deve ser superior ou igual a data corrente
         var dtNow = new Date();
-        if($scope.filtro.datamin && ($scope.filtro.datamin.getFullYear() < dtNow.getFullYear() || ($scope.filtro.datamin.getFullYear() === dtNow.getFullYear() && $scope.filtro.datamin.getMonth() < dtNow.getMonth()) || ($scope.filtro.datamin.getFullYear() === dtNow.getFullYear() && $scope.filtro.datamin.getMonth() === dtNow.getMonth() && $scope.filtro.datamin.getDate() < dtNow.getDate()))){
-            $scope.showModalAlerta('Data inicial deve ser igual ou superior a data corrente!', 'Atos Capital', 'OK', 
+        if($scope.filtro.datamin && 
+           ($scope.filtro.datamin.getFullYear() > dtNow.getFullYear() || ($scope.filtro.datamin.getFullYear() === dtNow.getFullYear() && $scope.filtro.datamin.getMonth() > dtNow.getMonth()) || ($scope.filtro.datamin.getFullYear() === dtNow.getFullYear() && $scope.filtro.datamin.getMonth() === dtNow.getMonth() && $scope.filtro.datamin.getDate() >= dtNow.getDate()))){
+            $scope.showModalAlerta('Data inicial deve ser inferior à data corrente!', 'Atos Capital', 'OK', 
+               function(){
+                     $timeout(function(){$scope.exibeCalendarioDataMin();}, 300);
+                }
+              );
+            return; 
+        }
+        if($scope.datamax && 
+           ($scope.filtro.datamax.getFullYear() < $scope.filtro.datamin.getFullYear() || ($scope.filtro.datamax.getFullYear() === $scope.filtro.datamin.getFullYear() && $scope.filtro.datamax.getMonth() < $scope.filtro.datamin.getMonth()) || ($scope.filtro.datamax.getFullYear() === $scope.filtro.datamin.getFullYear() && $scope.filtro.datamax.getMonth() === $scope.filtro.datamin.getMonth() && $scope.filtro.datamax.getDate() < $scope.filtro.datamin.getDate()))){
+            $scope.showModalAlerta('Data final deve ser igual ou superior à data inicial!', 'Atos Capital', 'OK', 
                function(){
                      $timeout(function(){$scope.exibeCalendarioDataMax();}, 300);
                 }
@@ -176,53 +225,55 @@ angular.module("card-services-recebiveis-futuros", [])
             return; 
         }
         // Nova busca
-        buscaRecebiveisFuturos();
+        buscaRelatorioVendas();
     }
                                                 
                                                 
-    var buscaRecebiveisFuturos = function(){
+    var buscaRelatorioVendas = function(){
         // Abre os progress
        $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
-       $scope.showProgress(divPortletBodyRecebiveisPos);
+       $scope.showProgress(divPortletBodyRelatorioPos);
         
        // Filtros    
        var filtros = obtemFiltrosBusca();
            
        //console.log(filtros);
-       $webapi.get($apis.getUrl($apis.card.recebiveisfuturos, [$scope.token, 0], filtros)) 
+       $webapi.get($apis.getUrl($apis.card.relatoriovendas, [$scope.token, 0], filtros)) 
             .then(function(dados){
                 //console.log(dados);
                 // Obtém os dados
-                $scope.recebiveis = dados.Registros;
+                $scope.relatorio = dados.Registros;
                 // Totais
                 $scope.total.valorBruto = dados.Totais.valorBruto;
                 $scope.total.valorDescontado = dados.Totais.valorDescontado;
                 $scope.total.valorLiquido = dados.Totais.valorLiquido;
+                $scope.total.valorRecebido = dados.Totais.valorRecebido;
+                $scope.total.valorAReceber = dados.Totais.valorAReceber;
 
                 // Fecha os progress
                 $scope.hideProgress(divPortletBodyFiltrosPos);
-                $scope.hideProgress(divPortletBodyRecebiveisPos);
+                $scope.hideProgress(divPortletBodyRelatorioPos);
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                 else $scope.showAlert('Houve uma falha ao obter recebíveis futuros (' + failData.status + ')', true, 'danger', true);
+                 else $scope.showAlert('Houve uma falha ao obter relatório de vendas (' + failData.status + ')', true, 'danger', true);
                  $scope.hideProgress(divPortletBodyFiltrosPos);
-                 $scope.hideProgress(divPortletBodyRecebiveisPos);
+                 $scope.hideProgress(divPortletBodyRelatorioPos);
               });           
     }
                                                 
                                                 
                                                 
     // TABELA EXPANSÍVEL
-    $scope.toggle = function(recebivel){
-        if(!recebivel || recebivel === null) return;
-        if(recebivel.collapsed) recebivel.collapsed = false;
-        else recebivel.collapsed = true;
+    $scope.toggle = function(venda){
+        if(!venda || venda === null) return;
+        if(venda.collapsed) venda.collapsed = false;
+        else venda.collapsed = true;
     }
-    $scope.isExpanded = function(recebivel){
-        if(!recebivel || recebivel === null) return false;
-        return recebivel.collapsed;
+    $scope.isExpanded = function(venda){
+        if(!venda || venda === null) return false;
+        return venda.collapsed;
     }
     
 }])
