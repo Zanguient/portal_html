@@ -25,37 +25,7 @@ angular.module("card-services-consolidacao-movimento-tef", [])
     // Exibição
     $scope.itens_pagina = [50, 100, 150, 200]; 
     $scope.paginaInformada = 1; // página digitada pelo usuário 
-    $scope.movimentos = [{horario: '09:00',	
-                          filial: 'Filal 17 - ARUANDA' ,	
-                          bandeira: 'VISA' ,	
-                          cartao: '863587****3453' ,	
-                          valor: '54,08', 
-                          parcelas:5 ,
-                          tipo:'CRÉDITO' ,	
-                          nsuSitef:0000012 , 
-                          status: 'EFETUADA',
-                         },
-                         {horario: '12:30',	
-                          filial: 'Filal 03 - HERMES FONTES' ,	
-                          bandeira: 'ELO DÉBITO' ,	
-                          cartao: '237643****8675' ,	
-                          valor: '190,00', 
-                          parcelas:1 ,
-                          tipo:'DÉBITO' ,	
-                          nsuSitef:0000023 , 
-                          status: 'NÃO EFETUADA',
-                         }
-                        ];
-    $scope.resumos_movimento = [{bandeira:'cielo',
-                                 transacao:67,
-                                 quantidade:9,
-                                 valor:789,
-                                },
-                               {bandeira:'Master',
-                                 transacao:45,
-                                 quantidade:2,
-                                 valor:235,
-                                }]; 
+    
     
     // Filtros
     
@@ -66,25 +36,18 @@ angular.module("card-services-consolidacao-movimento-tef", [])
     var divPortletBodyRelatorioPos = 1; // posição da div que vai receber o loading progress
     $scope.tab = 1; // init Sintético
     
-    // Relatórios
-    $scope.relatorio = {terminal : [], sintetico : [], analitico : []};                                             
-    // Totais
-    $scope.total = {terminal  : {totalTransacoes : 0, valorBruto : 0, 
-                                 totalTransacoesFiltrado : 0, valorBrutoFiltrado : 0}, 
-                    sintetico : {totalTransacoes : 0, valorBruto : 0,
-                                 totalTransacoesFiltrado : 0, valorBrutoFiltrado : 0}, 
-                    analitico : {valorBruto : 0, valorBrutoFiltrado : 0}};                                              
+                                              
     // flag
     var ultimoFiltro = undefined;
     $scope.exibeTela = false;  
-    $scope.buscandoRelatorio = false;                                             
+                                                
                                                  
                                                  
     // Inicialização do controller
     $scope.cardServices_consolidacao_movimento_tefInit = function(){
         // Título da página 
-        $scope.pagina.titulo = 'Card Services';                          
-        $scope.pagina.subtitulo = 'Consolidação - movimento TEF';
+        $scope.pagina.titulo = 'Menu';                          
+        $scope.pagina.subtitulo = 'Sub Módulo';
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
@@ -145,7 +108,42 @@ angular.module("card-services-consolidacao-movimento-tef", [])
                  //else $scope.showAlert('Houve uma falha ao obter filiais (' + failData.status + ')', true, 'danger', true);
               });     
     };                                             
-                                                 
+    
+    
+    // DATA
+    var ajustaIntervaloDeData = function(){
+      // Verifica se é necessário reajustar a data max para ser no mínimo igual a data min
+      if($scope.filtro.datamax && $scope.filtro.datamax < $scope.filtro.datamin) $scope.filtro.datamax = $scope.filtro.datamin;
+      if(!$scope.$$phase) $scope.$apply();
+    };
+    // Data MIN
+    $scope.exibeCalendarioDataMin = function($event) {
+        if($event){
+            $event.preventDefault();
+            $event.stopPropagation();
+        }
+        $scope.abrirCalendarioDataMin = !$scope.abrirCalendarioDataMin;
+        $scope.abrirCalendarioDataMax = false;
+      };
+    $scope.alterouDataMin = function(){
+      ajustaIntervaloDeData();
+    };
+    // Data MAX
+    $scope.exibeCalendarioDataMax = function($event) {
+        if($event){
+            $event.preventDefault();
+            $event.stopPropagation();
+        }
+        $scope.abrirCalendarioDataMax = !$scope.abrirCalendarioDataMax;
+        $scope.abrirCalendarioDataMin = false;
+      };
+    $scope.alterouDataMax = function(){
+       if($scope.filtro.datamax === null) $scope.filtro.datamax = '';
+       else ajustaIntervaloDeData();
+    };
+     
+    
+        
     //TAB 
     /**
       * Retorna true se a tab informada corresponde a tab em exibição
@@ -158,8 +156,5 @@ angular.module("card-services-consolidacao-movimento-tef", [])
       */
     $scope.setTab = function (tab){
         if (tab >= 1 && tab <= 2) $scope.tab = tab;  
-    }
-     
-    //console.log($scope.resumos_movimento);    
-    console.log($scope.movimentos);    
+    }                                             
 }]);
