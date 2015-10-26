@@ -85,9 +85,10 @@
                                 <!-- Filial -->
                                 <td rowspan="1" colspan="1">
                                     <select class="form-control form-filter input-sm comboBoxFiltros"                      
-                                            ng-model="filtro.sacado"
-                                            ng-change="alterouSacado()"
-                                            ng-options="sacado as (sacado.des_forma_pagto | uppercase) for sacado in sacados">
+                                            ng-disabled="filiais.length == 0"
+                                                    ng-model="filtro.filial"
+                                                    ng-change="alterouFilial()"
+                                                    ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
                                         <option value="">TODAS</option>
                                     </select>
                                 </td>
