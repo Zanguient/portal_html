@@ -52,6 +52,7 @@ angular.module("tax-services-importacao-xml", [])
     $scope.total = { nfe : 0 };  
     $scope.notadetalhada = undefined;  
     $scope.nrChave = ''; //chave da nota para importação
+    $scope.dadosImportacao = {}; //Dados para importação da NFe
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyManifestoPos = 1; // posição da div que vai receber o loading progress                                         
     // flags
@@ -645,24 +646,24 @@ angular.module("tax-services-importacao-xml", [])
     /*
     Importação da NFe
     */
-    $scope.importarNota = function (dadosImportacao) {
+    $scope.importarNota = function () {
                
         // Valida se o usuário informou os dados necessários 
-        if(!dadosImportacao || dadosImportacao === null){
+        if(!$scope.dadosImportacao || $scope.dadosImportacao === null){
            $scope.showModalAlerta('É necessário selecionar a Natureza da Operação e o Almoxarifado!'); 
            return;       
-       }else if(!dadosImportacao.natOperacao || dadosImportacao.natOperacao === null){
+       }else if(!$scope.dadosImportacao.natOperacao || $scope.dadosImportacao.natOperacao === null){
            $scope.showModalAlerta('É necessário selecionar a Natureza da Operação!'); 
            return;       
-       }else if(!dadosImportacao.almoxarifado || dadosImportacao.almoxarifado === null){
+       }else if(!$scope.dadosImportacao.almoxarifado || $scope.dadosImportacao.almoxarifado === null){
            $scope.showModalAlerta('É necessário selecionar o Almoxarifado!'); 
            return;       
        }
         
         // Obtém o JSON
         var jsonImportar = { nrChave : $scope.nrChave,
-                          codAlmoxarifado : dadosImportacao.almoxarifado.cod_almoxarifado,
-                          codNaturezaOperacao : dadosImportacao.natOperacao.cod_natureza_operacao
+                          codAlmoxarifado : $scope.dadosImportacao.almoxarifado.cod_almoxarifado,
+                          codNaturezaOperacao : $scope.dadosImportacao.natOperacao.cod_natureza_operacao
                         };
 
         // POST
@@ -700,7 +701,7 @@ angular.module("tax-services-importacao-xml", [])
                 $scope.hideProgress();
                 
             }); 
-        
+        $scope.dadosImportacao = null;
     };
            
     /*
