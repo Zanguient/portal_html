@@ -45,6 +45,7 @@ angular.module("card-services-conciliacao-bancaria", [])
     $scope.paginaInformada = 1; // página digitada pelo usuário                                             
     // Dados    
     $scope.dadosconciliacao = [];
+    $scope.dadosTitulos = [];
     $scope.totais = { totalExtrato : 0.0, totalRecebimentosParcela : 0.0,
                       contExtrato : 0, contRecebimentosParcela : 0,
                     };
@@ -86,6 +87,10 @@ angular.module("card-services-conciliacao-bancaria", [])
         // Título da página 
         $scope.pagina.titulo = 'Card Services';                          
         $scope.pagina.subtitulo = 'Conciliação Bancária';
+        console.log('USER: ');
+        console.log($scope.usuariologado);
+        console.log($scope.usuariologado.grupoempresa);
+        console.log($scope.usuariologado.grupoempresa.id_grupo);
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
@@ -514,6 +519,19 @@ angular.module("card-services-conciliacao-bancaria", [])
         // Exibe o modal
         $('#modalDetalhes').modal('show');
     }
+        
+    
+    
+    // MODAL DETALHES
+    $scope.detalharTitulos = function(grupo, titulos){
+        $scope.modalDetalhesTitulos = titulos;
+        $scope.modalDetalhesGrupo = grupo;
+        //console.log(grupo);
+        // Exibe o modal
+        $('#modalDetalhesTitulos').modal('show');
+    }
+    
+
     
     
     
@@ -688,8 +706,144 @@ angular.module("card-services-conciliacao-bancaria", [])
         }else $scope.modalDataRecebimento.dataValida = false;
     };
                                                  
-                                                 
-                                                 
+
+    /* Busca Venda */
+    $scope.coparaVendaTitulo = function(nsu)
+    {
+        // var dados = $filter('filter')($scope.modalDetalhesGrupo, function(d){return d.Documento.indexOf( nsu )});
+        /*var dadosVT = $scope.modalDetalhesGrupo.filter(function (list) {
+            return (list.Documento.indexOf(nsu) > 0);
+        });
+        return dadosVT;*/
+        //return dados;
+        var nsuTitulo = '';
+        var numVendas = 0;
+        for(var a = 0; a < $scope.modalDetalhesGrupo.length; a++)
+        {
+            
+            if(nsu.indexOf($scope.modalDetalhesGrupo[a].Documento) > 0)
+            {
+                nsuTitulo = $scope.modalDetalhesGrupo[a].Documento;
+                //return nsuTitulo + '[' + $scope.modalDetalhesGrupo[a].Valor + ']';
+                return $scope.modalDetalhesGrupo[a].NumParcela;
+            }
+        }
+        
+        
+    }
+        
+        
+    /**
+    * Consulta Titulos no ERP do Cliente
+    */
+    $scope.consultaErp = function(dados)
+    {
+        var indice = -1;
+        for(var a = 0; a < $scope.dadosconciliacao.length; a++)
+        {
+            if( $scope.dadosconciliacao[a].$$hashKey === dados.$$hashKey)
+                indice = a;
+        }
+        
+        var RecebimentosParcela = dados.RecebimentosParcela;
+        console.log($scope.dadosconciliacao[indice]);
+        //console.log($scope.dadosconciliacao[indice].Data)
+        if(RecebimentosParcela != undefined && RecebimentosParcela.length > 0)
+        {
+            $scope.showProgress(divPortletBodyFiltrosPos, 10000);
+            $scope.showProgress(divPortletBodyDadosPos);
+            
+            var filtros = [];
+            var item = '';
+            
+            for(var r = 0; r < RecebimentosParcela.length; r++){
+                item = '177:'+ RecebimentosParcela[r].Documento + ','
+                                //+ '106:'+$scope.dadosconciliacao[indice].Data.substring(0,10).replace('-','').replace('-','');
+                             + '106:'+RecebimentosParcela[r].DataVenda.substring(0,10).replace('-','').replace('-','');
+                
+                filtros.push({  id: r,
+                                valor: item});
+            }
+
+                
+                
+        $webapi.post($apis.getUrl($apis.rezende.pgsql.tabtituloreceber, undefined,
+                                 {id : 'token', valor : $scope.token}), filtros) 
+            .then(function(dados){           
+                $scope.showAlert('Conta cadastrada com sucesso!', true, 'success', true);
+                // Fecha os progress
+                //$scope.hideProgress();
+                // Fecha o modal
+                //fechaModalConta();
+                // Relista
+               // buscaContas();
+                
+            
+                $scope.dadosTitulos.push({ id: $scope.dadosconciliacao[indice].$$hashKey, values: dados });
+                console.log($scope.dadosTitulos);
+            
+                var totalValue = 0;
+                /*for(var r = 0; r < dados.Registros.length; r++)
+                {
+                     totalValue = totalValue + dados.Registros[r].
+                }*/
+            
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 500) $scope.showAlert('Conta já cadastrada!', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao cadastrar conta (' + failData.status + ')', true, 'danger', true);
+                 // Fecha os progress
+                 //$scope.hideProgress();
+              }); 
+            
+            
+            /*$webapi.get($apis.getUrl($apis.rezende.pgsql.tabtituloreceber, 
+                                [$scope.token, 1, /*$campos.card.conciliacaobancaria.data* 100, 0,0,0],
+                                filtros)) 
+            .then(function(dados){
+            
+                console.log(dados.Registros);
+                
+                
+                
+
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter dados dos Titulos ERP (' + failData.status + ')', true, 'danger', true);
+                 // Fecha o progress
+                //$scope.hideProgress(divPortletBodyFiltrosPos);
+                //$scope.hideProgress(divPortletBodyDadosPos);
+              }); */
+
+            
+            
+                // Fecha o progress
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+                $scope.hideProgress(divPortletBodyDadosPos);
+                /*console.log(filtros);
+                
+                console.log($apis.getUrl($apis.rezende.pgsql.tabtituloreceber, 
+                            [$scope.token, 0,/*$campos.card.conciliacaobancaria.data 100, 0, 0, 0],
+                            filtros));*/
+            
+        }
+    }
+                                
+    
+    // SOMA GRUPO DE TITULOS
+    $scope.SomaGrupoDeTitulos = function(registros)
+    {
+        var soma = 0;
+         for(var k = 0; k < registros.length; k++)
+            soma = soma + registros[k].val_original - registros[k].val_taxa_cobranca;
+        
+        return soma;
+    }
+    
                                                  
                                                  
     // ASSOCIAÇÃO MANUAL   

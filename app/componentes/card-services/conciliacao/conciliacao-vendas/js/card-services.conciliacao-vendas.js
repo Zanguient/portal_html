@@ -3,6 +3,8 @@
  *  
  *  suporte@atoscapital.com.br
  *
+ *  Versão 1.0.1 - 07/10/2015
+ *      - Criação das tabs para as abas.  
  *
  *  Versão 1.0 - 03/09/2015
  *
@@ -15,6 +17,14 @@ angular.module("card-services-conciliacao-vendas", [])
     
     // flags
     $scope.exibeTela = false;
+    
+    //tabs
+    $scope.tab = 3;
+    $scope.adquirentes = [{
+        nome: 'CIELO',
+        cardServices: 500,
+        controleCliente: 470
+    }],
     // Data
     $scope.datamin = new Date();
     $scope.datamax = null;
@@ -69,5 +79,31 @@ angular.module("card-services-conciliacao-vendas", [])
     $scope.limpaDataMax = function () {
         $scope.datamax = null;
       };
+    
+    //TAB 
+    /**
+      * Retorna true se a tab informada corresponde a tab em exibição
+      */
+    $scope.tabIs = function (tab){
+        return $scope.tab === tab;
+    }
+    /**
+      * Altera a tab em exibição
+      */
+    $scope.setTab = function (tab){
+        if (tab >= 1 && tab <= 3) $scope.tab = tab;        
+    }
+    
+     // TABELA EXPANSÍVEL
+    $scope.toggle = function(adquirente){
+        if(!adquirente || adquirente === null) return;
+        if(adquirente.collapsed) adquirente.collapsed = false;
+        else adquirente.collapsed = true;
+        //console.log(adquirente);
+    }
+    $scope.isExpanded = function(adquirente){
+        if(!adquirente || adquirente === null) return;
+        return adquirente.collapsed;
+    }
     
 }]);
