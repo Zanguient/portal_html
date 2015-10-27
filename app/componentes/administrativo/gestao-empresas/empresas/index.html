@@ -8,6 +8,9 @@
     Administrativo > Gestão de Empresas > Empresas
 
 
+    Versão 1.0.1 - 23/10/2015
+    - Prioridade nas cargas
+
     Versão 1.0 - 03/09/2015
 -->
 
@@ -233,46 +236,36 @@
 
                             <thead>
                                 <tr class="" role="row">
-                                    <th class="" 
-                                        tabindex="0"                                         
-                                        rowspan="1" 
-                                        colspan="1"                                        
-                                        style="width: 25%; text-align:left;">
+                                    <th tabindex="0"                                        
+                                        style="width: 30%; text-align:left;">
                                      Empresa
                                     </th>
                                     <th class="" 
-                                        tabindex="1"                                         
-                                        rowspan="1" 
-                                        colspan="1"                                        
+                                        tabindex="1"                                        
                                         style="width: 10%;">
                                          Serviços
                                     </th>
-                                    <th class="" 
-                                        tabindex="2"                                        
-                                        rowspan="1" 
-                                        colspan="1"                                        
+                                    <th tabindex="2"                                       
                                         style="width: 10%;">
                                          Status
                                     </th>
-                                    <th class="" 
-                                        tabindex="3"                                        
+                                    <th tabindex="3"                                        
                                         rowspan="1" 
                                         colspan="2"
                                         style="width: 30%;">
                                          Último Acesso
                                     </th>
-                                    <th class="" 
-                                        tabindex="4"                                        
+                                    <th tabindex="4"                                        
                                         rowspan="1" 
                                         colspan="1" 
                                         style="width: 10%;">
                                          Data de Cadastro 
                                     </th>
-                                    <th class="" 
-                                        tabindex="5" 
-                                        aria-controls="sample_editable_1" 
-                                        rowspan="1" 
-                                        colspan="1"                                         
+                                    <!--th tabindex="5"
+                                        style="width: 10%;">
+                                         Prioridade 
+                                    </th-->
+                                    <th tabindex="6"                                         
                                         style="width: 10%;">
                                          Ações
                                     </th>
@@ -321,6 +314,12 @@
                                              ng-bind="getDataString(grupoempresa.dt_cadastro)" style="text-align:center">
                                         </div>    
                                     </td>
+                                    <!-- PRIORIDADE -- >
+                                    <td>
+                                        <div class="dadosEmpresa" style="text-align:center">
+                                            {{grupoempresa.cdPrioridade || ''}}
+                                        </div>    
+                                    </td-->
                                     <td>
                                         <div class="dadosEmpresa" style="text-align:center">
                                             <div class="btn-group" dropdown dropdown-append-to-body>

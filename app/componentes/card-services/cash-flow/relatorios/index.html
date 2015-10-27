@@ -8,6 +8,8 @@
     Card Services > Cash Flow > Relatórios
 
 
+    Versão 1.0.5 - 23/10/2015
+    - Código de autorização
 
     Versão 1.0.4 - 15/10/2015
     - Exibição dos ajustes
@@ -605,34 +607,39 @@
                                                                 <th tabindex="7" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 5%;">
-                                                                    Parcela
-                                                                </th>
+                                                                    Código <br> Autorizador
+                                                                </th> 
                                                                 <th tabindex="8" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 5%;">
-                                                                    VL <br>Bruto
+                                                                    Parcela
                                                                 </th>
                                                                 <th tabindex="9" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 5%;">
-                                                                    VL<br> Parcela
+                                                                    VL <br>Bruto
                                                                 </th>
                                                                 <th tabindex="10" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 5%;">
-                                                                    VL<br> Descontado
+                                                                    VL<br> Parcela
                                                                 </th>
                                                                 <th tabindex="11" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 5%;">
-                                                                    Taxa <br> Cashflow
+                                                                    VL<br> Descontado
                                                                 </th>
                                                                 <th tabindex="12" 
                                                                     rowspan="1" colspan="1" 
-                                                                    style="width: 15%;">
-                                                                    VL<br> Desc.<br> Antecipação
+                                                                    style="width: 5%;">
+                                                                    Taxa <br> Cashflow
                                                                 </th>
                                                                 <th tabindex="13" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 10%;">
+                                                                    VL<br> Desc.<br> Antecipação
+                                                                </th>
+                                                                <th tabindex="14" 
                                                                     rowspan="1" colspan="1" 
                                                                     style="width: 5%;">
                                                                     VL<br> Líquido
@@ -664,8 +671,12 @@
                                                                     {{relanalitico.codResumoVenda}}
                                                                 </td>
                                                                 <!-- NSU -->
-                                                                <td colspan="{{relanalitico.numParcela != 0 ? 1 : 8}}">
+                                                                <td colspan="{{relanalitico.numParcela != 0 ? 1 : 9}}">
                                                                      {{relanalitico.nsu}}
+                                                                </td>
+                                                                <!-- CÓDIGO DE AUTORIZAÇÃO -->
+                                                                <td ng-show="relanalitico.numParcela != 0">
+                                                                     {{relanalitico.cdAutorizador}}
                                                                 </td>
                                                                 <!-- PARCELA -->
                                                                 <td ng-show="relanalitico.numParcela != 0">
@@ -703,7 +714,7 @@
                                                                 </td>
                                                             </tr>
                                                             <tr role="row" class="odd linhaTotalRelatorios">
-                                                                <td colspan="9" style="text-align:right">
+                                                                <td colspan="10" style="text-align:right">
                                                                     Total Exibido
                                                                 </td> 
                                                                 <!--td>
@@ -729,7 +740,7 @@
                                                                 </td>                                                    
                                                             </tr>
                                                             <tr role="row" class="odd linhaTotalRelatorios">
-                                                                <td colspan="9" style="text-align:right">
+                                                                <td colspan="10" style="text-align:right">
                                                                     Total Filtrado
                                                                 </td>  
                                                                 <!--td>

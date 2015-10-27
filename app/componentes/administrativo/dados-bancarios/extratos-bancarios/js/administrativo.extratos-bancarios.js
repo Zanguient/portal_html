@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.1 - 22/10/2015
+ *  - LowerCase na extensão do arquivo
+ *
  *  Versão 1.0 - 03/09/2015
  *
  */
@@ -377,7 +380,7 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
             var file = files[0];
             // Avalia a extensão
             var index = file.name.lastIndexOf('.');
-            if(index === -1 || (file.name.substr(index + 1) !== 'ofx' && file.name.substr(index + 1) !== 'pdf')){ 
+            if(index === -1 || (file.name.toLowerCase().substr(index + 1) !== 'ofx' && file.name.toLowerCase().substr(index + 1) !== 'pdf')){ 
                 // Extensão não é OFX e PDF
                 //console.log("ARQUIVO '" + file.name + "' NÃO É UM .ofx");
                 $scope.showAlert("O arquivo deve ser do tipo .ofx ou .pdf!", true, 'warning', true, false);

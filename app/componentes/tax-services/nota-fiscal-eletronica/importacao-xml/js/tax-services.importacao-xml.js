@@ -52,6 +52,7 @@ angular.module("tax-services-importacao-xml", [])
     $scope.total = { nfe : 0 };  
     $scope.notadetalhada = undefined;  
     $scope.nrChave = ''; //chave da nota para importação
+    $scope.dadosImportacao = {}; //Dados para importação da NFe
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyManifestoPos = 1; // posição da div que vai receber o loading progress                                         
     // flags
@@ -157,6 +158,7 @@ angular.module("tax-services-importacao-xml", [])
         // Filtros Por Data
        if($scope.tabFiltro === 1)
        {
+           var filtroData = undefined;
            // Data
            if($scope.filtro.data === 'Emissão'){ 
                //console.log("Emissão");
@@ -582,11 +584,11 @@ angular.module("tax-services-importacao-xml", [])
             /**
       * Requisita a natureza da operação para importação da nota fiscal
       */
-    var obtemNatOperacoes = function(funcaoSucesso){
+    var obtemNatOperacoes = function(colecao,funcaoSucesso){
        $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
        $scope.showProgress(divPortletBodyManifestoPos);
         
-       $webapi.get($apis.getUrl($apis.rezende.pgsql.tbnaturezaoperacao, [$scope.token, 1])) 
+       $webapi.get($apis.getUrl($apis.rezende.pgsql.tbnaturezaoperacao, [$scope.token, colecao])) 
             .then(function(dados){
                 // Obtém os dados
                 $scope.natOperacoes = undefined;
@@ -630,32 +632,39 @@ angular.module("tax-services-importacao-xml", [])
     */
     $scope.obterInformarcoesImportar = function(manifesto, indexNota){
         var nota = manifesto.notas[indexNota];
+        var uf = manifesto.UF;
+        var colecao = 1;
+        if(uf != 'SE')
+        {
+            colecao = 2;
+        }
         $scope.nrChave = nota.nrChave;
+        
         obtemAlmoxarifados(nota.nrCNPJ, function(){$('#modalImportar').modal('show');});
-        obtemNatOperacoes(function(){$('#modalImportar').modal('show');});
+        obtemNatOperacoes(colecao,function(){$('#modalImportar').modal('show');});
     }
 
     /*
     Importação da NFe
     */
-    $scope.importarNota = function (dadosImportacao) {
+    $scope.importarNota = function () {
                
         // Valida se o usuário informou os dados necessários 
-        if(!dadosImportacao || dadosImportacao === null){
+        if(!$scope.dadosImportacao || $scope.dadosImportacao === null){
            $scope.showModalAlerta('É necessário selecionar a Natureza da Operação e o Almoxarifado!'); 
            return;       
-       }else if(!dadosImportacao.natOperacao || dadosImportacao.natOperacao === null){
+       }else if(!$scope.dadosImportacao.natOperacao || $scope.dadosImportacao.natOperacao === null){
            $scope.showModalAlerta('É necessário selecionar a Natureza da Operação!'); 
            return;       
-       }else if(!dadosImportacao.almoxarifado || dadosImportacao.almoxarifado === null){
+       }else if(!$scope.dadosImportacao.almoxarifado || $scope.dadosImportacao.almoxarifado === null){
            $scope.showModalAlerta('É necessário selecionar o Almoxarifado!'); 
            return;       
        }
         
         // Obtém o JSON
         var jsonImportar = { nrChave : $scope.nrChave,
-                          codAlmoxarifado : dadosImportacao.almoxarifado.cod_almoxarifado,
-                          codNaturezaOperacao : dadosImportacao.natOperacao.cod_natureza_operacao
+                          codAlmoxarifado : $scope.dadosImportacao.almoxarifado.cod_almoxarifado,
+                          codNaturezaOperacao : $scope.dadosImportacao.natOperacao.cod_natureza_operacao
                         };
 
         // POST
@@ -683,7 +692,6 @@ angular.module("tax-services-importacao-xml", [])
                     // Fecha o modal
                         fechaModalImportar();
                     }
-            
               },
             function(failData){
                 fechaModalImportar();
@@ -694,7 +702,7 @@ angular.module("tax-services-importacao-xml", [])
                 $scope.hideProgress();
                 
             }); 
-        
+        $scope.dadosImportacao = null;
     };
            
     /*
