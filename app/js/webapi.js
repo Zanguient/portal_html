@@ -608,12 +608,9 @@ angular.module('webapi', ['utils'])
             tabpdv : $autenticacao.getUrlBaseRezende() + '/pgsql/tabpdv/',
             tabpessoa : $autenticacao.getUrlBaseRezende() + '/pgsql/tabpessoa/',
             tbalmoxarifado: $autenticacao.getUrlBaseRezende() + '/Pgsql/TabAlmoxarifado/',
-<<<<<<< HEAD
             tbnaturezaoperacao: $autenticacao.getUrlBaseRezende() + '/Pgsql/TabNaturezaOperacao/',
             tabnotafiscalentrada: $autenticacao.getUrlBaseRezende() + '/Pgsql/TabNotaFiscalEntrada/',
-=======
             tabtituloreceber: $autenticacao.getUrlBaseRezende() + '/Pgsql/tabtituloreceber/',
->>>>>>> Esdras
           }
     }
   }

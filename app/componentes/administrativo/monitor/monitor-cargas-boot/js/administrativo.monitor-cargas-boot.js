@@ -528,7 +528,7 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
                      if(!areceber) areceber = {};
                      else areceber.flSucesso = tbLogCarga.flStatusReceber;
                      // Venda à débito
-                     var vendadebito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'DÉBITO'})[0];
+                     var vendadebito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'DÉBITO' || (loginAdquirenteEmpresa.tbAdquirente.nmAdquirente !== 'REDE' && d.dsModalidade === 'VENDA')})[0];
                      if(!vendadebito) vendadebito = {};
                      else vendadebito.flSucesso = tbLogCarga.flStatusVendasDebito;
                      // Vendas à crédito
@@ -630,7 +630,7 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
                          var areceber = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'LANÇAMENTOS FUTUROS'})[0];
                          if(areceber) areceber.flSucesso = tbLogCarga.flStatusReceber;
                          // Venda à débito
-                         var vendadebito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'DÉBITO'})[0];
+                         var vendadebito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'DÉBITO'  || (loginAdquirenteEmpresa.tbAdquirente.nmAdquirente !== 'REDE' && d.dsModalidade === 'VENDA')})[0];
                          if(vendadebito) vendadebito.flSucesso = tbLogCarga.flStatusVendasDebito;
                          // Vendas à crédito
                          var vendacredito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'VENDA'})[0];

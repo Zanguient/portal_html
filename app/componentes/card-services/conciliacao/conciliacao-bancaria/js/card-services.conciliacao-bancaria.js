@@ -87,10 +87,10 @@ angular.module("card-services-conciliacao-bancaria", [])
         // Título da página 
         $scope.pagina.titulo = 'Card Services';                          
         $scope.pagina.subtitulo = 'Conciliação Bancária';
-        console.log('USER: ');
-        console.log($scope.usuariologado);
-        console.log($scope.usuariologado.grupoempresa);
-        console.log($scope.usuariologado.grupoempresa.id_grupo);
+        //console.log('USER: ');
+        //console.log($scope.usuariologado);
+        //console.log($scope.usuariologado.grupoempresa);
+        //console.log($scope.usuariologado.grupoempresa.id_grupo);
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);

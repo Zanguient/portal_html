@@ -94,7 +94,7 @@ Não é necessário nenhum outro módulo externo.
                                             ds_fantasia : string,
                                             filial : string,
                                         },
-								tbadquirente : {
+								tbAdquirente : {
                                             cdAdquirente : int,
                                             nmAdquirente : string
                                         },
@@ -133,7 +133,7 @@ Não é necessário nenhum outro módulo externo.
 															ds_fantasia : string,
 															filial : string,
 														},
-												tbadquirente : {
+												tbAdquirente : {
 															cdAdquirente : int,
 															nmAdquirente : string
 														},
