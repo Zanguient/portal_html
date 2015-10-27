@@ -4,6 +4,12 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.5 - 20/10/2015
+ *  - tabtituloreceber
+ *
+ *  Versão 1.0.4 - 16/10/2015
+ *  - tbcatalogo
+ *
  *  Versão 1.0.3 - 09/10/2015
  *  - tbbandeira
  *
@@ -532,7 +538,8 @@ angular.module('webapi', ['utils'])
         webpagesrolelevels : $autenticacao.getUrlBase() + '/administracao/webpagesrolelevels/',
         webpagesroles : $autenticacao.getUrlBase() + '/administracao/webpagesroles/',
         webpagesusers : $autenticacao.getUrlBase() + '/administracao/webpagesusers/', 
-        webpagesusersinroles : $autenticacao.getUrlBase() + '/administracao/webpagesusersinroles/'
+        webpagesusersinroles : $autenticacao.getUrlBase() + '/administracao/webpagesusersinroles/',
+        tbcatalogo : $autenticacao.getUrlBase() + '/administracao/tbcatalogo/'
     },
     card : {
         conciliacaobancaria : $autenticacao.getUrlBase() + '/card/conciliacaobancaria/',
@@ -581,8 +588,12 @@ angular.module('webapi', ['utils'])
             tabpdv : $autenticacao.getUrlBaseRezende() + '/pgsql/tabpdv/',
             tabpessoa : $autenticacao.getUrlBaseRezende() + '/pgsql/tabpessoa/',
             tbalmoxarifado: $autenticacao.getUrlBaseRezende() + '/Pgsql/TabAlmoxarifado/',
+<<<<<<< HEAD
             tbnaturezaoperacao: $autenticacao.getUrlBaseRezende() + '/Pgsql/TabNaturezaOperacao/',
             tabnotafiscalentrada: $autenticacao.getUrlBaseRezende() + '/Pgsql/TabNotaFiscalEntrada/',
+=======
+            tabtituloreceber: $autenticacao.getUrlBaseRezende() + '/Pgsql/tabtituloreceber/',
+>>>>>>> Esdras
           }
     }
   }
