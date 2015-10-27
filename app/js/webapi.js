@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.5 - 20/10/2015
+ *  - tabtituloreceber
+ *
  *  Versão 1.0.4 - 16/10/2015
  *  - tbcatalogo
  *
@@ -580,6 +583,7 @@ angular.module('webapi', ['utils'])
             tabpdv : $autenticacao.getUrlBaseRezende() + '/pgsql/tabpdv/',
             tabpessoa : $autenticacao.getUrlBaseRezende() + '/pgsql/tabpessoa/',
             tbalmoxarifado: $autenticacao.getUrlBaseRezende() + '/Pgsql/TabAlmoxarifado/',
+            tabtituloreceber: $autenticacao.getUrlBaseRezende() + '/Pgsql/tabtituloreceber/',
           }
     }
   }

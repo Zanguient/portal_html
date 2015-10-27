@@ -297,6 +297,71 @@
        </div>
         <!-- FIM - MODAL DETALHAR DOCUMENTOS -->
         
+        
+       <!-- MODAL DETALHAR TITULO -->
+       <div class="modal fade bs-modal-sm modal-input" 
+            id="modalDetalhesTitulos" aria-hidden="true">
+           <div class="modal-dialog modal-sm" style="width:1000px">
+               <div class="modal-content">
+                   <div class="modal-header">
+                       <h4 class="modal-title modal-cabecalho">Detalhes do agrupamento de titulos</h4>
+                   </div>
+                   <div class="modal-body modal-corpo modalAcessoDeUsuarios" style="text-align: center">
+                       <div class="row">
+                           <div class="col-sm-2">
+                                <label>Filial</label>
+                           </div>
+                           <div class="col-sm-2">
+                                <label>Sacado</label>
+                           </div>
+                           <div class="col-sm-2">
+                                <label>NSU</label>
+                           </div>
+                           <div class="col-sm-2">
+                                <label>Parcela/Total</label>
+                           </div>
+                           <div class="col-sm-2">
+                                <label>Valor Bruto</label>
+                           </div>
+                           <div class="col-sm-2">
+                                <label>Valor Líquido</label>
+                           </div>
+                       </div>
+                       <div class="row" ng-repeat="item in modalDetalhesTitulos">
+                           <div class="col-sm-2" style="text-align:center">
+                                {{item.nom_fantasia | uppercase}}
+                           </div>
+                           <div class="col-sm-2" style="text-align:center">
+                                {{item.nom_pessoa | uppercase}}
+                           </div>
+                           <div  class="col-sm-2" style="text-align:center">
+                               {{item.num_nsu_tef}} <!-- - 
+                               {{coparaVendaTitulo(item.num_nsu_tef)}}-->
+                           </div>
+                           
+                           <div class="col-sm-2" style="text-align:center">
+                              {{item.num_parcela}} / {{item.qtd_parcelas}}
+                           </div>
+                                                      <div class="col-sm-2" style="text-align:center">
+                               {{item.val_original | currency:'R$'}}
+                           </div>
+                           <div class="col-sm-2" style="text-align:center">
+                                {{(item.val_original - item.val_taxa_cobranca) | currency:'R$'}}
+                           </div>
+                       </div>
+                    </div>
+                   <div class="modal-footer">
+                       <div class="col-sm-6 col-sm-offset-2">
+                           <button type="button" class="btn default" data-dismiss="modal">
+                               Fechar
+                           </button>
+                       </div>                           
+                   </div>
+               </div>
+           </div>
+       </div>
+        <!-- FIM - MODAL DETALHAR TITULOS -->
+        
         <!-- MODAL ALTERAR DATA DE RECEBIMENTO -->
        <div class="modal fade bs-modal-sm modal-input" 
             id="modalDataRecebimento" aria-hidden="true">
@@ -423,10 +488,11 @@
                 
                 <!--CUPONS ESTÁTICOS-->
                 <!-- 1ª LINHA-->
-                <div class="row">
+                <div class="row"  ng-repeat="dado in dadosconciliacao" ng-show="(usuariologado.grupoempresa.id_grupo == 6)">
+                    
                     <!--1º CUPOM-->
                     <div class="col-md-3" style="padding-left:5%">
-                        <div class="row">
+                        <div class="row" ng-repeat="titulo in dadosTitulos | filter:dado.$$hashKey" >
                             <div class="col-md-8 col-sm-12 cupomAzulConciliacaoBancariaTef"
                                  ng-class="">
                                 <!--HEAD-->
@@ -439,7 +505,7 @@
                                             </div>
                                             <!--TIPO DO CUPON-->
                                             <div class="col-md-8 conteudoCuponsConciliacaobancaria">
-                                                Previsão de Crédito
+                                                Titulos ERP
                                             </div>
                                             <div class="col-md-2">
                                                 <span ng-class="{'element-hidden' : dado.Conciliado !== 3 || dado.ExtratoBancario !== null || !associacaoManual.selecionandoRecebimentos || !isMesmaDataEAdquirenteExtratoSelecionado(dado)}">
@@ -450,7 +516,7 @@
                                         <!--SUBTITULO DO CUPON -->
                                         <div class="row tituloCumponsConciliacaoBancariaICard">
                                             <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
-                                                Matriz
+                                                {{titulo.values.Registros[0].nom_fantasia}}
                                             </div>
                                         </div>                                 
                                     </div>
@@ -468,26 +534,16 @@
                                         <label>Data:</label>
                                     </div>
                                     <div class="col-md-6 col-sm-6 alinhamentoDados"
-                                         ng-bind="">
-                                        20/10/2015
+                                         ng-bind="getDataString(titulo.values.Registros[0].dta_emissao)">
                                     </div>
                                 </div>
-                                <!--ADQUIRENTE -->
-                                <div class="row">
-                                    <div class="col-md-6 col-sm-6">
-                                        <label>Adquirente:</label>
-                                    </div>
-                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        REDE
-                                    </div>                      
-                                </div> 
                                 <!--BANDEIRA -->
                                 <div class="row">
                                     <div class="col-md-4 col-sm-4">
-                                        <label>Bandeira:</label>
+                                        <label>Sacado:</label>
                                     </div>
                                     <div class="col-md-8 col-sm-8 alinhamentoDados">
-                                        REDE - VISA EL
+                                        {{titulo.values.Registros[0].nom_pessoa}}
                                     </div>                      
                                 </div> 
                                 <!--VALOR TOTAL-->
@@ -499,7 +555,7 @@
                                     </div>
                                     <!--RESULTADO DO VALOR-->
                                     <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        <label>R$ 139,00</label>
+                                        <label>{{SomaGrupoDeTitulos(titulo.values.Registros)  | currency:'R$'}}</label>
                                     </div>                                              
                                 </div> 
                                 <!--DOCUMENTO-- >
@@ -519,9 +575,9 @@
                                     <div class="col-md-1 col-sm-2 alinhamentoDados">
                                         <button class="btn btnRegistrosCupon"
                                                 ng-class="{'blue ' : dado.Conciliado === 1, 'btnPossivelConciliadoConciliacaoBancaria' : dado.Conciliado === 2, 'red': dado.Conciliado === 3}"
-                                                ng-click="detalhar(dado.RecebimentosParcela)"
+                                                ng-click="detalharTitulos(dado.RecebimentosParcela, titulo.values.Registros)"
                                                 style="color:#fff">
-                                            {{dado.RecebimentosParcela.length}}
+                                            {{titulo.values.Registros.length}}
                                         </button>
                                     </div>                                              
                                 </div>
@@ -529,7 +585,7 @@
                                 <div class="row" style="text-align:center">
                                     <div class="col-md-12">
                                         <button class="btn green" 
-                                                style="margin-bottom:-75px"
+                                                style="margin-bottom:-25px"
                                                 ng-disabled="">
                                             Baixa Automática    
                                         </button>
@@ -540,10 +596,11 @@
                     </div>
                     
                     <!--2º CUPOM-->
-                    <div class="col-md-3 col-md-offset-1">
+                    <div class="col-md-3 col-md-offset-1"
+                         ng-class="{'element-hidden' : dado.RecebimentosParcela === null}">
                         <div class="row">
-                            <div class="col-md-8 col-sm-12 cupomAzulConciliacaoBancariaTef"
-                                 ng-class="">
+                            <div class="col-md-8 col-sm-12 "
+                                 ng-class="{'cupomAzulConciliacaoBancaria' : dado.Conciliado === 1, 'cupomVermelhoConciliacaoBancaria' : dado.Conciliado === 3, 'cupomLaranjaConciliacaoBancaria' : dado.Conciliado === 2}">
                                 <!--HEAD-->
                                 <div class="row">
                                     <div class="col-md-12">
@@ -565,7 +622,7 @@
                                         <!--SUBTITULO DO CUPON -->
                                         <div class="row tituloCumponsConciliacaoBancariaICard">
                                             <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
-                                                Matriz
+                                                {{dado.RecebimentosParcela[0].Filial | uppercase}} 
                                             </div>
                                         </div>                                 
                                     </div>
@@ -583,8 +640,7 @@
                                         <label>Data:</label>
                                     </div>
                                     <div class="col-md-6 col-sm-6 alinhamentoDados"
-                                         ng-bind="">
-                                        20/10/2015
+                                         ng-bind="getDataString(dado.Data)">
                                     </div>
                                 </div>
                                 <!--ADQUIRENTE -->
@@ -593,7 +649,7 @@
                                         <label>Adquirente:</label>
                                     </div>
                                     <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        REDE
+                                        {{dado.Adquirente | uppercase}}
                                     </div>                      
                                 </div> 
                                 <!--BANDEIRA -->
@@ -602,7 +658,7 @@
                                         <label>Bandeira:</label>
                                     </div>
                                     <div class="col-md-8 col-sm-8 alinhamentoDados">
-                                        REDE - VISA EL
+                                        {{(dado.Bandeira | uppercase) || ''}}
                                     </div>                      
                                 </div> 
                                 <!--VALOR TOTAL-->
@@ -614,7 +670,7 @@
                                     </div>
                                     <!--RESULTADO DO VALOR-->
                                     <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        <label>R$ 139,00</label>
+                                        <label>{{dado.ValorTotalRecebimento | currency:'R$'}}</label>
                                     </div>                                              
                                 </div> 
                                 <!--DOCUMENTO-- >
@@ -644,8 +700,9 @@
                                 <div class="row" style="text-align:center">
                                     <div class="col-md-12">
                                         <button class="btn green" 
-                                                style="margin-bottom:-75px"
-                                                ng-disabled="">
+                                                style="margin-bottom:-25px"
+                                                ng-disabled=""
+                                                ng-click="consultaErp(dado)">
                                             Consulta de Títulos ERP  <i class="fa fa-search" 
                                                    ng-hide=""></i>  
                                         </button>
@@ -655,49 +712,68 @@
                         </div>
                     </div>
                     
-                    <!-- BOTÃO-->
+
+                    
+                    <!--BOTÕES-->
                     <div class="col-md-1 btnConciliacaoBancariaTef" style="padding-left:5%">
-                        <buttom class="btn grey">
-                            <i class="fa fa-check"></i>
-                        </buttom>
+                        <div class="row" ng-init="incrementaTotalPreConciliados(dado.Conciliado === 2)">
+                            <div class="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-4"
+                                 title="{{dado.Conciliado == 1 ? 'Conciliado' : dado.Conciliado === 2 && !associacaoManual.selecionandoRecebimentos ? 'Conciliar' : dado.Conciliado === 3 && dado.ExtratoBancario === null && !associacaoManual.selecionandoRecebimentos ? 'Alterar data de recebimento' : dado.Conciliado === 3 && dado.RecebimentosParcela === null && !associacaoManual.selecionandoRecebimentos && (!associacaoManual.extrato || associacaoManual.extrato === null) ? 'Conciliar manualmente' : dado.Conciliado === 3 && dado.RecebimentosParcela === null && associacaoManual.selecionandoRecebimentos && isExtratoSelecionado(dado) ? 'Cancelar' : dado.Conciliado === 3 && dado.ExtratoBancario === null && associacaoManual.selecionandoRecebimentos && isMesmaDataEAdquirenteExtratoSelecionado(dado) && dado.selecionado ? 'Conciliar com movimentação bancária selecionada' : ''}}">
+                                <a href="javascript:;" class="btn btn-icon-only"
+                                   ng-class="{'default' : !associacaoManual.selecionandoRecebimentos || dado.Conciliado !== 3 || dado.RecebimentosParcela !== null || !isExtratoSelecionado(dado), 'btn-primary' : dado.Conciliado === 3 && dado.RecebimentosParcela === null && associacaoManual.selecionandoRecebimentos && isExtratoSelecionado(dado)}"
+                                   ng-click="dado.Conciliado === 2 ? concilia(dado) : dado.Conciliado === 3 && dado.ExtratoBancario === null && !associacaoManual.selecionandoRecebimentos ? exibeModalDataRecebimento(dado) : dado.Conciliado === 3 && dado.RecebimentosParcela === null && !associacaoManual.selecionandoRecebimentos ? associaExtratoBancario(dado) : dado.Conciliado === 3 && dado.RecebimentosParcela === null && associacaoManual.selecionandoRecebimentos ? desassociaExtratoBancario() : dado.Conciliado === 3 && dado.ExtratoBancario === null && associacaoManual.selecionandoRecebimentos && isMesmaDataEAdquirenteExtratoSelecionado(dado) && dado.selecionado ? associaRecebimentosSelecionados() : 0"
+                                   ng-disabled="!usuarioPodeAlterarDadosConciliacaoBancaria() || dado.Conciliado === 1 || (associacaoManual.selecionandoRecebimentos && (dado.Conciliado === 2 || (dado.Conciliado === 3 && ((dado.ExtratoBancario === null && (!isMesmaDataEAdquirenteExtratoSelecionado(dado) || !dado.selecionado)) || (dado.RecebimentosParcela === null && !isExtratoSelecionado(dado)) ))))">
+                                    <i class="fa"
+                                       ng-class="{'fa-check': dado.Conciliado === 1, 'fa-arrow-right': dado.Conciliado === 2, 'fa-edit': dado.Conciliado === 3 && dado.ExtratoBancario === null && (!associacaoManual.selecionandoRecebimentos || !isMesmaDataEAdquirenteExtratoSelecionado(dado)), 'fa-search' : dado.Conciliado === 3 && dado.RecebimentosParcela === null && (!associacaoManual.selecionandoRecebimentos || !isExtratoSelecionado(dado)), 'fa-times' : dado.Conciliado === 3 && dado.RecebimentosParcela === null && associacaoManual.selecionandoRecebimentos && isExtratoSelecionado(dado), 'fa-arrow-left': dado.Conciliado === 3 && dado.ExtratoBancario === null && associacaoManual.selecionandoRecebimentos && isMesmaDataEAdquirenteExtratoSelecionado(dado)}"></i>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                     
-                    <!--3º CUPOM-->
-                   <div class="col-md-3" style="padding-left:5%">
+                    <!--3º CUPOM(COMPROVANTE CRÉDITO)-->
+                    <div class="col-md-3" style="padding-left:5%"
+                         ng-class="{'element-hidden' : dado.ExtratoBancario === null}">
                         <div class="row">
-                            <div class="col-md-8 col-sm-12 cupomAzulConciliacaoBancariaTef"
-                                 ng-class="">
+                            <div class="col-md-8 col-sm-12"
+                                 ng-class="{'cupomAzulConciliacaoBancaria' : dado.Conciliado === 1, 'cupomVermelhoConciliacaoBancaria' : dado.Conciliado === 3, 'cupomLaranjaConciliacaoBancaria' : dado.Conciliado === 2}">
                                 <!--HEAD-->
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-12 col-sm-12">
                                         <!--TITULO DO CUPON -->
                                         <div class="row tituloCumponsConciliacaoBancaria">
-                                            <div class="col-md-2">
-                                                <!--none-->
-                                            </div>
                                             <!--TIPO DO CUPON-->
-                                            <div class="col-md-8 conteudoCuponsConciliacaobancaria">
-                                                Previsão de Crédito
-                                            </div>
-                                            <div class="col-md-2">
-                                                <span ng-class="{'element-hidden' : dado.Conciliado !== 3 || dado.ExtratoBancario !== null || !associacaoManual.selecionandoRecebimentos || !isMesmaDataEAdquirenteExtratoSelecionado(dado)}">
-                                                    <checkbox normal ng-model="dado.selecionado"></checkbox>
-                                                </span>
+                                            <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
+                                                Comprovante de Crédito
                                             </div>
                                         </div>
                                         <!--SUBTITULO DO CUPON -->
-                                        <div class="row tituloCumponsConciliacaoBancariaICard">
-                                            <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
-                                                Matriz
+                                        <div class="row">
+                                            <!--BANCO-->
+                                            <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria"
+                                                 style="margin-top:5px"
+                                                 ng-bind="exibeBanco(dado.Conta.banco)">
                                             </div>
                                         </div>                                 
                                     </div>
                                 </div>
-                                <!--BODY-->                   
+                                <!--BODY-->
+                                <!--AGÊNCIA E CONTA -->
+                                <div class="row">
+                                    <!--AGÊNCIA-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Agência:&nbsp;</label>
+                                        {{(dado.Conta.nrAgencia | uppercase) || ''}}
+                                    </div>
+                                    <!--CONTA-->
+                                    <div class="col-md-6  alinhamentoDados">
+                                        <label>Conta:&nbsp;</label>
+                                        {{dado.Conta.nrConta | uppercase}}
+                                    </div> 
+                                </div>                   
                                 <!--DIVISÓRIA DOS TIPOS DE CUPONS-->
                                 <div class="row">   
                                     <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
-                                        ==============================
+                                        =============================
                                     </div>
                                 </div>
                                 <!--DATA-->
@@ -706,9 +782,8 @@
                                         <label>Data:</label>
                                     </div>
                                     <div class="col-md-6 col-sm-6 alinhamentoDados"
-                                         ng-bind="">
-                                        20/10/2015
-                                    </div>
+                                         ng-bind="getDataString(dado.Data)">
+                                    </div>                      
                                 </div>
                                 <!--ADQUIRENTE -->
                                 <div class="row">
@@ -716,431 +791,67 @@
                                         <label>Adquirente:</label>
                                     </div>
                                     <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        REDE
+                                        {{dado.Adquirente | uppercase}}
                                     </div>                      
                                 </div> 
-                                <!--BANDEIRA -->
+                                <!--MEMO -->
                                 <div class="row">
-                                    <div class="col-md-4 col-sm-4">
-                                        <label>Bandeira:</label>
+                                    <div class="col-md-3 col-sm-3">
+                                        <label>Memo:</label>
                                     </div>
-                                    <div class="col-md-8 col-sm-8 alinhamentoDados">
-                                        REDE - VISA EL
+                                    <div class="col-md-9 col-sm-9 alinhamentoDados">
+                                        {{(dado.Memo | uppercase) || ''}}
                                     </div>                      
+                                </div> 
+                                <!--CAMPO NUMERO DOCUMENTO -->
+                                <div class="row">
+                                    <!-- nothing ...-->           
                                 </div> 
                                 <!--VALOR TOTAL-->
-                                <div class="row" 
-                                     ng-init="incrementaContRecebimentosParcelas(dado.RecebimentosParcela)">
+                                <div class="row"
+                                     ng-init="incrementaContExtratoBancario(dado.ExtratoBancario)">
                                     <!--VALOR-->
                                     <div class="col-md-6 col-sm-6">
                                         <label>Valor total:</label>
                                     </div>
                                     <!--RESULTADO DO VALOR-->
                                     <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        <label>R$ 139,00</label>
+                                        <label>{{dado.ValorTotalExtrato | currency:'R$'}}</label>
                                     </div>                                              
                                 </div> 
-                                <!--DOCUMENTO-- >
-                                <div class="row" ng-show="dado.RecebimentosParcela.length === 1">
+                                <!--DOCUMENTO-->
+                                <div class="row" ng-show="dado.ExtratoBancario.length === 1">
                                     <div class="col-md-6 col-sm-6">
-                                        <label>NSU:</label>
+                                        <label>Documento:</label>
                                     </div>
                                     <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        <label>{{dado.RecebimentosParcela[0].Documento}}</label>
+                                        <label>{{dado.ExtratoBancario[0].Documento}}</label>
                                     </div>                                              
-                                </div--> 
+                                </div> 
                                 <!--AGRUPADO-->
-                                <div class="row" ng-show="dado.RecebimentosParcela.length > 0">
+                                <div class="row" ng-show="dado.ExtratoBancario.length > 1">
                                     <div class="col-md-10 col-sm-10">
                                         <label>Registros agrupados:</label>
                                     </div>
-                                    <div class="col-md-1 col-sm-2 alinhamentoDados">
+                                    <div class="col-md-2 col-sm-2 alinhamentoDados">
                                         <button class="btn btnRegistrosCupon"
-                                                ng-class="{'blue ' : dado.Conciliado === 1, 'btnPossivelConciliadoConciliacaoBancaria' : dado.Conciliado === 2, 'red': dado.Conciliado === 3}"
-                                                ng-click="detalhar(dado.RecebimentosParcela)"
+                                                ng-class="{'blue' : dado.Conciliado === 1, 'yellow' : dado.Conciliado === 2, 'red': dado.Conciliado === 3}"
+                                                ng-click="detalhar(dado.ExtratoBancario)"
                                                 style="color:#fff">
-                                            {{dado.RecebimentosParcela.length}}
+                                            {{dado.ExtratoBancario.length}}
                                         </button>
                                     </div>                                              
-                                </div>
-                                <!--BOTÃO BAIXA AUTOMÁTICA-- >
-                                <div class="row" style="text-align:center">
-                                    <div class="col-md-12">
-                                        <button class="btn green" 
-                                                style="margin-bottom:-75px"
-                                                ng-disabled="dado.Conciliado === 2 || dado.Conciliado === 3">
-                                            Baixa Automática  <i class="fa fa-check" 
-                                                   ng-hide="dado.Conciliado === 2 || dado.Conciliado === 3"></i>  
-                                        </button>
-                                    </div>
-                                </div-->
+                                </div> 
                             </div>
-                        </div>
+                        </div>    
                     </div>
                 
                 </div>
                 
-                <!--2ª LINHA-->
-                <div class="row">
-                    <!--1º CUPOM-->
-                    <div class="col-md-3" style="padding-left:5%">
-                        <div class="row">
-                            <div class="col-md-8 col-sm-12 cupomAzulConciliacaoBancariaTef"
-                                 ng-class="">
-                                <!--HEAD-->
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <!--TITULO DO CUPON -->
-                                        <div class="row tituloCumponsConciliacaoBancaria">
-                                            <div class="col-md-2">
-                                                <!--none-->
-                                            </div>
-                                            <!--TIPO DO CUPON-->
-                                            <div class="col-md-8 conteudoCuponsConciliacaobancaria">
-                                                Previsão de Crédito
-                                            </div>
-                                            <div class="col-md-2">
-                                                <span ng-class="{'element-hidden' : dado.Conciliado !== 3 || dado.ExtratoBancario !== null || !associacaoManual.selecionandoRecebimentos || !isMesmaDataEAdquirenteExtratoSelecionado(dado)}">
-                                                    <checkbox normal ng-model="dado.selecionado"></checkbox>
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <!--SUBTITULO DO CUPON -->
-                                        <div class="row tituloCumponsConciliacaoBancariaICard">
-                                            <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
-                                                Matriz
-                                            </div>
-                                        </div>                                 
-                                    </div>
-                                </div>
-                                <!--BODY-->                   
-                                <!--DIVISÓRIA DOS TIPOS DE CUPONS-->
-                                <div class="row">   
-                                    <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
-                                        ==============================
-                                    </div>
-                                </div>
-                                <!--DATA-->
-                                <div class="row">
-                                    <div class="col-md-6 col-sm-6">
-                                        <label>Data:</label>
-                                    </div>
-                                    <div class="col-md-6 col-sm-6 alinhamentoDados"
-                                         ng-bind="">
-                                        20/10/2015
-                                    </div>
-                                </div>
-                                <!--ADQUIRENTE -->
-                                <div class="row">
-                                    <div class="col-md-6 col-sm-6">
-                                        <label>Adquirente:</label>
-                                    </div>
-                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        REDE
-                                    </div>                      
-                                </div> 
-                                <!--BANDEIRA -->
-                                <div class="row">
-                                    <div class="col-md-4 col-sm-4">
-                                        <label>Bandeira:</label>
-                                    </div>
-                                    <div class="col-md-8 col-sm-8 alinhamentoDados">
-                                        REDE - VISA EL
-                                    </div>                      
-                                </div> 
-                                <!--VALOR TOTAL-->
-                                <div class="row" 
-                                     ng-init="incrementaContRecebimentosParcelas(dado.RecebimentosParcela)">
-                                    <!--VALOR-->
-                                    <div class="col-md-6 col-sm-6">
-                                        <label>Valor total:</label>
-                                    </div>
-                                    <!--RESULTADO DO VALOR-->
-                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        <label>R$ 139,00</label>
-                                    </div>                                              
-                                </div> 
-                                <!--DOCUMENTO-- >
-                                <div class="row" ng-show="dado.RecebimentosParcela.length === 1">
-                                    <div class="col-md-6 col-sm-6">
-                                        <label>NSU:</label>
-                                    </div>
-                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        <label>{{dado.RecebimentosParcela[0].Documento}}</label>
-                                    </div>                                              
-                                </div--> 
-                                <!--AGRUPADO-->
-                                <div class="row" ng-show="dado.RecebimentosParcela.length > 0">
-                                    <div class="col-md-10 col-sm-10">
-                                        <label>Registros agrupados:</label>
-                                    </div>
-                                    <div class="col-md-1 col-sm-2 alinhamentoDados">
-                                        <button class="btn btnRegistrosCupon"
-                                                ng-class="{'blue ' : dado.Conciliado === 1, 'btnPossivelConciliadoConciliacaoBancaria' : dado.Conciliado === 2, 'red': dado.Conciliado === 3}"
-                                                ng-click="detalhar(dado.RecebimentosParcela)"
-                                                style="color:#fff">
-                                            {{dado.RecebimentosParcela.length}}
-                                        </button>
-                                    </div>                                              
-                                </div>
-                                <!--BOTÃO BAIXA AUTOMÁTICA-->
-                                <div class="row" style="text-align:center">
-                                    <div class="col-md-12">
-                                        <button class="btn green" 
-                                                style="margin-bottom:-75px"
-                                                ng-disabled="">
-                                            Baixa Automática    
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!--2º CUPOM-->
-                    <div class="col-md-3 col-md-offset-1">
-                        <div class="row">
-                            <div class="col-md-8 col-sm-12 cupomAzulConciliacaoBancariaTef"
-                                 ng-class="">
-                                <!--HEAD-->
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <!--TITULO DO CUPON -->
-                                        <div class="row tituloCumponsConciliacaoBancaria">
-                                            <div class="col-md-2">
-                                                <!--none-->
-                                            </div>
-                                            <!--TIPO DO CUPON-->
-                                            <div class="col-md-8 conteudoCuponsConciliacaobancaria">
-                                                Previsão de Crédito
-                                            </div>
-                                            <div class="col-md-2">
-                                                <span ng-class="{'element-hidden' : dado.Conciliado !== 3 || dado.ExtratoBancario !== null || !associacaoManual.selecionandoRecebimentos || !isMesmaDataEAdquirenteExtratoSelecionado(dado)}">
-                                                    <checkbox normal ng-model="dado.selecionado"></checkbox>
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <!--SUBTITULO DO CUPON -->
-                                        <div class="row tituloCumponsConciliacaoBancariaICard">
-                                            <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
-                                                Matriz
-                                            </div>
-                                        </div>                                 
-                                    </div>
-                                </div>
-                                <!--BODY-->                   
-                                <!--DIVISÓRIA DOS TIPOS DE CUPONS-->
-                                <div class="row">   
-                                    <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
-                                        ==============================
-                                    </div>
-                                </div>
-                                <!--DATA-->
-                                <div class="row">
-                                    <div class="col-md-6 col-sm-6">
-                                        <label>Data:</label>
-                                    </div>
-                                    <div class="col-md-6 col-sm-6 alinhamentoDados"
-                                         ng-bind="">
-                                        20/10/2015
-                                    </div>
-                                </div>
-                                <!--ADQUIRENTE -->
-                                <div class="row">
-                                    <div class="col-md-6 col-sm-6">
-                                        <label>Adquirente:</label>
-                                    </div>
-                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        REDE
-                                    </div>                      
-                                </div> 
-                                <!--BANDEIRA -->
-                                <div class="row">
-                                    <div class="col-md-4 col-sm-4">
-                                        <label>Bandeira:</label>
-                                    </div>
-                                    <div class="col-md-8 col-sm-8 alinhamentoDados">
-                                        REDE - VISA EL
-                                    </div>                      
-                                </div> 
-                                <!--VALOR TOTAL-->
-                                <div class="row" 
-                                     ng-init="incrementaContRecebimentosParcelas(dado.RecebimentosParcela)">
-                                    <!--VALOR-->
-                                    <div class="col-md-6 col-sm-6">
-                                        <label>Valor total:</label>
-                                    </div>
-                                    <!--RESULTADO DO VALOR-->
-                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        <label>R$ 139,00</label>
-                                    </div>                                              
-                                </div> 
-                                <!--DOCUMENTO-- >
-                                <div class="row" ng-show="dado.RecebimentosParcela.length === 1">
-                                    <div class="col-md-6 col-sm-6">
-                                        <label>NSU:</label>
-                                    </div>
-                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        <label>{{dado.RecebimentosParcela[0].Documento}}</label>
-                                    </div>                                              
-                                </div--> 
-                                <!--AGRUPADO-->
-                                <div class="row" ng-show="dado.RecebimentosParcela.length > 0">
-                                    <div class="col-md-10 col-sm-10">
-                                        <label>Registros agrupados:</label>
-                                    </div>
-                                    <div class="col-md-1 col-sm-2 alinhamentoDados">
-                                        <button class="btn btnRegistrosCupon"
-                                                ng-class="{'blue ' : dado.Conciliado === 1, 'btnPossivelConciliadoConciliacaoBancaria' : dado.Conciliado === 2, 'red': dado.Conciliado === 3}"
-                                                ng-click="detalhar(dado.RecebimentosParcela)"
-                                                style="color:#fff">
-                                            {{dado.RecebimentosParcela.length}}
-                                        </button>
-                                    </div>                                              
-                                </div>
-                                <!--CONSULTA DE TITULOS ERP-->
-                                <div class="row" style="text-align:center">
-                                    <div class="col-md-12">
-                                        <button class="btn green" 
-                                                style="margin-bottom:-75px"
-                                                ng-disabled="">
-                                            Consulta de Títulos ERP  <i class="fa fa-search" 
-                                                   ng-hide=""></i>  
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- BOTÃO-->
-                    <div class="col-md-1 btnConciliacaoBancariaTef" style="padding-left:5%">
-                        <buttom class="btn grey">
-                            <i class="fa fa-check"></i>
-                        </buttom>
-                    </div>
-                    
-                    <!--3º CUPOM-->
-                   <div class="col-md-3" style="padding-left:5%">
-                        <div class="row">
-                            <div class="col-md-8 col-sm-12 cupomAzulConciliacaoBancariaTef"
-                                 ng-class="">
-                                <!--HEAD-->
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <!--TITULO DO CUPON -->
-                                        <div class="row tituloCumponsConciliacaoBancaria">
-                                            <div class="col-md-2">
-                                                <!--none-->
-                                            </div>
-                                            <!--TIPO DO CUPON-->
-                                            <div class="col-md-8 conteudoCuponsConciliacaobancaria">
-                                                Previsão de Crédito
-                                            </div>
-                                            <div class="col-md-2">
-                                                <span ng-class="{'element-hidden' : dado.Conciliado !== 3 || dado.ExtratoBancario !== null || !associacaoManual.selecionandoRecebimentos || !isMesmaDataEAdquirenteExtratoSelecionado(dado)}">
-                                                    <checkbox normal ng-model="dado.selecionado"></checkbox>
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <!--SUBTITULO DO CUPON -->
-                                        <div class="row tituloCumponsConciliacaoBancariaICard">
-                                            <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
-                                                Matriz
-                                            </div>
-                                        </div>                                 
-                                    </div>
-                                </div>
-                                <!--BODY-->                   
-                                <!--DIVISÓRIA DOS TIPOS DE CUPONS-->
-                                <div class="row">   
-                                    <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
-                                        ==============================
-                                    </div>
-                                </div>
-                                <!--DATA-->
-                                <div class="row">
-                                    <div class="col-md-6 col-sm-6">
-                                        <label>Data:</label>
-                                    </div>
-                                    <div class="col-md-6 col-sm-6 alinhamentoDados"
-                                         ng-bind="">
-                                        20/10/2015
-                                    </div>
-                                </div>
-                                <!--ADQUIRENTE -->
-                                <div class="row">
-                                    <div class="col-md-6 col-sm-6">
-                                        <label>Adquirente:</label>
-                                    </div>
-                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        REDE
-                                    </div>                      
-                                </div> 
-                                <!--BANDEIRA -->
-                                <div class="row">
-                                    <div class="col-md-4 col-sm-4">
-                                        <label>Bandeira:</label>
-                                    </div>
-                                    <div class="col-md-8 col-sm-8 alinhamentoDados">
-                                        REDE - VISA EL
-                                    </div>                      
-                                </div> 
-                                <!--VALOR TOTAL-->
-                                <div class="row" 
-                                     ng-init="incrementaContRecebimentosParcelas(dado.RecebimentosParcela)">
-                                    <!--VALOR-->
-                                    <div class="col-md-6 col-sm-6">
-                                        <label>Valor total:</label>
-                                    </div>
-                                    <!--RESULTADO DO VALOR-->
-                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        <label>R$ 139,00</label>
-                                    </div>                                              
-                                </div> 
-                                <!--DOCUMENTO-- >
-                                <div class="row" ng-show="dado.RecebimentosParcela.length === 1">
-                                    <div class="col-md-6 col-sm-6">
-                                        <label>NSU:</label>
-                                    </div>
-                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        <label>{{dado.RecebimentosParcela[0].Documento}}</label>
-                                    </div>                                              
-                                </div--> 
-                                <!--AGRUPADO-->
-                                <div class="row" ng-show="dado.RecebimentosParcela.length > 0">
-                                    <div class="col-md-10 col-sm-10">
-                                        <label>Registros agrupados:</label>
-                                    </div>
-                                    <div class="col-md-1 col-sm-2 alinhamentoDados">
-                                        <button class="btn btnRegistrosCupon"
-                                                ng-class="{'blue ' : dado.Conciliado === 1, 'btnPossivelConciliadoConciliacaoBancaria' : dado.Conciliado === 2, 'red': dado.Conciliado === 3}"
-                                                ng-click="detalhar(dado.RecebimentosParcela)"
-                                                style="color:#fff">
-                                            {{dado.RecebimentosParcela.length}}
-                                        </button>
-                                    </div>                                              
-                                </div>
-                                <!--BOTÃO BAIXA AUTOMÁTICA-- >
-                                <div class="row" style="text-align:center">
-                                    <div class="col-md-12">
-                                        <button class="btn green" 
-                                                style="margin-bottom:-75px"
-                                                ng-disabled="dado.Conciliado === 2 || dado.Conciliado === 3">
-                                            Baixa Automática  <i class="fa fa-check" 
-                                                   ng-hide="dado.Conciliado === 2 || dado.Conciliado === 3"></i>  
-                                        </button>
-                                    </div>
-                                </div-->
-                            </div>
-                        </div>
-                    </div>
-                
-                </div>
                 <!--FIM CUPONS ESTÁTICOS-->
                 
                 <!--CUPONS-->
-                <div class="row" ng-repeat="dado in dadosconciliacao">
+                <div class="row" ng-repeat="dado in dadosconciliacao" ng-show="!(usuariologado.grupoempresa.id_grupo == 6)">
                     <!--1º CUPOM (PREVISÃO CRÉDITO)-->
                     <div class="col-md-5 col-sm-5" 
                          ng-class="{'element-hidden' : dado.RecebimentosParcela === null}">
@@ -1390,6 +1101,16 @@
                     </div>
                 </div>
                 <!--FIM CUPONS-->
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
                 <!-- TOTAIS - VALORES -->
                 <div class="row" style="margin-top:30px">
                     <!-- RECEBIMENTO PARCELA -->
