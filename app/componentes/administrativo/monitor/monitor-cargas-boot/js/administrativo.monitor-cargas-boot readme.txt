@@ -1,0 +1,164 @@
+# README #
+
+Módulo que:
+ - gerencia o layout da tela de monitor de cargas do boot de Monitor (app/componentes/administrativo/monitor/monitor-cargas-boot/index.html);
+ 
+
+### Pra Que Serve Este Módulo? ###
+
+Gerenciar completamente a tela de monitor de cargas do boot de Monitor.  
+
+
+
+### O que é necessário para usar o módulo? ###
+
+Como esse é um controller filho do controller principal "appCtrl" (app.js), ele herda todos os módulos importados por ele.
+Não é necessário nenhum outro módulo externo.
+
+ 
+### Outras depêndencias ###
+
+  * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
+  * $scope.token do "appCtrl"
+  * Emite evento "acessouTela" no init do controller para que seja feito o log de acesso de tela
+  * Evento "acessoDeTelaNotificado", proveniente do "appCtrl", para de fato exibir a tela e fazer requisições 
+	=> importante para o log correto de requisições HTTP, ao qual identifica corretamente a (tela de) origem
+  * APIS:
+    - cliente/empresa
+    - card/tbadquirente
+
+
+### Interação com a WEB API ###
+ 
+  * cliente/empresa
+    - GET : listagem das filiais (coleção 0)
+			[
+			  { nu_cnpj : string,
+				ds_fantasia : string,
+				filial : string ou null,
+				id_grupo : int
+			  }
+			]
+			Filtro de id_grupo pode ser enviado ou não para filtrar as filiais por grupo empresa
+			
+  * card/tbadquirente
+    - GET : listagem das adquirentes (coleção 1)
+			[
+			  { cdAdquirente : int,
+                nmAdquirente : string,
+                dsAdquirente : string,
+                stAdquirente : int,  // igual a 1
+				hrExecucao : datetime,
+			  }
+			]
+ 
+ 
+ 
+ 
+
+### IMessage ### 
+ 
+  * Interage com o IMessage via websocket
+  * Um serviço (factory) é usado no script para manter a conexão ativa e interagir com o HUB
+  * O controller se comunica com o serviço através das seguintes mensagens:
+	- "notifyMonitorConnectionStatus" : Recebe um novo status da conexão com o IMessage através do socket
+	- "notifyMonitorFalha" : Recebe o erro obtido ao tentar obter a lista completa para monitorar as cargas
+	- "notifyMonitorLista" : Foi recebido a lista completa para monitorar as cargas, baseado no filtro.
+							  [{ tbLogCargas : [{idLogCarga : int,
+												 dtCompetencia : datetime,
+												 flStatusPagosAntecipacao : bool,
+												 flStatusPagosCredito : bool,
+												 flStatusPagosDebito : bool,
+												 flStatusReceber : bool,
+												 flStatusVendasCredito : bool,
+												 flStatusVendasDebito : bool,
+												 tbLogCargasDetalheMonitor : // para cada dsModalidade, o último detalhe
+													[{
+														dsMensagem : string,
+														dsModalidade : string,
+														dtExecucaoFim : datetime
+														dtExecucaoIni : datetime ou null
+														flStatus : int,
+														idLogCargaDetalhe : int,
+														qtTransacoes : int,
+														vlTotalProcessado : double,
+													}]
+									}],
+								ultimaDataExecucaoFim : datetime ou null,
+								grupoempresa : {
+											id_grupo : int,
+											ds_nome : string
+								 },
+								empresa : {
+                                            nu_cnpj : string,
+                                            ds_fantasia : string,
+                                            filial : string,
+                                        },
+								tbadquirente : {
+                                            cdAdquirente : int,
+                                            nmAdquirente : string
+                                        },
+							  
+							  }]
+    - "notifyMonitorMudancas" : Foi recebido pelo socket uma lista com mudanças ocorridas na base
+								{
+								    NotificationInfo : string, // INSERT, DELETE, UPDATE
+									objetos : [{ tbLogCargas : [{idLogCarga : int,
+																 dtCompetencia : datetime,
+																 flStatusPagosAntecipacao : bool,
+																 flStatusPagosCredito : bool,
+																 flStatusPagosDebito : bool,
+																 flStatusReceber : bool,
+																 flStatusVendasCredito : bool,
+																 flStatusVendasDebito : bool,
+																 tbLogCargasDetalheMonitor : // para cada dsModalidade, o último detalhe
+																	[{
+																		dsMensagem : string,
+																		dsModalidade : string,
+																		dtExecucaoFim : datetime
+																		dtExecucaoIni : datetime ou null
+																		flStatus : int,
+																		idLogCargaDetalhe : int,
+																		qtTransacoes : int,
+																		vlTotalProcessado : double,
+																	}],
+														}],
+												ultimaDataExecucaoFim : datetime ou null,
+												grupoempresa : {
+															id_grupo : int,
+															ds_nome : string
+												 },
+												empresa : {
+															nu_cnpj : string,
+															ds_fantasia : string,
+															filial : string,
+														},
+												tbadquirente : {
+															cdAdquirente : int,
+															nmAdquirente : string
+														},
+											  
+											  }]
+							    }
+  * O serviço provê quatro funções:
+	- conectar() : estabelece comunicação com o IMessage. A resposta é enviada através da mensagem "notifyMonitorConnectionStatus"
+	- desconectar() : desfaz a comunicação com o IMessage. A resposta é enviada através da mensagem "notifyMonitorConnectionStatus"
+	- getTotalDiasMesFiltrado() : retorna o total de dias do mês e ano usado no filtro
+	- isConnected() : retorna true se a conexão está ativa
+	- obtemListaBoot(filtro) : Solicita ao servidor a lista completa para o filtro informado, que deve seguir o modelo
+												{ data : string, // 6 dígitos: 'AAAAMM'
+												  // status : int, // não é considerado!
+												  idGrupo : int,
+												  nuCnpj: string,
+												  cdAdquirente : int }
+						   A resposta é enviada através da mensagem "notifyMonitorLista".
+ 
+   
+
+   
+   
+   
+   
+### Desenvolvedores ###
+
+Deivid Marinho - deividgfmarinho@gmail.com

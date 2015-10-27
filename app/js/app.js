@@ -43,6 +43,7 @@ angular.module("AtosCapital", ['ui.router',
                                'administrativo-acesso-usuarios',
                                'administrativo-acoes-usuarios',
                                'administrativo-monitor-cargas',
+                               'administrativo-monitor-cargas-boot',
                                'administrativo-consulta-pos-terminal',
                                'dashboard', 
                                'card-services-cash-flow-relatorios',
@@ -238,6 +239,15 @@ angular.module("AtosCapital", ['ui.router',
         url: prefixo + 'administrativo/monitor-cargas',
         templateUrl: 'componentes/administrativo/monitor/monitor-cargas/index.html',
         controller: "administrativo-monitor-cargasCtrl",
+        data: {
+            titulo: 'Administrativo'
+        }
+      })
+    
+      .state('administrativo-monitor-monitor-cargas-boot', {
+        url: prefixo + 'administrativo/monitor-cargas-boot',
+        templateUrl: 'componentes/administrativo/monitor/monitor-cargas-boot/index.html',
+        controller: "administrativo-monitor-cargas-bootCtrl",
         data: {
             titulo: 'Administrativo'
         }
@@ -483,6 +493,7 @@ angular.module("AtosCapital", ['ui.router',
     var controllerAdministrativoAcessoUsuarios = undefined;
     var controllerAdministrativoAcoesUsuarios = undefined;
     var controllerAdministrativoMonitorCargas = undefined;
+    var controllerAdministrativoMonitorCargasBoot = undefined;                        
     var controllerAdministrativoConsultaPOSTerminal = undefined;
     var controllerDashboard = undefined;
     var controllerCardServicesCashFlowRelatorios = undefined;
@@ -522,6 +533,7 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_ADMINISTRATIVO_LOGS_ACOES_USUARIOS = false;  
     $scope.PERMISSAO_ADMINISTRATIVO_MONITOR = false;                        
     $scope.PERMISSAO_ADMINISTRATIVO_MONITOR_MONITOR_CARGAS = false;
+    $scope.PERMISSAO_ADMINISTRATIVO_MONITOR_MONITOR_CARGAS_BOOT = false;                        
     $scope.PERMISSAO_DASHBOARD = false;
     $scope.PERMISSAO_CARD_SERVICES = false;
     $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW = false;   
@@ -743,7 +755,14 @@ angular.module("AtosCapital", ['ui.router',
     $scope.goAdministrativoMonitorCargas = function(params){
         controllerAtual = controllerAdministrativoMonitorCargas;
         go('administrativo-monitor-monitor-cargas', params);
-    };                             
+    };  
+    /**
+      * Exibe como conteúdo a Monitor Monitor de Cargas do Boot, de Administrativo
+      */                        
+    $scope.goAdministrativoMonitorCargasBoot = function(params){
+        controllerAtual = controllerAdministrativoMonitorCargasBoot;
+        go('administrativo-monitor-monitor-cargas-boot', params);
+    }; 
     /**
       * Exibe como conteúdo o Dashboard
       */                        
@@ -1000,13 +1019,22 @@ angular.module("AtosCapital", ['ui.router',
                      controllerAtual.id_controller !== controllerAdministrativoAcoesUsuarios.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual 
         }else if(url === $state.get('administrativo-monitor-monitor-cargas').url){ 
-            // Logs > Ações de usuários
+            // Administrativo > Monitor > Monitor de Cargas
             if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_MONITOR || !$scope.PERMISSAO_ADMINISTRATIVO_MONITOR_MONITOR_CARGAS){
                 // Não possui permissão!
                 event.preventDefault();
                 $scope.goUsuarioSemPrivilegios();
-            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'AÇÕES DE USUÁRIOS')
+            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'MONITOR DE CARGAS')
                      controllerAtual.id_controller !== controllerAdministrativoMonitorCargas.id_controller)
+                $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual 
+        }else if(url === $state.get('administrativo-monitor-monitor-cargas-boot').url){ 
+            // Administrativo > Monitor > Monitor de Cargas do Boot
+            if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_MONITOR || !$scope.PERMISSAO_ADMINISTRATIVO_MONITOR_MONITOR_CARGAS_BOOT){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.goUsuarioSemPrivilegios();
+            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'MONITOR DE CARGAS DO BOOT')
+                     controllerAtual.id_controller !== controllerAdministrativoMonitorCargasBoot.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual 
         }else if(url === $state.get('dashboard').url){ 
             // Dashboard
@@ -1224,7 +1252,12 @@ angular.module("AtosCapital", ['ui.router',
                 if($location.path() === $state.get('administrativo-monitor-monitor-cargas').url) 
                     controllerAtual = controller;
                 controllerAdministrativoMonitorCargas = controller;
-                return $scope.goAdministrativoMonitorCargas;    
+                return $scope.goAdministrativoMonitorCargas;
+            case 'MONITOR DE CARGAS DO BOOT':
+                if($location.path() === $state.get('administrativo-monitor-monitor-cargas-boot').url) 
+                    controllerAtual = controller;
+                controllerAdministrativoMonitorCargasBoot = controller;
+                return $scope.goAdministrativoMonitorCargasBoot;
             // Dashboard
             case 'DASHBOARD ATOS': 
                 if($location.path() === $state.get('dashboard').url) controllerAtual = controller;
@@ -1420,6 +1453,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'ACESSO DE USUÁRIOS' : return state == 'acesso-usuarios';  
             case 'AÇÕES DE USUÁRIOS': return state == 'acoes-usuarios';
             case 'MONITOR DE CARGAS': return state == 'monitor-cargas';
+            case 'MONITOR DE CARGAS DO BOOT': return state == 'monitor-cargas-boot';    
             // Tax Services
             case 'IMPORTAÇÃO XML': return state == 'importacao-xml';
             case 'CADASTRO CERTIFICADO DIGITAL': return state == 'cadastro-certificado-digital';
