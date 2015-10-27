@@ -223,16 +223,17 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
                     // Reseta seleção de filtro específico de empresa
                     $scope.filtro.filial = $scope.filtro.adquirente = null;
                     buscaFiliais();
+                    if($scope.monitor.isConnected()){
+                        obtendoLista = true;
+                        $scope.showProgress(divPortletBodyFiltrosPos, 10000);
+                        $scope.showProgress(divPortletBodyMonitorPos);
+                        $scope.monitor.obtemLista(obtemFiltroBusca());
+                    }
                 }else{ // reseta tudo e não faz buscas 
                     $scope.filiais = [];
                     $scope.adquirentes = [];
                     $scope.filtro.filial = $scope.filtro.adquirente = null;
-                }
-                if($scope.monitor.isConnected()){
-                    obtendoLista = true;
-                    $scope.showProgress(divPortletBodyFiltrosPos, 10000);
-                    $scope.showProgress(divPortletBodyMonitorPos);
-                    $scope.monitor.obtemLista(obtemFiltroBusca());
+                    $scope.monitorCargas = [];
                 }
             }
         }); 
@@ -273,24 +274,25 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
         // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
         $scope.$on('acessoDeTelaNotificado', function(event){
             $scope.exibeTela = true;
-            // Busca
-            buscaFiliais();
             // Conecta e obtém lista
-            $scope.exibeTela = true;
+            if($scope.usuariologado.grupoempresa){
+                buscaFiliais();
+                $scope.showProgress(divPortletBodyFiltrosPos, 10000);
+                $scope.showProgress(divPortletBodyMonitorPos);
+                conectando = true;
+                $scope.monitor.conectar(); 
+            }
+        });
+        // Acessou a tela
+        $scope.$emit("acessouTela");
+        /*$scope.exibeTela = true;
+        if($scope.usuariologado.grupoempresa){
             buscaFiliais();
             $scope.showProgress(divPortletBodyFiltrosPos, 10000);
             $scope.showProgress(divPortletBodyMonitorPos);
             conectando = true;
             $scope.monitor.conectar(); 
-        });
-        // Acessou a tela
-        //$scope.$emit("acessouTela");
-        $scope.exibeTela = true;
-        buscaFiliais();
-        $scope.showProgress(divPortletBodyFiltrosPos, 10000);
-        $scope.showProgress(divPortletBodyMonitorPos);
-        conectando = true;
-        $scope.monitor.conectar(); 
+        }*/
     } 
     
     
@@ -468,10 +470,20 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
                                                 
     // MONITOR DE CARGAS
     $scope.buscaListaMonitor = function(){
+        // Avalia se há um grupo empresa selecionado
+        if(!$scope.usuariologado.grupoempresa){
+            $scope.showModalAlerta('Por favor, selecione uma empresa', 'Atos Capital', 'OK', 
+                                   function(){
+                                         $timeout(function(){$scope.setVisibilidadeBoxGrupoEmpresa(true);}, 300);
+                                    }
+                                  );
+            return;   
+        }
         obtemListaMonitorCargas();        
     }
                                                 
     var obtemListaMonitorCargas = function(){
+        if(!$scope.usuariologado.grupoempresa) return;
         if($scope.monitor && $scope.monitor !== null){
             $scope.showProgress(divPortletBodyFiltrosPos, 10000);
             $scope.showProgress(divPortletBodyMonitorPos);
