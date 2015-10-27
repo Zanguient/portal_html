@@ -1846,11 +1846,9 @@
                                    </div>
                                    <div class="col-md-9">
                                         <select class="form-control form-filter input-sm"
-                                                ng-options=""
-                                                ng-model="">
-                                            <option style="" value="9">1102-COMPRA PARA COMERCIALIZACAO - DE</option>
-                                            <option style="" value="13">1403-COMPRA PARA COMERCIALIZACAO MERCADORIA ST - DE</option>
-                                            <option style="" value="35">1949-OUTRA ENTRADA DE MERC OU PRESTACAO DE SERV NAO ESPECIFICADO</option>
+                                                ng-model="dadosImportacao.natOperacao"
+                                                ng-options="natOperacao.des_natureza_operacao for natOperacao in natOperacoes">
+                                            <option value=""></option>
                                         </select>
                                    </div>
                                </div>
@@ -1860,7 +1858,7 @@
                                    </div>
                                    <div class="col-md-9">
                                         <select class="form-control form-filter input-sm"
-                                                ng-model="almoxarifado.cod_almoxarifado"
+                                                ng-model="dadosImportacao.almoxarifado"
                                                 ng-options="almoxarifado.des_almoxarifado for almoxarifado in almoxarifados">
                                             <option value=""></option>
                                         </select>
@@ -1868,13 +1866,42 @@
                                </div>
                                 <div class="row button-modal-importacao">
                                    <div class="col-md-12">
-                                    <button class="btn red">Importar</button>
+                                    <button class="btn btn-sm red filter-submit margin-bottom" ng-click="importarNota();">Importar</button>
                                    </div>
                                </div>
                            </div>
                            <div class="modal-footer">
                                <div class="col-md-1 col-md-offset-10">
-                                   <button type="button" class="btn default" data-dismiss="modal">
+                                   <button type="button" class="btn default" data-dismiss="modal" >
+                                       Fechar
+                                   </button>
+                               </div>                           
+                           </div>
+                       </div>
+                   </div>
+                </div>
+                <!-- FIM - MODAL IMPORTAÇÃO DE NOTA FISCAL-->
+                
+                                
+                <!-- MODAL RETORNO DA IMPORTAÇÃO DE NOTA FISCAL-->
+                <div class="modal fade bs-modal-sm modal-input" 
+                    id="modalRetornoImportacao" aria-hidden="true">
+                   <div class="modal-dialog modal-sm" style="width:800px">
+                       <div class="modal-content">
+                           <div class="modal-header">
+                               <h4 class="modal-title modal-cabecalho">Erros gerados na importação da NFe</h4>
+                           </div>
+                           <div class="modal-body modal-corpo" style="text-align: left">
+
+                               <div class="row">
+                                   <div class="col-md-12" ng-repeat="mensagem in Mensagens">
+                                       {{mensagem}}<br/>
+                                   </div>
+                               </div>  
+                           </div>
+                           <div class="modal-footer">
+                               <div class="col-md-1 col-md-offset-10">
+                                   <button type="button" class="btn default" data-dismiss="modal" >
                                        Fechar
                                    </button>
                                </div>                           
@@ -2167,7 +2194,7 @@
                                                                 </li>
                                                                  <li>
                                                                     <a href="javascript:;" 
-                                                                       ng-click="importar(manifesto, $index)">
+                                                                       ng-click="obterInformarcoesImportar(manifesto, $index)">
                                                                         Importar
                                                                     </a>
                                                                 </li>

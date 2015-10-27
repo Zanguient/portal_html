@@ -40,6 +40,8 @@ angular.module("tax-services-importacao-xml", [])
     $scope.filiais = [];   
     $scope.manifestos = [];
     $scope.almoxarifados = [];
+    $scope.natOperacoes = [];
+    $scope.Mensagens = [];
     $scope.itens_pagina = [50, 100, 150, 200];
     $scope.statusmanifesto = [/*{id: 1, nome : 'MANIFESTO'},
                                 {id: 2, nome : 'ERP'}*/];                                        
@@ -48,7 +50,9 @@ angular.module("tax-services-importacao-xml", [])
                       itens_pagina : $scope.itens_pagina[0], pagina : 1,
                       total_registros : 0, faixa_registros : '0-0', total_paginas : 0, chaveAcesso : null}; 
     $scope.total = { nfe : 0 };  
-    $scope.notadetalhada = undefined;                                            
+    $scope.notadetalhada = undefined;  
+    $scope.nrChave = ''; //chave da nota para importação
+    $scope.dadosImportacao = {}; //Dados para importação da NFe
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyManifestoPos = 1; // posição da div que vai receber o loading progress                                         
     // flags
@@ -154,6 +158,7 @@ angular.module("tax-services-importacao-xml", [])
         // Filtros Por Data
        if($scope.tabFiltro === 1)
        {
+           var filtroData = undefined;
            // Data
            if($scope.filtro.data === 'Emissão'){ 
                //console.log("Emissão");
@@ -552,15 +557,13 @@ angular.module("tax-services-importacao-xml", [])
            
        //console.log(filtros);
        
-       $webapi.get($apis.getUrl($apis.rezende.pgsql.tbalmoxarifado, [$scope.token, 1], filtro)) 
+       $webapi.get($apis.getUrl($apis.rezende.pgsql.tbalmoxarifado, [$scope.token, 1,100,0], filtro)) 
             .then(function(dados){
                 // Obtém os dados
                 $scope.almoxarifados = undefined;
-                //console.log(dados);
-           
+              
                 if(dados.Registros.length > 0){ 
                     $scope.almoxarifados = dados.Registros;
-                    //console.log(almoxarifados);
                 }
 
                 if(typeof funcaoSucesso === 'function') funcaoSucesso();
@@ -570,15 +573,46 @@ angular.module("tax-services-importacao-xml", [])
                 $scope.hideProgress(divPortletBodyManifestoPos);
               },
               function(failData){
-           console.log(failData);
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
-                 //else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else $scope.showAlert('Houve uma falha ao obter os almaxorifados para importação (' + failData.status + ')', true, 'danger',true);
                  $scope.hideProgress(divPortletBodyFiltrosPos);
                  $scope.hideProgress(divPortletBodyManifestoPos);
               });     
     }
     
+            /**
+      * Requisita a natureza da operação para importação da nota fiscal
+      */
+    var obtemNatOperacoes = function(colecao,funcaoSucesso){
+       $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
+       $scope.showProgress(divPortletBodyManifestoPos);
+        
+       $webapi.get($apis.getUrl($apis.rezende.pgsql.tbnaturezaoperacao, [$scope.token, colecao])) 
+            .then(function(dados){
+                // Obtém os dados
+                $scope.natOperacoes = undefined;
+                
+           
+                if(dados.Registros.length > 0){ 
+                    $scope.natOperacoes = dados.Registros;
+                    
+                }
+
+                if(typeof funcaoSucesso === 'function') funcaoSucesso();
+           
+                // Fecha os progress
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+                $scope.hideProgress(divPortletBodyManifestoPos);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter a natureza da operação para importação da NFe(' + failData.status + ')', true, 'danger',true);
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+                 $scope.hideProgress(divPortletBodyManifestoPos);
+              });     
+    }
     
     /** 
       * Detalha a nota
@@ -593,19 +627,94 @@ angular.module("tax-services-importacao-xml", [])
             $('#modalDetalhes').modal('show');
     }
     
-        /** 
-      * Importa a nota
-      */
-    $scope.importar = function(manifesto, indexNota){
+    /** 
+      * Obtem as informações para importar a nota
+    */
+    $scope.obterInformarcoesImportar = function(manifesto, indexNota){
         var nota = manifesto.notas[indexNota];
-        //console.log("DETALHAR " + manifesto.nmEmitente.toUpperCase());
-        console.log(nota);
-        //if(!$scope.notadetalhada || $scope.notadetalhada.idManifesto !== nota.idManifesto)
-            obtemAlmoxarifados(nota.nrCNPJ, function(){$('#modalImportar').modal('show');});
-        //else
-            $('#modalImportar').modal('show');
+        var uf = manifesto.UF;
+        var colecao = 1;
+        if(uf != 'SE')
+        {
+            colecao = 2;
+        }
+        $scope.nrChave = nota.nrChave;
+        
+        obtemAlmoxarifados(nota.nrCNPJ, function(){$('#modalImportar').modal('show');});
+        obtemNatOperacoes(colecao,function(){$('#modalImportar').modal('show');});
+    }
+
+    /*
+    Importação da NFe
+    */
+    $scope.importarNota = function () {
+               
+        // Valida se o usuário informou os dados necessários 
+        if(!$scope.dadosImportacao || $scope.dadosImportacao === null){
+           $scope.showModalAlerta('É necessário selecionar a Natureza da Operação e o Almoxarifado!'); 
+           return;       
+       }else if(!$scope.dadosImportacao.natOperacao || $scope.dadosImportacao.natOperacao === null){
+           $scope.showModalAlerta('É necessário selecionar a Natureza da Operação!'); 
+           return;       
+       }else if(!$scope.dadosImportacao.almoxarifado || $scope.dadosImportacao.almoxarifado === null){
+           $scope.showModalAlerta('É necessário selecionar o Almoxarifado!'); 
+           return;       
+       }
+        
+        // Obtém o JSON
+        var jsonImportar = { nrChave : $scope.nrChave,
+                          codAlmoxarifado : $scope.dadosImportacao.almoxarifado.cod_almoxarifado,
+                          codNaturezaOperacao : $scope.dadosImportacao.natOperacao.cod_natureza_operacao
+                        };
+
+        // POST
+        $scope.showProgress();
+        $webapi.post($apis.getUrl($apis.rezende.pgsql.tabnotafiscalentrada, undefined,
+                                 {id : 'token', valor : $scope.token}), jsonImportar) 
+            .then(function(dados){
+                // Fecha os progress
+                $scope.hideProgress();
+            
+                    if(dados && dados != null){
+                        if(dados.cdMensagem === 200)
+                        {
+                           //Fecha o modal
+                           fechaModalImportar();
+                            $scope.showModalAlerta('Nota Fiscal incluída com sequência: '+dados.sqNota+'.');   
+                        }
+                        else{
+                        fechaModalImportar();
+                        $scope.Mensagens = dados.Mensagens; 
+                        exibeRetornoImportacao();
+                        }
+                    }else{ 
+                    // Não recebeu JSON de resposta...
+                    // Fecha o modal
+                        fechaModalImportar();
+                    }
+              },
+            function(failData){
+                fechaModalImportar();
+                if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                else $scope.showAlert('Houve uma falha ao importar a NFe (' + failData.status + ')', true, 'danger', true);
+                // Fecha os progress
+                $scope.hideProgress();
+                
+            }); 
+        $scope.dadosImportacao = null;
+    };
+           
+    /*
+    Fecha o modal Importar
+    */                                            
+    var fechaModalImportar = function(){
+        $('#modalImportar').modal('hide');       
     }
     
+        var exibeRetornoImportacao = function(){
+        $('#modalRetornoImportacao').modal('show');       
+    }
     /** 
       * Imprime a nota
       */

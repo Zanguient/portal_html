@@ -641,6 +641,13 @@ angular.module("card-services-consolidacao-relatorios", [])
                 $scope.hideProgress(divPortletBodyRelatorioPos);
               },
               function(failData){
+                 // Reseta valores
+                 $scope.relatorio.terminal = [];
+                 $scope.filtro.terminal.pagina = 1;
+                 $scope.filtro.terminal.total_registros = 0;
+                 $scope.filtro.terminal.faixa_registros = '0-0';
+                 $scope.filtro.terminal.total_paginas = 0;
+           
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else $scope.showAlert('Houve uma falha ao obter relatório por terminal lógico (' + failData.status + ')', true, 'danger', true);
@@ -705,6 +712,13 @@ angular.module("card-services-consolidacao-relatorios", [])
                 $scope.hideProgress(divPortletBodyRelatorioPos);
               },
               function(failData){
+                 // Reseta valores
+                 $scope.relatorio.sintetico = [];
+                 $scope.filtro.sintetico.pagina = 1;
+                 $scope.filtro.sintetico.total_registros = 0;
+                 $scope.filtro.sintetico.faixa_registros = '0-0';
+                 $scope.filtro.sintetico.total_paginas = 0;
+           
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else $scope.showAlert('Houve uma falha ao obter relatório sintético (' + failData.status + ')', true, 'danger', true);
@@ -818,6 +832,13 @@ angular.module("card-services-consolidacao-relatorios", [])
                 $scope.hideProgress(divPortletBodyRelatorioPos);
               },
               function(failData){
+                 // Reseta valores
+                 $scope.relatorio.analitico = [];
+                 $scope.filtro.analitico.pagina = 1;
+                 $scope.filtro.analitico.total_registros = 0;
+                 $scope.filtro.analitico.faixa_registros = '0-0';
+                 $scope.filtro.analitico.total_paginas = 0;
+           
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else $scope.showAlert('Houve uma falha ao obter relatório analítico (' + failData.status + ')', true, 'danger', true);

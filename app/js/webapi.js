@@ -4,8 +4,19 @@
  *  suporte@atoscapital.com.br
  *
  *
+<<<<<<< HEAD
+ *  Versão 1.0.5 - 20/10/2015
+ *  - tabtituloreceber
+ *
  *  Versão 1.0.4 - 16/10/2015
  *  - tbcatalogo
+=======
+ *  Versão 1.0.5 - 23/10/2015
+ *  - relatoriovendas
+ *
+ *  Versão 1.0.4 - 20/10/2015
+ *  - recebiveisfuturos
+>>>>>>> cfb9b500068b285ee1e31b572aa0cdaca95e0f38
  *
  *  Versão 1.0.3 - 09/10/2015
  *  - tbbandeira
@@ -148,6 +159,16 @@ angular.module('webapi', ['utils'])
             // Relacionamentos
             operadora : 200,
             tbadquirente : 300
+        },
+        recebiveisfuturos : {
+            data : 100,
+            id_grupo : 101,
+            nu_cnpj : 102,
+        },
+        relatoriovendas : {
+            data : 100,
+            id_grupo : 101,
+            nu_cnpj : 102,
         },
         tbadquirente : {
             cdAdquirente : 100,
@@ -298,6 +319,7 @@ angular.module('webapi', ['utils'])
             codVendaERP : 112,
             codResumoVenda : 113,
             numParcelaTotal : 114,
+            cdBandeira : 115,
             // Relacionamento
             operadora : 300,
             empresa : 400, // pode ser usado para buscar o id_grupo
@@ -319,14 +341,18 @@ angular.module('webapi', ['utils'])
             operadora : 400,
             bandeira : 500,
             recebimento : 600,
-            tbadquirente : 700
+            tbadquirente : 700,
+            tbbandeira : 800
             // EXPORTAR
             exportar : 9999
         },
         terminallogico : {
             idTerminalLogico: 100,
             dsTerminalLogico : 101,
-            idOperadora : 102    
+            idOperadora : 102,
+            // Relacionamentos
+            idGrupoEmpresa : 200,
+            cdAdquirente : 300
         }
       },
       tax : {
@@ -535,6 +561,8 @@ angular.module('webapi', ['utils'])
     },
     card : {
         conciliacaobancaria : $autenticacao.getUrlBase() + '/card/conciliacaobancaria/',
+        recebiveisfuturos : $autenticacao.getUrlBase() + '/card/recebiveisfuturos/',
+        relatoriovendas : $autenticacao.getUrlBase() + '/card/relatoriovendas/',
         tbadquirente : $autenticacao.getUrlBase() + '/card/tbadquirente/',
         tbbancoparametro : $autenticacao.getUrlBase() + '/card/tbbancoparametro/',
         tbbandeira : $autenticacao.getUrlBase() + '/card/tbbandeira/',
@@ -580,6 +608,9 @@ angular.module('webapi', ['utils'])
             tabpdv : $autenticacao.getUrlBaseRezende() + '/pgsql/tabpdv/',
             tabpessoa : $autenticacao.getUrlBaseRezende() + '/pgsql/tabpessoa/',
             tbalmoxarifado: $autenticacao.getUrlBaseRezende() + '/Pgsql/TabAlmoxarifado/',
+            tbnaturezaoperacao: $autenticacao.getUrlBaseRezende() + '/Pgsql/TabNaturezaOperacao/',
+            tabnotafiscalentrada: $autenticacao.getUrlBaseRezende() + '/Pgsql/TabNotaFiscalEntrada/',
+            tabtituloreceber: $autenticacao.getUrlBaseRezende() + '/Pgsql/tabtituloreceber/',
           }
     }
   }
