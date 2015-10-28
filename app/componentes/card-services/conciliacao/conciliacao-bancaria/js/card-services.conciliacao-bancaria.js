@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.6 - 28/10/2015
+ *  - Desfazer conciliação
+ *
  *  Versão 1.0.5 - 13/10/2015
  *  - Seleção de TODAS as filiais
  *  - Combo ADQUIRENTE sendo preenchida pela tabela tbAdquirente em vez de Operadora
@@ -537,6 +540,20 @@ angular.module("card-services-conciliacao-bancaria", [])
     
     // AÇÕES
     /**
+      * Solicita confirmação para o usuário quanto a desconciliação
+      */
+    $scope.desconcilia = function(dado){
+        var dadoE = angular.copy(dado);
+        dadoE.ExtratoBancario[0].Id = -1; // desfazer conciliação
+        //console.log(dado);
+        //console.log(dadoE);
+        // Confirma a desconciliação
+        //var carga = dadoE.RecebimentosParcela.length > 1 ? "as cargas" : "a carga";
+        $scope.showModalConfirmacao('Confirmação', 
+            "Tem certeza que deseja desfazer a conciliação selecionada?",
+            concilia, [dadoE], 'Sim', 'Não');  
+    }
+    /**
       * Solicita confirmação para o usuário quanto a conciliação
       */
     $scope.concilia = function(dado){
@@ -600,7 +617,8 @@ angular.module("card-services-conciliacao-bancaria", [])
             .then(function(dados){
                     //$scope.showAlert('Conciliação bancária realizada com sucesso!', true, 'success', true);
                     if($scope.associacaoManual.extrato && $scope.associacaoManual.extrato !== null &&
-                       $scope.associacaoManual.recebimentos && $scope.associacaoManual.recebimentos !== null){
+                       $scope.associacaoManual.recebimentos && $scope.associacaoManual.recebimentos !== null || 
+                       json.idExtrato === -1){
                         buscaDadosConciliacaoBancaria(true);
                     }else{
                         // Altera o status da conciliação
