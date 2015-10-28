@@ -147,11 +147,13 @@ angular.module('utils', [ ])
 .factory('$autenticacao', ['$localstorage', function($localstorage){
   
   // URL base da WEBAPI
+
   var urlBase = 'http://localhost:55007';
+  //var urlBase = 'http://localhost:55437';
   //var urlBase = 'http://192.168.1.100/apiportal';  // proxy: versão mais atualizada da webapi 
   //var urlBase = 'http://ws.atoscapital.com.br/proxy';
   // IMessage
-  //var urlBaseIMessage = 'http://localhost:50939';
+  //var urlBaseIMessage = 'http://localhost:50780';
   var urlBaseIMessage = 'http://imessage.atoscapital.com.br';
   // Rezende
   //var urlBaseRezende = 'http://localhost:50939';

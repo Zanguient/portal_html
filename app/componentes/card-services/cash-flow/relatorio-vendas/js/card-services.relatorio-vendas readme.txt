@@ -1,0 +1,82 @@
+# README #
+
+Módulo que:
+ - gerencia o layout da tela de Relatório de Vendas de Cash Flow (app/componentes/card-services/cash-flow/relatorio-vendas/index.html);
+
+ 
+ 
+### Pra Que Serve Este Módulo? ###
+
+Gerenciar completamente a tela de Relatório de Vendas de Cash Flow.  
+
+
+
+### O que é necessário para usar o módulo? ###
+
+Como esse é um controller filho do controller principal "appCtrl" (app.js), ele herda todos os módulos importados por ele.
+Não é necessário nenhum outro módulo externo.
+
+ 
+### Outras depêndencias ###
+
+  * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
+  * $scope.token do "appCtrl"
+  * Emite evento "acessouTela" no init do controller para que seja feito o log de acesso de tela
+  * Evento "acessoDeTelaNotificado", proveniente do "appCtrl", para de fato exibir a tela e fazer requisições 
+	=> importante para o log correto de requisições HTTP, ao qual identifica corretamente a (tela de) origem
+  * $scope.grupoempresa, do "appCtrl" : grupo empresa informado pelo usuário na barra administrativa
+  * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
+  * APIS:
+    - cliente/empresa 
+	- card/relatoriovendas
+	
+ 
+ 
+ ### Interação com a WEB API ###
+ 
+  * cliente/empresa
+    - GET : listagem das filiais (coleção 0)
+			[
+			  { nu_cnpj : string,
+				ds_fantasia : string,
+				filial : string ou null,
+				id_grupo : int
+			  }
+			]
+	
+    * card/relatoriovendas	
+	   - GET : dados relativos ao relatório de vendas do grupo ou filial (coleção 0)
+			[
+			  {
+			    diaVenda : string,
+			    valorBruto : double,
+			    valorDescontado : double,
+			    valorLiquido : double,
+				valorRecebido : double,
+				valorAReceber : double,
+			    adquirentes : [{ adquirente : string,
+						   valorBruto : double,
+						   valorDescontado : double,
+						   valorLiquido : double,
+						   valorRecebido : double,
+						   valorAReceber : double,
+						   bandeiras : [{  bandeira : string,
+										   valorBruto : double,
+										   valorDescontado : double,
+										   valorLiquido : double,
+										   valorRecebido : double,
+										   valorAReceber : double,
+										}]
+						 }]
+			  } 
+			]
+			Envia no JSON a chave "Totais" com: "valorBruto", "valorDescontado", "valorLiquido", "valorRecebido" e "valorAReceber"  (todos double)
+			
+   
+
+   
+   
+   
+### Desenvolvedores ###
+
+Deivid Marinho - deividgfmarinho@gmail.com

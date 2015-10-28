@@ -121,6 +121,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 								dtaRecebimento : date,
 								dtaRecebimentoEfetivo : date ou null,
 								codResumoVenda : string,
+								cdAutorizador : string ou null,
 								nsu : string,
 								numParcela : string,
 								valorBruto : double,

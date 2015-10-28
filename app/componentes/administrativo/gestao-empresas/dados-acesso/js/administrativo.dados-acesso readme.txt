@@ -89,7 +89,11 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				empresa : { nu_cnpj : string,
 							ds_fantasia : string,
 							filial : string },
-				estabelecimento : string (ou null)
+				estabelecimento : string (ou null),
+				empresaCentralizadora : null ou { nu_cnpj : string,
+												  ds_fantasia : string,
+												  filial : string },
+				cdEstabelecimentoConsulta : string (ou null)
 			  }
 			]
 			
@@ -102,6 +106,8 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				cnpj : string,
 				idGrupo : int,
 				estabelecimento : string (pode ser null),
+				nrCNPJCentralizadora : string ou null, // para desassociar, enviar como string vazia
+				cdEstabelecimentoConsulta : string ou null,
 				operadora : { nmOperadora : nomeAdquirente }
 			  }
 				
@@ -111,7 +117,9 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 			  { id : int,
 				login : string,
 				senha : string,
-				estabelecimento : string (pode ser null)
+				estabelecimento : string (pode ser null),
+				nrCNPJCentralizadora : string ou null, // para desassociar, enviar como string vazia
+				cdEstabelecimentoConsulta : string ou null,
 			  }
 			]
  
