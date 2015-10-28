@@ -26,21 +26,23 @@ angular.module("card-services-consolidacao-movimento-tef", [])
     $scope.itens_pagina = [50, 100, 150, 200]; 
     $scope.paginaInformada = 1; // página digitada pelo usuário 
     // Filtros
+    $scope.filiais = $scope.bandeiras = [];
+                                                 
     $scope.filtro = {datamin : new Date(), datamax : '', filial : null, bandeira : null, busca : '',}
     $scope.abrirCalendarioDataMin = false;
     $scope.abrirCalendarioDataMax = false;                                           
     
     //Movimentos
-    $scope.relatorio = {movimento : [], resumoMovimento : []};
+    $scope.recebimento = {movimento : [], resumoMovimento : []};
      
     // flag
     var ultimoFiltro = undefined;
     $scope.exibeTela = false;  
-    $scope.buscandoRelatorio = false;                                                  
+    $scope.buscandoRecebimento = false;                                                  
     
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyRelatorioPos = 1; // posição da div que vai receber o loading progress
-    $scope.tab = 1; // init Sintético                                             
+    $scope.tab = 2; // init Sintético                                             
     $scope.movimentos = [{horario: '09:00',	
                           filial: 'Filal 17 - ARUANDA' ,	
                           bandeira: 'VISA' ,	
@@ -149,7 +151,7 @@ angular.module("card-services-consolidacao-movimento-tef", [])
             buscaAdquirentes(false); 
         }*/
         // Limpa relatórios
-        $scope.movimento_tef.movimento = [];
+        //$scope.movimento_tef.movimento = [];
         $scope.movimento_tef.resumo_movimeto = [];        
         $scope.filtro.movimento.pagina = $scope.filtro.resumo_movimento.pagina = 1;
         $scope.filtro.movimento.total_registros = $scope.filtro.resumo_movimento.total_registros = 0;
@@ -248,7 +250,7 @@ angular.module("card-services-consolidacao-movimento-tef", [])
       */                                             
     var buscaBandeiras = function(progressEstaAberto, buscarTerminaisLogicos, idBandeira, idTerminalLogico){
        
-       if(!$scope.filtro.adquirente || $scope.filtro.adquirente === null){
+       if(!$scope.filtro.filial || $scope.filtro.filial === null){
            $scope.filtro.bandeira = null;
            $scope.bandeiras = [];
            return;
@@ -259,8 +261,8 @@ angular.module("card-services-consolidacao-movimento-tef", [])
        var filtros = undefined;
 
        // Filtro de adquirente
-       if($scope.filtro.adquirente !== null) filtros = {id: /*$campos.pos.bandeirapos.idOperadora*/ 102, 
-                                                        valor: $scope.filtro.adquirente.id};
+       if($scope.filtro.filial !== null) filtros = {id: /*$campos.pos.bandeirapos.idOperadora*/ 114, 
+                                                        valor: $scope.filtro.filial.id};
        
        $webapi.get($apis.getUrl($apis.pos.bandeirapos, 
                                 [$scope.token, 0, /*$campos.pos.bandeirapos.desBandeira*/ 101],
@@ -392,7 +394,7 @@ angular.module("card-services-consolidacao-movimento-tef", [])
     /**
       * Obtem o Resumo
       */
-    $scope.buscaRelatorio = function(){
+    $scope.buscaMovimento = function(){
         // Avalia se há um grupo empresa selecionado
         if(!$scope.usuariologado.grupoempresa){
             $scope.showModalAlerta('Por favor, selecione uma empresa', 'Atos Capital', 'OK', 
@@ -421,12 +423,83 @@ angular.module("card-services-consolidacao-movimento-tef", [])
             }
         }
         // Nova busca
-        if($scope.tabIs(0)) buscaRelatorioTerminal(true);
-        else if($scope.tabIs(1)) buscaRelatorioSintetico(true);
-        else if($scope.tabIs(2)) buscaRelatorioAnalitico(true, true);
+        //else if($scope.tabIs(1)) buscaRecebimentoMovimento(true);
+        else if($scope.tabIs(2)) buscaRecebimentoResumoMovimento();
     };
-                                                 
-                                                 
+ 
+    // RESUMO DO MOVIMENTO
+    /**
+      * Busca o resumo do movimento
+      */
+    var buscaRelatorioTerminal = function(resetaOutrosRelatorios){
+       $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
+       $scope.showProgress(divPortletBodyRelatorioPos);
+        
+       // Filtros    
+       var filtros = obtemFiltroDeBusca();
+           
+       //console.log(filtros);
+       
+       $webapi.get($apis.getUrl($apis.card.tbrecebimentotef, 
+                                [$scope.token, 3, 100, 0, 
+                                 $scope.filtro.itens_pagina, $scope.filtro.terminal.pagina],
+                                filtros)) 
+            .then(function(dados){
+                ultimoFiltro = filtros;
+           
+                // Reseta os valores totais
+                $scope.total.terminal.totalTransacoes = $scope.total.terminal.valorBruto = 0;
+                // Obtém os dados
+                $scope.relatorio.terminal = dados.Registros;
+                // Obtém os totais
+                $scope.total.terminal.totalTransacoesFiltrado = dados.Totais.totalTransacoes;
+                $scope.total.terminal.valorBrutoFiltrado = dados.Totais.valorBruto;
+           
+                // Set valores de exibição
+                $scope.filtro.terminal.total_registros = dados.TotalDeRegistros;
+                $scope.filtro.terminal.total_paginas = Math.ceil($scope.filtro.terminal.total_registros / $scope.filtro.itens_pagina);
+                if($scope.relatorio.terminal.length === 0) $scope.filtro.terminal.faixa_registros = '0-0';
+                else{
+                    var registroInicial = ($scope.filtro.terminal.pagina - 1)*$scope.filtro.itens_pagina + 1;
+                    var registroFinal = registroInicial - 1 + $scope.filtro.itens_pagina;
+                    if(registroFinal > $scope.filtro.terminal.total_registros) registroFinal = $scope.filtro.terminal.total_registros;
+                    $scope.filtro.terminal.faixa_registros =  registroInicial + '-' + registroFinal;
+                }
+                // Verifica se a página atual é maior que o total de páginas
+                if($scope.filtro.terminal.pagina > $scope.filtro.terminal.total_paginas)
+                    setPagina(1); // volta para a primeira página e refaz a busca
+           
+                // Reseta os outros para forçar uma nova busca
+                if(resetaOutrosRelatorios){
+                    $scope.relatorio.analitico = [];
+                    $scope.relatorio.sintetico = [];
+                    $scope.filtro.analitico.pagina = $scope.filtro.sintetico.pagina = 1;
+                    $scope.filtro.analitico.total_registros = $scope.filtro.sintetico.total_registros = 0;
+                    $scope.filtro.analitico.faixa_registros = $scope.filtro.sintetico.faixa_registros = '0-0';
+                    $scope.filtro.analitico.total_paginas = $scope.filtro.sintetico.total_paginas = 0;
+                }
+           
+                // Fecha os progress
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+                $scope.hideProgress(divPortletBodyRelatorioPos);
+              },
+              function(failData){
+                 // Reseta valores
+                 $scope.relatorio.terminal = [];
+                 $scope.filtro.terminal.pagina = 1;
+                 $scope.filtro.terminal.total_registros = 0;
+                 $scope.filtro.terminal.faixa_registros = '0-0';
+                 $scope.filtro.terminal.total_paginas = 0;
+           
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter relatório por terminal lógico (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+                 $scope.hideProgress(divPortletBodyRelatorioPos);
+              });       
+    }
+    
+ 
     //TAB 
     /**
       * Retorna true se a tab informada corresponde a tab em exibição

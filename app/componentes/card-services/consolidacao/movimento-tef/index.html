@@ -80,8 +80,34 @@
                                                 <i class="fa fa-calendar"></i>
                                             </button>
                                         </span>
-                                    </div>                                                                                
-                                </td>                                
+                                    </div>
+                                    <div class="input-group"> <!--  date date-picker margin-bottom-5" -->
+                                        <input type="text" 
+                                               class="form-control form-filter input-sm" 
+                                               readonly="" 
+                                               style="cursor: pointer" 
+                                               ng-click="exibeCalendarioDataMax($event)" 
+                                               placeholder="Fim" 
+                                               ng-model="filtro.datamax" 
+                                               ng-change="alterouDataMax()" 
+                                               datepicker-popup="dd MMMM yyyy" 
+                                               is-open="abrirCalendarioDataMax" 
+                                               datepicker-append-to-body="true"
+                                               ng-required="false" 
+                                               current-text="Hoje" 
+                                               clear-text="Limpar" 
+                                               close-text="Fechar" 
+                                               show-button-bar="true" 
+                                               show-weeks="false">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-sm default" 
+                                                    type="button" 
+                                                    ng-click="exibeCalendarioDataMax($event)">
+                                                <i class="fa fa-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </div>                                            
+                                </td>                             
                                 <!-- Filial -->
                                 <td rowspan="1" colspan="1">
                                     <select class="form-control form-filter input-sm comboBoxFiltros"                      
@@ -92,15 +118,20 @@
                                         <option value="">TODAS</option>
                                     </select>
                                 </td>
-                                <!-- BANDEIRA -->
-                                <td rowspan="1" ng-hide="tabIs(2)" colspan="1">
+                                <!-- BANDEIRAS -->
+                                <td rowspan="1" ng-hide="tabIs(2)" colspan="1" style="text-align: center">
                                     <select class="form-control form-filter input-sm comboBoxFiltros"
-                                            
-                                            ng-model="filtro.sacado"
-                                            ng-change="alterouSacado()"
-                                            ng-options="sacado as (sacado.des_forma_pagto | uppercase) for sacado in sacados">
+                                            ng-disabled="filtro.filial === null"
+                                            ng-model="filtro.bandeira"
+                                            ng-change="alterouBandeira()"
+                                            ng-options="bandeira as (bandeira.desBandeira | uppercase) for bandeira in bandeiras">
                                         <option value="">TODAS</option>
                                     </select>
+                                    <i class="fa fa-question-circle"
+                                       ng-show="usuariologado.grupoempresa && filtro.adquirente === null"
+                                       popover-placement="bottom"
+                                       popover="É necessário selecionar uma adquirente"
+                                       popover-trigger="mouseenter"></i>
                                 </td>
                                 <!-- AÇÕES -->
                                 <td rowspan="1" colspan="1" style="text-align:center">
