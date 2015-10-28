@@ -28,6 +28,7 @@ angular.module("administrativo-parametros-noticias", [])
     $scope.catalogos = [];                                            
     //$scope.filtro = {catalogo = null};                                            
     
+    $scope.usuarios = [];                                            
     // flags
     $scope.exibeTela = false;                                            
                                                 
@@ -55,39 +56,73 @@ angular.module("administrativo-parametros-noticias", [])
         
     };
     
-       var obtemCatalogos = function(funcaoSucesso){
-       //$scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
-       //$scope.showProgress(divPortletBodyManifestoPos);
-        
-             
-       $webapi.get($apis.getUrl($apis.administracao.tbcatalogo, [$scope.token, 0])) 
-            .then(function(dados){
-                // Obtém os dados
-                $scope.catalogos = undefined;
-                           
-                if(dados.Registros.length > 0){ 
-                    $scope.catalogos = dados.Registros;
-                    console.log(dados);
-                    
-                }
+    var obtemCatalogos = function(funcaoSucesso){
+    //$scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
+    //$scope.showProgress(divPortletBodyManifestoPos);
 
-                if(typeof funcaoSucesso === 'function') funcaoSucesso();
-           
-                // Fecha os progress
-                //$scope.hideProgress(divPortletBodyFiltrosPos);
-                //$scope.hideProgress(divPortletBodyManifestoPos);
-              },
-              function(failData){
-                if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
-                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                 else $scope.showAlert('Houve uma falha ao obter os catálogos (' + failData.status + ')', true, 'danger',true);
-                 //$scope.hideProgress(divPortletBodyFiltrosPos);
-                 //$scope.hideProgress(divPortletBodyManifestoPos);
-              });     
+
+    $webapi.get($apis.getUrl($apis.administracao.tbcatalogo, [$scope.token, 0])) 
+        .then(function(dados){
+            // Obtém os dados
+            $scope.catalogos = undefined;
+
+            if(dados.Registros.length > 0){ 
+                $scope.catalogos = dados.Registros;
+                //console.log(dados);
+
+            }
+
+            if(typeof funcaoSucesso === 'function') funcaoSucesso();
+
+            // Fecha os progress
+            //$scope.hideProgress(divPortletBodyFiltrosPos);
+            //$scope.hideProgress(divPortletBodyManifestoPos);
+          },
+          function(failData){
+            if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+             else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+             else $scope.showAlert('Houve uma falha ao obter os catálogos (' + failData.status + ')', true, 'danger',true);
+             //$scope.hideProgress(divPortletBodyFiltrosPos);
+             //$scope.hideProgress(divPortletBodyManifestoPos);
+          });     
     }
        
        
     obtemCatalogos();  
+    //console.log(catalogos);   
+                                                
+    
+    var obtemUsuarios = function(funcaoSucesso){
+    //$scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
+    //$scope.showProgress(divPortletBodyManifestoPos);
+
+
+    $webapi.get($apis.getUrl($apis.administracao.webpagesusers, [$scope.token, 0])) 
+        .then(function(dados){
+            // Obtém os dados
+            $scope.usuarios = undefined;
+
+            if(dados.Registros.length > 0){ 
+                $scope.usuarios = dados.Registros;
+            }
+
+            if(typeof funcaoSucesso === 'function') funcaoSucesso();
+
+            // Fecha os progress
+            //$scope.hideProgress(divPortletBodyFiltrosPos);
+            //$scope.hideProgress(divPortletBodyManifestoPos);
+          },
+          function(failData){
+            if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+             else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+             else $scope.showAlert('Houve uma falha ao obter os catálogos (' + failData.status + ')', true, 'danger',true);
+             //$scope.hideProgress(divPortletBodyFiltrosPos);
+             //$scope.hideProgress(divPortletBodyManifestoPos);
+          });     
+    }
+       
+       
+    obtemUsuarios();  
     //console.log(catalogos);                                            
                                                 
 }])
