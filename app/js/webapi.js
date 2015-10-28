@@ -611,6 +611,7 @@ angular.module('webapi', ['utils'])
             tbnaturezaoperacao: $autenticacao.getUrlBaseRezende() + '/Pgsql/TabNaturezaOperacao/',
             tabnotafiscalentrada: $autenticacao.getUrlBaseRezende() + '/Pgsql/TabNotaFiscalEntrada/',
             tabtituloreceber: $autenticacao.getUrlBaseRezende() + '/Pgsql/tabtituloreceber/',
+            baixaautomatica: $autenticacao.getUrlBaseRezende() + '/Pgsql/baixaautomatica/',
           }
     }
   }
