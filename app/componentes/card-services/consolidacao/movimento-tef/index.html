@@ -46,10 +46,13 @@
                                 <th width="10%" class="" tabindex="1" aria-controls="datatable_ajax" rowspan="1" colspan="1">
                                      Filial
                                 </th>
-                                <th width="10%" ng-hide="tabIs(2)" class="" tabindex="2" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                <th width="10%" class="" tabindex="2" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                     Adquirente
+                                </th>
+                                <th width="10%" ng-hide="tabIs(2)" class="" tabindex="3" aria-controls="datatable_ajax" rowspan="1" colspan="1">
                                      Bandeira
                                 </th>
-                                <th width="1%" class="" tabindex="3" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                <th width="1%" class="" tabindex="4" aria-controls="datatable_ajax" rowspan="1" colspan="1">
                                      Ações
                                 </th>
                             </tr>
@@ -112,11 +115,26 @@
                                 <td rowspan="1" colspan="1">
                                     <select class="form-control form-filter input-sm comboBoxFiltros"                      
                                             ng-disabled="filiais.length == 0"
-                                                    ng-model="filtro.filial"
-                                                    ng-change="alterouFilial()"
-                                                    ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
+                                            ng-model="filtro.filial"
+                                            ng-change="alterouFilial()"
+                                            ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
                                         <option value="">TODAS</option>
                                     </select>
+                                </td>
+                                <!-- ADQUIRENTES -->
+                                <td rowspan="1" colspan="1" style="text-align: center">
+                                    <select class="form-control form-filter input-sm comboBoxFiltros"
+                                            ng-disabled="!filtro.filial || filtro.filial === null"
+                                            ng-model="filtro.adquirente"
+                                            ng-change="alterouAdquirente()"
+                                            ng-options="adquirente as (adquirente.nmOperadora | uppercase) for adquirente in adquirentes">
+                                        <option value="">TODAS</option>
+                                    </select>
+                                     <i class="fa fa-question-circle"
+                                        ng-show="!usuariologado.grupoempresa || !filtro.filial || filtro.filial === null"
+                                        popover-placement="bottom"
+                                        popover="É necessário selecionar uma filial"
+                                        popover-trigger="mouseenter"></i>
                                 </td>
                                 <!-- BANDEIRAS -->
                                 <td rowspan="1" ng-hide="tabIs(2)" colspan="1" style="text-align: center">
@@ -138,7 +156,7 @@
                                     <div class="margin-bottom-5">
                                         <!-- BOTÃO BUSCAR -->
                                         <button class="btn btn-sm red filter-submit margin-bottom" 
-                                                ng-click="buscaAutorizacoes()">
+                                                ng-click="buscaMovimento()">
                                             <i class="fa fa-search"></i> 
                                             Buscar
                                         </button>

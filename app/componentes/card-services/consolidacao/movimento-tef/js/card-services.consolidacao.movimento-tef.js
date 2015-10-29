@@ -107,6 +107,7 @@ angular.module("card-services-consolidacao-movimento-tef", [])
                     buscaFiliais();
                 }else{ // reseta tudo e não faz buscas 
                     $scope.filiais = [];
+                    $scope.adquirente = [];
                     $scope.bandeiras = [];
                 }
             }
@@ -240,15 +241,67 @@ angular.module("card-services-consolidacao-movimento-tef", [])
       */
     $scope.alterouFilial = function(){
         //console.log($scope.filtro.filial); 
-        buscaBandeiras(false);
+        buscaAdquirentes(false);
     };
     
     
+    // ADQUIRENTES 
+    /**
+      * Busca as adquirentes
+      */
+    var buscaAdquirentes = function(progressEstaAberto, idOperadora, idBandeira,){
+ 
+       if(!$scope.filtro.filial || $scope.filtro.filial === null){
+           $scope.filtro.adquirente = $scope.filtro.bandeira = null;
+           return;
+       }    
+        
+       if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
+        
+       var filtros = undefined;
+
+
+       // Filtro do grupo empresa => barra administrativa
+       filtros = {id: 300,
+                 //id: $campos.pos.operadora.empresa + $campos.cliente.empresa.nu_cnpj - 100, 
+                  valor: $scope.filtro.filial.nu_cnpj};
+       
+       $webapi.get($apis.getUrl($apis.pos.operadora, 
+                                [$scope.token, 0, /*$campos.pos.operadora.nmOperadora*/ 101],
+                                filtros)) 
+            .then(function(dados){
+                $scope.adquirentes = dados.Registros;
+                // Reseta
+                if(!idOperadora) $scope.filtro.adquirente = null;
+                else $scope.filtro.adquirente = $filter('filter')($scope.adquirentes, function(a) {return a.id === idOperadora;})[0];
+                // Busca bandeiras
+                if($scope.filtro.adquirente && $scope.filtro.adquirente !== null) 
+                    buscaBandeiras(true, true, idBandeira,);
+                else
+                    $scope.hideProgress(divPortletBodyFiltrosPos);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter adquirentes (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+              });        
+    }
+    /**
+      * Selecionou uma adquirente
+      */
+    $scope.alterouAdquirente = function(idBandeira, progressEstaAberto){
+        $scope.bandeiras = []; 
+        $scope.filtro.bandeira = null;
+        if($scope.filtro.adquirente !== null)
+            buscaBandeiras(progressEstaAberto, true, idBandeira,);
+    };                                             
+ 
     // BANDEIRAS  
     /**
       * Busca as bandeiras
       */                                             
-    var buscaBandeiras = function(progressEstaAberto, buscarTerminaisLogicos, idBandeira, idTerminalLogico){
+    var buscaBandeiras = function(progressEstaAberto, idBandeira,){
        
        if(!$scope.filtro.filial || $scope.filtro.filial === null){
            $scope.filtro.bandeira = null;
@@ -274,17 +327,17 @@ angular.module("card-services-consolidacao-movimento-tef", [])
                     $scope.filtro.bandeira = $filter('filter')($scope.bandeiras, function(b) {return b.id === idBandeira;})[0];
                     if(!$scope.filtro.bandeira) $scope.filtro.bandeira = null;
                 }else $scope.filtro.bandeira = null;
-                // Esconde o progress
-                if(buscarTerminaisLogicos) buscaTerminaisLogicos(true, idTerminalLogico);
-                else $scope.hideProgress(divPortletBodyFiltrosPos);
+                // Esconde o progress                
+                $scope.hideProgress(divPortletBodyFiltrosPos);
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else $scope.showAlert('Houve uma falha ao obter bandeiras (' + failData.status + ')', true, 'danger', true);
                  $scope.hideProgress(divPortletBodyFiltrosPos);
-              });     
-    };
+              });  
+                
+   };
     /**
       * Selecionou uma bandeira
       */
@@ -292,6 +345,7 @@ angular.module("card-services-consolidacao-movimento-tef", [])
         //console.log($scope.filtro.bandeira);    
     };                                             
     
+        
     // PAGINAÇÃO
     /**
       * Altera efetivamente a página exibida
@@ -423,15 +477,16 @@ angular.module("card-services-consolidacao-movimento-tef", [])
             }
         }
         // Nova busca
-        //else if($scope.tabIs(1)) buscaRecebimentoMovimento(true);
-        else if($scope.tabIs(2)) buscaRecebimentoResumoMovimento();
+        //if($scope.tabIs(1)) buscaRecebimentoMovimento(true);
+        // else if($scope.tabIs(2)) buscaRecebimentoResumoMovimento();
+       if($scope.tabIs(2)) buscaRecebimentoResumoMovimento();
     };
  
     // RESUMO DO MOVIMENTO
     /**
       * Busca o resumo do movimento
       */
-    var buscaRelatorioTerminal = function(resetaOutrosRelatorios){
+    var buscaRecebimentoResumoMovimento = function(resetaOutrosRelatorios){
        $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
        $scope.showProgress(divPortletBodyRelatorioPos);
         
@@ -445,26 +500,8 @@ angular.module("card-services-consolidacao-movimento-tef", [])
                                  $scope.filtro.itens_pagina, $scope.filtro.terminal.pagina],
                                 filtros)) 
             .then(function(dados){
-                ultimoFiltro = filtros;
-           
-                // Reseta os valores totais
-                $scope.total.terminal.totalTransacoes = $scope.total.terminal.valorBruto = 0;
-                // Obtém os dados
-                $scope.relatorio.terminal = dados.Registros;
-                // Obtém os totais
-                $scope.total.terminal.totalTransacoesFiltrado = dados.Totais.totalTransacoes;
-                $scope.total.terminal.valorBrutoFiltrado = dados.Totais.valorBruto;
-           
-                // Set valores de exibição
-                $scope.filtro.terminal.total_registros = dados.TotalDeRegistros;
-                $scope.filtro.terminal.total_paginas = Math.ceil($scope.filtro.terminal.total_registros / $scope.filtro.itens_pagina);
-                if($scope.relatorio.terminal.length === 0) $scope.filtro.terminal.faixa_registros = '0-0';
-                else{
-                    var registroInicial = ($scope.filtro.terminal.pagina - 1)*$scope.filtro.itens_pagina + 1;
-                    var registroFinal = registroInicial - 1 + $scope.filtro.itens_pagina;
-                    if(registroFinal > $scope.filtro.terminal.total_registros) registroFinal = $scope.filtro.terminal.total_registros;
-                    $scope.filtro.terminal.faixa_registros =  registroInicial + '-' + registroFinal;
-                }
+                ultimoFiltro = filtros;           
+                
                 // Verifica se a página atual é maior que o total de páginas
                 if($scope.filtro.terminal.pagina > $scope.filtro.terminal.total_paginas)
                     setPagina(1); // volta para a primeira página e refaz a busca
