@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.7 - 30/10/2015
+ *  - Só permite conciliação de memos amarrados a um filial com a filial correspondente
+ *
  *  Versão 1.0.6 - 28/10/2015
  *  - Desfazer conciliação
  *
@@ -453,7 +456,7 @@ angular.module("card-services-conciliacao-bancaria", [])
                                  /*$campos.card.conciliacaobancaria.data*/ 100, 0, 
                                  $scope.filtro.itens_pagina, $scope.filtro.pagina],
                                 filtros)) 
-            .then(function(dados){           
+            .then(function(dados){       
             
                 // Desassocia possível conciliação manual não finalizada
                 $scope.desassociaExtratoBancario();
@@ -903,7 +906,7 @@ angular.module("card-services-conciliacao-bancaria", [])
            !$scope.associacaoManual.adquirenteExtrato) 
             return false;
         return $scope.getDataString(dado.Data) === $scope.getDataString($scope.associacaoManual.dtExtrato) && 
-               $scope.associacaoManual.adquirenteExtrato === dado.Adquirente;
+               $scope.associacaoManual.adquirenteExtrato === dado.Adquirente && (!$scope.associacaoManual.extrato[0].Filial || $scope.associacaoManual.extrato[0].Filial === dado.RecebimentosParcela[0].Filial);
     }
     /**
       * Selecionou o grupo de recebimentos para conciliar com o extrato selecionado para conciliação manual

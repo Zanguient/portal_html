@@ -69,7 +69,8 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 		{ ExtratoBancario : null ou // se null => não tem info do lado do extrato 
 							[{ Id : int, 
 							   Documento : string,
-							   Valor : double 
+							   Valor : double,
+							   Filial : string
 							 }], 
 		  RecebimentosParcela : null ou // se null => não tem info do lado do recebimento parcela
 							[{ Id : int, 
