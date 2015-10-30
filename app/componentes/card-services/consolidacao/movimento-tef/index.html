@@ -37,28 +37,40 @@
         <div class="portlet-body" ng-show="exibeTela">
             <div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">                
                 <div class="table-scrollable">
-                    <table class="table table-striped table-bordered table-hover dataTable no-footer conteudoTabelas" id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
+                   <table class="table table-striped table-bordered table-hover dataTable no-footer" 
+                           id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
                         <thead>
                             <tr role="row" class="heading">
-                                <th width="5%" class="" tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1">
-                                     Data
+                                <th width="8%" tabindex="0" 
+                                    aria-controls="datatable_ajax" 
+                                    rowspan="1" colspan="1">
+                                     Data {{filtro.data}}
                                 </th>
-                                <th width="10%" class="" tabindex="1" aria-controls="datatable_ajax" rowspan="1" colspan="1">
-                                     Filial
+                                <th width="11%" tabindex="1" 
+                                    aria-controls="datatable_ajax" 
+                                    rowspan="1" colspan="1">
+                                     Filial 
                                 </th>
-                                <th width="10%" class="" tabindex="2" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                <th width="5%" tabindex="2" 
+                                    aria-controls="datatable_ajax" 
+                                    rowspan="1" colspan="1">
                                      Adquirente
                                 </th>
-                                <th width="10%" ng-hide="tabIs(2)" class="" tabindex="3" aria-controls="datatable_ajax" rowspan="1" colspan="1">
+                                <th width="8%" tabindex="3" 
+                                    aria-controls="datatable_ajax" 
+                                    rowspan="1" colspan="1">
                                      Bandeira
                                 </th>
-                                <th width="1%" class="" tabindex="4" aria-controls="datatable_ajax" rowspan="1" colspan="1">
-                                     Ações
+                                <th width="1%" tabindex="5" 
+                                    aria-controls="datatable_ajax" 
+                                    rowspan="1" colspan="1">
+                                     Ações de filtro
                                 </th>
                             </tr>
+                            <!-- CONTEUDO DO FILTRO -->
                             <tr role="row" class="filter">
-                                <!--DATA-->
-                                <td rowspan="1" colspan="1">                                    
+                                <!-- DATA DE RECEBIMENTO -->
+                                <td rowspan="1" colspan="1"> 
                                     <div class="input-group date date-picker margin-bottom-5"
                                          data-date-format="dd/mm/yyyy">
                                         <input type="text" 
@@ -110,39 +122,47 @@
                                             </button>
                                         </span>
                                     </div>                                            
-                                </td>                             
-                                <!-- Filial -->
-                                <td rowspan="1" colspan="1">
-                                    <select class="form-control form-filter input-sm comboBoxFiltros"                      
+                                </td>
+                                <!-- FILIAIS -->
+                                <td rowspan="1" colspan="1" style="text-align: center;">
+                                    <select class="form-control form-filter input-sm comboBoxFiltros"
                                             ng-disabled="filiais.length == 0"
                                             ng-model="filtro.filial"
                                             ng-change="alterouFilial()"
                                             ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
                                         <option value="">TODAS</option>
                                     </select>
+                                    <i class="fa fa-question-circle"
+                                        ng-show="!usuariologado.grupoempresa"
+                                        popover-placement="bottom"
+                                        popover="É necessário selecionar uma empresa"
+                                        popover-trigger="mouseenter"
+                                        ></i> 
                                 </td>
                                 <!-- ADQUIRENTES -->
                                 <td rowspan="1" colspan="1" style="text-align: center">
                                     <select class="form-control form-filter input-sm comboBoxFiltros"
-                                            ng-disabled="!filtro.filial || filtro.filial === null"
+                                            ng-disabled="adquirentes.length === 0"
                                             ng-model="filtro.adquirente"
                                             ng-change="alterouAdquirente()"
-                                            ng-options="adquirente as (adquirente.nmOperadora | uppercase) for adquirente in adquirentes">
+                                            ng-options="adquirente as (adquirente.nmAdquirente | uppercase) for adquirente in adquirentes"
+                                            >
                                         <option value="">TODAS</option>
                                     </select>
-                                     <i class="fa fa-question-circle"
-                                        ng-show="!usuariologado.grupoempresa || !filtro.filial || filtro.filial === null"
-                                        popover-placement="bottom"
-                                        popover="É necessário selecionar uma filial"
-                                        popover-trigger="mouseenter"></i>
+                                    <!--i class="fa fa-question-circle"
+                                       ng-show="!usuariologado.grupoempresa || !filtro.filial || filtro.filial === null"
+                                       popover-placement="bottom"
+                                       popover="É necessário selecionar uma filial"
+                                       popover-trigger="mouseenter"></i-->
                                 </td>
                                 <!-- BANDEIRAS -->
-                                <td rowspan="1" ng-hide="tabIs(2)" colspan="1" style="text-align: center">
+                                <td rowspan="1" colspan="1" style="text-align: center">
                                     <select class="form-control form-filter input-sm comboBoxFiltros"
-                                            ng-disabled="filtro.filial === null"
+                                            ng-disabled="filtro.adquirente === null || bandeiras.length === 0"
                                             ng-model="filtro.bandeira"
                                             ng-change="alterouBandeira()"
-                                            ng-options="bandeira as (bandeira.desBandeira | uppercase) for bandeira in bandeiras">
+                                            ng-options="bandeira as (bandeira.dsBandeira | uppercase) for bandeira in bandeiras"
+                                            >
                                         <option value="">TODAS</option>
                                     </select>
                                     <i class="fa fa-question-circle"
@@ -170,8 +190,6 @@
                                 </td>
                             </tr>
                         </thead>
-                        <tbody>
-                        </tbody>
                     </table>
                 </div>                
             </div>
