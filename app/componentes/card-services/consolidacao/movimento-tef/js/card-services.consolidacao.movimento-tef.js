@@ -116,7 +116,7 @@ angular.module("card-services-consolidacao-movimento-tef", [])
         $scope.$on('acessoDeTelaNotificado', function(event){
             $scope.exibeTela = true;
             // Carrega filiais
-            //if($scope.usuariologado.grupoempresa) buscaFiliais(true);
+            if($scope.usuariologado.grupoempresa) buscaFiliais(true);
         });
         // Acessou a tela
         $scope.$emit("acessouTela");
