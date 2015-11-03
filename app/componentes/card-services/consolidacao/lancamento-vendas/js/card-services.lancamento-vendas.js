@@ -4,28 +4,40 @@
  *  suporte@atoscapital.com.br
  *
  *
+ * Versão 1.0.2 - 06/10/2015
+ *  -Criação dos calendários (um pra POS e o outro pra Adquirente).
+ *
+ * Versão 1.0.1 - 05/10/2015
+ *  -Alteração total da tela, tudo que era referente a cadastro pos/terminal virou: lançamento de vendas.
+ *
  *  Versão 1.0 - 03/09/2015
  *
  */
 
 // App
-angular.module("card-services-cadastro-pos-terminal", []) 
+angular.module('card-services-lancamento-vendas', []) 
 
-.controller("card-services-cadastro-pos-terminalCtrl", ['$scope','$state',function($scope,$state){ 
+.controller("card-services-lancamento-vendasCtrl", ['$scope','$state',function($scope,$state){ 
     
     // flags
     $scope.exibeTela = false;
+    
+    $scope.tab = 2;
     // Data
     $scope.datamin = new Date();
     $scope.datamax = null;
+    $scope.dataAdquirente = null;
+    $scope.dataPos = null;
+    $scope.abrirCalendarioDataAdquirente = false;
+    $scope.abrirCalendarioDataPos = false;
     $scope.abrirCalendarioDataMin = false;
     $scope.abrirCalendarioDataMax = false;
     
     // Inicialização do controller
-    $scope.cardServices_cadastroPOSTerminalInit = function(){
+    $scope.cardServices_lancamentoVendasInit = function(){
         // Título da página 
         $scope.pagina.titulo = 'Card Services';                          
-        $scope.pagina.subtitulo = 'Cadastro POS/Terminal';
+        $scope.pagina.subtitulo = 'Lançamento de Vendas';
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
@@ -53,9 +65,29 @@ angular.module("card-services-cadastro-pos-terminal", [])
         $scope.abrirCalendarioDataMin = !$scope.abrirCalendarioDataMin;
         $scope.abrirCalendarioDataMax = false;
       };
-    $scope.alterouDataMin = function(){
+    
+    // Data Por Adquirente
+    $scope.exibeCalendarioDataAdquirente = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.abrirCalendarioDataAdquirente = !$scope.abrirCalendarioDataAdquirente;
+        $scope.abrirCalendarioDataMax = false;
+      };
+    $scope.alterouDataAdquirente = function(){
       ajustaIntervaloDeData();
     };
+    
+    // Data Por Pos
+    $scope.exibeCalendarioDataPos = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.abrirCalendarioDataPos = !$scope.abrirCalendarioDataPos;
+        $scope.abrirCalendarioDataMax = false;
+      };
+    $scope.alterouDataPos = function(){
+      ajustaIntervaloDeData();
+    };
+    
     // Data MAX
     $scope.exibeCalendarioDataMax = function($event) {
         $event.preventDefault();
@@ -69,5 +101,21 @@ angular.module("card-services-cadastro-pos-terminal", [])
     $scope.limpaDataMax = function () {
         $scope.datamax = null;
       };
+    
+    
+    //TAB 
+    /**
+      * Retorna true se a tab informada corresponde a tab em exibição
+      */
+    $scope.tabIs = function (tab){
+        return $scope.tab === tab;
+    }
+    /**
+      * Altera a tab em exibição
+      */
+    $scope.setTab = function (tab){
+        if (tab >= 1 && tab <= 3) $scope.tab = tab;        
+    }
+      
     
 }]);

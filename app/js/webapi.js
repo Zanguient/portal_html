@@ -4,11 +4,19 @@
  *  suporte@atoscapital.com.br
  *
  *
+<<<<<<< HEAD
+ *  Versão 1.0.5 - 20/10/2015
+ *  - tabtituloreceber
+ *
+ *  Versão 1.0.4 - 16/10/2015
+ *  - tbcatalogo
+=======
  *  Versão 1.0.5 - 23/10/2015
  *  - relatoriovendas
  *
  *  Versão 1.0.4 - 20/10/2015
  *  - recebiveisfuturos
+>>>>>>> cfb9b500068b285ee1e31b572aa0cdaca95e0f38
  *
  *  Versão 1.0.3 - 09/10/2015
  *  - tbbandeira
@@ -548,7 +556,8 @@ angular.module('webapi', ['utils'])
         webpagesrolelevels : $autenticacao.getUrlBase() + '/administracao/webpagesrolelevels/',
         webpagesroles : $autenticacao.getUrlBase() + '/administracao/webpagesroles/',
         webpagesusers : $autenticacao.getUrlBase() + '/administracao/webpagesusers/', 
-        webpagesusersinroles : $autenticacao.getUrlBase() + '/administracao/webpagesusersinroles/'
+        webpagesusersinroles : $autenticacao.getUrlBase() + '/administracao/webpagesusersinroles/',
+        tbcatalogo : $autenticacao.getUrlBase() + '/administracao/tbcatalogo/'
     },
     card : {
         conciliacaobancaria : $autenticacao.getUrlBase() + '/card/conciliacaobancaria/',
@@ -601,6 +610,8 @@ angular.module('webapi', ['utils'])
             tbalmoxarifado: $autenticacao.getUrlBaseRezende() + '/Pgsql/TabAlmoxarifado/',
             tbnaturezaoperacao: $autenticacao.getUrlBaseRezende() + '/Pgsql/TabNaturezaOperacao/',
             tabnotafiscalentrada: $autenticacao.getUrlBaseRezende() + '/Pgsql/TabNotaFiscalEntrada/',
+            tabtituloreceber: $autenticacao.getUrlBaseRezende() + '/Pgsql/tabtituloreceber/',
+            baixaautomatica: $autenticacao.getUrlBaseRezende() + '/Pgsql/baixaautomatica/',
           }
     }
   }
