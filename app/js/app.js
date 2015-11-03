@@ -5,6 +5,9 @@
  *
  *
  *
+ *  Versão 1.0.7 - 30/10/2015
+ *  - Função adicionaQuebraLinhaHtml
+ *
  *  Versão 1.0.6 - 22/10/2015
  *  - Tela Movimento TEF
  *
@@ -2260,14 +2263,15 @@ angular.module("AtosCapital", ['ui.router',
         else text += banco.NomeExtenso;
         return text.toUpperCase();
     }
-    /**
+    /** 
       * Substitui na string os '\n' e coloca a quebra de linha do html
-      * /
+      */
     $scope.adicionaQuebraLinhaHtml = function(text){
-        console.log(text);
+        //console.log(text);
+        //console.log($scope.modalLog.log.msgErro);
         if(typeof text === 'string') return text.split("\n").join(String.fromCharCode(160));
         return text;
-    }*/
+    }
 
 
 

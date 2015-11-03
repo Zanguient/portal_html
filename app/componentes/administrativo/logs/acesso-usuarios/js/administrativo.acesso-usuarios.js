@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.1 - 30/10/2015
+ *  - Função adicionaQuebraLinhaHtml movida para app.js
+ *
  *  Versão 1.0 - 03/09/2015
  *
  */
@@ -68,16 +71,6 @@ angular.module("administrativo-acesso-usuarios", [])
         $scope.$emit("acessouTela");
         // Busca Logs
         //$scope.buscaLogs();
-    } 
-                                                
-    /** 
-      * Substitui na string os '\n' e coloca a quebra de linha do html
-      */
-    $scope.adicionaQuebraLinhaHtml = function(text){
-        console.log(text);
-        console.log($scope.modalLog.log.msgErro);
-        if(typeof text === 'string') return text.split("\n").join(String.fromCharCode(160));
-        return text;
     }                                            
                                                 
                                                 
