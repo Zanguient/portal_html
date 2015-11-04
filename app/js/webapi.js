@@ -158,7 +158,8 @@ angular.module('webapi', ['utils'])
             nu_cnpj = 103,
             // Relacionamentos
             operadora : 200,
-            tbadquirente : 300
+            tbadquirente : 300,
+            cdContaCorrente : 400
         },
         recebiveisfuturos : {
             data : 100,

@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.8 - 04/11/2015
+ *  - Conta Corrente
+ *
  *  Versão 1.0.7 - 30/10/2015
  *  - Só permite conciliação de memos amarrados a um filial com a filial correspondente
  *
@@ -58,9 +61,11 @@ angular.module("card-services-conciliacao-bancaria", [])
     var totalPreConciliados = 0;                                            
     $scope.adquirentes = [];
     $scope.filiais = [];
+    $scope.filiaisgrupo = [];                                             
+    $scope.contas = [];                                             
     $scope.tipos = [{id: 1, nome: 'CONCILIADO'}, {id: 2, nome: 'PRÉ-CONCILIADO'}, {id: 3, nome: 'NÃO CONCILIADO'}];             
     $scope.filtro = {datamin : new Date(), datamax : '', consideraPeriodo : true,
-                     tipo : null, adquirente : undefined, filial : undefined,
+                     tipo : null, adquirente : undefined, filial : undefined, conta : undefined,
                      itens_pagina : $scope.itens_pagina[1], order : 0,
                      pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0
                     };  
@@ -107,12 +112,14 @@ angular.module("card-services-conciliacao-bancaria", [])
                 // Avalia grupo empresa
                 if($scope.usuariologado.grupoempresa){ 
                     // Reseta seleção de filtro específico de empresa
-                    $scope.filtro.filial = $scope.filtro.adquirente = null;
+                    $scope.filtro.filial = $scope.filtro.conta = $scope.filtro.adquirente = null;
                     buscaFiliais(true);
+                    buscaContas();
                 }else{ // reseta tudo e não faz buscas 
                     $scope.dadosconciliacao = []; 
                     $scope.filiais = [];
-                    $scope.filtro.filial = $scope.filtro.adquirente = null;
+                    $scope.contas = [];
+                    $scope.filtro.filial = $scope.filtro.conta = $scope.filtro.adquirente = null;
                     
                     $scope.filtro.faixa_registros = '0-0';
                     $scope.filtro.total_registros = 0;
@@ -134,7 +141,10 @@ angular.module("card-services-conciliacao-bancaria", [])
         $scope.$on('acessoDeTelaNotificado', function(event){
             $scope.exibeTela = true;
             // Carrega dados
-            if($scope.usuariologado.grupoempresa) buscaFiliais(true);
+            if($scope.usuariologado.grupoempresa){ 
+                buscaFiliais(true);
+                buscaContas();
+            }
         });
         // Acessou a tela
         $scope.$emit("acessouTela");
@@ -163,11 +173,17 @@ angular.module("card-services-conciliacao-bancaria", [])
         $scope.filtro.datamax = ''; 
         
         $scope.filtro.adquirente = $scope.filtro.tipo = null; 
-
-        if($scope.filiais.length > 0 && $scope.filtro.filial !== $scope.filiais[0]){
+        
+        if($scope.filtro.conta && $scope.filtro.conta !== null){
+            $scope.filiais = $scope.filiaisgrupo;
+            $scope.filtro.filial = $scope.filiais[0]; 
+            buscaAdquirentes(false);
+        }else if($scope.filiais.length > 0 && $scope.filtro.filial !== $scope.filiais[0]){
             $scope.filtro.filial = $scope.filiais[0]; 
             buscaAdquirentes(false); 
         }
+        
+        $scope.filtro.conta = null;
     }
     
      /**
@@ -184,7 +200,14 @@ angular.module("card-services-conciliacao-bancaria", [])
                filtroData.valor = filtroData.valor + '|' + $scope.getFiltroData($scope.filtro.datamax);
            filtros.push(filtroData);
        }
-    
+        
+       // Conta
+       if($scope.filtro.conta && $scope.filtro.conta !== null){
+           var filtroConta = {id: /*$campos.card.conciliacaobancaria.cdContaCorrente*/ 400, 
+                              valor: $scope.filtro.conta.cdContaCorrente};
+           filtros.push(filtroConta);  
+       }
+        
        // Filial
        if($scope.filtro.filial && $scope.filtro.filial !== null){
            var filtroFilial = {id: /*$campos.card.conciliacaobancaria.nu_cnpj*/ 103, 
@@ -242,8 +265,94 @@ angular.module("card-services-conciliacao-bancaria", [])
        else ajustaIntervaloDeData();
     };
                                                  
+                                                 
+                                                 
+                                                 
+    // CONTAS
+    /**
+      * Busca as contas correntes
+      */
+    var buscaContas = function(){
+        
+         // Avalia se há um grupo empresa selecionado
+        if(!$scope.usuariologado.grupoempresa){
+            return;   
+        }
+        
+        //$scope.showProgress(divPortletBodyFiltrosPos, 10000);
+        
+        // Filtro  
+        var filtros = {id: /*$campos.card.tbcontacorrente.cdGrupo*/ 101,
+                      valor: $scope.usuariologado.grupoempresa.id_grupo};
+           
+        $webapi.get($apis.getUrl($apis.card.tbcontacorrente, 
+                                [$scope.token, 2, 
+                                 /*$campos.card.tbcontacorrente.cdBanco*/ 103, 0],
+                                filtros)) 
+            .then(function(dados){           
+
+                // Obtém as contas correntes
+                $scope.contas = dados.Registros;
+            
+                if($scope.filtro.conta && $scope.filtro.conta !== null)
+                    $scope.filtro.conta = $filter('filter')($scope.contas, function(c) {return c.cdContaCorrente === $scope.filtro.conta.cdContaCorrente;})[0];
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter contas correntes (' + failData.status + ')', true, 'danger', true);
+                 // Fecha o progress
+                 //$scope.hideProgress(divPortletBodyFiltrosPos);
+              });       
+    };
+    /**
+      * Selecionou uma conta
+      */
+    $scope.alterouConta = function(progressemexecucao){
+        if($scope.filtro.conta && $scope.filtro.conta !== null){
+            // Filiais associadas a conta
+            buscaFiliaisDaConta(true);
+        }else{
+            $scope.filiais = $scope.filiaisgrupo;
+            $scope.filtro.filial = $scope.filiais[0]; 
+            buscaAdquirentes(false);
+        }
+    };   
+          
+                                                 
+    // FILIAIS                                             
+    /**
+      * Busca as filiais associadas à conta
+      */                                              
+    var buscaFiliaisDaConta = function(){
+        
+       if(!$scope.filtro.conta || $scope.filtro.conta === null) return;
+        
+       $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
+        
+       var filtros = [];
+
+       filtros.push({id: /*$campos.card.tbcontacorrentetbloginadquirenteempresa.cdContaCorrente*/ 100, valor: $scope.filtro.conta.cdContaCorrente}); 
+       
+       $webapi.get($apis.getUrl($apis.card.tbcontacorrentetbloginadquirenteempresa, 
+                                [$scope.token, 3],
+                                filtros)) 
+            .then(function(dados){
+                $scope.filiais = dados.Registros;
+                // Reseta
+                $scope.filtro.filial = null;
+                buscaAdquirentesConta(true); // Busca adquirentes
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter filiais associadas à conta (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+              });     
+    };                                             
+                                                 
     
-    // FILIAIS
+    
     /**
       * Busca as filiais
       */
@@ -267,7 +376,7 @@ angular.module("card-services-conciliacao-bancaria", [])
                                 [$scope.token, 0, /*$campos.cliente.empresa.ds_fantasia*/ 104],
                                 filtros)) 
             .then(function(dados){
-                $scope.filiais = dados.Registros;
+                $scope.filiais = $scope.filiaisgrupo = dados.Registros;
                 // Reseta
                 if(!nu_cnpj) $scope.filtro.filial = $scope.filiais[0];
                 else $scope.filtro.filial = $filter('filter')($scope.filiais, function(f) {return f.nu_cnpj === nu_cnpj;})[0];
@@ -287,12 +396,49 @@ angular.module("card-services-conciliacao-bancaria", [])
       * Selecionou uma filial
       */
     $scope.alterouFilial = function(){
-        //console.log($scope.filtro.filial); 
-        buscaAdquirentes(false);
+        //console.log($scope.filtro.filial);
+        if($scope.filtro.conta && $scope.filtro.conta !== null){
+            if($scope.filtro.filial && $scope.filtro.filial !== null)
+                $scope.adquirentes = $scope.filtro.filial.adquirentes;
+            else buscaAdquirentesConta(false);
+        }else buscaAdquirentes(false);
     };
     
                                                                                          
     // ADQUIRENTES 
+    /**
+      * Busca as adquirentes associadas à conta
+      */
+    var buscaAdquirentesConta = function(progressEstaAberto){ 
+        
+       if(!$scope.filtro.conta || $scope.filtro.conta === null){ 
+           if(progressEstaAberto) $scope.hideProgress(divPortletBodyFiltrosPos);
+           return;
+       }
+            
+        
+       if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
+        
+       var filtros = [{id: /*$campos.card.tbcontacorrentetbloginadquirenteempresa.cdContaCorrente*/ 100, 
+                       valor: $scope.filtro.conta.cdContaCorrente}];
+       
+       
+       $webapi.get($apis.getUrl($apis.card.tbcontacorrentetbloginadquirenteempresa, 
+                                [$scope.token, 4],
+                                filtros))
+            .then(function(dados){
+                $scope.adquirentes = dados.Registros;
+                // Reseta
+                $scope.filtro.adquirente = null; 
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter adquirentes da conta (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+              });        
+    }                                             
     /**
       * Busca as adquirentes
       */
@@ -418,7 +564,7 @@ angular.module("card-services-conciliacao-bancaria", [])
                                   );
             return;   
         }
-        if(!$scope.filtro.adquirente || $scope.usuariologado.adquirente === null){
+        if((!$scope.filtro.conta || $scope.filtro.conta === null) && (!$scope.filtro.adquirente || $scope.usuariologado.adquirente === null)){
            $scope.showModalAlerta('É necessário selecionar uma adquirente!');
            return;
         }
@@ -440,7 +586,7 @@ angular.module("card-services-conciliacao-bancaria", [])
     }
     
     var buscaDadosConciliacaoBancaria = function(progressoemexecucao){
-        if(!$scope.usuariologado.grupoempresa ||  !$scope.filtro.adquirente || $scope.filtro.adquirente === null) 
+        if(!$scope.usuariologado.grupoempresa || ((!$scope.filtro.conta || $scope.filtro.conta === null) && (!$scope.filtro.adquirente || $scope.usuariologado.adquirente === null))) 
             return;
         
         if(!progressoemexecucao){
