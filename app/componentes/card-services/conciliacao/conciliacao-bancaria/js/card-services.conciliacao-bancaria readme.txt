@@ -75,6 +75,15 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				}],
 			  }
 			]
+
+   * card/tbcontacorrentetbloginadquirenteempresa
+    - GET: Adquirentes associadas à conta (coleção 4)
+			[
+			  { cdAdquirente : int,
+				nmAdquirente : string,
+				stAdquirente : int,
+			  }
+			]
  
   * cliente/empresa
     - GET : listagem das filiais (coleção 0)
