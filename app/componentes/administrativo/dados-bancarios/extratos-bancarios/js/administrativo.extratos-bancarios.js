@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.2 - 04/11/2015
+ *  - Função getNomeAmigavelConta passada para app.js
+ *
  *  Versão 1.0.1 - 22/10/2015
  *  - LowerCase na extensão do arquivo
  *
@@ -160,13 +163,6 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
     }
     
     // CONTAS
-    $scope.getNomeAmigavelConta = function(conta){
-        if(!conta || conta === null) return '';
-        var text = conta.banco.Codigo + ' ' + conta.banco.NomeExtenso + ' ' +
-                   String.fromCharCode(160) + String.fromCharCode(160) + String.fromCharCode(160) +
-                   'Ag. ' + conta.nrAgencia + ' Ct. ' + conta.nrConta;
-        return text.toUpperCase();
-    }
     /**
       * Busca as contas correntes
       */

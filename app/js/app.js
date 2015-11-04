@@ -5,6 +5,9 @@
  *
  *
  *
+ *  Versão 1.0.8 - 04/11/2015
+ *  - Função getNomeAmigavelConta
+ *
  *  Versão 1.0.7 - 30/10/2015
  *  - Função adicionaQuebraLinhaHtml
  *
@@ -2243,6 +2246,19 @@ angular.module("AtosCapital", ['ui.router',
         var nome = filial.ds_fantasia;
         if(filial.filial && filial.filial !== null) nome += ' ' + filial.filial;
         return nome.toUpperCase();
+    }
+    
+    /**
+      * Retorna o texto apresentável que descreve a conta
+      */
+    $scope.getNomeAmigavelConta = function(conta){
+        if(!conta || conta === null) return '';
+        var text = conta.banco.Codigo + ' ' + conta.banco.NomeExtenso + ' ' +
+                   String.fromCharCode(160) + String.fromCharCode(160) + String.fromCharCode(160) +
+                   'Ag. ' + conta.nrAgencia + ' Ct. ' + conta.nrConta +
+                   String.fromCharCode(160) + String.fromCharCode(160) + String.fromCharCode(160) +
+                   "(" + $scope.getNomeAmigavelFilial(conta.empresa) + ")";
+        return text.toUpperCase();
     }
 
     /**
