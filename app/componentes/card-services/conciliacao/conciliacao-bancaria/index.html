@@ -926,8 +926,8 @@
                                         </div>
                                         <!--SUBTITULO DO CUPON -->
                                         <div class="row tituloCumponsConciliacaoBancariaICard">
-                                            <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
-                                                {{dado.RecebimentosParcela[0].Filial | uppercase}} 
+                                            <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria"
+                                                 ng-bind="dado.RecebimentosParcela[0].Filial === dado.RecebimentosParcela[dado.RecebimentosParcela.length - 1].Filial ? dado.RecebimentosParcela[0].Filial : ''"> 
                                             </div>
                                         </div>                                 
                                     </div>
