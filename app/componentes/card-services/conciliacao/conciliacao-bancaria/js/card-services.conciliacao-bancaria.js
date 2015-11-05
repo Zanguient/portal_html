@@ -4,6 +4,10 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *
+ *  Versão 1.0.9 - 05/11/2015
+ *  - Diferença exibida dos valores da conciliação manual
+ *
  *  Versão 1.0.8 - 04/11/2015
  *  - Conta Corrente
  *
@@ -1084,7 +1088,7 @@ angular.module("card-services-conciliacao-bancaria", [])
         
         var carga = $scope.associacaoManual.recebimentos.length > 1 ? "as cargas" : "a carga";
         $scope.showModalConfirmacao('Confirmação', 
-            "Uma vez confirmada a conciliação, a movimentação e " + carga + " não poderão se envolver em outra conciliação bancária. Confirma essa conciliação de movimentação com valor de " + $filter('currency')($scope.associacaoManual.valorExtrato, 'R$', 2) + ' e ' + carga + ' com valor total de ' + $filter('currency')(totalRecebimento, 'R$', 2) + '?',
+            "Uma vez confirmada a conciliação, a movimentação e " + carga + " não poderão se envolver em outra conciliação bancária. Confirma essa conciliação de movimentação com valor de " + $filter('currency')($scope.associacaoManual.valorExtrato, 'R$', 2) + ' e ' + carga + ' com valor total de ' + $filter('currency')(totalRecebimento, 'R$', 2) + ' (diferença de ' + $filter('currency')(Math.abs(totalRecebimento - $scope.associacaoManual.valorExtrato), 'R$', 2) + ')?',
             concilia, [d], 'Sim', 'Não');
     }
 }]);

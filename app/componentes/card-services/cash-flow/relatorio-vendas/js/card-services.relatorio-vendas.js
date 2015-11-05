@@ -87,7 +87,7 @@ angular.module("card-services-relatorio-vendas", [])
 
         // Filial
         if($scope.filtro.filial && $scope.filtro.filial !== null){
-           filtros.push({id: /*$campos.card.recebiveisfuturos.nu_cnpj*/ 102, 
+           filtros.push({id: /*$campos.card.relatoriovendas.nu_cnpj*/ 102, 
                          valor: $scope.filtro.filial.nu_cnpj});  
         }
 
