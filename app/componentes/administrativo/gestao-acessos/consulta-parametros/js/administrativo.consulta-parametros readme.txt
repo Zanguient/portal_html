@@ -1,0 +1,94 @@
+# README #
+
+Módulo que:
+ - gerencia o layout da tela de privilégios (roles) da Gestão de acessos (app/componentes/administrativo/gestao-acessos/privilegios/index.html);
+ - permite criação de um novo privilégio
+ - permite também a exclusão de um determinado privilégio
+ - permite visualizar, adicionar e excluir funcionalidades (controllers e methods) associadas a cada role 
+ 
+
+### Pra Que Serve Este Módulo? ###
+
+Gerenciar completamente a tela de privilégios da Gestão de acessos.  
+
+
+
+### O que é necessário para usar o módulo? ###
+
+Como esse é um controller filho do controller principal "appCtrl" (app.js), ele herda todos os módulos importados por ele.
+Não é necessário nenhum outro módulo externo.
+
+ 
+### Outras depêndencias ###
+
+  * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
+  * $scope.token do "appCtrl"
+  * Emite evento "acessouTela" no init do controller para que seja feito o log de acesso de tela
+  * Evento "acessoDeTelaNotificado", proveniente do "appCtrl", para de fato exibir a tela e fazer requisições 
+	=> importante para o log correto de requisições HTTP, ao qual identifica corretamente a (tela de) origem
+  * APIS:
+    - administracao/webpagescontrollers
+    - administracao/webpagespermissions
+	- administracao/webpagesrolelevels
+	- administracao/webpagesroles
+	
+ 
+ 
+ ### Interação com a WEB API ###
+ 
+  * api/administracao/webpagescontrollers
+     - GET  : listagem de todos módulos (controllers), com suas respectivas funcionalidades (methods).
+			  Aqueles métodos ao qual a role tem acesso, terá o id 'selecionado' com valor igual a 'true'
+			  (por isso, deve-se enviar como filtro para a coleção 3 o RoleId)
+	          [{ id_controller : int,
+				ds_controller: string,	
+				principal : boolean, // true se é o controller que deve ser exibido inicialmente
+				methods : [{ id_method : int,
+							 ds_method : string,
+							 selecionado : boolean // true se a role tem permissão para este método
+							}] // ORDER BY DS_METHOD
+				subControllers : [{ id_controller : int
+									ds_controller: string,
+									principal : boolean, // true se é o controller que deve ser exibido inicialmente
+									methods : [{ id_method : int,
+												 ds_method : string,
+												 selecionado : boolean // true se a role tem permissão para este método
+												}] // ORDER BY DS_METHOD
+									subControllers : [{ id_controller : int
+														ds_controller: string,
+														principal : boolean, // true se é o controller que deve ser exibido inicialmente
+														methods : [{ id_method : int,
+																	 ds_method : string,
+																	 selecionado : boolean // true se a role tem permissão para este método
+																	}] // ORDER BY DS_METHOD
+														subControllers : [] // só vai até o terceiro nível	
+														}]	
+									}]
+			  }] // ORDER BY DS_CONTROLLER
+  * api/administracao/webpagespermissions
+     - PUT : armazenar as permissões associadas à role (methods)
+	          { 
+			    id_roles : idRole,
+			    inserir : [ id_method ],
+				deletar : [ id_method ],
+				id_controller_principal : id_controller
+				}
+  * api/administracao/webpagesrolelevels
+     - GET : obtém os níveis (coleção 0)
+              { LevelId: int, LevelNome: string }	 
+  * api/administracao/webpagesroles
+     - DELETE : deletar uma determinada role    url/?token=...&RoleId=idRole
+	 - GET : 
+	       => consulta nome do privilégio (coleção 0 com filtro)
+	       => listagem dos privilégios na tabela (coleção 1)
+			  { RoleId: int, RoleName : string, RoleLevels : {LevelId : int, LevelName: string} }
+	 - PUT : altera o nome e/ou level da role 
+			{ RoleId : int, RoleName : string, RoleLevel: int}
+	 - POST : adiciona uma nova role
+            { RoleName : string, RoleLevel : int }	 
+   
+
+   
+### Desenvolvedores ###
+
+Deivid Marinho - deividgfmarinho@gmail.com
