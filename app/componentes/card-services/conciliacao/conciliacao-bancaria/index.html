@@ -8,6 +8,9 @@
     Card Services > Conciliação > Conciliação Bancária
 
 
+    Versão 1.0.7 - 04/11/2015
+    - Conta Corrente
+
     Versão 1.0.6 - 28/10/2015
     - Desfazer conciliação
     - Exibindo nome da filial no extrato
@@ -59,6 +62,26 @@
         <div class="portlet-body" ng-show="exibeTela">
             <div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">
                 <div class="row">                       
+                    <!--div class="clearfix" style="text-align:center; margin-bottom:10px">
+                        <div class="btn-group" data-toggle="buttons">
+                            <div class="col-md-7 col-sm-12" style="margin-bottom:5px;">
+                                <label class="btn" 
+                                       ng-class="{ 'red': filtro.consulta === 'Adquirente', 'grey': filtro.consulta !== 'Adquirente'}"
+                                       ng-model="filtro.consulta" 
+                                       btn-radio="'Adquirente'">
+                                    Adquirente
+                                </label> 
+                            </div>
+                            <div class="col-md-5 col-sm-12">
+                                <label class="btn" 
+                                       ng-class="{ 'red': filtro.consulta === 'Conta Corrente', 'grey': filtro.consulta !== 'Conta Corrente'}"
+                                       ng-model="filtro.consulta" 
+                                       btn-radio="'Conta Corrente'">
+                                    Conta Corrente
+                                </label>
+                            </div>    
+                        </div>
+                    </div-->
                     <div class="col-md-8 col-sm-12">
                         <div class="dataTables_paginate paging_bootstrap_extended" id="datatable_ajax_paginate">
                         </div>
@@ -67,7 +90,7 @@
                     </div>
                     <div class="col-md-4 col-sm-12">
                         <div class="table-group-actions pull-right">
-                        <span> </span>
+                            <span> </span>
                         </div>
                     </div>
                 </div>
@@ -77,20 +100,23 @@
                            id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
                         <thead>
                             <tr role="row" class="heading">
-                                <th tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="10%">
+                                <th tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="20%">
                                      Data
                                 </th>
-                                <th tabindex="1" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="10%">
+                                <th tabindex="1" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="25%">
+                                     Conta 
+                                </th>
+                                <th tabindex="1" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="20%">
                                      Filial 
                                 </th>
-                                <th tabindex="2" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="8%">
+                                <th tabindex="2" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="15%">
                                      Adquirente 
                                 </th>
-                                <th tabindex="3" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="8%">
+                                <th tabindex="3" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="10%">
                                      Tipo
                                 </th>
-                                <th tabindex="4" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="1%">
-                                     Ações de Filtro
+                                <th tabindex="4" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="10%">
+                                     Ações
                                 </th>                                
                             </tr>
                             <tr role="row" class="filter"> 
@@ -148,6 +174,21 @@
                                         </span>
                                     </div>                                                      
                                 </td>
+                                <!-- CONTA -->
+                                <td rowspan="1" colspan="1">
+                                    <select class="form-control form-filter input-sm comboBoxFiltros"
+                                            ng-disabled="contas.length == 0"
+                                            ng-model="filtro.conta"
+                                            ng-change="alterouConta()"
+                                            ng-options="conta as getNomeAmigavelConta(conta) for conta in contas">
+                                        <option value="">TODAS</option>
+                                    </select>
+                                    <i class="fa fa-question-circle"
+                                        ng-show="!usuariologado.grupoempresa"
+                                        popover-placement="bottom"
+                                        popover="É necessário selecionar uma empresa"
+                                        popover-trigger="mouseenter"></i> 
+                                </td>
                                 <!-- FILIAL -->
                                 <td rowspan="1" colspan="1">
                                     <select class="form-control form-filter input-sm comboBoxFiltros"
@@ -170,7 +211,7 @@
                                             ng-model="filtro.adquirente"
                                             ng-change="alterouAdquirente()"
                                             ng-options="adquirente as (adquirente.nmAdquirente | uppercase) for adquirente in adquirentes">
-                                        <option style="display:none" value=""></option>
+                                        <option ng-show="filtro.conta && filtro.conta !== null" value="">TODAS</option>
                                     </select>
                                      <!--i class="fa fa-question-circle"
                                         ng-show="!usuariologado.grupoempresa || !filtro.filial || filtro.filial === null"
@@ -885,8 +926,8 @@
                                         </div>
                                         <!--SUBTITULO DO CUPON -->
                                         <div class="row tituloCumponsConciliacaoBancariaICard">
-                                            <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
-                                                {{dado.RecebimentosParcela[0].Filial | uppercase}} 
+                                            <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria"
+                                                 ng-bind="dado.RecebimentosParcela[0].Filial === dado.RecebimentosParcela[dado.RecebimentosParcela.length - 1].Filial ? dado.RecebimentosParcela[0].Filial : ''"> 
                                             </div>
                                         </div>                                 
                                     </div>

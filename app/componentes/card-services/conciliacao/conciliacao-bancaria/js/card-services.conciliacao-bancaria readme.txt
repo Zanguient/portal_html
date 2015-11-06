@@ -33,6 +33,8 @@ Além deles, é necessária a importação dos seguintes módulos externos.
   * $scope.grupoempresa, do "appCtrl" : grupo empresa informado pelo usuário na barra administrativa
   * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
   * APIS:
+    - card/tbcontacorrente
+	- card/tbcontacorrentetbloginadquirenteempresa
     - cliente/empresa
     - card/tbadquirente
     - card/conciliacaobancaria
@@ -41,6 +43,47 @@ Além deles, é necessária a importação dos seguintes módulos externos.
  
  
  ### Interação com a WEB API ###
+ 
+  * card/tbcontacorrente
+    - GET : listagem as contas correntes (coleção 2)
+			[
+			  { cdContaCorrente : int,
+				cdGrupo : int,
+				empresa : { nu_cnpj : string, 
+							ds_fantasia : string, 
+							filial : string ou null },
+				banco : { Codigo : string, 
+						  NomeExtenso : string},
+				nrAgencia : string,
+				nrConta : string,
+				flAtivo : boolean,
+				podeAtualizar : boolean
+			  }
+			]
+			
+  * card/tbcontacorrentetbloginadquirenteempresa
+    - GET: Filiais associadas à conta (coleção 3)
+			[
+			  { nu_cnpj : string,
+				ds_fantasia : string,
+				filial : string,
+				adquirentes : [
+				{
+					cdAdquirente : int,
+					nmAdquirente : string,
+					stAdquirente : int,
+				}],
+			  }
+			]
+
+   * card/tbcontacorrentetbloginadquirenteempresa
+    - GET: Adquirentes associadas à conta (coleção 4)
+			[
+			  { cdAdquirente : int,
+				nmAdquirente : string,
+				stAdquirente : int,
+			  }
+			]
  
   * cliente/empresa
     - GET : listagem das filiais (coleção 0)

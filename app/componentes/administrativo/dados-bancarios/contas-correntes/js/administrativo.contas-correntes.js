@@ -613,9 +613,9 @@ angular.module("administrativo-contas-correntes", [])
                                  /*$campos.card.tbloginadquirenteempresa.empresa + $campos.cliente.empresa.ds_fantasia - 100 */
                                  304, 0],
                                  [{id: /*$campos.card.tbloginadquirenteempresa.cdGrupo*/ 102, 
-                                  valor: $scope.usuariologado.grupoempresa.id_grupo},
-                                  {id: /*$campos.card.tbloginadquirenteempresa.stLoginAdquirente*/ 108, 
-                                  valor: 1}])) // somente as com status okay
+                                  valor: $scope.usuariologado.grupoempresa.id_grupo}/*,
+                                  {id: /*$campos.card.tbloginadquirenteempresa.stLoginAdquirente* / 108, 
+                                  valor: 1}*/])) // somente as com status okay
             .then(function(dados){           
                 adquirentesempresas = dados.Registros;
                 //console.log($scope.modalAdquirenteEmpresa.adquirentesempresa);

@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.2 - 04/11/2015
+ *  - Função getNomeAmigavelConta passada para app.js
+ *
  *  Versão 1.0.1 - 22/10/2015
  *  - LowerCase na extensão do arquivo
  *
@@ -160,13 +163,6 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
     }
     
     // CONTAS
-    $scope.getNomeAmigavelConta = function(conta){
-        if(!conta || conta === null) return '';
-        var text = conta.banco.Codigo + ' ' + conta.banco.NomeExtenso + ' ' +
-                   String.fromCharCode(160) + String.fromCharCode(160) + String.fromCharCode(160) +
-                   'Ag. ' + conta.nrAgencia + ' Ct. ' + conta.nrConta;
-        return text.toUpperCase();
-    }
     /**
       * Busca as contas correntes
       */
@@ -424,7 +420,7 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
                     buscaExtrato();
                 });
             }).error(function (data, status, headers, config){
-                 //console.log(data);
+                 //console.log("erro");console.log(data);
                  if(status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else if(status === 503 || status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else if(status === 500) $scope.showModalAlerta("Só são aceitos arquivos PDF de contas do SANTANDER! Se o extrato subido não foi um pdf, então o extrato '" + files[$scope.current].name + "' não corresponde a conta " + $scope.getNomeAmigavelConta($scope.filtro.conta));

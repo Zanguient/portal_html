@@ -1,27 +1,27 @@
-<!-- 
+<!--
 
     Atos Capital - www.atoscapital.com.br
-   
+
     suporte@atoscapital.com.br
- 
- 
+
+
     Card Services > Consolidação > Lançamento de Vendas
-    
+
     Versão 1.0.3 - 06/10/2015
         - Inclusão da aba "Por transação e algunn ajustes" .
- 
- 
+
+
     Versão 1.0.2 - 05/10/2015
         - Mudança do nome da tela de cadastro pos/terminal pra lançamento de vendas, e inclusão da navegação para as t             telas: Por Transação, Por POS e Por Adquirente .
- 
+
     Versão 1.0.1 - 10/09/2015
         - Foi criado um espaçamento no topo do conteudo.
-    
+
     Versão 1.0 - 03/09/2015
 -->
 
-<div class="container" ng-controller="card-services-lancamento-vendasCtrl" 
-     ng-init="cardServices_lancamentoVendasInit()">    
+<div class="container" ng-controller="card-services-lancamento-vendasCtrl"
+     ng-init="cardServices_lancamentoVendasInit()">
     <!-- BEGIN PAGE BREADCRUMB -->
     <ul class="page-breadcrumb breadcrumb">
         <li>
@@ -34,16 +34,16 @@
         </li>
     </ul>
     <!-- END PAGE BREADCRUMB -->
-   
+
     <div class="portlet light">
         <div class="portlet-title tabbable-line">
-            <div class="caption">								
+            <div class="caption">
                 <span class="caption-subject font-green-sharp bold uppercase">Lançamento de Vendas</span>
             </div>
-            
+
             <!--REFERENCIAS DAS ABAS DE NAVEGAÇÃO-->
 
-            <ul class="nav nav-tabs" style="float:left; margin-left:50%">                                            
+            <ul class="nav nav-tabs" style="float:left; margin-left:50%">
                 <li ng-class="{active : tabIs(1)}">
                     <a ng-click="setTab(1)">
                     Por Transação </a>
@@ -57,10 +57,10 @@
                     Por Adquirente  </a>
                 </li>
             </ul>
-            
+
             <div class="actions">
-                <a class="btn btn-circle btn-icon-only btn-default fullscreen" 
-                   href="javascript:;" 
+                <a class="btn btn-circle btn-icon-only btn-default fullscreen"
+                   href="javascript:;"
                    ng-click="fullScreenClick()"
                    title="{{telaEstaEmFullScreen() ? 'Tela Normal' : 'Tela Cheia'}}"></a>
                 <!--div class="btn-group element-hidden"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -- >
@@ -90,17 +90,15 @@
                 </div-->
             </div>
         </div>
-        
-        <div class="portlet-body" ng-show="exibeTela"> 
-            
+        <div class="portlet-body" ng-show="exibeTela">
             <!--POR TRANSAÇÃO-->
             <div class="panel" ng-show="tabIs(1)">
                 <div class="portlet light">
                     <div class="portlet-body" ng-show="exibeTela">
                         <div class="table-container">
-                            <div id="datatable_products_wrapper" 
+                            <div id="datatable_products_wrapper"
                                  class="dataTables_wrapper dataTables_extended_wrapper no-footer">
-                                
+
                                 <!--BOTÕES DE DOWNLOAD E ENVIO-->
                                 <div class="row">
                                     <!--DOWNLOAD-->
@@ -114,8 +112,8 @@
                                     <!--ENVIAR EXCEL-->
                                     <div class="col-md-6 col-md-offset-3">
                                         <div ngf-drop ngf-select class="drop-box"
-                                             ngf-drag-over-class="dragover" 
-                                             ngf-multiple="false" 
+                                             ngf-drag-over-class="dragover"
+                                             ngf-multiple="false"
                                              ngf-change="upload($files)"
                                              ngf-allow-dir="true"
                                              ng-disabled="uploadEmProgresso()"
@@ -123,7 +121,7 @@
                                              style="float:right; margin-top:20px;margin-bottom:20px">
                                             Arraste até aqui o extrato ou clique aqui para selecioná-lo
                                         </div>
-                                    </div>    
+                                    </div>
                                 </div>
 
                                 <!--EXIBIÇÃO E PESQUISA-->
@@ -132,31 +130,31 @@
                                     <div class="col-xs-4 col-sm-4 col-md-4">
                                         <div class="dataTables_length">
                                             <label>
-                                                <span class="seperator"></span>Exibindo 
-                                                <select name="datatable_products_length" aria-controls="datatable_products" 
+                                                <span class="seperator"></span>Exibindo
+                                                <select name="datatable_products_length" aria-controls="datatable_products"
                                                         class="form-control input-xsmall input-sm input-inline"
                                                         ng-model="usuario.itens_pagina"
                                                         ng-change="alterouItensPagina()"
-                                                        ng-options="item for item in itens_pagina">                                            
+                                                        ng-options="item for item in itens_pagina">
                                                 </select> registros de {{usuario.total_registros}}
                                             </label>
-                                        </div>   
+                                        </div>
                                     </div>
                                     <!--PAGINAÇÃO-->
                                     <div class="col-xs-4 col-sm-4 col-md-3">
-                                        <div class="pagination-panel centralizarPaginacao"> Página 
-                                            <a href="javascript:;" 
+                                        <div class="pagination-panel centralizarPaginacao"> Página
+                                            <a href="javascript:;"
                                                ng-click="retrocedePagina()"
-                                               class="btn btn-sm default prev" 
-                                               ng-class="{disabled: usuario.pagina <= 1}" 
+                                               class="btn btn-sm default prev"
+                                               ng-class="{disabled: usuario.pagina <= 1}"
                                                title="Página anterior">
                                                     <i class="fa fa-angle-left"></i>
                                             </a>
-                                            <input type="text" 
-                                                   class="pagination-panel-input form-control input-mini input-inline input-sm" 
-                                                   maxlength="4" 
+                                            <input type="text"
+                                                   class="pagination-panel-input form-control input-mini input-inline input-sm"
+                                                   maxlength="4"
                                                    style="text-align:center; margin: 0 5px;"
-                                                   ng-model="paginaInformada" 
+                                                   ng-model="paginaInformada"
                                                    valid-integer-number
                                                    ng-keypress="($event.which === 13) ? alteraPagina() : 0"
                                                    ng-blur="atualizaPaginaDigitada()">
@@ -167,19 +165,19 @@
                                                 <i class="fa fa-angle-right"></i>
                                             </a>
                                              de <span class="pagination-panel-total">{{usuario.total_paginas}}</span>
-                                        </div>    
+                                        </div>
                                     </div>
                                     <!--PESQUISA-->
                                     <div class="col-xs-4 col-sm-4 col-md-5">
                                         <div class="row dataTables_filter">
                                             <div class="col-md-6">
                                                 <label>
-                                                        <select aria-controls="datatable_products" 
+                                                        <select aria-controls="datatable_products"
                                                                 class="form-control input-sm input-inline"
                                                                 ng-model="usuario.campo_busca"
                                                                 ng-options="campo as campo.nome for campo in camposBusca | filter:{ativo:true}">
                                                         </select>
-                                                </label> 
+                                                </label>
                                                 <label>
                                                         <span class="seperator"></span>Pesquisar
                                                 </label>
@@ -187,41 +185,41 @@
                                             <div class="col-md-6">
                                                 <label>
                                                     <div class="input-group input-icon right">
-                                                        <i class="fa fa-times" 
+                                                        <i class="fa fa-times"
                                                            style="right:50px;cursor:pointer"
                                                            ng-click="resetaBusca()"
                                                            ng-show="usuario.busca"></i>
-                                                        <input type="text" 
-                                                           class="form-control input-inline" 
-                                                           placeholder="Buscar" 
+                                                        <input type="text"
+                                                           class="form-control input-inline"
+                                                           placeholder="Buscar"
                                                            ng-model="busca"
                                                            ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !busca)) && filtraUsuarios()">
                                                         <span class="input-group-addon">
                                                             <i class="fa fa-search" style="cursor:pointer"
                                                                    ng-click="filtraUsuarios()"></i>
                                                         </span>
-                                                    </div> 
+                                                    </div>
                                                 </label>
                                             </div>
                                         </div>
-                                    </div>                            
-                                </div>  
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        
+
                         <!--CUPONS-->
                         <div class="row">
-                            
+
                             <!--CUPOM 1-->
                             <div class="col-md-4">
                                 <div class="row">
                                     <div class="col-sm-10 col-md-offset-1 cuponAzulConciliacaoVendas">
                                         <div class="row">
                                             <div class="col-md-10" Style="text-align:center">
-                                                <strong>CIELO</strong>                            
+                                                <strong>CIELO</strong>
                                             </div>
                                             <div class="col-md-2">
-                                                <button class="btn btn-sm grey filter-submit" 
+                                                <button class="btn btn-sm grey filter-submit"
                                                         popover="Deseja remover o Cupom?"
                                                         popover-trigger="mouseenter"
                                                         popover-placement="bottom"
@@ -261,31 +259,31 @@
                                             </div>
                                             <div class="col-md-12">
                                                MASTERCARD
-                                            </div>                        
+                                            </div>
                                             <div class="col-md-12">
                                                 XXXXXXXXXXXXXXX4569
-                                            </div>                        
+                                            </div>
                                             <div class="col-md-12">
                                                 CREDITO A VISTA
-                                            </div>                        
+                                            </div>
                                             <div class="col-md-6">
                                                 VALOR:
                                             </div>
                                             <div class="col-md-6">
                                                 50,00
-                                            </div>                                
-                                        </div>                            
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <!--CUPOM 2-->
                             <div class="col-md-4">
                                 <div class="row">
                                     <div class="col-sm-10 col-sm-offset-1 cuponAzulConciliacaoVendas">
                                         <div class="row">
                                             <div class="col-sm-12" Style="text-align:center">
-                                                <strong>CIELO</strong>                            
+                                                <strong>CIELO</strong>
                                             </div>
                                             <div class="col-sm-12" Style="text-align:center">
                                                 <strong>VIA ESTABELECIMENTO</strong>
@@ -319,31 +317,31 @@
                                             </div>
                                             <div class="col-sm-12">
                                                MASTERCARD
-                                            </div>                        
+                                            </div>
                                             <div class="col-sm-12">
                                                 XXXXXXXXXXXXXXX4569
-                                            </div>                        
+                                            </div>
                                             <div class="col-sm-12">
                                                 CREDITO A VISTA
-                                            </div>                        
+                                            </div>
                                             <div class="col-sm-6">
                                                 VALOR:
                                             </div>
                                             <div class="col-sm-6">
                                                 50,00
-                                            </div>                                
-                                        </div>                            
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <!--CUPOM 3-->
                             <div class="col-md-4">
                                 <div class="row">
                                     <div class="col-sm-10 col-sm-offset-1 cuponAzulConciliacaoVendas">
                                         <div class="row">
                                             <div class="col-sm-12" Style="text-align:center">
-                                                <strong>CIELO</strong>                            
+                                                <strong>CIELO</strong>
                                             </div>
                                             <div class="col-sm-12" Style="text-align:center">
                                                 <strong>VIA ESTABELECIMENTO</strong>
@@ -377,30 +375,30 @@
                                             </div>
                                             <div class="col-sm-12">
                                                MASTERCARD
-                                            </div>                        
+                                            </div>
                                             <div class="col-sm-12">
                                                 XXXXXXXXXXXXXXX4569
-                                            </div>                        
+                                            </div>
                                             <div class="col-sm-12">
                                                 CREDITO A VISTA
-                                            </div>                        
+                                            </div>
                                             <div class="col-sm-6">
                                                 VALOR:
                                             </div>
                                             <div class="col-sm-6">
                                                 50,00
-                                            </div>                                
-                                        </div>                            
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                       
+
                         <!--RODAPÉ-->
                         <div class="row">
                             <div class="col-xs-4 col-sm-4 col-md-4">
-                                <div class="dataTables_info" 
-                                     id="sample_editable_1_info" 
+                                <div class="dataTables_info"
+                                     id="sample_editable_1_info"
                                      role="status"
                                      aria-live="polite">
                                     <strong class="ng-binding">Exibindo os registros 1-10</strong>
@@ -408,26 +406,26 @@
                             </div>
                             <!--PAGINAÇÃO-RODAPÉ-->
                             <div class="col-xs-4 col-sm-4 col-md-3">
-                                <div class="pagination-panel centralizarPaginacao"> Página 
-                                    <a href="javascript:;" 
-                                       ng-click="retrocedePagina()" 
-                                       class="btn btn-sm default prev disabled" 
-                                       ng-class="{disabled: usuario.pagina <= 1}" 
+                                <div class="pagination-panel centralizarPaginacao"> Página
+                                    <a href="javascript:;"
+                                       ng-click="retrocedePagina()"
+                                       class="btn btn-sm default prev disabled"
+                                       ng-class="{disabled: usuario.pagina <= 1}"
                                        title="Página anterior">
                                             <i class="fa fa-angle-left"></i>
                                     </a>
-                                    <input type="text" 
+                                    <input type="text"
                                            class="pagination-panel-input form-control input-mini input-inline input-sms"
-                                           maxlength="4" 
-                                           style="text-align:center; margin: 0 5px;" 
+                                           maxlength="4"
+                                           style="text-align:center; margin: 0 5px;"
                                            ng-model="paginaInformada"
                                            valid-integer-number=""
                                            ng-keypress="($event.which === 13) ? alteraPagina() : 0"
                                            ng-blur="atualizaPaginaDigitada()">
-                                    <a href="javascript:;" 
+                                    <a href="javascript:;"
                                        ng-click="avancaPagina()"
-                                       class="btn btn-sm default next" 
-                                       ng-class="{disabled: usuario.pagina >= usuario.total_paginas}" 
+                                       class="btn btn-sm default next"
+                                       ng-class="{disabled: usuario.pagina >= usuario.total_paginas}"
                                        title="Próxima página">
                                         <i class="fa fa-angle-right"></i>
                                     </a>
@@ -439,7 +437,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!--POR POS-->
             <div class="panel" ng-show="tabIs(2)">
                <div class="table-container" style="margin-top:40px; margin-bottom:50px">
@@ -448,13 +446,13 @@
                     <div class="row cponsRelatoriosTerminais">
 
                         <!--FORMULÁRIO DE CADASTRO-->
-                        <div class="col-md-12">                     
+                        <div class="col-md-12">
                             <div class="row">
                                 <!-- FORMULÁRIO-->
                                 <div class="col-md-6 col-sm-6">
                                     <div class="row">
-                                        <div class="col-md-8 col-md-offset-3 col-sm-offset-0 formularioCadastroTerminal" 
-                                             style="border: solid 1px #eaeaea; 
+                                        <div class="col-md-8 col-md-offset-3 col-sm-offset-0 formularioCadastroTerminal"
+                                             style="border: solid 1px #eaeaea;
                                                     background-color:#eef7fb;
                                                     border:solid 2px #a6e1ec">
 
@@ -464,44 +462,48 @@
                                                     Formulário de Cadastro
                                                 </div>
                                             </div>
-                                            
+
                                             <!--DATA-->
                                             <div class="row conteudoFormularioCadastroTerminal">
                                                 <label class="col-md-4 col-sm-4">Data</label>
                                                 <div class="col-md-8 col-sm-8">
                                                     <div class="input-group date date-picker margin-bottom-5">
                                                         <input type="text"
-                                                           class="form-control form-filter " 
+                                                           class="form-control form-filter "
                                                            readonly style="cursor: pointer"
                                                            ng-click="exibeCalendarioDataPos($event)"
-                                                           placeholder="Início" 
+                                                           placeholder="Início"
                                                            ng-model="dataPos"
                                                            ng-change="alterouDataPos()"
                                                            datepicker-append-to-body=true
                                                            datepicker-popup="dd MMMM yyyy"
-                                                           is-open="abrirCalendarioDataPos" 
+                                                           is-open="abrirCalendarioDataPos"
                                                            min-date="2000-01-01"
-                                                           ng-required="true" 
+                                                           ng-required="true"
                                                            show-button-bar="false"
                                                            show-weeks="false" />
                                                         <span class="input-group-btn">
                                                             <button class="btn default"
-                                                                    type="button" 
+                                                                    type="button"
                                                                     ng-click="exibeCalendarioDataPos($event)">
                                                                 <i class="fa fa-calendar"></i>
                                                             </button>
                                                         </span>
-                                                        
+
                                                     </div>
                                                 </div>
                                             </div>
-                                            
+
                                             <!--FILIAL-->
                                             <div class="row conteudoFormularioCadastroTerminal">
                                                 <label class="col-md-4 col-sm-4">Filial</label>
                                                 <div class="col-md-8 col-sm-8">
-                                                    <select class="form-control">
-                                                        <option value="">Todas</option>
+                                                    <select class="form-control form-filter"
+                                                            ng-disabled="filiais.length == 0 || dataPos == null"
+                                                            ng-model="filtro.filial"
+                                                            ng-change="alterouFilial()"
+                                                            ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
+                                                        <option value="">Selecione uma Filial</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -510,56 +512,75 @@
                                             <div class="row conteudoFormularioCadastroTerminal">
                                                 <label class="col-md-4 col-sm-4">Adquirente</label>
                                                 <div class="col-md-8 col-sm-8">
-                                                    <select class="form-control">
-                                                        <option>BANESECARD</option>
-                                                        <option>CIELO</option>
-                                                        <option>REDE</option>
-                                                    </select>
+                                                  <select class="form-control form-filter"
+                                                          ng-disabled="!filtro.filial || filtro.filial === null"
+                                                          ng-model="filtro.adquirente"
+                                                          ng-change="alterouAdquirente()"
+                                                          ng-options="adquirente as (adquirente.nmAdquirente | uppercase) for adquirente in adquirentes"
+                                                          >
+                                                      <option value="">Selecione uma Adquirente</option>
+                                                  </select>
                                                 </div>
                                             </div>
 
                                             <!--TERMINAL LÓGICO-->
                                             <div class="row conteudoFormularioCadastroTerminal">
-                                                <label class="col-md-4 col-sm-4">Terminal</label>
+                                                <label class="col-md-4 col-sm-4">POS</label>
                                                 <div class="col-md-8 col-sm-8">
-                                                    <select class="form-control">
-                                                        <option></option>                                                    
-                                                    </select>
+                                                  <select class="form-control form-filter"
+                                                          ng-disabled="!filtro.adquirente || filtro.adquirente === null"
+                                                          ng-model="filtro.terminal"
+                                                          ng-change="alterouTerminal()"
+                                                          ng-options="terminal as (terminal.cdTerminalLogico | uppercase) for terminal in terminais"
+                                                          >
+                                                      <option value="">Selecione um POS</option>
+                                                  </select>
                                                 </div>
                                             </div>
-                                            
+
+
                                             <!--BOTÃO CONSULTAR-->
                                                 <div class="col-md-4 col-md-offset-8 col-sm-4 col-sm-offset-8 " style="text-align:right;margin-top:15px">
-                                                    <button class=" btn btn-sm red filter-submit margin-bottom">
+                                                    <button class=" btn btn-sm red filter-submit margin-bottom"
+                                                            ng-disabled="!filtro.terminal || filtro.terminal === null"
+                                                            ng-click="buscaBandeiras()"
+                                                            >
                                                         <i class="fa fa-search"></i>
                                                         Consultar
                                                     </button>
                                                 </div>
 
                                             <div class="row">
-                                                <div class="col-md-12 col-sm-12" 
+                                                <div class="col-md-12 col-sm-12"
                                                      style="margin-top:30px; margin-bottom:20px;border-bottom: solid 1px #a6e1ec; width:90%;margin-left:15px; text-align:center">
 
                                                 </div>
                                             </div>
-
+                                          <div ng-show="exibeCupom">
                                             <!--BANDEIRA-->
                                             <div class="row conteudoFormularioCadastroTerminal">
                                                 <label class="col-md-4 col-sm-4">Bandeira</label>
                                                 <div class="col-md-8 col-sm-8">
-                                                    <select class="form-control">
-                                                        <option></option>
-                                                    </select>
+                                                  <select class="form-control form-filter"
+                                                          ng-disabled="!filtro.terminal || filtro.terminal === null"
+                                                          ng-model="filtro.bandeira"
+                                                          ng-change="alterouBandeira()"
+                                                          ng-options="bandeira as (bandeira.dsBandeira | uppercase) for bandeira in bandeiras"
+                                                          >
+                                                      <option value="">Selecione uma Bandeira</option>
+                                                  </select>
                                                 </div>
-                                            </div>                                       
+                                            </div>
 
                                             <!--TIPO-->
                                             <div class="row conteudoFormularioCadastroTerminal">
                                                 <label class="col-md-4 col-sm-4">Tipo</label>
                                                 <div class="col-md-8 col-sm-8">
-                                                    <select class="form-control">
-                                                        <option>Crédito</option>
-                                                        <option>Débito</option>
+                                                    <select class="form-control"
+                                                            ng-disabled="!filtro.bandeira || filtro.bandeira === null"
+                                                            ng-model="tipo"
+                                                            >
+                                                        <option>{{ tipo }}</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -567,27 +588,19 @@
                                             <!--DESCRIÇÃO-->
                                             <div class="row conteudoFormularioCadastroTerminal">
                                                 <label class="col-md-4 col-sm-4">Descrição</label>
-                                                <label class="col-md-4 col-sm-4"  style="text-align:center; font-size:13px">Qtd transações</label>
-                                                <label class="col-md-4 col-sm-4"  style="text-align:center">Total</label>
+                                                <label class="col-md-4 col-sm-4" style="text-align:center; font-size:13px">Qtd transações</label>
+                                                <label class="col-md-4 col-sm-4" style="text-align:center">Total</label>
                                             </div>
                                             <!--Á VISTA-->
                                             <div class="row conteudoFormularioCadastroTerminal">
-                                                <label class="col-md-4 col-sm-4">À Vista</label>
+                                                <label class="col-md-4 col-sm-4" ng-show="tipo == null">A Prazo</label>
+                                                <label class="col-md-4 col-sm-4" ng-show="tipo.trim() == 'CRÉDITO'">A Prazo</label>
+                                                <label class="col-md-4 col-sm-4" ng-show="tipo.trim() == 'DÉBITO'">À Vista</label>
                                                 <div class="col-md-4 col-sm-4">
-                                                    <input class="form-control">
+                                                    <input class="form-control" ng-model="formCadastro.qtdTransacao">
                                                 </div>
                                                 <div class="col-md-4 col-sm-4">
-                                                    <input class="form-control">
-                                                </div>
-                                            </div>
-                                            <!--À PRAZO-->
-                                            <div class="row conteudoFormularioCadastroTerminal">
-                                                <label class="col-md-4 col-sm-4">À Prazo</label>
-                                                <div class="col-md-4 col-sm-4">
-                                                    <input class="form-control">
-                                                </div>
-                                                <div class="col-md-4 col-sm-4">
-                                                    <input class="form-control">
+                                                    <input class="form-control" ng-model="formCadastro.total">
                                                 </div>
                                             </div>
 
@@ -595,36 +608,37 @@
                                             <div class="row">
                                                 <!--BOTÃO INCLUIR-->
                                                 <div class="col-md-4 col-md-offset-8 col-sm-4 col-sm-offset-8 " style="text-align:right;margin-top:15px">
-                                                    <button class=" btn btn-sm red filter-submit margin-bottom">
+                                                    <button class=" btn btn-sm red filter-submit margin-bottom" ng-click="inserirDados()">
                                                         <i class="fa fa-plus"></i>
                                                         Incluir
                                                     </button>
                                                 </div>
                                             </div>
+                                          </div>
                                         </div>
                                         <!--BOTÃO SALVAR-- ><!-- POSSIVELMENTE NÃO EXISTIRÁ O CONCEITO DE SALVAR -- >
                                         <div class="col-md-6 col-md-offset-9 col-sm-6 col-sm-offset-9">
                                             <button class="btn btn-sm blue filter-submit margin-bottom" style="font-size:15px; margin-top:15px">
-                                                
+
                                                 Salvar
                                             </button>
-                                        </div-->
+                                        </div -->
                                     </div>
                                 </div>
                                 <!--FIM FORMULÁRIO-->
 
-                                <!--CUPON PARA VISUALIZAÇÃO-->                            
-                                <div class="col-md-6 col-sm-6">
+                                <!--CUPON PARA VISUALIZAÇÃO-->
+                                <div class="col-md-6 col-sm-6" ng-show="exibeCupom">
                                     <div class="row">
                                         <!--CONTEÚDO DOS CUPONS-->
                                         <div class="col-md-7 col-md-offset-3 col-sm-7 col-sm-offset-2 cuponAzulRelatorios">
                                             <!--ADQUIRENTE-->
-                                            <div class="row tituloCuponRelatorios">                                            
+                                            <div class="row tituloCuponRelatorios">
                                                 <div class="col-md-10 col-sm-10">
-                                                    CIELO
+                                                    {{ cupom.adquirente }}
                                                 </div>
                                                 <div class="col-md-2 col-sm-2">
-                                                    <button class="btn btn-sm grey filter-submit" 
+                                                    <button class="btn btn-sm grey filter-submit"
                                                             popover="Deseja remover o Cupom?"
                                                             popover-trigger="mouseenter"
                                                             popover-placement="bottom"
@@ -637,41 +651,32 @@
                                             <div class="row informacoesCuponRelatorios">
                                                 <div class="col-md-12 col-sm-12">
                                                     <!--LOCAL-->
-                                                    <div class="row"> 
+                                                    <div class="row">
                                                         <div class="col-md-12 col-sm-12">
-                                                            Posto Sumaré
+                                                            {{ cupom.filial }}
                                                         </div>
                                                     </div>
                                                     <!--ENDEREÇO-->
-                                                    <div class="row">                                            
+                                                    <div class="row">
                                                         <div class="col-md-12 col-sm-12">
                                                             AV TANCREDO NEVES 1506
                                                         </div>
                                                     </div>
                                                     <!--CIDADE-->
-                                                    <div class="row">                                            
+                                                    <div class="row">
                                                         <div class="col-md-12 col-sm-12">
                                                             SALVADOR BA
                                                         </div>
                                                     </div>
                                                     <!--POS-->
-                                                    <div class="row">                                            
-                                                        <div class="col-md-6 col-sm-6">
-                                                            002002242475002
-                                                        </div>
-                                                        <div class="col-md-6 col-sm-6">
-                                                            /POS=0034386
-                                                        </div>
-                                                    </div>
-                                                    <!--DATA/HORA DA CONSULTA-- (NÃO TERÁ COMO SABER>
                                                     <div class="row">
                                                         <div class="col-md-6 col-sm-6">
-                                                            <label style="font-size:13px">DATA:</label>21/08/2015
+                                                            {{ cupom.cnpj }}
                                                         </div>
                                                         <div class="col-md-6 col-sm-6">
-                                                            <label style="font-size:13px">HORA:</label>10:30
+                                                            /POS={{ cupom.pos }}
                                                         </div>
-                                                    </div-->  
+                                                    </div>
                                                 </div>
                                             </div>
                                             <!--DATA/HORA DOS RELATÓRIOS-->
@@ -680,7 +685,7 @@
                                                     <!--DATA-->
                                                     <div class="row">
                                                         <div class="col-md-12 col-sm-12">
-                                                            <label>Relatório de:</label>21/08/2015
+                                                            <label>Relatório de:</label>{{ cupom.data | date:'dd/MM/yyyy' }}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -694,65 +699,54 @@
                                                             BANDEIRA
                                                         </div>
                                                     </div>
-                                                    <div class="row">    
+                                                    <div class="row">
                                                         <div class="col-md-5 col-sm-5">
                                                             TIPO
                                                         </div>
-                                                        <div class="col-md-2 col-sm-2"> 
+                                                        <div class="col-md-2 col-sm-2">
                                                             QTDE
                                                         </div>
                                                         <div class="col-md-5 col-sm-5">
                                                             TOTAL GERAL
-                                                        </div>     
+                                                        </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-md-5 col-sm-5">
                                                            DECRIÇÃO
                                                         </div>
-                                                        <div class="col-md-2 col-sm-2"> 
+                                                        <div class="col-md-2 col-sm-2">
                                                             QTDE
                                                         </div>
                                                         <div class="col-md-5 col-sm-5">
-                                                            TOTAL 
-                                                        </div>    
+                                                            TOTAL
+                                                        </div>
                                                     </div>
-                                                </div>                                
+                                                </div>
                                             </div>
 
 
                                             <!--RELATÓRIOS-->
-                                            <div class="row conteudoCupomRelatorios">
+                                            <div class="row conteudoCupomRelatorios" ng-repeat="bandeira in cupom.bandeiras">
                                                 <div class="col-md-10 col-sm-10">
                                                     <div class="row">
                                                         <div class="col-md-12 col-sm-12">
-                                                            VISA
+                                                            {{ bandeira.dsBandeira }}
                                                         </div>
-                                                    </div>
-                                                    <div class="row">    
-                                                        <div class="col-md-5 col-sm-5">
-                                                            CRÉDITO
-                                                        </div>
-                                                        <div class="col-md-2 col-sm-2"> 
-                                                            009
-                                                        </div>
-                                                        <div class="col-md-5 col-sm-5">
-                                                            1.000,87
-                                                        </div>     
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-md-5 col-sm-5">
-                                                            À VISTA    
+                                                            {{ bandeira.bandeiraTipo }}
                                                         </div>
-                                                        <div class="col-md-2 col-sm-2"> 
-                                                            009
+                                                        <div class="col-md-2 col-sm-2">
+                                                            {{ bandeira.qtTransacao }}
                                                         </div>
                                                         <div class="col-md-5 col-sm-5">
-                                                            1.000,87
-                                                        </div>    
+                                                            {{ bandeira.vlVenda | currency:'R$ ' }}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-2 col-sm-2"> 
-                                                    <button class="btn btn-sm grey filter-submit" 
+                                                <div class="col-md-2 col-sm-2">
+                                                    <button class="btn btn-sm grey filter-submit"
                                                             popover="Deseja remover essa linha?"
                                                             popover-trigger="mouseenter"
                                                             popover-placement="bottom"
@@ -763,55 +757,13 @@
                                                 </div>
                                             </div>
 
-                                            <!--RÉPLICA-->
-                                            <div class="row conteudoCupomRelatorios">
-                                                <div class="col-md-10 col-sm-10">
-                                                    <div class="row">
-                                                        <div class="col-md-12 col-sm-12">
-                                                            VISA
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">    
-                                                        <div class="col-md-5 col-sm-5">
-                                                            CRÉDITO
-                                                        </div>
-                                                        <div class="col-md-2 col-sm-2"> 
-                                                            009
-                                                        </div>
-                                                        <div class="col-md-5 col-sm-5">
-                                                            1.000,87
-                                                        </div>     
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-5 col-sm-5">
-                                                            À VISTA    
-                                                        </div>
-                                                        <div class="col-md-2 col-sm-2"> 
-                                                            009
-                                                        </div>
-                                                        <div class="col-md-5 col-sm-5">
-                                                            1.000,87
-                                                        </div>    
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-2 col-sm-2"> 
-                                                    <button class="btn btn-sm grey filter-submit" 
-                                                            popover="Deseja remover essa linha?"
-                                                            popover-trigger="mouseenter"
-                                                            popover-placement="bottom"
-                                                            popover-append-to-body="true"
-                                                            style="margin-top: 18px">
-                                                        <i class="fa fa-times"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
                                             <!--TOTAIS RELATÓRIOS-->
                                             <div class="row totaisCuponRelatorios">
                                                 <div class="col-md-12 col-sm-12">
                                                     <div class="row">
                                                         <div class="col-md-5 col-sm-5">
-                                                            total 
-                                                        </div>    
+                                                            total
+                                                        </div>
                                                         <!--TOTAIS DE TRANSAÇÕES-->
                                                         <div class="col-md-2 col-sm-2">
                                                             009
@@ -833,27 +785,27 @@
                                         <!--FIM CONTEÚDO DOS CUPONS-->
                                     </div>
                                 </div>
-                                <!--FIM 2ªCUPON-->                            
-                            </div>   
+                                <!--FIM 2ªCUPON-->
+                            </div>
                         </div>
                         <!--FIM CUPONS AZUIS-->
 
                         <!--CUPONS AMARELOS-->
-                        <div class="col-md-12">                     
+                        <div class="col-md-12">
 
                         </div>
                         <!--FIM CUPONS AMARELOS-->
 
                         <!--CUPONS VERMELHOS-->
-                        <div class="col-md-12">                     
+                        <div class="col-md-12">
 
                         </div>
                         <!--FIM CUPONS VERMELHOS-->
-                    </div>    
+                    </div>
                     <!--FIM CUPONS-->
                 </div>
-            </div>  
-            
+            </div>
+
             <!--POR ADQUIRENTE-->
             <div class="panel" ng-show="tabIs(3)">
                  <div class="table-container" style="margin-top:40px; margin-bottom:50px">
@@ -862,13 +814,13 @@
                     <div class="row cponsRelatoriosTerminais">
 
                         <!--FORMULÁRIO DE CADASTRO-->
-                        <div class="col-md-12">                     
+                        <div class="col-md-12">
                             <div class="row">
                                 <!-- FORMULÁRIO-->
                                 <div class="col-md-6 col-sm-6">
                                     <div class="row">
-                                        <div class="col-md-8 col-md-offset-3 col-sm-offset-0 formularioCadastroTerminal" 
-                                             style="border: solid 1px #eaeaea; 
+                                        <div class="col-md-8 col-md-offset-3 col-sm-offset-0 formularioCadastroTerminal"
+                                             style="border: solid 1px #eaeaea;
                                                     background-color:#eef7fb;
                                                     border:solid 2px #a6e1ec">
 
@@ -878,27 +830,27 @@
                                                     Formulário de Cadastro
                                                 </div>
                                             </div>
-                                            
+
                                             <!--DATA-->
                                             <div class="row conteudoFormularioCadastroTerminal">
                                                 <label class="col-md-4 col-sm-4">Data</label>
                                                 <div class="col-md-8 col-sm-8">
                                                     <div class="input-group date date-picker margin-bottom-5">
-                                                        <input type="text" class="form-control form-filter " 
+                                                        <input type="text" class="form-control form-filter "
                                                                readonly style="cursor: pointer"
                                                                ng-click="exibeCalendarioDataAdquirente($event)"
-                                                               placeholder="Início" 
+                                                               placeholder="Início"
                                                                ng-model="dataAdquirente"
                                                                ng-change="alterouDataAdquirente()"
                                                                datepicker-append-to-body=true
                                                                datepicker-popup="dd MMMM yyyy"
-                                                               is-open="abrirCalendarioDataAdquirente" 
+                                                               is-open="abrirCalendarioDataAdquirente"
                                                                min-date="2000-01-01"
-                                                               ng-required="true" 
+                                                               ng-required="true"
                                                                show-button-bar="false"
                                                                show-weeks="false" />
                                                         <span class="input-group-btn">
-                                                            <button class="btn default" 
+                                                            <button class="btn default"
                                                                     type="button"
                                                                     ng-click="exibeCalendarioDataAdquirente($event)">
                                                                 <i class="fa fa-calendar"></i>
@@ -907,7 +859,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            
+
                                             <!--FILIAL-->
                                             <div class="row conteudoFormularioCadastroTerminal">
                                                 <label class="col-md-4 col-sm-4">Filial</label>
@@ -939,11 +891,11 @@
                                                 </div>
 
                                             <div class="row">
-                                                <div class="col-md-12 col-sm-12" 
+                                                <div class="col-md-12 col-sm-12"
                                                      style="margin-top:30px; margin-bottom:20px;border-bottom: solid 1px #a6e1ec; width:90%;margin-left:15px; text-align:center">
 
                                                 </div>
-                                            </div>                                      
+                                            </div>
 
                                             <!--TIPO-->
                                             <div class="row conteudoFormularioCadastroTerminal">
@@ -997,7 +949,7 @@
                                         <!--BOTÃO SALVAR-- ><!-- POSSIVELMENTE NÃO EXISTIRÁ O CONCEITO DESSE BOTÃO-- >
                                         <div class="col-md-6 col-md-offset-9 col-sm-6 col-sm-offset-9">
                                             <button class="btn btn-sm blue filter-submit margin-bottom" style="font-size:15px; margin-top:15px">
-                                               
+
                                                 Salvar
                                             </button>
                                         </div-->
@@ -1005,18 +957,22 @@
                                 </div>
                                 <!--FIM FORMULÁRIO-->
 
-                                <!--CUPON PARA VISUALIZAÇÃO-->                            
+                                <!--CUPON PARA VISUALIZAÇÃO-->
                                 <div class="col-md-6 col-sm-6">
                                     <div class="row">
                                         <!--CONTEÚDO DOS CUPONS-->
                                         <div class="col-md-7 col-md-offset-3 col-sm-7 col-sm-offset-2 cuponAzulRelatorios">
                                             <!--ADQUIRENTE-->
-                                            <div class="row tituloCuponRelatorios">                                            
+                                            <div class="row tituloCuponRelatorios">
                                                 <div class="col-md-10 col-sm-10">
                                                     CIELO
                                                 </div>
                                                 <div class="col-md-2 col-sm-2">
-                                                    <button class="btn btn-sm grey filter-submit" 
+<<<<<<< HEAD
+                                                    <button class="btn btn-sm grey filter-submit"
+=======
+                                                    <button class="btn btn-sm grey filter-submit"
+>>>>>>> Esdras
                                                             popover="Deseja remover o cupom?"
                                                             popover-trigger="mouseenter"
                                                             popover-placement="bottom"
@@ -1029,25 +985,25 @@
                                             <div class="row informacoesCuponRelatorios">
                                                 <div class="col-md-12 col-sm-12">
                                                     <!--LOCAL-->
-                                                    <div class="row"> 
+                                                    <div class="row">
                                                         <div class="col-md-12 col-sm-12">
                                                             Posto Sumaré
                                                         </div>
                                                     </div>
                                                     <!--ENDEREÇO-->
-                                                    <div class="row">                                            
+                                                    <div class="row">
                                                         <div class="col-md-12 col-sm-12">
                                                             AV TANCREDO NEVES 1506
                                                         </div>
                                                     </div>
                                                     <!--CIDADE-->
-                                                    <div class="row">                                            
+                                                    <div class="row">
                                                         <div class="col-md-12 col-sm-12">
                                                             SALVADOR BA
                                                         </div>
                                                     </div>
                                                     <!--POS-->
-                                                    <div class="row">                                            
+                                                    <div class="row">
                                                         <div class="col-md-6 col-sm-6">
                                                             002002242475002
                                                         </div>
@@ -1077,29 +1033,29 @@
                                                             BANDEIRA
                                                         </div>
                                                     </div>
-                                                    <div class="row">    
+                                                    <div class="row">
                                                         <div class="col-md-5 col-sm-5">
                                                             TIPO
                                                         </div>
-                                                        <div class="col-md-2 col-sm-2"> 
+                                                        <div class="col-md-2 col-sm-2">
                                                             QTDE
                                                         </div>
                                                         <div class="col-md-5 col-sm-5">
                                                             TOTAL GERAL
-                                                        </div>     
+                                                        </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-md-5 col-sm-5">
                                                            DECRIÇÃO
                                                         </div>
-                                                        <div class="col-md-2 col-sm-2"> 
+                                                        <div class="col-md-2 col-sm-2">
                                                             QTDE
                                                         </div>
                                                         <div class="col-md-5 col-sm-5">
-                                                            TOTAL 
-                                                        </div>    
+                                                            TOTAL
+                                                        </div>
                                                     </div>
-                                                </div>                                
+                                                </div>
                                             </div>
 
 
@@ -1111,31 +1067,31 @@
                                                             VISA
                                                         </div>
                                                     </div>
-                                                    <div class="row">    
+                                                    <div class="row">
                                                         <div class="col-md-5 col-sm-5">
                                                             CRÉDITO
                                                         </div>
-                                                        <div class="col-md-2 col-sm-2"> 
+                                                        <div class="col-md-2 col-sm-2">
                                                             009
                                                         </div>
                                                         <div class="col-md-5 col-sm-5">
                                                             1.000,87
-                                                        </div>     
+                                                        </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-md-5 col-sm-5">
-                                                            À VISTA    
+                                                            À VISTA
                                                         </div>
-                                                        <div class="col-md-2 col-sm-2"> 
+                                                        <div class="col-md-2 col-sm-2">
                                                             009
                                                         </div>
                                                         <div class="col-md-5 col-sm-5">
                                                             1.000,87
-                                                        </div>    
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-2 col-sm-2"> 
-                                                    <button class="btn btn-sm grey filter-submit" 
+                                                <div class="col-md-2 col-sm-2">
+                                                    <button class="btn btn-sm grey filter-submit"
                                                             popover="Deseja remover essa linha?"
                                                             popover-trigger="mouseenter"
                                                             popover-placement="bottom"
@@ -1154,31 +1110,31 @@
                                                             VISA
                                                         </div>
                                                     </div>
-                                                    <div class="row">    
+                                                    <div class="row">
                                                         <div class="col-md-5 col-sm-5">
                                                             CRÉDITO
                                                         </div>
-                                                        <div class="col-md-2 col-sm-2"> 
+                                                        <div class="col-md-2 col-sm-2">
                                                             009
                                                         </div>
                                                         <div class="col-md-5 col-sm-5">
                                                             1.000,87
-                                                        </div>     
+                                                        </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-md-5 col-sm-5">
-                                                            À VISTA    
+                                                            À VISTA
                                                         </div>
-                                                        <div class="col-md-2 col-sm-2"> 
+                                                        <div class="col-md-2 col-sm-2">
                                                             009
                                                         </div>
                                                         <div class="col-md-5 col-sm-5">
                                                             1.000,87
-                                                        </div>    
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-2 col-sm-2"> 
-                                                    <button class="btn btn-sm grey filter-submit" 
+                                                <div class="col-md-2 col-sm-2">
+                                                    <button class="btn btn-sm grey filter-submit"
                                                             popover="Deseja remover essa linha?"
                                                             popover-trigger="mouseenter"
                                                             popover-placement="bottom"
@@ -1193,8 +1149,8 @@
                                                 <div class="col-md-12 col-sm-12">
                                                     <div class="row">
                                                         <div class="col-md-5 col-sm-5">
-                                                            total 
-                                                        </div>    
+                                                            total
+                                                        </div>
                                                         <!--TOTAIS DE TRANSAÇÕES-->
                                                         <div class="col-md-2 col-sm-2">
                                                             009
@@ -1216,26 +1172,26 @@
                                         <!--FIM CONTEÚDO DOS CUPONS-->
                                     </div>
                                 </div>
-                                <!--FIM 2ªCUPON-->                            
-                            </div>   
+                                <!--FIM 2ªCUPON-->
+                            </div>
                         </div>
                         <!--FIM CUPONS AZUIS-->
 
                         <!--CUPONS AMARELOS-->
-                        <div class="col-md-12">                     
+                        <div class="col-md-12">
 
                         </div>
                         <!--FIM CUPONS AMARELOS-->
 
                         <!--CUPONS VERMELHOS-->
-                        <div class="col-md-12">                     
+                        <div class="col-md-12">
 
                         </div>
                         <!--FIM CUPONS VERMELHOS-->
-                    </div>    
+                    </div>
                     <!--FIM CUPONS-->
                 </div>
             </div>
-        </div>       
+        </div>
     </div>
 </div>
