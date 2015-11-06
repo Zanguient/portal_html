@@ -24,9 +24,20 @@ angular.module("administrativo-consulta-parametros", [])
     var divPortletBodyFiltroPos = 0; // posição da div que vai receber o loading progress                             
     var divPortletBodyParametrosPos = 1; // posição da div que vai receber o loading progress   
     // flags
-    $scope.exibeTela = false;                                            
-                                                
-                                                
+    $scope.exibeTela = false;
+		$scope.cnpj = [];
+    $scope.fantasia = [];
+    $scope.adquirente = [];
+    $scope.estabelecimento = [];
+    $scope.estabelecimentoConsulta = [];
+    $scope.contaCorrente = [];
+    																							
+    $scope.filtro = {
+			cnpj: null, fantasia: null, adquirente: null, estabelecimento: null, 
+			estabelecimentoConsulta: null, contaCorrente:null
+		}
+																							
+																							
     // Inicialização do controller
     $scope.administrativo_consultaParametrosInit = function(){
         // Título da página 
@@ -38,7 +49,21 @@ angular.module("administrativo-consulta-parametros", [])
         });
         // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
         $scope.$on('acessoDeTelaNotificado', function(event){
-            $scope.exibeTela = true;
+            if($scope.exibeTela){
+							if($scope.usuariologado.grupoempresa){
+								// Reseta seleção de filtro específico de empresa
+								$scope.filtro.cnpj = $scope.filtro.fantasia = $scope.filtro.adquirente = $scope.filtro.estabelecimento = 
+									$scope.filtro.estabelecimentoConsulta = $scope.filtro.contaCorrente = null;
+								funcaoBusca(true);
+							}else{
+								$scope.cnpj = [];
+								$scope.fantasia = [];
+								$scope.adquirente = [];
+								$scope.estabelecimento = [];
+								$scope.estabelecimentoConsulta = [];
+								$scope.contaCorrente = [];
+							}
+						}
             // Busca
             // ...
         }); 
