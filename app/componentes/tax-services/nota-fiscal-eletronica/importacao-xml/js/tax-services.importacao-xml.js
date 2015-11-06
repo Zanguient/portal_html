@@ -684,7 +684,7 @@ angular.module("tax-services-importacao-xml", [])
                         }
                         else{
                         fechaModalImportar();
-                        $scope.Mensagens = dados.Mensagens; 
+                        $scope.Mensagens = dados.Erro;
                         exibeRetornoImportacao();
                         }
                     }else{ 
