@@ -25,17 +25,20 @@ angular.module("administrativo-consulta-parametros", [])
     var divPortletBodyParametrosPos = 1; // posição da div que vai receber o loading progress   
     // flags
     $scope.exibeTela = false;
-		$scope.cnpj = [];
-    $scope.fantasia = [];
-    $scope.adquirente = [];
-    $scope.estabelecimento = [];
-    $scope.estabelecimentoConsulta = [];
-    $scope.contaCorrente = [];
-    																							
-    $scope.filtro = {
-			cnpj: null, fantasia: null, adquirente: null, estabelecimento: null, 
-			estabelecimentoConsulta: null, contaCorrente:null
-		}
+    $scope.paginaInformada = 1;
+    $scope.parametros = [];
+		$scope.itens_pagina = [50, 100, 150, 200];
+		$scope.busca = ''; // model do input de busca  																					
+    $scope.parametro = {busca:'', itens_pagina : $scope.itens_pagina[0], pagina : 1,
+                     total_registros : 0, faixa_registros : '0-0', total_paginas : 0
+                     };
+    $scope.parametroSelecionado = undefined;
+																							
+																							
+    //$scope.filtro = {
+		//	cnpj: null, fantasia: null, adquirente: null, estabelecimento: null, 
+		//	estabelecimentoConsulta: null, contaCorrente:null
+		//}
 																							
 																							
     // Inicialização do controller
