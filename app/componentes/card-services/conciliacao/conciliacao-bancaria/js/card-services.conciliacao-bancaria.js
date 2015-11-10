@@ -49,8 +49,9 @@ angular.module("card-services-conciliacao-bancaria", [])
                                              /*'$campos',*/
                                              '$webapi',
                                              '$apis',
+                                             '$window',
                                              function($scope,$state,$filter,$timeout,$http,
-                                                      /*$campos,*/$webapi,$apis){ 
+                                                      /*$campos,*/$webapi,$apis,$window){ 
     
     // flags
     // Exibição
@@ -93,8 +94,8 @@ angular.module("card-services-conciliacao-bancaria", [])
     // flags                                                  
     $scope.exibeTela = false;    
     $scope.abrirCalendarioDataMin = $scope.abrirCalendarioDataVendaMin = false;
-    $scope.abrirCalendarioDataMax = $scope.abrirCalendarioDataVendaMax = false; 
-    
+    $scope.abrirCalendarioDataMax = $scope.abrirCalendarioDataVendaMax = false;                                           
+    $scope.modalDetalhesShowing = false;
     
     
     // Inicialização do controller
@@ -674,7 +675,14 @@ angular.module("card-services-conciliacao-bancaria", [])
         //console.log(grupo);
         // Exibe o modal
         $('#modalDetalhes').modal('show');
+        $scope.modalDetalhesShowing = true;
+        checaVisibilidadeModal();
     }
+    
+    var checaVisibilidadeModal = function(){
+        $timeout(function(){if($scope.modalIsVisible()) checaVisibilidadeModal(); /*else console.log("FALSE");*/}, 1000);
+    }
+    
         
     
     
@@ -771,7 +779,7 @@ angular.module("card-services-conciliacao-bancaria", [])
                     //$scope.showAlert('Conciliação bancária realizada com sucesso!', true, 'success', true);
                     if($scope.associacaoManual.extrato && $scope.associacaoManual.extrato !== null &&
                        $scope.associacaoManual.recebimentos && $scope.associacaoManual.recebimentos !== null || 
-                       json.idExtrato === -1){
+                       jsonConciliacaoBancaria[0].idExtrato === -1){
                         buscaDadosConciliacaoBancaria(true);
                     }else{
                         // Altera o status da conciliação
@@ -1091,4 +1099,28 @@ angular.module("card-services-conciliacao-bancaria", [])
             "Uma vez confirmada a conciliação, a movimentação e " + carga + " não poderão se envolver em outra conciliação bancária. Confirma essa conciliação de movimentação com valor de " + $filter('currency')($scope.associacaoManual.valorExtrato, 'R$', 2) + ' e ' + carga + ' com valor total de ' + $filter('currency')(totalRecebimento, 'R$', 2) + ' (diferença de ' + $filter('currency')(Math.abs(totalRecebimento - $scope.associacaoManual.valorExtrato), 'R$', 2) + ')?',
             concilia, [d], 'Sim', 'Não');
     }
+    
+    $scope.modalIsVisible = function(){
+        $scope.modalDetalhesShowing = $('#modalDetalhes').is(':visible');
+        return $scope.modalDetalhesShowing;
+    }
+    
+    /*$scope.printDetalhes = function(){
+        //$('#modalDetalhes').printElement();
+        var mywindow = window.open('', 'Detalhes do agrupamento', 'height=400,width=600');
+        mywindow.document.write('<html><head><title>Detalhes do agrupamento</title>');
+        //mywindow.document.write('<link href="../lib/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css">');
+        //mywindow.document.write('<link rel="stylesheet" href="../css/custom.css" type="text/css">');
+        mywindow.document.write('</head><body>');
+        //mywindow.document.write($('#modalDetalhes').html());
+        mywindow.document.write($('#modalDetalhes')[0].innerHTML);
+        mywindow.document.write('</body></html>');
+
+        mywindow.document.close(); // necessary for IE >= 10
+        mywindow.focus(); // necessary for IE >= 10
+
+        mywindow.print();
+        mywindow.close();
+    }*/
+    
 }]);

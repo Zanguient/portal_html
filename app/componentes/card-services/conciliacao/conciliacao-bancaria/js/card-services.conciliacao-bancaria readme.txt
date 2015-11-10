@@ -1,7 +1,7 @@
 # README #
 
 Módulo que:
- - gerencia o layout da tela de consolidação bancária da Conciliação (app/componentes/card-services/conciliação/conciliacao-bancaria/index.html);
+ - gerencia o layout da tela de conciliação bancária da Conciliação (app/componentes/card-services/conciliacao/conciliacao-bancaria/index.html);
  
 
 ### Pra Que Serve Este Módulo? ###

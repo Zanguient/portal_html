@@ -3,7 +3,10 @@
  *  
  *  suporte@atoscapital.com.br
  *
-
+ *
+ *  Versão 1.0.8 - 09/11/2015
+ *  - cupomConciliacaoTitulos
+ *
  *  Versão 1.0.7 - 16/10/2015
  *      -Criação dos estilos de importação de Xml.
  *
@@ -282,8 +285,12 @@ margin-top:170px;
   text-align: center;
 }
 
+.cupomConciliacaoTitulos{
+    height: 300px !important; 
+}
+
 .cupomAzulConciliacaoBancaria{
-    background-color: #eef7fb;
+    background-color: #eef7fb !important;
     border-color: #a6e1ec;
     color: #31708f;
     border-left:3px solid #a6e1ec;      
@@ -295,7 +302,7 @@ margin-top:170px;
 }
 
 .cupomLaranjaConciliacaoBancaria{
-    background-color: #fcf8e3;
+    background-color: #fcf8e3 !important;
     border-color: #f5d89e;
     color: #8a6d3b;
     border-left: 3px solid #f5d89e;    
@@ -307,7 +314,7 @@ margin-top:170px;
 }
 
 .cupomVermelhoConciliacaoBancaria{
-    background-color: #f9f0f0;
+    background-color: #f9f0f0 !important;
     border-color: #e4b9c0;
     color: #a94442;
     border-left: 3px solid #e4b9c0;  

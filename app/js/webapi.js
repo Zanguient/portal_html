@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.7 - 09/11/2015
+ *  - conciliacaotitulos
+ *
  *  Versão 1.0.6 - 05/11/2015
  *  - conciliacaorelatorios
  *
@@ -160,6 +163,15 @@ angular.module('webapi', ['utils'])
             data : 100,
             id_grupo : 101,
             nu_cnpj : 102,
+        },
+        conciliacaotitulos : {
+            data = 100, 
+            tipo = 101,
+            id_grupo = 102,
+            nu_cnpj = 103,
+            considera_nsu = 104,
+            // Relacionamentos
+            tbadquirente : 200
         },
         recebiveisfuturos : {
             data : 100,
@@ -563,6 +575,7 @@ angular.module('webapi', ['utils'])
     card : {
         conciliacaobancaria : $autenticacao.getUrlBase() + '/card/conciliacaobancaria/',
         conciliacaorelatorios : $autenticacao.getUrlBase() + '/card/conciliacaorelatorios/',
+        conciliacaotitulos : $autenticacao.getUrlBase() + '/card/conciliacaotitulos/',
         recebiveisfuturos : $autenticacao.getUrlBase() + '/card/recebiveisfuturos/',
         relatoriovendas : $autenticacao.getUrlBase() + '/card/relatoriovendas/',
         tbadquirente : $autenticacao.getUrlBase() + '/card/tbadquirente/',
