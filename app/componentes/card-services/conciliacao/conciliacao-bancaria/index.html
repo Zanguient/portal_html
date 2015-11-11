@@ -8,6 +8,9 @@
     Card Services > Conciliação > Conciliação Bancária
 
 
+    Versão 1.0.9 - 11/11/2015
+    - Arquivo CSV de cupons conciliados
+
     Versão 1.0.8 - 09/11/2015
     - Imprimir
 
@@ -575,14 +578,25 @@
                     </div>
                 </div>  
                 <div class="col-xs-4 col-sm-4 col-md-3" print-remove>
-                    <div class="dataTables_length">
-                        <button class="btn btn-primary" 
-                           ng-disabled="!temElementosPreConciliados() || associacaoManual.selecionandoRecebimentos"
-                           ng-click="conciliaPreConciliados()">
-                           Conciliar Pré-Conciliados
-                        </button>
+                    <div class="col-xs-6 col-sm-6 col-md-12">
+                        <div class="dataTables_length">
+                            <button class="btn btn-warning" 
+                               ng-disabled="!temElementosPreConciliados() || associacaoManual.selecionandoRecebimentos"
+                               ng-click="conciliaPreConciliados()">
+                               Conciliar Pré-Conciliados
+                            </button>
+                        </div>
                     </div>
-                </div>  
+                    <div class="col-xs-6 col-sm-6 col-md-12" style="margin-top:5px">
+                        <div class="dataTables_length">
+                            <button class="btn btn-primary" 
+                               ng-show="temElementosConciliados()"
+                               ng-click="downloadCSVs()">
+                               Baixar CSVs
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
          
         
@@ -820,7 +834,7 @@
                     
                     <!--BOTÕES-->
                     <div class="col-md-1 btnConciliacaoBancariaTef" style="padding-left:5%">
-                        <div class="row" ng-init="incrementaTotalPreConciliados(dado.Conciliado === 2)">
+                        <div class="row" ng-init="incrementaTotalPreConciliados(dado.Conciliado === 2);incrementaTotalConciliados(dado.Conciliado === 1)">
                             <div class="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-4"
                                  title="{{dado.Conciliado == 1 ? 'Desfazer conciliação' : dado.Conciliado === 2 && !associacaoManual.selecionandoRecebimentos ? 'Conciliar' : dado.Conciliado === 3 && dado.ExtratoBancario === null && !associacaoManual.selecionandoRecebimentos ? 'Alterar data de recebimento' : dado.Conciliado === 3 && dado.RecebimentosParcela === null && !associacaoManual.selecionandoRecebimentos && (!associacaoManual.extrato || associacaoManual.extrato === null) ? 'Conciliar manualmente' : dado.Conciliado === 3 && dado.RecebimentosParcela === null && associacaoManual.selecionandoRecebimentos && isExtratoSelecionado(dado) ? 'Cancelar' : dado.Conciliado === 3 && dado.ExtratoBancario === null && associacaoManual.selecionandoRecebimentos && isMesmaDataEAdquirenteExtratoSelecionado(dado) && dado.selecionado ? 'Conciliar com movimentação bancária selecionada' : ''}}">
                                 <a href="javascript:;" class="btn btn-icon-only"
@@ -955,7 +969,8 @@
                 <!--FIM CUPONS ESTÁTICOS-->
                 
                 <!--CUPONS-->
-                <div class="row" print-section print-if="!modalDetalhesShowing" ng-repeat="dado in dadosconciliacao" ng-show="!(usuariologado.grupoempresa.id_grupo == 6)">
+                <div class="row" print-section print-if="!modalDetalhesShowing" ng-repeat="dado in dadosconciliacao" 
+                     ng-show="!(usuariologado.grupoempresa.id_grupo == 6)">
                     <!--1º CUPOM (PREVISÃO CRÉDITO)-->
                     <div class="col-md-5 col-sm-5" print-avoid-break
                          ng-class="{'element-hidden' : dado.RecebimentosParcela === null}">
@@ -1037,15 +1052,6 @@
                                         </label>
                                     </div>                                              
                                 </div> 
-                                <!--DOCUMENTO-- >
-                                <div class="row" ng-show="dado.RecebimentosParcela.length === 1">
-                                    <div class="col-md-6 col-sm-6">
-                                        <label>NSU:</label>
-                                    </div>
-                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        <label>{{dado.RecebimentosParcela[0].Documento}}</label>
-                                    </div>                                              
-                                </div--> 
                                 <!--AGRUPADO-->
                                 <div class="row" ng-show="dado.RecebimentosParcela.length > 0">
                                     <div class="col-md-10 col-sm-10">
@@ -1061,24 +1067,23 @@
                                         </button>
                                     </div>                                              
                                 </div>
-                                <!--BOTÃO BAIXA AUTOMÁTICA-->
-                                <!--div class="row" style="text-align:center">
-                                    <div class="col-md-12">
-                                        <button class="btn green" 
-                                                style="margin-bottom:-30px"
-                                                ng-disabled="dado.Conciliado === 2 || dado.Conciliado === 3">
-                                            Baixa Automática  <i class="fa fa-check" 
-                                                   ng-hide="dado.Conciliado === 2 || dado.Conciliado === 3"></i>  
-                                        </button>
-                                    </div>
-                                </div-->
+                                <!--BOTÃO DOWNLOAD CSV-->
+                                <div class="row" style="text-align:center"
+                                     ng-show="dado.Conciliado === 1" 
+                                     style="margin-top: 10px">
+                                    <button class="btn btn-primary"
+                                            ng-click="downloadCSV(dado)">
+                                        Download CSV
+                                        <i class="fa fa-download"></i>  
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
                     <!--BOTÕES-->
                     <div class="col-md-2 col-sm-2 btnConciliacaoBancaria" print-hide>
-                        <div class="row" ng-init="incrementaTotalPreConciliados(dado.Conciliado === 2)">
+                        <div class="row" ng-init="incrementaTotalPreConciliados(dado.Conciliado === 2); incrementaTotalConciliados(dado.Conciliado === 1)">
                             <div class="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-4"
                                  title="{{dado.Conciliado == 1 ? 'Desfazer conciliação' : dado.Conciliado === 2 && !associacaoManual.selecionandoRecebimentos ? 'Conciliar' : dado.Conciliado === 3 && dado.ExtratoBancario === null && !associacaoManual.selecionandoRecebimentos ? 'Alterar data de recebimento' : dado.Conciliado === 3 && dado.RecebimentosParcela === null && !associacaoManual.selecionandoRecebimentos && (!associacaoManual.extrato || associacaoManual.extrato === null) ? 'Conciliar manualmente' : dado.Conciliado === 3 && dado.RecebimentosParcela === null && associacaoManual.selecionandoRecebimentos && isExtratoSelecionado(dado) ? 'Cancelar' : dado.Conciliado === 3 && dado.ExtratoBancario === null && associacaoManual.selecionandoRecebimentos && isMesmaDataEAdquirenteExtratoSelecionado(dado) && dado.selecionado ? 'Conciliar com movimentação bancária selecionada' : ''}}">
                                 <a href="javascript:;" class="btn btn-icon-only"

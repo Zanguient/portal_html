@@ -4,6 +4,8 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.1.0 - 11/11/2015
+ *  - Download CSV
  *
  *  Versão 1.0.9 - 05/11/2015
  *  - Diferença exibida dos valores da conciliação manual
@@ -48,10 +50,11 @@ angular.module("card-services-conciliacao-bancaria", [])
                                              '$http',
                                              /*'$campos',*/
                                              '$webapi',
+                                             '$autenticacao',
                                              '$apis',
                                              '$window',
                                              function($scope,$state,$filter,$timeout,$http,
-                                                      /*$campos,*/$webapi,$apis,$window){ 
+                                                      /*$campos,*/$webapi,$autenticacao,$apis,$window){ 
     
     // flags
     // Exibição
@@ -63,7 +66,8 @@ angular.module("card-services-conciliacao-bancaria", [])
     $scope.totais = { totalExtrato : 0.0, totalRecebimentosParcela : 0.0,
                       contExtrato : 0, contRecebimentosParcela : 0,
                     };
-    var totalPreConciliados = 0;                                            
+    var totalPreConciliados = 0;    
+    var totalConciliados = 0;                                             
     $scope.adquirentes = [];
     $scope.filiais = [];
     $scope.filiaisgrupo = [];                                             
@@ -505,6 +509,12 @@ angular.module("card-services-conciliacao-bancaria", [])
     $scope.incrementaTotalPreConciliados = function(incrementa){
         if(incrementa) totalPreConciliados++;    
     }
+    $scope.temElementosConciliados = function(){
+        return totalConciliados > 0;
+    }
+    $scope.incrementaTotalConciliados = function(incrementa){
+        if(incrementa) totalConciliados++;    
+    }
     
     
     
@@ -612,7 +622,7 @@ angular.module("card-services-conciliacao-bancaria", [])
                 // Desassocia possível conciliação manual não finalizada
                 $scope.desassociaExtratoBancario();
             
-                $scope.totais.contExtrato = $scope.totais.contRecebimentosParcela = totalPreConciliados = 0;
+                $scope.totais.contExtrato = $scope.totais.contRecebimentosParcela = totalPreConciliados = totalConciliados = 0;
             
                 // Obtém os dados
                 $scope.dadosconciliacao = dados.Registros;
@@ -1105,22 +1115,66 @@ angular.module("card-services-conciliacao-bancaria", [])
         return $scope.modalDetalhesShowing;
     }
     
-    /*$scope.printDetalhes = function(){
-        //$('#modalDetalhes').printElement();
-        var mywindow = window.open('', 'Detalhes do agrupamento', 'height=400,width=600');
-        mywindow.document.write('<html><head><title>Detalhes do agrupamento</title>');
-        //mywindow.document.write('<link href="../lib/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css">');
-        //mywindow.document.write('<link rel="stylesheet" href="../css/custom.css" type="text/css">');
-        mywindow.document.write('</head><body>');
-        //mywindow.document.write($('#modalDetalhes').html());
-        mywindow.document.write($('#modalDetalhes')[0].innerHTML);
-        mywindow.document.write('</body></html>');
-
-        mywindow.document.close(); // necessary for IE >= 10
-        mywindow.focus(); // necessary for IE >= 10
-
-        mywindow.print();
-        mywindow.close();
-    }*/
+    
+    /**
+      *  Download arquivo em CSV
+      */
+    $scope.downloadCSV = function(dado){
+        
+        if(!dado || dado === null || !dado.Data || dado.Data === null ||
+           !dado.RecebimentosParcela || dado.RecebimentosParcela == null) return;
+        
+        var url = $apis.getUrl($apis.card.conciliacaobancaria, undefined,
+                       {id: 'token', valor: $scope.token});
+        // Seta para a url de download
+        url = url.replace($autenticacao.getUrlBase(), $autenticacao.getUrlBaseDownload());
+        
+        var data = $scope.getFiltroData(new Date(dado.Data.replace("T", " ")));
+        
+        var json = { dataRecebimento : data,
+                     idsRecebimento : []}; 
+        
+        for(var k = 0; k < dado.RecebimentosParcela.length; k++)
+            json.idsRecebimento.push(dado.RecebimentosParcela[k].Id);
+        
+        // Download
+        $scope.download(url, 'Conciliação Bancária.csv', true, divPortletBodyDadosPos, divPortletBodyFiltrosPos, undefined, undefined, [json]);           
+    }
+    
+    
+    /**
+      *  Download arquivos CSV em zip
+      */
+    $scope.downloadCSVs = function(dado){
+        
+        var conciliados = $filter('filter')($scope.dadosconciliacao, function(c){ return c.Conciliado === 1 }); 
+        var total = conciliados.length;
+        // Tem elementos conciliados?
+        if(total === 0){
+            $scope.showModalAlerta('Não há dados conciliados em exibição!');
+            return;        
+        } 
+        
+        var param = [];
+        
+        for(var j = 0; j < conciliados.length; j++){
+            var dado = conciliados[j];
+            var data = $scope.getFiltroData(new Date(dado.Data.replace("T", " ")));
+            var json = { dataRecebimento : data,
+                         idsRecebimento : []}; 
+            for(var k = 0; k < dado.RecebimentosParcela.length; k++)
+                json.idsRecebimento.push(dado.RecebimentosParcela[k].Id);
+            
+            param.push(json);
+        }
+        
+        var url = $apis.getUrl($apis.card.conciliacaobancaria, undefined,
+                       {id: 'token', valor: $scope.token});
+        // Seta para a url de download
+        url = url.replace($autenticacao.getUrlBase(), $autenticacao.getUrlBaseDownload());
+        
+        // Download
+        $scope.download(url, 'Conciliação Bancária.zip', true, divPortletBodyDadosPos, divPortletBodyFiltrosPos, undefined, undefined, param);           
+    }
     
 }]);

@@ -64,7 +64,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 			]
  
   * card/conciliacaotitulos
-    - GET : obtém as informações para conciliação de títulos
+    - GET : obtém as informações para conciliação de títulos (coleção 0)
 	  [
 		{ Titulo : null ou // se null => não tem info do lado do extrato 
 				  {  Id : int,
@@ -72,29 +72,41 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 					 Nsu : string,
 					 DataVenda : datetime ou null,
 					 Valor : double,
-					 Bandeira : string
+					 Bandeira : string,
+					 Data : datetime,
 				  }, 
-		  RecebimentoParcela : null ou // se null => não tem info do lado do recebimento parcela
+		  RecebimentoParcela : 
 							{  Id : int,
 							   NumParcela : int,
 							   Nsu : string,
 							   CodResumoVendas : string,
 							   DataVenda : datetime,
 							   Valor : double,
-							   Bandeira : string
+							   Bandeira : string,
+							   Data : datetime,
 							},
 		  Adquirente : string, 
-		  Data : datetime,
 		  Filial : string,
 		  Conciliado : int, // 1 : CONCILIADO | 2 : PRÉ-CONCILIADO | 3 : NÃO-CONCILIADO
-		  Valor : double,
-		  Bandeira : string
 		}
 	  ]
 
-	  OBS1: Obrigatório o envio de filtro de data
-	  OBS2: Por ser um processamento "pesado", importante o filtrar o grupo empresa e usar um intervalo de data pequeno (de preferência, diário)
-	  OBS3: Usar paginação grande, 20+ itens por página
+	  - GET : busca títulos prováveis para a parcela (coleção 1)
+	  [
+		{ Id : int,
+		  NumParcela : int,
+		  Nsu : string,
+		  DataVenda : datetime ou null,
+		  Valor : double,
+		  Bandeira : string,
+		  Data : datetime,
+		  Adquirente : string, 
+		  Filial : string,
+		  Conciliado : int, // 1 : CONCILIADO | 2 : PRÉ-CONCILIADO | 3 : NÃO-CONCILIADO
+		}
+	  ]
+	  OBS: enviar como filtro IDRECEBIMENTO e NUMPARCELA
+	  
   
 	- PUT : seta os itens recebimento parcela para apontar para determinado título ou desassociar de um título
 			[{ 

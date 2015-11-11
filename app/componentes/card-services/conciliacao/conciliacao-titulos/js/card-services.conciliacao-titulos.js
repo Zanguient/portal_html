@@ -4,6 +4,8 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.1 - 11/11/2015
+ *  - Busca títulos
  *
  *  Versão 1.0 - 09/11/2015
  *
@@ -29,7 +31,6 @@ angular.module("card-services-conciliacao-titulos", [])
     $scope.paginaInformada = 1; // página digitada pelo usuário                                             
     // Dados    
     $scope.dadosconciliacao = [];
-    $scope.dadosTitulos = [];
     $scope.totais = { valorTotal : 0.0,
                       contTitulos : 0, contRecebimentosParcela : 0,
                     };
@@ -37,27 +38,16 @@ angular.module("card-services-conciliacao-titulos", [])
     $scope.adquirentes = [];
     $scope.filiais = [];                                                                                       
     $scope.tipos = [{id: 1, nome: 'CONCILIADO'}, {id: 2, nome: 'PRÉ-CONCILIADO'}, {id: 3, nome: 'NÃO CONCILIADO'}];             
-    $scope.filtro = {datamin : new Date(), datamax : '', consideraNsu : true,
+    $scope.filtro = {datamin : new Date(), datamax : '',
                      tipo : null, adquirente : undefined, filial : undefined,
                      itens_pagina : $scope.itens_pagina[1], order : 0,
                      pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0
                     };  
-    
-    $scope.associacaoManual = { selecionandoRecebimentos : false,
-                                titulo : null,
-                                dtTitulo : '',
-                                valorTitulo : 0.0,
-                                adquirenteTitulo : '',
-                                filialTitulo : '',
-                                recebimentos : null
-                              }; 
                                                  
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyDadosPos = 1;  
-    // Modal Detalhes
-    $scope.modalDetalhes = {grupo : [] };  
-    // Modal Data de Recebimento
-    $scope.modalDataRecebimento = { dado : undefined, data : '', dataValida : false };  
+    // Modal Busca Títulos
+    $scope.modalBuscaTitulos = {recebimento : null, titulos : [], buscandotitulos : false };   
     // Permissões                                           
     var permissaoAlteracao = false;   
     // flags                                                  
@@ -180,14 +170,7 @@ angular.module("card-services-conciliacao-titulos", [])
            var filtroTipo = {id: /*$campos.card.conciliacaotitulos.tipo*/101, 
                              valor: $scope.filtro.tipo.id};
            filtros.push(filtroTipo);
-       }  
-        
-       // Considera NSU
-       if($scope.isTipoPreConciliado()){
-           var filtroConsideraNsu = {id: /*$campos.card.conciliacaotitulos.considera_nsu*/104, 
-                             valor: $scope.filtro.consideraNsu ? true : false};
-           filtros.push(filtroConsideraNsu);
-       }     
+       }   
         
        // Retorna    
        return filtros;
@@ -328,7 +311,7 @@ angular.module("card-services-conciliacao-titulos", [])
     }
     $scope.alterouTipo = function(){
         //console.log($scope.filtro.tipo); 
-        if(!$scope.isTipoPreConciliado()) $scope.filtro.consideraNsu = true;
+        //if(!$scope.isTipoPreConciliado()) $scope.filtro.consideraNsu = true;
     }
     
     
@@ -442,9 +425,6 @@ angular.module("card-services-conciliacao-titulos", [])
                                 filtros)) 
             .then(function(dados){       
             
-                // Desassocia possível conciliação manual não finalizada
-                $scope.desassociaTitulo();
-            
                 $scope.totais.contTitulos = $scope.totais.contRecebimentosParcela = totalPreConciliados = 0;
             
                 // Obtém os dados
@@ -546,7 +526,10 @@ angular.module("card-services-conciliacao-titulos", [])
     /**
       * Efetiva a conciliação
       */
-    var concilia = function(dadosConciliacao){
+    var concilia = function(dadosConciliacao, buscar){
+        
+        //if(modalTitulosIsVisible()) fechaModalTitulos();
+        
         $scope.showProgress(divPortletBodyFiltrosPos, 10000);
         $scope.showProgress(divPortletBodyDadosPos);
         
@@ -567,12 +550,10 @@ angular.module("card-services-conciliacao-titulos", [])
         $webapi.update($apis.getUrl($apis.card.conciliacaotitulos, undefined,
                        {id: 'token', valor: $scope.token}), jsonConciliacaoTitulos)
             .then(function(dados){
-                    //$scope.showAlert('Conciliação bancária realizada com sucesso!', true, 'success', true);
-                    if($scope.associacaoManual.titulo && $scope.associacaoManual.titulo !== null &&
-                       $scope.associacaoManual.recebimentos && $scope.associacaoManual.recebimentos !== null || 
-                       jsonConciliacaoTitulos[0].idRecebimentoTitulo === -1){
+                    //$scope.showAlert('Conciliação de títulos realizada com sucesso!', true, 'success', true);
+                    if(buscar || jsonConciliacaoTitulos[0].idRecebimentoTitulo === -1)
                         buscaDadosConciliacaoTitulos(true);
-                    }else{
+                    else{
                         // Altera o status da conciliação
                         for(var k = 0; k < dadosConciliacao.length; k++) dadosConciliacao[k].Conciliado = 1;  
                         if(!$scope.$$phase) $scope.$apply();
@@ -591,74 +572,78 @@ angular.module("card-services-conciliacao-titulos", [])
 
                                                  
                                                  
-    // ASSOCIAÇÃO MANUAL   
+    // BUSCA TÍTULOS   
     /**
-      * Selecionou título para conciliar manualmente
+      * Selecionou um recebimentoparcela para buscar títulos
       */
-    $scope.associaTitulo = function(dado){
-        $scope.associacaoManual.selecionandoRecebimentos = true;
-        $scope.associacaoManual.titulo = dado.Titulo;
-        $scope.associacaoManual.dtTitulo = dado.Data;
-        $scope.associacaoManual.recebimentos = null;
-        $scope.associacaoManual.valorTitulo = dado.Valor;
-        $scope.associacaoManual.adquirenteTitulo = dado.Adquirente;
-        $scope.associacaoManual.filialTitulo = dado.Filial;
+    $scope.buscaTitulos = function(dado){
+        if(!dado.RecebimentoParcela || dado.RecebimentoParcela === null) return;
+        $scope.modalBuscaTitulos.recebimento = dado.RecebimentoParcela;
+        $scope.modalBuscaTitulos.titulos = [];
+        // Exibe o modal
+        $('#modalTitulos').modal('show');
+        buscaTitulos();
     }
-    /**
-      * Desistiu da conciliação manual
-      */
-    $scope.desassociaTitulo = function(){
-        $scope.associacaoManual.selecionandoRecebimentos = false;
-        $scope.associacaoManual.titulo = null;
-        $scope.associacaoManual.dtTitulo = '';
-        $scope.associacaoManual.recebimentos = null;
-        $scope.associacaoManual.valorTitulo = 0.0;
-        $scope.associacaoManual.adquirenteTitulo = '';
-        $scope.associacaoManual.filialTitulo = '';
+    
+    var modalTitulosIsVisible = function(){
+        return $('modalTitulos').is(':visible');
     }
-    /**
-      * Retorna true se o dado informado corresponde ao título selecionado para conciliação manual
-      */
-    $scope.isTituloSelecionado = function(dado){
-        if(!dado || !$scope.associacaoManual.titulo || dado === null || $scope.associacaoManual.titulo === null) 
-            return false;
-        return dado.Titulo.Id === $scope.associacaoManual.titulo.Id && 
-               dado.Titulo.NumParcela === $scope.associacaoManual.titulo.NumParcela;
+    
+    var fechaModalTitulos = function(){
+       $('#modalTitulos').modal('hide'); 
     }
+    
+    
     /**
-      * Retorna true se o dado informado corresponde ao título selecionado para conciliação manual
+      * Busca títulos
       */
-    $scope.isMesmaDataEAdquirenteTituloSelecionado = function(dado){
-        if(!dado || !$scope.associacaoManual.titulo || dado === null || 
-           $scope.associacaoManual.titulo === null || !$scope.associacaoManual.dtTitulo ||
-           !$scope.associacaoManual.adquirenteTitulo) 
-            return false;
-        return $scope.getDataString(dado.Data) === $scope.getDataString($scope.associacaoManual.dtTitulo) && 
-               $scope.associacaoManual.adquirenteTitulo === dado.Adquirente && $scope.associacaoManual.filialTitulo === dado.Filial;
+    var buscaTitulos = function(){
+       if(!$scope.modalBuscaTitulos.recebimento || $scope.modalBuscaTitulos.recebimento === null)
+            return;
+        
+        $scope.modalBuscaTitulos.buscandotitulos = true;
+        
+        $scope.showProgress();
+        
+        // Filtro  
+        var filtros = [{id: /*$campos.card.conciliacaotitulos.recebimentoparcela + $campos.pos.recebimentoparcela.idrecebimento - 100*/ 300, 
+                        valor: $scope.modalBuscaTitulos.recebimento.Id},
+                      {id: /*$campos.card.conciliacaotitulos.recebimentoparcela + $campos.pos.recebimentoparcela.numparcela - 100*/ 301, 
+                        valor: $scope.modalBuscaTitulos.recebimento.NumParcela}];
+           
+        $webapi.get($apis.getUrl($apis.card.conciliacaotitulos, [$scope.token, 1], filtros)) 
+            .then(function(dados){       
+                // Obtém os dados
+                $scope.modalBuscaTitulos.titulos = dados.Registros;   
+                $scope.modalBuscaTitulos.buscandotitulos = false;
+                // Fecha o progress
+                $scope.hideProgress();
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao consultar títulos (' + failData.status + ')', true, 'danger', true);
+                 $scope.modalBuscaTitulos.buscandotitulos = false;
+                 // Fecha o progress
+                 $scope.hideProgress();
+              });           
     }
+    
+    
     /**
-      * Selecionou o uma parcela para conciliar com o título selecionado para conciliação manual
-      * Solicita confirmação ao usuário
+      * Concilia parcela selecionada com o título
       */
-    $scope.associaRecebimento = function(dado){
-        
-        if(!dado || dado === null || dado.RecebimentoParcela === null){
-            $scope.showModalAlerta('Nenhuma carga foi selecionada!');
-            return;    
-        }
-        
-        //$scope.associacaoManual.recebimentos = dado.RecebimentosParcela;
-        var totalRecebimento = dado.Valor;
-        $scope.associacaoManual.recebimento = dado.RecebimentoParcela;
-        
-        var d = { Titulo : $scope.associacaoManual.titulo, 
-                  RecebimentoParcela : $scope.associacaoManual.recebimento,
-		          Data : $scope.associacaoManual.dtTitulo
-                };
-        
+    $scope.conciliarTitulo = function(titulo){
+        //console.log(titulo);
+        var dado = {RecebimentoParcela : $scope.modalBuscaTitulos.recebimento,
+                    Titulo : titulo};
+        //console.log(dado);
+        // Confirma conciliação
         $scope.showModalConfirmacao('Confirmação', 
-            "Uma vez confirmada a conciliação, o título e a carga não poderão se envolver em outra conciliação de títulos. Confirma essa conciliação de movimentação com valor de " + $filter('currency')($scope.associacaoManual.valorTitulo, 'R$', 2) + ' e a carga com valor total de ' + $filter('currency')(totalRecebimento, 'R$', 2) + ' (diferença de ' + $filter('currency')(Math.abs(totalRecebimento - $scope.associacaoManual.valorTitulo), 'R$', 2) + ')?',
-            concilia, [d], 'Sim', 'Não');
+            "Uma vez confirmada a conciliação, o título e a carga não poderão se envolver em outra conciliação de títulos. Confirma essa conciliação da parcela com valor de " + $filter('currency')($scope.modalBuscaTitulos.recebimento.Valor, 'R$', 2) + ' e o título com valor de ' + $filter('currency')(titulo.Valor, 'R$', 2) + ' (diferença de ' + $filter('currency')(Math.abs(titulo.Valor - $scope.modalBuscaTitulos.recebimento.Valor), 'R$', 2) + ')?',
+            function(){ fechaModalTitulos(); 
+                       $timeout(function(){concilia([dado], true);}, 300);}, undefined, 'Sim', 'Não');
     }
+    
     
 }]);

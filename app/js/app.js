@@ -5,6 +5,9 @@
  *
  *
  *
+ *  Versão 1.1.1 - 11/11/2015
+ *  - Função download requisitando via Patch
+ *
  *  Versão 1.1.0 - 09/11/2015
  *  - AngularPrint
  *  - $scope.print()
@@ -2456,7 +2459,7 @@ angular.module("AtosCapital", ['ui.router',
       * @param url
       * @param arquivo : nome do arquivo
       */
-    $scope.download = function(url, arquivo, exibirProgress, divPosPrincipal, divPosFiltro, funcaoSucesso, funcaoErro){
+    $scope.download = function(url, arquivo, exibirProgress, divPosPrincipal, divPosFiltro, funcaoSucesso, funcaoErro, json){
         if(exibirProgress){
             if(typeof divPosPrincipal === 'number'){
                 $scope.showProgress(divPosPrincipal); // z-index < z-index do fullscreen
@@ -2465,24 +2468,26 @@ angular.module("AtosCapital", ['ui.router',
             }else
                 $scope.showProgress(); // sobre a página
         }
-
-        $http.get(url, {responseType: 'arraybuffer'})
-            .success(function(data, status, headers, config){
+        
+        var downloadSucesso = function(data, status, headers, config){
                 //console.log(dados);
 
                 var octetStreamMime = 'application/octet-stream';
                 var success = false;
-
-                // Get the headers
-                headers = headers();
+               
+                var filename = arquivo;
+                var contentType = octetStreamMime;
+               
+                try{
+                    // Get the headers
+                    headers = headers();
+                    // Get the filename from the x-filename header or default to "download.bin"
+                    filename = headers['x-filename'] || arquivo;
+                    // Determine the content type from the header or default to "application/octet-stream"
+                    contentType = headers['content-type'] || octetStreamMime;
+                }catch(ex){}
 
                 //console.log(headers);
-
-                // Get the filename from the x-filename header or default to "download.bin"
-                var filename = headers['x-filename'] || arquivo;
-
-                // Determine the content type from the header or default to "application/octet-stream"
-                var contentType = headers['content-type'] || octetStreamMime;
 
                 try
                 {
@@ -2583,7 +2588,9 @@ angular.module("AtosCapital", ['ui.router',
                     }else
                         $scope.hideProgress(); // sobre a página
                 }
-            }).error(function(data, status, headers, config){
+            };
+        
+        var downloadErro = function(data, status, headers, config){
                  if(status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
                  else if(status === 503 || status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else $scope.showAlert('Houve uma falha ao realizar o download (' + status + ')', true, 'danger', true);
@@ -2601,7 +2608,22 @@ angular.module("AtosCapital", ['ui.router',
                     }else
                         $scope.hideProgress(); // sobre a página
                  }
-            });
+            };
+
+        
+        if(typeof json === 'undefined'){
+            $http.get(url, {responseType: 'arraybuffer'})
+                .success(downloadSucesso)
+                .error(downloadErro);
+                //.success(function(data, status, headers, config){ downloadSucesso(data, status, headers, config)})
+                //.error(function(data, status, headers, config){ downloadErro(data, status, headers, config); });
+        }else{
+           $http.patch(url, json, {responseType: 'arraybuffer'})
+                .success(downloadSucesso)
+                .error(downloadErro);
+                //.success(function(data, status, headers, config){ downloadSucesso(data, status, headers, config)})
+                //.error(function(data, status, headers, config){ downloadErro(data, status, headers, config); });
+        }
     }
 
 
