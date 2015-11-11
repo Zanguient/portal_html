@@ -49,10 +49,6 @@ angular.module("administrativo-consulta-parametros", [])
             // Refaz a busca
             if($scope.exibeTela) $scope.buscaParametros(true);
         }); 
-        // Obtém as permissões
-        if($scope.methodsDoControllerCorrente){// && $scope.methodsDoControllerCorrente.length > 0){              
-            permissaoCadastro = $scope.methodsDoControllerCorrente['cadastro'] ? true : false;//$filter('filter')($scope.methodsDoControllerCorrente, function(m){ return m.ds_method.toUpperCase() === 'CADASTRO' }).length > 0;
-        }
         // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
         $scope.$on('acessoDeTelaNotificado', function(event){
             $scope.exibeTela = true;
@@ -147,12 +143,16 @@ angular.module("administrativo-consulta-parametros", [])
 
            // Verifica se tem algum valor para ser filtrado    
            if($scope.parametro.busca.length > 0) filtros.push({id: /*$campos.cliente.empresa.ds_fantasia*/ 104, 
-                                                            valor: $scope.parametro.busca + '%'});        
+                                                          valor: $scope.parametro.busca + '%'});        
 
            if($scope.usuariologado.empresa) filtros.push({id: /*$campos.cliente.empresa.nu_cnpj*/ 100, 
                                                           valor: $scope.usuariologado.empresa.nu_cnpj});
-           
-           $webapi.get($apis.getUrl($apis.cliente.empresa, 
+			
+           if ($scope.usuariologado.tbContaCorrente) filtros.push({id: /*$campos.cliente.empresa.nu_cnpj*/ 100,
+                                                        valor: $scope.usuariologado.tbContaCorrente.cdContaCorrente
+           });
+
+           $webapi.get($apis.getUrl($apis.cliente.empresa,
                                     [$scope.token, 2, /*$campos.cliente.empresa.ds_fantasia*/ 104, 0, 
                                      $scope.parametro.itens_pagina, $scope.parametro.pagina],
                                     filtros)) 
