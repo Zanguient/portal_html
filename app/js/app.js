@@ -5,6 +5,9 @@
  *
  *
  *
+ *  Versão 1.1.2 - 12/11/2015
+ *  - Correção da função getDataFromDate
+ *
  *  Versão 1.1.1 - 11/11/2015
  *  - Função download requisitando via Patch
  *
@@ -2325,7 +2328,14 @@ angular.module("AtosCapital", ['ui.router',
      * A partir da data proveniente do banco de dados, retorna um Date, com horário zerado
      */
    $scope.getDataFromDate = function(date){
-       return $filter('date')(new Date(date.replace("T", " ")), "yyyy-MM-dd HH:mm:ss")
+       var ano = date.substr(0, 4);
+       var mes = date.substr(5, 2);
+       var dia = date.substr(8, 2);
+       var hora = date.substr(11, 2);
+       var minuto = date.substr(14, 2);
+       var segundo = date.substr(17, 2);
+       return new Date(ano, mes - 1, dia, hora, minuto, segundo, 0);
+       //return $filter('date')(new Date(date.replace("T", " ")), "yyyy-MM-dd HH:mm:ss");
    }
    /**
      * Retorna a data do tipo Date yyyy-MM-dd em string dd/MM/yyyy

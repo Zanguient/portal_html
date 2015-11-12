@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.1.1 - 12/11/2015
+ *  - Ajuste no envio da data do json para download do CSV
+ *
  *  Versão 1.1.0 - 11/11/2015
  *  - Download CSV
  *
@@ -1129,7 +1132,8 @@ angular.module("card-services-conciliacao-bancaria", [])
         // Seta para a url de download
         url = url.replace($autenticacao.getUrlBase(), $autenticacao.getUrlBaseDownload());
         
-        var data = $scope.getFiltroData(new Date(dado.Data.replace("T", " ")));
+        //var data = dado.Data.replace("-", "").replace("-", "").substr(0, 8); 
+        var data = $scope.getFiltroData($scope.getDataFromDate(dado.Data));
         
         var json = { dataRecebimento : data,
                      idsRecebimento : []}; 
@@ -1159,7 +1163,8 @@ angular.module("card-services-conciliacao-bancaria", [])
         
         for(var j = 0; j < conciliados.length; j++){
             var dado = conciliados[j];
-            var data = $scope.getFiltroData(new Date(dado.Data.replace("T", " ")));
+            //var data = dado.Data.replace("-", "").replace("-", "").substr(0, 8); 
+            var data = $scope.getFiltroData($scope.getDataFromDate(dado.Data));
             var json = { dataRecebimento : data,
                          idsRecebimento : []}; 
             for(var k = 0; k < dado.RecebimentosParcela.length; k++)
