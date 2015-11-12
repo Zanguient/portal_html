@@ -133,27 +133,29 @@ angular.module("administrativo-consulta-parametros", [])
            $scope.parametro.total_paginas = 0;
            $scope.parametro.faixa_registros = '0-0';
            $scope.paginaInformada = 1;
-           if(showMessage) $scope.showAlert('É necessário selecionar um grupo empresa!', true, 'warning', true);             
+           if (showMessage) $scope.showAlert('É necessário selecionar um grupo empresa!', true, 'warning', true);
        }else{
 
-           $scope.showProgress(divPortletBodyFilialPos);    
+           $scope.showProgress(divPortletBodyFilialPos);
 
-           var filtros = [{id: /*$campos.cliente.empresa.id_grupo*/ 116, 
-                           valor: $scope.usuariologado.grupoempresa.id_grupo}];
+           var filtros = [{
+               id: /*$campos.card.tbcontacorrentetbloginadquirenteempresa.id_grupo*/ 516,
+               valor: $scope.usuariologado.grupoempresa.id_grupo
+           }];
 
            // Verifica se tem algum valor para ser filtrado    
-           if($scope.parametro.busca.length > 0) filtros.push({id: /*$campos.cliente.empresa.ds_fantasia*/ 104, 
-                                                          valor: $scope.parametro.busca + '%'});        
-
-           if($scope.usuariologado.empresa) filtros.push({id: /*$campos.cliente.empresa.nu_cnpj*/ 100, 
-                                                          valor: $scope.usuariologado.empresa.nu_cnpj});
-			
-           if ($scope.usuariologado.tbContaCorrente) filtros.push({id: /*$campos.cliente.empresa.nu_cnpj*/ 100,
-                                                        valor: $scope.usuariologado.tbContaCorrente.cdContaCorrente
+           if ($scope.parametro.busca.length > 0) filtros.push({
+               id: /*$campos.card.tbcontacorrentetbloginadquirenteempresa.cdContaCorrente*/ 100,
+               valor: $scope.parametro.busca + '%'
            });
 
-           $webapi.get($apis.getUrl($apis.cliente.empresa,
-                                    [$scope.token, 2, /*$campos.cliente.empresa.ds_fantasia*/ 104, 0, 
+           //if ($scope.usuariologado.tbcontacorrentetbloginadquirenteempresa) filtros.push({
+              // id: /*$campos.card.tbcontacorrentetbloginadquirenteempresa.nu_cnpj*/ 500,
+              // valor: $scope.usuariologado.tbcontacorrentetbloginadquirenteempresa.nu_cnpj
+          // });
+
+           $webapi.get($apis.getUrl($apis.card.tbcontacorrentetbloginadquirenteempresa,
+                                    [$scope.token, 5, /*$campos.card.tbcontacorrentetbloginadquirenteempresa.id_grupo*/ 100, 0,
                                      $scope.parametro.itens_pagina, $scope.parametro.pagina],
                                     filtros)) 
                 .then(function(dados){
