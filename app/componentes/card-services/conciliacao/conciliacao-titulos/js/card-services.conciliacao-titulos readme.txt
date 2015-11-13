@@ -74,6 +74,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 					 Valor : double,
 					 Bandeira : string,
 					 Data : datetime,
+					 Filial : string,
 				  }, 
 		  RecebimentoParcela : 
 							{  Id : int,
@@ -84,9 +85,9 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 							   Valor : double,
 							   Bandeira : string,
 							   Data : datetime,
+							   Filial : string,
 							},
 		  Adquirente : string, 
-		  Filial : string,
 		  Conciliado : int, // 1 : CONCILIADO | 2 : PRÉ-CONCILIADO | 3 : NÃO-CONCILIADO
 		}
 	  ]
@@ -102,7 +103,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 		  Data : datetime,
 		  Adquirente : string, 
 		  Filial : string,
-		  Conciliado : int, // 1 : CONCILIADO | 2 : PRÉ-CONCILIADO | 3 : NÃO-CONCILIADO
+		  Tipo : 'T', // título
 		}
 	  ]
 	  OBS: enviar como filtro IDRECEBIMENTO e NUMPARCELA

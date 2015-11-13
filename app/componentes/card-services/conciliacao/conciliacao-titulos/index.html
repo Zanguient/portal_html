@@ -8,6 +8,9 @@
     Card Services > Conciliação > Conciliação de Títulos
 
 
+    Versão 1.0.2 - 13/11/2015
+    - Busca título em outra filial
+
     Versão 1.0.1 - 11/11/2015
     - DataVenda, Bandeira e Valor exibidos de cada cupom separadamente
     - Busca títulos
@@ -255,8 +258,30 @@
                            </div>
                        </div>
                        
+                       <!-- FILIAL DE CONSULTA -->
+                       <div class="row" style="margin-top: 50px">
+                           <div class="col-sm-2"></div>
+                           <div class="col-sm-8"> 
+                               <label style="margin-right: 20px">Filial</label>
+                               <select class="form-control form-filter input-sm comboBoxFiltros"
+                                       style="width: 60%"
+                                       ng-model="modalBuscaTitulos.filial"
+                                       ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
+                                    <option value="" style="display: none"></option>
+                               </select>
+                               <span style="margin-left: 20px" title="Buscar título">
+                                    <a href="javascript:;" class="btn btn-icon-only default"
+                                       ng-click="buscaTitulosFilial(modalBuscaTitulos.filial.nu_cnpj)"
+                                       ng-disabled="!usuarioPodeAlterarDadosConciliacaoTitulos()">
+                                        <i class="fa fa-search"></i>
+                                    </a>
+                               </span>
+                           </div>
+                           <div class="col-sm-2"></div>
+                       </div>
+                       
                        <!-- TABELA -->
-                       <div style="margin-top: 20px">
+                       <div style="margin-top: 50px">
                            <table class="table table-striped table-hover table-bordered dataTable no-footer conteudoTabelas"
                                   role="grid">
                                 <thead>
@@ -317,13 +342,15 @@
                                                 Conciliar
                                             </button>
                                         </td>
-                                    </tr>   
+                                    </tr> 
+                                    <tr role="row" 
+                                        ng-show="!modalBuscaTitulos.buscandotitulos && modalBuscaTitulos.titulos.length === 0">
+                                        <td colspan="7" class="linhaTotalRelatorios">
+                                            Nenhum título encontrado
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
-                            <div class="col-sm-12" 
-                                 ng-show="!modalBuscaTitulos.buscandotitulos && modalBuscaTitulos.titulos.length === 0">
-                                <label>Nenhum título encontrado</label>
-                            </div>
                        </div>
                    </div>
                    <div class="modal-footer">
@@ -332,7 +359,7 @@
                                Imprimir
                            </button>
                        </div-->
-                       <div class="col-sm-4">
+                       <div class="col-sm-6">
                            <button type="button" class="btn default" data-dismiss="modal">
                                Fechar
                            </button>
@@ -447,7 +474,7 @@
                                         <!--SUBTITULO DO CUPON -->
                                         <div class="row tituloCumponsConciliacaoBancariaICard">
                                             <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria"
-                                                 ng-bind="dado.RecebimentoParcela !== null ? dado.Filial : ''"> 
+                                                 ng-bind="dado.RecebimentoParcela !== null ? dado.RecebimentoParcela.Filial : ''"> 
                                             </div>
                                         </div>                                 
                                     </div>
@@ -531,7 +558,7 @@
                                     </div>                                              
                                 </div>
                                 <!--RESUMO VENDAS-->
-                                <div class="row">
+                                <div class="row" ng-show="dado.RecebimentoParcela !== null && dado.RecebimentoParcela.CodResumoVendas && dado.RecebimentoParcela.CodResumoVendas !== null">
                                     <!--RESUMO-->
                                     <div class="col-md-4 col-sm-4">
                                         <label ng-bind="dado.RecebimentoParcela !== null ? 'Resumo:' : ''"></label>
@@ -579,7 +606,7 @@
                                         <!--SUBTITULO DO CUPON -->
                                         <div class="row tituloCumponsConciliacaoBancariaICard">
                                             <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria"
-                                                 ng-bind="dado.Titulo !== null ? dado.Filial : ''"> 
+                                                 ng-bind="dado.Titulo !== null ? dado.Titulo.Filial : ''"> 
                                             </div>
                                         </div>                                 
                                     </div>

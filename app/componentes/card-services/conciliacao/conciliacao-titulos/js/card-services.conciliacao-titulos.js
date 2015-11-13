@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.2 - 13/11/2015
+ *  - Busca títulos em outra filial
+ *
  *  Versão 1.0.1 - 11/11/2015
  *  - Busca títulos
  *
@@ -47,7 +50,7 @@ angular.module("card-services-conciliacao-titulos", [])
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyDadosPos = 1;  
     // Modal Busca Títulos
-    $scope.modalBuscaTitulos = {recebimento : null, titulos : [], buscandotitulos : false };   
+    $scope.modalBuscaTitulos = {recebimento : null, titulos : [], buscandotitulos : false, filial : null };   
     // Permissões                                           
     var permissaoAlteracao = false;   
     // flags                                                  
@@ -580,6 +583,7 @@ angular.module("card-services-conciliacao-titulos", [])
         if(!dado.RecebimentoParcela || dado.RecebimentoParcela === null) return;
         $scope.modalBuscaTitulos.recebimento = dado.RecebimentoParcela;
         $scope.modalBuscaTitulos.titulos = [];
+        $scope.modalBuscaTitulos.filial = $filter('filter')($scope.filiais, function(f){return $scope.getNomeAmigavelFilial(f) === dado.RecebimentoParcela.Filial})[0];
         // Exibe o modal
         $('#modalTitulos').modal('show');
         buscaTitulos();
@@ -593,11 +597,18 @@ angular.module("card-services-conciliacao-titulos", [])
        $('#modalTitulos').modal('hide'); 
     }
     
+    /**
+      * Busca títulos em outra filial
+      */
+    $scope.buscaTitulosFilial = function(nu_cnpj){
+        if(nu_cnpj) buscaTitulos(nu_cnpj);
+    }
+    
     
     /**
       * Busca títulos
       */
-    var buscaTitulos = function(){
+    var buscaTitulos = function(nu_cnpj){
        if(!$scope.modalBuscaTitulos.recebimento || $scope.modalBuscaTitulos.recebimento === null)
             return;
         
@@ -610,6 +621,12 @@ angular.module("card-services-conciliacao-titulos", [])
                         valor: $scope.modalBuscaTitulos.recebimento.Id},
                       {id: /*$campos.card.conciliacaotitulos.recebimentoparcela + $campos.pos.recebimentoparcela.numparcela - 100*/ 301, 
                         valor: $scope.modalBuscaTitulos.recebimento.NumParcela}];
+        
+        // Busca para uma filial específica
+        if(typeof nu_cnpj === 'string'){
+            filtros.push({id: /*$campos.card.conciliacaotitulos.nu_cnpj*/ 103, 
+                          valor: nu_cnpj});
+        }
            
         $webapi.get($apis.getUrl($apis.card.conciliacaotitulos, [$scope.token, 1], filtros)) 
             .then(function(dados){       
