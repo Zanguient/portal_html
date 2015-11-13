@@ -91,8 +91,8 @@ angular.module("administrativo-consulta-parametros", [])
     /**
       * Vai para a página seguinte
       */                                            
-    $scope.avancaPagina = function(){
-        setPagina($scope.parametro.pagina + 1); 
+    $scope.avancaPagina = function () {
+        setPagina($scope.parametro.pagina + 1);
     };
     /**
       * Foi informada pelo usuário uma página para ser exibida
@@ -145,7 +145,7 @@ angular.module("administrativo-consulta-parametros", [])
 
            // Verifica se tem algum valor para ser filtrado    
            if ($scope.parametro.busca.length > 0) filtros.push({
-               id: /*$campos.card.tbcontacorrentetbloginadquirenteempresa.cdContaCorrente*/ 100,
+               id: /*$campos.card.tbcontacorrentetbloginadquirenteempresa.ds_fantasia*/ 204,
                valor: $scope.parametro.busca + '%'
            });
 
