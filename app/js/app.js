@@ -5,6 +5,9 @@
  *
  *
  *
+ *  Versão 1.1.3 - 13/11/2015
+ *  - card-services-relatorio-conciliacao-titulos
+ *
  *  Versão 1.1.2 - 12/11/2015
  *  - Correção da função getDataFromDate
  *
@@ -84,6 +87,7 @@ angular.module("AtosCapital", ['ui.router',
                                'card-services-recebiveis-futuros',
                                'card-services-conciliacao-bancaria',
                                'card-services-conciliacao-titulos',
+                               'card-services-relatorio-conciliacao-titulos',
                                'card-services-conciliacao-vendas',
                                'card-services-conciliacao-terminal-logico',
                                'card-services-conciliacao-vendas-dia',
@@ -364,7 +368,16 @@ angular.module("AtosCapital", ['ui.router',
         controller: "card-services-conciliacao-titulosCtrl",
         data: {
             titulo: 'Card Services'
-        }
+        } 
+      }) 
+    
+      .state('card-services-conciliacao-relatorio-conciliacao-titulos', {
+        url: prefixo + 'card-services/relatorio-conciliacao-titulos',
+        templateUrl: 'componentes/card-services/conciliacao/relatorio-conciliacao-titulos/index.html',
+        controller: "card-services-relatorio-conciliacao-titulosCtrl",
+        data: {
+            titulo: 'Card Services'
+        } 
       })
 
       .state('card-services-conciliacao-conciliacao-vendas', {
@@ -603,7 +616,8 @@ angular.module("AtosCapital", ['ui.router',
     var controllerCardServicesRelatorioVendas = undefined; 
     var controllerCardServicesRecebiveisFuturos = undefined;                          
     var controllerCardServicesConciliacaoBancaria = undefined;
-    var controllerCardServicesConciliacaoTitulos = undefined;                        
+    var controllerCardServicesConciliacaoTitulos = undefined;        
+    var controllerCardServicesRelatorioConciliacaoTitulos = undefined;                        
     var controllerCardServicesConciliacaoVendas = undefined;
     var controllerCardServicesConciliacaoTerminalLogico = undefined;
     var controllerCardServicesConciliacaoVendasDia = undefined;
@@ -653,6 +667,7 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO = false;
     $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_BANCARIA = false;
     $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_TITULOS = false;
+    $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_RELATORIO_CONCILIACAO_TITULOS = false;                        
     $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_VENDAS = false;
     $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_TERMINAL_LOGICO = false;
     $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_VENDAS_DIA = false;
@@ -933,7 +948,14 @@ angular.module("AtosCapital", ['ui.router',
     $scope.goCardServicesConciliacaoTitulos = function(params){
         controllerAtual = controllerCardServicesConciliacaoTitulos;
         go('card-services-conciliacao-conciliacao-titulos', params);
-    };                        
+    };
+    /**
+      * Exibe como conteúdo a Conciliação Relatório de Conciliação de Títulos, de Card Services
+      */
+    $scope.goCardServicesRelatorioConciliacaoTitulos = function(params){
+        controllerAtual = controllerCardServicesRelatorioConciliacaoTitulos;
+        go('card-services-conciliacao-relatorio-conciliacao-titulos', params);
+    };                          
     /**
       * Exibe como conteúdo a Conciliação Conciliação de Vendas, de Card Services
       */
@@ -1272,6 +1294,15 @@ angular.module("AtosCapital", ['ui.router',
             }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'CONCILIAÇÃO DE TÍTULOS')
                      controllerAtual.id_controller !== controllerCardServicesConciliacaoTitulos.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
+        }else if(url === $state.get('card-services-conciliacao-relatorio-conciliacao-titulos').url){
+            // Card Services > Conciliação > Relatório de Conciliação de Títulos
+            if(!$scope.PERMISSAO_CARD_SERVICES || !$scope.PERMISSAO_CARD_SERVICES_CONCILIACAO || !$scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_RELATORIO_CONCILIACAO_TITULOS){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.goUsuarioSemPrivilegios();
+            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'RELATÓRIO DE CONCILIAÇÃO DE TÍTULOS')
+                     controllerAtual.id_controller !== controllerCardServicesRelatorioConciliacaoTitulos.id_controller)
+                $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
         }else if(url === $state.get('card-services-conciliacao-conciliacao-vendas').url){
             // Card Services > Conciliação > Conciliação de Vendas
             if(!$scope.PERMISSAO_CARD_SERVICES || !$scope.PERMISSAO_CARD_SERVICES_CONCILIACAO || !$scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_VENDAS){
@@ -1520,7 +1551,12 @@ angular.module("AtosCapital", ['ui.router',
                 if($location.path() === $state.get('card-services-conciliacao-conciliacao-titulos').url)
                     controllerAtual = controller;
                 controllerCardServicesConciliacaoTitulos = controller;
-                return $scope.goCardServicesConciliacaoTitulos;    
+                return $scope.goCardServicesConciliacaoTitulos; 
+            case 'RELATÓRIO DE CONCILIAÇÃO DE TÍTULOS':
+                if($location.path() === $state.get('card-services-conciliacao-relatorio-conciliacao-titulos').url)
+                    controllerAtual = controller;
+                controllerCardServicesRelatorioConciliacaoTitulos = controller;
+                return $scope.goCardServicesRelatorioConciliacaoTitulos;
             case 'CONCILIAÇÃO DE VENDAS':
                 if($location.path() === $state.get('card-services-conciliacao-conciliacao-vendas').url)
                     controllerAtual = controller;
@@ -1650,6 +1686,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'CONCILIAÇÃO': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO = true; break;
             case 'CONCILIAÇÃO BANCÁRIA': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_BANCARIA = true; break;
             case 'CONCILIAÇÃO DE TÍTULOS': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_TITULOS = true; break;
+            case 'RELATÓRIO DE CONCILIAÇÃO DE TÍTULOS': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_RELATORIO_CONCILIACAO_TITULOS = true; break;
             case 'CONCILIAÇÃO DE VENDAS': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_VENDAS = true; break;
             case 'CONCILIAÇÃO TERMINAL LÓGICO': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_TERMINAL_LOGICO = true; break;
             case 'CONCILIAÇÃO VENDAS DIA': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_VENDAS_DIA = true; break;
@@ -1738,6 +1775,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'RECEBÍVEIS FUTUROS': return state == 'recebiveis-futuros';    
             case 'CONCILIAÇÃO BANCÁRIA': return state == 'conciliacao-bancaria';
             case 'CONCILIAÇÃO DE TÍTULOS': return state == 'conciliacao-titulos';
+            case 'RELATÓRIO DE CONCILIAÇÃO DE TÍTULOS': return state == 'relatorio-conciliacao-titulos';
             case 'CONCILIAÇÃO DE VENDAS': return state == 'conciliacao-vendas';
             case 'CONCILIAÇÃO TERMINAL LÓGICO': return state == 'conciliacao-terminal-logico';
             case 'CONCILIAÇÃO DE VENDAS DIA': return state == 'conciliacao-vendas-dia';

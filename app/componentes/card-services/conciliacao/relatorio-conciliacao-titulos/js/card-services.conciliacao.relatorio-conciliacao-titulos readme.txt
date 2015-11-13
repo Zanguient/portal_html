@@ -1,12 +1,12 @@
 # README #
 
 Módulo que:
- - gerencia o layout da tela de conciliação de títulos da Conciliação (app/componentes/card-services/conciliacao/conciliacao-titulos/index.html);
+ - gerencia o layout da tela de de relatório de conciliação de títulos da Conciliação (app/componentes/card-services/conciliacao/relatorio-conciliacao-titulos/index.html);
  
 
 ### Pra Que Serve Este Módulo? ###
 
-Gerenciar completamente a tela de conciliação de títulos da Conciliação (Card Services).  
+Gerenciar completamente a tela de relatório de conciliação de títulos da Conciliação (Card Services).  
 
 
 
@@ -34,13 +34,12 @@ Além deles, é necessária a importação dos seguintes módulos externos.
   * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
   * APIS:
     - cliente/empresa
-    - card/tbadquirente
-    - card/conciliacaotitulos
+	- card/tbadquirente
+    - card/relatorioconciliacaotitulos
 	
  
  
  ### Interação com a WEB API ###
- 
  
   * cliente/empresa
     - GET : listagem das filiais (coleção 0)
@@ -51,7 +50,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				id_grupo : int
 			  }
 			]
- 
+			
   * card/tbadquirente : listagem das adquirentes
 	- GET : listagem das adquirentes (coleção 1)
 			[
@@ -63,62 +62,38 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 			  }
 			]
  
-  * card/conciliacaotitulos
-    - GET : obtém as informações para conciliação de títulos (coleção 0)
-	  [
-		{ Titulo : null ou // se null => não tem info do lado do título 
-				  {  Id : int,
-					 NumParcela : int,
-					 Nsu : string,
-					 DataVenda : datetime ou null,
-					 Valor : double,
-					 Bandeira : string,
-					 Data : datetime,
-					 Filial : string,
-				  }, 
-		  RecebimentoParcela : 
-							{  Id : int,
-							   NumParcela : int,
-							   Nsu : string,
-							   CodResumoVendas : string,
-							   DataVenda : datetime,
-							   Valor : double,
-							   Bandeira : string,
-							   Data : datetime,
-							   Filial : string,
-							},
-		  Adquirente : string, 
-		  Conciliado : int, // 1 : CONCILIADO | 2 : PRÉ-CONCILIADO | 3 : NÃO-CONCILIADO
-		}
-	  ]
-
-	  - GET : busca títulos prováveis para a parcela (coleção 1)
-	  [
-		{ Id : int,
-		  NumParcela : int,
-		  Nsu : string,
-		  DataVenda : datetime ou null,
-		  Valor : double,
-		  Bandeira : string,
-		  Data : datetime,
-		  Adquirente : string, 
-		  Filial : string,
-		  Tipo : 'T', // título
-		}
-	  ]
-	  OBS: enviar como filtro IDRECEBIMENTO e NUMPARCELA
-	  
+  * card/relatorioconciliacaotitulos	
+	   - GET : dados relativos ao relatório de conciliação de títulos (coleção 0)
+			[
+			  { Titulo : null ou // se null => não tem info do lado do título 
+				    {  Id : int,
+					   NumParcela : int,
+					   Nsu : string,
+					   DataVenda : datetime,
+					   Valor : double,
+					   ValorVenda : double,
+					   Data : datetime,
+					   Filial : string,
+					},
+			   RecebimentoParcela : 
+								{  Id : int,
+								   NumParcela : int,
+								   Nsu : string,
+								   DataVenda : datetime,
+								   Valor : double,
+								   ValorLiquido : double,
+								   ValorVenda : double,
+								   Data : datetime,
+								   Filial : string,
+								},
+			   Adquirente : string
+			 }
+			]
+			Totais: "valorTotalBruto", "valorTotalLiquido"
+			OBS: Caso tenha mais de uma filial diferente nos títulos, traz valor total líquido e bruto de cada filial, sendo as chaves
+			     "(valorTotalBruto) " + <Titulo.Filial>
+				 "(valorTotalLiquido) " + <Titulo.Filial>
   
-	- PUT : seta os itens recebimento parcela para apontar para determinado título ou desassociar de um título
-			[{ 
-				idRecebimentoTitulo : int, // set -1 para desassociar de um título
-				recebimentoParcela: { idRecebimento : int, 
-									  numParcela : int
-									}
-			}]
-	
-	
-	
  
    
 

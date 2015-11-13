@@ -158,9 +158,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 			}]
 			
 	- PATCH: download de arquivos CSVs referentes aos cupons
-	   Enviar [{ dataRecebimento : string,
-				 idsRecebimento : [int]
-			   }]
+	   Enviar [{ idExtrato : int }]
   
   * pos/recebimentoparcela
     - PUT : altera a data de recibimento de um determinado grupo

@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.1.2 - 13/11/2015
+ *  - Envio dos idsExtrato em vez da data e idsRecebimento para download CSV
+ *
  *  Versão 1.1.1 - 12/11/2015
  *  - Ajuste no envio da data do json para download do CSV
  *
@@ -582,7 +585,7 @@ angular.module("card-services-conciliacao-bancaria", [])
                                   );
             return;   
         }
-        if((!$scope.filtro.conta || $scope.filtro.conta === null) && (!$scope.filtro.adquirente || $scope.usuariologado.adquirente === null)){
+        if((!$scope.filtro.conta || $scope.filtro.conta === null) && (!$scope.filtro.adquirente || $scope.filtro.adquirente === null)){
            $scope.showModalAlerta('É necessário selecionar uma adquirente!');
            return;
         }
@@ -1124,22 +1127,27 @@ angular.module("card-services-conciliacao-bancaria", [])
       */
     $scope.downloadCSV = function(dado){
         
-        if(!dado || dado === null || !dado.Data || dado.Data === null ||
-           !dado.RecebimentosParcela || dado.RecebimentosParcela == null) return;
+        //if(!dado || dado === null || !dado.Data || dado.Data === null ||
+        //   !dado.RecebimentosParcela || dado.RecebimentosParcela == null) return;
+        if(!dado || dado === null || !dado.ExtratoBancario || dado.ExtratoBancario === null) 
+            return;
         
         var url = $apis.getUrl($apis.card.conciliacaobancaria, undefined,
                        {id: 'token', valor: $scope.token});
         // Seta para a url de download
-        url = url.replace($autenticacao.getUrlBase(), $autenticacao.getUrlBaseDownload());
+        if(url.slice(0, "http://localhost:".length) !== "http://localhost:")
+            url = url.replace($autenticacao.getUrlBase(), $autenticacao.getUrlBaseDownload());
         
         //var data = dado.Data.replace("-", "").replace("-", "").substr(0, 8); 
-        var data = $scope.getFiltroData($scope.getDataFromDate(dado.Data));
+        //var data = $scope.getFiltroData($scope.getDataFromDate(dado.Data));
         
-        var json = { dataRecebimento : data,
-                     idsRecebimento : []}; 
+        //var json = { dataRecebimento : data,
+        //             idsRecebimento : []}; 
         
-        for(var k = 0; k < dado.RecebimentosParcela.length; k++)
-            json.idsRecebimento.push(dado.RecebimentosParcela[k].Id);
+        //for(var k = 0; k < dado.RecebimentosParcela.length; k++)
+        //    json.idsRecebimento.push(dado.RecebimentosParcela[k].Id);
+        var json = { idExtrato : dado.ExtratoBancario[0].Id };
+
         
         // Download
         $scope.download(url, 'Conciliação Bancária.csv', true, divPortletBodyDadosPos, divPortletBodyFiltrosPos, undefined, undefined, [json]);           
@@ -1164,19 +1172,19 @@ angular.module("card-services-conciliacao-bancaria", [])
         for(var j = 0; j < conciliados.length; j++){
             var dado = conciliados[j];
             //var data = dado.Data.replace("-", "").replace("-", "").substr(0, 8); 
-            var data = $scope.getFiltroData($scope.getDataFromDate(dado.Data));
-            var json = { dataRecebimento : data,
-                         idsRecebimento : []}; 
-            for(var k = 0; k < dado.RecebimentosParcela.length; k++)
-                json.idsRecebimento.push(dado.RecebimentosParcela[k].Id);
-            
-            param.push(json);
+            //var data = $scope.getFiltroData($scope.getDataFromDate(dado.Data));
+            //var json = { dataRecebimento : data,
+            //            idsRecebimento : []}; 
+            //for(var k = 0; k < dado.RecebimentosParcela.length; k++)
+            //   json.idsRecebimento.push(dado.RecebimentosParcela[k].Id);
+            param.push({ idExtrato : dado.ExtratoBancario[0].Id });
         }
         
         var url = $apis.getUrl($apis.card.conciliacaobancaria, undefined,
                        {id: 'token', valor: $scope.token});
         // Seta para a url de download
-        url = url.replace($autenticacao.getUrlBase(), $autenticacao.getUrlBaseDownload());
+        if(url.slice(0, "http://localhost:".length) !== "http://localhost:")
+            url = url.replace($autenticacao.getUrlBase(), $autenticacao.getUrlBaseDownload());
         
         // Download
         $scope.download(url, 'Conciliação Bancária.zip', true, divPortletBodyDadosPos, divPortletBodyFiltrosPos, undefined, undefined, param);           
