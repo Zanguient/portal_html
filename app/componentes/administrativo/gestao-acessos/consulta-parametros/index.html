@@ -24,7 +24,89 @@
         </li>
     </ul>
     <!-- END PAGE BREADCRUMB -->
- 
+ 		<div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN TABLE PORTLET-->
+            <div class="portlet light">
+				 
+                <div class="portlet-title">
+                    <div class="caption">								
+                        <span class="caption-subject font-green-sharp bold uppercase">Filtros</span>						
+                    </div>                    
+                </div>
+                <div class="portlet-body" ng-show="exibeTela">
+                    <div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">
+                        <div class="row">                       
+                            <div class="col-md-8 col-sm-12">
+                                <div class="dataTables_paginate paging_bootstrap_extended" id="datatable_ajax_paginate">
+                                </div>
+                                <div class="dataTables_info" id="datatable_ajax_info" role="status" aria-live="polite">
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                <div class="table-group-actions pull-right">
+                                    <span> </span>
+                                </div>
+                            </div>
+                        </div>
+                        <!--div class="table-scrollable"-->
+                        <div class="table-scrollable">
+                            <table class="table table-striped table-bordered table-hover dataTable no-footer conteudoTabelas" id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
+                                <thead>
+                                    <tr role="row" class="heading">
+                                        <th width="8%" tabindex="0" rowspan="1" colspan="1">
+                                             Filiais 
+                                        </th>
+                                        <th width="4%" tabindex="1" rowspan="1" colspan="1">
+                                             Opções
+                                        </th>
+                                    </tr>
+                                    <tr role="row" class="filter">   
+                                        <!-- FILIAIS -->
+                                        <td rowspan="1" colspan="1" style="text-align: center">
+                                            <select class="form-control form-filter input-sm filtros" ng-model="busca" ng-options="parametro.empresa.ds_fantasia for parametro in parametros">
+                                                <!--option value="">Todas</option-->
+                                            </select>
+                                            <i class="fa fa-question-circle"
+                                               ng-show="!usuariologado.grupoempresa"
+                                               popover-placement="bottom"
+                                               popover="É necessário selecionar uma empresa"
+                                               popover-trigger="mouseenter"></i>
+                                        </td>
+                                        <!--BUSCAR E LIMPAR-->
+                                        <td rowspan="1" colspan="1">
+                                            <div class="margin-bottom-5">
+                                                <button class="btn btn-sm red filter-submit margin-bottom" 
+                                                        ng-click="filtraParametros()">
+                                                    <i class="fa fa-search"></i> Buscar
+                                                </button>
+                                            </div>
+                                            <button class="btn btn-sm grey filter-cancel"
+                                                    ng-click="limpaFiltros()">
+                                                <i class="fa fa-times"></i> 
+                                                Limpar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8 col-sm-12">
+                                <div class="dataTables_paginate paging_bootstrap_extended">
+                                </div>
+                                <div class="dataTables_info">
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                            </div>
+                        </div>
+                    </div>
+                </div>    		
+            </div>
+            <!-- END TABLE PORTLET-->
+        </div>
+    </div> <!-- TERMINA AQUI -->
     <div class="row">
         <div class="col-md-12">
             <!-- BEGIN TABLE PORTLET-->
@@ -106,7 +188,7 @@
                                  de <span class="pagination-panel-total">{{parametro.total_paginas}}</span>
                             </div>
                         </div>    
-                        <!-- PESQUISA -->
+                        <!-- PESQUISA 
                         <div class=" col-sm-4  col-xs-4 col-md-5">
                             <div class="dataTables_filter">                            
                                 <div class="col-md-7 col-sm-12 col-md-offset-5" style="padding-right: 1px; padding-left: 1px;">
@@ -128,7 +210,7 @@
                                     </label>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                     <!-- TABELA -->
 				    <div class="col-xs-12 col-sm-12 col-md-12">

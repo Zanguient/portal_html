@@ -22,6 +22,7 @@ angular.module("administrativo-consulta-parametros", [])
     var divPortletBodyFilialPos = 0; // posição da div que vai receber o loading progress
     $scope.paginaInformada = 1; // página digitada pelo usuário
     $scope.parametros = [];
+		$scope.filiais = [];
     $scope.itens_pagina = [50, 100, 150, 200];
     $scope.busca = ''; // model do input de busca                                            
     $scope.parametro = {busca:'', itens_pagina : $scope.itens_pagina[0], pagina : 1,
@@ -68,8 +69,7 @@ angular.module("administrativo-consulta-parametros", [])
       */
     $scope.usuarioPodeConsultarParametros = function(){
         return typeof $scope.usuariologado.grupoempresa !== 'undefined';    
-    };   
-    
+    };    
     
     // PAGINAÇÃO
     /**
@@ -184,7 +184,69 @@ angular.module("administrativo-consulta-parametros", [])
                     $scope.hideProgress(divPortletBodyFilialPos);
                   }); 
        }
-    }; 
+    };
+		
+   $scope.buscaFiliais = function(showMessage){
+   
+       if(!$scope.usuariologado.grupoempresa){
+           $scope.filiais = [];
+           $scope.filial.total_registros = 0;
+           $scope.filial.total_paginas = 0;
+           $scope.filial.faixa_registros = '0-0';
+           $scope.paginaInformada = 1;
+           if(showMessage) $scope.showAlert('É necessário selecionar um grupo empresa!', true, 'warning', true);             
+       }else{
+
+           $scope.showProgress(divPortletBodyFilialPos);    
+
+           var filtros = [{id: /*$campos.cliente.empresa.id_grupo*/ 116, 
+                           valor: $scope.usuariologado.grupoempresa.id_grupo}];
+
+           // Verifica se tem algum valor para ser filtrado    
+           if($scope.filial.busca.length > 0) filtros.push({id: /*$campos.cliente.empresa.ds_fantasia*/ 104, 
+                                                            valor: $scope.filial.busca + '%'});        
+
+           if($scope.usuariologado.empresa) filtros.push({id: /*$campos.cliente.empresa.nu_cnpj*/ 100, 
+                                                          valor: $scope.usuariologado.empresa.nu_cnpj});
+           
+           $webapi.get($apis.getUrl($apis.cliente.empresa, 
+                                    [$scope.token, 2, /*$campos.cliente.empresa.ds_fantasia*/ 104, 0, 
+                                     $scope.filial.itens_pagina, $scope.filial.pagina],
+                                    filtros)) 
+                .then(function(dados){
+                    $scope.filiais = dados.Registros;
+                    $scope.filial.total_registros = dados.TotalDeRegistros;
+                    $scope.filial.total_paginas = Math.ceil($scope.filial.total_registros / $scope.filial.itens_pagina);
+                    if($scope.filiais.length === 0) $scope.filial.faixa_registros = '0-0';
+                    else{
+                        var registroInicial = ($scope.filial.pagina - 1)*$scope.filial.itens_pagina + 1;
+                        var registroFinal = registroInicial - 1 + $scope.filial.itens_pagina;
+                        if(registroFinal > $scope.filial.total_registros) registroFinal = $scope.filial.total_registros;
+                        $scope.filial.faixa_registros =  registroInicial + '-' + registroFinal;
+                    }
+                    // Verifica se a página atual é maior que o total de páginas
+                    if($scope.filial.pagina > $scope.filial.total_paginas)
+                        setPagina(1); // volta para a primeira página e refaz a busca
+
+                    // Esconde o progress
+                    $scope.hideProgress(divPortletBodyFilialPos);
+                  },
+                  function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                     else $scope.showAlert('Houve uma falha ao requisitar filiais (' + failData.status + ')', true, 'danger', true);
+                     // Esconde o progress
+                    $scope.hideProgress(divPortletBodyFilialPos);
+                  }); 
+       }
+    }; 																						 
+		
+    /**
+      * Selecionou uma filial
+      */
+    $scope.alterouFilial = function(){
+        buscaDadosDeAcesso();
+    };
 }]);
 
 
