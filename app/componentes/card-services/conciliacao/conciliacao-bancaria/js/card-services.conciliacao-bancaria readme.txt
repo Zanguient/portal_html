@@ -38,7 +38,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
     - cliente/empresa
     - card/tbadquirente
     - card/conciliacaobancaria
-	- pos/recebimentoparcela
+	- card/tbrecebimentotitulo
 	
  
  
@@ -149,27 +149,42 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 	  OBS3: Usar paginação grande, 20+ itens por página
 	  OBS4: Ajuste vem com NumParcela = -1
   
-	- PUT : seta os itens recebimento parcela para apontar para determinado extrato ou desassociar de um extrato
+	- POST : seta os itens recebimento parcela para apontar para determinado extrato ou desassociar de um extrato
 			[{ 
 				idExtrato : int, // set -1 para desassociar de um extrato
 				recebimentosParcela: [{ idRecebimento : int, 
-									    numParcela : int
+									    numParcela : int // -1 se for um ajuste
 									  }]
 			}]
+	
+	- PUT : altera a data de recibimento de um determinado grupo
+			{   dtaRecebimentoEfetivo : datetime, // nova data
+				recebimentosParcela: [{ idRecebimento : int, 
+									    numParcela : int // -1 se for um ajuste
+									  }]
+			}
 			
 	- PATCH: download de arquivos CSVs referentes aos cupons
 	   Enviar [{ idExtrato : int }]
   
-  * pos/recebimentoparcela
-    - PUT : altera a data de recibimento de um determinado grupo
-			{   dtaRecebimentoEfetivo : datetime, // nova data
-				recebimentosParcela: [{ idRecebimento : int, 
-									    numParcela : int
-									  }]
-			}
 	
-	
-	
+  * card/tbrecebimentotitulo
+    - GET : consulta títulos ERP (coleção 2)
+		[{ Id : int, 
+		   NumParcela : int,
+		   Documento : string,
+		   Valor : double,
+		   Adquirente : string,
+		   Bandeira : string,
+		   DataVenda : datetime,
+		   DataPrevista : datetime,
+		   Filial : string,
+		   Baixado : bool,
+		  }]
+		  OBS: enviar filtro de idExtrato (306)
+		  OBS2: recebe em Totais:
+		        - "valorTotal"
+				- "totalBaixados"
  
    
 

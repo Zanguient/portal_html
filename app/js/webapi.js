@@ -4,6 +4,12 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.9 - 16/11/2015
+ *  - tbrecebimentotitulo
+ *  - tbrecebimentoajuste
+ *  - dealernet
+ *  - baixaautomaticaerp
+ *
  *  Versão 1.0.8 - 13/11/2015
  *  - relatorioconciliacaotitulos
  *
@@ -152,6 +158,10 @@ angular.module('webapi', ['utils'])
         }
       },
       card : {
+        baixaautomaticaerp : {
+            idExtrato : 100,
+            id_grupo : 101
+        },
         conciliacaobancaria : {
             data = 100, 
             tipo = 101,
@@ -263,6 +273,34 @@ angular.module('webapi', ['utils'])
             // Relacionamentos
             tbadquirente : 200,
             empresa : 300
+        },
+        tbrecebimentoajuste : {
+            idRecebimentoAjuste : 100,
+            dtAjuste : 101,
+            nrCNPJ : 102,
+            cdBandeira : 103,
+            dsMotivo : 104,
+            vlAjuste : 105,
+            idExtrato : 106,
+            // RELACIONAMENTOS
+            empresa : 216,
+            tbBandeira : 300,
+        },
+        tbrecebimentotitulo: {
+            idrecebimentotitulo : 100,
+            nrCNPJ : 101,
+            nrNsu : 102,
+            dtVenda : 103,
+            cdAdquirente : 104,
+            dsBandeira : 106,
+            vlVenda : 107,
+            qtParcelas : 108,
+            dtTitulo : 109,
+            vlParcela : 110,
+            nrParcela : 111,
+            // RELACIONAMENTOS
+            id_grupo = 216,
+            idExtrato = 306,
         },
       },
       cliente : {
@@ -411,6 +449,14 @@ angular.module('webapi', ['utils'])
             NomeExtenso : 102
         }
       }
+      
+      
+      // DEALERNET
+      dealernet: {
+        consultatitulos : {
+            data : 100
+        }
+      },
       
       
       // REZENDE
@@ -585,6 +631,7 @@ angular.module('webapi', ['utils'])
         tbcatalogo : $autenticacao.getUrlBase() + '/administracao/tbcatalogo/'
     },
     card : {
+        baixaautomaticaerp : $autenticacao.getUrlBase() + '/card/baixaautomaticaerp/',
         conciliacaobancaria : $autenticacao.getUrlBase() + '/card/conciliacaobancaria/',
         conciliacaorelatorios : $autenticacao.getUrlBase() + '/card/conciliacaorelatorios/',
         conciliacaotitulos : $autenticacao.getUrlBase() + '/card/conciliacaotitulos/',
@@ -598,6 +645,8 @@ angular.module('webapi', ['utils'])
         tbcontacorrentetbloginadquirenteempresa : $autenticacao.getUrlBase() + '/card/tbcontacorrentetbloginadquirenteempresa/', 
         tbextrato : $autenticacao.getUrlBase() + '/card/tbextrato/', 
         tbloginadquirenteempresa : $autenticacao.getUrlBase() + '/card/tbloginadquirenteempresa/', 
+        tbrecebimentoajuste : $autenticacao.getUrlBase() + '/card/tbrecebimentoajuste/', 
+        tbrecebimentotitulo : $autenticacao.getUrlBase() + '/card/tbrecebimentotitulo/', 
         uploadextrato : $autenticacao.getUrlBase() + '/card/testeupload/',    
     },
     cliente: {
@@ -621,6 +670,12 @@ angular.module('webapi', ['utils'])
         utilnfe : $autenticacao.getUrlBaseDownload() + '/util/utilnfe/',   
     },
       
+    // DEALERNET
+    dealernet: {
+        //baixaautomatica : 'http://dealernet.atoscapital.com.br/dealernet/baixaautomatica/',
+        consultatitulos : 'http://dealernet.atoscapital.com.br/dealernet/consultatitulos/',   
+    },
+      
       
     // REZENDE
     rezende : {
@@ -639,7 +694,7 @@ angular.module('webapi', ['utils'])
             tbnaturezaoperacao: $autenticacao.getUrlBaseRezende() + '/Pgsql/TabNaturezaOperacao/',
             tabnotafiscalentrada: $autenticacao.getUrlBaseRezende() + '/Pgsql/TabNotaFiscalEntrada/',
             tabtituloreceber: $autenticacao.getUrlBaseRezende() + '/Pgsql/tabtituloreceber/',
-            baixaautomatica: $autenticacao.getUrlBaseRezende() + '/Pgsql/baixaautomatica/',
+            //baixaautomatica: $autenticacao.getUrlBaseRezende() + '/Pgsql/baixaautomatica/',
           }
     }
   }

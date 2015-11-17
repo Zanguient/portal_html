@@ -8,6 +8,9 @@
     Card Services > Conciliação > Conciliação Bancária
 
 
+    Versão 1.1.0 - 16/11/2015
+    - Consulta Títulos ERP + Baixa automática
+
     Versão 1.0.9 - 11/11/2015
     - Arquivo CSV de cupons conciliados
 
@@ -286,7 +289,7 @@
        <!-- MODAL DETALHAR DOCUMENTOS -->
        <div class="modal fade bs-modal-sm modal-input" 
             id="modalDetalhes" aria-hidden="true">
-           <div class="modal-dialog modal-sm" style="width:1000px">
+           <div class="modal-dialog modal-sm" style="width:1050px">
                <div class="modal-content">
                    <div class="modal-header">
                        <h4 class="modal-title modal-cabecalho">Detalhes do agrupamento</h4>
@@ -308,8 +311,12 @@
                            <div class="col-sm-2">
                                 <label>Data Prevista</label>
                            </div>
-                           <div class="col-sm-2">
-                                <label>Valor</label>
+                           <div ng-class="{'col-sm-2' : !modalDetalhes.grupo || modalDetalhes.grupo === null || modalDetalhes.grupo.length === 0 || modalDetalhes.grupo[0].Baixado === undefined, 'col-sm-1' : modalDetalhes.grupo && modalDetalhes.grupo !== null && modalDetalhes.grupo.length > 0 && modalDetalhes.grupo[0].Baixado !== undefined}">
+                               <label>Valor</label>
+                           </div>
+                           <div class="col-sm-1" 
+                                ng-show="modalDetalhes.grupo && modalDetalhes.grupo !== null && modalDetalhes.grupo.length > 0 && modalDetalhes.grupo[0].Baixado !== undefined">
+                                <label>Baixado</label>
                            </div>
                        </div>
                        <div class="row" ng-repeat="item in modalDetalhes.grupo">
@@ -331,9 +338,15 @@
                                 ng-bind="getDataString(item.DataPrevista)"
                                 ng-show="item.NumParcela >= 0">
                            </div>
-                           <div class="col-sm-2" style="text-align:center"
-                                ng-class="{'linhaTotalRelatorios' : item.NumParcela < 0, 'valorNegativo' : item.Valor < 0, 'valorPositivo' : item.NumParcela < 0 && item.Valor > 0}">
+                           <div style="text-align:center"
+                                ng-class="{'linhaTotalRelatorios' : item.NumParcela < 0, 'valorNegativo' : item.Valor < 0, 'valorPositivo' : item.NumParcela < 0 && item.Valor > 0, 'col-sm-2' : item.Baixado === undefined, 'col-sm-1' : item.Baixado !== undefined }">
                                 {{item.Valor | currency:'R$'}}
+                           </div>
+                           <div class="col-sm-1" style="text-align:center"
+                                ng-show="item.Baixado !== undefined">
+                                <i class="fa fa-check" ng-show="item.Baixado" 
+                                   style="color: green; padding-left: 5px" 
+                                   title="Título baixado"></i>
                            </div>
                        </div>
                     </div>
@@ -353,70 +366,6 @@
            </div>
        </div>
        <!-- FIM - MODAL DETALHAR DOCUMENTOS -->
-        
-       <!-- MODAL DETALHAR TITULO -->
-       <div class="modal fade bs-modal-sm modal-input" 
-            id="modalDetalhesTitulos" aria-hidden="true">
-           <div class="modal-dialog modal-sm" style="width:1000px">
-               <div class="modal-content">
-                   <div class="modal-header">
-                       <h4 class="modal-title modal-cabecalho">Detalhes do agrupamento de titulos</h4>
-                   </div>
-                   <div class="modal-body modal-corpo modalAcessoDeUsuarios" style="text-align: center">
-                       <div class="row">
-                           <div class="col-sm-2">
-                                <label>Filial</label>
-                           </div>
-                           <div class="col-sm-2">
-                                <label>Sacado</label>
-                           </div>
-                           <div class="col-sm-2">
-                                <label>NSU</label>
-                           </div>
-                           <div class="col-sm-2">
-                                <label>Parcela/Total</label>
-                           </div>
-                           <div class="col-sm-2">
-                                <label>Valor Bruto</label>
-                           </div>
-                           <div class="col-sm-2">
-                                <label>Valor Líquido</label>
-                           </div>
-                       </div>
-                       <div class="row" ng-repeat="item in modalDetalhesTitulos">
-                           <div class="col-sm-2" style="text-align:center">
-                                {{item.nom_fantasia | uppercase}}
-                           </div>
-                           <div class="col-sm-2" style="text-align:center">
-                                {{item.nom_pessoa | uppercase}}
-                           </div>
-                           <div  class="col-sm-2" style="text-align:center">
-                               {{item.num_nsu_tef}} <!-- - 
-                               {{coparaVendaTitulo(item.num_nsu_tef)}}-->
-                           </div>
-                           
-                           <div class="col-sm-2" style="text-align:center">
-                              {{item.num_parcela}} / {{item.qtd_parcelas}}
-                           </div>
-                                                      <div class="col-sm-2" style="text-align:center">
-                               {{item.val_original | currency:'R$'}}
-                           </div>
-                           <div class="col-sm-2" style="text-align:center">
-                                {{(item.val_original - item.val_taxa_cobranca) | currency:'R$'}}
-                           </div>
-                       </div>
-                    </div>
-                   <div class="modal-footer">
-                       <div class="col-sm-6 col-sm-offset-2">
-                           <button type="button" class="btn default" data-dismiss="modal">
-                               Fechar
-                           </button>
-                       </div>                           
-                   </div>
-               </div>
-           </div>
-       </div>
-       <!-- FIM - MODAL DETALHAR TITULOS -->
         
        <!-- MODAL ALTERAR DATA DE RECEBIMENTO -->
        <div class="modal fade bs-modal-sm modal-input" 
@@ -602,37 +551,29 @@
         
             <div class="table-container" style="margin-bottom:50px">
                 
-                <!--CUPONS ESTÁTICOS-->
-                <!-- 1ª LINHA-->
-                <div class="row" ng-repeat="dado in dadosconciliacao" ng-show="(usuariologado.grupoempresa.id_grupo == 6)">
+                <!--CUPONS-->
+                <div class="row" print-section print-if="!modalDetalhesShowing" 
+                     ng-repeat="dado in dadosconciliacao">
                     
-                    <!--1º CUPOM-->
-                    <div class="col-md-3" style="padding-left:5%">
-                        <div class="row" ng-repeat="titulo in dadosTitulos | filter:dado.$$hashKey" >
-                            <div class="col-md-8 col-sm-12 cupomAzulConciliacaoBancariaTef"
-                                 ng-class="">
+                    <!--CUPOM DOS TÍTULOS-->
+                    <div class="col-md-3" style="padding-left:5%" print-avoid-break
+                         ng-class="{'element-hidden' : !dado.titulos || dado.titulos === null}">
+                        <div class="row">
+                            <div class="col-md-8 col-sm-12 cupomAzulConciliacaoBancariaTef">
                                 <!--HEAD-->
                                 <div class="row">
                                     <div class="col-md-12">
                                         <!--TITULO DO CUPON -->
                                         <div class="row tituloCumponsConciliacaoBancaria">
-                                            <div class="col-md-2">
-                                                <!--none-->
-                                            </div>
                                             <!--TIPO DO CUPON-->
-                                            <div class="col-md-8 conteudoCuponsConciliacaobancaria">
+                                            <div class="col-md-12 conteudoCuponsConciliacaobancaria">
                                                 Titulos ERP
-                                            </div>
-                                            <div class="col-md-2">
-                                                <span ng-class="{'element-hidden' : dado.Conciliado !== 3 || dado.ExtratoBancario !== null || !associacaoManual.selecionandoRecebimentos || !isMesmaDataEAdquirenteExtratoSelecionado(dado)}" print-remove>
-                                                    <checkbox normal ng-model="dado.selecionado"></checkbox>
-                                                </span>
                                             </div>
                                         </div>
                                         <!--SUBTITULO DO CUPON -->
                                         <div class="row tituloCumponsConciliacaoBancariaICard">
-                                            <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
-                                                {{titulo.values.Registros[0].nom_fantasia}}
+                                            <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria"
+                                                ng-bind="dado.titulos && dado.titulos !== null && dado.titulos[0].Filial === dado.titulos[dado.titulos.length - 1].Filial? dado.titulos[0].Filial : ''">
                                             </div>
                                         </div>                                 
                                     </div>
@@ -647,336 +588,78 @@
                                 <!--DATA-->
                                 <div class="row">
                                     <div class="col-md-6 col-sm-6">
-                                        <label>Data:</label>
+                                        <label ng-bind="dados.titulos && dado.titulos !== null ? 'Data:' : ''"></label>
                                     </div>
                                     <div class="col-md-6 col-sm-6 alinhamentoDados"
-                                         ng-bind="getDataString(titulo.values.Registros[0].dta_emissao)">
+                                         ng-bind="dado.titulos && dado.titulos !== null ? getDataString(dado.titulos[0].DataPrevista) : ''">
                                     </div>
                                 </div>
-                                <!--BANDEIRA -->
+                                <!--ADQUIRENTE -->
                                 <div class="row">
-                                    <div class="col-md-4 col-sm-4">
-                                        <label>Sacado:</label>
+                                    <div class="col-md-6 col-sm-6">
+                                        <label ng-bind="dado.titulos && dado.titulos !== null ? 'Adquirente:' : ''"></label>
                                     </div>
-                                    <div class="col-md-8 col-sm-8 alinhamentoDados">
-                                        {{titulo.values.Registros[0].nom_pessoa}}
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados"
+                                         ng-bind="dado.titulos && dado.titulos !== null ? dado.titulos[0].Adquirente : ''">
                                     </div>                      
                                 </div> 
                                 <!--VALOR TOTAL-->
-                                <div class="row" 
-                                     ng-init="incrementaContRecebimentosParcelas(dado.RecebimentosParcela)">
+                                <div class="row">
                                     <!--VALOR-->
                                     <div class="col-md-6 col-sm-6">
-                                        <label>Valor total:</label>
+                                        <label ng-bind="dado.titulos && dado.titulos !== null ? 'Valor total:' : ''"></label>
                                     </div>
                                     <!--RESULTADO DO VALOR-->
                                     <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        <label>{{SomaGrupoDeTitulos(titulo.values.Registros)  | currency:'R$'}}</label>
+                                        <label ng-show="dado.titulos && dado.titulos !== null && dado.titulos.length > 0">
+                                            {{dado.ValorTotalTitulos | currency:'R$'}}
+                                        </label>
                                     </div>                                              
                                 </div> 
-                                <!--DOCUMENTO-- >
-                                <div class="row" ng-show="dado.RecebimentosParcela.length === 1">
-                                    <div class="col-md-6 col-sm-6">
-                                        <label>NSU:</label>
-                                    </div>
-                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        <label>{{dado.RecebimentosParcela[0].Documento}}</label>
-                                    </div>                                              
-                                </div--> 
                                 <!--AGRUPADO-->
-                                <div class="row" ng-show="dado.RecebimentosParcela.length > 0">
+                                <div class="row" 
+                                     ng-show="dado.titulos && dado.titulos !== null && dado.titulos.length > 0">
                                     <div class="col-md-10 col-sm-10">
-                                        <label>Registros agrupados:</label>
+                                        <label ng-bind="dado.titulos && dado.titulos !== null ? 'Registros agrupados:' : ''"> 
+                                        </label>
                                     </div>
                                     <div class="col-md-1 col-sm-2 alinhamentoDados">
-                                        <button class="btn btnRegistrosCupon"
-                                                ng-class="{'blue ' : dado.Conciliado === 1, 'btnPossivelConciliadoConciliacaoBancaria' : dado.Conciliado === 2, 'red': dado.Conciliado === 3}"
-                                                ng-click="detalharTitulos(dado.RecebimentosParcela, titulo.values.Registros)"
-                                                style="color:#fff">
-                                            {{titulo.values.Registros.length}}
+                                        <button class="btn btnRegistrosCupon blue"
+                                                ng-click="detalhar(dado.titulos)">
+                                            {{dado.titulos.length}}
                                         </button>
                                     </div>                                              
                                 </div>
                                 <!--BOTÃO BAIXA AUTOMÁTICA-->
-                                <!--div class="row" style="text-align:center">
+                                <div class="row" style="text-align:center"
+                                     ng-show="dado.titulos && dado.titulos !== null && dado.titulos.length > 0">
                                     <div class="col-md-12">
-                                        <button class="btn green" 
+                                        <button class="btn" 
+                                                ng-class="{'btn-warning' : dado.TotalTitulosBaixados > 0 && dado.TotalTitulosBaixados < dado.titulos.length, 'btn-primary' : dado.TotalTitulosBaixados === dado.titulos.length, 'btn-default' : dado.TotalTitulosBaixados === 0}"
                                                 style="margin-bottom:-25px"
-                                                ng-disabled=""
-                                                ng-click="baixaAuto(titulo.values.Registros)"
-                                                >
-                                            Baixa Automática    
-                                        </button>
-                                    </div>
-                                </div-->
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!--2º CUPOM-->
-                    <div class="col-md-3 col-md-offset-1"
-                         ng-class="{'element-hidden' : dado.RecebimentosParcela === null}">
-                        <div class="row">
-                            <div class="col-md-8 col-sm-12 "
-                                 ng-class="{'cupomAzulConciliacaoBancariaTef' : dado.Conciliado === 1, 'cupomVermelhoConciliacaoBancariaTef' : dado.Conciliado === 3, 'cupomLaranjaConciliacaoBancariaTef' : dado.Conciliado === 2}">
-                                <!--HEAD-->
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <!--TITULO DO CUPON -->
-                                        <div class="row tituloCumponsConciliacaoBancaria">
-                                            <div class="col-md-2">
-                                                <!--none-->
-                                            </div>
-                                            <!--TIPO DO CUPON-->
-                                            <div class="col-md-8 conteudoCuponsConciliacaobancaria">
-                                                Previsão de Crédito
-                                            </div>
-                                            <div class="col-md-2">
-                                                <span ng-class="{'element-hidden' : dado.Conciliado !== 3 || dado.ExtratoBancario !== null || !associacaoManual.selecionandoRecebimentos || !isMesmaDataEAdquirenteExtratoSelecionado(dado)}" print-remove>
-                                                    <checkbox normal ng-model="dado.selecionado"></checkbox>
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <!--SUBTITULO DO CUPON -->
-                                        <div class="row tituloCumponsConciliacaoBancariaICard">
-                                            <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
-                                                {{dado.RecebimentosParcela[0].Filial | uppercase}} 
-                                            </div>
-                                        </div>                                 
-                                    </div>
-                                </div>
-                                <!--BODY-->                   
-                                <!--DIVISÓRIA DOS TIPOS DE CUPONS-->
-                                <div class="row">   
-                                    <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
-                                        ==============================
-                                    </div>
-                                </div>
-                                <!--DATA-->
-                                <div class="row">
-                                    <div class="col-md-6 col-sm-6">
-                                        <label>Data:</label>
-                                    </div>
-                                    <div class="col-md-6 col-sm-6 alinhamentoDados"
-                                         ng-bind="getDataString(dado.Data)">
-                                    </div>
-                                </div>
-                                <!--ADQUIRENTE -->
-                                <div class="row">
-                                    <div class="col-md-6 col-sm-6">
-                                        <label>Adquirente:</label>
-                                    </div>
-                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        {{dado.Adquirente | uppercase}}
-                                    </div>                      
-                                </div> 
-                                <!--BANDEIRA -->
-                                <div class="row">
-                                    <div class="col-md-4 col-sm-4">
-                                        <label>Bandeira:</label>
-                                    </div>
-                                    <div class="col-md-8 col-sm-8 alinhamentoDados">
-                                        {{(dado.Bandeira | uppercase) || ''}}
-                                    </div>                      
-                                </div> 
-                                <!--VALOR TOTAL-->
-                                <div class="row" 
-                                     ng-init="incrementaContRecebimentosParcelas(dado.RecebimentosParcela)">
-                                    <!--VALOR-->
-                                    <div class="col-md-6 col-sm-6">
-                                        <label>Valor total:</label>
-                                    </div>
-                                    <!--RESULTADO DO VALOR-->
-                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        <label>{{dado.ValorTotalRecebimento | currency:'R$'}}</label>
-                                    </div>                                              
-                                </div> 
-                                <!--DOCUMENTO-- >
-                                <div class="row" ng-show="dado.RecebimentosParcela.length === 1">
-                                    <div class="col-md-6 col-sm-6">
-                                        <label>NSU:</label>
-                                    </div>
-                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        <label>{{dado.RecebimentosParcela[0].Documento}}</label>
-                                    </div>                                              
-                                </div--> 
-                                <!--AGRUPADO-->
-                                <div class="row" ng-show="dado.RecebimentosParcela.length > 0">
-                                    <div class="col-md-10 col-sm-10">
-                                        <label>Registros agrupados:</label>
-                                    </div>
-                                    <div class="col-md-1 col-sm-2 alinhamentoDados">
-                                        <button class="btn btnRegistrosCupon"
-                                                ng-class="{'blue ' : dado.Conciliado === 1, 'btnPossivelConciliadoConciliacaoBancaria' : dado.Conciliado === 2, 'red': dado.Conciliado === 3}"
-                                                ng-click="detalhar(dado.RecebimentosParcela)"
-                                                style="color:#fff">
-                                            {{dado.RecebimentosParcela.length}}
-                                        </button>
-                                    </div>                                              
-                                </div>
-                                <!--CONSULTA DE TITULOS ERP-->
-                                <div class="row" style="text-align:center">
-                                    <div class="col-md-12">
-                                        <button class="btn green" 
-                                                style="margin-bottom:-25px"
-                                                ng-disabled=""
-                                                ng-click="consultaErp(dado)">
-                                            Consulta de Títulos ERP  <i class="fa fa-search" 
-                                                   ng-hide=""></i>  
+                                                ng-click="baixaAutomatica(dado)">
+                                            Baixa Automática ERP    
                                         </button>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-
-                    
-                    <!--BOTÕES-->
-                    <div class="col-md-1 btnConciliacaoBancariaTef" style="padding-left:5%">
-                        <div class="row" ng-init="incrementaTotalPreConciliados(dado.Conciliado === 2);incrementaTotalConciliados(dado.Conciliado === 1)">
-                            <div class="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-4"
-                                 title="{{dado.Conciliado == 1 ? 'Desfazer conciliação' : dado.Conciliado === 2 && !associacaoManual.selecionandoRecebimentos ? 'Conciliar' : dado.Conciliado === 3 && dado.ExtratoBancario === null && !associacaoManual.selecionandoRecebimentos ? 'Alterar data de recebimento' : dado.Conciliado === 3 && dado.RecebimentosParcela === null && !associacaoManual.selecionandoRecebimentos && (!associacaoManual.extrato || associacaoManual.extrato === null) ? 'Conciliar manualmente' : dado.Conciliado === 3 && dado.RecebimentosParcela === null && associacaoManual.selecionandoRecebimentos && isExtratoSelecionado(dado) ? 'Cancelar' : dado.Conciliado === 3 && dado.ExtratoBancario === null && associacaoManual.selecionandoRecebimentos && isMesmaDataEAdquirenteExtratoSelecionado(dado) && dado.selecionado ? 'Conciliar com movimentação bancária selecionada' : ''}}">
-                                <a href="javascript:;" class="btn btn-icon-only"
-                                   ng-class="{'default' : !associacaoManual.selecionandoRecebimentos || dado.Conciliado !== 3 || dado.RecebimentosParcela !== null || !isExtratoSelecionado(dado), 'btn-primary' : dado.Conciliado === 3 && dado.RecebimentosParcela === null && associacaoManual.selecionandoRecebimentos && isExtratoSelecionado(dado)}"
-                                   ng-click="dado.Conciliado === 1 ? desconcilia(dado) : dado.Conciliado === 2 ? concilia(dado) : dado.Conciliado === 3 && dado.ExtratoBancario === null && !associacaoManual.selecionandoRecebimentos ? exibeModalDataRecebimento(dado) : dado.Conciliado === 3 && dado.RecebimentosParcela === null && !associacaoManual.selecionandoRecebimentos ? associaExtratoBancario(dado) : dado.Conciliado === 3 && dado.RecebimentosParcela === null && associacaoManual.selecionandoRecebimentos ? desassociaExtratoBancario() : dado.Conciliado === 3 && dado.ExtratoBancario === null && associacaoManual.selecionandoRecebimentos && isMesmaDataEAdquirenteExtratoSelecionado(dado) && dado.selecionado ? associaRecebimentosSelecionados() : 0"
-                                   ng-disabled="!usuarioPodeAlterarDadosConciliacaoBancaria() || (associacaoManual.selecionandoRecebimentos && (dado.Conciliado === 2 || (dado.Conciliado === 3 && ((dado.ExtratoBancario === null && (!isMesmaDataEAdquirenteExtratoSelecionado(dado) || !dado.selecionado)) || (dado.RecebimentosParcela === null && !isExtratoSelecionado(dado)) ))))">
-                                    <i class="fa"
-                                       ng-class="{'fa-undo': dado.Conciliado === 1, 'fa-arrow-right': dado.Conciliado === 2, 'fa-edit': dado.Conciliado === 3 && dado.ExtratoBancario === null && (!associacaoManual.selecionandoRecebimentos || !isMesmaDataEAdquirenteExtratoSelecionado(dado)), 'fa-search' : dado.Conciliado === 3 && dado.RecebimentosParcela === null && (!associacaoManual.selecionandoRecebimentos || !isExtratoSelecionado(dado)), 'fa-times' : dado.Conciliado === 3 && dado.RecebimentosParcela === null && associacaoManual.selecionandoRecebimentos && isExtratoSelecionado(dado), 'fa-arrow-left': dado.Conciliado === 3 && dado.ExtratoBancario === null && associacaoManual.selecionandoRecebimentos && isMesmaDataEAdquirenteExtratoSelecionado(dado)}"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!--3º CUPOM(COMPROVANTE CRÉDITO)-->
-                    <div class="col-md-3" style="padding-left:5%"
-                         ng-class="{'element-hidden' : dado.ExtratoBancario === null}">
-                        <div class="row">
-                            <div class="col-md-8 col-sm-12"
-                                 ng-class="{'cupomAzulConciliacaoBancariaTef' : dado.Conciliado === 1, 'cupomVermelhoConciliacaoBancariaTef' : dado.Conciliado === 3, 'cupomLaranjaConciliacaoBancariaTef' : dado.Conciliado === 2}">
-                                <!--HEAD-->
-                                <div class="row">
+                                <!--NÃO HÁ TÍTULOS-->
+                                <div class="row" ng-show="dado.titulos && dado.titulos !== null && dado.titulos.length === 0">
                                     <div class="col-md-12 col-sm-12">
-                                        <!--TITULO DO CUPON -->
-                                        <div class="row tituloCumponsConciliacaoBancaria">
-                                            <!--TIPO DO CUPON-->
-                                            <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
-                                                Comprovante de Crédito
-                                            </div>
-                                        </div>
-                                        <!--SUBTITULO DO CUPON -->
-                                        <div class="row">
-                                            <!--BANCO-->
-                                            <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria"
-                                                 style="margin-top:5px"
-                                                 ng-bind="exibeBanco(dado.Conta.banco)">
-                                            </div>
-                                        </div>                                 
-                                    </div>
+                                        <label style="font-weight: bolder; padding-top:20px">
+                                            Não há títulos conciliados das parcelas
+                                        </label>
+                                    </div>                                            
                                 </div>
-                                <!--BODY-->
-                                <!--AGÊNCIA E CONTA -->
-                                <div class="row">
-                                    <!--AGÊNCIA-->
-                                    <div class="col-md-6 col-sm-6">
-                                        <label>Agência:&nbsp;</label>
-                                        {{(dado.Conta.nrAgencia | uppercase) || ''}}
-                                    </div>
-                                    <!--CONTA-->
-                                    <div class="col-md-6  alinhamentoDados">
-                                        <label>Conta:&nbsp;</label>
-                                        {{dado.Conta.nrConta | uppercase}}
-                                    </div> 
-                                </div>                   
-                                <!--DIVISÓRIA DOS TIPOS DE CUPONS-->
-                                <div class="row">   
-                                    <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
-                                        =============================
-                                    </div>
-                                </div>
-                                <!--DATA-->
-                                <div class="row">
-                                    <div class="col-md-6 col-sm-6">
-                                        <label>Data:</label>
-                                    </div>
-                                    <div class="col-md-6 col-sm-6 alinhamentoDados"
-                                         ng-bind="getDataString(dado.Data)">
-                                    </div>                      
-                                </div>
-                                <!--ADQUIRENTE -->
-                                <div class="row">
-                                    <div class="col-md-6 col-sm-6">
-                                        <label>Adquirente:</label>
-                                    </div>
-                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        {{dado.Adquirente | uppercase}}
-                                    </div>                      
-                                </div> 
-                                <!--MEMO -->
-                                <div class="row">
-                                    <div class="col-md-3 col-sm-3">
-                                        <label>Memo:</label>
-                                    </div>
-                                    <div class="col-md-9 col-sm-9 alinhamentoDados">
-                                        {{(dado.Memo | uppercase) || ''}}
-                                    </div>                      
-                                </div> 
-                                <!--CAMPO NUMERO DOCUMENTO -->
-                                <div class="row">
-                                    <!-- nothing ...-->           
-                                </div> 
-                                <!--VALOR TOTAL-->
-                                <div class="row"
-                                     ng-init="incrementaContExtratoBancario(dado.ExtratoBancario)">
-                                    <!--VALOR-->
-                                    <div class="col-md-6 col-sm-6">
-                                        <label>Valor total:</label>
-                                    </div>
-                                    <!--RESULTADO DO VALOR-->
-                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        <label>{{dado.ValorTotalExtrato | currency:'R$'}}</label>
-                                    </div>                                              
-                                </div> 
-                                <!--DOCUMENTO-->
-                                <div class="row" ng-show="dado.ExtratoBancario.length === 1">
-                                    <div class="col-md-6 col-sm-6">
-                                        <label>Documento:</label>
-                                    </div>
-                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        <label>{{dado.ExtratoBancario[0].Documento}}</label>
-                                    </div>                                              
-                                </div> 
-                                <!--AGRUPADO-->
-                                <div class="row" ng-show="dado.ExtratoBancario.length > 1">
-                                    <div class="col-md-10 col-sm-10">
-                                        <label>Registros agrupados:</label>
-                                    </div>
-                                    <div class="col-md-2 col-sm-2 alinhamentoDados">
-                                        <button class="btn btnRegistrosCupon"
-                                                ng-class="{'blue' : dado.Conciliado === 1, 'yellow' : dado.Conciliado === 2, 'red': dado.Conciliado === 3}"
-                                                ng-click="detalhar(dado.ExtratoBancario)"
-                                                style="color:#fff">
-                                            {{dado.ExtratoBancario.length}}
-                                        </button>
-                                    </div>                                              
-                                </div> 
                             </div>
-                        </div>    
+                        </div>
                     </div>
-                
-                </div>
-                
-                <!--FIM CUPONS ESTÁTICOS-->
-                
-                <!--CUPONS-->
-                <div class="row" print-section print-if="!modalDetalhesShowing" ng-repeat="dado in dadosconciliacao" 
-                     ng-show="!(usuariologado.grupoempresa.id_grupo == 6)">
-                    <!--1º CUPOM (PREVISÃO CRÉDITO)-->
-                    <div class="col-md-5 col-sm-5" print-avoid-break
+                    
+                    <!--CUPOM (PREVISÃO CRÉDITO)-->
+                    <div class="col-md-1 col-md-offset-1" print-avoid-break
                          ng-class="{'element-hidden' : dado.RecebimentosParcela === null}">
                         <div class="row">
                             <div class="col-md-8 col-md-offset-4 col-sm-12"
-                                 ng-class="{'cupomAzulConciliacaoBancaria' : dado.RecebimentosParcela !== null && dado.Conciliado === 1, 'cupomVermelhoConciliacaoBancaria' : dado.RecebimentosParcela !== null && dado.Conciliado === 3, 'cupomLaranjaConciliacaoBancaria' : dado.RecebimentosParcela !== null && dado.Conciliado === 2}">
+                                 ng-class="{'cupomAzulConciliacaoBancariaTef' : dado.RecebimentosParcela !== null && dado.Conciliado === 1, 'cupomVermelhoConciliacaoBancariaTef' : dado.RecebimentosParcela !== null && dado.Conciliado === 3, 'cupomLaranjaConciliacaoBancariaTef' : dado.RecebimentosParcela !== null && dado.Conciliado === 2}">
                                 <!--HEAD-->
                                 <div class="row">
                                     <div class="col-md-12">
@@ -1067,14 +750,14 @@
                                         </button>
                                     </div>                                              
                                 </div>
-                                <!--BOTÃO DOWNLOAD CSV-->
+                                <!--CONSULTA DE TITULOS ERP : PETROX ou SAMAM-->
                                 <div class="row" style="text-align:center"
                                      ng-show="dado.Conciliado === 1" print-remove
                                      style="margin-top: 10px">
-                                    <button class="btn btn-primary"
-                                            ng-click="downloadCSV(dado)">
-                                        Download CSV
-                                        <i class="fa fa-download"></i>  
+                                    <button class="btn green"
+                                            ng-click="consultaErp(dado)">
+                                        Consulta de Títulos ERP
+                                        <i class="fa fa-search"></i>  
                                     </button>
                                 </div>
                             </div>
@@ -1082,7 +765,7 @@
                     </div>
                     
                     <!--BOTÕES-->
-                    <div class="col-md-2 col-sm-2 btnConciliacaoBancaria" print-hide>
+                    <div class="col-md-3 col-md-offset-1 btnConciliacaoBancariaTef" style="padding-left:10%" print-hide>
                         <div class="row" ng-init="incrementaTotalPreConciliados(dado.Conciliado === 2); incrementaTotalConciliados(dado.Conciliado === 1)">
                             <div class="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-4"
                                  title="{{dado.Conciliado == 1 ? 'Desfazer conciliação' : dado.Conciliado === 2 && !associacaoManual.selecionandoRecebimentos ? 'Conciliar' : dado.Conciliado === 3 && dado.ExtratoBancario === null && !associacaoManual.selecionandoRecebimentos ? 'Alterar data de recebimento' : dado.Conciliado === 3 && dado.RecebimentosParcela === null && !associacaoManual.selecionandoRecebimentos && (!associacaoManual.extrato || associacaoManual.extrato === null) ? 'Conciliar manualmente' : dado.Conciliado === 3 && dado.RecebimentosParcela === null && associacaoManual.selecionandoRecebimentos && isExtratoSelecionado(dado) ? 'Cancelar' : dado.Conciliado === 3 && dado.ExtratoBancario === null && associacaoManual.selecionandoRecebimentos && isMesmaDataEAdquirenteExtratoSelecionado(dado) && dado.selecionado ? 'Conciliar com movimentação bancária selecionada' : ''}}">
@@ -1097,12 +780,12 @@
                         </div>
                     </div>
                     
-                    <!--2º CUPOM(COMPROVANTE CRÉDITO)-->
-                    <div class="col-md-5 col-sm-5" print-avoid-break
+                    <!--CUPOM(COMPROVANTE CRÉDITO)-->
+                    <div class="col-md-3" print-avoid-break style="padding-left: 0 !important"
                          ng-class="{'element-hidden' : dado.ExtratoBancario === null}">
                         <div class="row">
                             <div class="col-md-8 col-sm-12"
-                                 ng-class="{'cupomAzulConciliacaoBancaria' : dado.ExtratoBancario !== null && dado.Conciliado === 1, 'cupomVermelhoConciliacaoBancaria' : dado.ExtratoBancario !== null && dado.Conciliado === 3, 'cupomLaranjaConciliacaoBancaria' : dado.ExtratoBancario !== null && dado.Conciliado === 2}">
+                                 ng-class="{'cupomAzulConciliacaoBancariaTef' : dado.ExtratoBancario !== null && dado.Conciliado === 1, 'cupomVermelhoConciliacaoBancariaTef' : dado.ExtratoBancario !== null && dado.Conciliado === 3, 'cupomLaranjaConciliacaoBancariaTef' : dado.ExtratoBancario !== null && dado.Conciliado === 2}">
                                 <!--HEAD-->
                                 <div class="row">
                                     <div class="col-md-12 col-sm-12">
@@ -1127,12 +810,12 @@
                                 <!--AGÊNCIA E CONTA -->
                                 <div class="row">
                                     <!--AGÊNCIA-->
-                                    <div class="col-md-6 col-sm-6">
+                                    <div class="col-md-5 col-sm-5">
                                         <label ng-bind="dado.ExtratoBancario !== null ? 'Agência:' : ''">&nbsp;</label>
                                         {{(dado.Conta.nrAgencia | uppercase) || ''}}
                                     </div>
                                     <!--CONTA-->
-                                    <div class="col-md-6  alinhamentoDados">
+                                    <div class="col-md-7 alinhamentoDados">
                                         <label ng-bind="dado.ExtratoBancario !== null ? 'Conta:' : ''">&nbsp;</label>
                                         {{dado.Conta.nrConta | uppercase}}
                                     </div> 

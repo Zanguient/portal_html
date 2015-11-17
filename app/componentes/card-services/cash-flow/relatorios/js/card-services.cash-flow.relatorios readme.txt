@@ -114,6 +114,8 @@ Além deles, é necessária a importação dos seguintes módulos externos.
        -> ANALÍTICO (coleção 8) : sempre ordenado pela data de recebimento, seguido do desBandeira
 			 Registros = [
 							{
+								parcela : { idRecebimento : int, numParcela : int }, // SE FOR PARCELA
+								ajuste : { idRecebimentoAjuste : int }, // SE FOR TARIFA
 								cnpj: string,
 								dsFantasia : string, // ds_fantasia + filial
 								dsBandeira : string,
