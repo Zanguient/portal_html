@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.3 - 18/11/2015
+ *  - Remoção de movimentações bancárias
+ *
  *  Versão 1.0.2 - 04/11/2015
  *  - Função getNomeAmigavelConta passada para app.js
  *
@@ -63,7 +66,6 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
     $scope.buscandoExtrato = false;
     $scope.exibeTela = false;                                             
     // Permissões                                           
-    var permissaoAlteracao = false;
     var permissaoCadastro = false;
     var permissaoRemocao = false;
                                                  
@@ -80,7 +82,6 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
         
         // Obtém as permissões
         if($scope.methodsDoControllerCorrente){
-            permissaoAlteracao = $scope.methodsDoControllerCorrente['atualização'] ? true : false;   
             permissaoCadastro = $scope.methodsDoControllerCorrente['cadastro'] ? true : false;
             permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;
         }
@@ -130,12 +131,6 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
       */
     $scope.usuarioPodeCadastrarExtratos = function(){
         return $scope.usuariologado.grupoempresa && $scope.filtro.conta !== null && permissaoCadastro;   
-    }
-    /**
-      * Retorna true se o usuário pode alterar extratos
-      */
-    $scope.usuarioPodeAlterarExtratos = function(){
-        return $scope.usuariologado.grupoempresa && $scope.filtro.conta !== null && permissaoAlteracao;
     }
     /**
       * Retorna true se o usuário pode excluir extratos
@@ -506,6 +501,44 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
         //console.log($scope.totais.extrato);
         $scope.totais.extrato += valor;  
     }
+    
+    
+    
+    // REMOVE MOVIMENTAÇÃO
+    $scope.removeMovimentacaoBancaria = function(movimentacao){
+        $scope.showModalConfirmacao('Confirmação', 
+                                    'Tem certeza que deseja excluir a movimentação bancária?',
+                                     excluiMovimentacao, movimentacao.idExtrato, 
+                                    'Sim', 'Não'); 
+    }
+    
+    
+    var excluiMovimentacao = function(idExtrato){
+        //console.log("EXCLUIR MOVIMENTAÇÃO " + idExtrato);
+        $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen    
+        $scope.showProgress(divPortletBodyExtratosPos);
+        
+        // Exclui
+        $webapi.delete($apis.getUrl($apis.card.tbextrato, undefined,
+                                     [{id: 'token', valor: $scope.token},
+                                      {id: 'idExtrato', valor: idExtrato}]))
+                .then(function(dados){           
+                    $scope.showAlert('Movimentação bancária excluída com sucesso!', true, 'success', true);
+                    $scope.hideProgress(divPortletBodyExtratosPos);
+                    // Relista
+                    buscaExtrato(true);
+                  },
+                  function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                     else if(failData.status === 500) $scope.showAlert('Movimentação bancária não pode ser excluída!', true, 'warning', true); 
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                     else $scope.showAlert('Houve uma falha ao excluir a movimentação bancária (' + failData.status + ')', true, 'danger', true);
+                     // Fecha os progress
+                     $scope.hideProgress(divPortletBodyFiltrosPos);   
+                     $scope.hideProgress(divPortletBodyExtratosPos);
+                  });  
+    }
+    
     
     
 }]);

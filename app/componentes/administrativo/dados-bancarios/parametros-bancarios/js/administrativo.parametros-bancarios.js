@@ -4,7 +4,8 @@
  *  suporte@atoscapital.com.br
  *
  *
- *
+ *  Versão 1.0.5 - 18/11/2015
+ *  - Pesquisa parâmetros ocultos
  *
  *  Versão 1.0.4 - 13/10/2015
  *  - Associação a uma bandeira
@@ -50,7 +51,7 @@ angular.module("administrativo-parametros-bancarios", [])
     $scope.filiais = [];                                             
     $scope.filtro = {banco : undefined, tipo : '', adquirente : undefined, bandeira : undefined, tipoCartao : '',
                      filial : undefined, selecao : false, semadquirentes : false, semfiliais : false, sembandeiras : false,
-                     itens_pagina : $scope.itens_pagina[0], order : 0,
+                     itens_pagina : $scope.itens_pagina[0], order : 0, pesquisarOcultos : false,
                      pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0
                     };  
     $scope.dsTipos = ['CREDIT', 'DEBIT']; 
@@ -534,6 +535,11 @@ angular.module("administrativo-parametros-bancarios", [])
                           valor: $scope.filtro.filial.nu_cnpj}); 
         }
         
+        // VISIBILIDADE DOS PARÂMTROS
+        filtros.push({id: /*$campos.card.tbbancoparametro.flVisivel*/ 104,
+                      valor: $scope.filtro.pesquisarOcultos ? false : true});
+        
+        
         return filtros.length > 0 ? filtros : undefined;
     }
                                            
@@ -879,20 +885,22 @@ angular.module("administrativo-parametros-bancarios", [])
     }
     
     /**
-     * Solicita confirmação para ocultar o parâmetro bancário
+     * Solicita confirmação para ocultar/tornar visível o parâmetro bancário
      */
     $scope.ocultaParametroBancario = function(parametro){
         
+        var text = parametro.flVisivel ? 'ocultar' : 'tornar visível';
+        
         $scope.showModalConfirmacao('Confirmação', 
-                                    'Tem certeza que deseja ocultar o parâmetro bancário?',
+                                    'Tem certeza que deseja ' + text + ' o parâmetro bancário?',
                                      ocultaParametroBancario, 
                                     { parametros : [{cdBanco : parametro.banco.Codigo,
                                                      dsMemo: parametro.dsMemo}],
                                       deletar : false,
-                                      flVisivel : false}, 'Sim', 'Não');  
+                                      flVisivel : parametro.flVisivel ? false : true}, 'Sim', 'Não');  
     };                   
     /**
-      * Efetiva a exclusão do parâmetro bancário
+      * Efetiva a alteração da visibilidade do parâmetro bancário
       */
     var ocultaParametroBancario = function(jsonParametro){
          // Oculta
@@ -908,7 +916,7 @@ angular.module("administrativo-parametros-bancarios", [])
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                 else $scope.showAlert('Houve uma falha ao ocultar parâmetro bancário (' + failData.status + ')', true, 'danger', true);
+                 else $scope.showAlert('Houve uma falha ao alterar visibilidade do parâmetro bancário (' + failData.status + ')', true, 'danger', true);
                  // Fecha os progress
                  $scope.hideProgress(divPortletBodyFiltrosPos);
                  $scope.hideProgress(divPortletBodyParametrosPos);

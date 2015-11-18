@@ -4,6 +4,8 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.7 - 16/11/2015
+ *  - Remoção de cargas, vendas e ajustes
  *
  *  Versão 1.0.6 - 16/10/2015
  *  - Combo ADQUIRENTE sendo preenchida pela tabela tbAdquirente em vez de Operadora
@@ -89,7 +91,8 @@ angular.module("card-services-cash-flow-relatorios", [])
     // flag
     var ultimoFiltro = undefined;
     $scope.exibeTela = false;  
-    $scope.buscandoRelatorio = false;                                             
+    $scope.buscandoRelatorio = false; 
+    var permissaoRemocao = false;                                             
                                             
                                                  
                                                  
@@ -117,6 +120,12 @@ angular.module("card-services-cash-flow-relatorios", [])
                 }
             }
         }); 
+        // Obtém as permissões
+        if($scope.methodsDoControllerCorrente){// && $scope.methodsDoControllerCorrente.length > 0){
+            //permissaoAlteracao = $scope.methodsDoControllerCorrente['atualização'] ? true : false;  
+            //permissaoCadastro = $scope.methodsDoControllerCorrente['cadastro'] ? true : false;
+            permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;
+        }
         // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
         $scope.$on('acessoDeTelaNotificado', function(event){
             $scope.exibeTela = true;
@@ -128,6 +137,16 @@ angular.module("card-services-cash-flow-relatorios", [])
         // Carrega filiais
         //if($scope.usuariologado.grupoempresa) buscaFiliais(true);
     };
+                                                 
+    
+    // PERMISSÕES
+    /**
+      * Retorna true se o usuário pode remover cargas
+      */
+    $scope.usuarioPodeRemoverCargas = function(){
+        return permissaoRemocao;    
+    }                                                
+                                                 
     
                                                  
     // BUSCA
@@ -649,10 +668,12 @@ angular.module("card-services-cash-flow-relatorios", [])
     /**
       * Busca o relatório agrupado por bandeira
       */
-    var buscaRelatorioAnalitico = function(resetaRelatorioSintetico){
+    var buscaRelatorioAnalitico = function(resetaRelatorioSintetico, progressoemexecucao){
         
-       $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen    
-       $scope.showProgress(divPortletBodyRelatorioPos);
+        if(!progressoemexecucao){
+           $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen    
+           $scope.showProgress(divPortletBodyRelatorioPos);
+        }
         
        // Filtros    
        var filtros = obtemFiltroDeBusca();
@@ -780,6 +801,115 @@ angular.module("card-services-cash-flow-relatorios", [])
         var funcao = function(){ $scope.buscandoRelatorio = false; };
         
         $scope.download(url, filename, true, divPortletBodyRelatorioPos, divPortletBodyFiltrosPos, funcao, funcao);        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    // REMOVE CARGA
+    $scope.removeCarga = function(relanalitico){
+        if(!relanalitico || relanalitico === null ||
+          ((!relanalitico.parcela || relanalitico.parcela === null) && 
+           (!relanalitico.ajuste || relanalitico.ajuste === null)))
+           return;
+        
+        if(relanalitico.ajuste && relanalitico.ajuste !== null){
+            // É um ajuste
+            $scope.showModalConfirmacao('Confirmação', 
+                                    'Tem certeza que deseja excluir o ajuste?',
+                                     excluiAjuste, relanalitico.ajuste.idRecebimentoAjuste, 
+                                    'Sim', 'Não'); 
+        }else{
+            // É uma parcela
+            // Remover a venda ou a parcela?
+            $scope.showModalConfirmacao('Confirmação', 
+                                    'Excluir venda completa ou somente a parcela?',
+                                     excluirVenda, relanalitico.parcela.idRecebimento, 
+                                    'Venda', 'Cancelar', true, 'Parcela', 
+                                     excluirParcela, relanalitico.parcela); 
+        }
+  
+    }
+    
+    
+    var excluirVenda = function(idRecebimento){
+        //console.log("EXCLUIR VENDA " + idRecebimento);
+        $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen    
+        $scope.showProgress(divPortletBodyRelatorioPos);
+        
+        // Exclui
+        $webapi.delete($apis.getUrl($apis.pos.recebimento, undefined,
+                                     [{id: 'token', valor: $scope.token},
+                                      {id: 'id', valor: idRecebimento}]))
+                .then(function(dados){           
+                    $scope.showAlert('Venda excluída com sucesso!', true, 'success', true);
+                    // Relista
+                    buscaRelatorioAnalitico(false, true);
+                  },
+                  function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                     else if(failData.status === 500) $scope.showAlert('Venda não pode ser excluída!', true, 'warning', true); 
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                     else $scope.showAlert('Houve uma falha ao excluir a venda (' + failData.status + ')', true, 'danger', true);
+                     // Fecha os progress
+                     $scope.hideProgress(divPortletBodyFiltrosPos);   
+                     $scope.hideProgress(divPortletBodyRelatorioPos);
+                  });  
+    }
+    
+    var excluirParcela = function(parcela){
+        //console.log("EXCLUIR PARCELA " + parcela.numParcela + " DA VENDA " + parcela.idRecebimento);
+        $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen    
+        $scope.showProgress(divPortletBodyRelatorioPos);
+        
+        // Exclui
+        $webapi.delete($apis.getUrl($apis.pos.recebimentoparcela, undefined,
+                                     [{id: 'token', valor: $scope.token},
+                                      {id: 'idRecebimento', valor: parcela.idRecebimento},
+                                      {id: 'numParcela', valor: parcela.numParcela}]))
+                .then(function(dados){           
+                    $scope.showAlert('Parcela excluída com sucesso!', true, 'success', true);
+                    // Relista
+                    buscaRelatorioAnalitico(false, true);
+                  },
+                  function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                     else if(failData.status === 500) $scope.showAlert('Parcela não pode ser excluída!', true, 'warning', true); 
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                     else $scope.showAlert('Houve uma falha ao excluir a parcela (' + failData.status + ')', true, 'danger', true);
+                     // Fecha os progress
+                     $scope.hideProgress(divPortletBodyFiltrosPos);   
+                     $scope.hideProgress(divPortletBodyRelatorioPos);
+                  });
+    }
+    
+    var excluiAjuste = function(idRecebimentoAjuste){
+        //console.log("EXCLUIR AJUSTE " + idRecebimentoAjuste);
+        $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen    
+        $scope.showProgress(divPortletBodyRelatorioPos);
+        
+        // Exclui
+        $webapi.delete($apis.getUrl($apis.card.tbrecebimentoajuste, undefined,
+                                     [{id: 'token', valor: $scope.token},
+                                      {id: 'idRecebimentoAjuste', valor: idRecebimentoAjuste}]))
+                .then(function(dados){           
+                    $scope.showAlert('Ajuste excluído com sucesso!', true, 'success', true);
+                    // Relista
+                    buscaRelatorioAnalitico(false, true);
+                  },
+                  function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                     else if(failData.status === 500) $scope.showAlert('Ajuste não pode ser excluído!', true, 'warning', true); 
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                     else $scope.showAlert('Houve uma falha ao excluir o ajuste (' + failData.status + ')', true, 'danger', true);
+                     // Fecha os progress
+                     $scope.hideProgress(divPortletBodyFiltrosPos);   
+                     $scope.hideProgress(divPortletBodyRelatorioPos);
+                  });
     }
     
 }]);

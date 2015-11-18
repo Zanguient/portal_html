@@ -4,8 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
- *  Versão 1.1.2 - 13/11/2015
+ *  Versão 1.1.2 - 17/11/2015
  *  - Envio dos idsExtrato em vez da data e idsRecebimento para download CSV
+ *  - Baixa automática
  *
  *  Versão 1.1.1 - 12/11/2015
  *  - Ajuste no envio da data do json para download do CSV
@@ -134,6 +135,7 @@ angular.module("card-services-conciliacao-bancaria", [])
                     $scope.dadosconciliacao = []; 
                     $scope.filiais = [];
                     $scope.contas = [];
+                    totalConciliados = totalPreConciliados = 0;
                     $scope.filtro.filial = $scope.filtro.conta = $scope.filtro.adquirente = null;
                     
                     $scope.filtro.faixa_registros = '0-0';
@@ -702,14 +704,14 @@ angular.module("card-services-conciliacao-bancaria", [])
         
     
     
-    // MODAL DETALHES
-    $scope.detalharTitulos = function(grupo, titulos){
+    // MODAL TÍTULOS
+    /*$scope.detalharTitulos = function(grupo, titulos){
         $scope.modalDetalhesTitulos = titulos;
         $scope.modalDetalhesGrupo = grupo;
         //console.log(grupo);
         // Exibe o modal
         $('#modalDetalhesTitulos').modal('show');
-    }
+    }*/
     
 
     
@@ -789,7 +791,7 @@ angular.module("card-services-conciliacao-bancaria", [])
             jsonConciliacaoBancaria.push(json);
         }
         
-        $webapi.update($apis.getUrl($apis.card.conciliacaobancaria, undefined,
+        $webapi.post($apis.getUrl($apis.card.conciliacaobancaria, undefined,
                        {id: 'token', valor: $scope.token}), jsonConciliacaoBancaria)
             .then(function(dados){
                     //$scope.showAlert('Conciliação bancária realizada com sucesso!', true, 'success', true);
@@ -826,6 +828,7 @@ angular.module("card-services-conciliacao-bancaria", [])
       * Valida a data informada e envia para o servidor
       */
     $scope.alteraDataRecebimento = function(){
+        
         if(!$scope.modalDataRecebimento.dataValida){
             $scope.showModalAlerta('Data informada é inválida!');
             return;
@@ -861,7 +864,7 @@ angular.module("card-services-conciliacao-bancaria", [])
         //$scope.hideProgress(divPortletBodyFiltrosPos);
         //$scope.hideProgress(divPortletBodyDadosPos);
 
-        $webapi.update($apis.getUrl($apis.pos.recebimentoparcela, undefined,
+        $webapi.update($apis.getUrl($apis.card.conciliacaobancaria, undefined,
                        {id: 'token', valor: $scope.token}), jsonRecebimentoParcela)
             .then(function(dados){
                     //$scope.showAlert('Data de recebimento alterada com sucesso!', true, 'success', true);
@@ -892,7 +895,7 @@ angular.module("card-services-conciliacao-bancaria", [])
             if($scope.modalDataRecebimento.data.length < 10) $scope.modalDataRecebimento.dataValida = false;
             else{
                 var parts = $scope.modalDataRecebimento.data.split("/");
-                var data = new Date(parts[2], parts[1] - 1, parts[0]);
+                var data = new Date(parts[2], parts[1] - 1, parts[0], 0, 0, 0, 0);
                 // Verifica se a data é válida
                 $scope.modalDataRecebimento.dataValida =  parts[0] == data.getDate() && 
                                                           (parts[1] - 1) == data.getMonth() && 
@@ -902,140 +905,223 @@ angular.module("card-services-conciliacao-bancaria", [])
     };
                                                  
 
-    /**
-    * BEGIN BAIXA AUTOMÁTICA = PETROX
-    */
                                                  
                                                  
-            /**
-            * Busca parcelas da Venda
-            */
-            $scope.coparaVendaTitulo = function(nsu)
-            {
-                var nsuTitulo = '';
-                var numVendas = 0;
-                for(var a = 0; a < $scope.modalDetalhesGrupo.length; a++)
-                {
-                    if(nsu.indexOf($scope.modalDetalhesGrupo[a].Documento) > 0)
-                    {
-                        nsuTitulo = $scope.modalDetalhesGrupo[a].Documento;
-                        return $scope.modalDetalhesGrupo[a].NumParcela;
-                    }
-                }
-            }
-
-
-
-            // SOMA GRUPO DE TITULOS
-            $scope.SomaGrupoDeTitulos = function(registros)
-            {
-                var soma = 0;
-                 for(var k = 0; k < registros.length; k++)
-                    soma = soma + registros[k].val_original - registros[k].val_taxa_cobranca;
-
-                return soma;
-            }
-
-            /**
-            * Consulta Titulos no ERP do Cliente - PETROX
-            */
-            $scope.consultaErp = function(dados)
-            {
-                $scope.showProgress(divPortletBodyFiltrosPos, 10000);
-                $scope.showProgress(divPortletBodyDadosPos);
-
-                var indice = -1;
-                for(var a = 0; a < $scope.dadosconciliacao.length; a++)
-                {
-                    if( $scope.dadosconciliacao[a].$$hashKey === dados.$$hashKey)
-                        indice = a;
-                }
-
-                var RecebimentosParcela = dados.RecebimentosParcela;
-                if(RecebimentosParcela != undefined && RecebimentosParcela.length > 0)
-                {
-                    var filtros = [];
-                    var item = '';
-                    for(var r = 0; r < RecebimentosParcela.length; r++){
-                        item = '177:'+ RecebimentosParcela[r].Documento + ','
-                                     + '106:'+RecebimentosParcela[r].DataVenda.substring(0,10).replace('-','').replace('-','');
-                        filtros.push({  id: r, valor: item});
-                    }
-
-                $webapi.post($apis.getUrl($apis.rezende.pgsql.tabtituloreceber, undefined,
-                                         {id : 'token', valor : $scope.token}), filtros) 
-                    .then(function(dados){           
-                        $scope.hideProgress(divPortletBodyFiltrosPos);
-                        $scope.hideProgress(divPortletBodyDadosPos);
-                        $scope.dadosTitulos.push({ id: $scope.dadosconciliacao[indice].$$hashKey, values: dados });
-                      },
-                      function(failData){
-                         if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
-                         else if(failData.status === 500) $scope.showAlert('Titulos não encontrado!', true, 'warning', true); 
-                         else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                         else $scope.showAlert('Houve uma falha ao consultar os titulos (' + failData.status + ')', true, 'danger', true);
-                         // Fecha os progress
-                            $scope.hideProgress(divPortletBodyFiltrosPos);
-                            $scope.hideProgress(divPortletBodyDadosPos);
-                      }); 
-                }
-            }
-            
-            
-            
-            
-            
-            /**
-            * Consulta Titulos no ERP do Cliente - PETROX
-            */
-            $scope.baixaAuto = function(dados)
-            {
-                
-                $scope.showProgress(divPortletBodyFiltrosPos, 10000);
-                $scope.showProgress(divPortletBodyDadosPos);
-
-                /*var indice = -1;
-                for(var a = 0; a < $scope.dadosconciliacao.length; a++)
-                {
-                    if( $scope.dadosconciliacao[a].$$hashKey === dados.$$hashKey)
-                        indice = a;
-                }
-
-                var RecebimentosParcela = dados.RecebimentosParcela;
-                if(RecebimentosParcela != undefined && RecebimentosParcela.length > 0)
-                {
-                    var filtros = [];
-                    var item = '';
-                    for(var r = 0; r < RecebimentosParcela.length; r++){
-                        item = '177:'+ RecebimentosParcela[r].Documento + ','
-                                     + '106:'+RecebimentosParcela[r].DataVenda.substring(0,10).replace('-','').replace('-','');
-                        filtros.push({  id: r, valor: item});
-                    }
-                */
-                
-                $webapi.post($apis.getUrl($apis.rezende.pgsql.baixaautomatica, undefined,
-                                         {id : 'token', valor : $scope.token}), dados) 
-                    .then(function(dados){           
-                        $scope.hideProgress(divPortletBodyFiltrosPos);
-                        $scope.hideProgress(divPortletBodyDadosPos);
-                        $scope.dadosTitulos.push({ id: $scope.dadosconciliacao[indice].$$hashKey, values: dados });
-                      },
-                      function(failData){
-                         if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
-                         else if(failData.status === 500) $scope.showAlert('Titulos não encontrado!', true, 'warning', true); 
-                         else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                         else $scope.showAlert('Houve uma falha ao consultar os titulos (' + failData.status + ')', true, 'danger', true);
-                         // Fecha os progress
-                            $scope.hideProgress(divPortletBodyFiltrosPos);
-                            $scope.hideProgress(divPortletBodyDadosPos);
-                      }); 
-                }
+                                                 
+    
+    //============================== BEGIN BAIXA AUTOMÁTICA =========================================//
+    
 
     /**
-    * END BAIXA AUTOMÁTICA = PETROX
-    */
+      * Consulta Titulos no ERP do Cliente
+      */
+    $scope.consultaErp = function(dado, progressoemexecucao)
+    {
+        if(!dado || dado === null || !dado.ExtratoBancario || dado.ExtratoBancario === null){
+            if(progressoemexecucao){
+                // Fecha os progress
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+                 $scope.hideProgress(divPortletBodyDadosPos);
+            }
+            return;
+        }
+
+        if(!progressoemexecucao){
+            $scope.showProgress(divPortletBodyFiltrosPos, 10000);
+            $scope.showProgress(divPortletBodyDadosPos);
+        }
+        
+        var filtro = {id : /*$campos.card.tbrecebimentotitulo.idExtrato*/ 306,
+                      valor: dado.ExtratoBancario[0].Id};
+     
+        $webapi.get($apis.getUrl($apis.card.tbrecebimentotitulo, [$scope.token, 2], filtro)) 
+            .then(function(dados){   
+                
+                dado.titulos = dados.Registros;
+                dado.ValorTotalTitulos = dados.Totais.valorTotal;
+                dado.TotalTitulosBaixados = dados.Totais.totalBaixados;
+            
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+                $scope.hideProgress(divPortletBodyDadosPos);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao consultar os titulos (' + failData.status + ')', true, 'danger', true);
+                 // Fecha os progress
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+                 $scope.hideProgress(divPortletBodyDadosPos);
+              }); 
+    }
+    
+    /**
+      * Baixa automática
+      */
+    $scope.baixaAutomatica = function(dado)
+    {
+        if(!dado || dado === null || !dado.ExtratoBancario || dado.ExtratoBancario === null)
+            return;
+
+        $scope.showProgress(divPortletBodyFiltrosPos, 10000);
+        $scope.showProgress(divPortletBodyDadosPos);
+        
+        var filtro = {id : /*$campos.card.baixaautomaticaerp.idExtrato*/ 100,
+                      valor: dado.ExtratoBancario[0].Id};
+     
+        $webapi.get($apis.getUrl($apis.card.baixaautomaticaerp, $scope.token, filtro)) 
+            .then(function(dados){   
+                $scope.consultaErp(dado, true);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                 else if(failData.status === 401) $scope.showModalAlerta('A empresa');
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao realizar a baixa automática (' + failData.status + ')', true, 'danger', true);
+                 // Fecha os progress
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+                 $scope.hideProgress(divPortletBodyDadosPos);
+              }); 
+    }
+
+    
+    
+    
+    /**
+      * Busca parcelas da Venda
+      * /
+    $scope.coparaVendaTitulo = function(nsu)
+    {
+        var nsuTitulo = '';
+        var numVendas = 0;
+        for(var a = 0; a < $scope.modalDetalhesGrupo.length; a++)
+        {
+            if(nsu.indexOf($scope.modalDetalhesGrupo[a].Documento) > 0)
+            {
+                nsuTitulo = $scope.modalDetalhesGrupo[a].Documento;
+                return $scope.modalDetalhesGrupo[a].NumParcela;
+            }
+        }
+    }
+
+
+
+    // SOMA GRUPO DE TITULOS
+    $scope.SomaGrupoDeTitulos = function(registros)
+    {
+        var soma = 0;
+         for(var k = 0; k < registros.length; k++)
+            soma = soma + registros[k].val_original - registros[k].val_taxa_cobranca;
+
+        return soma;
+    }
+
+    /**
+      * Consulta Titulos no ERP do Cliente - PETROX
+      * /
+    var consultaErpPetrox = function(dados)
+    {
+        $scope.showProgress(divPortletBodyFiltrosPos, 10000);
+        $scope.showProgress(divPortletBodyDadosPos);
+
+        var indice = -1;
+        for(var a = 0; a < $scope.dadosconciliacao.length; a++)
+        {
+            if( $scope.dadosconciliacao[a].$$hashKey === dados.$$hashKey)
+                indice = a;
+        }
+
+        var RecebimentosParcela = dados.RecebimentosParcela;
+        if(RecebimentosParcela != undefined && RecebimentosParcela.length > 0)
+        {
+            var filtros = [];
+            var item = '';
+            for(var r = 0; r < RecebimentosParcela.length; r++){
+                item = '177:'+ RecebimentosParcela[r].Documento + ','
+                             + '106:' + RecebimentosParcela[r].DataVenda.substring(0,10).replace('-','').replace('-','');
+                filtros.push({  id: r, valor: item});
+            }
+
+        $webapi.post($apis.getUrl($apis.rezende.pgsql.tabtituloreceber, undefined,
+                                 {id : 'token', valor : $scope.token}), filtros) 
+            .then(function(dados){           
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+                $scope.hideProgress(divPortletBodyDadosPos);
+                $scope.dadosTitulos.push({ id: $scope.dadosconciliacao[indice].$$hashKey, values: dados });
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 500) $scope.showAlert('Titulos não encontrado!', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao consultar os titulos (' + failData.status + ')', true, 'danger', true);
+                 // Fecha os progress
+                    $scope.hideProgress(divPortletBodyFiltrosPos);
+                    $scope.hideProgress(divPortletBodyDadosPos);
+              }); 
+        }else{
+            $scope.hideProgress(divPortletBodyFiltrosPos);
+            $scope.hideProgress(divPortletBodyDadosPos);
+        }
+    }
+
+
+
+
+
+    /**
+      * Consulta Titulos no ERP do Cliente - PETROX
+      * /
+    $scope.baixaAuto = function(dados)
+    {
+        
+        $scope.showProgress(divPortletBodyFiltrosPos, 10000);
+        $scope.showProgress(divPortletBodyDadosPos);
+
+        /*var indice = -1;
+        for(var a = 0; a < $scope.dadosconciliacao.length; a++)
+        {
+            if( $scope.dadosconciliacao[a].$$hashKey === dados.$$hashKey)
+                indice = a;
+        }
+
+        var RecebimentosParcela = dados.RecebimentosParcela;
+        if(RecebimentosParcela != undefined && RecebimentosParcela.length > 0)
+        {
+            var filtros = [];
+            var item = '';
+            for(var r = 0; r < RecebimentosParcela.length; r++){
+                item = '177:'+ RecebimentosParcela[r].Documento + ','
+                             + '106:'+RecebimentosParcela[r].DataVenda.substring(0,10).replace('-','').replace('-','');
+                filtros.push({  id: r, valor: item});
+            }
+        * /
+
+        $webapi.post($apis.getUrl($apis.rezende.pgsql.baixaautomatica, undefined,
+                                 {id : 'token', valor : $scope.token}), dados) 
+            .then(function(dados){           
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+                $scope.hideProgress(divPortletBodyDadosPos);
+                $scope.dadosTitulos.push({ id: $scope.dadosconciliacao[indice].$$hashKey, values: dados });
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 500) $scope.showAlert('Titulos não encontrado!', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao consultar os titulos (' + failData.status + ')', true, 'danger', true);
+                 // Fecha os progress
+                    $scope.hideProgress(divPortletBodyFiltrosPos);
+                    $scope.hideProgress(divPortletBodyDadosPos);
+              }); 
+    }*/
+
+    //============================== END BAIXA AUTOMÁTICA =========================================//
                                                  
-                                                 
+             
+    
+    
+    
+    
+    
+    
     // ASSOCIAÇÃO MANUAL   
     /**
       * Selecionou movimentação bancária para conciliar manualmente

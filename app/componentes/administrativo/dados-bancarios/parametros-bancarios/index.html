@@ -8,6 +8,8 @@
     Administrativo > Dados Bancários > Parâmetros Bancários
 
 
+    Versão 1.0.4 - 18/11/2015
+    - Pesquisa parâmetros ocultos
 
     Versão 1.0.3 - 13/10/2015
     - Associação a uma bandeira
@@ -105,7 +107,16 @@
                                            typeahead-focus-first=false
                                            typeahead-min-length='3'
                                            typeahead-wait-ms="500"
-                                           typeahead="banco as exibeBanco(banco) for banco in buscaBancos($viewValue)" />                 
+                                           typeahead="banco as exibeBanco(banco) for banco in buscaBancos($viewValue)" />  
+
+                                    <div class="row" style="margin-top: 10px;">
+                                        <div class="col-sm-3 col-md-3" style="margin-right: -15px;">
+                                            <checkbox normal ng-model="filtro.pesquisarOcultos"></checkbox>
+                                        </div>
+                                        <div class="col-sm-9 col-md-9" style="text-align:left;">
+                                            <label>Exibir parâmetros ocultados</label>
+                                        </div>
+                                    </div>
                                 </td>
                                 <!-- TIPO -->
                                 <td rowspan="1" colspan="1">
@@ -879,8 +890,8 @@
                                         </li> 
                                         <li ng-show="usuarioPodeAlterarParametros()">
                                             <a href="javascript:;" 
-                                               ng-click="ocultaParametroBancario(parametro)">
-                                                Ocultar
+                                               ng-click="ocultaParametroBancario(parametro)"
+                                               ng-bind="parametro.flVisivel ? 'Ocultar' : 'Tornar visível'">
                                             </a>
                                         </li> 
                                     </ul>
