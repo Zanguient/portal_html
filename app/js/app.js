@@ -5,6 +5,9 @@
  *
  *
  *
+ *  Versão 1.1.4 - 16/11/2015
+ *  - Modal Confirmação com três botões
+ *
  *  Versão 1.1.3 - 13/11/2015
  *  - card-services-relatorio-conciliacao-titulos
  *
@@ -2244,13 +2247,22 @@ angular.module("AtosCapital", ['ui.router',
      * @param textoConfirma : texto exibido no botão de confirmação
      * @param textoCancela : texto exibido no botão que cancela o modal
      */
-   $scope.showModalConfirmacao = function(titulo, mensagem, funcaoConfirma, parametroFuncaoConfirma, textoConfirma, textoCancela){
+   $scope.showModalConfirmacao = function(titulo, mensagem, funcaoConfirma, parametroFuncaoConfirma, textoConfirma, textoCancela, tresbotoes, textoConfirma2, funcaoConfirma2, parametroFuncaoConfirma2){
       // Seta os valores
       $scope.modal_titulo = titulo ? titulo : 'Atos Capital';
       $scope.modal_mensagem = mensagem ? mensagem : '';
       $scope.modal_textoConfirma = textoConfirma ? textoConfirma : 'Ok';
       $scope.modal_textoCancela = textoCancela ? textoCancela : 'Cancelar';
       $scope.modal_confirma = funcaoConfirma ? function(){funcaoConfirma(parametroFuncaoConfirma);} : function(){};
+      if(tresbotoes){
+         $scope.modal_exibe_confirma2 = true;
+         $scope.modal_textoConfirma2 = textoConfirma2;
+         $scope.modal_confirma2 = funcaoConfirma2 ? function(){funcaoConfirma2(parametroFuncaoConfirma2);} : function(){};
+      }else{
+         $scope.modal_exibe_confirma2 = false;
+         $scope.modal_textoConfirma2 = '';
+         $scope.modal_confirma2 = function(){};
+      }
       // Exibe o modal
       $('#modalConfirmacao').modal('show');
       if(!$scope.$$phase) $scope.$apply();

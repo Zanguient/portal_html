@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.1 - 16/11/2015
+ *  - element[0].maxLength no firefox é igual a -1 quando não definido
+ *
  *  Versão 1.0 - 03/09/2015
  *
  */
@@ -20,7 +23,7 @@ angular.module('diretivas', ['ui.bootstrap'])
         
       ngModelCtrl.$parsers.push(function(val) {
         // Se tiver definido maxlength, impede de entrar com um número maior
-        if(element[0].maxLength && val.length > element[0].maxLength)
+        if(element[0].maxLength && element[0].maxLength > 0 && val.length > element[0].maxLength)
             return val.substring(0, val.length - 1);    
         
         var clean = val.replace( /[^0-9]+/g, '');
@@ -89,7 +92,7 @@ angular.module('diretivas', ['ui.bootstrap'])
           var backspace = false;
         
           var avaliaData = function(val){   
-
+              
             var clean = val.replace( /[^0-9/]+/g, '');
             var render = false;
             if (val !== clean) render = true;
@@ -119,9 +122,9 @@ angular.module('diretivas', ['ui.bootstrap'])
             }
             // Reajusta o valor do flag  
             backspace = false;
-              
+            
             // Retorna o valor utilizado
-            if(element[0].maxLength && clean.length > element[0].maxLength)
+            if(element[0].maxLength && element[0].maxLength > 0 && clean.length > element[0].maxLength)
                 return clean.substring(0, element[0].maxLength); 
             return clean;
           };
@@ -225,7 +228,7 @@ angular.module('diretivas', ['ui.bootstrap'])
               
             // Retorna o valor utilizado
             // Se tiver definido maxlength, impede de entrar com um número maior
-            if(element[0].maxLength && clean.length > element[0].maxLength)
+            if(element[0].maxLength && element[0].maxLength > 0 && clean.length > element[0].maxLength)
                 return clean.substring(0, element[0].maxLength);
             return clean;   
           };
@@ -289,7 +292,7 @@ angular.module('diretivas', ['ui.bootstrap'])
               
             // Retorna o valor utilizado
             // Se tiver definido maxlength, impede de entrar com um número maior
-            if(element[0].maxLength && clean.length > element[0].maxLength)
+            if(element[0].maxLength && element[0].maxLength > 0 && clean.length > element[0].maxLength)
                 return clean.substring(0, element[0].maxLength);
               
             return clean;   
@@ -359,7 +362,7 @@ angular.module('diretivas', ['ui.bootstrap'])
               
             // Retorna o valor utilizado
             // Se tiver definido maxlength, impede de entrar com um número maior
-            if(element[0].maxLength && clean.length > element[0].maxLength)
+            if(element[0].maxLength && element[0].maxLength > 0 && clean.length > element[0].maxLength)
                 return clean.substring(0, element[0].maxLength);
               
             return clean;   
@@ -481,7 +484,7 @@ angular.module('diretivas', ['ui.bootstrap'])
 
             // Retorna o valor utilizado
             // Se tiver definido maxlength, impede de entrar com um número maior
-            if(element[0].maxLength && clean.length > element[0].maxLength)
+            if(element[0].maxLength && element[0].maxLength > 0 && clean.length > element[0].maxLength)
                 return clean.substring(0, element[0].maxLength);
             return clean;   
           };

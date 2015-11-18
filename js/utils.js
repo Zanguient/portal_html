@@ -158,6 +158,7 @@ angular.module('utils', [ ])
   // Rezende
   //var urlBaseRezende = 'http://localhost:50939';
   var urlBaseRezende = 'http://apirezende.atoscapital.com.br';
+  var urlBaseDealernet = 'http://dealernet.atoscapital.com.br';
   // Download
   var urlBaseDownload = 'http://apiportal.atoscapital.com.br';
   // Tempo em horas máximos definido de inatividade para requerer novo login, caso LEMBRAR não tenha sido marcado
@@ -168,6 +169,7 @@ angular.module('utils', [ ])
     getUrlBaseIMessage : function(){ return urlBaseIMessage },
     getUrlBaseDownload : function(){ return urlBaseDownload },
     getUrlBaseRezende : function() { return urlBaseRezende },
+    getUrlBaseDealernet : function() { return urlBaseDealernet },  
     apiStatus: urlBase + '/login/status/',
     // URL + keys da local storage  
     autenticacao: { 

@@ -8,6 +8,9 @@
     Administrativo > Dados Bancários > Extratos Bancários
 
 
+    Versão 1.0.1 - 18/11/2015
+    - Exclusão de movimentações bancárias
+
     Versão 1.0 - 03/09/2015
 -->
 
@@ -84,7 +87,7 @@
                                                 <button class="btn btn-primary" ngf-select ngf-change="upload($files)" 
                                                         ngf-multiple="false" accept=".ofx,.pdf"
                                                         ng-disabled="uploadEmProgresso()"
-                                                        ng-show="filtro.conta && $filtro.conta !== null">
+                                                        ng-show="filtro.conta && $filtro.conta !== null && usuarioPodeCadastrarExtratos()">
                                                     <i class="fa fa-spin fa-spinner" 
                                                        ng-show="uploadEmProgresso()"/>
                                                     Selecionar Extrato
@@ -231,7 +234,17 @@
                                     <table class="table table-striped table-hover table-bordered dataTable no-footer conteudoTabelas">
                                         <thead>
                                             <tr class="uppercase">
-                                                <th width="15%" tabindex="0" rowspan="1" colspan="1">
+                                                <th ng-show="usuarioPodeExcluirExtratos()"
+                                                    width="1%">
+                                                </th>
+                                                <th ng-show="usuarioPodeExcluirExtratos()"
+                                                    width="14%" 
+                                                    tabindex="0" rowspan="1" colspan="1">
+                                                     Data
+                                                </th>
+                                                <th ng-show="!usuarioPodeExcluirExtratos()"
+                                                    width="15%" 
+                                                    tabindex="0" rowspan="1" colspan="1">
                                                      Data
                                                 </th>
                                                 <th width="10%" tabindex="1" rowspan="1" colspan="1">
@@ -250,6 +263,14 @@
                                         </thead>
                                         <tbody>
                                             <tr ng-repeat="movimentacao in extrato">
+                                                <td ng-show="usuarioPodeExcluirExtratos()"
+                                                    style="vertical-align: middle" print-remove>
+                                                    <a href="javascript:;"
+                                                       title="Remover movimentação bancária"
+                                                       ng-click="removeMovimentacaoBancaria(movimentacao)">
+                                                        <i class="fa fa-remove" style="color: red"></i>
+                                                    </a>
+                                                </td>
                                                 <!-- DATA -->
                                                 <td ng-bind="getDataString(movimentacao.dtExtrato)"
                                                     style="text-align:center">
@@ -276,7 +297,7 @@
                                                 </td>
                                             </tr>
                                             <tr ng-hide="extrato.length == 0">
-                                                <td colspan="2"
+                                                <td colspan="{{usuarioPodeExcluirExtratos() ? 3 : 2}}"
                                                     style="font-weight: bolder; text-align: center">
                                                     Movimentações
                                                 </td>
@@ -295,8 +316,8 @@
                                                     </span>
                                                 </td>
                                             </tr>
-                                            <tr ng-show="!buscandoExtrato && filtro.conta && filtro.conta !== null && extrato.length == 0">
-                                                <td colspan="2"></td>
+                                            <tr ng-show="!buscandoExtrato && filtro.conta && filtro.conta !== null && extrato.length == 0 && usuarioPodeCadastrarExtratos()">
+                                                <td colspan="{{usuarioPodeExcluirExtratos() ? 3 : 2}}"></td>
                                                 <td> 
                                                     <div class="col-sm-12" 
                                                          ng-class="{'element-hidden': !uploadEmProgresso()}">
