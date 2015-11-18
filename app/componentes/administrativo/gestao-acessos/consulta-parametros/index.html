@@ -67,7 +67,7 @@
                                             <select class="form-control form-filter input-sm filtros" 
 																										ng-model="busca"
 																										ng-change="alterouFilial()"
-																										ng-disabled="parametros.length == 0">
+																										ng-disabled="statusLogado == false">
                                                 <!--option value="">Todas</option-->
 																							<option ng-repeat="filial in filiais | unique:'empresa.ds_fantasia'">{{filial.empresa.ds_fantasia}}</option>
                                             </select>

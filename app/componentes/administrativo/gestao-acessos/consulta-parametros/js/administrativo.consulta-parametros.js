@@ -24,6 +24,7 @@ angular.module("administrativo-consulta-parametros", [])
     $scope.parametros = [];
 		$scope.filiais = [];
 		$scope.vigencias = [];
+		$scope.statusLogado = true;
     $scope.itens_pagina = [50, 100, 150, 200];
     $scope.busca = ''; // model do input de busca                                            
     $scope.parametro = {busca:'', itens_pagina : $scope.itens_pagina[0], pagina : 1,
@@ -48,17 +49,17 @@ angular.module("administrativo-consulta-parametros", [])
         });
         // Quando houver alteração do grupo empresa na barra administrativa                                           
         $scope.$on('alterouGrupoEmpresa', function(event){ 
-            // Refaz a busca
-					  if($scope.exibeTela) buscaFiliais(true);
-            if($scope.exibeTela) $scope.buscaParametros(true);
-					if($scope.exibeTela) $scope.buscaVigencias(true);
+					// Refaz a busca
+					if($scope.exibeTela) buscaFiliais(true);
+					if($scope.exibeTela) $scope.buscaParametros(true);
+					if($scope.exibeTela) buscaVigencias(true);
 						//if($scope.exibeTela) $scope.buscaFiliais(true);
         }); 
         // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
         $scope.$on('acessoDeTelaNotificado', function(event){
-            $scope.exibeTela = true;
-            // Busca parametros
-            $scope.buscaParametros();
+					$scope.exibeTela = true;
+					// Busca parametros
+					$scope.buscaParametros();
 					buscaFiliais();
 					buscaVigencias();
 						//$scope.buscaFiliais();
@@ -121,10 +122,7 @@ angular.module("administrativo-consulta-parametros", [])
       */                                            
     $scope.alterouItensPagina = function(){
         if($scope.parametros.length > 0) $scope.buscaParametros();   
-    };
-                                               
-                                               
-                                               
+    };                                        
     // BUSCA
     $scope.agrupaBusca = function(){
 			$scope.buscaParametros();
@@ -203,37 +201,42 @@ angular.module("administrativo-consulta-parametros", [])
                   }); 
        }
     };
-																						 
-    var buscaFiliais = function(showMessage){
+			
+			var buscaFiliais = function(showMessage){
         
-       //$scope.showProgress(divPortletBodyFiltrosPos, 10000);    
-       $scope.showProgress(divPortletBodyFilialPos); 
-       var filtros = [];
-        
-       // Somente com status ativo
-       //filtros.push({id: /*$campos.cliente.empresa.fl_ativo*/ 516, valor: $scope.usuariologado.grupoempresa.id_grupo});
+				if(!$scope.usuariologado.grupoempresa){
+					$scope.statusLogado = false;
+				} else {
+					$scope.statusLogado = true;
+				 //$scope.showProgress(divPortletBodyFiltrosPos, 10000);    
+				 $scope.showProgress(divPortletBodyFilialPos); 
+				 var filtros = [];
 
-       // Filtro do grupo empresa => barra administrativa
-       if($scope.usuariologado.grupoempresa){ 
-           filtros.push({id: /*$campos.cliente.empresa.id_grupo*/ 516, valor: $scope.usuariologado.grupoempresa.id_grupo});
-           if ($scope.usuariologado.tbcontacorrentetbloginadquirenteempresa) filtros.push({
-               id: /*$campos.card.tbcontacorrentetbloginadquirenteempresa.nu_cnpj*/ 500,
-               valor: $scope.usuariologado.tbcontacorrentetbloginadquirenteempresa.nu_cnpj
-           });
-       
-       $webapi.get($apis.getUrl($apis.card.tbcontacorrentetbloginadquirenteempresa, 
-                                [$scope.token, 5, /*$campos.cliente.empresa.ds_fantasia*/ 100],
-                                filtros)) 
-            .then(function(dados){
-                $scope.filiais = dados.Registros;
-              },
-              function(failData){
-                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
-                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                 else $scope.showAlert('Houve uma falha ao obter filiais (' + failData.status + ')', true, 'danger', true);
-                 $scope.hideProgress(divPortletBodyFiltrosPos);
-              });     
-    };																						 
+				 // Somente com status ativo
+				 //filtros.push({id: /*$campos.cliente.empresa.fl_ativo*/ 516, valor: $scope.usuariologado.grupoempresa.id_grupo});
+
+				 // Filtro do grupo empresa => barra administrativa
+				 if($scope.usuariologado.grupoempresa){ 
+						 filtros.push({id: /*$campos.cliente.empresa.id_grupo*/ 516, valor: $scope.usuariologado.grupoempresa.id_grupo});
+						 if ($scope.usuariologado.tbcontacorrentetbloginadquirenteempresa) filtros.push({
+								 id: /*$campos.card.tbcontacorrentetbloginadquirenteempresa.nu_cnpj*/ 500,
+								 valor: $scope.usuariologado.tbcontacorrentetbloginadquirenteempresa.nu_cnpj
+						 });
+
+				 $webapi.get($apis.getUrl($apis.card.tbcontacorrentetbloginadquirenteempresa, 
+																	[$scope.token, 5, /*$campos.cliente.empresa.ds_fantasia*/ 100],
+																	filtros)) 
+							.then(function(dados){
+									$scope.filiais = dados.Registros;
+								},
+								function(failData){
+									 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+									 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+									 else $scope.showAlert('Houve uma falha ao obter filiais (' + failData.status + ')', true, 'danger', true);
+									 $scope.hideProgress(divPortletBodyFiltrosPos);
+								});     
+			};
+	}
 };
 			var buscaVigencias = function(showMessage){
         
