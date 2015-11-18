@@ -182,7 +182,7 @@ angular.module("tax-services-importacao-xml", [])
 
             // Emitente
             if($scope.filtro.emitente && $scope.filtro.emitente !== ''){
-                filtros.push({id: /*$campos.card.tbbancoparametro.nmEmitente */ 106,
+                filtros.push({id: /*$campos.card.tbmanifesto.nmEmitente */ 106,
                               valor: '%' + $scope.filtro.emitente});
             }
 

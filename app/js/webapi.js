@@ -672,8 +672,7 @@ angular.module('webapi', ['utils'])
       
     // DEALERNET
     dealernet: {
-        //baixaautomatica : 'http://dealernet.atoscapital.com.br/dealernet/baixaautomatica/',
-        consultatitulos : 'http://dealernet.atoscapital.com.br/dealernet/consultatitulos/',   
+        consultatitulos : $autenticacao.getUrlBaseDealernet() + '/dealernet/consultatitulos/',   
     },
       
       
