@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.1.3 - 18/11/2015
+ *  - Reporta erro da baixa
+ *
  *  Versão 1.1.2 - 17/11/2015
  *  - Envio dos idsExtrato em vez da data e idsRecebimento para download CSV
  *  - Baixa automática
@@ -968,15 +971,20 @@ angular.module("card-services-conciliacao-bancaria", [])
         var filtro = {id : /*$campos.card.baixaautomaticaerp.idExtrato*/ 100,
                       valor: dado.ExtratoBancario[0].Id};
      
-        $webapi.get($apis.getUrl($apis.card.baixaautomaticaerp, $scope.token, filtro)) 
+        var url = $apis.getUrl($apis.card.baixaautomaticaerp, $scope.token, filtro);
+        
+        // Seta para a url de download
+        if(url.slice(0, "http://localhost:".length) !== "http://localhost:")
+            url = url.replace($autenticacao.getUrlBase(), $autenticacao.getUrlBaseDownload());
+        
+        $webapi.get(url) 
             .then(function(dados){   
                 $scope.consultaErp(dado, true);
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
-                 else if(failData.status === 401) $scope.showModalAlerta('A empresa');
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                 else $scope.showAlert('Houve uma falha ao realizar a baixa automática (' + failData.status + ')', true, 'danger', true);
+                 else $scope.showModalAlerta('Houve uma falha ao realizar a baixa automática. (' + (failData.dados && failData.dados !== null ? failData.dados : failData.status) + ')', 'Erro');
                  // Fecha os progress
                  $scope.hideProgress(divPortletBodyFiltrosPos);
                  $scope.hideProgress(divPortletBodyDadosPos);

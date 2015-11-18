@@ -5,6 +5,9 @@
  *
  *
  *
+ *  Versão 1.1.5 - 18/11/2015
+ *  - administrativo-titulos
+ *
  *  Versão 1.1.4 - 16/11/2015
  *  - Modal Confirmação com três botões
  *
@@ -84,6 +87,7 @@ angular.module("AtosCapital", ['ui.router',
                                'administrativo-monitor-cargas',
                                'administrativo-monitor-cargas-boot',
                                'administrativo-consulta-pos-terminal',
+                               'administrativo-titulos',
                                'dashboard',
                                'card-services-cash-flow-relatorios',
                                'card-services-relatorio-vendas',
@@ -316,6 +320,15 @@ angular.module("AtosCapital", ['ui.router',
         }
       })
 
+      .state('administrativo-integracao-erp-titulos', {
+        url: prefixo + 'administrativo/titulos',
+        templateUrl: 'componentes/administrativo/integracao-erp/titulos/index.html',
+        controller: "administrativo-titulosCtrl",
+        data: {
+            titulo: 'Administrativo'
+        }
+      })
+    
 
 
       // DASHBOARD
@@ -614,6 +627,7 @@ angular.module("AtosCapital", ['ui.router',
     var controllerAdministrativoMonitorCargas = undefined;
     var controllerAdministrativoMonitorCargasBoot = undefined; 
     var controllerAdministrativoConsultaPOSTerminal = undefined;
+    var controllerAdministrativoTitulos = undefined;                        
     var controllerDashboard = undefined;
     var controllerCardServicesCashFlowRelatorios = undefined;
     var controllerCardServicesRelatorioVendas = undefined; 
@@ -661,6 +675,8 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_ADMINISTRATIVO_MONITOR = false;
     $scope.PERMISSAO_ADMINISTRATIVO_MONITOR_MONITOR_CARGAS = false;
     $scope.PERMISSAO_ADMINISTRATIVO_MONITOR_MONITOR_CARGAS_BOOT = false; 
+    $scope.PERMISSAO_ADMINISTRATIVO_INTEGRACAO_ERP = false;                        
+    $scope.PERMISSAO_ADMINISTRATIVO_INTEGRACAO_ERP_TITULOS = false;                         
     $scope.PERMISSAO_DASHBOARD = false;
     $scope.PERMISSAO_CARD_SERVICES = false;
     $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW = false;
@@ -909,7 +925,14 @@ angular.module("AtosCapital", ['ui.router',
     $scope.goAdministrativoMonitorCargasBoot = function(params){
         controllerAtual = controllerAdministrativoMonitorCargasBoot;
         go('administrativo-monitor-monitor-cargas-boot', params);
-    };                         
+    };  
+    /**
+      * Exibe como conteúdo a Integração ERP Títulos, de Administrativo
+      */                        
+    $scope.goAdministrativoTitulos = function(params){
+        controllerAtual = controllerAdministrativoTitulos;
+        go('administrativo-integracao-erp-titulos', params);
+    };                        
     /**
       * Exibe como conteúdo o Dashboard
       */
@@ -1243,6 +1266,15 @@ angular.module("AtosCapital", ['ui.router',
             }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'MONITOR DE CARGAS DO BOOT')
                      controllerAtual.id_controller !== controllerAdministrativoMonitorCargasBoot.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual 
+        }else if(url === $state.get('administrativo-integracao-erp-titulos').url){ 
+            // Administrativo > Integração ERP > Títulos
+            if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_INTEGRACAO_ERP || !$scope.PERMISSAO_ADMINISTRATIVO_INTEGRACAO_ERP_TITULOS){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.goUsuarioSemPrivilegios();
+            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'Títulos')
+                     controllerAtual.id_controller !== controllerAdministrativoTitulos.id_controller)
+                $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual 
         }else if(url === $state.get('dashboard').url){
             // Dashboard
             if(!$scope.PERMISSAO_DASHBOARD){
@@ -1529,6 +1561,11 @@ angular.module("AtosCapital", ['ui.router',
                     controllerAtual = controller;
                 controllerAdministrativoMonitorCargasBoot = controller;
                 return $scope.goAdministrativoMonitorCargasBoot;
+            case 'TÍTULOS':
+                if($location.path() === $state.get('administrativo-integracao-erp-titulos').url) 
+                    controllerAtual = controller;
+                controllerAdministrativoTitulos = controller;
+                return $scope.goAdministrativoTitulos;    
             // Dashboard
             case 'DASHBOARD ATOS':
                 if($location.path() === $state.get('dashboard').url) controllerAtual = controller;
@@ -1672,6 +1709,8 @@ angular.module("AtosCapital", ['ui.router',
             case 'MONITOR': $scope.PERMISSAO_ADMINISTRATIVO_MONITOR = true; break;
             case 'MONITOR DE CARGAS': $scope.PERMISSAO_ADMINISTRATIVO_MONITOR_MONITOR_CARGAS = true; break;
             case 'MONITOR DE CARGAS DO BOOT': $scope.PERMISSAO_ADMINISTRATIVO_MONITOR_MONITOR_CARGAS_BOOT = true; break;
+            case 'INTEGRAÇÃO ERP': $scope.PERMISSAO_ADMINISTRATIVO_INTEGRACAO_ERP = true; break;    
+            case 'TÍTULOS': $scope.PERMISSAO_ADMINISTRATIVO_INTEGRACAO_ERP_TITULOS = true; break;
             // Dashboard
             case 'DASHBOARD ATOS': $scope.PERMISSAO_DASHBOARD = true; break;
             // Tax Services
@@ -1769,6 +1808,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'AÇÕES DE USUÁRIOS': return state == 'acoes-usuarios';
             case 'MONITOR DE CARGAS': return state == 'monitor-cargas';
             case 'MONITOR DE CARGAS DO BOOT': return state == 'monitor-cargas-boot'; 
+            case 'TÍTULOS': return state == 'titulos';    
             // Tax Services
             case 'IMPORTAÇÃO XML': return state == 'importacao-xml';
             case 'CADASTRO CERTIFICADO DIGITAL': return state == 'cadastro-certificado-digital';

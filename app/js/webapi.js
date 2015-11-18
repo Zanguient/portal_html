@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.1.0 - 18/11/2015
+ *  - tituloserp
+ *
  *  Versão 1.0.9 - 16/11/2015
  *  - tbrecebimentotitulo
  *  - tbrecebimentoajuste
@@ -302,6 +305,10 @@ angular.module('webapi', ['utils'])
             id_grupo = 216,
             idExtrato = 306,
         },
+        tituloserp : {
+            data : 100,
+            id_grupo : 101
+        }
       },
       cliente : {
         empresa : {
@@ -647,6 +654,7 @@ angular.module('webapi', ['utils'])
         tbloginadquirenteempresa : $autenticacao.getUrlBase() + '/card/tbloginadquirenteempresa/', 
         tbrecebimentoajuste : $autenticacao.getUrlBase() + '/card/tbrecebimentoajuste/', 
         tbrecebimentotitulo : $autenticacao.getUrlBase() + '/card/tbrecebimentotitulo/', 
+        tituloserp : $autenticacao.getUrlBase() + '/card/tituloserp/', 
         uploadextrato : $autenticacao.getUrlBase() + '/card/testeupload/',    
     },
     cliente: {
