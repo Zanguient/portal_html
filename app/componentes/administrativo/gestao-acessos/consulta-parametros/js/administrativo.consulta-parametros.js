@@ -4,42 +4,40 @@
  *  suporte@atoscapital.com.br
  *
  *
- *  Versão 1.0 - 03/09/2015
+ *  Versão 1.0 - 17/11/2015
  *
  */
 
 // App
 angular.module("administrativo-consulta-parametros", []) 
 
-.controller("administrativo-consulta-parametrosCtrl", ['$scope',
-                                           '$state',
-                                           '$filter',
-                                           /*'$campos',*/
-                                           '$webapi',
-                                           '$apis', 
-                                           function($scope,$state,$filter,/*$campos,*/$webapi,$apis){ 
-
+.controller("administrativo-consulta-parametrosCtrl", ['$scope',   
+                                            '$state',
+                                            '$http',
+                                            /*'$campos',*/
+                                            '$webapi',
+                                            '$apis',
+                                            '$filter', 
+                                            function($scope,$state,$http,/*$campos,*/
+                                                     $webapi,$apis,$filter){ 
+                                        
+                                                
     var divPortletBodyFilialPos = 0; // posição da div que vai receber o loading progress
     $scope.paginaInformada = 1; // página digitada pelo usuário
     $scope.parametros = [];
-		$scope.filiais = [];
 		$scope.vigencias = [];
-		$scope.statusLogado = true;
+    $scope.statusLogado = true;																							
     $scope.itens_pagina = [50, 100, 150, 200];
     $scope.busca = ''; // model do input de busca                                            
     $scope.parametro = {busca:'', itens_pagina : $scope.itens_pagina[0], pagina : 1,
-    total_registros : 0, faixa_registros : '0-0', total_paginas : 0
-    };
+                     total_registros : 0, faixa_registros : '0-0', total_paginas : 0
+                     };   
     $scope.parametroSelecionada = undefined;
     // Flags
     $scope.exibeTela = false;                                           
-    // Permissões                                           
-    var permissaoAlteracao = false;
-    var permissaoCadastro = false;
-    var permissaoRemocao = false;
                                                
     // Inicialização do controller
-    $scope.administrativo_parametrosInit = function(){
+    $scope.administrativo_consultaParametrosInit = function(){
         // Título da página 
         $scope.pagina.titulo = 'Gestão de Acessos';                          
         $scope.pagina.subtitulo = 'Consulta Parâmetros';
@@ -49,20 +47,18 @@ angular.module("administrativo-consulta-parametros", [])
         });
         // Quando houver alteração do grupo empresa na barra administrativa                                           
         $scope.$on('alterouGrupoEmpresa', function(event){ 
-					// Refaz a busca
-					if($scope.exibeTela) buscaFiliais(true);
-					if($scope.exibeTela) $scope.buscaParametros(true);
-					if($scope.exibeTela) buscaVigencias(true);
-						//if($scope.exibeTela) $scope.buscaFiliais(true);
+            // Refaz a busca
+            if($scope.exibeTela) buscaFiliais(true);
+						if($scope.exibeTela) $scope.buscaParametros(true);
+						if($scope.exibeTela) buscaVigencias(true);
         }); 
         // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
         $scope.$on('acessoDeTelaNotificado', function(event){
-					$scope.exibeTela = true;
-					// Busca parametros
-					$scope.buscaParametros();
-					buscaFiliais();
-					buscaVigencias();
-						//$scope.buscaFiliais();
+            $scope.exibeTela = true;
+            // Busca parametros
+            $scope.buscaParametros();
+						buscaFiliais();
+						buscaVigencias();
         });
         // Acessou a tela
         $scope.$emit("acessouTela");
@@ -70,14 +66,8 @@ angular.module("administrativo-consulta-parametros", [])
         //$scope.buscaParametros();
     };
                                                
-                                               
-    // PERMISSÕES
-    /**
-      * Retorna true se o usuário pode consultar as parametros
-      */
-    $scope.usuarioPodeConsultarParametros = function(){
-        return typeof $scope.usuariologado.grupoempresa !== 'undefined';    
-    };    
+                                            
+    
     
     // PAGINAÇÃO
     /**
@@ -86,10 +76,8 @@ angular.module("administrativo-consulta-parametros", [])
     var setPagina = function(pagina){
        if(pagina >= 1 && pagina <= $scope.parametro.total_paginas){ 
            $scope.parametro.pagina = pagina;
-           $scope.buscaParametros();
-			     buscaFiliais();
-				 buscaVigencias();
-			 }
+           $scope.buscaParametros(); 
+       }
        $scope.atualizaPaginaDigitada();    
     };
     /**
@@ -122,8 +110,12 @@ angular.module("administrativo-consulta-parametros", [])
       */                                            
     $scope.alterouItensPagina = function(){
         if($scope.parametros.length > 0) $scope.buscaParametros();   
-    };                                        
+    };
+                                               
+                                               
+                                               
     // BUSCA
+    
     $scope.agrupaBusca = function(){
 			$scope.buscaParametros();
 			buscaVigencias();
@@ -140,7 +132,7 @@ angular.module("administrativo-consulta-parametros", [])
 			$scope.parametro.busca = $scope.busca;
 			$scope.buscaParametros();
 			$scope.filtro = null;
-		};																						 
+		};																							
     $scope.buscaParametros = function(showMessage){
    
        if(!$scope.usuariologado.grupoempresa){
@@ -201,7 +193,8 @@ angular.module("administrativo-consulta-parametros", [])
                   }); 
        }
     };
-			
+		
+					
 			var buscaFiliais = function(showMessage){
         
 				if(!$scope.usuariologado.grupoempresa){
@@ -269,4 +262,5 @@ angular.module("administrativo-consulta-parametros", [])
               });     
     };																						 
 };
+
 }]);
