@@ -1,0 +1,75 @@
+﻿# README #
+
+Módulo que:
+ - gerencia o layout da tela de usuários da Gestão de acessos (app/componentes/administrativo/gestao-acessos/usuarios/index.html);
+ - exibe os usuários do sistema, permitindo filtros e ordenação distintas
+ - permite criação de um novo usuário ou a alteração de um existente (direcionando para a tela de cadastro, em views/cadastro/index.html)
+ - permite também a exclusão e a redefinição de senha de um determinado usuário
+ 
+
+### Pra Que Serve Este Módulo? ###
+
+Gerenciar completamente a tela de usuários da Gestão de acessos.  
+
+
+
+### O que é necessário para usar o módulo? ###
+
+Como esse é um controller filho do controller principal "appCtrl" (app.js), ele herda todos os módulos importados por ele.
+Não é necessário nenhum outro módulo externo.
+
+ 
+### Outras depêndencias ###
+
+  * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
+  * $scope.token do "appCtrl"
+  * Emite evento "acessouTela" no init do controller para que seja feito o log de acesso de tela
+  * Evento "acessoDeTelaNotificado", proveniente do "appCtrl", para de fato exibir a tela e fazer requisições 
+	=> importante para o log correto de requisições HTTP, ao qual identifica corretamente a (tela de) origem
+  * $scope.grupoempresa, do "appCtrl" : grupo empresa informado pelo usuário na barra administrativa
+  * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
+  * Faz referência direta ao controller de cadastro de usuários da Gestão de Acessos (gestao-acessos.usuarios.cadastro.js)
+  * Quando for para alterar um usuário, envia como parâmetro no $state.go o JSON associado ao usuário
+  * APIS:
+    - administracao/webpagesmembership
+	- administracao/webpagesusers
+
+ 
+ ### Interação com a WEB API ###
+ 
+  * api/administracao/webpagesmembership
+     - PUT  : redefinir senha 
+	          { userId : idUsuario, novaSenha : '' } // novaSenha vazio => redefinir senha para a padrão
+			  
+  * api/administracao/webpagesusers
+	 - GET : listagem dos usuários na tabela (coleção 2)
+			{
+				pessoa : { dt_nascimento: string, 
+						   nm_pessoa: string, 
+						   nu_ramal: string, 
+						   nu_telefone: string }, 
+				webpagesusers : {  ds_email: string,
+								   ds_login: string,
+								   fl_ativo: boolean,
+								   id_grupo: int ou null,
+								   id_pessoa: int,
+								   id_users: int,
+								   nu_cnpjBaseEmpresa: string ou null
+								   nu_cnpjEmpresa : string ou null },
+				webpagesusersinroles : [{RoleId : int, 
+										   RoleName : string,
+										   RolePrincipal : boolean}]
+				grupoempresa : ds_nome,
+				empresa : ds_fantasia + ' ' + filial,
+				podeExcluir : boolean,
+				gruposvendedor : { id_grupo : int, 
+									 ds_nome : string }
+			}
+	 - DELETE : deletar um determinado usuário (?token=...&id_users=id_usuario)
+ 
+   
+
+   
+### Desenvolvedores ###
+
+Deivid Marinho - deividgfmarinho@gmail.com

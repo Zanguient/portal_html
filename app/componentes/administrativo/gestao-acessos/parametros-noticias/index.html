@@ -1,0 +1,219 @@
+<!-- 
+
+    Atos Capital - www.atoscapital.com.br
+   
+    suporte@atoscapital.com.br
+ 
+ 
+    Administrativo > Gestão de Acessos > Parâmetros de Notícias
+ 
+    Versão 1.0.2 - 16/10/2015
+        - Listagem dos catalógos.
+  
+    Versão 1.0.1 - 30/09/2015
+        - Criação dos selects lists de usuários e Assinantes (html).
+ 
+    Versão 1.0 - 29/09/2015
+-->
+
+<div class="container" ng-controller="administrativo-parametros-noticiasCtrl" ng-init="administrativoParametrosNoticiasInit()">
+    <!-- BEGIN PAGE BREADCRUMB -->
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href="javascript:;" ng-click="goHome()">Início</a><i class="fa fa-circle"></i>
+        </li>
+        <li class="active">
+             Administrativo<i class="fa fa-caret-right"></i>
+             Gestão de Acessos<i class="fa fa-caret-right"></i>
+             Parâmetros de Notícias
+        </li>
+    </ul>
+    <!-- END PAGE BREADCRUMB -->
+    
+    <!-- FILTROS -->
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN TABLE PORTLET-->
+            <div class="portlet light">  
+
+                <!-- TOPO : Nome 'Importação XML' e botões de 'Opções' e FullScreen -->                
+                <div class="portlet-title" >
+                    <div class="caption">
+                        <!--i class="fa fa-cogs font-green-sharp"></i-->
+                        <span class="caption-subject font-green-sharp bold uppercase">Filtros</span>
+                    </div>
+                </div>                   
+                
+                <!-- CORPO  -->
+                <div class="portlet-body" ng-show="exibeTela">                    
+                    
+                    <!-- PORTLET BODY FILTRO INSIDE -->
+                    <div class="panel">
+                        <div class="dataTables_wrapper dataTables_extended_wrapper no-footer">
+
+                            <!-- TABELA FILTRO -->
+                            <div class="table-scrollable">
+                                <table class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
+                                    <thead>
+                                        <tr role="row" class="heading">
+                                            <th width="90%" tabindex="0"  
+                                                rowspan="1" colspan="1">
+                                                 Catálagos
+                                            </th>                                        
+                                            <th width="10%" tabindex="4" 
+                                                rowspan="1" colspan="1">
+                                                 Ações de filtro
+                                            </th>
+                                        </tr>
+                                        <!-- CONTEUDO DO FILTRO -->
+                                        <tr role="row" class="filter">
+                                            <!-- CATALÁGOS -->
+                                            <td rowspan="1" colspan="1">                                           
+                                                <select class="form-control"
+                                                        ng-model="catalogo.cdCatalogo"
+                                                        ng-options="catalogo.dsCatalogo for catalogo in catalogos">
+                                                    <option value="">Selecione o Catálogo</option>
+                                                </select>                                            
+                                            </td>                                                                         
+                                            <!-- AÇÕES -->
+                                            <td rowspan="1" colspan="1" style="text-align:center">
+                                                <div class="margin-bottom-5">
+                                                    <!-- BOTÃO BUSCAR -->
+                                                    <button class="btn btn-sm red filter-submit margin-bottom" 
+                                                            ng-click="buscaCatalogos()">
+                                                        <i class="fa fa-search"></i> 
+                                                        Buscar
+                                                    </button>
+                                                </div>
+                                                <!-- BOTÃO LIMPAR -->
+                                                <button class="btn btn-sm grey filter-cancel hide"
+                                                        ng-click="limpaFiltros()">
+                                                    <i class="fa fa-times"></i> 
+                                                    Limpar
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <!-- END TABELA FILTRO -->
+                        </div>
+                        <!-- END PORTLET BODY FILTRO INSIDE -->
+                    </div>
+                </div>  
+                <!-- END TABLE PORTLET BODY -->
+            </div>
+            <!-- END TABLE PORTLET-->
+        </div>
+    </div>
+    
+    <!-- RELAÇÃO -->
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN TABLE PORTLET-->
+            <div class="portlet light">  
+
+                <!-- TOPO : Nome 'Importação XML' e botões de 'Opções' e FullScreen -->                
+                <div class="portlet-title" >
+                    <div class="caption">
+                        <!--i class="fa fa-cogs font-green-sharp"></i-->
+                        <span class="caption-subject font-green-sharp bold uppercase">Relação</span>
+                    </div>
+                    <div class="actions">
+                        <a class="btn btn-circle btn-icon-only btn-default fullscreen" 
+                           href="javascript:;" 
+                           ng-click="fullScreenClick()"
+                           title="{{telaEstaEmFullScreen() ? 'Tela Normal' : 'Tela Cheia'}}"></a>
+                        <div class="btn-group element-hidden"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -->
+                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
+                            <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to Excel </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to CSV </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to XML </a>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Print Invoices </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>                   
+                
+                <!-- CORPO  -->
+                <div class="portlet-body" ng-show="exibeTela">                    
+                    
+                    <!-- PORTLET BODY FILTRO INSIDE -->
+                    <div class="panel">
+                        <div class="dataTables_wrapper dataTables_extended_wrapper no-footer">
+                            
+                            <div class="form-group row">
+                                
+                                <!--SELECT LIST:TODOS USUÁRIOS DO GRUPO--> 
+                                <div class="col-md-4 col-md-offset-1 col-sm-5 titulos-select-noticias">
+                                    <label>Usuários</label>
+                                    <select multiple class="form-control select-noticias"
+                                            ng-model="usuario.id_users"
+                                            ng-options="usuario.ds_login for usuario in usuarios">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                                
+                                <!--multiple class="form-control select-noticias"-->
+                                <!--BOTÕES-->
+                                <div class="col-md-2  col-sm-2">
+                                    <div class="row">
+                                        <div class="col-md-12" style="text-align:center">
+                                            <div class="row btn-noticias">
+                                                
+                                                <!--BOTÃO PARA INCLUIR UM ASSINANTE AO CATÁLAGO-->
+                                                <div class="col-md-12 col-sm-12">
+                                                    <button type="button" 
+                                                            class="btn red"
+                                                            ng-click="incluirLista()">
+                                                        <i class="fa fa-arrow-right"></i>
+                                                    </button>
+                                                </div>
+                                                
+                                                <!--BOTÃO PARA TIRAR DO GRUPO DE ASSINANTES DO CATÁLAGO-->
+                                                <div class="col-md-12 col-sm-12 btn-noticias-2">
+                                                    <button type="button" class="btn red">
+                                                        <i class="fa fa-arrow-left"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                 </div>
+                                
+                                <!--SELECT LIST: ASSINANTES DO CATÁLAGO SELECIONADO-->
+                                <div class="col-md-4 col-sm-5 titulos-select-noticias">
+                                    <label>Assinantes</label>
+                                    <select multiple class="form-control select-noticias">
+                                        <option value="1">Option 1</option>
+                                        <option value="2">Option 2</option>
+                                        <option value="3">Option 3</option>
+                                        <option value="4">Option 4</option>
+                                        <option value="5">Option 5</option>
+                                    </select>
+                                </div>
+                            </div>  
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>

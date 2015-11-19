@@ -1,0 +1,211 @@
+<!-- 
+
+    Atos Capital - www.atoscapital.com.br
+   
+    suporte@atoscapital.com.br
+ 
+ 
+    Dashboard
+
+
+    Versão 1.0 - 03/09/2015
+-->
+
+
+<div class="container" ng-controller="dashboardCtrl" ng-init="dashboardInit()">
+    <!-- BEGIN PAGE BREADCRUMB -->
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href="javascript:;" ng-click="goHome()">Início</a><i class="fa fa-circle"></i>
+        </li>
+        <li class="active">
+             Dashboard
+        </li>
+    </ul>
+    <!-- END PAGE BREADCRUMB -->
+    <!-- BEGIN PAGE CONTENT INNER -->
+    
+    <!--EXBIÇÃO DE VALORES-->
+    <div class="row" ng-show="exibeTela">
+        
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <a class="dashboard-stat dashboard-stat-light blue-madison" href="javascript:;">
+            <div class="visual">
+                <i class="fa fa-money fa-icon-medium"></i>
+            </div>
+            <div class="details">
+                
+                <!--VALOR TOTAL EM TRANSAÇÕES-->
+                <div class="number">
+                     $168.492,54
+                </div>
+                <div class="desc">
+                     Valor Total em Transações
+                </div>
+            </div>
+            </a>
+        </div>
+        
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <a class="dashboard-stat dashboard-stat-light green-haze" href="javascript:;">
+            <div class="visual">
+                <i class="fa fa-align-left fa-icon-medium"></i>
+            </div>
+            <div class="details">
+                
+                <!--QUANTIDADE DE TRANSAÇÕES-->
+                <div class="number">
+                     1.127,390
+                </div>
+                <div class="desc">
+                     Total de Transações
+                </div>
+            </div>
+            </a>
+        </div>
+        
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <a class="dashboard-stat dashboard-stat-light red-intense" href="javascript:;">
+            <div class="visual">
+                <i class="fa fa-usd fa-icon-medium"></i>
+            </div>
+            <div class="details">
+                
+                <!--VALOR TAXA DE ADMINISTRAÇÃO-->
+                <div class="number">
+                     $670,54
+                </div>
+                <div class="desc">
+                     Taxa de Administração
+                </div>
+            </div>
+            </a>
+        </div>
+        
+    </div>
+    <!--FIM EXBIÇÃO DE VALORES-->
+    
+    <div class="row margin-top-10">
+        
+        <div class="col-md-6">
+            <!-- Begin: life time stats -->
+            <div class="portlet light">
+                
+                <div class="portlet-title">
+                    <div class="caption">                        
+                        <span class="caption-subject font-green-sharp bold uppercase">Consolidado por adquirente</span>
+                        <span class="caption-helper">Valores da Semana</span>
+                    </div>              
+                    <div class="actions">
+                        <a class="btn btn-circle btn-icon-only btn-default fullscreen" 
+                           href="javascript:;" ng-click="fullScreenClick()"
+                           title="{{telaEstaEmFullScreen() ? 'Tela Normal' : 'Tela Cheia'}}"></a>
+                        <div class="btn-group element-hidden"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -->
+                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
+                            <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to Excel </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to CSV </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to XML </a>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Print Invoices </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body" ng-show="exibeTela">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-light">
+                            <thead style="text-align:left">
+                                <tr class="uppercase">
+                                    <th style="text-align:left">
+                                         Adquirente
+                                    </th>
+                                    <th style="text-align:left">
+                                         Valor
+                                    </th>
+                                    <th style="text-align:left">
+                                         Total
+                                    </th >
+                                    <th style="text-align:left">
+                                        Taxa
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <a href="javascript:;">
+                                            REDE 
+                                        </a>
+                                    </td>
+                                    <td>
+                                         R$625,50
+                                    </td>
+                                    <td>
+                                         809
+                                    </td>
+                                    <td>
+                                        R$ 535,00
+                                    </td>
+                                </tr>
+                                
+                                <!--RÉPLICAS DADOS-->                                
+                                <tr>
+                                    <td>
+                                        <a href="javascript:;">
+                                            CIELO 
+                                        </a>
+                                    </td>
+                                    <td>
+                                         R$62.960,50
+                                    </td>
+                                    <td>
+                                         1809
+                                    </td>
+                                    <td>
+                                        R$ 78.935,00
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="javascript:;">
+                                            AMEX 
+                                        </a>
+                                    </td>
+                                    <td>
+                                         R$76.625,50
+                                    </td>
+                                    <td>
+                                         765
+                                    </td>
+                                    <td>
+                                        R$ 8.535,00
+                                    </td>
+                                </tr>
+                                <!--FIM RÉPLICA DADOS-->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>                
+            </div>
+            <!-- End: life time stats -->
+        </div>        
+       
+    </div>        
+    <!-- END PAGE CONTENT INNER -->
+</div>

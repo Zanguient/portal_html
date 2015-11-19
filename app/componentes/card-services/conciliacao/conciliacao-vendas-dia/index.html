@@ -1,0 +1,793 @@
+<!-- 
+
+    Atos Capital - www.atoscapital.com.br
+   
+    suporte@atoscapital.com.br
+ 
+ 
+    Card Services > Conciliação > Conciliação Vendas-Dia
+
+
+    Versão 1.0 - 03/09/2015
+-->
+<div class="container" ng-controller="card-services-conciliacao-vendas-diaCtrl" 
+     ng-init="cardServices_conciliacaoVendasDiaInit()">    
+    <!-- BEGIN PAGE BREADCRUMB -->
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href="javascript:;" ng-click="goHome()">Início</a><i class="fa fa-circle"></i>
+        </li>
+        <li class="active">
+             Card Services<i class="fa fa-caret-right"></i>
+             Conciliação<i class="fa fa-caret-right"></i>
+             Conciliação Vendas Dia
+        </li>
+    </ul>
+
+    <!-- END PAGE BREADCRUMB -->
+    
+    <!-- FILTROS -->
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN TABLE PORTLET-->
+            <div class="portlet light">  
+
+                <!-- TOPO : Nome 'Importação XML' e botões de 'Opções' e FullScreen -->
+                <div class="portlet-title">
+                    <div class="caption">
+                        <!--i class="fa fa-cogs font-green-sharp"></i-->
+                        <span class="caption-subject font-green-sharp bold uppercase">Filtros</span>
+                    </div>
+                    <div class="actions">
+                        <!-- OPÇÕES -->
+                        <div class="btn-group element-hidden"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -->
+                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
+                            <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to Excel </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to CSV </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to XML </a>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Print Invoices </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- CORPO  -->
+                <div class="portlet-body" ng-show="exibeTela">                    
+                    <!-- PORTLET BODY FILTRO INSIDE -->
+                    <div class="dataTables_wrapper dataTables_extended_wrapper no-footer">
+
+                        <!-- TABELA FILTRO -->
+                        <div class="table-scrollable">
+                            <table class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
+                                <thead>
+                                    <tr role="row" class="heading">
+                                        <th width="20%" tabindex="0"  
+                                            rowspan="1" colspan="1">
+                                             Período
+                                        </th>
+                                        <th width="25%" tabindex="1" 
+                                            rowspan="1" colspan="1">
+                                             Filial 
+                                        </th>
+                                        <th width="20%" tabindex="2" 
+                                            rowspan="1" colspan="1">
+                                             Adquirente
+                                        </th>
+                                        <th width="20%" tabindex="3"  
+                                            rowspan="1" colspan="1">
+                                             Bandeira
+                                        </th>
+                                        <th width="20%" tabindex="3"  
+                                            rowspan="1" colspan="1">
+                                             Tipo
+                                        </th>
+                                        <th width="10%" tabindex="4" 
+                                            rowspan="1" colspan="1">
+                                             Ações de filtro
+                                        </th>
+                                    </tr>
+                                    <!-- CONTEUDO DO FILTRO -->
+                                    <tr role="row" class="filter">
+                                        <!-- PERIODO -->
+                                        <td rowspan="1" colspan="1">                                    
+                                            <div class="input-group date date-picker margin-bottom-5"
+                                                 data-date-format="mm/yyyy">
+                                                <input type="text" 
+                                                       class="form-control form-filter input-sm" 
+                                                       readonly="" 
+                                                       style="cursor: pointer" 
+                                                       ng-click="exibeCalendarioDataMin($event)" 
+                                                       placeholder="Início" 
+                                                       ng-model="filtro.datamin" 
+                                                       ng-change="alterouDataMin()" 
+                                                       datepicker-append-to-body="true" 
+                                                       datepicker-popup="MMMM yyyy" 
+                                                       is-open="abrirCalendarioDataMin" 
+                                                       ng-required="true" 
+                                                       show-button-bar="false" 
+                                                       show-weeks="false" 
+                                                       required="required">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-sm default" 
+                                                        type="button" 
+                                                        ng-click="exibeCalendarioDataMin($event)">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </button>
+                                                </span>
+                                            </div>                                       
+                                        </td>
+                                        <!-- FILIAL -->
+                                        <td rowspan="1" colspan="1" style="text-align: center">
+                                            <select class="form-control form-filter input-sm comboBoxFiltros"
+                                                    ng-model="filtro.destinatario"
+                                                    ng-change="alterouDestinatario()"
+                                                    ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
+                                                <option value="">TODAS</option>
+                                            </select>
+                                        </td>
+                                        <!-- ADQUIRENTE -->
+                                         <td rowspan="1" colspan="1" style="text-align: center">
+                                            <select class="form-control form-filter input-sm comboBoxFiltros"
+                                                    ng-model="filtro.destinatario"
+                                                    ng-change="alterouDestinatario()"
+                                                    ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
+                                                <option value="">TODAS</option>
+                                            </select>
+                                        </td>
+                                        <!-- BANDEIRA -->
+                                        <td rowspan="1" colspan="1" style="text-align: center">
+                                            <select class="form-control form-filter input-sm comboBoxFiltros"
+                                                    ng-model="filtro.statusmanifesto"
+                                                    ng-options="status as (status.nome | uppercase) for status in statusmanifesto">
+                                                <option value="">TODOS</option>
+                                            </select>
+                                        </td>
+                                         <!-- TIPO -->
+                                        <td rowspan="1" colspan="1" style="text-align: center">
+                                            <select class="form-control form-filter input-sm comboBoxFiltros"
+                                                    ng-model="filtro.statusmanifesto"
+                                                    ng-options="status as (status.nome | uppercase) for status in statusmanifesto">
+                                                <option value="">TODOS</option>
+                                            </select>
+                                        </td>
+                                        <!-- AÇÕES -->
+                                        <td rowspan="1" colspan="1" style="text-align:center">
+                                            <div class="margin-bottom-5">
+                                                <!-- BOTÃO BUSCAR -->
+                                                <button class="btn btn-sm red filter-submit margin-bottom" 
+                                                        ng-click="busca()">
+                                                    <i class="fa fa-search"></i> 
+                                                    Buscar
+                                                </button>
+                                            </div>
+                                            <!-- BOTÃO LIMPAR -->
+                                            <button class="btn btn-sm grey filter-cancel"
+                                                    ng-click="limpaFiltros()">
+                                                <i class="fa fa-times"></i> 
+                                                Limpar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <!-- END TABELA FILTRO -->
+                    </div>
+                    <!-- END PORTLET BODY FILTRO INSIDE -->
+                </div>  
+                <!-- END TABLE PORTLET BODY -->
+            </div>
+            <!-- END TABLE PORTLET-->
+        </div>
+    </div>
+    
+    <!-- CONTEUDO -->
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN TABLE PORTLET-->
+            <div class="portlet light">
+                <!--TITULO-->
+                <div class="portlet-title">
+                    <div class="caption">								
+                        <span class="caption-subject font-green-sharp bold uppercase">Consulta Vendas Dia</span>
+                    </div>
+                    <div class="actions">
+                        <a class="btn btn-circle btn-icon-only btn-default fullscreen" 
+                           href="javascript:;" 
+                           ng-click="fullScreenClick()"
+                           title="{{telaEstaEmFullScreen() ? 'Tela Normal' : 'Tela Cheia'}}"></a>
+                        <div class="btn-group element-hidden"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -->
+                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
+                            <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to Excel </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to CSV </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to XML </a>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Print Invoices </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- CORPO -->
+                <div class="portlet-body" ng-show="exibeTela">
+                    <div class="row paddingDivs">
+                       <!--EXIBIÇÃO-->
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class="dataTables_length">
+                                <label>
+                                    <span class="seperator"></span>Exibindo 
+                                    <select name="datatable_products_length" aria-controls="datatable_products" 
+                                            class="form-control input-xsmall input-sm input-inline"
+                                            ng-model="filtro.itens_pagina"
+                                            ng-change="alterouItensPagina()"
+                                            ng-options="item for item in itens_pagina">                                            
+                                    </select> registros de {{filtro.total_registros}}
+                                </label>
+                            </div>   
+                        </div>
+                        <!--PAGINAÇÃO-->
+                        <div class="col-xs-4 col-sm-4 col-md-3">
+                            <div class="pagination-panel centralizarPaginacao"> Página 
+                                <a href="javascript:;" ng-click="retrocedePagina()"
+                                   class="btn btn-sm default prev" 
+                                   ng-class="{disabled: filtro.pagina <= 1}" 
+                                   title="Página anterior">
+                                        <i class="fa fa-angle-left"></i>
+                                </a>
+                                <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                       maxlength="4" style="text-align:center; margin: 0 5px;"
+                                       ng-model="paginaInformada" valid-integer-number
+                                       ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                                       ng-blur="atualizaPaginaDigitada()">
+                                    <a href="javascript:;" ng-click="avancaPagina()"
+                                       class="btn btn-sm default next"
+                                       ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
+                                       title="Próxima página">
+                                        <i class="fa fa-angle-right"></i>
+                                    </a>
+                                    de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
+                            </div>
+                        </div> 
+                        <div class="col-xs-4 col-sm-4 col-md-3 alinhamentoDados">
+                            <div class="dataTables_length">
+                                <button class="btn btn-primary" 
+                                   ng-disabled="!temElementosPreConciliados()"
+                                   ng-click="conciliaPreConciliados()">
+                                   Conciliar Pré-Conciliados
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- TABELA EXTERNA -->
+                    <div class="table scrollable">
+                        <table class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
+                            <thead>
+                                <tr>
+                                    <th colspan="6" class="cabecalhoTheadTabelas">
+                                        VALOR BRUTO
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th width="5%">
+                                    </th>
+                                    <th width="15%" style="text-align: center;">
+                                        Bandeira
+                                    </th>
+                                    <th width="15%" style="text-align: center;">
+                                        CardServices
+                                    </th>
+                                    <th width="15%" style="text-align: center;">
+                                        Controle Cliente
+                                    </th>
+                                    <th width="10%" style="text-align: center;">
+                                        Diferença
+                                    </th>
+                                    <th width="10%" style="text-align: center;">
+                                        Status
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td width="5%" style="text-align: center;">
+                                        <a href="javascript:;" ng-click="toggle(emitente)">
+                                            <i class="fa"
+                                               ng-class="{'fa-plus-square' : !isExpanded(emitente), 'fa-minus-square' : isExpanded(emitente)}"
+                                               style="margin-top: -3px;"> 
+                                            </i> 
+                                        </a>
+                                    </td>
+                                    <td width="15%">
+                                        REDE
+                                    </td>
+                                    <td width="15%">
+                                        R$ 150,00
+                                    </td>
+                                    <td width="15%">
+                                        R$ 150,00
+                                    </td>
+                                    <td width="10%">
+                                        R$ 150,00
+                                    </td>
+                                    <td width="10%">
+                                        Conciliado
+                                    </td>
+                                </tr>
+                                    <tr>
+                                    <td colspan="6">
+                                        <!-- TABELA INTERNA -->
+                                            <!-- Begin: life time stats -->
+                                            <div class="portlet light">
+                                                <!--REFERENCIAS DAS ABAS DE NAVEGAÇÃO-->
+                                                <div class="portlet-title tabbable-line">							
+                                                    <ul class="nav nav-tabs">                                            
+                                                        <li ng-class="{active : tabIs(0)}">
+                                                            <a href="javascript:;" 
+                                                               data-toggle="tab-pane" 
+                                                               ng-click="setTab(0)">
+                                                            Terminal Lógico </a>
+                                                        </li>                                          
+                                                        <li ng-class="{active : tabIs(1)}">
+                                                            <a href="javascript:;" 
+                                                               data-toggle="tab"
+                                                               ng-click="setTab(1)">
+                                                            Sintético </a>
+                                                        </li>
+                                                        <li ng-class="{active : tabIs(2)}">
+                                                            <a href="javascript:;" 
+                                                               data-toggle="tab"
+                                                               ng-click="setTab(2)">
+                                                            Analítico </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <!--CONTEUDO DA NAVEGAÇÃO-->
+                                                <div class="portlet-body" ng-show="exibeTela">
+                                                    <div class="tab-content">
+                                                        <!--CONTEÚDO DO TERMINAL LÓGICO-->
+                                                        <div class="tab-pane conteudoNavegacao"
+                                                             ng-class="{active : tabIs(0)}">
+                                                            <!--TABELA TÉRMINAL LÓGICO-->
+                                                            <div class="table-scrollable">
+                                                                <table class="table table-striped table-hover table-bordered dataTable no-footer conteudoTabelas" role="grid">
+                                                                    <thead class="centralizarVerticalTitulos">
+                                                                        <tr role="row">
+                                                                            <th tabindex="0" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 25%;">
+                                                                                Filial
+                                                                            </th>
+                                                                            <th tabindex="2" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 10%;">
+                                                                                Bandeira
+                                                                            </th>
+                                                                            <th tabindex="1" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 10%;">
+                                                                                Venda
+                                                                            </th>
+                                                                            <th tabindex="3" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 15%;">
+                                                                                Terminal
+                                                                            </th>
+                                                                            <th tabindex="4" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 10%;">
+                                                                                CardServices
+                                                                            </th>
+                                                                            <th tabindex="5" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 15%;">
+                                                                                Controle Cliente
+                                                                            </th>
+                                                                            <th tabindex="6" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 15%;">
+                                                                                Diferença
+                                                                            </th> 
+                                                                            <th tabindex="7" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 15%;">
+                                                                                Status
+                                                                            </th>                                        
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr role="row" class="odd">
+                                                                            <!-- FILIAL -->
+                                                                            <td style="text-align:left;">
+                                                                                 Petrox - Mania
+                                                                            </td>
+                                                                            <!-- BANDEIRA -->
+                                                                            <td style="text-align:left;">
+                                                                                 REDE
+                                                                            </td>
+                                                                            <!-- DATA DA VENDA -->
+                                                                            <td>
+                                                                                 11/08/2015
+                                                                            </td>
+                                                                            <!-- TERMINAL LÓGICO -->
+                                                                            <td>
+                                                                                 Terminal
+                                                                            </td>
+                                                                            <!-- CARD SERVICES -->
+                                                                            <td>
+                                                                                 R$ 1.500,00
+                                                                            </td>
+                                                                            <!-- CONTROLE CLIENTE -->
+                                                                            <td>
+                                                                                 R$ 1.500,00
+                                                                            </td>
+                                                                            <!-- DIFERENÇA -->
+                                                                            <td>
+                                                                                 R$ 1.500,00
+                                                                            </td>
+                                                                            <!-- STATUS -->
+                                                                            <td>
+                                                                                 Conciliado
+                                                                            </td>
+
+                                                                        <tr role="row" class="odd linhaTotalRelatorios"
+                                                                            style="font-weight : bolder">
+                                                                            <td colspan="4" style="text-align:right;">
+                                                                                Total Exibido
+                                                                            </td>
+                                                                            <td>
+                                                                                R$ 1.500,00
+                                                                            </td>
+                                                                            <td>
+                                                                                R$ 1.500,00
+                                                                            </td>
+                                                                            <td>
+                                                                                R$ 1.500,00
+                                                                            </td>
+                                                                            <td>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr role="row" class="odd linhaTotalRelatorios"
+                                                                            style="font-weight : bolder">
+                                                                            <td colspan="4" style="text-align:right;">
+                                                                                Total Filtrado
+                                                                            </td>
+                                                                            <td>
+                                                                                 R$ 1.500,00
+                                                                            </td>
+                                                                            <td>
+                                                                                 R$ 1.500,00
+                                                                            </td>
+                                                                            <td>
+                                                                                R$ 1.500,00
+                                                                            </td>
+                                                                            <td>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+
+                                                                </table>
+                                                            </div>
+
+                                                        </div>
+                                                        <!--FIM CONTEÚDO DA NAVEGAÇÃO-->
+
+                                                        <!--CONTEÚDO DO RELATÓRIO SINTÉTICO-->
+                                                        <div class="tab-pane conteudoNavegacao"
+                                                             ng-class="{active : tabIs(1)}">
+                                                            <!--TABELA RELATÓRIO SINTÉTICO-->
+                                                            <div class="table-scrollable">
+                                                                <table class="table table-striped table-hover 
+                                                                              table-bordered dataTable no-footer conteudoTabelas" role="grid">
+                                                                    <thead class="centralizarVerticalTitulos">
+                                                                        <th tabindex="0" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 25%;">
+                                                                                Filial
+                                                                            </th>
+                                                                            <th tabindex="2" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 15%;">
+                                                                                Bandeira
+                                                                            </th>
+                                                                            <th tabindex="1" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 10%;">
+                                                                                Venda
+                                                                            </th>
+                                                                            
+                                                                            <th tabindex="4" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 15%;">
+                                                                                CardServices
+                                                                            </th>
+                                                                            <th tabindex="5" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 15%;">
+                                                                                Controle Cliente
+                                                                            </th>
+                                                                            <th tabindex="6" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 15%;">
+                                                                                Diferença
+                                                                            </th> 
+                                                                            <th tabindex="6" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 10%;">
+                                                                                Status
+                                                                            </th>                                        
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr role="row" class="odd">
+                                                                            <!-- FILIAL -->
+                                                                            <td style="text-align:left;">
+                                                                                 Petrox - Mania
+                                                                            </td>
+                                                                            <!-- BANDEIRA -->
+                                                                            <td style="text-align:left;">
+                                                                                 REDE
+                                                                            </td>
+                                                                            <!-- DATA DA VENDA -->
+                                                                            <td>
+                                                                                11/08/2015
+                                                                            </td>
+                                                                            
+                                                                            <!-- CARD SERVICES -->
+                                                                            <td>
+                                                                                 R$ 3.718,88
+                                                                            </td>
+                                                                            <!-- CONTROLE CLIENTE -->
+                                                                            <td>
+                                                                                 R$ 3.718,88
+                                                                            </td>
+                                                                            <!-- DIFERENÇA -->
+                                                                            <td>
+                                                                                 R$ 3.718,88
+                                                                            </td>
+                                                                            <!-- STATUS -->
+                                                                            <td>
+                                                                                 Conciliado
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr role="row" class="odd linhaTotalRelatorios" 
+                                                                            style="font-weight:bolder">
+                                                                            <td style="text-align:right;" colspan="3">
+                                                                                 Total Filtrado
+                                                                            </td>
+                                                                            <td>
+                                                                                 R$ 3.718,88
+                                                                            </td>
+                                                                            <td>
+                                                                                 R$ 3.718,88
+                                                                            </td>
+                                                                            <td>
+                                                                                 R$ 3.718,88
+                                                                            </td>
+                                                                            <td>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr role="row" class="odd linhaTotalRelatorios" 
+                                                                            style="font-weight:bolder">
+                                                                            <td style="text-align:right;" colspan="3">
+                                                                                 Total Filtrado
+                                                                            </td>
+                                                                            <td>
+                                                                                 R$ 3.718,88
+                                                                            </td>
+                                                                            <td>
+                                                                                 R$ 3.718,88
+                                                                            </td>
+                                                                            <td>
+                                                                                 R$ 3.718,88
+                                                                            </td>
+                                                                            <td>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <!--FIM CONTEÚDO DO RELATÓRIO SINTÉTICO-->
+
+                                                        <!--CONTEÚDO DO RELATÓRIO ANALÍTICO-->
+                                                        <div class="tab-pane conteudoNavegacao"
+                                                             ng-class="{active : tabIs(2)}">
+                                                            <div class="table-scrollable">
+                                                                <table class="table table-striped table-hover table-bordered dataTable no-footer conteudoTabelas" role="grid">
+                                                                    <thead class="centralizarVerticalTitulos">
+                                                                        <tr role="row">
+                                                                            <th tabindex="0" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 25%;">
+                                                                                Filial
+                                                                            </th>
+                                                                            <th tabindex="2" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 10%;">
+                                                                                Bandeira
+                                                                            </th>
+                                                                            <th tabindex="1" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 10%;">
+                                                                                Venda
+                                                                            </th>
+                                                                            <th tabindex="3" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 15%;">
+                                                                                Terminal
+                                                                            </th>
+                                                                            <th tabindex="4" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 10%;">
+                                                                                CardServices
+                                                                            </th>
+                                                                            <th tabindex="5" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 15%;">
+                                                                                Controle Cliente
+                                                                            </th>
+                                                                            <th tabindex="6" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 15%;">
+                                                                                Diferença
+                                                                            </th> 
+                                                                            <th tabindex="7" 
+                                                                                rowspan="1" colspan="1" 
+                                                                                style="width: 15%;">
+                                                                                Status
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr role="row" class="odd">
+                                                                            <!-- FILIAL -->
+                                                                            <td style="text-align:left;">
+                                                                                 Petrox - Mania
+                                                                            </td>
+                                                                            <!-- BANDEIRA -->
+                                                                            <td style="text-align:left;">
+                                                                                 REDE
+                                                                            </td>
+                                                                            <!-- DATA DA VENDA -->
+                                                                            <td>
+                                                                                11/08/2015
+                                                                            </td>
+                                                                            <!-- TERMINAL LÓGICO -->
+                                                                            <td>
+                                                                                 Terminal
+                                                                            </td>
+                                                                            <!-- CARD SERVICES -->
+                                                                            <td>
+                                                                                 R$ 2.200,56
+                                                                            </td>
+                                                                            <!-- CONTROLE CLIENTE -->
+                                                                            <td>
+                                                                                 R$ 2.200,56
+                                                                            </td>
+                                                                            <!-- DIFERENÇA -->
+                                                                            <td>
+                                                                                 R$ 2.200,56
+                                                                            </td>
+                                                                            <!-- STATUS -->
+                                                                            <td>
+                                                                                 Conciliado
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr role="row" class="odd linhaTotalRelatorios">
+                                                                            <td colspan="4" style="text-align:right;">
+                                                                                 Total Exibido
+                                                                            </td>                                                     
+                                                                            <td>
+                                                                                 R$ 2.200,56
+                                                                            </td> 
+                                                                            <td>
+                                                                                 R$ 2.200,56
+                                                                            </td>
+                                                                            <td>
+                                                                                 R$ 2.200,56
+                                                                            </td>
+                                                                            <td>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr role="row" class="odd linhaTotalRelatorios">
+                                                                            <td colspan="4" style="text-align:right;">
+                                                                                 Total Filtrado
+                                                                            </td>                                                     
+                                                                            <td>
+                                                                                 R$ 2.200,56
+                                                                            </td> 
+                                                                            <td>
+                                                                                 R$ 2.200,56
+                                                                            </td>
+                                                                            <td>
+                                                                                 R$ 2.200,56
+                                                                            </td>
+                                                                            <td>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>    
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                         <!--FIM CONTEÚDO DO RELATÓRIO ANALÍTICO-->
+                                                    </div>
+                                                </div>
+                                                <!--FIM CONTEUDO DA NAVEGAÇÃO-->
+                                            </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- FIM CORPO -->
+                    
+                    <!-- RODAPÉ : Exibição dos resultados e paginação -->
+                    <div class="row">
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class="dataTables_info" role="status" aria-live="polite">
+                                <strong>Exibindo os registros {{filtro.faixa_registros}}</strong>
+                            </div>
+                        </div>
+                        <!--PAGINAÇÃO-RODAPÉ-->
+                        <div class="col-xs-4 col-sm-4 col-md-3">
+                            <div class="pagination-panel centralizarPaginacao"> Página 
+                                <a href="javascript:;" ng-click="retrocedePagina()"
+                                   class="btn btn-sm default prev" 
+                                   ng-class="{disabled: filtro.pagina <= 1}" 
+                                   title="Página anterior">
+                                        <i class="fa fa-angle-left"></i>
+                                </a>
+                                <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                       maxlength="4" style="text-align:center; margin: 0 5px;"
+                                       ng-model="paginaInformada" valid-integer-number
+                                       ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                                       ng-blur="atualizaPaginaDigitada()">
+                                    <a href="javascript:;" ng-click="avancaPagina()"
+                                       class="btn btn-sm default next"
+                                       ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
+                                       title="Próxima página">
+                                        <i class="fa fa-angle-right"></i>
+                                    </a>
+                                    de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
+                            </div>
+                        </div>
+                        <!-- FIM PAGINAÇÃO -->
+                    </div> 
+                </div>
+            <!--FIM TABLE PORTLET-->
+        </div>
+    </div>  
+</div>
+<!-- END PAGE CONTENT INNER -->

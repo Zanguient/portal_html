@@ -1,0 +1,126 @@
+# README #
+
+Módulo que:
+ - gerencia o layout da tela de cadastro/alteração de usuários da Gestão de acessos (app/componentes/administrativo/gestao-acessos/usuarios/views/cadastro/index.html)
+ - permite cadastrar um novo usuário 
+ - permite alterar um usuário existente
+ 
+
+### Pra Que Serve Este Módulo? ###
+
+Gerenciar o cadastro de um novo usuário e a alteração de um usuário existente.  
+
+
+
+### Diferenciação da ação Cadastro para ação Alteração ###
+
+Esse controller recebe como parâmetro ($stateParams) o id "usuario". Caso este seja null => CADASTRO. Caso contrário => ALTERAÇÃO.
+Esse parâmetro é enviado com o "$state.go('rota', {usuario: jsonUsuario})"
+
+
+
+### O que é necessário para usar o módulo? ###
+
+Como esse é um controller filho do controller principal "appCtrl" (app.js), ele herda todos os módulos importados por ele.
+Não é necessário nenhum outro módulo externo.
+
+ 
+ ### Outras depêndencias ###
+
+  * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
+  * $scope.token do "appCtrl"
+  * Faz referência direta ao controller de usuários da Gestão de Acessos (gestao-acessos.usuarios.js)
+  * $stateParams para receber o usuário para alteração (quando não receber, significa que é um cadastro)
+      {
+		pessoa : {dt_nascimento: string, 
+					nm_pessoa: string, 
+					nu_ramal: string, 
+					nu_telefone: string}, 
+		webpagesusers : {ds_email: string,
+						   ds_login: string,
+						   fl_ativo: boolean,
+						   id_grupo: int ou null,
+						   id_pessoa: int,
+						   id_users: int,
+						   nu_cnpjBaseEmpresa: string ou null
+						   nu_cnpjEmpresa : string ou null },
+		webpagesusersinroles : [ { RoleId : int, 
+								   RolePrincipal : boolean}]
+		grupoempresa : ds_nome,
+		empresa : ds_fantasia + ' ' + filial,
+		podeExcluir : boolean,
+		gruposvendedor : { id_grupo : int, 
+							 ds_nome : string }
+	}
+  * APIS:
+    - cliente/empresa (busca por nome fantasia)
+    - cliente/grupoempresa (busca por nome)
+	- administracao/webpagesroles (listagem, IDs)
+    - administracao/webpagesusers (busca e-mail, busca login, cadastro, alteração)
+
+
+ 
+ ### Interação com a WEB API ###
+ 
+   * api/cliente/grupoempresa  
+	 - GET : consulta nome do grupo empresa (coleção 0)
+
+  * api/cliente/empresa 
+	 - GET : consulta nome fantasia da empresa (coleção 0)
+	
+  * api/administracao/webpagesroles
+     - GET : lista de roles (coleção 3) 
+		{ RoleId : int, 
+		  RoleName : string, 
+		  Controllers : [   id_controller : int,
+							ds_controller: string,	
+							principal : boolean, // true se é o controller que deve ser exibido inicialmente
+							methods : [{ id_method : int,
+										 ds_method : string
+										}] // ORDER BY DS_METHOD
+							subControllers : [ ]
+		                ]}
+	
+  * api/administracao/webpagesusers
+	 - GET : Consulta e-mail e login, para validação (coleção 0)
+	 - POST : cria novo usuário
+			{
+				"pessoa" : {dt_nascimento: string, 
+							nm_pessoa: string,  *
+							nu_ramal: string, 
+							nu_telefone: string},
+				"webpagesusers" : {ds_email: string, *
+								   ds_login: string, *
+								   id_grupo: int ou null,
+								   nu_cnpjEmpresa : string ou null },
+				"webpagesusersinroles" : [{RoleId: roleid, RolePrincipal: boolean}],
+				"addidsgrupoempresavendedor" : [ids], // associa grupos empresas ao vendedor (OPCIONAL)
+				"removeidsgrupoempresavendedor" : [ids], // desassocia grupos empresas ao vendedor (OPCIONAL)
+			}
+	 - PUT : atualiza usuário existente	
+			{
+				"pessoa" : { dt_nascimento: string, 
+							 nm_pessoa: string,  *
+							 nu_ramal: string, 
+							 nu_telefone: string}, 
+				"webpagesusers" : { id_users : int,
+									ds_email: string, *
+								    ds_login: string, *
+								    id_grupo: int ou null,
+								    nu_cnpjEmpresa : string ou null },
+				"webpagesusersinroles" : [{RoleId: roleid, UserId: -1, RolePrincipal: boolean}],
+				"addidsgrupoempresavendedor" : [ids], // associa grupos empresas ao vendedor
+				"removeidsgrupoempresavendedor" : [ids], // desassocia grupos empresas ao vendedor
+			}
+			OBS 1: Independente se atualizou ou não dados da conta (login, e-mail, grupo empresa ou empresa), toda atualização 
+			       tem que enviar o json "webpagesusers", pois ele inclui o id_users
+			OBS 2: Para deletar uma associação de role a um usuário, enviar o json  "{UserId: -1, RoleId: roleid}" no array 
+				   (UserId tem que ser igual a -1)
+			OBS 3: Para remover a associação de um grupo empresa, id_grupo = -1
+			OBS 4: Para remover a associação de uma empresa, nu_cnpjEmpresa = ''
+   
+
+   
+### Desenvolvedores ###
+
+Deivid Marinho - deividgfmarinho@gmail.com

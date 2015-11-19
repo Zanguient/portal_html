@@ -1,0 +1,321 @@
+<!-- 
+
+    Atos Capital - www.atoscapital.com.br
+   
+    suporte@atoscapital.com.br
+ 
+ 
+    Administrativo > Gestão de Acessos > Usuários
+
+
+    Versão 1.0 - 03/09/2015
+-->
+
+<div class="container" ng-controller="administrativo-usuariosCtrl" ng-init="administrativoUsuariosInit()">
+    <!-- BEGIN PAGE BREADCRUMB -->
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href="javascript:;" ng-click="goHome()">Início</a><i class="fa fa-circle"></i>
+        </li>
+        <li class="active">
+             Administrativo<i class="fa fa-caret-right"></i>
+             Gestão de Acessos<i class="fa fa-caret-right"></i>
+             Usuários
+        </li>
+    </ul>
+    <!-- END PAGE BREADCRUMB -->
+    <!-- BEGIN PAGE CONTENT INNER -->
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN TABLE PORTLET-->
+            <div class="portlet light">                
+                
+                <!-- TOPO : Nome 'Usuários' e botões de 'Opções' e FullScreen -->
+                <div class="portlet-title">
+                    <div class="caption">
+                        <!--i class="fa fa-cogs font-green-sharp"></i-->
+                        <span class="caption-subject font-green-sharp bold uppercase">Usuários</span>
+                    </div>
+                    <div class="actions">
+                        <!-- FULLSCREEN -->
+                        <a class="btn btn-circle btn-icon-only btn-default fullscreen" 
+                           href="javascript:;" ng-click="fullScreenClick()"
+                           title="{{telaEstaEmFullScreen() ? 'Tela Normal' : 'Tela Cheia'}}"></a>
+                        <!-- OPÇÕES -->
+                        <div class="btn-group element-hidden"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -->
+                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
+                            <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to Excel </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to CSV </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to XML </a>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Print Invoices </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- CORPO : Botão 'Novo Usuário' e Tabela -->
+                <div class="portlet-body" ng-show="exibeTela">
+                    <!-- TOPO DA TABELA COM BOTÃO 'Novo Usuário' -->
+                    <div class="table-toolbar">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="btn-group">
+                                    <a href="javascript:;" ng-click="goAdministrativoUsuariosCadastro()"
+                                       ng-class="{ 'element-hidden' : !usuarioPodeCadastrarUsuarios()}">
+                                        <button class="btn red">
+                                        Novo Usuário <i class="fa fa-plus"></i>
+                                    </button></a>
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                    <!-- TABELA -->
+                    <div class="dataTables_wrapper no-footer">
+                        <!-- EXIBIÇÃO E PESQUISA -->                      
+                        <div class="row">
+                            <!--EXIBIÇÃO-->
+                            <div class="col-xs-4 col-sm-4 col-md-4">
+                                <div class="dataTables_length">
+                                    <label>
+                                        <span class="seperator"></span>Exibindo 
+                                        <select name="datatable_products_length" aria-controls="datatable_products" 
+                                                class="form-control input-xsmall input-sm input-inline"
+                                                ng-model="usuario.itens_pagina"
+                                                ng-change="alterouItensPagina()"
+                                                ng-options="item for item in itens_pagina">                                            
+                                        </select> registros de {{usuario.total_registros}}
+                                    </label>
+                                </div>   
+                            </div>
+                            <!--PAGINAÇÃO-->
+                            <div class="col-xs-4 col-sm-4 col-md-3">
+                                <div class="pagination-panel centralizarPaginacao"> Página 
+                                    <a href="javascript:;" ng-click="retrocedePagina()"
+                                       class="btn btn-sm default prev" 
+                                       ng-class="{disabled: usuario.pagina <= 1}" 
+                                       title="Página anterior">
+                                            <i class="fa fa-angle-left"></i>
+                                    </a>
+                                    <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                           maxlength="4" style="text-align:center; margin: 0 5px;"
+                                           ng-model="paginaInformada" valid-integer-number
+                                           ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                                           ng-blur="atualizaPaginaDigitada()">
+                                    <a href="javascript:;" ng-click="avancaPagina()"
+                                       class="btn btn-sm default next"
+                                       ng-class="{disabled: usuario.pagina >= usuario.total_paginas}"
+                                       title="Próxima página">
+                                        <i class="fa fa-angle-right"></i>
+                                    </a>
+                                     de <span class="pagination-panel-total">{{usuario.total_paginas}}</span>
+                                </div>    
+                            </div>
+                            <!--PESQUISA-->
+                            <div class="col-xs-4 col-sm-4 col-md-5">
+                                <div class="row dataTables_filter">
+                                    <div class="col-md-6">
+                                        <label>
+                                                <select aria-controls="datatable_products" 
+                                                        class="form-control input-sm input-inline"
+                                                        ng-model="usuario.campo_busca"
+                                                        ng-options="campo as campo.nome for campo in camposBusca | filter:{ativo:true}">
+                                                </select>
+                                        </label> 
+                                        <label>
+                                                <span class="seperator"></span>Pesquisar
+                                        </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>
+                                            <div class="input-group input-icon right">
+                                                <i class="fa fa-times" style="right:50px;cursor:pointer"
+                                                   ng-click="resetaBusca()"
+                                                   ng-show="usuario.busca"></i>
+                                                <input type="text" 
+                                                   class="form-control input-inline" 
+                                                   placeholder="Buscar" 
+                                                   ng-model="busca"
+                                                   ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !busca)) && filtraUsuarios()">
+												<span class="input-group-addon">
+                                                    <i class="fa fa-search" style="cursor:pointer"
+                                                           ng-click="filtraUsuarios()"></i>
+												</span>
+											</div> 
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>                            
+                        </div> 
+                        
+                        <!-- TABELA -->
+                        <div class="table-scrollable">
+                            <table class="table table-striped table-hover table-bordered dataTable no-footer" 
+                                   role="grid" aria-describedby="sample_editable_1_info">
+                                <!-- TÍTULOS -->
+                                <thead>
+                                    <tr role="row">
+                                        <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 15%"
+                                            ng-click="ordenaPorLogin()"
+                                            ng-class="{'sorting_asc' : estaOrdenadoCrescentePorLogin(), 'sorting_desc' : estaOrdenadoDecrescentePorLogin()}">
+                                             Login
+                                        </th>
+                                        <th class="sorting" tabindex="1" rowspan="1" colspan="1" style="width: 20%"
+                                            ng-click="ordenaPorEmail()"
+                                            ng-class="{'sorting_asc' : estaOrdenadoCrescentePorEmail(), 'sorting_desc' : estaOrdenadoDecrescentePorEmail()}">
+                                             Email
+                                        </th>
+                                        <th class="sorting" tabindex="2" rowspan="1" colspan="1" style="15%"
+                                            ng-click="ordenaPorGrupoEmpresa()"
+                                            ng-class="{'sorting_asc' : estaOrdenadoCrescentePorGrupoEmpresa(), 'sorting_desc' : estaOrdenadoDecrescentePorGrupoEmpresa()}">
+                                             Empresa
+                                        </th>
+                                        <th class="sorting" tabindex="3" rowspan="1" colspan="1" style="width: 25%;"
+                                            ng-click="ordenaPorEmpresa()"
+                                            ng-class="{'sorting_asc' : estaOrdenadoCrescentePorEmpresa(), 'sorting_desc' : estaOrdenadoDecrescentePorEmpresa()}">
+                                             Filial
+                                        </th>
+                                        <th class="sorting_disabled" tabindex="4" 
+                                            rowspan="1" colspan="1" 
+                                            style="width: 10%;">
+                                             Privilégio
+                                        </th>
+                                        <th class="sorting_disabled" tabindex="5" 
+                                            style="width: 5%;">
+                                             Status
+                                        </th>
+                                        <th class="sorting_disabled" tabindex="6" 
+                                            rowspan="1" colspan="1" style="width: 10%;text-aling:center;">
+                                             Opções
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <!-- CONTEUDO DA TABELA -->
+                                <tbody class="centralizarVertical">
+                                    <tr role="row" class="odd" ng-repeat="usuario in usuarios">
+                                        <!-- LOGIN -->
+                                        <td>
+                                             {{usuario.webpagesusers.ds_login}}
+                                        </td>
+                                        <!-- E-MAIL -->
+                                        <td>
+                                             {{usuario.webpagesusers.ds_email | lowercase}}
+                                        </td>
+                                        <!-- GRUPO EMPRESA -->
+                                        <td>
+                                             {{usuario.grupoempresa | uppercase}}
+                                        </td>
+                                        <!-- FILIAL -->
+                                        <td class="center">
+                                             {{usuario.empresa | uppercase}}
+                                        </td>
+                                        <!-- PRIVILÉGIO -->
+                                        <td style="text-align:center">
+                                             {{usuario.webpagesusersinroles[0].RoleName | uppercase}}
+                                        </td>
+                                        <!--BOTÃO-->
+                                        <td class="conteudoColunas" >
+                                             <span ng-class="{ 'StatusSenhaValida' : usuario.webpagesusers.fl_ativo, 
+                                                               'StatusSenhaInvalida' : !usuario.webpagesusers.fl_ativo}"
+                                                   ng-bind="usuario.webpagesusers.fl_ativo ? 'Ativo' : 'Inativo'">
+                                            </span>
+                                        </td>
+                                        <td class="center btnacoes">
+                                            <div class="btn-group" dropdown dropdown-append-to-body
+                                                 ng-show="usuarioPodeDesativarUsuarios() || usuarioPodeAlterarUsuarios() || usuarioPodeExcluirUsuarios()">
+                                                <a class="btn btn-default btn-circle" 
+                                                   href="javascript:;" dropdown-toggle>
+                                                    <i class="fa fa-pencil"></i> 
+                                                    Ações 
+                                                    <i class="fa fa-angle-down"></i>
+                                                </a>
+                                            <ul class="dropdown-menu" style="max-width: 40px">
+                                                <li ng-show="usuarioPodeDesativarUsuarios()">
+                                                    <a ng-show="usuario.webpagesusers.fl_ativo"
+                                                       href="javascript:;" ng-click="desativar(usuario)">
+                                                        Desativar
+                                                    </a>
+                                                    <a ng-show="!usuario.webpagesusers.fl_ativo"
+                                                       href="javascript:;" ng-click="ativar(usuario)">
+                                                        Ativar
+                                                    </a>
+                                                </li>
+                                                <li ng-show="usuarioPodeAlterarUsuarios()">
+                                                    <a href="javascript:;" ng-click="editarUsuario(usuario)">
+                                                        Editar
+                                                    </a>
+                                                </li>
+                                                <li ng-show="usuarioPodeExcluirUsuarios() && usuario.podeExcluir">
+                                                    <a href="javascript:;" ng-click="exluirUsuario(usuario)">
+                                                        Excluir
+                                                    </a>
+                                                </li> 
+                                                <li ng-show="usuarioPodeAlterarUsuarios()">
+                                                    <a href="javascript:;" ng-click="resetarSenhaDoUsuario(usuario)"> 
+                                                        Resetar Senha
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- RODAPÉ : Exibição dos resultados e paginação -->
+                        <div class="row">
+                            <div class="col-xs-4 col-sm-4 col-md-4">
+                                <div class="dataTables_info" id="sample_editable_1_info" role="status" aria-live="polite">
+                                    <strong>Exibindo os registros {{usuario.faixa_registros}}</strong>
+                                </div>
+                            </div>
+                            <!--PAGINAÇÃO-RODAPÉ-->
+                            <div class="col-xs-4 col-sm-4 col-md-3">
+                                <div class="pagination-panel centralizarPaginacao"> Página 
+                                    <a href="javascript:;" ng-click="retrocedePagina()"
+                                       class="btn btn-sm default prev" 
+                                       ng-class="{disabled: usuario.pagina <= 1}" 
+                                       title="Página anterior">
+                                            <i class="fa fa-angle-left"></i>
+                                    </a>
+                                    <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                           maxlength="4" style="text-align:center; margin: 0 5px;"
+                                           ng-model="paginaInformada" valid-integer-number
+                                           ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                                           ng-blur="atualizaPaginaDigitada()">
+                                    <a href="javascript:;" ng-click="avancaPagina()"
+                                       class="btn btn-sm default next"
+                                       ng-class="{disabled: usuario.pagina >= usuario.total_paginas}"
+                                       title="Próxima página">
+                                        <i class="fa fa-angle-right"></i>
+                                    </a>
+                                     de <span class="pagination-panel-total">{{usuario.total_paginas}}</span>
+                                </div>
+                            </div>
+                            <!-- FIM PAGINAÇÃO -->
+                        </div>
+                        <!-- FIM RODAPÉ -->
+                    </div>
+                </div>
+                <!-- FIM TABELA -->
+            </div>
+            <!-- END TABLE PORTLET-->
+        </div>
+    </div>
+    <!-- END PAGE CONTENT INNER -->
+</div>
