@@ -1,0 +1,2262 @@
+<!-- 
+
+    Atos Capital - www.atoscapital.com.br
+   
+    suporte@atoscapital.com.br
+ 
+ 
+    Tax Services > Nota Fiscal Eletrônica > Importação XML
+ 
+     Versão 1.0.2 - 23/09/2015
+      -Atribuição do filtro por Chave de acesso(sem as funcionalidades). 
+ 
+ 
+    Versão 1.0.1 - 22/09/2015
+      - Atribuição ao filtro de data para filtrar por "Recebimento" e por "Emissão".
+ 
+ 
+    Versão 1.0 - 03/09/2015
+-->
+
+<div class="container" ng-controller="tax-services-importacao-xmlCtrl" ng-init="taxServices_importacaoXMLInit()">   
+    
+    <!-- BEGIN PAGE BREADCRUMB -->
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href="javascript:;" ng-click="goHome()">Início</a><i class="fa fa-circle"></i>
+        </li>
+        <li class="active">
+             Tax Services<i class="fa fa-caret-right"></i>
+             Nota Fiscal Eletrônica<i class="fa fa-caret-right"></i>
+             Importação XML
+        </li>
+    </ul>
+    <!-- END PAGE BREADCRUMB -->
+    
+    <!-- FILTROS -->
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN TABLE PORTLET-->
+            <div class="portlet light filtro">  
+
+                <!-- TOPO : Nome 'Importação XML' e botões de 'Opções' e FullScreen -->                
+                <div class="portlet-title tabbable-line" >
+                    <div class="caption">
+                        <!--i class="fa fa-cogs font-green-sharp"></i-->
+                        <span class="caption-subject font-green-sharp bold uppercase">Filtros</span>
+                    </div>
+                    <!--REFERENCIAS DAS ABAS DE NAVEGAÇÃO-->
+
+                    <ul class="nav nav-tabs" style="float:right">                                            
+                        <li ng-class="{active : tabFiltroIs(1)}">
+                            <a ng-click="setTabFiltro(1)">
+                            Por Data </a>
+                        </li>
+                        <li ng-class="{active : tabFiltroIs(2)}">
+                            <a ng-click="setTabFiltro(2)">
+                            Por Chave  </a>
+                        </li>
+                    </ul>
+                </div>                   
+                
+                <!-- CORPO  -->
+                <div class="portlet-body" ng-show="exibeTela">
+                    <!-- PORTLET BODY FILTRO INSIDE -->
+                    <div class="panel" ng-show="tabFiltroIs(1)">
+                        <div class="dataTables_wrapper dataTables_extended_wrapper no-footer">
+
+                            <!-- TABELA FILTRO -->
+                            <div class="table-scrollable">
+                                <table class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
+                                    <thead>
+                                        <tr role="row" class="heading">
+                                            <th width="27%" tabindex="0"  
+                                                rowspan="1" colspan="1">
+                                                 Data {{filtro.data}}
+                                            </th>
+                                            <th width="25%" tabindex="1" 
+                                                rowspan="1" colspan="1">
+                                                 Destinatário 
+                                            </th>
+                                            <th width="25%" tabindex="2" 
+                                                rowspan="1" colspan="1">
+                                                 Emitente
+                                            </th>
+                                            <th width="20%" tabindex="3"  
+                                                rowspan="1" colspan="1">
+                                                 Status Manifesto
+                                            </th>
+                                            <th width="10%" tabindex="4" 
+                                                rowspan="1" colspan="1">
+                                                 Ações de filtro
+                                            </th>
+                                        </tr>
+                                        <!-- CONTEUDO DO FILTRO -->
+                                        <tr role="row" class="filter">
+                                            <!-- DATA -->
+                                            <td rowspan="1" colspan="1">
+                                                <div class="clearfix" style="text-align:center; margin-bottom:10px">
+                                                    <div class="btn-group" data-toggle="buttons">
+                                                        <div class="col-md-7 col-sm-12" style="margin-bottom:5px; padding-left:">
+                                                            <label class="btn" 
+                                                                   ng-class="{ 'red': filtro.data === 'Recebimento', 'grey': filtro.data !== 'Recebimento'}"
+                                                                   ng-model="filtro.data" 
+                                                                   btn-radio="'Recebimento'">
+                                                                Recebimento
+                                                            </label> 
+                                                        </div>
+                                                        <div class="col-md-5 col-sm-12" style="text-align:center">
+                                                            <label class="btn" 
+                                                                   ng-class="{ 'red': filtro.data === 'Emissão', 'grey': filtro.data !== 'Emissão'}"
+                                                                   ng-model="filtro.data" 
+                                                                   btn-radio="'Emissão'">
+                                                                Emissão
+                                                            </label>
+                                                        </div>    
+                                                    </div>
+                                                </div>
+                                                <div class="input-group date date-picker margin-bottom-5"
+                                                     data-date-format="dd/mm/yyyy">
+                                                    <input type="text" 
+                                                           class="form-control form-filter input-sm" 
+                                                           readonly="" 
+                                                           style="cursor: pointer" 
+                                                           ng-click="exibeCalendarioDataMin($event)" 
+                                                           placeholder="Início" 
+                                                           ng-model="filtro.datamin" 
+                                                           ng-change="alterouDataMin()" 
+                                                           datepicker-append-to-body="true" 
+                                                           datepicker-popup="dd MMMM yyyy" 
+                                                           is-open="abrirCalendarioDataMin" 
+                                                           ng-required="true" 
+                                                           show-button-bar="false" 
+                                                           show-weeks="false" 
+                                                           required="required">
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-sm default" 
+                                                            type="button" 
+                                                            ng-click="exibeCalendarioDataMin($event)">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                                <div class="input-group"> <!--  date date-picker margin-bottom-5" -->
+                                                    <input type="text" 
+                                                           class="form-control form-filter input-sm" 
+                                                           readonly="" 
+                                                           style="cursor: pointer" 
+                                                           ng-click="exibeCalendarioDataMax($event)" 
+                                                           placeholder="Fim" 
+                                                           ng-model="filtro.datamax" 
+                                                           ng-change="alterouDataMax()" 
+                                                           datepicker-popup="dd MMMM yyyy" 
+                                                           is-open="abrirCalendarioDataMax" 
+                                                           datepicker-append-to-body="true"
+                                                           ng-required="false" 
+                                                           current-text="Hoje" 
+                                                           clear-text="Limpar" 
+                                                           close-text="Fechar" 
+                                                           show-button-bar="true" 
+                                                           show-weeks="false">
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-sm default" 
+                                                                type="button" 
+                                                                ng-click="exibeCalendarioDataMax($event)">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>                                            
+                                            </td>
+                                            <!-- DESTINATÁRIO -->
+                                            <td rowspan="1" colspan="1" style="text-align: center">
+                                                <select class="form-control form-filter input-sm comboBoxFiltros"
+                                                        ng-disabled="filiais.length == 0"
+                                                        ng-model="filtro.destinatario"
+                                                        ng-change="alterouDestinatario()"
+                                                        ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
+                                                    <option value="">TODAS</option>
+                                                </select>
+                                                <i class="fa fa-question-circle"
+                                                   ng-show="!usuariologado.grupoempresa"
+                                                   popover-placement="bottom"
+                                                   popover="É necessário selecionar uma empresa"
+                                                   popover-trigger="mouseenter"></i>
+                                            </td>
+                                            <!-- EMITENTE -->
+                                             <td rowspan="1" colspan="1" style="text-align: center">
+                                                <input type="text" class="form-control"
+                                                       placeholder="Emitente" 
+                                                       ng-model="filtro.emitente"
+                                                       onfocus="this.select();" 
+                                                       onmouseup="return false;"
+                                                       maxlength="44"
+                                                       ng-pattern="/\(\d{2}\)\d{8}\d?/"
+                                                       valid-integer-number/>
+                                            </td>
+                                            <!-- STATUS -->
+                                            <td rowspan="1" colspan="1" style="text-align: center">
+                                                <select class="form-control form-filter input-sm comboBoxFiltros"
+                                                        ng-model="filtro.statusmanifesto"
+                                                        ng-disabled="statusmanifesto.length === 0"
+                                                        ng-options="status as (status.nome | uppercase) for status in statusmanifesto">
+                                                    <option value="">TODOS</option>
+                                                </select>
+                                            </td>
+                                            <!-- AÇÕES -->
+                                            <td rowspan="1" colspan="1" style="text-align:center">
+                                                <div class="margin-bottom-5">
+                                                    <!-- BOTÃO BUSCAR -->
+                                                    <button class="btn btn-sm red filter-submit margin-bottom" 
+                                                            ng-click="buscaManifestos()">
+                                                        <i class="fa fa-search"></i> 
+                                                        Buscar
+                                                    </button>
+                                                </div>
+                                                <!-- BOTÃO LIMPAR -->
+                                                <button class="btn btn-sm grey filter-cancel"
+                                                        ng-click="limpaFiltros()">
+                                                    <i class="fa fa-times"></i> 
+                                                    Limpar
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <!-- END TABELA FILTRO -->
+                        </div>
+                        <!-- END PORTLET BODY FILTRO INSIDE -->
+                    </div>
+                    
+                    <!-- PORTLET BODY FILTRO INSIDE -->
+                    <div class="panel" ng-show="tabFiltroIs(2)">
+                        <div class="dataTables_wrapper dataTables_extended_wrapper no-footer">
+
+                            <!-- TABELA FILTRO -->
+                            <div class="table-scrollable">
+                                <table class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
+                                    <thead>
+                                        <tr role="row" class="heading">
+                                            <th width="90%" tabindex="0"  
+                                                rowspan="1" colspan="1">
+                                                 Chave de Acesso
+                                            </th>                                        
+                                            <th width="10%" tabindex="4" 
+                                                rowspan="1" colspan="1">
+                                                 Ações de filtro
+                                            </th>
+                                        </tr>
+                                        <!-- CONTEUDO DO FILTRO -->
+                                        <tr role="row" class="filter">
+                                            <!-- CHAVE DE ACESSO -->
+                                            <td rowspan="1" colspan="1">                                           
+                                                <input class="form-control"
+                                                      placeholder="Chave de Acesso" 
+                                                        ng-model="filtro.chaveAcesso"
+                                                       onfocus="this.select();" 
+                                                       valid-integer-number 
+                                                        maxlength="44"
+                                                       onmouseup="return false;">                                            
+                                            </td>                                                                         
+                                            <!-- AÇÕES -->
+                                            <td rowspan="1" colspan="1" style="text-align:center">
+                                                <div class="margin-bottom-5">
+                                                    <!-- BOTÃO BUSCAR -->
+                                                    <button class="btn btn-sm red filter-submit margin-bottom" 
+                                                            ng-click="buscaManifestos()">
+                                                        <i class="fa fa-search"></i> 
+                                                        Buscar
+                                                    </button>
+                                                </div>
+                                                <!-- BOTÃO LIMPAR -->
+                                                <button class="btn btn-sm grey filter-cancel"
+                                                        ng-click="limpaFiltros()">
+                                                    <i class="fa fa-times"></i> 
+                                                    Limpar
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <!-- END TABELA FILTRO -->
+                        </div>
+                        <!-- END PORTLET BODY FILTRO INSIDE -->
+                    </div>
+                </div>  
+                <!-- END TABLE PORTLET BODY -->
+            </div>
+            <!-- END TABLE PORTLET-->
+        </div>
+    </div>
+    
+    <!-- CONTEUDO -->
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN TABLE PORTLET-->
+            <div class="portlet light">
+                
+                <!-- MODAL DETALHES -->
+                <div class="modal fade bs-modal-sm modal-input" 
+                    id="modalDetalhes" aria-hidden="true">
+                   <div class="modal-dialog modal-sm" style="width:1000px">
+                       <div class="modal-content">
+                           <div class="modal-header">
+                               <h4 class="modal-title modal-cabecalho">Detalhes da Nota</h4>
+                           </div>
+                           <div class="modal-body modal-corpo" style="text-align: left">
+                               <!-- TABS -->
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <tabset vertical="" type="pills">
+                                            <tab heading="NF-e" select="setTab(1)" active="true"></tab>
+                                            <tab heading="Emitente" select="setTab(2)"></tab>
+                                            <tab heading="Destinatário" select="setTab(3)"></tab>
+                                            <tab heading="Produtos e Serviços" select="setTab(4)"></tab>
+                                            <tab heading="Totais" select="setTab(5)"></tab>
+                                            <tab heading="Transporte" select="setTab(6)"></tab>
+                                            <tab heading="Cobrança" select="setTab(7)"></tab>
+                                            <tab heading="Informações Adicionais" select="setTab(8)"></tab>
+                                        </tabset>
+                                    </div>
+                                    <!-- CONTEÚDO -->
+                                    <div class="col-sm-12">
+                                        <!-- NF-e -->
+                                        <div class="panel" ng-show="tabIs(1)">
+                                            <!--CONTEÚDO-->
+                                            <div class="row conteudos-detalhe-nota">
+                                                <div class="col-md-12">
+                                                    <!--TITULO-->
+                                                    <div class="row headDetalhesNota">
+                                                        <div class="col-md-12">
+                                                            Dados da NF-e
+                                                        </div>
+                                                    </div>
+                                                    <!--BODY CAMPOS-->
+                                                    <div class="row campos-detalhe-nota">
+                                                        <div class="col-md-12">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Detalhes chave de acesso
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                {{notadetalhada.nrChave}}
+                                                            </div>                                              
+                                                        </div>
+                                                    </div>
+                                                    <div class="row campos-detalhe-nota">
+                                                        <div class="col-md-1">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Modelo
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                {{notadetalhada.nfe.modelo || ''}} 
+                                                            </div>                                              
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Série
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                {{notadetalhada.nfe.serie || ''}}
+                                                            </div> 
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Número
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                {{notadetalhada.nfe.numero || ''}}
+                                                            </div> 
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Data de Emissão
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"
+                                                                 ng-bind="getDataTimeString(notadetalhada.nfe.dtEmissao)">
+                                                            </div> 
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Data/Hora de Saída ou da Entrada
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"
+                                                                 ng-bind="getDataString(notadetalhada.nfe.dtSaiEnt) !== '01/01/0001' ? getDataTimeString(notadetalhada.nfe.dtSaiEnt) : ''">
+                                                            </div> 
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Valor Total da Nota Fiscal
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                {{(notadetalhada.nfe.vlNFe | currency:'R$') || ''}}
+                                                            </div> 
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!--EMITENTE-->
+                                                    <div class="row titulos-campos-detalhes-nota">
+                                                        <div class="col-md-6">
+                                                            <label>Emitente</label>                                              
+                                                        </div>
+                                                    </div>
+                                                    <div class="row campos-detalhe-nota">
+                                                        <div class="col-md-3">
+                                                           <label class="col-md-12 titulos-dados-detalhes-nota"
+                                                                  ng-bind="notadetalhada.emitente.CPF && notadetalhada.emitente.CPF !== null ? 'CPF' : 'CNPJ'">
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"
+                                                                 ng-bind="notadetalhada.emitente.CPF && notadetalhada.emitente.CPF !== null ? notadetalhada.emitente.CPF : notadetalhada.emitente.CNPJ">
+                                                            </div> 
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                           <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Nome/Razão Social
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                {{notadetalhada.emitente.razaoSocial | uppercase}}
+                                                            </div> 
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                           <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Inscrição Estadual
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                {{notadetalhada.emitente.inscricaoEstadual}}
+                                                            </div> 
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                UF
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                {{notadetalhada.emitente.endereco.UF | uppercase}}
+                                                            </div> 
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!--DESTINATÁRIO-->
+                                                    <!--TITULO-->
+                                                    <div class="row titulos-campos-detalhes-nota">
+                                                        <div class="col-md-6">
+                                                            <label>Destinatário</label>                                           
+                                                        </div>
+                                                    </div>
+                                                    <!--CORPO-->
+                                                    <div class="row campos-detalhe-nota">
+                                                        <div class="col-md-12">
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota"
+                                                                          ng-bind="notadetalhada.destinatario.CPF && notadetalhada.destinatario.CPF !== null ? 'CPF' : 'CNPJ'">
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"
+                                                                         ng-bind="notadetalhada.destinatario.CPF && notadetalhada.destinatario.CPF !== null ? notadetalhada.destinatario.CPF : notadetalhada.destinatario.CNPJ">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Nome/Razão Social
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        {{notadetalhada.destinatario.razaoSocial | uppercase}}
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Inscrição Estadual
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        {{notadetalhada.destinatario.inscricaoEstadual}}
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        UF
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        {{notadetalhada.destinatario.endereco.UF | uppercase}}
+                                                                    </div> 
+                                                                </div>
+                                                            </div> 
+                                                            <div class="row espacamento-linhas-dados">
+                                                                <div class="col-md-3">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Destino da operação
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"
+                                                                         ng-bind="getCodigoTracoDescricao(notadetalhada.nfe.destinoOperacao)"> 
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Consumidor Final
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota" 
+                                                                         ng-bind="getCodigoTracoDescricao(notadetalhada.nfe.consumidorFinal)">  
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">  
+                                                                        Presença do Comprador
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota" 
+                                                                         ng-bind="getCodigoTracoDescricao(notadetalhada.nfe.presencaComprador)">
+                                                                    </div> 
+                                                                </div>
+                                                            </div>    
+                                                        </div>                                                      
+                                                    </div>
+                                                    
+                                                    
+                                                    <!--EMISSÃO-->
+                                                    <div class="row titulos-campos-detalhes-nota">
+                                                        <div class="col-md-6">
+                                                            <label>Emissão</label>                                           
+                                                        </div>
+                                                    </div>
+                                                    <div class="row campos-detalhe-nota">
+                                                        <div class="col-md-12">
+                                                            <div class="row">
+                                                                <div class="col-md-4">
+                                                                   <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Processo
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota" 
+                                                                         ng-bind="getCodigoTracoDescricao(notadetalhada.nfe.emissao.processo)">
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Versão do Processo
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        {{notadetalhada.nfe.emissao.versaoProcesso}}
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota"> 
+                                                                        Tipo de Emissão
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota" 
+                                                                         ng-bind="getCodigoTracoDescricao(notadetalhada.nfe.emissao.tipoEmissao)">
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Finalidade
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota" 
+                                                                         ng-bind="getCodigoTracoDescricao(notadetalhada.nfe.emissao.finalidade)">
+                                                                    </div> 
+                                                                </div>
+                                                            </div>
+                                                            <div class="row espacamento-linhas-dados">
+                                                                <div class="col-md-4">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Natureza da Operação
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        {{notadetalhada.nfe.emissao.naturezaOperacao}}
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Tipo de Operação 
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota" 
+                                                                         ng-bind="getCodigoTracoDescricao(notadetalhada.nfe.emissao.tipoOperacao)">
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Forma de Pagamento
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota" 
+                                                                         ng-bind="getCodigoTracoDescricao(notadetalhada.nfe.emissao.formaPagamento)">
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        <i>Digest</i> Value da NF-e
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                        {{notadetalhada.nfe.emissao.digestValue}}
+                                                                    </div> 
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!--Situação Atual:-- >  
+                                                    <div class="row titulos-campos-detalhes-nota">
+                                                        <div class="col-md-6">
+                                                            <label>
+                                                                Situação Atual:  AUTORIZADA (Ambiente de autorização: produção)
+                                                            </label>                                           
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="row campos-detalhe-nota">
+                                                        <div class="col-md-4">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Eventos da NF-e
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                               Autorização de Uso (Cód.:2211113)
+                                                            </div> 
+                                                            <div class="col-md-12 espacamento-linhas-dados informacoes-detalhe-nota"> 
+                                                               Ciência da Operação pelo Destinatário (Cód.: 210210)
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Protocolo
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                129150069560681   
+                                                            </div> 
+                                                            <div class="col-md-12 espacamento-linhas-dados informacoes-detalhe-nota"> 
+                                                               891150584090327
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Data / Hora
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                26/07/2015 às 23:36:39-03:00
+                                                            </div>
+                                                            <div class="col-md-12 espacamento-linhas-dados informacoes-detalhe-nota"> 
+                                                               Autorização de Uso (Cód.:2211113)
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                Data / Hora AN
+                                                            </label>
+                                                            <div class="col-md-12 informacoes-detalhe-nota"> 
+                                                                26/07/2015 às 23:46:17
+                                                            </div> 
+                                                            <div class="col-md-12 espacamento-linhas-dados informacoes-detalhe-nota"> 
+                                                               Autorização de Uso (Cód.:2211113)
+                                                            </div>
+                                                        </div>
+                                                    </div-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- FIM TAB DADOS NF-e -->
+                                        
+                                        <!-- EMITENTE -->
+                                        <div class="panel" ng-show="tabIs(2)">
+                                            <!--CONTEÚDO-->
+                                            <div class="row conteudos-detalhe-nota">
+                                                <div class="col-md-12">
+                                                    <!--TITULO-->
+                                                    <div class="row headDetalhesNota">
+                                                        <div class="col-md-12">
+                                                            Dados do Emitente
+                                                        </div>
+                                                    </div>
+                                                    <!--BODY CAMPOS-->
+                                                    <div class="row campos-detalhe-nota">
+                                                        <div class="col-md-6">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Nome/Razão Social
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.emitente.razaoSocial | uppercase}}
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota"
+                                                                           ng-bind="notadetalhada.emitente.CPF && notadetalhada.emitente.CPF !== null ? 'CPF' : 'CNPJ'">
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"
+                                                                         ng-bind="notadetalhada.emitente.CPF && notadetalhada.emitente.CPF !== null ? notadetalhada.emitente.CPF : notadetalhada.emitente.CNPJ">
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Bairro / Distrito
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.emitente.endereco.bairro | uppercase}}
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Município
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota" 
+                                                                         ng-bind="getCodigoTracoDescricao(notadetalhada.emitente.endereco.municipio)">
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        UF
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                       {{notadetalhada.emitente.endereco.UF | uppercase}}
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Inscrição Estadual
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.emitente.inscricaoEstadual | uppercase}} 
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Inscrição Municipal
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.emitente.inscricaoMunicipal | uppercase}} 
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        CNAE Fiscal
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.emitente.CNAE | uppercase}}  
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="col-md-6">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Nome Fantasia
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.emitente.nomeFantasia | uppercase}} 
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Endereço
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.emitente.endereco.logradouro | uppercase}}
+                                                                        ,&nbsp;
+                                                                        {{notadetalhada.emitente.endereco.numero | uppercase}}
+                                                                        ,&nbsp;
+                                                                        {{notadetalhada.emitente.endereco.complemento | uppercase}}
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        CEP
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.emitente.endereco.cep | uppercase}}
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Telefone
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.emitente.telefone}}
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        País
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota" 
+                                                                         ng-bind="getCodigoTracoDescricao(notadetalhada.emitente.endereco.pais)">
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Inscrição Estadual do Substituto Tributário
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.emitente.IEST}}
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Município da Ocorrência do Fato Gerador do ICMS
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.emitente.endereco.municipio.codigo}} 
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Código de Regime Tributário
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota" 
+                                                                         ng-bind="getCodigoTracoDescricao(notadetalhada.emitente.CRT)">
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>    
+                                        </div>
+                                        <!-- FIM TAB EMITENTE -->
+                                        
+                                        <!-- DESTINATÁRIO -->
+                                        <div class="panel" ng-show="tabIs(3)">
+                                            <div class="row conteudos-detalhe-nota">
+                                                <div class="col-md-12">
+                                                    <!--TITULO-->
+                                                    <div class="row headDetalhesNota">
+                                                        <div class="col-md-12">
+                                                            Dados do Destinatário
+                                                        </div>
+                                                    </div>
+                                                    <!--BODY CAMPOS-->
+                                                    <div class="row campos-detalhe-nota">
+                                                        <div class="col-md-12">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Nome/Razão Social
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.destinatario.razaoSocial | uppercase}}
+                                                                    </div>                                              
+                                                                </div>    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <label class="col-md-12 titulos-dados-detalhes-nota"
+                                                                                   ng-bind="notadetalhada.destinatario.CPF && notadetalhada.destinatario.CPF !== null ? 'CPF' : 'CNPJ'">
+                                                                            </label>
+                                                                            <div class="col-md-12 informacoes-detalhe-nota"
+                                                                                 ng-bind="notadetalhada.destinatario.CPF && notadetalhada.destinatario.CPF !== null ? notadetalhada.destinatario.CPF : notadetalhada.destinatario.CNPJ">
+                                                                            </div> 
+                                                                        </div>
+                                                                        <div class="col-md-12">
+                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                Bairro / Distrito
+                                                                            </label>
+                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                {{notadetalhada.destinatario.endereco.bairro | uppercase}}
+                                                                            </div>
+                                                                        </div><div class="col-md-12">
+                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                Município
+                                                                            </label>
+                                                                            <div class="col-md-12 informacoes-detalhe-nota" 
+                                                                                        ng-bind="getCodigoTracoDescricao(notadetalhada.destinatario.endereco.municipio)">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12">
+                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                UF
+                                                                            </label>
+                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                {{notadetalhada.destinatario.endereco.UF | uppercase}} 
+                                                                            </div>    
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                Indicador IE
+                                                                            </label>
+                                                                            <div class="col-md-12 informacoes-detalhe-nota" 
+                                                                                 ng-bind="getCodigoTracoDescricao(notadetalhada.destinatario.indicadorIE)">
+                                                                            </div>    
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                Inscrição Estadual
+                                                                            </label>
+                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                {{notadetalhada.destinatario.inscricaoEstadual | uppercase}}  
+                                                                            </div>    
+                                                                        </div>
+                                                                    </div>    
+                                                                </div>
+                                                                
+                                                                <div class="col-md-6">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                Endereço
+                                                                            </label>
+                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                {{notadetalhada.destinatario.endereco.logradouro | uppercase}}
+                                                                                ,&nbsp;
+                                                                                {{notadetalhada.destinatario.endereco.numero | uppercase}}
+                                                                                ,&nbsp;
+                                                                                {{notadetalhada.destinatario.endereco.complemento | uppercase}} 
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12">
+                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                CEP
+                                                                            </label>
+                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                {{notadetalhada.destinatario.endereco.cep | uppercase}}
+                                                                            </div>
+                                                                        </div><div class="col-md-12">
+                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                Telefone
+                                                                            </label>
+                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                {{notadetalhada.destinatario.telefone}}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12">
+                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                               País
+                                                                            </label>
+                                                                            <div class="col-md-12 informacoes-detalhe-nota" 
+                                                                                 ng-bind="getCodigoTracoDescricao(notadetalhada.destinatario.endereco.pais)">
+                                                                            </div>    
+                                                                        </div>
+                                                                        <div class="col-md-12">
+                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                               Inscrição SUFRAMA
+                                                                            </label>
+                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                               {{notadetalhada.destinatario.inscricaoSUFRAMA}} 
+                                                                            </div>    
+                                                                        </div>
+                                                                    </div>    
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                       IM
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.destinatario.inscricaoMunicipal}}   
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-9">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                       E-mail
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.destinatario.email | lowercase}} 
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- FIM TAB DESTINATARIO -->
+                                        
+                                        <!-- PRODUTOS E SERVIÇOS -->
+                                        <div class="panel" ng-show="tabIs(4)">
+                                            <div class="row conteudos-detalhe-nota">
+                                                <div class="col-md-12">
+                                                    <!--TITULO-->
+                                                    <div class="row headDetalhesNota">
+                                                        <div class="col-md-12">
+                                                            Produtos e Serviços
+                                                        </div>
+                                                    </div>
+                                                    <!--BODY CAMPOS-->
+                                                    <div class="row campos-detalhe-nota">
+                                                        <div class="col-md-12">
+                                                            
+                                                            <!--ITEM-->
+                                                            <div class="row" ng-repeat-start="produto in notadetalhada.produtos"
+                                                                 style="border-bottom: solid 2px #808080; padding-bottom: 10px">
+                                                                <div class="col-md-1">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        &nbsp;
+                                                                    </label>
+                                                                    <div class="col-md-12" style="margin-left: 20px">
+                                                                        <a href="javascript:;" ng-click="toggle(produto)">
+                                                                            <i class="fa"
+                                                                               ng-class="{'fa-plus-square' : !isExpanded(manifesto), 'fa-minus-square' : isExpanded(manifesto)}"
+                                                                               style="margin-top: -3px;"> 
+                                                                            </i> 
+                                                                        </a>
+                                                                    </div>   
+                                                                </div> 
+                                                                <div class="col-md-1">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Num.
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{produto.produto.num}}
+                                                                    </div>                                              
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Descrição
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{produto.produto.descricao | uppercase}}
+                                                                    </div>                                              
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Qtd.
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{produto.produto.qtdComercial | currency:''}}
+                                                                    </div>                                              
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Unidade Comercial
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{produto.produto.unidadeComercial}}
+                                                                    </div>                                              
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Valor(R$)
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{produto.produto.valor | currency:'R$'}} 
+                                                                    </div>                                              
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <!--DESCRIÇÃO/DETALHES: ABRIR COM A AÇÃO DO BOTÃO-->
+                                                            <div class="row" ng-repeat-end ng-show="isExpanded(produto)">
+                                                                <div class="col-md-12">
+                                                                    <!--PRIMEIRO BLOCO-->
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="row campos-detalhe-nota">
+                                                                                <div class="col-md-12">
+
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-4">
+                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                Código do Produto
+                                                                                            </label>
+                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                                {{produto.produto.codigo}} 
+                                                                                            </div>                                              
+                                                                                        </div>
+                                                                                        <div class="col-md-4">
+                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                Código NCM
+                                                                                            </label>
+                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                                {{produto.produto.codNCM}}
+                                                                                            </div>                                              
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-4">
+                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                Código EX da TIPI
+                                                                                            </label>
+                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                                {{produto.produto.codEXTIPI}}
+                                                                                            </div>                                              
+                                                                                        </div>
+                                                                                        <div class="col-md-4">
+                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                CFOP
+                                                                                            </label>
+                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                                {{produto.produto.CFOP}}
+                                                                                            </div>                                              
+                                                                                        </div>
+                                                                                        <div class="col-md-4">
+                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                Outras Despesas Acessórias
+                                                                                            </label>
+                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                                {{produto.produto.outrasDespesas | currency:'R$'}} 
+                                                                                            </div>                                              
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-4">
+                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                Valor do Desconto
+                                                                                            </label>
+                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                                {{produto.produto.valorDesconto | currency:'R$'}} 
+                                                                                            </div>                                              
+                                                                                        </div>
+                                                                                        <div class="col-md-4">
+                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                Valor Total do Frete
+                                                                                            </label>
+                                                                                            <div class="col-md-12 informacoes-detalhe-nota">    
+                                                                                                {{produto.produto.valorTotalFrete | currency:'R$'}} 
+                                                                                            </div>                                              
+                                                                                        </div>
+                                                                                        <div class="col-md-4">
+                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                Valor do Seguro
+                                                                                            </label>
+                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                                {{produto.produto.valorSeguro | currency:'R$'}} 
+                                                                                            </div>                                              
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    
+                                                                    <!--SEGUNDO BLOCO-->
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="row campos-detalhe-nota">
+                                                                                <div class="col-md-12">
+
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-12">
+                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                Indicador de Composição do Valor Total da NF-e
+
+                                                                                            </label>
+                                                                                            <div class="col-md-12 informacoes-detalhe-nota" ng-bind="getCodigoTracoDescricao(produto.produto.indicadorComposicao)">
+                                                                                            </div>                                              
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-4">
+                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                Código EAN Comercial
+
+                                                                                            </label>
+                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                        {{produto.produto.codigoEANComercial}} 
+                                                                                            </div>                                              
+                                                                                        </div>
+                                                                                        <div class="col-md-4">
+                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                Unidade Comercial
+
+                                                                                            </label>
+                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                             {{produto.produto.unidadeComercial}} 
+                                                                                            </div>                                              
+                                                                                        </div>
+                                                                                        <div class="col-md-4">
+                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                Quantidade Comercial
+
+                                                                                            </label>
+                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                                {{produto.produto.qtdComercial | currency:''}} 
+                                                                                            </div>                                              
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-4">
+                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                Código EAN Tributável
+
+                                                                                            </label>
+                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                        {{produto.produto.codigoEANTributario}} 
+                                                                                            </div>  
+                                                                                        </div>
+                                                                                        <div class="col-md-4">
+                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                Unidade Tributável
+
+                                                                                            </label>
+                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                            {{produto.produto.unidadeTributaria}}
+                                                                                            </div>                                              
+                                                                                        </div>
+                                                                                        <div class="col-md-4">
+                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                Quantidade Tributável
+
+                                                                                            </label>
+                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                                {{produto.produto.qtdTributario | currency:''}}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-4">
+                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                Valor unitário de comercialização
+
+                                                                                            </label>
+                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                   {{produto.produto.valorUnitarioComercializacao | currency:'R$'}}
+                                                                                            </div>                                              
+                                                                                        </div>
+                                                                                        <div class="col-md-4">
+                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                Valor unitário de tributação
+
+                                                                                            </label>
+                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                        {{produto.produto.valorUnitarioTributacao | currency:'R$'}}
+                                                                                            </div>                                              
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-4">
+                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                Número do pedido de compra
+
+                                                                                            </label>
+                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                            {{produto.produto.numPedidoCompra}}
+                                                                                            </div>                                              
+                                                                                        </div>
+                                                                                        <div class="col-md-4">
+                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                Item do pedido de compra
+
+                                                                                            </label>
+                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                            {{produto.produto.itemPedidoCompra}}
+                                                                                            </div>                                              
+                                                                                        </div>
+                                                                                        <div class="col-md-4">
+                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                Valor Aproximado dos Tributos
+
+                                                                                            </label>
+                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                        {{produto.imposto.valorAproximadoTributos | currency:'R$'}}
+                                                                                            </div>                                              
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-4">
+                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                Número da FCI
+
+                                                                                            </label>
+                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                                {{produto.produto.FCI}}
+                                                                                            </div>                                              
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    
+                                                                                    <!--ICMS Normal e ST-->
+                                                                                    <div class="row titulos-campos-detalhes-nota">
+                                                                                        <div class="col-md-6">
+                                                                                            <label>ICMS Normal e ST</label>                                              
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-12">
+                                                                                            <div class="row campos-detalhe-nota">
+                                                                                                <div class="col-md-12">
+                                                                                                    <div class="row">
+                                                                                                        <div class="col-md-4">
+                                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                                Origem da Mercadoria
+
+                                                                                                            </label>
+                                                                                                            <div class="col-md-12 informacoes-detalhe-nota" ng-bind="getCodigoTracoDescricao(produto.imposto.ICMS.origem)">
+                                                                                                            </div>                                              
+                                                                                                        </div>
+                                                                                                        <div class="col-md-4">
+                                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                                Tributação do ICMS      
+
+                                                                                                            </label>
+                                                                                                            <div class="col-md-12 informacoes-detalhe-nota">        
+                                                                                                    {{produto.imposto.ICMS.CST}}
+                                                                                                            </div>                                              
+                                                                                                        </div>
+                                                                                                        <div class="col-md-4">
+                                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                                Modalidade Definição da BC ICMS NORMAL
+
+                                                                                                            </label>
+                                                                                                            <div class="col-md-12 informacoes-detalhe-nota" ng-bind="getCodigoTracoDescricao(produto.imposto.ICMS.modalidadeBC)">
+                                                                                                            </div>                                              
+                                                                                                        </div>
+                                                                                                    </div>
+
+                                                                                                    <div class="row">
+                                                                                                        <div class="col-md-4">
+                                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                                Base de Cálculo do ICMS Normal
+
+                                                                                                            </label>
+                                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                    {{produto.imposto.ICMS.baseCalculoICMSNormal | currency:'R$'}}
+                                                                                                            </div>                                              
+                                                                                                        </div>
+                                                                                                        <div class="col-md-4">
+                                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                                Alíquota do ICMS Normal      
+
+                                                                                                            </label>
+                                                                                                            <div class="col-md-12 informacoes-detalhe-nota">        
+                                                                                        {{produto.imposto.ICMS.aliquotaICMSNormal | currency:''}}%
+                                                                                                            </div>                                              
+                                                                                                        </div>
+                                                                                                        <div class="col-md-4">
+                                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                                Valor do ICMS Normal
+
+                                                                                                            </label>
+                                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                           {{produto.imposto.ICMS.valorICMSNormal | currency:'R$'}}
+                                                                                                            </div>                                              
+                                                                                                        </div>
+                                                                                                    </div>
+
+                                                                                                    <div class="row">
+                                                                                                        <div class="col-md-4">
+                                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                                Base de Cálculo do ICMS ST
+
+                                                                                                            </label>
+                                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                         {{produto.imposto.ICMS.baseCalculoICMSST | currency:'R$'}}
+                                                                                                            </div>                                              
+                                                                                                        </div>
+                                                                                                        <div class="col-md-4">
+                                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                                Alíquota do ICMS ST      
+
+                                                                                                            </label>
+                                                                                                            <div class="col-md-12 informacoes-detalhe-nota">        
+                                                                                            {{produto.imposto.ICMS.aliquotaICMSST | currency:''}}%
+                                                                                                            </div>                                              
+                                                                                                        </div>
+                                                                                                        <div class="col-md-4">
+                                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                                Valor do ICMS ST
+
+                                                                                                            </label>
+                                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                               {{produto.imposto.ICMS.valorICMSST | currency:'R$'}}
+                                                                                                            </div>                                              
+                                                                                                        </div>
+                                                                                                    </div>
+
+                                                                                                    <div class="row">
+                                                                                                        <div class="col-md-4">
+                                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                                Percentual Redução de BC do ICMS ST
+
+                                                                                                            </label>
+                                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                          {{produto.imposto.ICMS.percentualICMSST | currency:''}}%
+                                                                                                            </div>                                              
+                                                                                                        </div>
+                                                                                                        <div class="col-md-4">
+                                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                                Percentual do MVA do ICMS ST      
+
+                                                                                                            </label>
+                                                                                                            <div class="col-md-12 informacoes-detalhe-nota">        
+                                                                                       {{produto.imposto.ICMS.percentualMVAICMSST | currency:''}}%
+                                                                                                            </div>                                              
+                                                                                                        </div>
+                                                                                                        <div class="col-md-4">
+                                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                                Modalidade Definição da BC ICMS ST
+
+                                                                                                            </label>
+                                                                                                            <div class="col-md-12 informacoes-detalhe-nota" ng-bind="getCodigoTracoDescricao(produto.imposto.ICMS.modalidadeBCICMSST)">
+                                                                                                            </div>                                              
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                    <!--PIS-->
+                                                                                    <div class="row titulos-campos-detalhes-nota">
+                                                                                        <div class="col-md-6">
+                                                                                            <label>PIS</label>                                              
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-12">
+                                                                                            <div class="row campos-detalhe-nota">
+                                                                                                <div class="col-md-12">
+                                                                                                    <div class="row">
+                                                                                                        <div class="col-md-12">
+                                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                                CST
+
+                                                                                                            </label>
+                                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                                      {{produto.imposto.PIS.CST}}
+                                                                                                            </div>                                              
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                    <!--COFINS-->
+                                                                                    <div class="row titulos-campos-detalhes-nota">
+                                                                                        <div class="col-md-6">
+                                                                                            <label>COFINS</label>                                              
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-12">
+                                                                                            <div class="row campos-detalhe-nota">
+                                                                                                <div class="col-md-12">
+                                                                                                    <div class="row">
+                                                                                                        <div class="col-md-12">
+                                                                                                            <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                                                                CST
+
+                                                                                                            </label>
+                                                                                                            <div class="col-md-12 informacoes-detalhe-nota">
+                                                                                                   {{produto.imposto.COFINS.CST}}
+                                                                                                            </div>                                              
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- FIM - PRODUTO DETALHADO -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- FIM TAB PRODUTOS E SERVIÇOS -->
+                                        
+                                        <!-- TOTAIS -->
+                                        <div class="panel" ng-show="tabIs(5)">
+                                            <div class="row conteudos-detalhe-nota">
+                                                <div class="col-md-12">
+                                                    <!--TITULO-->
+                                                    <div class="row headDetalhesNota">
+                                                        <div class="col-md-12">
+                                                            Totais
+                                                        </div>
+                                                    </div>
+                                                    <!--BODY CAMPOS-->
+                                                    <div class="row titulos-campos-detalhes-nota">
+                                                        <div class="col-md-6">
+                                                            <label>ICMS</label>                                              
+                                                        </div>
+                                                    </div>
+                                                    <div class="row campos-detalhe-nota">
+                                                        <div class="col-md-12">
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Base de Cálculo ICMS
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.totais.ICMS.valorBaseCalculoICMS | currency:'R$'}} 
+                                                                    </div>                                              
+                                                                </div>  
+                                                                <div class="col-md-3">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Valor do ICMS
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.totais.ICMS.valorICMS | currency:'R$'}}  
+                                                                    </div>                                              
+                                                                </div>  
+                                                                <div class="col-md-3">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Valor do ICMS Desonerado
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.totais.ICMS.valorICMSDesonerado | currency:'R$'}} 
+                                                                    </div>                                              
+                                                                </div>  
+                                                                <div class="col-md-3">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Base de Cálculo ICMS ST
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.totais.ICMS.valorBaseCalculoICMSST | currency:'R$'}} 
+                                                                    </div>                                              
+                                                                </div>  
+                                                            </div>
+                                                            
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Valor ICMS Substituição
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.totais.ICMS.valorICMSST | currency:'R$'}} 
+                                                                    </div>                                              
+                                                                </div>  
+                                                                <div class="col-md-3">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Valor Total dos Produtos
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.totais.ICMS.valorProdutos | currency:'R$'}}  
+                                                                    </div>                                              
+                                                                </div>  
+                                                                <div class="col-md-3">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Valor do Frete
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.totais.ICMS.valorProdutos | currency:'R$'}}  
+                                                                    </div>                                              
+                                                                </div>  
+                                                                <div class="col-md-3">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Valor do Seguro
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.totais.ICMS.valorSeguro | currency:'R$'}}  
+                                                                    </div>                                              
+                                                                </div>  
+                                                            </div>
+                                                            
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Outras Despesas Acessórias
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.totais.ICMS.valorOutrasDespesas | currency:'R$'}} 
+                                                                    </div>                                              
+                                                                </div>  
+                                                                <div class="col-md-3">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Valor Total do IPI
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.totais.ICMS.valorIPI | currency:'R$'}} 
+                                                                    </div>                                              
+                                                                </div>  
+                                                                <div class="col-md-3">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Valor Total da NFe
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.totais.ICMS.valorNF | currency:'R$'}}
+                                                                    </div>                                              
+                                                                </div>  
+                                                                <div class="col-md-3">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Valor Total dos Descontos
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.totais.ICMS.valorDesconto | currency:'R$'}} 
+                                                                    </div>                                              
+                                                                </div>  
+                                                            </div>
+                                                            
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Valor Total do II
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.totais.ICMS.valorII | currency:'R$'}}  
+                                                                    </div>                                              
+                                                                </div>  
+                                                                <div class="col-md-3">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Valor do PIS
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.totais.ICMS.valorPIS | currency:'R$'}}
+                                                                    </div>                                              
+                                                                </div>  
+                                                                <div class="col-md-3">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Valor da COFINS
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.totais.ICMS.valorCOFINS | currency:'R$'}}
+                                                                    </div>                                              
+                                                                </div>  
+                                                                <div class="col-md-3">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Valor Aproximado dos Tributos
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.totais.ICMS.valorTributos | currency:'R$'}} 
+                                                                    </div>                                              
+                                                                </div>  
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- FIM TAB TOTAIS -->
+                                        
+                                        <!-- TRANSPORTE -->
+                                        <div class="panel" ng-show="tabIs(6)">
+                                            <div class="row conteudos-detalhe-nota">
+                                                <div class="col-md-12">
+                                                    <!--TITULO-->
+                                                    <div class="row headDetalhesNota">
+                                                        <div class="col-md-12">
+                                                            Transporte
+                                                        </div>
+                                                    </div>
+                                                    <!--BODY CAMPOS-->
+                                                    <div class="row campos-detalhe-nota">
+                                                        <div class="col-md-12">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Modalidade do Frete
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"
+                                                                         ng-bind="getCodigoTracoDescricao(notadetalhada.transporte.modalidade)"> 
+                                                                    </div>                                              
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- FIM TAB TRANSPORTE -->
+                                        
+                                        <!-- COBRANÇA -->
+                                        <div class="panel" ng-show="tabIs(7)">
+                                            <div class="row conteudos-detalhe-nota">
+                                                <div class="col-md-12">
+                                                    <!--TITULO-->
+                                                    <div class="row headDetalhesNota">
+                                                        <div class="col-md-12">
+                                                            Cobrança
+                                                        </div>
+                                                    </div>
+                                                    <!--BODY CAMPOS-->
+                                                    <div class="row titulos-campos-detalhes-nota">
+                                                        <div class="col-md-6">
+                                                            <label>Fatura</label>                                              
+                                                        </div>
+                                                    </div>
+                                                    <div class="row campos-detalhe-nota">
+                                                        <div class="col-md-12">
+                                                            <div class="row">
+                                                                <div class="col-md-4">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Número
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.cobranca.fatura.numero}} 
+                                                                    </div>                                              
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Valor Original
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.cobranca.fatura.valorOriginal | currency:'R$'}}  
+                                                                    </div>                                              
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Valor do Desconto
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.cobranca.fatura.valorDesconto | currency:'R$'}}   
+                                                                    </div>                                              
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Valor Líquido
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{notadetalhada.cobranca.fatura.valorLiquido | currency:'R$'}}   
+                                                                    </div>                                              
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row titulos-campos-detalhes-nota">
+                                                        <div class="col-md-6">
+                                                            <label>Duplicatas</label>                                              
+                                                        </div>
+                                                    </div>
+                                                    <div class="row campos-detalhe-nota">
+                                                        <div class="col-md-12">
+                                                            <div class="row" 
+                                                                 ng-repeat="duplicata in notadetalhada.cobranca.duplicatas">
+                                                                <div class="col-md-4">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Número
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{duplicata.numero}}
+                                                                    </div>                                              
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                       Vencimento
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"
+                                                                         ng-bind="getDataString(duplicata.dataVencimento)"> 
+                                                                    </div>                                              
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Valor
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{duplicata.valor | currency:'R$'}}    
+                                                                    </div>                                              
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>    
+                                        </div>
+                                        <!-- FIM TAB COBRANÇA -->
+                                        
+                                        <!-- INFORMAÇÕES ADICIONAIS -->
+                                        <div class="panel" ng-show="tabIs(8)">
+                                            <div class="row conteudos-detalhe-nota">
+                                                <div class="col-md-12">
+                                                    <!--TITULO-->
+                                                    <div class="row headDetalhesNota">
+                                                        <div class="col-md-12">
+                                                            Informações Adicionais
+                                                        </div>
+                                                    </div>
+                                                    <!--BODY CAMPOS-->
+                                                    <div class="row campos-detalhe-nota">
+                                                        <div class="col-md-12">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Formato de Impressão DANFE
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota"
+                                                                         ng-bind="getCodigoTracoDescricao(notadetalhada.nfe.formatoImpressaoDANFE)">
+                                                                    </div>                                              
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row titulos-campos-detalhes-nota"
+                                                         ng-show="notadetalhada.infoAdicional.obsContribuinte.length > 0">
+                                                        <div class="col-md-6">
+                                                            <label>
+                                                                Informações Complementares de Interesse do Contribuinte
+                                                            </label>                                              
+                                                        </div>
+                                                    </div>
+                                                    <div class="row campos-detalhe-nota"
+                                                         ng-repeat="obs in notadetalhada.infoAdicional.obsContribuinte">
+                                                        <div class="col-md-12">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="col-md-12 titulos-dados-detalhes-nota">
+                                                                        Descrição
+                                                                    </label>
+                                                                    <div class="col-md-12 informacoes-detalhe-nota">
+                                                                        {{obs.conteudo}}
+                                                                    </div>                                              
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>    
+                                        </div>
+                                        <!-- FIM TAB INFORMAÇÕES ADICIONAIS -->
+                                    </div>
+                                </div>
+                           </div>
+                           <div class="modal-footer">
+                               <div class="col-md-1 col-md-offset-10">
+                                   <button type="button" class="btn default" data-dismiss="modal">
+                                       Fechar
+                                   </button>
+                               </div>                           
+                           </div>
+                       </div>
+                   </div>
+                </div>
+                <!-- FIM - MODAL DETALHES -->
+                
+                <!-- MODAL IMPORTAÇÃO DE NOTA FISCAL-->
+                <div class="modal fade bs-modal-sm modal-input" 
+                    id="modalImportar" aria-hidden="true">
+                   <div class="modal-dialog modal-sm" style="width:800px">
+                       <div class="modal-content">
+                           <div class="modal-header">
+                               <h4 class="modal-title modal-cabecalho">Importação de Nota Fiscal Eletrônica</h4>
+                           </div>
+                           <div class="modal-body modal-corpo" style="text-align: left">
+                               <div class="row select-modal-importacao">
+                                    <div class="col-md-3">
+                                    <label>Natureza da Operação: </label>
+                                   </div>
+                                   <div class="col-md-9">
+                                        <select class="form-control form-filter input-sm"
+                                                ng-model="dadosImportacao.natOperacao"
+                                                ng-options="natOperacao.des_natureza_operacao for natOperacao in natOperacoes">
+                                            <option value=""></option>
+                                        </select>
+                                   </div>
+                               </div>
+                               <div class="row select-modal-importacao">
+                                   <div class="col-md-3">
+                                    <label>Almoxarifado: </label>
+                                   </div>
+                                   <div class="col-md-9">
+                                        <select class="form-control form-filter input-sm"
+                                                ng-model="dadosImportacao.almoxarifado"
+                                                ng-options="almoxarifado.des_almoxarifado for almoxarifado in almoxarifados">
+                                            <option value=""></option>
+                                        </select>
+                                   </div>
+                               </div>
+                                <div class="row button-modal-importacao">
+                                   <div class="col-md-12">
+                                    <button class="btn btn-sm red filter-submit margin-bottom" ng-click="importarNota();">Importar</button>
+                                   </div>
+                               </div>
+                           </div>
+                           <div class="modal-footer">
+                               <div class="col-md-1 col-md-offset-10">
+                                   <button type="button" class="btn default" data-dismiss="modal" >
+                                       Fechar
+                                   </button>
+                               </div>                           
+                           </div>
+                       </div>
+                   </div>
+                </div>
+                <!-- FIM - MODAL IMPORTAÇÃO DE NOTA FISCAL-->
+                
+                                
+                <!-- MODAL RETORNO DA IMPORTAÇÃO DE NOTA FISCAL-->
+                <div class="modal fade bs-modal-sm modal-input" 
+                    id="modalRetornoImportacao" aria-hidden="true">
+                   <div class="modal-dialog modal-sm" style="width:800px">
+                       <div class="modal-content">
+                           <div class="modal-header">
+                               <h4 class="modal-title modal-cabecalho">Erros gerados na importação da NFe</h4>
+                           </div>
+                           <div class="modal-body modal-corpo" style="text-align: left">
+
+                               <div class="row">
+                                   <div class="col-md-12" ng-repeat="mensagem in Mensagens">
+                                       {{mensagem.mensagemErro}}<br/>
+                                   </div>
+                               </div>  
+                           </div>
+                           <div class="modal-footer">
+                               <div class="col-md-1 col-md-offset-10">
+                                   <button type="button" class="btn default" data-dismiss="modal" >
+                                       Fechar
+                                   </button>
+                               </div>                           
+                           </div>
+                       </div>
+                   </div>
+                </div>
+                <!-- FIM - MODAL IMPORTAÇÃO DE NOTA FISCAL-->
+                
+                <!--TITULO-->
+                <div class="portlet-title">
+                    <div class="caption">								
+                        <span class="caption-subject font-green-sharp bold uppercase">Consulta NF-e</span>
+                    </div>
+                    <div class="actions">
+                        <a class="btn btn-circle btn-icon-only btn-default fullscreen" 
+                           href="javascript:;" 
+                           ng-click="fullScreenClick()"
+                           title="{{telaEstaEmFullScreen() ? 'Tela Normal' : 'Tela Cheia'}}"></a>
+                        <div class="btn-group element-hidden"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -->
+                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
+                            <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to Excel </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to CSV </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to XML </a>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Print Invoices </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- CORPO -->
+                <div class="portlet-body" ng-show="exibeTela">
+                    <div class="row paddingDivs">
+                       <!--EXIBIÇÃO-->
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class="dataTables_length">
+                                <label>
+                                    <span class="seperator"></span>Exibindo 
+                                    <select name="datatable_products_length" aria-controls="datatable_products" 
+                                            class="form-control input-xsmall input-sm input-inline"
+                                            ng-model="filtro.itens_pagina"
+                                            ng-change="alterouItensPagina()"
+                                            ng-options="item for item in itens_pagina">                                            
+                                    </select> registros de {{filtro.total_registros}}
+                                </label>
+                            </div>   
+                        </div>
+                        <!--PAGINAÇÃO-->
+                        <div class="col-xs-4 col-sm-4 col-md-3">
+                            <div class="pagination-panel centralizarPaginacao"> Página 
+                                <a href="javascript:;" ng-click="retrocedePagina()"
+                                   class="btn btn-sm default prev" 
+                                   ng-class="{disabled: filtro.pagina <= 1}" 
+                                   title="Página anterior">
+                                        <i class="fa fa-angle-left"></i>
+                                </a>
+                                <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                       maxlength="4" style="text-align:center; margin: 0 5px;"
+                                       ng-model="paginaInformada" valid-integer-number
+                                       ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                                       ng-blur="atualizaPaginaDigitada()">
+                                    <a href="javascript:;" ng-click="avancaPagina()"
+                                       class="btn btn-sm default next"
+                                       ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
+                                       title="Próxima página">
+                                        <i class="fa fa-angle-right"></i>
+                                    </a>
+                                    de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
+                            </div>
+                        </div>                                   
+                    </div>
+                    
+                    <!-- TABELA EXTERNA -->
+                    <div class="table scrollable">
+                        <table class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
+                            <thead>
+                                <tr>
+                                    <th colspan="6" class="cabecalhoTheadTabelas">
+                                        DADOS EMITENTE
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th width="5%">
+                                    </th>
+                                    <th width="10" style="text-align: center;">
+                                        CNPJ
+                                    </th>
+                                    <th width="50%" style="text-align: center;">
+                                        Razão Social
+                                    </th>
+                                    <th width="5%" style="text-align: center;">
+                                        UF
+                                    </th>
+                                    <th width="10%" style="text-align: center;">
+                                        Total NF-e
+                                    </th>
+                                    <th width="10%" style="text-align: center;">
+                                        Ações
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat-start="manifesto in manifestos">
+                                    <td width="5%" style="text-align: center;">
+                                        <a href="javascript:;" ng-click="toggle(manifesto)">
+                                            <i class="fa"
+                                               ng-class="{'fa-plus-square' : !isExpanded(manifesto), 'fa-minus-square' : isExpanded(manifesto)}"
+                                               style="margin-top: -3px;"> 
+                                            </i> 
+                                        </a>
+                                    </td>
+                                    <!-- CPF/CNPJ -->
+                                    <td width="20%">
+                                        {{manifesto.nrEmitenteCNPJCPF}}
+                                    </td>
+                                    <!-- RAZÃO SOCIAL -->
+                                    <td width="30%">
+                                        {{manifesto.nmEmitente | uppercase}}
+                                    </td>
+                                    <!-- UF -->
+                                    <td width="10%">
+                                        {{(manifesto.UF | uppercase) || ''}}
+                                    </td>
+                                    <!-- TOTAL DE NF-e -->
+                                    <td width="10%"
+                                        ng-init="incrementaTotalNFes(manifesto.notas.length)">
+                                        {{manifesto.notas.length || '0'}}
+                                    </td>
+                                    <!-- BOTÃO -->
+                                    <td>
+                                        <div class="btn-group" dropdown dropdown-append-to-body>
+                                            <a class="btn btn-default btn-circle" 
+                                               href="javascript:;" dropdown-toggle>
+                                                <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
+                                            </a>
+                                            <ul class="dropdown-menu dropDownAtos">
+                                                <li>
+                                                    <a href="javascript:;" 
+                                                       ng-click="downloadDANFE(manifesto)">
+                                                        Downlaod DANFEs
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:;" 
+                                                       ng-click="downloadXML(manifesto)">
+                                                        Download XMLs
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- LINHA EXPANSÍVEL -->
+                                <tr ng-repeat-end ng-show="isExpanded(manifesto)"> 
+                                    <td colspan="6">
+                                        <!-- TABELA INTERNA -->
+                                        <table class="table table-striped table-bordered table-hover dataTable no-footer">
+                                            <thead> 
+                                                <tr>
+                                                    <th colspan="6" class="cabecalhoTheadTabelas">
+                                                        DADOS NF-e
+                                                    </th>
+                                                    <th colspan="3" class="cabecalhoTheadTabelas">
+                                                        STATUS
+                                                    </th>
+                                                    <th rowspan="1" colspan="1" 
+                                                        class="cabecalhoTheadTabelas">
+                                                        AÇÕES
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <!-- DADOS NFE -->
+                                                    <th width="5%">
+                                                        Emissão
+                                                    </th>
+                                                    <th width="5%" style="text-align: center;">
+                                                        Modelo
+                                                    </th>
+                                                    <th width="7%" style="text-align: center;">
+                                                        Número
+                                                    </th>
+                                                    <th width="5%" style="text-align: center;">
+                                                        Série
+                                                    </th>
+                                                    <th width="10%" style="text-align: center;">
+                                                        Valor NF
+                                                    </th>
+
+                                                    <th width="5%" style="text-align: center;">
+                                                        Recebimento
+                                                    </th>
+                                                    <th width="15%" style="text-align: center;">
+                                                        NF-e
+                                                    </th>
+                                                    <th width="21%" style="text-align: center;">
+                                                        Manifesto
+                                                    </th>
+                                                    <th width="15%" style="text-align: center;">
+                                                        ERP
+                                                    </th>
+                                                    <!-- BOTÃO -->
+                                                    <th width="7%"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                 <!-- DADOS NFE -->
+                                                 <tr ng-repeat="nota in manifesto.notas">
+                                                    <!-- DATA DE EMISSÃO -->
+                                                    <td ng-bind="getDataString(nota.dtEmissao)">
+                                                    </td>
+                                                    <!-- MODELO -->
+                                                    <td>
+                                                        {{nota.modelo}}
+                                                    </td>
+                                                    <!-- NÚMERO -->
+                                                    <td>
+                                                        {{nota.numero}}
+                                                    </td>
+                                                    <!-- SÉRIE --> 
+                                                    <td>
+                                                        {{nota.serie}}
+                                                    </td>
+                                                    <!-- VALOR NF -->  
+                                                    <td>
+                                                        {{nota.vlNFe | currency:'R$'}}
+                                                    </td>
+                                                    <!-- DATA DE RECEBIMENTO --> 
+                                                    <td ng-bind="getDataString(nota.dtEntrega)">
+                                                    </td>
+                                                    <!-- STATUS-->
+                                                    <!-- NF -->
+                                                    <td>
+                                                        {{nota.nfe}}
+                                                    </td>
+                                                    <!-- MANIFESTO --> 
+                                                    <td>
+                                                        {{nota.dsSituacaoManifesto}}
+                                                    </td>
+                                                    <!-- ERP --> 
+                                                    <td>
+                                                        {{nota.dsSituacaoErp}}
+                                                    </td>
+                                                    <!-- BOTÃO -->
+                                                    <td>
+                                                        <div class="btn-group" dropdown dropdown-append-to-body>
+                                                            <a class="btn btn-default btn-circle" 
+                                                               href="javascript:;" dropdown-toggle>
+                                                                <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
+                                                            </a>
+                                                            <ul class="dropdown-menu dropDownAtos">
+                                                                <li>
+                                                                    <a href="javascript:;" 
+                                                                       ng-click="downloadDANFE(manifesto, $index)">
+                                                                        DANFE
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="javascript:;" 
+                                                                       ng-click="detalhar(manifesto, $index)">
+                                                                        Detalhes
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="javascript:;" 
+                                                                       ng-click="imprimir(manifesto, $index)">
+                                                                        Imprimir
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="javascript:;" 
+                                                                       ng-click="downloadXML(manifesto, $index)">
+                                                                        XML
+                                                                    </a>
+                                                                </li>
+                                                                 <li>
+                                                                    <a href="javascript:;" 
+                                                                       ng-click="obterInformarcoesImportar(manifesto, $index)">
+                                                                        Importar
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table> 
+                                    </td>
+                                </tr>
+                                <tr role="row" class="odd linhaTotalRelatorios">
+                                    <!-- TOTAL NF-e -->
+                                    <td colspan="4" style="text-align:right;">
+                                         Total Exibido
+                                    </td>                                                     
+                                    <td>
+                                         {{total.nfe || '0'}}
+                                    </td> 
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- FIM CORPO -->
+                    
+                    <!-- RODAPÉ : Exibição dos resultados e paginação -->
+                    <div class="row">
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class="dataTables_info" role="status" aria-live="polite">
+                                <strong>Exibindo os registros {{filtro.faixa_registros}}</strong>
+                            </div>
+                        </div>
+                        <!--PAGINAÇÃO-RODAPÉ-->
+                        <div class="col-xs-4 col-sm-4 col-md-3">
+                            <div class="pagination-panel centralizarPaginacao"> Página 
+                                <a href="javascript:;" ng-click="retrocedePagina()"
+                                   class="btn btn-sm default prev" 
+                                   ng-class="{disabled: filtro.pagina <= 1}" 
+                                   title="Página anterior">
+                                        <i class="fa fa-angle-left"></i>
+                                </a>
+                                <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                       maxlength="4" style="text-align:center; margin: 0 5px;"
+                                       ng-model="paginaInformada" valid-integer-number
+                                       ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                                       ng-blur="atualizaPaginaDigitada()">
+                                    <a href="javascript:;" ng-click="avancaPagina()"
+                                       class="btn btn-sm default next"
+                                       ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
+                                       title="Próxima página">
+                                        <i class="fa fa-angle-right"></i>
+                                    </a>
+                                    de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
+                            </div>
+                        </div>
+                        <!-- FIM PAGINAÇÃO -->
+                    </div> 
+                </div>
+            </div>
+            <!--FIM TABLE PORTLET-->
+        </div>
+    </div>  
+</div>
+<!-- END PAGE CONTENT INNER -->

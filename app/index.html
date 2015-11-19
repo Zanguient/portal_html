@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<!-- 
+
+    Atos Capital - www.atoscapital.com.br
+   
+    suporte@atoscapital.com.br
+ 
+ 
+                Website
+
+
+    Versão 1.0 - 03/09/2015
+-->
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<html lang="pt-BR" class="no-js" ng-app="AtosCapital">
+<!-- BEGIN HEAD -->
+<head>
+<!--base href="/app/" /-->
+<meta charset="utf-8">
+<title ng-bind="'Atos Capital | ' + titulo">Atos Capital</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<meta content="" name="description">
+<meta content="" name="author">
+<!-- PREVENT BROWSER CACHE -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+    
+<!-- BEGIN GLOBAL MANDATORY STYLES -->
+<!--link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css"-->
+<link href="../lib/font-awesome/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link href="../lib/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css">
+<link href="../lib/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="../lib/uniform/uniform.default.css" rel="stylesheet" type="text/css">
+<!-- END GLOBAL MANDATORY STYLES -->
+<!-- BEGIN PAGE LEVEL PLUGIN STYLES -->
+<link href="../lib/css/page-error.css" rel="stylesheet" type="text/css">
+<link href="../lib/select2/select2.css" rel="stylesheet" type="text/css">
+<link href="../lib/bootstrap/datatable/dataTables.bootstrap.css" rel="stylesheet" type="text/css">
+<link href="../lib/bootstrap/datepicker/bootstrap-datepicker.css" rel="stylesheet" type="text/css">
+<!-- END PAGE LEVEL PLUGIN STYLES -->
+<!-- BEGIN PAGE STYLES -->
+<link href="../lib/jstree/style.min.css" rel="stylesheet" type="text/css">
+<!-- END PAGE STYLES -->
+<!-- BEGIN THEME STYLES -->
+<link href="../lib/css/components-rounded.css?v=1.0" id="style_components" rel="stylesheet" type="text/css">
+<link href="../lib/css/plugins.css?v=1.0" rel="stylesheet" type="text/css">
+<link href="css/layout.css?v=1.0" rel="stylesheet" type="text/css">
+<link href="css/default.css?v=1.0" rel="stylesheet" type="text/css" id="style_color">
+<link href="../css/custom.css?v=1.0.8" rel="stylesheet" type="text/css">
+<link href="../css/fontes.css?v=1.0" rel="stylesheet" type="text/css">
+<link href="../lib/angular-print/angularPrint.css?v=1.0" rel="stylesheet" type="text/css">
+<link href="../manutencao/css/estilo.css?v=1.0" rel="stylesheet" type="text/css">
+<!-- END THEME STYLES -->
+<link rel="shortcut icon" href="../img/favicon.jpg">  
+    
+</head>
+<!-- END HEAD -->
+    
+<!-- BEGIN BODY -->
+<body ng-controller="appCtrl" ng-init="init()">
+    
+<!-- PRE-LOADER IMAGE -->
+<!--img class="imgPreloader" ng-src="../img/preloader.gif" ng-hide="exibeLayout"-->
+    
+<!-- BEGIN HEADER : Logo, Usuário Conectado, Menu e Barra de Pesquisa -->
+<div class="page-header" print-remove ng-show="exibeLayout" ng-cloak>
+    
+	<!-- BEGIN HEADER TOP : Logo e Usuário Conectado -->
+	<div class="page-header-top">
+		<div class="container">
+            
+			<!-- BEGIN LOGO -->
+			<div class="page-logo">
+				<a href="javascript:;" ng-click="goHome()"><img ng-src="../img/AtosCapital.jpg" title="{{empresa.nome}}" class="logo-default"></a>
+			</div>
+			<!-- END LOGO -->
+            
+			<!-- BEGIN RESPONSIVE MENU TOGGLER -->
+			<a href="javascript:;" class="menu-toggler"></a>
+			<!-- END RESPONSIVE MENU TOGGLER -->
+            
+			<!-- BEGIN TOP NAVIGATION MENU : Menu do usuário -->
+			<div class="top-menu">
+				<ul class="nav navbar-nav pull-right">
+					
+					<!-- BEGIN USER LOGIN DROPDOWN -->
+                    <li class="dropdown dropdown-user dropdown-dark">        
+						<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" 
+                           data-hover="dropdown" data-close-others="true">                        
+						<img alt="" class="img-circle" ng-src="../img/avatar.jpg">
+                           
+						<span class="username username-hide-mobile">{{nome_usuario || 'Usuário'}}</span>
+						</a>
+						<ul class="dropdown-menu dropdown-menu-default">
+							<li>
+								<a href="javascript:;" 
+                                   ng-click="goMinhaConta()">
+								    <i class="icon-user"></i> 
+                                    Minha Conta 
+                                </a>
+							</li>
+							<li class="divider">
+							</li>
+							<!--li>
+								<a href="">
+								<i class="icon-lock"></i> Bloquear Tela </a>
+							</li-->
+							<li>
+								<a href="javascript:;" ng-click="voltarTelaLogin()">
+								<i class="icon-key"></i> Desconectar </a>
+							</li>
+						</ul>
+					</li>
+					<!-- END USER LOGIN DROPDOWN -->
+				</ul>
+			</div>
+			<!-- END TOP NAVIGATION MENU -->
+		</div>
+	</div>
+	<!-- END HEADER TOP -->
+    
+	<!-- BEGIN HEADER MENU : Menu e Barra de Pesquisa -->
+	<div class="page-header-menu">
+		<div class="container">
+			<!-- BEGIN HEADER SEARCH BOX : Barra de Pesquisa -->
+			<form class="search-form" ng-show="itensMenuLink.length > 0"> <!-- REVER ISSO -->
+				<div class="input-group">
+					<input type="text" class="form-control" 
+                           placeholder="Pesquisar"
+                           ng-model="buscaItemLink"
+                           typeahead-focus-first=false
+                           typeahead-on-select="selecionaItemMenuLink($item)"
+                           typeahead="item as item.path for item in itensMenuLink | filter:$viewValue">
+					<span class="input-group-btn">
+					<a href="javascript:;" class="btn submit"><i class="icon-magnifier"></i></a>
+					</span>
+				</div>
+			</form>
+			<!-- END HEADER SEARCH BOX -->
+            
+			<!-- BEGIN MEGA MENU : Menu -->
+			
+		<div class="hor-menu">
+			<ul class="nav navbar-nav">
+				<li ng-repeat="item in menu" 
+                    ng-show="item.temLink"
+                    ng-class=" { active : menuAtivo(item.ds_controller), 'menu-dropdown mega-menu-dropdown' : item.subControllers && item.subControllers.length > 0, open : itemExpandIs(item.id_controller) }">
+                    <!-- SEM SUBMENU -->
+					<a ng-show="!item.subControllers || item.subControllers.length == 0"
+                       href="javascript:;" ng-click="goLinkController(item)"
+                       ng-mouseover="expandItem()">
+                        {{item.ds_controller}}
+                    </a>
+                    <!-- COM SUBMENU -->
+                    <a ng-show="item.subControllers && item.subControllers.length > 0"
+                       data-hover="megamenu-dropdown" data-close-others="true" 
+                       data-toggle="dropdown" href="javascript:;"
+                       ng-mouseover="expandItem(item)">
+                        {{item.ds_controller}}<i class="fa fa-angle-down"></i>
+                    </a>
+					<ul ng-show="item.subControllers && item.subControllers.length > 0" 
+                        class="dropdown-menu">
+                        <li>
+                            <div class="mega-menu-content">
+                                <div class="row">
+                                    <div class="col-xs-1" 
+                                         style="width: inherit !important" 
+                                         ng-repeat="subController1 in item.subControllers">
+                                        <ul class="mega-menu-submenu" ng-show="subController1.temLink">
+                                            <li>
+                                                <h3>{{subController1.ds_controller}}</h3>
+                                            </li>
+                                            <li ng-repeat="subController2 in subController1.subControllers"
+                                                ng-class="{ active : moduloAtivo(subController2.ds_controller, subController1.ds_controller) }">
+                                                <a href="javascript:;" ng-click="goLinkController(subController2); expandItem()"
+                                                   ng-show="subController2.temLink">
+                                                   <i class="fa fa-angle-right"></i>
+                                                   {{subController2.ds_controller}}
+                                                </a>
+                                            </li>												
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+				</li>
+			</ul>
+		</div>
+			<!-- END MEGA MENU -->
+		</div>
+	</div>
+	<!-- END HEADER MENU -->
+</div>
+<!-- END HEADER -->
+    
+<!-- BEGIN PAGE CONTAINER : View com o título e subtítulo do conteúdo exibido, além do botão para pesquisar grupo empresa -->
+<div class="page-container" ng-show="exibeLayout" print-remove ng-cloak>
+	<!-- BEGIN PAGE HEAD -->
+	<div class="page-head" print-remove>
+		<div class="container">
+			<!-- BEGIN PAGE TITLE : Título e subtítulo da página -->
+			<div class="page-title">
+				<h1>{{pagina.titulo || 'Home'}} <small>{{pagina.subtitulo || ''}}</small></h1>
+			</div>
+			<!-- END PAGE TITLE --> 
+            
+            <!-- TESTE -->
+            <!-- BEGIN PAGE TOOLBAR : Busca de grupo empresa para administrar -->
+			<div class="page-toolbar">
+				<!-- BEGIN THEME PANEL -->
+				<div class="btn-group btn-theme-panel">
+                    <div class="selecionar-empresa">
+                        <div class="row">
+                            <div class="col col-sm-10">
+                                <span class="empresa">
+                                    {{(usuariologado.grupoempresa.ds_nome | uppercase) || ''}}
+                                </span>
+                                <span class="filial" ng-bind="getNomeAmigavelFilial(usuariologado.empresa)">
+                                </span>
+                            </div>
+                            <div class="col col-sm-2">
+                                <img ng-src="../img/loading-atos.gif" ng-show="carregandoGrupoEmpresas"/>
+                                <a class="btn" href="javascript:;" 
+                                   ng-click="limpaGrupoEmpresa()"
+                                   ng-show="PERMISSAO_FILTRO_EMPRESA && PERMISSAO_ADMINISTRATIVO && usuariologado.grupoempresa && !carregandoGrupoEmpresas">
+                                    <i class="fa fa-times-circle"></i>
+                                </a>
+                                <a href="javascript:;" class="btn dropdown-toggle" 
+                                   data-toggle="dropdown"
+                                   ng-show="PERMISSAO_FILTRO_EMPRESA && PERMISSAO_ADMINISTRATIVO && !usuariologado.grupoempresa  && !carregandoGrupoEmpresas">
+                                    <i class="icon-settings"></i>
+                                </a>
+                                
+                                <!-- LAYOUT DE BUSCA DO GRUPO EMPRESA -->
+                                <div id="admBuscaGrupoEmpresa" 
+                                     class="dropdown-menu theme-panel pull-right hold-on-click" 
+                                     ng-click="$event.stopPropagation()" style="min-width: 400px">	
+                                    <h3>Empresa</h3>
+                                    <form class="search-form">
+                                        <div class="input-group" style="width:100%">
+                                           <input type="text" class="form-control" 
+                                                  placeholder="Buscar" 
+                                                  ng-model="gempresa"
+                                                  ng-keyup="$event.keyCode == 13"
+                                                  typeahead-focus-first=false
+                                                  typeahead-on-select="selecionaGrupoEmpresa($item)"
+                                                  typeahead-min-length='3'
+                                                  typeahead-wait-ms="500"
+                                                  typeahead="gempresa as (gempresa.ds_nome | uppercase) for gempresa in buscaGrupoEmpresas($viewValue)"/>
+                                        </div>
+                                        <!--div style="width:100%; margin-top:15px" ng-show="usuariologado.grupoempresa">
+                                            <a href="javascript:;" ng-click="limpaGrupoEmpresa()" class="btn">
+                                                <i class="fa fa-times-circle"></i>
+                                            </a>
+                                            <strong>{{usuariologado.grupoempresa.ds_nome || ''}}</strong>
+                                        </div-->
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+			<!-- END PAGE TOOLBAR -->
+        </div>
+    </div>
+    <!-- END PAGE HEAD -->
+</div>
+<!-- END PAGE CONTAINER -->
+    
+<!-- BEGIN PAGE CONTENT : Conteúdo da página é incluído dinamicamente nesta div -->
+<div class="page-content" ng-show="exibeLayout" ng-cloak>
+   <!-- MODAIS -->    
+                        
+   <!-- MODAL INPUT -->
+   <div class="modal fade bs-modal-sm modal-input" id="modalInput" role="dialog"
+        data-backdrop="static" data-keyboard="false">
+       <div class="modal-dialog modal-sm">
+           <div class="modal-content">
+               <div class="modal-header">
+                   <h4 class="modal-title modal-cabecalho">{{input.titulo}}</h4>
+               </div>
+               <div class="modal-body modal-corpo" style="text-align: center">
+                    {{input.mensagem}}
+                    <input class="form-control modalConfig" type="text" ng-model="input.text"
+                           ng-keypress="($event.which === 13) ? input.funcaoConfirma(input.text) : 0">
+                    <span ng-show="input.showCheckbox" style="margin-top: 10px"> 
+                        <checkbox normal ng-model="input.checkbox" 
+                                  ng-change="input.funcaoCheckboxChange(input.checkbox)"></checkbox>
+                        {{input.checkboxText}}
+                    </span>
+               </div>
+               <div class="modal-footer">
+                   <div class="col-sm-4 col-sm-offset-1">
+                       <button type="button" class="btn default" data-dismiss="modal">
+                           {{input.textoCancela}}
+                       </button>
+                   </div>                           
+                   <div class="col-sm-4 col-sm-offset-1">
+                       <button type="button" class="btn blue"
+                               ng-click="input.funcaoConfirma(input.text)">
+                           {{input.textoConfirma}}
+                       </button>                                
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+   <!-- END MODAL INPUT -->
+
+   <!-- MODAL CONFIRMAÇÃO -->
+   <div class="modal fade bs-modal-sm modal-mensagem" id="modalConfirmacao" 
+        tabindex="-1" role="dialog" aria-hidden="true">
+       <div class="modal-dialog modal-sm">
+           <div class="modal-content">
+               <div class="modal-header">
+                   <!--button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button-->
+                   <h4 class="modal-title modal-cabecalho">{{modal_titulo}}</h4>
+               </div>
+               <div class="modal-body">
+                    {{modal_mensagem}}
+               </div>
+               <div class="modal-footer">
+                   <button type="button" class="btn default" data-dismiss="modal">
+                       {{modal_textoCancela}}
+                   </button>
+                   <button type="button" class="btn green" ng-show="modal_exibe_confirma2"
+                           data-dismiss="modal" ng-click="modal_confirma2()">
+                        {{modal_textoConfirma2}}
+                   </button>
+                   <button type="button" class="btn blue" 
+                           data-dismiss="modal" ng-click="modal_confirma()">
+                       {{modal_textoConfirma}}
+                   </button>
+               </div>
+           </div>
+       </div>
+   </div>
+   <!-- END MODAL CONFIRMAÇÃO -->    
+
+   <!-- MODAL ALERT -->
+   <div class="modal fade bs-modal-sm modal-mensagem" id="modalAlerta" role="dialog"
+        data-backdrop="static" data-keyboard="false">
+       <div class="modal-dialog modal-sm">
+           <div class="modal-content">
+               <div class="modal-header">
+                   <h4 class="modal-title modal-cabecalho">{{alerta.titulo}}</h4>
+               </div>
+               <div class="modal-body modal-corpo" style="text-align: center">
+                    {{alerta.mensagem}}
+               </div>
+               <div class="modal-footer" style="text-align: center">                           
+                   <button type="button" class="btn blue"
+                           ng-click="alerta.funcaoOk($event)">
+                       {{alerta.textoOk}}
+                   </button> 
+               </div>
+           </div>
+       </div>
+   </div>
+   <!-- END MODAL ALERT -->
+
+   <!-- END MODAIS -->
+   <div ui-view></div>
+</div>
+<!-- END PAGE CONTENT -->
+
+    
+<!-- BEGIN PRE-FOOTER : Sobre (resumido) e Contato-->
+<div class="page-prefooter" print-remove ng-show="exibeLayout" ng-cloak>
+	<div class="container">
+		<div class="row">
+            <!-- SOBRE -->
+			<div class="col-md-6 col-sm-4 col-xs-4 footer-block" >
+				<h2>Sobre</h2>
+				<p>{{empresa.sobreResumido}}</p>
+			</div>
+            <!-- VISITE NOS -->
+			<div class="col-md-3 col-sm-4 col-xs-4 footer-block" align="center">
+				<h2>Visite-nos</h2>
+				<ul class="social-icons" style="display: inline-block">
+					<li>
+						<a href="{{empresa.facebook}}" data-original-title="facebook" class="facebook" target="_blank"></a>
+					</li>
+					<li>
+						<a href="{{empresa.linkedin}}" data-original-title="linkedin" class="linkedin" target="_blank"></a>
+					</li>
+				</ul>
+			</div>
+            <!-- CONTATO -->
+			<div class="col-md-3 col-sm-4 col-xs-4 footer-block" >
+				<h2>Contato</h2>
+                <address class="margin-bottom-40">
+				 Telefone: {{empresa.telefone}}<br>
+				 Email: {{empresa.email}}
+				</address>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END PRE-FOOTER -->
+    
+<!-- BEGIN FOOTER : COPYRIGHT -->
+<div class="page-footer" print-remove ng-show="exibeLayout" ng-cloak>
+	<div class="container">
+		 {{empresa.copyright}}
+	</div>
+</div>
+<div class="scroll-to-top" print-remove ng-show="exibeLayout" ng-cloak>
+	<i class="icon-arrow-up"></i>
+</div>
+<!-- END FOOTER -->
+
+    
+    
+<!-- BEGIN JAVASCRIPTS (Load javascripts at bottom, this will reduce page load time) -->
+<!-- JQUERY -->
+<script src="../lib/jquery.min.js" type="text/javascript"></script>
+<script src="../lib/jquery-migrate.min.js" type="text/javascript"></script>
+<script src="../lib/jquery-ui.min.js" type="text/javascript"></script>
+<script src="../lib/signalr/jquery.signalR.min.js" type="text/javascript"></script>
+<!--script src="../lib/jquery.printElement.min.js" type="text/javascript"></script-->
+<!-- END JQUERY --> 
+<!-- BEGIN CORE PLUGINS -->
+<script src="../lib/bootstrap/bootstrap.min.js" type="text/javascript"></script>
+<script src="../lib/bootstrap/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
+<script src="../lib/bootstrap/datepicker/bootstrap-datepicker.js" type="text/javascript"></script>
+<script src="../lib/jquery.slimscroll.min.js" type="text/javascript"></script>
+<script src="../lib/jquery.blockui.min.js" type="text/javascript"></script>
+<script src="../lib/jquery.cokie.min.js" type="text/javascript"></script>
+<script src="../lib/uniform/jquery.uniform.min.js" type="text/javascript"></script>
+<!-- END CORE PLUGINS --> 
+<!-- ANGULAR -->
+<script src="../lib/angularjs/angular.min.js" type="text/javascript"></script>
+<script src="../lib/angularjs/angular-locale_pt-br.js" type="text/javascript"></script>
+<script src="../lib/bootstrap/ui-bootstrap-tpls-0.13.0.min.js" type="text/javascript"></script>  
+<script src="../lib/angularjs/plugins/angular-ui-router.min.js" type="text/javascript"></script>  
+<!-- END - ANGULAR --> 
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+<script src="../lib/ng-file-upload/ng-file-upload-shim.min.js" type="text/javascript"></script>
+<script src="../lib/ng-file-upload/ng-file-upload.min.js" type="text/javascript"></script> 
+<script src="../lib/jstree/jstree.min.js" type="text/javascript"></script>
+<script src="../lib/jstree/jsTree.directive.js" type="text/javascript"></script> 
+<script src="../lib/angularjs/plugins/angular-filter.min.js" type="text/javascript"></script> 
+<script src="../lib/signalr/signalr-hub.js" type="text/javascript"></script>
+<!--script src="http://localhost:50780/signalr/hubs" type="application/javascript"></script-->
+<script ng-src="{{signalRHubsPath}}"></script>
+<script src="../lib/bootstrap/angular-bootstrap-checkbox.js" type="text/javascript"></script> 
+<script src="../lib/select2/select2.min.js" type="text/javascript"></script>
+<script src="../lib/jquery.dataTables.min.js" type="text/javascript"></script>
+<!--script src="../lib/jquery.pulsate.min.js" type="text/javascript"></script-->
+<script src="../lib/bootstrap/datatable/dataTables.bootstrap.js" type="text/javascript"></script>
+<!-- END PAGE LEVEL PLUGINS -->
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src="../lib/angular-print/angularPrint.js?v=1.0" type="text/javascript"></script>
+<script src="../lib/metronic/metronic.js?v=1.0" type="text/javascript"></script>
+<script src="js/layout.js?v=1.0" type="text/javascript"></script> <!-- INDEX -->
+<!-- END PAGE LEVEL SCRIPTS -->
+<!-- ANGULAR SCRIPTS -->
+<script src="../js/diretivas.js?v=1.0.1" type="text/javascript"></script> 
+<script src="../js/utils.js?v=1.0.1" type="text/javascript"></script>     
+<script src="js/webapi.js?v=1.1.0" type="text/javascript"></script>
+<script src="js/base64.min.js?v=1.0" type="text/javascript"></script>
+<script src="componentes/nao-autorizado/js/nao-autorizado.js?v=1.0" type="text/javascript"></script> 
+<script src="componentes/nao-encontrado/js/nao-encontrado.js?v=1.0" type="text/javascript"></script>     
+<script src="componentes/administrativo/gestao-acessos/usuarios/js/administrativo.usuarios.js?v=1.0" type="text/javascript"></script>
+<script src="componentes/administrativo/gestao-acessos/consulta-parametros/js/administrativo.consulta-parametros.js?v=1.0" type="text/javascript"></script>
+<script src="componentes/administrativo/gestao-acessos/usuarios/views/cadastro/js/administrativo.usuarios.cadastro.js?v=1.0.1" type="text/javascript"></script>
+<script src="componentes/administrativo/gestao-acessos/privilegios/js/administrativo.privilegios.js?v=1.0.1" type="text/javascript"></script>
+<script src="componentes/administrativo/gestao-acessos/modulos-funcionalidades/js/administrativo.modulos-funcionalidades.js?v=1.0" type="text/javascript"></script>  
+<script src="componentes/administrativo/gestao-acessos/parametros-noticias/js/administrativo.parametros-noticias.js?v=1.0.1" type="text/javascript"></script>
+<script src="componentes/administrativo/gestao-empresas/empresas/js/administrativo.empresas.js?v=1.0.1" type="text/javascript"></script>    
+<script src="componentes/administrativo/gestao-empresas/filiais/js/administrativo.filiais.js?v=1.0" type="text/javascript"></script>
+<script src="componentes/administrativo/gestao-empresas/filiais/views/cadastro/js/administrativo.filiais.cadastro.js?v=1.0" type="text/javascript"></script>
+<script src="componentes/administrativo/gestao-empresas/dados-acesso/js/administrativo.dados-acesso.js?v=1.0.2" type="text/javascript"></script>
+<script src="componentes/administrativo/gestao-empresas/senhas-invalidas/js/administrativo.senhas-invalidas.js?v=1.0.1" type="text/javascript"></script> 
+<script src="componentes/administrativo/gestao-empresas/consulta-pos-terminal/js/administrativo.consulta-pos-terminal.js?v=1.0" type="text/javascript"></script> 
+<script src="componentes/administrativo/dados-bancarios/contas-correntes/js/administrativo.contas-correntes.js?v=1.0.2" type="text/javascript"></script> 
+<script src="componentes/administrativo/dados-bancarios/contas-correntes/views/vigencias/js/administrativo.contas-correntes-vigencias.js?v=1.0" type="text/javascript"></script> 
+<script src="componentes/administrativo/dados-bancarios/extratos-bancarios/js/administrativo.extratos-bancarios.js?v=1.0.3" type="text/javascript"></script> 
+<script src="componentes/administrativo/dados-bancarios/parametros-bancarios/js/administrativo.parametros-bancarios.js?v=1.0.5" type="text/javascript"></script> 
+<script src="componentes/administrativo/logs/acesso-usuarios/js/administrativo.acesso-usuarios.js?v=1.0" type="text/javascript"></script>
+<script src="componentes/administrativo/logs/acoes-usuarios/js/administrativo.acoes-usuarios.js?v=1.0.1" type="text/javascript"></script>
+<script src="componentes/administrativo/monitor/monitor-cargas/js/administrativo.monitor-cargas.js?v=1.0.3" type="text/javascript"></script>
+<script src="componentes/administrativo/monitor/monitor-cargas-boot/js/administrativo.monitor-cargas-boot.js?v=1.0" type="text/javascript"></script>
+<script src="componentes/administrativo/integracao-erp/titulos/js/administrativo.titulos.js?v=1.0" type="text/javascript"></script>    
+<script src="componentes/dashboard/js/dashboard.js?v=1.0" type="text/javascript"></script> <!-- DASHBOARD -->
+<script src="componentes/card-services/cash-flow/relatorios/js/card-services.cash-flow.relatorios.js?v=1.0.7" type="text/javascript"></script>
+<script src="componentes/card-services/cash-flow/recebiveis-futuros/js/card-services.recebiveis-futuros.js?v=1.0" type="text/javascript"></script>
+<script src="componentes/card-services/cash-flow/relatorio-vendas/js/card-services.relatorio-vendas.js?v=1.0" type="text/javascript"></script>
+<script src="componentes/card-services/conciliacao/conciliacao-bancaria/js/card-services.conciliacao-bancaria.js?v=1.1.3" type="text/javascript"></script>
+<script src="componentes/card-services/conciliacao/conciliacao-titulos/js/card-services.conciliacao-titulos.js?v=1.0.2" type="text/javascript"></script>
+<script src="componentes/card-services/conciliacao/relatorio-conciliacao-titulos/js/card-services.conciliacao.relatorio-conciliacao-titulos.js?v=1.0" type="text/javascript"></script>
+<script src="componentes/card-services/conciliacao/conciliacao-vendas/js/card-services.conciliacao-vendas.js?v=1.0" type="text/javascript"></script>
+<script src="componentes/card-services/conciliacao/conciliacao-terminal-logico/js/card-services.conciliacao-terminal-logico.js?v=1.0" type="text/javascript"></script>
+<script src="componentes/card-services/conciliacao/conciliacao-vendas-dia/js/card-services.conciliacao-vendas-dia.js?v=1.0" type="text/javascript"></script>
+<script src="componentes/card-services/conciliacao/relatorios/js/card-services.conciliacao.relatorios.js?v=1.0" type="text/javascript"></script>
+<script src="componentes/card-services/consolidacao/lancamento-vendas/js/card-services.lancamento-vendas.js?v=1.0" type="text/javascript"></script> 
+<script src="componentes/card-services/consolidacao/movimento-tef/js/card-services.consolidacao.movimento-tef.js?v=1.0" type="text/javascript"></script> 
+<script src="componentes/card-services/consolidacao/relatorios/js/card-services.consolidacao.relatorios.js?v=1.0.3" type="text/javascript"></script> 
+<script src="componentes/card-services/consolidacao/cadastro-codigo-autorizacao/js/card-services.cadastro-codigo-autorizacao.js?v=1.0.1" type="text/javascript"></script>   
+<script src="componentes/card-services/tef/movimento/js/card-services.movimento.js?v=1.0" type="text/javascript"></script>    
+<script src="componentes/card-services/tef/resumo-de-movimento/js/card-services.resumo-de-movimento.js?v=1.0" type="text/javascript"></script> 
+<script src="componentes/tax-services/nota-fiscal-eletronica/importacao-xml/js/tax-services.importacao-xml.js?v=1.0.4" type="text/javascript"></script>   
+<script src="componentes/tax-services/nota-fiscal-eletronica/cadastro-certificado-digital/js/tax-services.cadastro-certificado-digital.js?v=1.0.3" type="text/javascript"></script> 
+<script src="componentes/tax-services/nota-fiscal-eletronica/recebimento-nfe/js/tax-services.recebimento-nfe.js?v=1.0" type="text/javascript"></script> 
+<script src="componentes/usuario-sem-link/js/usuario-sem-link.js?v=1.0" type="text/javascript"></script>
+<script src="componentes/conta/js/conta.js?v=1.0" type="text/javascript"></script> 
+<script src="componentes/conta/views/alterar-senha/js/conta.alterar-senha.js?v=1.0" type="text/javascript"></script> 
+<script src="js/app.js?v=1.1.3" type="text/javascript"></script> <!-- INDEX -->
+<!-- END ANGULAR SCRIPTS -->
+<!-- END JAVASCRIPTS -->    
+    
+</body>
+<!-- END BODY -->
+    
+</html>

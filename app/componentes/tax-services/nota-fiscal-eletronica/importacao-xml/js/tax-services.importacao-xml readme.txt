@@ -1,0 +1,555 @@
+# README #
+
+Módulo que:
+ - gerencia o layout da tela de importação XML da Nota Fiscal Eletrônica (app/componentes/tax-services/nota-fiscal-eletronica/importacao-xml/index.html);
+
+ 
+ 
+### Pra Que Serve Este Módulo? ###
+
+Gerenciar completamente a tela de importação XML da Nota Fiscal Eletrônica.  
+
+
+
+### O que é necessário para usar o módulo? ###
+
+Como esse é um controller filho do controller principal "appCtrl" (app.js), ele herda todos os módulos importados por ele.
+Não é necessário nenhum outro módulo externo.
+
+ 
+### Outras depêndencias ###
+
+  * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
+  * $scope.token do "appCtrl"
+  * Emite evento "acessouTela" no init do controller para que seja feito o log de acesso de tela
+  * Evento "acessoDeTelaNotificado", proveniente do "appCtrl", para de fato exibir a tela e fazer requisições 
+	=> importante para o log correto de requisições HTTP, ao qual identifica corretamente a (tela de) origem
+  * $scope.grupoempresa, do "appCtrl" : grupo empresa informado pelo usuário na barra administrativa
+  * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
+  * APIS:
+    - tax/tbmanifesto
+	- util/utilnfe
+	
+ 
+ 
+ ### Interação com a WEB API ###
+ 
+  * tax/tbmanifesto
+    - GET : obtém os registros agrupados por emitente (coleção 5)
+		{	nrEmitenteCNPJCPF : string,
+			nmEmitente : string,
+			UF : string,
+			notas : [{	dtEmissao : datetime ou null,
+						modelo : int,
+						serie : int,
+						numero : int,
+						vlNFe : double,
+						nrChave : string,
+						// STATUS
+						nfe : string,
+						dsSituacaoManifesto : string,
+						dsSituacaoErp : string
+						xmlNFe = x.xmlNFe,
+						nrCNPJ : string,
+					}] // ordenado por dtEmissao
+		
+		}
+		
+	- GET : obtém detalhes da nota (coleção 4) => envia como filtro idManifesto
+		{	
+			nrEmitenteCNPJCPF : string,
+			nmEmitente : string,
+			UF : string,
+			notas : [{	idManifesto : int,
+						nfe : 
+						{
+							info : 
+							{
+								ID : string,
+								versao : double,
+							},
+							modelo : int,
+							serie : int,
+							numero : int,
+							dtEmissao : datetime,
+							dtSaiEnt : datetime,
+							vlNFe : double,
+							formatoImpressaoDANFE : 
+							{
+								codigo : int,
+								descricao : string,
+							},
+							destinoOperacao : 
+							{
+								codigo : int,
+								descricao : string,
+							},
+							consumidorFinal : 
+							{
+								codigo : int,
+								descricao : string,
+							},
+							presencaComprador : 
+							{
+								codigo : int,
+								descricao : string,
+							},
+							emissao : 
+							{
+								processo : 
+								{
+									codigo : int,
+									descricao : string,
+								},
+								versaoProcesso : string,
+								tipoEmissao : 
+								{
+									codigo : int,
+									descricao : string,
+								},
+								finalidade : 
+								{
+									codigo : int,
+									descricao : string,
+								},
+								naturezaOperacao : string,
+								tipoOperacao : 
+								{
+									codigo : int,
+									descricao : string,
+								},
+								formaPagamento : 
+								{
+									codigo : int,
+									descricao : string,
+								},
+								digestValue : string,
+							}
+						},
+						emitente : 
+						{
+							razaoSocial : string,
+							CNPJ : string,
+							CPF : string,
+							endereco : 
+							{
+								logradouro : string,
+								numero : string,
+								complemento : string,
+								bairro : string,
+								municipio : 
+								{
+									codigo : int,
+									nome : string,
+								},
+								UF : string,
+								pais : 
+								{
+									codigo : int,
+									nome : string,
+								},
+								cep : int
+							},
+							telefone : string,
+							inscricaoMunicipal : string,
+							inscricaoEstadual : string,
+							IEST : string,
+							CNAE : string,
+							nomeFantasia : string,
+							CRT : 
+							{
+								codigo : int,
+								nome : string,
+							},
+						},
+						destinatario : 
+						{
+							razaoSocial : string,
+							CNPJ : string,
+							CPF : string,
+							endereco : 
+							{
+								logradouro : string,
+								numero : string,
+								complemento : string,
+								bairro : string,
+								municipio : 
+								{
+									codigo : int,
+									nome : string,
+								},
+								UF : string,
+								pais : 
+								{
+									codigo : int,
+									nome : string,
+								},
+								cep : int
+							},
+							idEstrangeiro : string,
+							telefone : string,
+							inscricaoMunicipal : string,
+							inscricaoEstadual : string,
+							indicadorIE : 
+							{
+								codigo : int,
+								descricao : string,
+							},
+							inscricaoSUFRAMA : string,
+							email : string,
+						},
+						entrega : 
+						{
+							municipio : 
+							{
+								codigo : int,
+								nome : string,
+							},
+							CNPJ : string,
+							CPF : string,
+							logradouro : string,
+							numero : string,
+							complemento : string,
+							bairro : string,
+							UF : string,
+						},
+						produtos : 
+						[{
+							infoAdicional : string,
+							produto : 
+							{
+								num : int,
+								descricao : string,
+								qtdComercial : double,
+								unidadeComercial : string,
+								valor : double,
+								codigo : string,
+								codNCM : string,
+								codEXTIPI : string,
+								CFOP : string,
+								outrasDespesas : double,
+								valorDesconto : double,
+								valorTotalFrete : double,
+								valorSeguro : double,
+								indicadorComposicao : 
+								{
+									codigo : int,
+									descricao : string
+								},
+								codigoEANComercial : string,
+								unidadeTributaria : string,
+								qtdTributario : double,
+								codigoEANTributario : string,
+								valorUnitarioComercializacao : double,
+								valorUnitarioTributacao : double,
+								numPedidoCompra : string,
+								itemPedidoCompra : int,
+								FCI : string,
+							},
+							imposto : 
+							{
+								valorAproximadoTributos : double,
+								ICMS : 
+								{
+									origem : 
+									{
+										codigo : int,
+										descricao : string
+									},
+									tributacao : string,
+									modalidadeBC : 
+									{
+										codigo : int,
+										descricao : string
+									},
+									baseCalculoICMSNormal : double,
+									aliquotaICMSNormal : double,
+									valorICMSNormal : double,
+									baseCalculoICMSST : double,
+									aliquotaICMSST : double,
+									valorICMSST : double,
+									percentualICMSST : double,
+									percentualMVAICMSST : double,
+									modalidadeBCICMSST : 
+									{
+										codigo : int,
+										descricao : string
+									},
+								},
+								ICMSTot : 
+								{
+									baseCalculoICMS : double,
+									baseCalculoICMSST : double,
+									valorCOFINS : double,
+									valorTotalDesconto : double,
+									valorTotalFrete : double,
+									valorTotalICMS : double,
+									valorTotalICMSDesonerado : double,
+									valorTotalII : double,
+									valorTotalIPI : double,
+									valorTotalNfe : double,
+									outrasDespesas : double,
+									valorPIS : double,
+									valorTotalProdutos : double,
+									valorTotalSeguro : double,
+									valorICMSST : double,
+									valorAproximadoTotal : double,
+								},
+								II : 
+								{
+									valorBaseCalculo : double,
+									valorDespesas : double,
+									valorII : double,
+									valorIOF : double
+								},
+								IPI : 
+								{
+									codigoEnquadramento : string,
+									classeEnquadramento : string,
+									CNPJProdutor : string,
+									codigoSelo : string,
+									CST : string,
+									aliquotaIPI : double,
+									qtdSelo : int,
+									qtdTotalUnidadePadrao : double,
+									baseCalculo : double,
+									valorIPI : double,
+									valorUnidade : double,
+								},
+								PIS : 
+								{
+									CST : string,
+									aliquotaPercentual : double,
+									qtdVendida : double,
+									aliquotaReais : double,
+									valorBaseCalculo : double,
+									valorPIS : double
+								},
+								PISST : 
+								{
+									aliquotaPercentual : double,
+									qtdVendida : double,
+									aliquotaReais : double,
+									valorBaseCalculo : double,
+									valorPIS : double,
+								},
+								COFINS : 
+								{
+									CST : string,
+									aliquotaPercentual : double,
+									qtdVendida : double,
+									aliquotaReais : double,
+									valorBaseCalculo : double,
+									valorVendido : double,
+									valorCOFINS : double,
+								},
+								COFINSST : 
+								{
+									aliquotaPercentual : double,
+									qtdVendida : double,
+									aliquotaReais : double,
+									valorBaseCalculo : double,
+									valorCOFINS : double,
+								},
+								retTrib : 
+								{
+									valorBaseCalculoIRRF : double,
+									valorRetencaoPrevidencia : double,
+									valorRetidoIRRF : double,
+									valorRetidoCOFINS : double,
+									valorRetidoCSLL : double,
+									valorRetidoPIS : double,
+									valorBaseCalculoPrevidencia : double,
+								},
+							},
+							impostoDevolvido : 
+							{
+								percentualMercadoria : double,
+								valorIPI :  : double
+							},
+						}],
+
+						transporte : 
+						{
+							balsa : string,
+							modalidade : 
+							{
+								codigo : int,
+								descricao : string
+							},
+							reboques :  
+							[{
+								placa : string,
+								RNTC : string,
+								UF : string
+							}],
+							retTransp : 
+							{
+								CFOP : string,
+								codigoMunicipioOcorrencia : int,
+								aliquotaRetencao : double,
+								valorBaseCalculoRetencao : double,
+								valorICMSRetido : double,
+								valorServico : double,
+							}
+							grupoTransportador : 
+							{
+								CNPJ : string,
+								CPF : string,
+								IE : string,
+								UF : string,
+								endereco : string,
+								municipio : string,
+								nome : string
+							},
+							vagao : string,
+							grupoVeiculoTransporte : 
+							{
+								placa : string,
+								RNTC : string,
+								UF : string,
+							},
+							grupoVolumes : 
+							[{
+								qtd : int,
+								especie : string,
+								marca : string,
+								numeracao : string,
+								pesoLiquido : double,
+								pesoBruto : double,
+								lacres : [string]
+							}]
+						},
+						totais : 
+						{
+							ICMS : 
+							{
+								valorBaseCalculoICMS : double,
+								valorICMS : double,
+								valorICMSDesonerado : double,
+								valorBaseCalculoICMSST : double,
+								valorICMSST : double,
+								valorProdutos : double,
+								valorFrete : double,
+								valorSeguro : double,
+								valorDesconto : double,
+								valorII : double,
+								valorIPI : double,
+								valorPIS : double,
+								valorCOFINS : double,
+								valorOutrasDespesas : double,
+								valorNF : double,
+								valorTributos : double,
+							},
+							ISSQN : 
+							{
+								valorServico : double,
+								valorBaseCalculo : double,
+								valorISS : double,
+								valorPIS : double,
+								valorCOFINS : double,
+								dataPrestacao : datetime,
+								valorDeducao : double,
+								valorOutras : double,
+								valorDescontoIncondicionado : double,
+								valorDescontoCondicionado : double,
+								valorRetencao : double,
+								codigoRegimeTributacao : 
+								{
+									codigo : int,
+									descricao : string
+								},
+							},
+							retTrib : 
+							{
+								valorPIS : double,
+								valorCOFINS : double,
+								valorCSLL : double,
+								valorBaseCalculoIRRF : double,
+								valorIRRF : double,
+								valorBaseCalculoPrevidencia : double,
+								valorPrevidencia : double
+							}
+						},
+						cobranca : 
+						{
+							fatura : 
+							{
+								numero : string,
+								valorOriginal : double,
+								valorDesconto : double,
+								valorLiquido : double
+							},
+							duplicatas :
+							[{
+								numero : string,
+								dataVencimento : datetime,
+								valor : double
+							}]
+						}
+						retirada : 
+						{
+							municipio : 
+							{
+								codigo : int,
+								nome : string,
+							},
+							CNPJ : string,
+							CPF : string,
+							logradouro : string,
+							numero : string,
+							complemento : string,
+							bairro : string,
+							UF : string,
+						},
+						infoAdicional : 
+						{
+							fisco : string,
+							complementar : string,
+						    obsContribuinte : 
+						    [{
+							   identificacao : string,
+							   conteudo : string
+						    }],
+							obsFisco  : 
+						    [{
+							   identificacao : string,
+							   conteudo : string
+						    }],
+							processoReferenciado
+							[{
+								identificador : string,
+								indicadorOrigem : string
+							}],
+						},
+						avulsa :
+						{
+							CNPJ : string,
+							dtEmissao : datetime,
+							dtPagamento : datetime,
+							telefone : string,
+							matriculaAgente : string,
+							numDAR : string,
+							reparticaoEmitente : string,
+							UF : string,
+							valorDAR : double,
+							nomeAgente : string,
+							orgaoEmitente : string,
+						}
+					}]					
+		}	
+	
+    * util/utilnfe	
+	   - GET : Recebe um conjunto de bytes para realização do download de um arquivo
+			-> Coleção 0: XML de uma única nota
+			-> Coleção 1: XMLs de um conjunto de notas (arquivo ZIP contendo XMLs)
+			-> Coleção 2: DAMFE de uma única nota (arquivo PDF) 
+			-> Coleção 3: DAMFEs de um conjunto de notas (arquivo ZIP contendo PDFs)
+   
+
+   
+   
+   
+### Desenvolvedores ###
+
+Deivid Marinho - deividgfmarinho@gmail.com

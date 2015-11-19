@@ -1,0 +1,98 @@
+# README #
+
+Módulo que:
+ - gerencia o layout da tela de cadastro de código de autorização da Consolidação (app/componentes/card-services/consolidacao/cadastro-codigo-autorizacao/index.html);
+ 
+
+### Pra Que Serve Este Módulo? ###
+
+Gerenciar completamente a tela de cadastro de código de autorização da Consolidação (Card Services).  
+
+
+
+### O que é necessário para usar o módulo? ###
+
+Como esse é um controller filho do controller principal "appCtrl" (app.js), ele herda todos os módulos importados por ele.
+Além deles, é necessária a importação dos seguintes módulos externos.
+
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |                MODULO                  |                   DESCRIÇÃO                       |         IMPORT (no app/index.html)        |
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |                       
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+
+
+ 
+### Outras depêndencias ###
+
+  * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
+  * $scope.token do "appCtrl"
+  * Emite evento "acessouTela" no init do controller para que seja feito o log de acesso de tela
+  * Evento "acessoDeTelaNotificado", proveniente do "appCtrl", para de fato exibir a tela e fazer requisições 
+	=> importante para o log correto de requisições HTTP, ao qual identifica corretamente a (tela de) origem
+  * $scope.grupoempresa, do "appCtrl" : grupo empresa informado pelo usuário na barra administrativa
+  * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
+  * APIS (REZENDE):
+    - pgsql/pdvs
+	- pgsql/tabempresa
+	- pgsql/tabpdv
+	- pgsql/tabpessoa
+	
+ 
+ 
+ ### Interação com a WEB API ###
+ 
+  * pgsql/tabempresa
+    - GET : lista lojas (coleção 0) 
+		{ 	cod_empresa : int,
+			nom_razao_social : string,
+			nom_fantasia : string,
+			num_cnpj : string,
+		} 
+		
+  * pgsql/tabpdv
+    - GET : lista pdvs (coleção 2) // ind_pdv_desativado = "S"
+		{ 	cod_pdv : int,
+			des_pdv : string, // sem num_fabricacao
+			num_fabricacao : string
+		} 		
+ 
+  * pgsql/tabpessoa
+    - GET : lista bandeira/sacado (coleção 0) // ind_administradora_cartao = "S"
+		{ 	cod_pessoa : int,
+			nom_pessoa : string
+		}
+		
+  * pgsql/pdvs
+    - GET : lista pagamentos de cupons e notas
+		{ 	sequencia : int,
+			tipo : string, // "C" : Cupom Fiscal, "N" : Nota Fiscal
+			seq_pagamento : int,
+			data : datetime ou null, 
+			hora : string,
+			valor : double, // valor arredondado em 2 casas decimais
+			pdv : {
+					cod_pdv : int,
+					des_pdv : string,
+				  },
+			empresa : {
+						cod_empresa : int,
+						num_cnpj : string,
+						nom_fantasia : string,
+						nom_razao_social : string,
+					  },
+			num_autorizacao : string,
+			sacado : {
+						cod_pessoa : int,
+						nom_pessoa : string,
+					 },
+		}
+
+		
+ 
+   
+
+   
+### Desenvolvedores ###
+
+Deivid Marinho - deividgfmarinho@gmail.com

@@ -1,0 +1,81 @@
+# README #
+
+Módulo que:
+ - gerencia o layout da tela de senhas inválidas de Gestão de Empresas (app/componentes/administracao/gestao-empresas/senhas-invalidas/index.html);
+ - permite a visualização dos dados de acesso
+ 
+
+### Pra Que Serve Este Módulo? ###
+
+Gerenciar completamente a tela de senhas inválidas de Gestão de Empresas (Administrativo). 
+
+
+
+### O que é necessário para usar o módulo? ###
+
+Como esse é um controller filho do controller principal "appCtrl" (app.js), ele herda todos os módulos importados por ele.
+Além deles, é necessária a importação dos seguintes módulos externos.
+
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |                MODULO                  |                   DESCRIÇÃO                       |         IMPORT (no app/index.html)        |
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |                       
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+
+
+ 
+### Outras depêndencias ###
+
+  * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
+  * $scope.token do "appCtrl"
+  * Emite evento "acessouTela" no init do controller para que seja feito o log de acesso de tela
+  * Evento "acessoDeTelaNotificado", proveniente do "appCtrl", para de fato exibir a tela e fazer requisições 
+	=> importante para o log correto de requisições HTTP, ao qual identifica corretamente a (tela de) origem
+  * $scope.grupoempresa, do "appCtrl" : grupo empresa informado pelo usuário na barra administrativa
+  * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
+  * APIS:
+    - pos/loginoperadora
+	
+ 
+ 
+ ### Interação com a WEB API ###
+ 
+ 
+  * pos/loginoperadora
+    - GET : listagem dos dados de acesso (coleção 4)
+			[
+			  { id : int,
+				login : string,
+				senha : string,
+				status : boolean,
+				empresa : string,
+				grupoempresa : string,
+				operadora : string,
+				estabelecimento : string (ou null),
+				empresaCentralizadora : null ou { nu_cnpj : string,
+												  ds_fantasia : string,
+												  filial : string },
+				cdEstabelecimentoConsulta : string (ou null)
+			  }
+			]
+			
+	- DELETE : deletar dados de acesso	
+				?token=....&id=id
+				
+    - PUT : alterar dado de acesso da adquirente (relacionando com filial)
+			[
+			  { id : int,
+				login : string,
+				senha : string,
+				estabelecimento : string (pode ser null),
+				nrCNPJCentralizadora : string ou null, // para desassociar, enviar como string vazia
+				cdEstabelecimentoConsulta : string ou null,
+			  }
+			]
+ 
+   
+
+   
+### Desenvolvedores ###
+
+Deivid Marinho - deividgfmarinho@gmail.com

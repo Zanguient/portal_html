@@ -1,0 +1,194 @@
+# README #
+
+Módulo que:
+ - gerencia o layout da tela de conciliação bancária da Conciliação (app/componentes/card-services/conciliacao/conciliacao-bancaria/index.html);
+ 
+
+### Pra Que Serve Este Módulo? ###
+
+Gerenciar completamente a tela de conciliação bancária da Conciliação (Card Services).  
+
+
+
+### O que é necessário para usar o módulo? ###
+
+Como esse é um controller filho do controller principal "appCtrl" (app.js), ele herda todos os módulos importados por ele.
+Além deles, é necessária a importação dos seguintes módulos externos.
+
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |                MODULO                  |                   DESCRIÇÃO                       |         IMPORT (no app/index.html)        |
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |                       
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+
+
+ 
+### Outras depêndencias ###
+
+  * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
+  * $scope.token do "appCtrl"
+  * Emite evento "acessouTela" no init do controller para que seja feito o log de acesso de tela
+  * Evento "acessoDeTelaNotificado", proveniente do "appCtrl", para de fato exibir a tela e fazer requisições 
+	=> importante para o log correto de requisições HTTP, ao qual identifica corretamente a (tela de) origem
+  * $scope.grupoempresa, do "appCtrl" : grupo empresa informado pelo usuário na barra administrativa
+  * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
+  * APIS:
+    - card/tbcontacorrente
+	- card/tbcontacorrentetbloginadquirenteempresa
+    - cliente/empresa
+    - card/tbadquirente
+    - card/conciliacaobancaria
+	- card/tbrecebimentotitulo
+	
+ 
+ 
+ ### Interação com a WEB API ###
+ 
+  * card/tbcontacorrente
+    - GET : listagem as contas correntes (coleção 2)
+			[
+			  { cdContaCorrente : int,
+				cdGrupo : int,
+				empresa : { nu_cnpj : string, 
+							ds_fantasia : string, 
+							filial : string ou null },
+				banco : { Codigo : string, 
+						  NomeExtenso : string},
+				nrAgencia : string,
+				nrConta : string,
+				flAtivo : boolean,
+				podeAtualizar : boolean
+			  }
+			]
+			
+  * card/tbcontacorrentetbloginadquirenteempresa
+    - GET: Filiais associadas à conta (coleção 3)
+			[
+			  { nu_cnpj : string,
+				ds_fantasia : string,
+				filial : string,
+				adquirentes : [
+				{
+					cdAdquirente : int,
+					nmAdquirente : string,
+					stAdquirente : int,
+				}],
+			  }
+			]
+
+   * card/tbcontacorrentetbloginadquirenteempresa
+    - GET: Adquirentes associadas à conta (coleção 4)
+			[
+			  { cdAdquirente : int,
+				nmAdquirente : string,
+				stAdquirente : int,
+			  }
+			]
+ 
+  * cliente/empresa
+    - GET : listagem das filiais (coleção 0)
+			[
+			  { nu_cnpj : string,
+				ds_fantasia : string,
+				filial : string ou null,
+				id_grupo : int
+			  }
+			]
+ 
+  * card/tbadquirente : listagem das adquirentes
+	- GET : listagem das adquirentes (coleção 1)
+			[
+			  { cdAdquirente : int,
+                nmAdquirente : string,
+                dsAdquirente : string,
+                stAdquirente : int,  // igual a 1
+				hrExecucao : datetime,
+			  }
+			]
+ 
+  * card/conciliacaobancaria
+    - GET : obtém as informações para conciliação bancária
+	  [
+		{ ExtratoBancario : null ou // se null => não tem info do lado do extrato 
+							[{ Id : int, 
+							   Documento : string,
+							   Valor : double,
+							   Filial : string
+							 }], 
+		  RecebimentosParcela : null ou // se null => não tem info do lado do recebimento parcela
+							[{ Id : int, 
+							   NumParcela : int,
+							   Documento : string,
+							   Valor : double,
+							   Bandeira : string,
+							   DataVenda : datetime,
+							   DataPrevista : datetime,
+							   Filial : string,
+							 }],
+		  Adquirente : string, 
+		  Bandeira : string,
+		  Memo : string,
+		  Data : datetime,
+		  ValorTotalRecebimento : double,
+		  ValorTotalExtrato : double,
+		  Conciliado : int, // 1 : CONCILIADO | 2 : PRÉ-CONCILIADO | 3 : NÃO-CONCILIADO
+		  Conta : null ou  // vem NULL quando é não info de extrato
+				  {
+					cdContaCorrente : int,
+					nrAgencia : string,
+					nrConta : string,
+					banco : { Codigo : string,
+							  NomeExtenso : string
+							}
+				  },
+		}
+	  ]
+
+	  OBS1: Obrigatório o envio de filtro de data
+	  OBS2: Por ser um processamento "pesado", importante o filtrar o grupo empresa e usar um intervalo de data pequeno (de preferência, diário)
+	  OBS3: Usar paginação grande, 20+ itens por página
+	  OBS4: Ajuste vem com NumParcela = -1
+  
+	- POST : seta os itens recebimento parcela para apontar para determinado extrato ou desassociar de um extrato
+			[{ 
+				idExtrato : int, // set -1 para desassociar de um extrato
+				recebimentosParcela: [{ idRecebimento : int, 
+									    numParcela : int // -1 se for um ajuste
+									  }]
+			}]
+	
+	- PUT : altera a data de recibimento de um determinado grupo
+			{   dtaRecebimentoEfetivo : datetime, // nova data
+				recebimentosParcela: [{ idRecebimento : int, 
+									    numParcela : int // -1 se for um ajuste
+									  }]
+			}
+			
+	- PATCH: download de arquivos CSVs referentes aos cupons
+	   Enviar [{ idExtrato : int }]
+  
+	
+  * card/tbrecebimentotitulo
+    - GET : consulta títulos ERP (coleção 2)
+		[{ Id : int, 
+		   NumParcela : int,
+		   Documento : string,
+		   Valor : double,
+		   Adquirente : string,
+		   Bandeira : string,
+		   DataVenda : datetime,
+		   DataPrevista : datetime,
+		   Filial : string,
+		   Baixado : bool,
+		  }]
+		  OBS: enviar filtro de idExtrato (306)
+		  OBS2: recebe em Totais:
+		        - "valorTotal"
+				- "totalBaixados"
+ 
+   
+
+   
+### Desenvolvedores ###
+
+Deivid Marinho - deividgfmarinho@gmail.com

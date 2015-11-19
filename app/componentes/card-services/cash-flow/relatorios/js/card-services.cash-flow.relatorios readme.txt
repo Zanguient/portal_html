@@ -1,0 +1,149 @@
+# README #
+
+Módulo que:
+ - gerencia o layout da tela de relatórios do Cash Flow (app/componentes/card-services/cash-flow/relatorios/index.html);
+ - permite a visualização de relatórios sintéticos e analítico a partir de filtros
+ 
+
+### Pra Que Serve Este Módulo? ###
+
+Gerenciar completamente a tela de relatórios do Cash Flow (Card Services).  
+
+
+
+### O que é necessário para usar o módulo? ###
+
+Como esse é um controller filho do controller principal "appCtrl" (app.js), ele herda todos os módulos importados por ele.
+Além deles, é necessária a importação dos seguintes módulos externos.
+
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |                MODULO                  |                   DESCRIÇÃO                       |         IMPORT (no app/index.html)        |
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |                       
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+
+
+ 
+### Outras depêndencias ###
+
+  * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
+  * $scope.token do "appCtrl"
+  * Emite evento "acessouTela" no init do controller para que seja feito o log de acesso de tela
+  * Evento "acessoDeTelaNotificado", proveniente do "appCtrl", para de fato exibir a tela e fazer requisições 
+	=> importante para o log correto de requisições HTTP, ao qual identifica corretamente a (tela de) origem
+  * $scope.grupoempresa, do "appCtrl" : grupo empresa informado pelo usuário na barra administrativa
+  * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
+  * APIS:
+    - cliente/empresa (filiais)
+	- card/tbadquirente (adquirente)
+	- card/tbbandeira (bandeiras) 
+	- pos/recebimentoparcela (relatórios)
+	
+ 
+ 
+ ### Interação com a WEB API ###
+ 
+  * cliente/empresa
+    - GET : listagem das filiais (coleção 0)
+			[
+			  { nu_cnpj : string,
+				ds_fantasia : string,
+				filial : string ou null,
+				id_grupo : int
+			  }
+			]
+			Filtro de id_grupo pode ser enviado ou não para filtrar as filiais por grupo empresa
+			
+  * card/tbadquirente : listagem das adquirentes
+	- GET : listagem das adquirentes (coleção 1)
+			[
+			  { cdAdquirente : int,
+                nmAdquirente : string,
+                dsAdquirente : string,
+                stAdquirente : int,  // igual a 1
+				hrExecucao : datetime,
+			  }
+			]
+				
+   * card/tbbandeira
+    - GET : listagem das bandeiras (coleção 1)
+			[
+			  { cdBandeira : int
+				dsBandeira : string
+				cdAdquirente : int
+			  }
+			]		
+  
+   * pos/recebimentoparcela
+    - GET : listagem do conteúdo do relatório
+	    -> FILTROS 
+           . Data : 'yyyyMMdd' (ano com 4 dígitos seguido de mês com dois dígitos seguido de dia com 2 dígitos)
+           . Filial : cnpj   =>  300 + código do campo cnpj - 100
+		   . Adquirente : personalizado => 400 + código do campo id - 100
+		   . Bandeira : idBandeira
+			 
+		-> SINTÉTICO (coleção 9) : ordenado por desBandeira
+			 Registros = [
+			    {
+					empresa : { nu_cnpj : string,
+								ds_fantasia : string
+								filial : string,
+							  },
+					bandeira : { cdBandeira : int
+								 dsBandeira : string,
+								 cdAdquirente : int
+							   },
+                    totalTransacoes	: int,
+					valorBruto : double,
+					valorParcela : double,
+					valorLiquida : double,
+					valorDescontado : double,
+					vlDescontadoAntecipacao : double
+				}
+			 ],
+			 Totais : {
+			            totalTransacoes : int,
+						valorBruto : double,
+						valorParcela : double,
+						valorLiquida" : double,
+						valorDescontado : double,
+						vlDescontadoAntecipacao : double,
+						taxaCashFlow : double, // em %
+					  }	
+
+       -> ANALÍTICO (coleção 8) : sempre ordenado pela data de recebimento, seguido do desBandeira
+			 Registros = [
+							{
+								parcela : { idRecebimento : int, numParcela : int }, // SE FOR PARCELA
+								ajuste : { idRecebimentoAjuste : int }, // SE FOR TARIFA
+								cnpj: string,
+								dsFantasia : string, // ds_fantasia + filial
+								dsBandeira : string,
+								dtaVenda : date,
+								dtaRecebimento : date,
+								dtaRecebimentoEfetivo : date ou null,
+								codResumoVenda : string,
+								cdAutorizador : string ou null,
+								nsu : string,
+								numParcela : string,
+								valorBruto : double,
+								valorParcela : double,
+								valorLiquida : double,
+								valorDescontado : double,
+								vlDescontadoAntecipacao : double
+							}
+			 ],
+			Totais : {
+			            valorBruto : double,
+						valorParcelaBruta : double,
+						valorParcelaLiquida : double,
+						valorDescontado : double,
+						vlDescontadoAntecipacao : double
+					  }		
+ 
+            OBS: ajustes é indicado como numParcela = 0, e o dsMotivo vem em nsu
+
+   
+### Desenvolvedores ###
+
+Deivid Marinho - deividgfmarinho@gmail.com
