@@ -197,9 +197,8 @@ angular.module("administrativo-consulta-parametros", [])
 					
 			var buscaFiliais = function(showMessage){
         
-				if(!$scope.usuariologado.grupoempresa){
-					$scope.statusLogado = false;
-				} else {
+				if($scope.usuariologado.grupoempresa){
+					
 					$scope.statusLogado = true;
 				 //$scope.showProgress(divPortletBodyFiltrosPos, 10000);    
 				 $scope.showProgress(divPortletBodyFilialPos); 
