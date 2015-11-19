@@ -100,11 +100,11 @@ angular.module("AtosCapital", ['ui.router',
                                'card-services-conciliacao-vendas-dia',
                                'card-services-conciliacao-relatorios',
                                'card-services-consolidacao-relatorios',
-                               'card-services-consolidacao-movimento-tef',
+                               'card-services-movimento-tef',
                                'card-services-cadastro-codigo-autorizacao',
                                'card-services-lancamento-vendas',
-                               'card-services-movimento',
-                               'card-services-resumo-de-movimento',
+                               //'card-services-movimento',
+                               //'card-services-resumo-de-movimento',
                                'tax-services-importacao-xml',
                                'tax-services-cadastro-certificado-digital',
                                'tax-services-recebimento-nfe',
@@ -462,13 +462,13 @@ angular.module("AtosCapital", ['ui.router',
     .state('card-services-consolidacao-movimento-tef', {
         url: prefixo + 'card-services/movimento-tef',
         templateUrl: 'componentes/card-services/consolidacao/movimento-tef/index.html',
-        controller: "card-services-consolidacao-movimento-tefCtrl",
+        controller: "card-services-movimento-tefCtrl",
         data: {
             titulo: 'Card Services'
         }
       })
     
-      .state('card-services-tef-movimento', {
+      /*.state('card-services-tef-movimento', {
         url: prefixo + 'card-services/movimento',
         templateUrl: 'componentes/card-services/tef/movimento/index.html',
         controller: "card-services-movimentoCtrl",
@@ -484,7 +484,7 @@ angular.module("AtosCapital", ['ui.router',
         data: {
             titulo: 'Card Services'
         }
-      })
+      })*/
 
 
 
@@ -640,11 +640,11 @@ angular.module("AtosCapital", ['ui.router',
     var controllerCardServicesConciliacaoVendasDia = undefined;
     var controllerCardServicesConciliacaoRelatorios = undefined;                        
     var controllerCardServicesConsolidacaoRelatorios = undefined;
-    var controllerCardServicesConsolidacaoMovimentoTef = undefined;
+    var controllerCardServicesMovimentoTef = undefined;
     var controllerCardServicesCadastroCodigoAutorizacao = undefined;
     var controllerCardServicesLancamentoVendas = undefined;
-    var controllerCardServicesMovimento = undefined; 
-    var controllerCardServicesResumoDeMovimento = undefined;                         
+    //var controllerCardServicesMovimento = undefined; 
+    //var controllerCardServicesResumoDeMovimento = undefined;                         
     var controllerTaxServicesImportacaoXML = undefined;
     var controllerTaxServicesCadastroCertificadoDigital = undefined;
     var controllerTaxServicesRecebimentoNfe = undefined;
@@ -696,8 +696,8 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_CADASTRO_CODIGO_AUTORIZACAO = false;
     $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_LANCAMENTO_VENDAS = false;
     $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_MOVIMENTO_TEF = false;
-    $scope.PERMISSAO_CARD_SERVICES_TEF_MOVIMENTO = false;  
-    $scope.PERMISSAO_CARD_SERVICES_TEF_RESUMO_DE_MOVIMENTO = false;                         
+    //$scope.PERMISSAO_CARD_SERVICES_TEF_MOVIMENTO = false;  
+    //$scope.PERMISSAO_CARD_SERVICES_TEF_RESUMO_DE_MOVIMENTO = false;                         
     $scope.PERMISSAO_TAX_SERVICES = false;
     $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA = false;
     $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_IMPORTACAO_XML = false;
@@ -1040,18 +1040,18 @@ angular.module("AtosCapital", ['ui.router',
     };                        
     /**
       * Exibe como conteúdo a Movimento, de TEF
-      */
+      * /
     $scope.goCardServicesMovimento = function(params){
         controllerAtual = controllerCardServicesMovimento;
         go('card-services-tef-movimento', params);
     }; 
     /**
       * Exibe como conteúdo a Resumo de Movimento, de TEF
-      */
+      * /
     $scope.goCardServicesResumoDeMovimento = function(params){
         controllerAtual = controllerCardServicesResumoDeMovimento;
         go('card-services-tef-resumo-de-movimento', params);
-    };                         
+    };  */                       
     /**
       * Exibe como conteúdo a Nota Fiscal Eletrônica Importação XML, de Tax Services
       */
@@ -1410,7 +1410,7 @@ angular.module("AtosCapital", ['ui.router',
             }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'MOVIMENTO TEF')
                      controllerAtual.id_controller !== controllerCardServicesMovimentoTef.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
-        }else if(url === $state.get('card-services-tef-movimento').url){
+        }/*else if(url === $state.get('card-services-tef-movimento').url){
             // Card Services > TEF > Movimento
             if(!$scope.PERMISSAO_CARD_SERVICES || !$scope.PERMISSAO_CARD_SERVICES_TEF || !$scope.PERMISSAO_CARD_SERVICES_TEF_MOVIMENTO){
                 // Não possui permissão!
@@ -1428,7 +1428,7 @@ angular.module("AtosCapital", ['ui.router',
             }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'RESUMO DE MOVIMENTO')
                      controllerAtual.id_controller !== controllerCardServicesResumoDeMovimento.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
-        }else if(url === $state.get('tax-services-nota-fiscal-eletronica-importacao-xml').url){
+        }*/else if(url === $state.get('tax-services-nota-fiscal-eletronica-importacao-xml').url){
             // Tax Services > Nota Fiscal Eletrônica > Importação XML
             if(!$scope.PERMISSAO_TAX_SERVICES || !$scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA || !$scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_IMPORTACAO_XML){
                 // Não possui permissão!
@@ -1627,7 +1627,7 @@ angular.module("AtosCapital", ['ui.router',
                     controllerAtual = controller;
                 controllerCardServicesMovimentoTef = controller;
                 return $scope.goCardServicesMovimentoTef;    
-            case 'MOVIMENTO':
+            /*case 'MOVIMENTO':
                 if($location.path() === $state.get('card-services-tef-movimento').url)
                     controllerAtual = controller;
                 controllerCardServicesMovimento = controller;
@@ -1636,7 +1636,7 @@ angular.module("AtosCapital", ['ui.router',
                 if($location.path() === $state.get('card-services-tef-resumo-de-movimento').url)
                     controllerAtual = controller;
                 controllerCardServicesResumoDeMovimento = controller;
-                return $scope.goCardServicesResumoDeMovimento;     
+                return $scope.goCardServicesResumoDeMovimento;     */
             // Tax Services
             case 'IMPORTAÇÃO XML':
                 if($location.path() === $state.get('tax-services-nota-fiscal-eletronica-importacao-xml').url)
@@ -1724,7 +1724,6 @@ angular.module("AtosCapital", ['ui.router',
             case 'CASH FLOW' : $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW = true; break;
             case 'RELATÓRIO DE VENDAS': $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW_RELATORIO_VENDAS = true; break;
             case 'RECEBÍVEIS FUTUROS': $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW_RECEBIVEIS_FUTUROS = true; break;
-            case 'TEF' : $scope.PERMISSAO_CARD_SERVICES_TEF = true; break;
             case 'CONCILIAÇÃO': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO = true; break;
             case 'CONCILIAÇÃO BANCÁRIA': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_BANCARIA = true; break;
             case 'CONCILIAÇÃO DE TÍTULOS': $scope.PERMISSAO_CARD_SERVICES_CONCILIACAO_CONCILIACAO_TITULOS = true; break;
@@ -1735,8 +1734,9 @@ angular.module("AtosCapital", ['ui.router',
             case 'CONSOLIDAÇÃO': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO = true; break;
             case 'CADASTRO CÓDIGO AUTORIZAÇÃO': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_CADASTRO_CODIGO_AUTORIZACAO = true; break;
             case 'LANÇAMENTO DE VENDAS': $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_LANCAMENTO_VENDAS = true; break;
+            /*case 'TEF' : $scope.PERMISSAO_CARD_SERVICES_TEF = true; break;
             case 'MOVIMENTO' : $scope.PERMISSAO_CARD_SERVICES_TEF_MOVIMENTO = true; break;
-            case 'RESUMO DE MOVIMENTO' : $scope.PERMISSAO_CARD_SERVICES_TEF_RESUMO_DE_MOVIMENTO = true; break;
+            case 'RESUMO DE MOVIMENTO' : $scope.PERMISSAO_CARD_SERVICES_TEF_RESUMO_DE_MOVIMENTO = true; break;*/
             case 'MOVIMENTO TEF' : $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_MOVIMENTO_TEF = true; break;    
 
             // AMBÍGUOS
@@ -1825,8 +1825,8 @@ angular.module("AtosCapital", ['ui.router',
             case 'CADASTRO CÓDIGO AUTORIZAÇÃO': return state == 'cadastro-codigo-autorizacao';
             case 'LANÇAMENTO DE VENDAS': return state == 'lancamento-vendas';
             case 'MOVIMENTO': return state == 'movimento';  
-            case 'RESUMO DE MOVIMENTO': return state == 'resumo-de-movimento';
-            case 'MOVIMENTO TEF': return state == 'movimento-tef';
+            //case 'RESUMO DE MOVIMENTO': return state == 'resumo-de-movimento';
+            //case 'MOVIMENTO TEF': return state == 'movimento-tef';
 
             // AMBÍGUOS
             case 'RELATÓRIOS': return titulopai.toUpperCase() === 'CASH FLOW' ?

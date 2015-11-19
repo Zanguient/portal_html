@@ -35,10 +35,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
   * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
   * APIS:
     - cliente/empresa (filiais)
-	- pos/bandeirapos (bandeiras)
-    - pos/operadora (adquirente)
-	- pos/terminallogico (terminais lógicos)
-	- pos/recebimento (relatórios)
+	- card/tbrecebimentotef (relatórios)
 	
  
  
@@ -54,109 +51,26 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 			  }
 			]
 			Filtro de id_grupo pode ser enviado ou não para filtrar as filiais por grupo empresa
-			
-  * pos/operadora
-    - GET : listagem das adquirentes (coleção 0)
-			[
-			  { id : int,
-				nmOperadora : string,
-				idGrupoEmpresa : int
-			  }
-			]	
-			Filtro de cnpj pode ser enviado  com  300 + código do cnpj - 100 
-				
-   * pos/bandeirapos
-    - GET : listagem das bandeiras (coleção 0)
-			[
-			  { id : int
-				desBandeira : string
-				idOperadora : int
-			  }
-			]
-			Filtro de idOperadora pode ser enviado ou não para filtrar as bandeiras por adquirente			
- 
-   * pos/terminallogico
-    - GET : listagem das bandeiras (coleção 2)
-			[
-			  { idTerminalLogico : int,
-				dsTerminalLogico : string,
-				idOperadora : int
-			  }
-			]
-			Filtro de idOperadora pode ser enviado ou não para filtrar os terminais lógicos por adquirente			
- 
-  
-   * pos/recebimento
-    - GET : listagem do conteúdo do relatório e obtenção dos NSUs e Cod Autorizador do filtro
-	    -> FILTROS 
-           . Data : 'yyyyMMdd' (ano com 4 dígitos seguido de mês com dois dígitos seguido de dia com 2 dígitos)
-           . Filial : cnpj
-		   . Adquirente : personalizado => 300 + código do campo id - 100
-		   . Bandeira : idBandeira
-		   . Terminal Lógico : idLogicoTerminal
- 		
-		-> NSU (coleção 11) = [nsu1,nsu2,...]
-		
-		-> Cod. Autorizador (coleção 12) = [cdAutorizador1,cdAutorizador2,...]
-		
-		-> TERMINAL LÓGICO (coleção 3) : ordenado por ds_fantasia + dsTerminalLogico
-			 Registros = [
-							{
-								terminal : { idTerminalLogico : int,
-											 dsTerminalLogico : string
-										   },
-								empresa : { nu_cnpj : string,
-											ds_fantasia : string
-										  },
-								bandeira : { id : int
-											 desBandeira : string
-										   },
-								idOperadora : int,
-								totalTransacoes	: int,
-								valorBruto : double
-							}
-				],
-			 Totais : {
-						totalTransacoes : int,
-						valorBruto : double
-					  }
-			 
-		-> SINTÉTICO (coleção 4) : ordenado por ds_fantasia + desBandeira
-			 Regitros = [
-							{
-								empresa : { nu_cnpj : string,
-											ds_fantasia : string,
-											filial : string,
-										  },
-								bandeira : { id : int
-											 desBandeira : string
-										   },
-								idOperadora : int,
-								totalTransacoes	: total,
-								valorBruto : valor
-							}
-				],
-			Totais : {
-						totalTransacoes : int,
-						valorBruto : double
-					  }
 
-       -> ANALÍTICO (coleção 5) : ordenado por dtVenda
-			 Registros = [
-							{
-								cnpj : string,
-								dtaVenda : date,
-								dsFantasia : string, // ds_fantasia + filial
-								dsTerminalLogico : string,
-								desBandeira : string
-								nsu	: string,
-								cdAutorizador : string,
-								valorVendaBruta : double
-							}
-				 ],
-			 Totais : {
-						valorVendaBruta : double
-					  }
+  
+   * card/tbrecebimentotef
+    - GET : 
+	   . ANALÍTICO : listagem dos recebimetos TEF (coleção 4)
+	    [{  dtVenda : datetime,
+			hrVenda : string,
+			empresa : null ou { nu_cnpj : string, ds_fantasia : string, filial : string },
+			dsBandeira : string,
+			nrCartao : string,
+			vlVenda : double,
+			qtParcelas : int,
+			tipoProtuto : string,
+			nrNSUTEF : string,
+			nrPDVTEF : string,
+			dsEstadoTransacaoTef : string,
+			tbRedeTEF : null ou { cdRedeTef : int, dsRedeTef : string }
+		 }]
+		 Totais : "valorVenda" : double,
+				  "totalTransacoes" : int
  
    
 
