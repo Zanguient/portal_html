@@ -4,14 +4,14 @@
  *  suporte@atoscapital.com.br
  *
  *
- *  Versão 1.0 - 22/10/2015
+ *  Versão 1.0 - 19/11/2015
  *
  */
 
 // App
-angular.module("card-services-consolidacao-movimento-tef", []) 
+angular.module("card-services-movimento-tef", []) 
 
-.controller("card-services-consolidacao-movimento-tefCtrl", ['$scope',
+.controller("card-services-movimento-tefCtrl", ['$scope',
                                              '$state',
                                              '$filter',
                                              '$timeout',
@@ -25,29 +25,33 @@ angular.module("card-services-consolidacao-movimento-tef", [])
     // Exibição
     $scope.itens_pagina = [50, 100, 150, 200]; 
     $scope.paginaInformada = 1; // página digitada pelo usuário 
-    
-    
     // Filtros
-    
-    $scope.abrirCalendarioDataMin = false;
-    $scope.abrirCalendarioDataMax = false;                                           
-                                                 
-    var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
-    var divPortletBodyRelatorioPos = 1; // posição da div que vai receber o loading progress
-    $scope.tab = 1; // init Sintético
-    
-                                              
+    $scope.filiais = [];                                                                                   
+    $scope.filtro = {datamin : new Date(), datamax : '', filial : null,
+					 itens_pagina : $scope.itens_pagina[0], order : 0,
+                     analitico : { pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0},
+                     sintetico : { pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0},
+                    };
+    $scope.relatorio = {sintetico : [], analitico : []};     
+    // Totais
+    $scope.total = {sintetico : {totalTransacoes : 0, valorVenda : 0}, 
+                    analitico : {valorVenda : 0, totalTransacoes : 0}};                                              
+
     // flag
-    var ultimoFiltro = undefined;
+    $scope.tab = 1; // init Analítico                                             
+    var ultimoFiltro = undefined;                                          
     $scope.exibeTela = false;  
+    $scope.buscandoRecebimento = false;       
+    $scope.abrirCalendarioDataMin = false;
+    $scope.abrirCalendarioDataMax = false;  
+    var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
+    var divPortletBodyRecebimentoPos = 1; // posição da div que vai receber o loading progress
                                                 
-                                                 
-                                                 
     // Inicialização do controller
-    $scope.cardServices_consolidacao_movimento_tefInit = function(){
+    $scope.cardServices_movimento_tefInit = function(){
         // Título da página 
-        $scope.pagina.titulo = 'Menu';                          
-        $scope.pagina.subtitulo = 'Sub Módulo';
+        $scope.pagina.titulo = 'Card Services';                          
+        $scope.pagina.subtitulo = 'Movimento TEF';
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
@@ -58,13 +62,10 @@ angular.module("card-services-consolidacao-movimento-tef", [])
                 // Avalia grupo empresa
                 if($scope.usuariologado.grupoempresa){ 
                     // Reseta seleção de filtro específico de empresa
-                    $scope.filtro.filial = $scope.filtro.adquirente = $scope.filtro.bandeira = $scope.filtro.terminallogico = null;
+                    $scope.filtro.filial = null;
                     buscaFiliais();
                 }else{ // reseta tudo e não faz buscas 
                     $scope.filiais = []; 
-                    $scope.adquirentes = [];
-                    $scope.bandeiras = [];
-                    $scope.terminais = [];
                 }
             }
         }); 
@@ -73,44 +74,94 @@ angular.module("card-services-consolidacao-movimento-tef", [])
             $scope.exibeTela = true;
             // Carrega filiais
             if($scope.usuariologado.grupoempresa) buscaFiliais();
-        }); 
+        });
         // Acessou a tela
-        $scope.$emit("acessouTela");
+        //$scope.$emit("acessouTela");
         // Carrega filiais
-        //if($scope.usuariologado.grupoempresa) buscaFiliais(true);
-    };
-    
-     
-        var buscaFiliais = function(){
-
-       var filtros = [];
-
-       // Somente com status ativo
-       filtros.push({id: /*$campos.cliente.empresa.fl_ativo*/ 114, valor: 1}); 
-
-       // Filtro do grupo empresa => barra administrativa
-       if($scope.usuariologado.grupoempresa){ 
-           filtros.push({id: /*$campos.cliente.empresa.cdGrupo*/ 116, 
-                       valor: $scope.usuariologado.grupoempresa.id_grupo});
-           if($scope.usuariologado.empresa) filtros.push({id: /*$campos.cliente.empresa.nu_cnpj*/ 100, 
-                                                          valor: $scope.usuariologado.empresa.nu_cnpj});
+        $scope.exibeTela = true;
+        if($scope.usuariologado.grupoempresa) buscaFiliais();
+    }; 
+                                                 
+                                                 
+                                                 
+                                                 
+    // PAGINAÇÃO
+    /**
+      * Altera efetivamente a página exibida
+      */                                            
+    var setPagina = function(pagina){
+       var totalPaginas = $scope.tabIs(0) ? $scope.filtro.sintetico.total_paginas : 
+                          $scope.tabIs(1) ? $scope.filtro.analitico.total_paginas : 0;
+       if(pagina >= 1 && pagina <= totalPaginas){ 
+           if($scope.tabIs(2)){ 
+               $scope.filtro.sintetico.pagina = pagina;
+               if($scope.relatorio.sintetico.length > 0) buscaRelatorioSintetico(false);
+           }else if($scope.tabIs(1)){ 
+               $scope.filtro.analitico.pagina = pagina;
+               if($scope.relatorio.analitico.length > 0) buscaRelatorioAnalitico(false, false);
+           }
        }
-       
-       $webapi.get($apis.getUrl($apis.cliente.empresa, 
-                                [$scope.token, 0, /*$campos.cliente.empresa.ds_fantasia*/ 104],
-                                filtros)) 
-            .then(function(dados){
-                $scope.filiais = dados.Registros;
-              },
-              function(failData){
-                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
-                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                 //else $scope.showAlert('Houve uma falha ao obter filiais (' + failData.status + ')', true, 'danger', true);
-              });     
+       $scope.atualizaPaginaDigitada();    
+    };
+    /**
+      * Vai para a página anterior
+      */
+    $scope.retrocedePagina = function(){
+        var pagina = $scope.tabIs(2) ? $scope.filtro.sintetico.pagina : 
+                     $scope.tabIs(1) ? $scope.filtro.analitico.pagina : 0;
+        setPagina(pagina - 1); 
+    };
+    /**
+      * Vai para a página seguinte
+      */                                            
+    $scope.avancaPagina = function(){
+        var pagina = $scope.tabIs(2) ? $scope.filtro.sintetico.pagina : 
+                     $scope.tabIs(1) ? $scope.filtro.analitico.pagina : 0;
+        setPagina(pagina + 1); 
+    };
+    /**
+      * Foi informada pelo usuário uma página para ser exibida
+      */                                            
+    $scope.alteraPagina = function(){
+        if($scope.paginaInformada) setPagina(parseInt($scope.paginaInformada));
+        else $scope.atualizaPaginaDigitada();  
+    };
+    /**
+      * Sincroniza a página digitada com a que efetivamente está sendo exibida
+      */                                            
+    $scope.atualizaPaginaDigitada = function(){
+        $scope.paginaInformada = $scope.tabIs(2) ? $scope.filtro.sintetico.pagina : 
+                                 $scope.tabIs(1) ? $scope.filtro.analitico.pagina : 1; 
     };                                             
+                                                 
+                                                 
+                                                 
     
+    /* FILTRO */
     
-    // DATA
+    /**
+      * Limpa os filtros
+      */
+    $scope.limpaFiltros = function(){
+        
+        ultimoFiltro = undefined;
+        
+        // Limpar data => Refazer busca?
+        $scope.filtro.datamin = new Date();
+        $scope.filtro.datamax = ''; 
+        
+        $scope.filtro.filial = null; 
+
+        // Limpa relatórios
+        $scope.relatorio.analitico = [];
+        $scope.relatorio.sintetico = [];
+        $scope.filtro.analitico.pagina = $scope.filtro.sintetico.pagina = 1;
+        $scope.filtro.analitico.total_registros = $scope.filtro.sintetico.total_registros = 0;
+        $scope.filtro.analitico.faixa_registros = $scope.filtro.sintetico.faixa_registros = '0-0';
+        $scope.filtro.analitico.total_paginas = $scope.filtro.sintetico.total_paginas = 0;
+    }
+    
+    // DATA RECEBIMENTO
     var ajustaIntervaloDeData = function(){
       // Verifica se é necessário reajustar a data max para ser no mínimo igual a data min
       if($scope.filtro.datamax && $scope.filtro.datamax < $scope.filtro.datamin) $scope.filtro.datamax = $scope.filtro.datamin;
@@ -126,7 +177,7 @@ angular.module("card-services-consolidacao-movimento-tef", [])
         $scope.abrirCalendarioDataMax = false;
       };
     $scope.alterouDataMin = function(){
-      ajustaIntervaloDeData();
+         ajustaIntervaloDeData(); 
     };
     // Data MAX
     $scope.exibeCalendarioDataMax = function($event) {
@@ -136,25 +187,227 @@ angular.module("card-services-consolidacao-movimento-tef", [])
         }
         $scope.abrirCalendarioDataMax = !$scope.abrirCalendarioDataMax;
         $scope.abrirCalendarioDataMin = false;
-      };
-    $scope.alterouDataMax = function(){
-       if($scope.filtro.datamax === null) $scope.filtro.datamax = '';
-       else ajustaIntervaloDeData();
     };
-     
-    
-        
-    //TAB 
+    $scope.alterouDataMax = function(){
+        if($scope.filtro.datamax === null) $scope.filtro.datamax = '';
+        else ajustaIntervaloDeData(); 
+    };
+                                                 
+                                                 
+    // TABS
     /**
-      * Retorna true se a tab informada corresponde a tab em exibição
+      * Seta a tab
       */
-    $scope.tabIs = function (tab){
-        return $scope.tab === tab;
+    $scope.setTab = function(tab){
+        if(typeof tab === 'number' && tab >= 1 && tab <= 2){ 
+            $scope.tab = tab;
+            if($scope.tabIs(2)){
+                $scope.paginaInformada = $scope.filtro.sintetico.pagina;
+                if($scope.relatorio.sintetico.length == 0 && 
+                   $scope.relatorio.analitico.length > 0) 
+                        buscaRelatorioSintetico(false);   
+            }else if($scope.tabIs(1)){
+                $scope.paginaInformada = $scope.filtro.analitico.pagina;
+                if($scope.relatorio.analitico.length == 0 && 
+                   $scope.relatorio.sintetico.length > 0) 
+                        buscaRelatorioAnalitico(false, false);   
+            }
+        }
     }
     /**
-      * Altera a tab em exibição
+      * Retorna true se a tab selecionada é inforamda
       */
-    $scope.setTab = function (tab){
-        if (tab >= 1 && tab <= 2) $scope.tab = tab;  
-    }                                             
+    $scope.tabIs = function(tab){
+        return $scope.tab === tab;
+    }                                              
+                                                 
+                                                 
+    
+    // FILIAIS
+    /**
+      * Busca as filiais
+      */
+    var buscaFiliais = function(nu_cnpj){
+        
+       $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
+        
+       var filtros = [];
+        
+       // Somente com status ativo
+       filtros.push({id: /*$campos.cliente.empresa.fl_ativo*/ 114, valor: 1});
+
+       // Filtro do grupo empresa => barra administrativa
+       if($scope.usuariologado.grupoempresa){ 
+           filtros.push({id: /*$campos.cliente.empresa.id_grupo*/ 116, valor: $scope.usuariologado.grupoempresa.id_grupo});
+           if($scope.usuariologado.empresa) filtros.push({id: /*$campos.cliente.empresa.nu_cnpj*/ 100, 
+                                                          valor: $scope.usuariologado.empresa.nu_cnpj});
+       }
+       
+       $webapi.get($apis.getUrl($apis.cliente.empresa, 
+                                [$scope.token, 0, /*$campos.cliente.empresa.ds_fantasia*/ 104],
+                                filtros)) 
+            .then(function(dados){
+                $scope.filiais = dados.Registros;
+                // Reseta
+                if(!nu_cnpj) $scope.filtro.filial = null;
+                else $scope.filtro.filial = $filter('filter')($scope.filiais, function(f) {return f.nu_cnpj === nu_cnpj;})[0];
+                // Fecha o progress
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter filiais (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+              });     
+    };
+    /**
+      * Selecionou uma filial
+      */
+    $scope.alterouFilial = function(){
+        //console.log($scope.filtro.filial); 
+    };
+                                          
+    
+    /**
+      * Retorna os filtros para ser usado junto a url para requisição via webapi
+      */
+    var obtemFiltroDeBusca = function(){
+       var filtros = [];
+       // Data
+       var filtroData = {id: /*$campos.card.tbrecebimentotef.dtaVenda*/ 109,
+                         valor: $scope.getFiltroData($scope.filtro.datamin)}; 
+       if($scope.filtro.datamax)
+           filtroData.valor = filtroData.valor + '|' + $scope.getFiltroData($scope.filtro.datamax);
+       filtros.push(filtroData);
+        
+       // Filial
+       if($scope.filtro.filial && $scope.filtro.filial !== null){
+           var filtroFilial = {id: /*$campos.card.tbrecebimentotef.nrCNPJ*/ 102, 
+                               valor: $scope.filtro.filial.nu_cnpj};
+           filtros.push(filtroFilial);  
+       }
+        
+       // Retorna    
+       return filtros;
+    };
+    
+    var alteraFiltroDeBusca = function(){
+        if($scope.usuariologado.grupoempresa){
+            if($scope.tabIs(1)){
+                if($scope.relatorio.analitico.length > 0) buscaRelatorioAnalitico(true);
+            }
+        }    
+    };											 
+	 
+	
+	$scope.buscaRecebimentoTEF = function(){
+        // Avalia se há um grupo empresa selecionado
+        if(!$scope.usuariologado.grupoempresa){
+            $scope.showModalAlerta('Por favor, selecione uma empresa', 'Atos Capital', 'OK', 
+                                   function(){
+                                         $timeout(function(){$scope.setVisibilidadeBoxGrupoEmpresa(true);}, 300);
+                                    }
+                                  );
+            return;   
+        }
+        // Intervalo de data
+        if($scope.filtro.datamax){
+            var timeDiff = Math.abs($scope.filtro.datamax.getTime() - $scope.filtro.datamin.getTime());
+            var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+            if(diffDays > 31){
+                var periodo = diffDays <= 366 ? diffDays + ' dias' : 'mais de um ano';
+                $scope.showModalAlerta('Por favor, selecione um intervalo de data de no máximo 31 dias. (Sua seleção consta ' + periodo + ')', 'Atos Capital', 'OK', 
+                                   function(){
+                                         $timeout(function(){$scope.exibeCalendarioDataMax();}, 300);
+                                    }
+                                  );
+                return; 
+            }
+        }
+        // Nova busca
+        if($scope.tabIs(1)) buscaRelatorioAnalitico(true);
+    };
+	
+	// ANALÍTICO 
+    /**
+      * Busca o relatório analítico
+      */
+    var buscaRelatorioAnalitico = function(resetaRelatorioSintetico, progressoemexecucao){
+        
+       $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen    
+       $scope.showProgress(divPortletBodyRecebimentoPos);
+        
+       // Filtros    
+       var filtros = obtemFiltroDeBusca();
+           
+       $scope.buscandoMovimento = true;    
+        
+       $webapi.get($apis.getUrl($apis.card.tbrecebimentotef, 
+                                [$scope.token, 4, 100, 0, 
+                                 $scope.filtro.itens_pagina, $scope.filtro.analitico.pagina],
+                                filtros)) 
+            .then(function(dados){
+           
+                ultimoFiltro = filtros;
+           
+                // Reseta os valores totais
+                $scope.total.analitico.valorVenda = 0;
+                $scope.total.analitico.totalTransacoes = 0;
+                // Obtém os dados
+                $scope.relatorio.analitico = dados.Registros;
+                // Obtém os totais
+                $scope.total.analitico.valorVenda = dados.Totais.valorVenda;
+                $scope.total.analitico.totalTransacoes = dados.Totais.totalTransacoes;
+           
+                // Set valores de exibição
+                $scope.filtro.analitico.total_registros = dados.TotalDeRegistros;
+                $scope.filtro.analitico.total_paginas = Math.ceil($scope.filtro.analitico.total_registros / $scope.filtro.itens_pagina);
+                if($scope.relatorio.analitico.length === 0) $scope.filtro.analitico.faixa_registros = '0-0';
+                else{
+                    var registroInicial = ($scope.filtro.analitico.pagina - 1)*$scope.filtro.itens_pagina + 1;
+                    var registroFinal = registroInicial - 1 + $scope.filtro.itens_pagina;
+                    if(registroFinal > $scope.filtro.analitico.total_registros) registroFinal = $scope.filtro.analitico.total_registros;
+                    $scope.filtro.analitico.faixa_registros =  registroInicial + '-' + registroFinal;
+                }
+                // Verifica se a página atual é maior que o total de páginas
+                if($scope.filtro.analitico.pagina > $scope.filtro.analitico.total_paginas)
+                    setPagina(1); // volta para a primeira página e refaz a busca
+           
+                // Reseta os outros para forçar uma nova busca
+                if(resetaRelatorioSintetico){
+                    $scope.relatorio.sintetico = [];
+                    $scope.filtro.sintetico.pagina = 1;
+                    $scope.filtro.sintetico.total_registros = 0;
+                    $scope.filtro.sintetico.faixa_registros = '0-0';
+                    $scope.filtro.sintetico.total_paginas = 0;
+                }
+           
+                // Fecha os progress
+                $scope.buscandoMovimento = false;
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+                $scope.hideProgress(divPortletBodyRecebimentoPos);
+              },
+              function(failData){
+                 // Reseta tudo
+                 $scope.relatorio.analitico = [];
+                 $scope.filtro.analitico.pagina = 1;
+                 $scope.filtro.analitico.total_registros = 0;
+                 $scope.filtro.analitico.faixa_registros = '0-0';
+                 $scope.filtro.analitico.total_paginas = 0;
+           
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter relatório analítico (' + failData.status + ')', true, 'danger', true);
+           
+                 $scope.buscandoMovimento = false;
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+                 $scope.hideProgress(divPortletBodyRecebimentoPos);
+              });       
+    }											 
+
+     
+    //console.log($scope.resumos_movimento);    
+    //console.log($scope.movimentos);    
+     
 }]);

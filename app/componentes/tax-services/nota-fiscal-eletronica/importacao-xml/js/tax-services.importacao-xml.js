@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.5 - 19/11/2015
+ *  - Não retorna para a tela de login quando ocorrer erro 503 ou 404. Notifica a indisponibilidade do serviço
+ *
  *  Versão 1.0.4 - 25/09/2015
  *  - Notifica acesso de tela 
  *
@@ -574,7 +577,7 @@ angular.module("tax-services-importacao-xml", [])
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
-                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else if(failData.status === 503 || failData.status === 404) $scope.showAlert('Serviço indisponível no momento. Por favor tente mais tarde', true, 'warning',true);//$scope.voltarTelaLogin(); // Volta para a tela de login
                  else $scope.showAlert('Houve uma falha ao obter os almaxorifados para importação (' + failData.status + ')', true, 'danger',true);
                  $scope.hideProgress(divPortletBodyFiltrosPos);
                  $scope.hideProgress(divPortletBodyManifestoPos);
@@ -607,7 +610,7 @@ angular.module("tax-services-importacao-xml", [])
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
-                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else if(failData.status === 503 || failData.status === 404) $scope.showAlert('Serviço indisponível no momento. Por favor tente mais tarde', true, 'warning',true);//$scope.voltarTelaLogin(); // Volta para a tela de login
                  else $scope.showAlert('Houve uma falha ao obter a natureza da operação para importação da NFe(' + failData.status + ')', true, 'danger',true);
                  $scope.hideProgress(divPortletBodyFiltrosPos);
                  $scope.hideProgress(divPortletBodyManifestoPos);
@@ -696,7 +699,7 @@ angular.module("tax-services-importacao-xml", [])
             function(failData){
                 fechaModalImportar();
                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
-                else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                else if(failData.status === 503 || failData.status === 404) $scope.showAlert('Serviço indisponível no momento. Por favor tente mais tarde', true, 'warning',true);//$scope.voltarTelaLogin(); // Volta para a tela de login
                 else $scope.showAlert('Houve uma falha ao importar a NFe (' + failData.status + ')', true, 'danger', true);
                 // Fecha os progress
                 $scope.hideProgress();

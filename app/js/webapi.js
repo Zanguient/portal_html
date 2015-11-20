@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.1.1 - 19/11/2015
+ *  - tbrecebimentotef
+ *
  *  Versão 1.1.0 - 18/11/2015
  *  - tituloserp
  *
@@ -288,6 +291,32 @@ angular.module('webapi', ['utils'])
             // RELACIONAMENTOS
             empresa : 216,
             tbBandeira : 300,
+        },
+        tbrecebimentotef : {
+            idRecebimentoTEF : 100,
+            cdGrupo : 101,
+            nrCNPJ : 102,
+            cdEmpresaTEF : 103,
+            nrPDVTEF : 104,
+            nrNSUHost : 105,
+            nrNSUTEF : 106,
+            cdAutorizacao : 107,
+            cdSituacaoRedeTEF : 108,
+            dtVenda : 109,
+            hrVenda : 110,
+            vlVenda : 111,
+            qtParcelas : 112,
+            nrCartao : 113, 
+            cdBandeira : 114,
+            nmOperadora : 115,
+            dthrVenda : 116,
+            cdEstadoTransacaoTEF : 117,
+            cdTrasacaoTEF : 118,
+            cdModoEntradaTEF : 119,
+            cdRedeTEF : 120,
+            cdProdutoTEF : 121,
+            cdBandeiraTEF : 122,
+            cdEstabelecimentoHost : 123
         },
         tbrecebimentotitulo: {
             idrecebimentotitulo : 100,
@@ -653,6 +682,7 @@ angular.module('webapi', ['utils'])
         tbextrato : $autenticacao.getUrlBase() + '/card/tbextrato/', 
         tbloginadquirenteempresa : $autenticacao.getUrlBase() + '/card/tbloginadquirenteempresa/', 
         tbrecebimentoajuste : $autenticacao.getUrlBase() + '/card/tbrecebimentoajuste/', 
+        tbrecebimentotef : $autenticacao.getUrlBase() + '/card/tbrecebimentotef/', 
         tbrecebimentotitulo : $autenticacao.getUrlBase() + '/card/tbrecebimentotitulo/', 
         tituloserp : $autenticacao.getUrlBase() + '/card/tituloserp/', 
         uploadextrato : $autenticacao.getUrlBase() + '/card/testeupload/',    
