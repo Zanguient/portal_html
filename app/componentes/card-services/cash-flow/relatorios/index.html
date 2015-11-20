@@ -455,23 +455,23 @@
                                              {{relsintetico.bandeira.dsBandeira}}
                                         </td>
                                         <!-- TOTAL DE TRANSAÇÕES -->
-                                        <td ng-init="total.sintetico.totalTransacoes = total.sintetico.totalTransacoes + relsintetico.totalTransacoes" >
+                                        <td>
                                              {{relsintetico.totalTransacoes}} 
                                         </td>
                                         <!-- VALOR PARCELA -->
-                                        <td ng-init="total.sintetico.valorParcela = total.sintetico.valorParcela + relsintetico.valorParcela">
+                                        <td>
                                              {{relsintetico.valorParcela | currency:'R$'}}
                                         </td>
                                         <!-- VALOR DESCONTADO -->
-                                        <td ng-init="total.sintetico.valorDescontado = total.sintetico.valorDescontado + relsintetico.valorDescontado">
+                                        <td>
                                              {{relsintetico.valorDescontado | currency:'R$'}}
                                         </td>
                                         <!-- VALOR DESCONTADO POR ANTECIPAÇÃO -->
-                                        <td ng-init="total.sintetico.vlDescontadoAntecipacao = total.sintetico.vlDescontadoAntecipacao + relsintetico.vlDescontadoAntecipacao">
+                                        <td>
                                             {{relsintetico.vlDescontadoAntecipacao | currency:'R$'}}
                                         </td>
                                         <!-- VALOR LÍQUIDO -->
-                                        <td ng-init="total.sintetico.valorLiquido = total.sintetico.valorLiquido + relsintetico.valorLiquida">
+                                        <td>
                                              {{relsintetico.valorLiquida | currency:'R$'}}
                                         </td>                                                   
                                         <!-- BOTÃO DETALHAR -->
@@ -1022,33 +1022,27 @@
                                                                     {{relanalitico.numParcela}}
                                                                 </td>
                                                                 <!-- VALOR BRUTO -->
-                                                                <td ng-init="total.analitico.valorBruto = total.analitico.valorBruto + relanalitico.valorBruto"
-                                                                    ng-show="relanalitico.numParcela != 0">
+                                                                <td ng-show="relanalitico.numParcela != 0">
                                                                      {{relanalitico.valorBruto | currency:'R$'}}
                                                                 </td>
                                                                 <!-- VALOR PARCELA -->
-                                                                <td ng-init="total.analitico.valorParcela = total.analitico.valorParcela + relanalitico.valorParcela"
-                                                                    ng-show="relanalitico.numParcela != 0">
+                                                                <td ng-show="relanalitico.numParcela != 0">
                                                                     {{relanalitico.valorParcela | currency:'R$'}}
                                                                 </td>
                                                                 <!-- VALOR DESCONTADO -->
-                                                                <td ng-init="total.analitico.valorDescontado = total.analitico.valorDescontado + relanalitico.valorDescontado"
-                                                                    ng-show="relanalitico.numParcela != 0">
+                                                                <td ng-show="relanalitico.numParcela != 0">
                                                                     {{relanalitico.valorDescontado | currency:'R$'}}
                                                                 </td>
                                                                 <!-- TAXA CASH FLOW -->
-                                                                <td ng-show="relanalitico.numParcela != 0"
-                                                                    ng-init="addTaxaCashFlow(relanalitico.numParcela === 0, (relanalitico.valorDescontado*100)/relanalitico.valorParcela)">
+                                                                <td ng-show="relanalitico.numParcela != 0">
                                                         {{(relanalitico.valorDescontado*100)/relanalitico.valorParcela | number:2}}%
                                                                 </td>
                                                                 <!-- VALOR DESCONTADO POR ANTECIPAÇÃO -->
-                                                                <td ng-init="total.analitico.vlDescontadoAntecipacao = total.analitico.vlDescontadoAntecipacao + relanalitico.vlDescontadoAntecipacao"
-                                                                    ng-show="relanalitico.numParcela != 0">
+                                                                <td ng-show="relanalitico.numParcela != 0">
                                                                     {{relanalitico.vlDescontadoAntecipacao | currency:'R$'}}
                                                                 </td>
                                                                 <!-- VALOR LÍQUIDO -->
-                                                                <td ng-init="total.analitico.valorLiquido = total.analitico.valorLiquido + relanalitico.valorLiquida"
-                                                                    ng-class="{'linhaTotalRelatorios valorPositivo' : relanalitico.numParcela === 0 && relanalitico.valorLiquida > 0, 'linhaTotalRelatorios valorNegativo' : relanalitico.numParcela === 0 && relanalitico.valorLiquida < 0}">
+                                                                <td ng-class="{'linhaTotalRelatorios valorPositivo' : relanalitico.numParcela === 0 && relanalitico.valorLiquida > 0, 'linhaTotalRelatorios valorNegativo' : relanalitico.numParcela === 0 && relanalitico.valorLiquida < 0}">
                                                                      {{relanalitico.valorLiquida | currency:'R$'}}
                                                                 </td>
                                                             </tr>
