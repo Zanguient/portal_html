@@ -242,11 +242,11 @@
                                     </div>
                                     <div class="row" style="margin-top:10px;"
                                          ng-class="{'element-hidden' : !isTipoNaoConciliado()}">
-                                        <div class="col-sm-3 col-md-3" style="margin-right: -15px;">
+                                        <div class="col-sm-4 col-md-4" style="margin-right: -15px;">
                                             <checkbox normal ng-model="filtro.consideraPeriodo"
                                                       ng-change="selecionouCheckboxSemData()"></checkbox>
                                         </div>
-                                        <div class="col-sm-9 col-md-9" style="text-align:left;">
+                                        <div class="col-sm-8 col-md-8" style="text-align:left;">
                                             <label>Considerar período informado</label>
                                         </div>
                                     </div>
@@ -429,7 +429,7 @@
         <div class="portlet-body" print-landscape ng-show="exibeTela"> 
             
            <!-- DETALHES -->
-           <div class="row" print-section print-only print-if="modalDetalhesShowing"> 
+           <div class="row"  print-section print-only print-if="modalDetalhesShowing"> 
                <div style="text-align: center">
                    <h4 class="linhaTotalRelatorios">Detalhes do agrupamento</h4>
                </div>
@@ -549,17 +549,18 @@
             </div>
          
         
-            <div class="table-container" style="margin-bottom:50px">
+            <div class="table-container" style="margin-bottom:50px" 
+                 print-section print-if="!modalDetalhesShowing">
                 
                 <!--CUPONS-->
-                <div class="row" print-section print-if="!modalDetalhesShowing" 
-                     ng-repeat="dado in dadosconciliacao">
+                <div class="row" ng-repeat="dado in dadosconciliacao">
                     
                     <!--CUPOM DOS TÍTULOS-->
                     <div class="col-md-3" style="padding-left:5%" print-avoid-break
-                         ng-class="{'element-hidden' : !dado.titulos || dado.titulos === null}">
+                         ng-class="{'element-hidden divTextosBrancos' : !dado.titulos || dado.titulos === null}">
                         <div class="row">
-                            <div class="col-md-8 col-sm-12 cupomAzulConciliacaoBancariaTef">
+                            <div class="col-md-8 col-sm-12"
+                                 ng-class="{'cupomAzulConciliacaoBancariaTef' : dado.titulos && dado.titulos !== null}">
                                 <!--HEAD-->
                                 <div class="row">
                                     <div class="col-md-12">
@@ -567,7 +568,8 @@
                                         <div class="row tituloCumponsConciliacaoBancaria">
                                             <!--TIPO DO CUPON-->
                                             <div class="col-md-12 conteudoCuponsConciliacaobancaria">
-                                                Titulos ERP
+                                                 <!--ng-bind="dado.titulos && dado.titulos !== null ? 'Títulos ERP' : ''"-->
+                                                Títulos ERP
                                             </div>
                                         </div>
                                         <!--SUBTITULO DO CUPON -->
@@ -581,14 +583,14 @@
                                 <!--BODY-->                   
                                 <!--DIVISÓRIA DOS TIPOS DE CUPONS-->
                                 <div class="row">   
-                                    <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria">
-                                        ==============================
+                                    <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria"
+                                         ng-bind="dado.titulos && dado.titulos !== null ? '==============================' : ''">
                                     </div>
                                 </div>
                                 <!--DATA-->
                                 <div class="row">
                                     <div class="col-md-6 col-sm-6">
-                                        <label ng-bind="dados.titulos && dado.titulos !== null ? 'Data:' : ''"></label>
+                                        <label ng-bind="dado.titulos && dado.titulos !== null ? 'Data:' : ''"></label>
                                     </div>
                                     <div class="col-md-6 col-sm-6 alinhamentoDados"
                                          ng-bind="dado.titulos && dado.titulos !== null ? getDataString(dado.titulos[0].DataPrevista) : ''">
@@ -636,14 +638,15 @@
                                     <div class="col-md-12">
                                         <button class="btn" 
                                                 ng-class="{'btn-warning' : dado.TotalTitulosBaixados > 0 && dado.TotalTitulosBaixados < dado.titulos.length, 'btn-primary' : dado.TotalTitulosBaixados === dado.titulos.length, 'btn-default' : dado.TotalTitulosBaixados === 0}"
-                                                style="margin-bottom:-25px"
+                                                style="margin-bottom:-25px" print-remove
                                                 ng-click="baixaAutomatica(dado)">
                                             Baixa Automática ERP    
                                         </button>
                                     </div>
                                 </div>
                                 <!--NÃO HÁ TÍTULOS-->
-                                <div class="row" ng-show="dado.titulos && dado.titulos !== null && dado.titulos.length === 0">
+                                <div class="row" 
+                                     ng-show="dado.titulos && dado.titulos !== null && dado.titulos.length === 0">
                                     <div class="col-md-12 col-sm-12">
                                         <label style="font-weight: bolder; padding-top:20px">
                                             Não há títulos conciliados das parcelas
@@ -656,7 +659,7 @@
                     
                     <!--CUPOM (PREVISÃO CRÉDITO)-->
                     <div class="col-md-1 col-md-offset-1" print-avoid-break
-                         ng-class="{'element-hidden' : dado.RecebimentosParcela === null}">
+                         ng-class="{'element-hidden divTextosBrancos' : dado.RecebimentosParcela === null}">
                         <div class="row">
                             <div class="col-md-8 col-md-offset-4 col-sm-12"
                                  ng-class="{'cupomAzulConciliacaoBancariaTef' : dado.RecebimentosParcela !== null && dado.Conciliado === 1, 'cupomVermelhoConciliacaoBancariaTef' : dado.RecebimentosParcela !== null && dado.Conciliado === 3, 'cupomLaranjaConciliacaoBancariaTef' : dado.RecebimentosParcela !== null && dado.Conciliado === 2}">
@@ -781,8 +784,8 @@
                     </div>
                     
                     <!--CUPOM(COMPROVANTE CRÉDITO)-->
-                    <div class="col-md-3" print-avoid-break style="padding-left: 0 !important"
-                         ng-class="{'element-hidden' : dado.ExtratoBancario === null}">
+                    <div class="col-md-3" style="padding-left: 0 !important" print-avoid-break
+                         ng-class="{'element-hidden divTextosBrancos' : dado.ExtratoBancario === null}">
                         <div class="row">
                             <div class="col-md-8 col-sm-12"
                                  ng-class="{'cupomAzulConciliacaoBancariaTef' : dado.ExtratoBancario !== null && dado.Conciliado === 1, 'cupomVermelhoConciliacaoBancariaTef' : dado.ExtratoBancario !== null && dado.Conciliado === 3, 'cupomLaranjaConciliacaoBancariaTef' : dado.ExtratoBancario !== null && dado.Conciliado === 2}">
@@ -910,7 +913,7 @@
                 <!--FIM CUPONS-->
 
                 <!-- TOTAIS - VALORES -->
-                <div class="row" print-section print-if="!modalDetalhesShowing" style="margin-top:30px">
+                <div class="row" style="margin-top:30px">
                     <!-- RECEBIMENTO PARCELA -->
                     <div class="col-md-5 col-sm-5" style="text-align:center">
                         <label style="font-weight:bolder">
@@ -928,7 +931,7 @@
                     </div>
                 </div>
                 <!-- TOTAIS - REGISTROS -->
-                <div class="row" print-section print-if="!modalDetalhesShowing" style="margin-top:30px">
+                <div class="row" style="margin-top:30px">
                     <!-- RECEBIMENTO PARCELA -->
                     <div class="col-md-5 col-sm-5" style="text-align:center">
                         <label style="font-weight:bolder">

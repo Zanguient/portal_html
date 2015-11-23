@@ -259,6 +259,11 @@ margin-top:170px;
 }
 
 /* BOTÕES*/
+
+div.divTextosBrancos *{
+    color : #fff !important;
+}
+
 .btnConciliacaoBancaria{
   margin-top: 140px;
 }

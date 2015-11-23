@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.1 - 23/11/2015
+ *  - Não busca logs sem click do botão Buscar
+ *
  *  Versão 1.0 - 03/09/2015
  *
  */
@@ -79,7 +82,7 @@ angular.module("administrativo-acoes-usuarios", [])
         $scope.$on('acessoDeTelaNotificado', function(event){
             $scope.exibeTela = true;
             // Busca Logs
-            buscaLogs();
+            //buscaLogs();
         });
         // Acessou a tela
         $scope.$emit("acessouTela");
