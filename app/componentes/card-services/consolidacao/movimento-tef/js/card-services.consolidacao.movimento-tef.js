@@ -26,16 +26,18 @@ angular.module("card-services-movimento-tef", [])
     $scope.itens_pagina = [50, 100, 150, 200]; 
     $scope.paginaInformada = 1; // página digitada pelo usuário 
     // Filtros
-    $scope.filiais = [];                                                                                   
-    $scope.filtro = {datamin : new Date(), datamax : '', filial : null,
+    $scope.filiais = [];   
+    $scope.pdvs = [];                                             
+    $scope.filtro = {datamin : new Date(), datamax : '', filial : null, pdv : null,
 					 itens_pagina : $scope.itens_pagina[0], order : 0,
                      analitico : { pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0},
                      sintetico : { pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0},
                     };
     $scope.relatorio = {sintetico : [], analitico : []};     
     // Totais
-    $scope.total = {sintetico : {totalTransacoes : 0, valorVenda : 0}, 
-                    analitico : {valorVenda : 0, totalTransacoes : 0}};                                              
+    $scope.total = {sintetico : {valorVendaExibido : 0, valorVendaFiltrado : 0,
+                                 totalTransacoesExibido : 0, totalTransacoesFiltrado : 0}, 
+                    analitico : {valorVendaExibido : 0, valorVendaFiltrado : 0}};                                              
 
     // flag
     $scope.tab = 1; // init Analítico                                             
@@ -62,10 +64,12 @@ angular.module("card-services-movimento-tef", [])
                 // Avalia grupo empresa
                 if($scope.usuariologado.grupoempresa){ 
                     // Reseta seleção de filtro específico de empresa
-                    $scope.filtro.filial = null;
-                    buscaFiliais();
+                    $scope.filtro.filial = $scope.filtro.pdv = null;
+                    buscaFiliais(true);
                 }else{ // reseta tudo e não faz buscas 
                     $scope.filiais = []; 
+                    $scope.pdvs = [];
+                    $scope.filtro.filial = $scope.filtro.pdv = null;
                 }
             }
         }); 
@@ -73,13 +77,13 @@ angular.module("card-services-movimento-tef", [])
         $scope.$on('acessoDeTelaNotificado', function(event){
             $scope.exibeTela = true;
             // Carrega filiais
-            if($scope.usuariologado.grupoempresa) buscaFiliais();
+            if($scope.usuariologado.grupoempresa) buscaFiliais(true);
         });
         // Acessou a tela
         //$scope.$emit("acessouTela");
         // Carrega filiais
         $scope.exibeTela = true;
-        if($scope.usuariologado.grupoempresa) buscaFiliais();
+        if($scope.usuariologado.grupoempresa) buscaFiliais(true);
     }; 
                                                  
                                                  
@@ -227,7 +231,7 @@ angular.module("card-services-movimento-tef", [])
     /**
       * Busca as filiais
       */
-    var buscaFiliais = function(nu_cnpj){
+    var buscaFiliais = function(buscarPDVS, nu_cnpj){
         
        $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
         
@@ -251,8 +255,9 @@ angular.module("card-services-movimento-tef", [])
                 // Reseta
                 if(!nu_cnpj) $scope.filtro.filial = null;
                 else $scope.filtro.filial = $filter('filter')($scope.filiais, function(f) {return f.nu_cnpj === nu_cnpj;})[0];
+                if(buscarPDVS) buscaPDVs(true);
                 // Fecha o progress
-                $scope.hideProgress(divPortletBodyFiltrosPos);
+                else $scope.hideProgress(divPortletBodyFiltrosPos);
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
@@ -265,9 +270,55 @@ angular.module("card-services-movimento-tef", [])
       * Selecionou uma filial
       */
     $scope.alterouFilial = function(){
-        //console.log($scope.filtro.filial); 
+        //console.log($scope.filtro.filial);
+        buscaPDVs();
     };
-                                          
+         
+                                                 
+                                                 
+    // PDVS
+    /**
+      * Busca os pdvs
+      */
+    var buscaPDVs = function(progressoemexecucao){
+        
+       if(!progressoemexecucao) $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
+        
+       var filtros = [];
+        
+       if($scope.filtro.filial && $scope.filtro.filial !== null)    
+           // Somente os pdvs da filial
+           filtros.push({id: /*$campos.cartao.pdvs.CNPJjFilial*/ 101, 
+                         valor: $scope.filtro.filial.nu_cnpj});
+
+       
+       $webapi.get($apis.getUrl($apis.cartao.pdvs, 
+                                [$scope.token, 2, /*$campos.cartao.pdvs.CodPdvHostPagamento*/ 105],
+                                filtros)) 
+            .then(function(dados){
+                $scope.pdvs = dados.Registros;
+                // Reseta
+                $scope.filtro.pdv = null;
+                // Fecha o progress
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter pdvs (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+              });     
+    };
+    /**
+      * Selecionou um pdv
+      */
+    $scope.alterouPDV = function(){
+        //console.log($scope.filtro.pdv);
+    };                                             
+                                                 
+                                                 
+                                                 
+                                                 
     
     /**
       * Retorna os filtros para ser usado junto a url para requisição via webapi
@@ -287,6 +338,13 @@ angular.module("card-services-movimento-tef", [])
                                valor: $scope.filtro.filial.nu_cnpj};
            filtros.push(filtroFilial);  
        }
+        
+       // PDV
+       if($scope.filtro.pdv && $scope.filtro.pdv !== null){
+           var filtroPDV = {id: /*$campos.card.tbrecebimentotef.nrPDVTEF*/ 104, 
+                               valor: $scope.filtro.pdv.CodPdvHostPagamento};
+           filtros.push(filtroPDV);  
+       } 
         
        // Retorna    
        return filtros;
@@ -327,6 +385,7 @@ angular.module("card-services-movimento-tef", [])
         }
         // Nova busca
         if($scope.tabIs(1)) buscaRelatorioAnalitico(true);
+        else if($scope.tabIs(2)) buscaRelatorioSintetico(true);
     };
 	
 	// ANALÍTICO 
@@ -352,13 +411,12 @@ angular.module("card-services-movimento-tef", [])
                 ultimoFiltro = filtros;
            
                 // Reseta os valores totais
-                $scope.total.analitico.valorVenda = 0;
-                $scope.total.analitico.totalTransacoes = 0;
+                $scope.total.analitico.valorVendaFiltrado = 0;
+                $scope.total.analitico.valorVendaExibido = 0;
                 // Obtém os dados
                 $scope.relatorio.analitico = dados.Registros;
                 // Obtém os totais
-                $scope.total.analitico.valorVenda = dados.Totais.valorVenda;
-                $scope.total.analitico.totalTransacoes = dados.Totais.totalTransacoes;
+                $scope.total.analitico.valorVendaFiltrado = dados.Totais.valorVenda;
            
                 // Set valores de exibição
                 $scope.filtro.analitico.total_registros = dados.TotalDeRegistros;
@@ -407,7 +465,83 @@ angular.module("card-services-movimento-tef", [])
     }											 
 
      
-    //console.log($scope.resumos_movimento);    
-    //console.log($scope.movimentos);    
+    
+    
+    
+    // SINTÉTICO
+    var buscaRelatorioSintetico = function(resetaRelatorioAnalitico, progressoemexecucao){
+        
+       $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen    
+       $scope.showProgress(divPortletBodyRecebimentoPos);
+        
+       // Filtros    
+       var filtros = obtemFiltroDeBusca();
+           
+       $scope.buscandoMovimento = true;    
+        
+       $webapi.get($apis.getUrl($apis.card.tbrecebimentotef, 
+                                [$scope.token, 3, 100, 0, 
+                                 $scope.filtro.itens_pagina, $scope.filtro.sintetico.pagina],
+                                filtros)) 
+            .then(function(dados){
+           
+                ultimoFiltro = filtros;
+           
+                // Reseta os valores totais
+                $scope.total.sintetico.valorVendaFiltrado = 0;
+                $scope.total.sintetico.valorVendaExibido = 0;
+                $scope.total.sintetico.totalTransacoesExibido = 0;
+                $scope.total.sintetico.totalTransacoesFiltrado = 0;
+                // Obtém os dados
+                $scope.relatorio.sintetico = dados.Registros;
+                // Obtém os totais
+                $scope.total.sintetico.valorVendaFiltrado = dados.Totais.valorVenda;
+                $scope.total.sintetico.totalTransacoesFiltrado = dados.Totais.totalTransacoes;
+           
+                // Set valores de exibição
+                $scope.filtro.sintetico.total_registros = dados.TotalDeRegistros;
+                $scope.filtro.sintetico.total_paginas = Math.ceil($scope.filtro.sintetico.total_registros / $scope.filtro.itens_pagina);
+                if($scope.relatorio.sintetico.length === 0) $scope.filtro.sintetico.faixa_registros = '0-0';
+                else{
+                    var registroInicial = ($scope.filtro.sintetico.pagina - 1)*$scope.filtro.itens_pagina + 1;
+                    var registroFinal = registroInicial - 1 + $scope.filtro.itens_pagina;
+                    if(registroFinal > $scope.filtro.sintetico.total_registros) registroFinal = $scope.filtro.sintetico.total_registros;
+                    $scope.filtro.sintetico.faixa_registros =  registroInicial + '-' + registroFinal;
+                }
+                // Verifica se a página atual é maior que o total de páginas
+                if($scope.filtro.sintetico.pagina > $scope.filtro.sintetico.total_paginas)
+                    setPagina(1); // volta para a primeira página e refaz a busca
+           
+                // Reseta os outros para forçar uma nova busca
+                if(resetaRelatorioAnalitico){
+                    $scope.relatorio.analitico = [];
+                    $scope.filtro.analitico.pagina = 1;
+                    $scope.filtro.analitico.total_registros = 0;
+                    $scope.filtro.analitico.faixa_registros = '0-0';
+                    $scope.filtro.analitico.total_paginas = 0;
+                }
+           
+                // Fecha os progress
+                $scope.buscandoMovimento = false;
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+                $scope.hideProgress(divPortletBodyRecebimentoPos);
+              },
+              function(failData){
+                 // Reseta tudo
+                 $scope.relatorio.sintetico = [];
+                 $scope.filtro.sintetico.pagina = 1;
+                 $scope.filtro.sintetico.total_registros = 0;
+                 $scope.filtro.sintetico.faixa_registros = '0-0';
+                 $scope.filtro.sintetico.total_paginas = 0;
+           
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter relatório sintético (' + failData.status + ')', true, 'danger', true);
+           
+                 $scope.buscandoMovimento = false;
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+                 $scope.hideProgress(divPortletBodyRecebimentoPos);
+              });       
+    }
      
 }]);

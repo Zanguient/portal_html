@@ -52,12 +52,12 @@
                                     rowspan="1" colspan="1">
                                      Filial 
                                 </th>
-                                <!--th width="5%" tabindex="2" 
+                                <th width="20%" tabindex="2" 
                                     aria-controls="datatable_ajax" 
                                     rowspan="1" colspan="1">
-                                     Adquirente
+                                     PDV
                                 </th>
-                                <th width="8%" tabindex="3" 
+                                <!--th width="8%" tabindex="3" 
                                     aria-controls="datatable_ajax" 
                                     rowspan="1" colspan="1">
                                      Bandeira
@@ -140,17 +140,23 @@
                                         popover-trigger="mouseenter"
                                         ></i> 
                                 </td>
-                                <!-- ADQUIRENTES -- >
+                                <!-- PDVs -->
                                 <td rowspan="1" colspan="1" style="text-align: center">
                                     <select class="form-control form-filter input-sm comboBoxFiltros"
-                                            ng-disabled="adquirentes.length === 0"
-                                            ng-model="filtro.adquirente"
-                                            ng-change="alterouAdquirente()"
-                                            ng-options="adquirente as (adquirente.nmAdquirente | uppercase) for adquirente in adquirentes"
+                                            ng-disabled="pdvs.length === 0"
+                                            ng-model="filtro.pdv"
+                                            ng-change="alterouPDV()"
+                                            ng-options="pdv as (pdv.CodPdvHostPagamento | uppercase) for pdv in pdvs"
                                             >
-                                        <option value="">TODAS</option>
+                                        <option value="">TODOS</option>
                                     </select>
-                                </td-->
+                                    <i class="fa fa-question-circle"
+                                        ng-show="!usuariologado.grupoempresa"
+                                        popover-placement="bottom"
+                                        popover="É necessário selecionar uma empresa"
+                                        popover-trigger="mouseenter"
+                                        ></i>
+                                </td>
                                 <!-- BANDEIRAS -- >
                                 <td rowspan="1" colspan="1" style="text-align: center">
                                     <select class="form-control form-filter input-sm comboBoxFiltros"
@@ -247,7 +253,10 @@
                         </div-->
                     </div>
                 </div>                
-                <div class="portlet-body" ng-show="exibeTela">     
+                
+                
+                <div class="portlet-body" ng-show="exibeTela"> 
+                    <!-- ANALÍTICO -->
                     <div class="panel" ng-show="tabIs(1)">
                         <div class="portlet-body" ng-show="exibeTela">
                             <!-- TABELA -->
@@ -264,9 +273,7 @@
                                                         ng-model="filtro.itens_pagina"
                                                         ng-change="alterouItensPagina()"
                                                         ng-options="item for item in itens_pagina">                                            
-                                                </select> registros de 
-                                                <span ng-show="tabIs(2)">{{filtro.sintetico.total_registros}}</span>
-                                                <span ng-show="tabIs(1)">{{filtro.analitico.total_registros}}</span>
+                                                </select> registros de {{filtro.analitico.total_registros}}
                                             </label>
                                         </div>
                                     </div> 
@@ -275,7 +282,7 @@
                                         <div class="pagination-panel centralizarPaginacao"> Página 
                                             <a href="javascript:;" ng-click="retrocedePagina()"
                                                class="btn btn-sm default prev" 
-                                               ng-class="{disabled: (tabIs(2) && filtro.sintetico.pagina  <= 1) || (tabIs(1) && filtro.analitico.pagina <= 1)}" 
+                                               ng-class="{disabled: filtro.analitico.pagina <= 1}" 
                                                title="Página anterior">
                                                     <i class="fa fa-angle-left"></i>
                                             </a>
@@ -287,17 +294,11 @@
                                                    ng-blur="atualizaPaginaDigitada()">
                                             <a href="javascript:;" ng-click="avancaPagina()"
                                                class="btn btn-sm default next"
-                                               ng-class="{disabled: (tabIs(2) && filtro.sintetico.pagina >= filtro.sintetico.total_paginas) || (tabIs(1) && filtro.analitico.pagina >= filtro.analitico.total_paginas)}"
+                                               ng-class="{disabled: filtro.analitico.pagina >= filtro.analitico.total_paginas}"
                                                title="Próxima página">
                                                 <i class="fa fa-angle-right"></i>
                                             </a>
-                                             de 
-                                            <span class="pagination-panel-total" ng-show="tabIs(2)">
-                                                {{filtro.sintetico.total_paginas}}
-                                            </span>
-                                            <span class="pagination-panel-total" ng-show="tabIs(1)">
-                                                {{filtro.analitico.total_paginas}}
-                                            </span>
+                                             de {{filtro.analitico.total_paginas}}
                                         </div>
                                     </div>                                                 
                                 </div> 
@@ -359,7 +360,7 @@
                                                         {{relanalitico.nrCartao}}
                                                     </td>
                                                     <!-- VALOR -->
-                                                    <td>
+                                                    <td ng-init="total.analitico.valorVendaExibido = total.analitico.valorVendaExibido + relanalitico.vlVenda">
                                                         {{relanalitico.vlVenda | currency:'R$'}}
                                                     </td>
                                                     <!-- PARCELAS -->
@@ -368,7 +369,7 @@
                                                     </td>
                                                     <!-- TIPO -->
                                                     <td>
-                                                        {{relanalitico.tipoProtuto || ''}}
+                                                        {{(relanalitico.tipoProduto | uppercase) || ''}}
                                                     </td>
                                                     <!-- NSU SITEF -->
                                                     <td>
@@ -385,6 +386,24 @@
                                                     <!-- STATUS -->
                                                     <td>
                                                         {{relanalitico.dsEstadoTransacaoTef || ''}}
+                                                    </td>
+                                                </tr>
+                                                <tr class="linhaTotalRelatorios">
+                                                    <!-- DATA + HORA -->
+                                                    <td colspan="4" style="text-align: right">
+                                                        Valor total exibido
+                                                    </td>
+                                                    <!-- VALOR -->
+                                                    <td style="text-align: center">
+                                                        {{total.analitico.valorVendaExibido | currency:'R$'}}
+                                                    </td>
+                                                    <!-- PARCELAS -->
+                                                    <td colspan="4" style="text-align: right">
+                                                        Valor total filtrado
+                                                    </td>
+                                                    <!-- STATUS -->
+                                                    <td colspan="2">
+                                                        {{total.analitico.valorVendaFiltrado | currency:'R$'}}
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -439,13 +458,15 @@
                             </div>
                         </div>   
                     </div>
+                    <!-- SINTÉTICO -->
                     <div class="panel" ng-show="tabIs(2)">
                         <div class="portlet-body" ng-show="exibeTela">
                             <!-- TABELA -->
                             <div class="dataTables_wrapper no-footer">
                                 <!-- EXIBIÇÃO E PESQUISA -->                      
+                               <!-- EXIBIÇÃO E PESQUISA -->                      
                                 <div class="row">
-                                    <!--EXIBIÇÃO-->
+                                    <!-- EXIBIÇÃO --> 
                                     <div class="col-xs-4 col-sm-4 col-md-4">
                                         <div class="dataTables_length">
                                             <label>
@@ -455,31 +476,32 @@
                                                         ng-model="filtro.itens_pagina"
                                                         ng-change="alterouItensPagina()"
                                                         ng-options="item for item in itens_pagina">                                            
-                                                </select> registros de {{filtro.total_registros}}
+                                                </select> registros de {{filtro.sintetico.total_registros}}
                                             </label>
-                                        </div>   
-                                    </div>
+                                        </div>
+                                    </div> 
                                     <!--PAGINAÇÃO-->
-                                    <div class="col-xs-4 col-sm-4 col-md-3">
+                                    <div class="col-xs-4 col-sm-4 col-md-3" print-hide>
                                         <div class="pagination-panel centralizarPaginacao"> Página 
                                             <a href="javascript:;" ng-click="retrocedePagina()"
                                                class="btn btn-sm default prev" 
-                                               ng-class="{disabled: filtro.pagina <= 1}" 
+                                               ng-class="{disabled: filtro.sintetico.pagina  <= 1}" 
                                                title="Página anterior">
                                                     <i class="fa fa-angle-left"></i>
                                             </a>
-                                            <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                            <input type="text" 
+                                                   class="pagination-panel-input form-control input-mini input-inline input-sm" 
                                                    maxlength="4" style="text-align:center; margin: 0 5px;"
                                                    ng-model="paginaInformada" valid-integer-number
                                                    ng-keypress="($event.which === 13) ? alteraPagina() : 0"
                                                    ng-blur="atualizaPaginaDigitada()">
-                                                <a href="javascript:;" ng-click="avancaPagina()"
-                                                   class="btn btn-sm default next"
-                                                   ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
-                                                   title="Próxima página">
-                                                    <i class="fa fa-angle-right"></i>
-                                                </a>
-                                                de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
+                                            <a href="javascript:;" ng-click="avancaPagina()"
+                                               class="btn btn-sm default next"
+                                               ng-class="{disabled: filtro.sintetico.pagina >= filtro.sintetico.total_paginas}"
+                                               title="Próxima página">
+                                                <i class="fa fa-angle-right"></i>
+                                            </a>
+                                             de {{filtro.sintetico.total_paginas}}
                                         </div>
                                     </div>                                                 
                                 </div> 
@@ -490,37 +512,63 @@
                                         <table class="table table-striped table-hover table-bordered dataTable no-footer conteudoTabelas" role="grid">
                                             <thead>
                                                 <tr role="row">
-                                                    <th style="width:15%" tabindex="0" rowspan="1" colspan="1" style="width: 15%;">
+                                                    <th style="width:40%" tabindex="0" rowspan="1" colspan="1">
                                                         Bandeira
                                                     </th>
-                                                    <th style="width:15%" tabindex="1" rowspan="1" colspan="1" style="width: 20%;">
+                                                    <th style="width:20%" tabindex="1" rowspan="1" colspan="1">
                                                         Transação
                                                     </th>
-                                                    <th style="width:10%" tabindex="2" rowspan="1" colspan="1" style="width: 5%;">
+                                                    <th style="width:20%" tabindex="2" rowspan="1" colspan="1">
                                                         Quantidade
                                                     </th>
-                                                    <th style="width:10%" tabindex="3" rowspan="1" colspan="1" style="width: 5%;">
+                                                    <th style="width:20%" tabindex="3" rowspan="1" colspan="1">
                                                         Valores
                                                     </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr ng-repeat="resumo in resumos_movimento">
+                                                <tr ng-repeat="relsintetico in relatorio.sintetico">
                                                     <!-- BANDEIRA -->
                                                     <td>
-                                                      {{resumo.bandeira}}
+                                                      {{relsintetico.dsBandeira || ''}}
                                                     </td>
                                                     <!-- TRANSAÇÃO -->
                                                     <td>
-                                                       {{resumo.transacao}} 
+                                                       {{relsintetico.tipoProduto | uppercase}} 
                                                     </td>
                                                     <!-- QUANTIDADE -->
+                                                    <td ng-init="total.sintetico.totalTransacoesExibido = total.sintetico.totalTransacoesExibido + relsintetico.totalTransacoes">
+                                                        {{relsintetico.totalTransacoes}} 
+                                                    </td>
+                                                    <!-- VALORES -->
+                                                    <td ng-init="total.sintetico.valorVendaExibido = total.sintetico.valorVendaExibido + relsintetico.vlVenda">
+                                                       {{relsintetico.vlVenda | currency:'R$'}}
+                                                    </td>
+                                                </tr>
+                                                <tr class="linhaTotalRelatorios">
+                                                    <td colspan="2">
+                                                      Exibido
+                                                    </td>
+                                                    <!-- TRANSAÇÃO -->
                                                     <td>
-                                                        {{resumo.quantidade}}
+                                                       {{total.sintetico.totalTransacoesExibido}} 
                                                     </td>
                                                     <!-- VALORES -->
                                                     <td>
-                                                       {{resumo.valor}}
+                                                       {{total.sintetico.valorVendaExibido | currency:'R$'}}
+                                                    </td>
+                                                </tr>
+                                                <tr class="linhaTotalRelatorios">
+                                                    <td colspan="2">
+                                                      Filtrado
+                                                    </td>
+                                                    <!-- TRANSAÇÃO -->
+                                                    <td>
+                                                       {{total.sintetico.totalTransacoesFiltrado}} 
+                                                    </td>
+                                                    <!-- VALORES -->
+                                                    <td>
+                                                       {{total.sintetico.valorVendaFiltrado | currency:'R$'}}
                                                     </td>
                                                 </tr>
                                             </tbody>

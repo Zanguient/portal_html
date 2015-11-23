@@ -4,8 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
- *  Versão 1.1.1 - 19/11/2015
+ *  Versão 1.1.1 - 20/11/2015
  *  - tbrecebimentotef
+ *  - pdvs
  *
  *  Versão 1.1.0 - 18/11/2015
  *  - tituloserp
@@ -337,6 +338,17 @@ angular.module('webapi', ['utils'])
         tituloserp : {
             data : 100,
             id_grupo : 101
+        }
+      },
+      cartao : {
+        pdvs : {
+            IdPDV : 100,
+            CNPJjFilial : 101,
+            DecricaoPdv : 102,
+            CodPdvERP : 103,
+            cdEmpresaTEF : 104,
+            CodPdvHostPagamento : 105,
+            cdGrupo : 106
         }
       },
       cliente : {
@@ -686,6 +698,9 @@ angular.module('webapi', ['utils'])
         tbrecebimentotitulo : $autenticacao.getUrlBase() + '/card/tbrecebimentotitulo/', 
         tituloserp : $autenticacao.getUrlBase() + '/card/tituloserp/', 
         uploadextrato : $autenticacao.getUrlBase() + '/card/testeupload/',    
+    },
+    cartao : {
+        pdvs :  $autenticacao.getUrlBase() + '/cartao/pdvs/',
     },
     cliente: {
         empresa : $autenticacao.getUrlBase() + '/cliente/empresa/',
