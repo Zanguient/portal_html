@@ -5,7 +5,7 @@
     suporte@atoscapital.com.br
  
  
-    Administrativo > Gestão de Acessos > Consulta Parâmetros
+    Administrativo > Gestão de Acessos > Sem Nome
 
 
     Versão 1.0 - 17/11/2015
@@ -21,7 +21,7 @@
         <li class="active">
              Administrativo<i class="fa fa-caret-right"></i>
              Gestão de Acessos<i class="fa fa-caret-right"></i>
-             Consulta Parâmetros
+             Sem-Nome
         </li>
     </ul>
     <!-- END PAGE BREADCRUMB -->
@@ -35,7 +35,7 @@
                         <span class="caption-subject font-green-sharp bold uppercase">Filtros</span>
                     </div>
                 </div>
-                <div class="portlet-body" ng-show="exibeTela">
+                <div class="portlet-body" ng-show="exibeTela" ng-disabled="statusLogado == false">
                     <div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">
                         <div class="row">
                             <div class="col-md-8 col-sm-12">
@@ -55,22 +55,85 @@
                             <table class="table table-striped table-bordered table-hover dataTable no-footer conteudoTabelas" id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
                                 <thead>
                                     <tr role="row" class="heading">
+																			<th width="8%" tabindex="0" rowspan="1" colspan="1">
+                                            Período
+                                        </th>
                                         <th width="8%" tabindex="0" rowspan="1" colspan="1">
                                             Filiais
+                                        </th>
+																			<th width="8%" tabindex="0" rowspan="1" colspan="1">
+                                            Adquirentes
                                         </th>
                                         <th width="4%" tabindex="1" rowspan="1" colspan="1">
                                             Opções
                                         </th>
                                     </tr>
                                     <tr role="row" class="filter">
+																			<!-- DATA -->
+																			<td rowspan="1" colspan="1">                                    
+                                            <div class="input-group date date-picker margin-bottom-5"
+                                                 data-date-format="dd/mm/yyyy">
+                                                <input type="text" 
+                                                       class="form-control form-filter input-sm" 
+                                                       readonly="" 
+                                                       style="cursor: pointer" 
+                                                       ng-click="exibeCalendarioDataMin($event)" 
+                                                       placeholder="Início" 
+                                                       ng-model="filtro.datamin" 
+                                                       ng-change="alterouDataMin()" 
+                                                       datepicker-append-to-body="true" 
+                                                       datepicker-popup="dd MMMM yyyy" 
+                                                       is-open="abrirCalendarioDataMin" 
+                                                       ng-required="true" 
+                                                       show-button-bar="false" 
+                                                       show-weeks="false" 
+                                                       required="required">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-sm default" 
+                                                        type="button" 
+                                                        ng-click="exibeCalendarioDataMin($event)">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                            <div class="input-group"> <!--  date date-picker margin-bottom-5" -->
+                                                <input type="text" 
+                                                       class="form-control form-filter input-sm" 
+                                                       readonly="" 
+                                                       style="cursor: pointer" 
+                                                       ng-click="exibeCalendarioDataMax($event)" 
+                                                       placeholder="Fim" 
+                                                       ng-model="filtro.datamax" 
+                                                       ng-change="alterouDataMax()" 
+                                                       datepicker-popup="dd MMMM yyyy" 
+                                                       is-open="abrirCalendarioDataMax" 
+                                                       datepicker-append-to-body="true"
+                                                       ng-required="false" 
+                                                       current-text="Hoje" 
+                                                       clear-text="Limpar" 
+                                                       close-text="Fechar" 
+                                                       show-button-bar="true" 
+                                                       show-weeks="false">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-sm default" 
+                                                            type="button" 
+                                                            ng-click="exibeCalendarioDataMax($event)">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </button>
+                                                </span>
+                                            </div>                                            
+                                        </td>
                                         <!-- FILIAIS -->
                                         <td rowspan="1" colspan="1" style="text-align: center">
                                             <select class="form-control form-filter input-sm filtros" 
 																										ng-model="busca"
 																										ng-change="alterouFilial()"
-																										ng-disabled="filiais.length == 0">
+																										ng-disabled="statusLogado == false">
                                                 <!--option value="">Todas</option-->
-																							<option ng-repeat="filial in filiais | unique:'empresa.ds_fantasia'">{{filial.empresa.ds_fantasia}}</option>
+																							<option 
+																											ng-repeat="filial in filiais | unique:'empresa.ds_fantasia'">
+																							{{filial.empresa.ds_fantasia}}
+																							</option>
                                             </select>
                                             <i class="fa fa-question-circle"
                                                ng-show="!usuariologado.grupoempresa"
@@ -78,18 +141,19 @@
                                                popover="É necessário selecionar uma empresa"
                                                popover-trigger="mouseenter"></i>
                                         </td> 
+																			  <td rowspan="1" colspan="1" style="text-align: center">
+																					<select class="form-control form-filter input-sm filtros"></select>
+																			</td>
                                         <!--BUSCAR E LIMPAR-->
                                         <td rowspan="1" colspan="1">
                                             <div class="margin-bottom-5">
                                                 <button class="btn btn-sm red filter-submit margin-bottom"
-                                                        ng-click="filtraParametros()"
-																												ng-disabled="filiais.length == 0">
+                                                        ng-click="filtraParametros()">
                                                     <i class="fa fa-search"></i> Buscar
                                                 </button>
                                             </div>
                                             <button class="btn btn-sm grey filter-cancel"
-                                                    ng-click="resetaBusca()"
-																										ng-disabled="filiais.length == 0">
+                                                    ng-click="resetaBusca()">
                                                 <i class="fa fa-times"></i>
                                                 Limpar
                                             </button>
@@ -118,7 +182,7 @@
     <div class="portlet light">
         <div class="portlet-title">
             <div class="caption">                        
-                <span class="caption-subject font-green-sharp bold uppercase">Consulta Parâmetros</span>
+                <span class="caption-subject font-green-sharp bold uppercase">Informações</span>
             </div>
             <div class="actions">
                 <a class="btn btn-circle btn-icon-only btn-default fullscreen" 
@@ -222,26 +286,23 @@
                 <div class="table-scrollable">
                     <table class="table table-striped table-hover table-bordered dataTable no-footer conteudoTabelas"
                            role="grid">
-                        <thead>
-                            <tr role="row">
-                                <th tabindex="0" rowspan="1" colspan="1" style="width: 10%;">CNPJ</th>
-                                <th tabindex="1" rowspan="1" colspan="1" style="width: 15%;">Fantasia</th>
-                                <th tabindex="2" rowspan="1" colspan="1" style="width: 10%;">Adquirentes</th>                                    
-                                <th tabindex="3" rowspan="1" colspan="1" style="width: 5%;">Estabelecimento</th>
-                                <th tabindex="4" rowspan="1" colspan="1" style="width: 5%;">Estabelecimento Consulta</th>
-                                <th tabindex="5" rowspan="1" colspan="1" style="width: 15%;">Conta Corrente</th>
-                           </tr>
-                        </thead>
-                        <tbody class="centralizarVertical">
-                            <tr role="row" class="odd" ng-repeat="parametro in parametros">
-                                <td style="text-align:center">{{parametro.empresa.nu_cnpj}}</td>
-                                <td style="text-align:center">{{parametro.empresa.ds_fantasia | uppercase}}</td>
-                                <td style="text-align:center">{{parametro.tbAdquirente.nmAdquirente | uppercase}}</td>                                    
-                                <td style="text-align:center">{{parametro.cdEstabelecimento}}</td>
-                                <td style="text-align:center">{{parametro.cdEstabelecimentoConsulta}}</td>
-                                <td style="text-align:center">{{parametro.tbContaCorrente.banco.NomeExtenso | uppercase}} / {{parametro.tbContaCorrente.nrAgencia}} / {{parametro.tbContaCorrente.nrConta}}</td>
-                            </tr>   
-                        </tbody>
+											<thead>
+													<tr role="row">
+														<th tabindex="0" rowspan="1" colspan="1" style="width: 10%;">Filial</th>
+														<th tabindex="1" rowspan="1" colspan="1" style="width: 10%;">Adquirente</th>
+														<th tabindex="2" rowspan="1" colspan="1" style="width: 10%;">Nº Parcela</th>                                    												 <th tabindex="3" rowspan="1" colspan="1" style="width: 10%;">Valor venda</th>
+														<th tabindex="4" rowspan="1" colspan="1" style="width: 10%;">Qnt Vendas</th>
+												 </tr>
+											</thead>
+											<tbody class="centralizarVertical">
+												<tr role="row" class="odd">
+														<td style="text-align:center"></td>
+														<td style="text-align:center"></td>                                    
+														<td style="text-align:center"></td>
+														<td style="text-align:center"></td>
+														<td style="text-align:center"></td>
+												</tr>   
+											</tbody>
                     </table>
                 </div>
             </div>

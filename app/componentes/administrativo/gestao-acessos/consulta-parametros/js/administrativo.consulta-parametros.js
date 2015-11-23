@@ -25,8 +25,8 @@ angular.module("administrativo-consulta-parametros", [])
     var divPortletBodyFilialPos = 0; // posição da div que vai receber o loading progress
     $scope.paginaInformada = 1; // página digitada pelo usuário
     $scope.parametros = [];
-		$scope.vigencias = [];
-    $scope.statusLogado = true;																							
+		$scope.filiais = [];
+		$scope.vigencias = [];																					
     $scope.itens_pagina = [50, 100, 150, 200];
     $scope.busca = ''; // model do input de busca                                            
     $scope.parametro = {busca:'', itens_pagina : $scope.itens_pagina[0], pagina : 1,
@@ -47,18 +47,42 @@ angular.module("administrativo-consulta-parametros", [])
         });
         // Quando houver alteração do grupo empresa na barra administrativa                                           
         $scope.$on('alterouGrupoEmpresa', function(event){ 
-            // Refaz a busca
-            if($scope.exibeTela) buscaFiliais(true);
-						if($scope.exibeTela) $scope.buscaParametros(true);
-						if($scope.exibeTela) buscaVigencias(true);
+          if($scope.exibeTela){
+                // Avalia grupo empresa
+                if($scope.usuariologado.grupoempresa){ 
+                    // Reseta seleção de filtro específico de empresa
+                    $scope.busca = null;
+                    buscaFiliais(true);
+										$scope.buscaParametros(true);
+										buscaVigencias(true);
+                }else{ // reseta tudo e não faz buscas 
+                    $scope.filiais = []; 
+                    $scope.vigencias = [];
+                    $scope.parametros = [];
+                    $scope.parametro.faixa_registros = '0-0';
+                    $scope.parametro.pagina = 1;
+                    $scope.parametro.total_paginas = 0;
+                }
+            }
         }); 
         // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
         $scope.$on('acessoDeTelaNotificado', function(event){
             $scope.exibeTela = true;
-            // Busca parametros
-            $scope.buscaParametros();
-						buscaFiliais();
-						buscaVigencias();
+            // Avalia grupo empresa
+                if($scope.usuariologado.grupoempresa){ 
+                    // Reseta seleção de filtro específico de empresa
+                    $scope.busca = null;
+                    buscaFiliais(true);
+										$scope.buscaParametros(true);
+										buscaVigencias(true);
+                }else{ // reseta tudo e não faz buscas 
+                    $scope.filiais = []; 
+                    $scope.vigencias = [];
+                    $scope.parametros = [];
+                    $scope.parametro.faixa_registros = '0-0';
+                    $scope.parametro.pagina = 1;
+                    $scope.parametro.total_paginas = 0;
+                }
         });
         // Acessou a tela
         $scope.$emit("acessouTela");
@@ -197,10 +221,8 @@ angular.module("administrativo-consulta-parametros", [])
 					
 			var buscaFiliais = function(showMessage){
         
-				if(!$scope.usuariologado.grupoempresa){
-					$scope.statusLogado = false;
-				} else {
-					$scope.statusLogado = true;
+				if($scope.usuariologado.grupoempresa){
+					
 				 //$scope.showProgress(divPortletBodyFiltrosPos, 10000);    
 				 $scope.showProgress(divPortletBodyFilialPos); 
 				 var filtros = [];
