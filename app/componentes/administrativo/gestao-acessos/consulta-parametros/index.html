@@ -68,7 +68,7 @@
                                             <select class="form-control form-filter input-sm filtros" 
 																										ng-model="busca"
 																										ng-change="alterouFilial()"
-																										ng-disabled="statusLogado == false">
+																										ng-disabled="filiais.length == 0">
                                                 <!--option value="">Todas</option-->
 																							<option ng-repeat="filial in filiais | unique:'empresa.ds_fantasia'">{{filial.empresa.ds_fantasia}}</option>
                                             </select>
@@ -82,12 +82,14 @@
                                         <td rowspan="1" colspan="1">
                                             <div class="margin-bottom-5">
                                                 <button class="btn btn-sm red filter-submit margin-bottom"
-                                                        ng-click="filtraParametros()">
+                                                        ng-click="filtraParametros()"
+																												ng-disabled="filiais.length == 0">
                                                     <i class="fa fa-search"></i> Buscar
                                                 </button>
                                             </div>
                                             <button class="btn btn-sm grey filter-cancel"
-                                                    ng-click="resetaBusca()">
+                                                    ng-click="resetaBusca()"
+																										ng-disabled="filiais.length == 0">
                                                 <i class="fa fa-times"></i>
                                                 Limpar
                                             </button>
