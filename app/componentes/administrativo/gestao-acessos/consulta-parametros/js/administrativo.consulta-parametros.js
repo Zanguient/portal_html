@@ -139,11 +139,7 @@ angular.module("administrativo-consulta-parametros", [])
                                                
                                                
     // BUSCA
-    
-    $scope.agrupaBusca = function(){
-			$scope.buscaParametros();
-			buscaVigencias();
-		} 																						 
+    																						 
     $scope.resetaBusca = function(){
         $scope.busca = '';
         $scope.filtraParametros();
