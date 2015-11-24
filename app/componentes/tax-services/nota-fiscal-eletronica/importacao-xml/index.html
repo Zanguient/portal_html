@@ -1840,6 +1840,34 @@
                                <h4 class="modal-title modal-cabecalho">Importação de Nota Fiscal Eletrônica</h4>
                            </div>
                            <div class="modal-body modal-corpo" style="text-align: left">
+                               <div class="row select-modal-importacao input-group date date-picker margin-bottom-5" data-date-format="dd/mm/yyyy">
+                                   <div class="col-md-3">
+                                       <label>Data de Entrada:</label>
+                                   </div>
+                                   <div  class="col-md-9">
+                                                <input type="text" 
+                                                           class="form-control form-filter input-sm" 
+                                                           readonly="" 
+                                                           style="cursor: pointer" 
+                                                           ng-click="exibeCalendarioDataEntrada($event)" 
+                                                           placeholder="Data de Entrada" 
+                                                           ng-model="dadosImportacao.dtEntrega"  
+                                                           datepicker-append-to-body="true" 
+                                                           datepicker-popup="dd MMMM yyyy"
+                                                           is-open="exibeCalendarioDataEntrada"
+                                                           ng-required="true" 
+                                                           show-button-bar="false" 
+                                                           show-weeks="false" 
+                                                           required="required">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-sm default" 
+                                                            type="button" 
+                                                            ng-click="exibeCalendarioDataEntrada($event)">
+                                                            <i class="fa fa-calendar"></i>
+                                                    </button>
+                                                </span>
+                                    </div>
+                                </div>
                                <div class="row select-modal-importacao">
                                     <div class="col-md-3">
                                     <label>Natureza da Operação: </label>
