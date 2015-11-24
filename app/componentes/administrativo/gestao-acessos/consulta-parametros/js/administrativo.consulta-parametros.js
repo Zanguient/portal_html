@@ -26,7 +26,9 @@ angular.module("administrativo-consulta-parametros", [])
     $scope.paginaInformada = 1; // página digitada pelo usuário
     $scope.parametros = [];
 		$scope.filiais = [];
-		$scope.vigencias = [];																					
+		$scope.vigencias = [];
+    $scope.grupo = [];
+    $scope.statusBusca = true;
     $scope.itens_pagina = [50, 100, 150, 200];
     $scope.busca = ''; // model do input de busca                                            
     $scope.parametro = {busca:'', itens_pagina : $scope.itens_pagina[0], pagina : 1,
@@ -50,11 +52,11 @@ angular.module("administrativo-consulta-parametros", [])
           if($scope.exibeTela){
                 // Avalia grupo empresa
                 if($scope.usuariologado.grupoempresa){ 
-                    // Reseta seleção de filtro específico de empresa
-                    $scope.busca = null;
-                    buscaFiliais(true);
-										$scope.buscaParametros(true);
-										buscaVigencias(true);
+									// Reseta seleção de filtro específico de empresa
+									$scope.busca = null;
+									buscaFiliais(true);
+									$scope.buscaParametros(true);
+									buscaVigencias(true);
                 }else{ // reseta tudo e não faz buscas 
                     $scope.filiais = []; 
                     $scope.vigencias = [];
@@ -70,11 +72,11 @@ angular.module("administrativo-consulta-parametros", [])
             $scope.exibeTela = true;
             // Avalia grupo empresa
                 if($scope.usuariologado.grupoempresa){ 
-                    // Reseta seleção de filtro específico de empresa
-                    $scope.busca = null;
-                    buscaFiliais(true);
-										$scope.buscaParametros(true);
-										buscaVigencias(true);
+									// Reseta seleção de filtro específico de empresa
+									$scope.busca = null;
+									buscaFiliais(true);
+									$scope.buscaParametros(true);
+									buscaVigencias(true);
                 }else{ // reseta tudo e não faz buscas 
                     $scope.filiais = []; 
                     $scope.vigencias = [];
@@ -139,18 +141,20 @@ angular.module("administrativo-consulta-parametros", [])
                                                
                                                
     // BUSCA
-    																						 
+																							
     $scope.resetaBusca = function(){
-        $scope.busca = '';
-        $scope.filtraParametros();
+      $scope.busca = '';
+			$scope.statusBusca = false;
+      $scope.filtraParametros();
     };
     $scope.filtraParametros = function(){
-        $scope.parametro.busca = $scope.busca;
-        $scope.buscaParametros();
+			$scope.parametro.busca = $scope.busca;
+			$scope.buscaParametros();
     };
     $scope.alterouFilial = function(){
 			$scope.parametro.busca = $scope.busca;
 			$scope.buscaParametros();
+			$scope.statusBusca = true;
 			$scope.filtro = null;
 		};																							
     $scope.buscaParametros = function(showMessage){

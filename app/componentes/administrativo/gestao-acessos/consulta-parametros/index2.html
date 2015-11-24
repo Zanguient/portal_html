@@ -295,7 +295,8 @@
 											 </tr>
 											</thead>
 											<tbody class="centralizarVertical">
-												<tr role="row" class="odd" ng-repeat="venda in vendas">
+												<div ng-repeat="venda in vendas">
+												<tr role="row" class="odd">
 													<td style="text-align:center">{{venda.filial | uppercase}}</td>
 													<td style="text-align:center">{{venda.adquirente | uppercase}}</td>                                    
 													<td style="text-align:center">{{venda.nParcela}}</td>
@@ -305,6 +306,14 @@
 														totalGeral(1);
 													</script>
 												</tr>
+												<tr class="centralizarVertical">
+													<td style="text-align:center"></td>
+													<td style="text-align:center"></td>
+													<td style="text-align:center"></td>
+													<td tabindex="3" rowspan="1" colspan="1" style="font-size: 110%;">Subtotal:</td>
+													<td style="text-align:center"></td>
+												</tr>
+													</div>
 												<tr role="row" class="odd">
 													<td style="text-align:center"></td>
 													<td style="text-align:center"></td>                                    
