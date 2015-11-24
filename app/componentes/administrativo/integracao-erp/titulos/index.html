@@ -35,20 +35,7 @@
         </div>
         <!-- FILTROS -->
         <div class="portlet-body" ng-show="exibeTela">
-            <div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">
-                <div class="row">
-                    <div class="col-md-8 col-sm-12">
-                        <div class="dataTables_paginate paging_bootstrap_extended" id="datatable_ajax_paginate">
-                        </div>
-                        <div class="dataTables_info" id="datatable_ajax_info" role="status" aria-live="polite">
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-12">
-                        <div class="table-group-actions pull-right">
-                        <span> </span>
-                        </div>
-                    </div>
-                </div>
+            <div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer" style="width:50%; margin:auto; min-width:400px">
                 
                 <div class="table-scrollable">
                     <table class="table table-striped table-bordered table-hover dataTable no-footer conteudoTabelas" id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
@@ -66,7 +53,7 @@
                                 <td rowspan="1" colspan="1">
                                     <div class="input-group date date-picker margin-bottom-5"
                                          data-date-format="dd/mm/yyyy"
-                                         style="width: 30%; margin:auto">
+                                         style="margin:auto">
                                         <input type="text" 
                                                class="form-control form-filter input-sm" 
                                                readonly="" 
@@ -96,7 +83,8 @@
                                     <div class="margin-bottom-5">
                                         <button class="btn btn-sm filter-submit margin-bottom btn-primary" 
                                            ng-disabled="!usuarioPodeCadastrarTitulos()"
-                                           ng-click="importaTitulos()">
+                                           ng-click="importaTitulos()"
+												style="width:150px">
                                             <i class="fa fa-upload"></i>
                                            Importar Títulos
                                         </button>
@@ -113,17 +101,7 @@
                         </thead>
                     </table>
                 </div>
-                <div class="row">
-                    <div class="col-md-8 col-sm-12">
-                        <div class="dataTables_paginate paging_bootstrap_extended">
-                        </div>
-                        <div class="dataTables_info">
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-12">
-                    </div>
-                </div>
-            </div>
+			</div>
         </div>
     </div>
     <!-- FIM PORTLET FILTROS -->
@@ -212,7 +190,7 @@
             <!-- CONTEÚDO DA TABELA -->
             <div class="table-scrollable">
                 <table class="table table-striped table-hover table-bordered dataTable no-footer" role="grid">
-                    <thead>
+                    <thead class="centralizarVerticalTitulos">
                         <tr role="row">
                             <th tabindex="0" rowspan="1" colspan="1" style="width: 18%;">
                                Filial
@@ -255,7 +233,7 @@
                             </th>  
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="centralizarVertical">
                         <tr role="row" class="odd conteudoTabelas"
                             ng-repeat="titulo in titulos">
                             <!-- FILIAL -->
