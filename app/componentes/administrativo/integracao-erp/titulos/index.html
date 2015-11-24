@@ -94,17 +94,20 @@
                                 <!--AÇÕES-->
                                 <td rowspan="1" colspan="1">
                                     <div class="margin-bottom-5">
+                                        <button class="btn btn-sm filter-submit margin-bottom btn-primary" 
+                                           ng-disabled="!usuarioPodeCadastrarTitulos()"
+                                           ng-click="importaTitulos()">
+                                            <i class="fa fa-upload"></i>
+                                           Importar Títulos
+                                        </button>
+                                    </div>
+                                    <div class="margin-bottom-5">
                                         <button class="btn btn-sm red filter-submit margin-bottom"
                                                 ng-click="buscaTitulos()">
                                             <i class="fa fa-search"></i>
                                             Títulos Carregados
                                         </button>
                                     </div>
-                                    <button class="btn btn-primary" 
-                                       ng-disabled="titulos.length === 0 || !usuarioPodeCadastrarTitulos()"
-                                       ng-click="importaTitulos()">
-                                       Importar Títulos
-                                    </button>
                                 </td>
                             </tr>                   
                         </thead>

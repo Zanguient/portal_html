@@ -244,7 +244,8 @@ angular.module('webapi', ['utils'])
             nrCnpj : 102,
             cdBanco : 103, 
             nrAgencia : 104
-            nrConta : 105
+            nrConta : 105,
+            flAtivo : 106
         },
         tbcontacorrentetbloginadquirenteempresa: {
             cdContaCorrente : 100,

@@ -267,10 +267,11 @@ angular.module("administrativo-titulos", [])
             .then(function(dados){           
 
                 $scope.showAlert('Títulos importados com sucesso!', true, 'success', true);
-           
+                
+                buscaTitulos(true);
                 // Fecha o progress
-                $scope.hideProgress(divPortletBodyFiltrosPos);
-                $scope.hideProgress(divPortletBodyTitulosPos);
+                // $scope.hideProgress(divPortletBodyFiltrosPos);
+                // $scope.hideProgress(divPortletBodyTitulosPos);
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 

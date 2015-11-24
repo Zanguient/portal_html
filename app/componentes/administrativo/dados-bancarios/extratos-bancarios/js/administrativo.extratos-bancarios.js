@@ -4,6 +4,10 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.4 - 24/11/2015
+ *  - Upload extrato sem passar pelo porteiro
+ *  - Lista somente contas ativas
+ *
  *  Versão 1.0.3 - 18/11/2015
  *  - Remoção de movimentações bancárias
  *
@@ -28,9 +32,10 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
                                              /*'$campos',*/
                                              '$webapi',
                                              '$apis',
+                                             '$autenticacao',          
                                              'Upload',
                                              function($scope,$state,$stateParams,$filter,$timeout,
-                                                      /*$campos,*/$webapi,$apis,Upload){ 
+                                                      /*$campos,*/$webapi,$apis,$autenticacao,Upload){ 
                                                 
     // Filtros
     $scope.extrato = [];
@@ -176,8 +181,10 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
         $scope.showProgress(divPortletBodyFiltrosPos, 10000);
         
         // Filtro  
-        var filtros = {id: /*$campos.card.tbcontacorrente.cdGrupo*/ 101,
-                      valor: $scope.usuariologado.grupoempresa.id_grupo};
+        var filtros = [{id: /*$campos.card.tbcontacorrente.cdGrupo*/ 101,
+                        valor: $scope.usuariologado.grupoempresa.id_grupo},
+                       {id: /*$campos.card.tbcontacorrente.flAtivo*/ 106,
+                        valor: true}];
            
         $webapi.get($apis.getUrl($apis.card.tbcontacorrente, 
                                 [$scope.token, 2, 
@@ -385,10 +392,14 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
                 //}
                 //continue;
             }
+            var url = $apis.getUrl($apis.card.tbextrato, $scope.token, 
+                                   {id: /*$campos.card.tbextrato.cdContaCorrente*/ 101, 
+                                    valor: $scope.filtro.conta.cdContaCorrente});
+            // Seta para a url de download
+            if(url.slice(0, "http://localhost:".length) !== "http://localhost:")
+                url = url.replace($autenticacao.getUrlBase(), $autenticacao.getUrlBaseDownload());
             Upload.upload({
-                url: $apis.getUrl($apis.card.tbextrato, $scope.token, 
-                                  {id: /*$campos.card.tbextrato.cdContaCorrente*/ 101, 
-                                   valor: $scope.filtro.conta.cdContaCorrente}),
+                url: url,
                 file: file,
                 method: 'PATCH'
             }).progress(function (evt) {
@@ -418,7 +429,7 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
                  //console.log("erro");console.log(data);
                  if(status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else if(status === 503 || status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                 else if(status === 500) $scope.showModalAlerta("Só são aceitos arquivos PDF de contas do SANTANDER! Se o extrato subido não foi um pdf, então o extrato '" + files[$scope.current].name + "' não corresponde a conta " + $scope.getNomeAmigavelConta($scope.filtro.conta));
+                 else if(status === 500) $scope.showModalAlerta(data);//"Só são aceitos arquivos PDF de contas do SANTANDER! Se o extrato subido não foi um pdf, então o extrato '" + files[$scope.current].name + "' não corresponde a conta " + $scope.getNomeAmigavelConta($scope.filtro.conta));
                  else $scope.showAlert("Houve uma falha ao fazer upload do extrato '" + files[$scope.current] + "' (" + status + ")", true, 'danger', true, false);
                 //if(++$scope.current === $scope.total){
                 $scope.type = 'danger';

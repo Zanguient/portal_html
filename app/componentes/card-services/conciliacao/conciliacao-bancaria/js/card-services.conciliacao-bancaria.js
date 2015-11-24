@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.1.4 - 24/11/2015
+ *  - Lista somente contas ativas
+ *
  *  Versão 1.1.3 - 18/11/2015
  *  - Reporta erro da baixa
  *
@@ -302,8 +305,10 @@ angular.module("card-services-conciliacao-bancaria", [])
         //$scope.showProgress(divPortletBodyFiltrosPos, 10000);
         
         // Filtro  
-        var filtros = {id: /*$campos.card.tbcontacorrente.cdGrupo*/ 101,
-                      valor: $scope.usuariologado.grupoempresa.id_grupo};
+        var filtros = [{id: /*$campos.card.tbcontacorrente.cdGrupo*/ 101,
+                        valor: $scope.usuariologado.grupoempresa.id_grupo},
+                       {id: /*$campos.card.tbcontacorrente.flAtivo*/ 106,
+                        valor: true}];
            
         $webapi.get($apis.getUrl($apis.card.tbcontacorrente, 
                                 [$scope.token, 2, 

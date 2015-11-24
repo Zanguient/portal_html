@@ -380,7 +380,8 @@ angular.module("administrativo-parametros-bancarios", [])
             $scope.modalParametro.estabelecimento = estabelecimento.estabelecimento;
         }else{
             $scope.modalSelecionaAdquirenteFilial.filial = $filter('filter')($scope.filiais, function(f){ return f.nu_cnpj === estabelecimento.nu_cnpj})[0];
-
+            if($scope.modalSelecionaAdquirenteFilial.filial && $scope.modalSelecionaAdquirenteFilial.filial !== null)
+                $scope.modalSelecionaAdquirenteFilial.selecionaFilial = true;
             $scope.modalSelecionaAdquirenteFilial.estabelecimento = estabelecimento.estabelecimento;
         }
     }
