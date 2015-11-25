@@ -156,8 +156,8 @@ angular.module('utils', [ ])
   //var urlBaseIMessage = 'http://localhost:50780';
   var urlBaseIMessage = 'http://imessage.atoscapital.com.br';
   // Rezende
-  var urlBaseRezende = 'http://localhost:50939';
-  //var urlBaseRezende = 'http://apirezende.atoscapital.com.br';
+  //var urlBaseRezende = 'http://localhost:50939';
+  var urlBaseRezende = 'http://apirezende.atoscapital.com.br';
   var urlBaseDealernet = 'http://dealernet.atoscapital.com.br';
   // Download
   var urlBaseDownload = 'http://apiportal.atoscapital.com.br';

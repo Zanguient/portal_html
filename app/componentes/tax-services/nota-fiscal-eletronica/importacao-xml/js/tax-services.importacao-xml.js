@@ -651,15 +651,18 @@ angular.module("tax-services-importacao-xml", [])
         {
             colecao = 2;
         }
+
         if(nota.dtEntrega !=null)
         {
-        $scope.nrChave = nota.nrChave;
-        $scope.dadosImportacao.dtEntrega = nota.dtEntrega;
-        obtemAlmoxarifados(nota.nrCNPJ, function(){$('#modalImportar').modal('show');});
-        obtemNatOperacoes(colecao,function(){$('#modalImportar').modal('show');});
+            $scope.nrChave = nota.nrChave;
+            $scope.dtEntrega = nota.dtEntrega;
+            obtemAlmoxarifados(nota.nrCNPJ, function(){$('#modalImportar').modal('show');});
+            obtemNatOperacoes(colecao,function(){$('#modalImportar').modal('show');});
+
         }
         else
         {
+
            $scope.showModalAlerta('A nota não está disponível para importação, pois a mesma ainda não foi recebida.'); 
            return;
         }
@@ -669,7 +672,7 @@ angular.module("tax-services-importacao-xml", [])
     Importação da NFe
     */
     $scope.importarNota = function () {
-               
+        
         // Valida se o usuário informou os dados necessários 
         if(!$scope.dadosImportacao || $scope.dadosImportacao === null){
            $scope.showModalAlerta('É necessário selecionar a Natureza da Operação e o Almoxarifado!'); 
@@ -680,7 +683,7 @@ angular.module("tax-services-importacao-xml", [])
        }else if(!$scope.dadosImportacao.almoxarifado || $scope.dadosImportacao.almoxarifado === null){
            $scope.showModalAlerta('É necessário selecionar o Almoxarifado!'); 
            return;       
-       }else if(!$scope.dadosImportacao.dtEntrega || $scope.dadosImportacao.dtEntrega === null){
+       }else if(!$scope.dtEntrega || $scope.dtEntrega === null){
             $scope.showModalAlerta('Favor informar a data de Entrada da Nota!'); 
            return; 
        }
@@ -689,7 +692,7 @@ angular.module("tax-services-importacao-xml", [])
         var jsonImportar = { nrChave : $scope.nrChave,
                           codAlmoxarifado : $scope.dadosImportacao.almoxarifado.cod_almoxarifado,
                           codNaturezaOperacao : $scope.dadosImportacao.natOperacao.cod_natureza_operacao,
-                            dtEntrega: $scope.dadosImportacao.dtEntrega,
+                            dtEntrega: $scope.dtEntrega,
                         };
 
         // POST
