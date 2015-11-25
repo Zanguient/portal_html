@@ -43,7 +43,7 @@ angular.module("card-services-conciliacao-titulos", [])
     $scope.tipos = [{id: 1, nome: 'CONCILIADO'}, {id: 2, nome: 'PRÉ-CONCILIADO'}, {id: 3, nome: 'NÃO CONCILIADO'}];             
     $scope.filtro = {datamin : new Date(), datamax : '',
                      tipo : null, adquirente : undefined, filial : undefined,
-                     itens_pagina : $scope.itens_pagina[1], order : 0,
+                     itens_pagina : $scope.itens_pagina[0], order : 0,
                      pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0
                     };  
                                                  

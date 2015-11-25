@@ -74,9 +74,9 @@ angular.module("administrativo-titulos", [])
         });
         // Obtém as permissões
         if($scope.methodsDoControllerCorrente){
-            permissaoAlteracao = $scope.methodsDoControllerCorrente['atualização'] ? true : false;   
+            //permissaoAlteracao = $scope.methodsDoControllerCorrente['atualização'] ? true : false;   
             permissaoCadastro = $scope.methodsDoControllerCorrente['cadastro'] ? true : false;
-            permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;
+            //permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;
         }
         // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
         $scope.$on('acessoDeTelaNotificado', function(event){
@@ -84,8 +84,8 @@ angular.module("administrativo-titulos", [])
             // ...
         });
         // Acessou a tela
-        // $scope.$emit("acessouTela");
-        $scope.exibeTela = true;
+        $scope.$emit("acessouTela");
+        //$scope.exibeTela = true;
     };
                                                  
                                                  
@@ -256,7 +256,7 @@ angular.module("administrativo-titulos", [])
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                 else $scope.showAlert('Houve uma falha ao obter carregar títulos (' + failData.status + ')', true, 'danger', true);
+                 else $scope.showAlert('Houve uma falha ao carregar títulos (' + failData.status + ')', true, 'danger', true);
                  // Fecha o progress
                 $scope.hideProgress(divPortletBodyFiltrosPos);
                 $scope.hideProgress(divPortletBodyTitulosPos);
@@ -286,6 +286,7 @@ angular.module("administrativo-titulos", [])
               function(failData){
                  if(failData.status === 0) $scope.showAlert('O servidor está demorando muito para responder. O processo de importação ainda está sendo realizado. Por favor, realize a consulta dos títulos mais tarde.', true, 'warning', true); 
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else if(failData.status === 401) $scope.showModalAlerta(failData.dados);
                  else $scope.showAlert('Houve uma falha ao obter carregar títulos (' + failData.status + ')', true, 'danger', true);
                  // Fecha o progress
                 $scope.hideProgress(divPortletBodyFiltrosPos);

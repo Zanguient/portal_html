@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.6 - 25/11/2015
+ *  - Atualizações Fernando
+ *
  *  Versão 1.0.5 - 19/11/2015
  *  - Não retorna para a tela de login quando ocorrer erro 503 ou 404. Notifica a indisponibilidade do serviço
  *
