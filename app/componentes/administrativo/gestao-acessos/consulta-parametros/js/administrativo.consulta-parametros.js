@@ -27,7 +27,6 @@ angular.module("administrativo-consulta-parametros", [])
     $scope.parametros = [];
 		$scope.filiais = [];
 		$scope.vigencias = [];
-    $scope.grupo = [];
     $scope.statusBusca = true;
     $scope.itens_pagina = [50, 100, 150, 200];
     $scope.busca = ''; // model do input de busca                                            
@@ -61,6 +60,7 @@ angular.module("administrativo-consulta-parametros", [])
                     $scope.filiais = []; 
                     $scope.vigencias = [];
                     $scope.parametros = [];
+										$scope.grupo = [];
                     $scope.parametro.faixa_registros = '0-0';
                     $scope.parametro.pagina = 1;
                     $scope.parametro.total_paginas = 0;
@@ -81,6 +81,7 @@ angular.module("administrativo-consulta-parametros", [])
                     $scope.filiais = []; 
                     $scope.vigencias = [];
                     $scope.parametros = [];
+										$scope.grupo = [];
                     $scope.parametro.faixa_registros = '0-0';
                     $scope.parametro.pagina = 1;
                     $scope.parametro.total_paginas = 0;

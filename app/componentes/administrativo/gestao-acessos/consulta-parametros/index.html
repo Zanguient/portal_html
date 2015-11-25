@@ -227,24 +227,26 @@
 															<th tabindex="0" rowspan="1" colspan="1" style="width: 10%;">CNPJ</th>
 															<th tabindex="1" rowspan="1" colspan="1" style="width: 15%;">Fantasia</th>
 															<th tabindex="2" rowspan="1" colspan="1" style="width: 10%;">Adquirentes</th>
-															<th tabindex="2" rowspan="1" colspan="1" style="width: 10%;">Data Início</th>                      
-															<th tabindex="2" rowspan="1" colspan="1" style="width: 10%;">Data Fim</th>                      
+															<!--<th tabindex="2" rowspan="1" colspan="1" style="width: 10%;">Data Início</th>                      
+															<th tabindex="2" rowspan="1" colspan="1" style="width: 10%;">Data Fim</th>-->                      
 															<th tabindex="3" rowspan="1" colspan="1" style="width: 5%;">Estabelecimento</th>
-															<th tabindex="4" rowspan="1" colspan="1" style="width: 5%;">Estabelecimento Consulta</th>
-															<th tabindex="5" rowspan="1" colspan="1" style="width: 15%;">Conta Corrente</th>
+															<th tabindex="4" rowspan="1" colspan="1" style="width: 3%;">Estabelecimento Consulta</th>
+															<th tabindex="5" rowspan="1" colspan="1" style="width: 17%;">Conta Corrente</th>
                            </tr>
                         </thead>
                         <tbody class="centralizarVertical">
+													<div>
                             <tr role="row" class="odd" ng-repeat="parametro in parametros">
 															<td style="text-align:center">{{parametro.empresa.nu_cnpj}}</td>
 															<td style="text-align:center">{{parametro.empresa.ds_fantasia | uppercase}}</td>
 															<td style="text-align:center">{{parametro.tbAdquirente.nmAdquirente | uppercase}}</td>                
-															<td style="text-align:center"></td>                
-															<td style="text-align:center"></td>                
+															<!-- <td style="text-align:center">{{vigencias[$index].dtInicio}}</td>                
+															<td style="text-align:center">{{grupo.Vigencia.dtFim}}</td> -->               
 															<td style="text-align:center">{{parametro.cdEstabelecimento}}</td>
 															<td style="text-align:center">{{parametro.cdEstabelecimentoConsulta}}</td>
 															<td style="text-align:center">{{parametro.tbContaCorrente.banco.NomeExtenso | uppercase}} / {{parametro.tbContaCorrente.nrAgencia}} / {{parametro.tbContaCorrente.nrConta}}</td>
-                            </tr>   
+                            </tr>
+													</div>
                         </tbody>
                     </table>
                 </div>
