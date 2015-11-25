@@ -8,6 +8,9 @@
     Administrativo > Integração ERP > Títulos
 
 
+    Versão 1.0.1 - 25/11/2015
+    - Exibe valor total, total de conciliados e total de baixados
+
     Versão 1.0 - 18/11/2015
 -->
 
@@ -185,6 +188,33 @@
                             de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
                     </div>
                 </div>
+                <!-- TOTAL -->
+                <div class="col-xs-4 col-sm-4 col-md-4" style="font-weight: bolder; text-align: center">
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <label>Valor: </label>
+                        </div>
+                        <div class="row">
+                            {{total.valorTotal | currency:'R$'}}
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <label>Baixados: </label>
+                        </div>
+                        <div class="row">
+                            {{total.totalBaixados}}
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <label>Conciliados: </label>
+                        </div>
+                        <div class="row">
+                            {{total.totalConciliados}}
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <!-- CONTEÚDO DA TABELA -->
@@ -288,7 +318,7 @@
                                    style="color: green">
                                 </i>
                             </td>
-                        </tr>                                                                
+                        </tr> 
                     </tbody>
                 </table>
             </div> 

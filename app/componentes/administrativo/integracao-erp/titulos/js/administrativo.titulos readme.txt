@@ -64,6 +64,9 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				conciliado : bool
 			  }
 			]	
+		   Recebe em Totais: - "valorTotal" : double // valor total parcela
+							 - "totalBaixados" : int // total de títulos baixados
+							 - "totalConciliados" : int // total de títulos conciliados
 
    
 ### Desenvolvedores ###
