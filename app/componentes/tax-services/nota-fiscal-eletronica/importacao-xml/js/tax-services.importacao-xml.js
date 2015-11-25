@@ -64,7 +64,8 @@ angular.module("tax-services-importacao-xml", [])
     $scope.tabFiltro = 1;                                            
     $scope.exibeTela = false;                                         
     $scope.abrirCalendarioDataMin = false;
-    $scope.abrirCalendarioDataMax = false;                                                            
+    $scope.abrirCalendarioDataMax = false;
+    $scope.abrirCalendarioDataEntrada = false;
                                                 
     // Inicialização do controller
     $scope.taxServices_importacaoXMLInit = function(){
@@ -584,6 +585,15 @@ angular.module("tax-services-importacao-xml", [])
               });     
     }
     
+        // Data Entrada
+    $scope.exibeCalendarioDataEntrada = function($event) {
+        if($event){
+            $event.preventDefault();
+            $event.stopPropagation();
+        }
+        $scope.abrirCalendarioDataEntrada = !$scope.abrirCalendarioDataEntrada;
+      };
+                                                
             /**
       * Requisita a natureza da operação para importação da nota fiscal
       */
@@ -641,17 +651,28 @@ angular.module("tax-services-importacao-xml", [])
         {
             colecao = 2;
         }
-        $scope.nrChave = nota.nrChave;
-        
-        obtemAlmoxarifados(nota.nrCNPJ, function(){$('#modalImportar').modal('show');});
-        obtemNatOperacoes(colecao,function(){$('#modalImportar').modal('show');});
+
+        if(nota.dtEntrega !=null)
+        {
+            $scope.nrChave = nota.nrChave;
+            $scope.dtEntrega = nota.dtEntrega;
+            obtemAlmoxarifados(nota.nrCNPJ, function(){$('#modalImportar').modal('show');});
+            obtemNatOperacoes(colecao,function(){$('#modalImportar').modal('show');});
+
+        }
+        else
+        {
+
+           $scope.showModalAlerta('A nota não está disponível para importação, pois a mesma ainda não foi recebida.'); 
+           return;
+        }
     }
 
     /*
     Importação da NFe
     */
     $scope.importarNota = function () {
-               
+        
         // Valida se o usuário informou os dados necessários 
         if(!$scope.dadosImportacao || $scope.dadosImportacao === null){
            $scope.showModalAlerta('É necessário selecionar a Natureza da Operação e o Almoxarifado!'); 
@@ -662,12 +683,16 @@ angular.module("tax-services-importacao-xml", [])
        }else if(!$scope.dadosImportacao.almoxarifado || $scope.dadosImportacao.almoxarifado === null){
            $scope.showModalAlerta('É necessário selecionar o Almoxarifado!'); 
            return;       
+       }else if(!$scope.dtEntrega || $scope.dtEntrega === null){
+            $scope.showModalAlerta('Favor informar a data de Entrada da Nota!'); 
+           return; 
        }
         
         // Obtém o JSON
         var jsonImportar = { nrChave : $scope.nrChave,
                           codAlmoxarifado : $scope.dadosImportacao.almoxarifado.cod_almoxarifado,
-                          codNaturezaOperacao : $scope.dadosImportacao.natOperacao.cod_natureza_operacao
+                          codNaturezaOperacao : $scope.dadosImportacao.natOperacao.cod_natureza_operacao,
+                            dtEntrega: $scope.dtEntrega,
                         };
 
         // POST
