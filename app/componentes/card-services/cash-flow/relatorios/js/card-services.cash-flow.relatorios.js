@@ -795,7 +795,8 @@ angular.module("card-services-cash-flow-relatorios", [])
             return;
         
         // Seta para a url de download
-        url = url.replace($autenticacao.getUrlBase(), $autenticacao.getUrlBaseDownload());
+        if(url.slice(0, "http://localhost:".length) !== "http://localhost:")
+            url = url.replace($autenticacao.getUrlBase(), $autenticacao.getUrlBaseDownload());
         
         $scope.buscandoRelatorio = true;
         var funcao = function(){ $scope.buscandoRelatorio = false; };

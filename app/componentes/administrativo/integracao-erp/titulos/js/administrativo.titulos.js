@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.1 - 23/11/2015
+ *  - Consulta títulos da base da atos
+ *
  *  Versão 1.0 - 18/11/2015
  *
  */
@@ -191,7 +194,7 @@ angular.module("administrativo-titulos", [])
         var filtros = [];
         
         // Data
-        filtros.push({id: /*$campos.card.tituloserp.data*/ 100,
+        filtros.push({id: /*$campos.card.tbrecebimentotitulo.dtTitulo*/ 109,
                       valor: $scope.getFiltroData($scope.filtro.data)});
         
         
@@ -211,8 +214,8 @@ angular.module("administrativo-titulos", [])
         // Filtro  
         var filtros = obtemFiltrosBusca();
         
-        $webapi.get($apis.getUrl($apis.card.tituloserp, 
-                                [$scope.token, 0, 
+        $webapi.get($apis.getUrl($apis.card.tbrecebimentotitulo,//$apis.card.tituloserp, 
+                                [$scope.token, 3,//0, 
                                  /*$campos.card.tituloserp.data*/ 100, 0, 
                                  $scope.filtro.itens_pagina, $scope.filtro.pagina],
                                 filtros)) 
@@ -264,10 +267,11 @@ angular.module("administrativo-titulos", [])
             .then(function(dados){           
 
                 $scope.showAlert('Títulos importados com sucesso!', true, 'success', true);
-           
+                
+                buscaTitulos(true);
                 // Fecha o progress
-                $scope.hideProgress(divPortletBodyFiltrosPos);
-                $scope.hideProgress(divPortletBodyTitulosPos);
+                // $scope.hideProgress(divPortletBodyFiltrosPos);
+                // $scope.hideProgress(divPortletBodyTitulosPos);
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 

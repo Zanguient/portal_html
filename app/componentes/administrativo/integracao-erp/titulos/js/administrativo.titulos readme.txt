@@ -2,7 +2,8 @@
 
 Módulo que:
  - gerencia o layout da tela de títulos de Integração ERP (app/componentes/administrativo/integracao-erp/titulos/index.html);
- - permite a consulta e importação dos títulos da base do cliente para a base da atoscapital
+ - permite a consulta dos títulos já importados da base do cliente
+ - permite a importação dos títulos da base do cliente para a base da atoscapital
  
 
 ### Pra Que Serve Este Módulo? ###
@@ -35,13 +36,18 @@ Além deles, é necessária a importação dos seguintes módulos externos.
   * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
   * APIS:
     - card/tituloserp
+	- card/tbrecebimentotitulo
 	
  
  
  ### Interação com a WEB API ###
  
   * card/tituloserp
-    - GET : carrega os títulos provenientes da base da empresa
+	- POST : importa títulos da base da empresa para a base da atoscapital
+			 Espera o JSON { data : string }, que é a data do título		
+   
+  * card/tbrecebimentotitulo
+        - GET : carrega os títulos já importados (coleção 3)
 			[
 			  { empresa : { nu_cnpj : string, ds_fantasia : string, filial : string ou null },
 				nrNSU : string,
@@ -55,23 +61,9 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				nrParcela : int,
 				cdERP : string ou null,
 				dtBaixaERP : datetime ou null
-
+				conciliado : bool
 			  }
 			]	
-	- PUT : altera parâmetro(s) bancário(s) existente
-			[
-			  cdAdquirente : int,
-			  nrCnpj : string,
-			  dsTipoCartao : string,
-			  cdBandeira : int,
-			  flVisivel : bool, // obrigatório!
-			  deletar : bool, // obrigatório!
-			  parametros : [{ cdBanco : string,
-							  dsMemo : string,
-							  dsTipo : string,
-							}]
-			]			
-   
 
    
 ### Desenvolvedores ###

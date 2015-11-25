@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.2 - 23/11/2015
+ *  - Não busca logs sem click do botão Buscar
+ *
  *  Versão 1.0.1 - 30/10/2015
  *  - Função adicionaQuebraLinhaHtml movida para app.js
  *
@@ -61,11 +64,15 @@ angular.module("administrativo-acesso-usuarios", [])
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
         });  
+        // Quando houver alteração do grupo empresa na barra administrativa                                           
+        $scope.$on('alterouGrupoEmpresa', function(event){
+            if($scope.exibeTela) buscaLogs();
+        }); 
         // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
         $scope.$on('acessoDeTelaNotificado', function(event){
             $scope.exibeTela = true;
             // Busca Logs
-            $scope.buscaLogs();
+            //$scope.buscaLogs();
         });
         // Acessou a tela
         $scope.$emit("acessouTela");
