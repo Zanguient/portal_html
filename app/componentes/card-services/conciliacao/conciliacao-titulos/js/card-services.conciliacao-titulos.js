@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.3 - 26/11/2015
+ *  - Conciliar TEF-NSU
+ *
  *  Versão 1.0.2 - 13/11/2015
  *  - Busca títulos em outra filial
  *
@@ -660,6 +663,42 @@ angular.module("card-services-conciliacao-titulos", [])
             "Uma vez confirmada a conciliação, o título e a carga não poderão se envolver em outra conciliação de títulos. Confirma essa conciliação da parcela com valor de " + $filter('currency')($scope.modalBuscaTitulos.recebimento.Valor, 'R$', 2) + ' e o título com valor de ' + $filter('currency')(titulo.Valor, 'R$', 2) + ' (diferença de ' + $filter('currency')(Math.abs(titulo.Valor - $scope.modalBuscaTitulos.recebimento.Valor), 'R$', 2) + ')?',
             function(){ fechaModalTitulos(); 
                        $timeout(function(){concilia([dado], true);}, 300);}, undefined, 'Sim', 'Não');
+    }
+    
+    
+    /**
+      * Concilia TEF-NSU
+      */
+    $scope.conciliaTefNsu = function(){
+        
+        if(!$scope.filtro.filial || $scope.filtro.filial === null ||
+           !$scope.filtro.adquirente || $scope.filtro.adquirente === null)
+            return;
+        
+        $scope.showProgress(divPortletBodyFiltrosPos, 10000);
+        $scope.showProgress(divPortletBodyDadosPos);
+        
+        // Obtém o json
+        var json = { data : $scope.getFiltroData($scope.filtro.datamin),
+                     nrCNPJ : $scope.filtro.filial.nu_cnpj,
+                     cdAdquirente : $scope.filtro.adquirente.cdAdquirente
+                   }; 
+        if($scope.filtro.datamax)
+            json.data = json.data + '|' + $scope.getFiltroData($scope.filtro.datamax);        
+        
+        
+        $webapi.post($apis.getUrl($apis.card.conciliacaotitulos, undefined,
+                       {id: 'token', valor: $scope.token}), json)
+            .then(function(dados){
+                    //$scope.showAlert('Conciliação de títulos TEF-NSU realizada com sucesso!', true, 'success', true);
+                    buscaDadosConciliacaoTitulos(true);
+                  },function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                     else $scope.showAlert('Houve uma falha ao realizar a conciliação de títulos TEF-NSU (' + failData.status + ')', true, 'danger', true); 
+                    $scope.hideProgress(divPortletBodyFiltrosPos);
+                    $scope.hideProgress(divPortletBodyDadosPos);
+                  });     
     }
     
     

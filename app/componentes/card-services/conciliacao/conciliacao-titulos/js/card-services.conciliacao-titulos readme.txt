@@ -116,6 +116,13 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 									  numParcela : int
 									}
 			}]
+			
+	- POST : Faz a conciliação TEF
+			{ 
+			    data : string,
+				nrCNPJ : string,
+				cdAdquirente : int
+			}	
 	
 	
 	

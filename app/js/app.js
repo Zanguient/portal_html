@@ -2248,7 +2248,7 @@ angular.module("AtosCapital", ['ui.router',
      * @param scroll : set true se deseja que, ao ser exibido, a barra de rolagem rolará até ele. Default: false
      * @param reset : por default ele é true. Set false para não remover outros alerts da tela
      */
-   $scope.showAlert = function(mensagem, closable, type, scroll, reset){
+   $scope.showAlert = function(mensagem, closable, type, scroll, reset, closeInSeconds){
         jQuery(document).ready(function() {
         //$rootScope.$on('$viewContentLoaded', function(){
            $timeout(function(){
@@ -2260,7 +2260,7 @@ angular.module("AtosCapital", ['ui.router',
                     close: closable ? true : false, // make alert closable
                     reset: typeof reset === 'undefined' ? true : reset, // close all previouse alerts first
                     focus: scroll ? true : false, // auto scroll to the alert after shown
-                    closeInSeconds: type !== 'info' ? 10 : 0, // auto close after defined seconds
+                    closeInSeconds: typeof closeInSeconds === 'number' ? closeInSeconds : type !== 'info' ? 10 : 0, // auto close after defined seconds
                     icon: type === 'danger' || type === 'warning' ? 'warning' : type === 'success' ? 'check' : '', // put icon before the message
                     img : !type || type === 'info' ? '/img/loading-atos.gif' : '' // put img before the message
                 });

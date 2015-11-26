@@ -74,9 +74,9 @@ angular.module("card-services-relatorio-conciliacao-titulos", [])
             buscaFiliais(true);
         }); 
         // Acessou a tela
-        //$scope.$emit("acessouTela");
-        $scope.exibeTela = true;
-        buscaFiliais(true);
+        $scope.$emit("acessouTela");
+        //$scope.exibeTela = true;
+        //buscaFiliais(true);
     };                                           
                                                 
                                             

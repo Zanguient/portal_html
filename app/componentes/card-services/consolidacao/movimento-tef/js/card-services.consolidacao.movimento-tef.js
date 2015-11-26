@@ -80,10 +80,10 @@ angular.module("card-services-movimento-tef", [])
             if($scope.usuariologado.grupoempresa) buscaFiliais(true);
         });
         // Acessou a tela
-        //$scope.$emit("acessouTela");
+        $scope.$emit("acessouTela");
         // Carrega filiais
-        $scope.exibeTela = true;
-        if($scope.usuariologado.grupoempresa) buscaFiliais(true);
+        //$scope.exibeTela = true;
+        //if($scope.usuariologado.grupoempresa) buscaFiliais(true);
     }; 
                                                  
                                                  
