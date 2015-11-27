@@ -33,8 +33,9 @@ angular.module("administrativo-consulta-parametros", [])
     $scope.itens_pagina = [50, 100, 150, 200];
     $scope.busca = ''; // model do input de busca
 		$scope.buscaAdquirente = '';
-		$scope.buscaStatus = '';
-    $scope.parametro = {busca:'', itens_pagina : $scope.itens_pagina[0], pagina : 1,
+		$scope.buscaStatus = '';						
+    $scope.status = 0;																							
+    $scope.parametro = {busca:'', buscaAdquirente:'', itens_pagina : $scope.itens_pagina[0], pagina : 1,
 												total_registros : 0, faixa_registros : '0-0', total_paginas : 0
 											 };   
     $scope.parametroSelecionada = undefined;
@@ -159,6 +160,7 @@ angular.module("administrativo-consulta-parametros", [])
     };
     $scope.filtraParametros = function(){
 			$scope.parametro.busca = $scope.busca;
+			$scope.parametro.buscaAdquirente = $scope.buscaAdquirente;
 			$scope.buscaParametros();
     };
     $scope.alterouFilial = function(){
@@ -170,31 +172,12 @@ angular.module("administrativo-consulta-parametros", [])
 			$scope.statusAdquirente = true;
 			$scope.filtro = null;
 		};
-																							
-		var obtemFiltroDeBusca = function(){
-       //var filtros = [];
-       // Filial
-       var filtroFilial = {id: /*$campos.pos.loginoperadora.cnpj*/ 204, 
-                           valor: $scope.busca};
-       filtros.push(filtroFilial);  
-        
-       // Adquirente
-       //if($scope.buscaAdquirente !== ''){
-           //var filtroAdquirente = {id: /*$campos.pos.loginoperadora.idOperadora*/ 301, 
-           //                        valor: $scope.filtro.adquirente.id};
-          // filtros.push(filtroAdquirente);
-       //} 
-        
-       // Bandeira
-       //if($scope.filtro.status !== null){
-        //   var filtroStatus = {id: /*$campos.pos.loginoperadora.status*/ 104, 
-        //                       valor: $scope.filtro.status.status};
-         //  filtros.push(filtroStatus);
-      // }
-       
-       // Retorna    
-       return filtros;
-    };
+    //$scope.verificaStatus = function($scope.status){
+			//$scope.returnStatus = '';
+			//if ($scope.status == "Rede") $scope.returnStatus = "nao";
+			//else ($scope.status == "Cielo") $scope.returnStatus = "sim";
+			///return $scope.returnStatus;
+		//}
 																							
     $scope.buscaParametros = function(showMessage){
 			
@@ -214,12 +197,6 @@ angular.module("administrativo-consulta-parametros", [])
 					valor: $scope.usuariologado.grupoempresa.id_grupo
 				}];
 				
-				// Verifica se tem algum valor para ser filtrado    
-				//if ($scope.parametro.busca.length > 0) filtros.push({
-					//id: /*$campos.card.tbcontacorrentetbloginadquirenteempresa.ds_fantasia*/ 204,
-					//valor: $scope.parametro.busca + '%'
-				//});
-				
 				//FILTROS
 				
 				//Filial
@@ -227,6 +204,14 @@ angular.module("administrativo-consulta-parametros", [])
 					filtros.push({
 						id: /*$campos.card.tbcontacorrentetbloginadquirenteempresa.ds_fantasia*/ 204, 
 						valor: $scope.parametro.busca + '%'
+					});
+				}
+				
+				//Adquirente
+				if($scope.parametro.buscaAdquirente != ''){
+					filtros.push({
+						id: /*$campos.card.tbcontacorrentetbloginadquirenteempresa.ds_fantasia*/ 301,
+						valor: $scope.parametro.buscaAdquirente + '%'
 					});
 				}
 				
@@ -253,6 +238,8 @@ angular.module("administrativo-consulta-parametros", [])
 																 filtros)) 
 					.then(function(dados){
 					$scope.parametros = dados.Registros;
+					//if ($scope.parametros.status == 1) $scope.parametros.status = "Não";
+					//else ($scope.parametros.status == 0) $scope.parametros.status = "Sim";
 					$scope.parametro.total_registros = dados.TotalDeRegistros;
 					$scope.parametro.total_paginas = Math.ceil($scope.parametro.total_registros / $scope.parametro.itens_pagina);
 					if($scope.parametros.length === 0) $scope.parametro.faixa_registros = '0-0';

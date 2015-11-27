@@ -265,6 +265,7 @@
 															<th tabindex="0" rowspan="1" colspan="1" style="width: 7%;">CNPJ</th>
 															<th tabindex="1" rowspan="1" colspan="1" style="width: 18%;">Fantasia</th>
 															<th tabindex="2" rowspan="1" colspan="1" style="width: 7%;">Adquirentes</th>
+															<th tabindex="2" rowspan="1" colspan="1" style="width: 7%;">Bloqueado</th>
 															<!--<th tabindex="2" rowspan="1" colspan="1" style="width: 10%;">Data Início</th>                      
 															<th tabindex="2" rowspan="1" colspan="1" style="width: 10%;">Data Fim</th>-->                      
 															<th tabindex="3" rowspan="1" colspan="1" style="width: 5%;">Estabelecimento</th>
@@ -277,7 +278,12 @@
                             <tr role="row" class="odd" ng-repeat="parametro in parametros">
 															<td style="text-align:center">{{parametro.empresa.nu_cnpj}}</td>
 															<td style="text-align:center">{{parametro.empresa.ds_fantasia | uppercase}}</td>
-															<td style="text-align:center">{{parametro.tbAdquirente.nmAdquirente | uppercase}}</td>                
+															<td style="text-align:center">{{parametro.tbAdquirente.nmAdquirente | uppercase}}</td>
+															<td style="text-align:center">
+																<span ng-class="{ 'StatusSenhaValida' : parametro.tbAdquirente.nmAdquirente == 'Cielo', 'StatusSenhaInvalida' : !parametro.tbAdquirente.nmAdquirente == 'Cielo'}">
+																	José
+																</span>
+															</td>
 															<!-- <td style="text-align:center">{{vigencias[$index].dtInicio}}</td>                
 															<td style="text-align:center">{{grupo.Vigencia.dtFim}}</td> -->               
 															<td style="text-align:center">{{parametro.cdEstabelecimento}}</td>
