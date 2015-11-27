@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.2 - 25/11/2015
+ *  - Totais
+ *
  *  Versão 1.0.1 - 23/11/2015
  *  - Consulta títulos da base da atos
  *
@@ -33,7 +36,8 @@ angular.module("administrativo-titulos", [])
     $scope.filtro = { data : new Date(),
                      itens_pagina : $scope.itens_pagina[0], order : 0, 
                      pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0
-                    };                                             
+                    };   
+    $scope.total = { valorTotal : 0.0, totalBaixados : 0, totalConciliados : 0};                                             
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyTitulosPos = 1;                                                    
     // Permissões                                           
@@ -70,9 +74,9 @@ angular.module("administrativo-titulos", [])
         });
         // Obtém as permissões
         if($scope.methodsDoControllerCorrente){
-            permissaoAlteracao = $scope.methodsDoControllerCorrente['atualização'] ? true : false;   
+            //permissaoAlteracao = $scope.methodsDoControllerCorrente['atualização'] ? true : false;   
             permissaoCadastro = $scope.methodsDoControllerCorrente['cadastro'] ? true : false;
-            permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;
+            //permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;
         }
         // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
         $scope.$on('acessoDeTelaNotificado', function(event){
@@ -80,8 +84,8 @@ angular.module("administrativo-titulos", [])
             // ...
         });
         // Acessou a tela
-        // $scope.$emit("acessouTela");
-        $scope.exibeTela = true;
+        $scope.$emit("acessouTela");
+        //$scope.exibeTela = true;
     };
                                                  
                                                  
@@ -221,8 +225,14 @@ angular.module("administrativo-titulos", [])
                                 filtros)) 
             .then(function(dados){           
 
+                $scope.total.totalBaixados = $scope.total.totalConciliados = 0;
+                $scope.total.valorTotal = 0.0;
+            
                 // Obtém os dados
                 $scope.titulos = dados.Registros;
+                $scope.total.totalBaixados = dados.Totais.totalBaixados;
+                $scope.total.totalConciliados = dados.Totais.totalConciliados;
+                $scope.total.valorTotal = dados.Totais.valorTotal;
                 
                 // Set valores de exibição
                 $scope.filtro.total_registros = dados.TotalDeRegistros;
@@ -246,7 +256,7 @@ angular.module("administrativo-titulos", [])
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                 else $scope.showAlert('Houve uma falha ao obter carregar títulos (' + failData.status + ')', true, 'danger', true);
+                 else $scope.showAlert('Houve uma falha ao carregar títulos (' + failData.status + ')', true, 'danger', true);
                  // Fecha o progress
                 $scope.hideProgress(divPortletBodyFiltrosPos);
                 $scope.hideProgress(divPortletBodyTitulosPos);
@@ -274,8 +284,10 @@ angular.module("administrativo-titulos", [])
                 // $scope.hideProgress(divPortletBodyTitulosPos);
               },
               function(failData){
-                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 console.log(failData);
+                 if(failData.status === 0) $scope.showAlert('O servidor está demorando muito para responder. O processo de importação ainda está sendo realizado. Por favor, realize a consulta dos títulos mais tarde.', true, 'warning', true, true, 0); 
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else if(failData.status === 401) $scope.showModalAlerta(failData.dados);
                  else $scope.showAlert('Houve uma falha ao obter carregar títulos (' + failData.status + ')', true, 'danger', true);
                  // Fecha o progress
                 $scope.hideProgress(divPortletBodyFiltrosPos);

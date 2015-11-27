@@ -8,6 +8,9 @@
     Card Services > Conciliação > Conciliação de Títulos
 
 
+    Versão 1.0.3 - 26/11/2015
+    - Conciliar TEF-NSU
+
     Versão 1.0.2 - 13/11/2015
     - Busca título em outra filial
 
@@ -439,14 +442,17 @@
                             de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
                     </div>
                 </div>  
-                <div class="col-xs-4 col-sm-4 col-md-3" print-remove>
-                    <div class="dataTables_length">
-                        <button class="btn btn-warning" 
-                           ng-disabled="!temElementosPreConciliados() || associacaoManual.selecionandoRecebimentos"
-                           ng-click="conciliaPreConciliados()">
-                           Conciliar Pré-Conciliados
-                        </button>
-                    </div>
+                <div class="col-xs-4 col-sm-4 col-md-4" print-remove>
+                    <button class="btn btn-warning" 
+                       ng-disabled="!temElementosPreConciliados() || associacaoManual.selecionandoRecebimentos"
+                       ng-click="conciliaPreConciliados()">
+                       Conciliar Pré-Conciliados
+                    </button>
+                    <button class="btn btn-danger" style="padding-left: 10px" 
+                       ng-disabled="!filtro.filial || filtro.filial === null || associacaoManual.selecionandoRecebimentos"
+                       ng-click="conciliaTefNsu()">
+                       Conciliar TEF-NSU
+                    </button>
                 </div>  
             </div>
          
