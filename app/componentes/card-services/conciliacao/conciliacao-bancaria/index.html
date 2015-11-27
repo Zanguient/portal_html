@@ -527,24 +527,16 @@
                     </div>
                 </div>  
                 <div class="col-xs-4 col-sm-4 col-md-4" print-remove>
-                    <div class="col-xs-6 col-sm-6 col-md-12">
-                        <div class="dataTables_length">
-                            <button class="btn btn-warning" 
-                               ng-disabled="!temElementosPreConciliados() || associacaoManual.selecionandoRecebimentos"
-                               ng-click="conciliaPreConciliados()">
-                               Conciliar Pré-Conciliados
-                            </button>
-                        </div>
-                    </div>
-                    <div class="col-xs-6 col-sm-6 col-md-12" style="margin-top:5px">
-                        <div class="dataTables_length">
-                            <button class="btn btn-primary" 
-                               ng-show="temElementosConciliados()"
-                               ng-click="downloadCSVs()">
-                               Baixar CSVs
-                            </button>
-                        </div>
-                    </div>
+                    <button class="btn btn-warning" 
+                       ng-disabled="!temElementosPreConciliados() || associacaoManual.selecionandoRecebimentos"
+                       ng-click="conciliaPreConciliados()">
+                       Conciliar Pré-Conciliados
+                    </button>
+                    <button class="btn btn-primary" style="padding-left: 10px" 
+                       ng-show="temElementosConciliados()"
+                       ng-click="downloadCSVs()">
+                       Baixar CSVs
+                    </button>
                 </div>
             </div>
          

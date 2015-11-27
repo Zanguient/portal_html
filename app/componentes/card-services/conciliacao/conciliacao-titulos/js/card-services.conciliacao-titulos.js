@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.4 - 27/11/2015
+ *  - Considerar pré-conciliação com outras filiais do grupo
+ *
  *  Versão 1.0.3 - 26/11/2015
  *  - Conciliar TEF-NSU
  *
@@ -45,7 +48,7 @@ angular.module("card-services-conciliacao-titulos", [])
     $scope.filiais = [];                                                                                       
     $scope.tipos = [{id: 1, nome: 'CONCILIADO'}, {id: 2, nome: 'PRÉ-CONCILIADO'}, {id: 3, nome: 'NÃO CONCILIADO'}];             
     $scope.filtro = {datamin : new Date(), datamax : '',
-                     tipo : null, adquirente : undefined, filial : undefined,
+                     tipo : null, adquirente : undefined, filial : undefined, considerarGrupo : false,
                      itens_pagina : $scope.itens_pagina[0], order : 0,
                      pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0
                     };  
@@ -177,6 +180,12 @@ angular.module("card-services-conciliacao-titulos", [])
                              valor: $scope.filtro.tipo.id};
            filtros.push(filtroTipo);
        }   
+        
+       // Pré-Conciliação considerando grupo
+        if($scope.isTipoPreConciliado()){
+            filtros.push({id: /*$campos.card.conciliacaotitulos.preconcilia_grupo*/104, 
+                          valor: $scope.filtro.considerarGrupo ? true : false});
+        }
         
        // Retorna    
        return filtros;
@@ -317,7 +326,7 @@ angular.module("card-services-conciliacao-titulos", [])
     }
     $scope.alterouTipo = function(){
         //console.log($scope.filtro.tipo); 
-        //if(!$scope.isTipoPreConciliado()) $scope.filtro.consideraNsu = true;
+        //if(!$scope.isTipoPreConciliado()) $scope.filtro.considerarGrupo = false;
     }
     
     
