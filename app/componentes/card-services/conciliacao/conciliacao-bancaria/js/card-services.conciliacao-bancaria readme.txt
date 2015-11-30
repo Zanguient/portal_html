@@ -120,6 +120,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 							   NumParcela : int,
 							   Documento : string,
 							   Valor : double,
+							   ValorBruto : double,
 							   Bandeira : string,
 							   DataVenda : datetime,
 							   DataPrevista : datetime,
@@ -129,6 +130,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 		  Bandeira : string,
 		  Memo : string,
 		  Data : datetime,
+		  ValorTotalBruto : double, // da parcela
 		  ValorTotalRecebimento : double,
 		  ValorTotalExtrato : double,
 		  Conciliado : int, // 1 : CONCILIADO | 2 : PRÉ-CONCILIADO | 3 : NÃO-CONCILIADO

@@ -8,6 +8,11 @@
     Card Services > Conciliação > Conciliação Bancária
 
 
+
+
+    Versão 1.1.0 - 30/11/2015
+    - Valor Bruto do cupom de parcelas
+
     Versão 1.1.0 - 16/11/2015
     - Consulta Títulos ERP + Baixa automática
 
@@ -721,7 +726,21 @@
                                      ng-init="incrementaContRecebimentosParcelas(dado.RecebimentosParcela)">
                                     <!--VALOR-->
                                     <div class="col-md-6 col-sm-6">
-                                        <label ng-bind="dado.RecebimentosParcela !== null ? 'Valor total:' : ''"></label>
+                                        <label ng-bind="dado.RecebimentosParcela !== null ? 'Valor bruto:' : ''"></label>
+                                    </div>
+                                    <!--RESULTADO DO VALOR-->
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                        <label ng-show="dado.RecebimentosParcela !== null">
+                                            {{dado.ValorTotalBruto | currency:'R$'}}
+                                        </label>
+                                    </div>                                              
+                                </div> 
+                                <!--VALOR TOTAL-->
+                                <div class="row" 
+                                     ng-init="incrementaContRecebimentosParcelas(dado.RecebimentosParcela)">
+                                    <!--VALOR-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label ng-bind="dado.RecebimentosParcela !== null ? 'Valor líquido:' : ''"></label>
                                     </div>
                                     <!--RESULTADO DO VALOR-->
                                     <div class="col-md-6 col-sm-6 alinhamentoDados">
@@ -805,12 +824,12 @@
                                 <!--AGÊNCIA E CONTA -->
                                 <div class="row">
                                     <!--AGÊNCIA-->
-                                    <div class="col-md-5 col-sm-5">
+                                    <div class="col-md-6 col-sm-6">
                                         <label ng-bind="dado.ExtratoBancario !== null ? 'Agência:' : ''">&nbsp;</label>
                                         {{(dado.Conta.nrAgencia | uppercase) || ''}}
                                     </div>
                                     <!--CONTA-->
-                                    <div class="col-md-7 alinhamentoDados">
+                                    <div class="col-md-6 alinhamentoDados">
                                         <label ng-bind="dado.ExtratoBancario !== null ? 'Conta:' : ''">&nbsp;</label>
                                         {{dado.Conta.nrConta | uppercase}}
                                     </div> 
