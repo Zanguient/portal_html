@@ -8,6 +8,9 @@
     Card Services > Conciliação > Conciliação de Títulos
 
 
+    Versão 1.0.4 - 27/11/2015
+    - Considerar pré-conciliação com outras filiais do grupo
+ 
     Versão 1.0.3 - 26/11/2015
     - Conciliar TEF-NSU
 
@@ -173,6 +176,15 @@
                                                 ng-options="tipo as (tipo.nome | uppercase) for tipo in tipos">
                                             <option value="">TODOS</option>
                                         </select>
+                                    </div>
+                                    <div class="row" style="margin-top:10px;"
+                                         ng-class="{'element-hidden' : !isTipoPreConciliado()}">
+                                        <div class="col-sm-4 col-md-4" style="margin-right: -15px;">
+                                            <checkbox normal ng-model="filtro.considerarGrupo"></checkbox>
+                                        </div>
+                                        <div class="col-sm-8 col-md-8" style="text-align:left;">
+                                            <label>Pré-conciliar com outras filiais</label>
+                                        </div>
                                     </div>
                                 </td>
                                 <td rowspan="1" colspan="1">

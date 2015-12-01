@@ -189,6 +189,7 @@ angular.module('webapi', ['utils'])
             tipo = 101,
             id_grupo = 102,
             nu_cnpj = 103,
+            preconcilia_grupo = 104,
             // Relacionamentos
             tbadquirente : 200,
             recebimentoparcela : 300

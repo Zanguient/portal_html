@@ -267,6 +267,12 @@ angular.module("administrativo-titulos", [])
     // IMPORTA TÍTULOS
     $scope.importaTitulos = function(){
 
+        if(!$scope.usuariologado.grupoempresa || $scope.usuariologado.grupoempresa === null) return; 
+        if(!$scope.usuariologado.grupoempresa.dsAPI || $scope.usuariologado.grupoempresa.dsAPI === null){
+            $scope.showModalAlerta('Empresa não possui serviço ativo!');
+            return;
+        }
+        
         $scope.showProgress(divPortletBodyFiltrosPos, 10000);
         $scope.showProgress(divPortletBodyTitulosPos);
         
@@ -293,7 +299,18 @@ angular.module("administrativo-titulos", [])
                 $scope.hideProgress(divPortletBodyFiltrosPos);
                 $scope.hideProgress(divPortletBodyTitulosPos);
               });  
-    }                                             
+    }      
+    
+    
+    
+    // IMPORTA CSV
+    $scope.importaCSV = function(){
+        
+        if(!$scope.usuariologado.grupoempresa || $scope.usuariologado.grupoempresa === null) return; 
+        
+        console.log("importa csv");
+        
+    }
                        
     
     
