@@ -33,8 +33,8 @@ angular.module("administrativo-consulta-parametros", [])
     $scope.itens_pagina = [50, 100, 150, 200];
     $scope.busca = ''; // model do input de busca
 		$scope.buscaAdquirente = '';
-		$scope.buscaStatus = '';						
-    $scope.status = 0;																							
+		$scope.buscaStatus = '';
+		$scope.teste = '';
     $scope.parametro = {busca:'', buscaAdquirente:'', itens_pagina : $scope.itens_pagina[0], pagina : 1,
 												total_registros : 0, faixa_registros : '0-0', total_paginas : 0
 											 };   
@@ -165,6 +165,9 @@ angular.module("administrativo-consulta-parametros", [])
     };
     $scope.alterouFilial = function(){
 			$scope.buscaAdquirente = '';
+			$scope.parametro.buscaAdquirente = '';
+			$scope.buscaStatus = '';
+			$scope.parametro.buscaStatus = '';
 			$scope.parametro.busca = $scope.busca;
 			$scope.buscaParametros();
 			buscaAdquirentes();
@@ -172,12 +175,6 @@ angular.module("administrativo-consulta-parametros", [])
 			$scope.statusAdquirente = true;
 			$scope.filtro = null;
 		};
-    //$scope.verificaStatus = function($scope.status){
-			//$scope.returnStatus = '';
-			//if ($scope.status == "Rede") $scope.returnStatus = "nao";
-			//else ($scope.status == "Cielo") $scope.returnStatus = "sim";
-			///return $scope.returnStatus;
-		//}
 																							
     $scope.buscaParametros = function(showMessage){
 			
@@ -215,22 +212,18 @@ angular.module("administrativo-consulta-parametros", [])
 					});
 				}
 				
-				//Adquirente
-				//if($scope.parametro.busca !== ''){
-				//var filtroAdquirente = {id: /*$campos.pos.loginoperadora.idOperadora*/ 301, 
-				//                        valor: $scope.filtro.adquirente.id};
-				// filtros.push(filtroAdquirente);
-				//} 
-				
-				//if ($scope.parametro.buscaAdquirente.length > 0) filtros.push({
-				//	id: /*$campos.card.tbcontacorrentetbloginadquirenteempresa.ds_fantasia*/ 301,
-				//	valor: $scope.parametro.buscaAdquirente + '%'
-				//});
-				
-				//if ($scope.usuariologado.tbcontacorrentetbloginadquirenteempresa) filtros.push({
-				// id: /*$campos.card.tbcontacorrentetbloginadquirenteempresa.nu_cnpj*/ 500,
-				// valor: $scope.usuariologado.tbcontacorrentetbloginadquirenteempresa.nu_cnpj
-				// });
+				if(1>2){		
+					//Status
+					if($scope.parametro.buscaStatus == "sim") $scope.parametro.buscaStatus = 0;
+					else if($scope.parametro.buscaStatus == "nao") $scope.parametro.buscaStatus = 1;
+					
+					if($scope.parametro.buscaStatus != ''){
+						filtros.push({
+							id: /*$campos.card.tbcontacorrentetbloginadquirenteempresa.ds_fantasia*/ 301,
+							valor: $scope.parametro.buscaStatus + '%'
+						});
+					}					
+				}
 				
 				$webapi.get($apis.getUrl($apis.card.tbcontacorrentetbloginadquirenteempresa,
 																 [$scope.token, 5, /*$campos.card.tbcontacorrentetbloginadquirenteempresa.id_grupo*/ 100, 0,

@@ -280,12 +280,9 @@
 															<td style="text-align:center">{{parametro.empresa.ds_fantasia | uppercase}}</td>
 															<td style="text-align:center">{{parametro.tbAdquirente.nmAdquirente | uppercase}}</td>
 															<td style="text-align:center">
-																<span ng-class="{ 'StatusSenhaValida' : parametro.tbAdquirente.nmAdquirente == 'Cielo', 'StatusSenhaInvalida' : !parametro.tbAdquirente.nmAdquirente == 'Cielo'}">
-																	José
-																</span>
+																<span ng-if="parametro.tbAdquirente.nmAdquirente == 'CIELO'" class='StatusSenhaValida'>SIM</span>
+																<span ng-if="parametro.tbAdquirente.nmAdquirente != 'CIELO'" class='StatusSenhaInvalida'>NÃO</span>
 															</td>
-															<!-- <td style="text-align:center">{{vigencias[$index].dtInicio}}</td>                
-															<td style="text-align:center">{{grupo.Vigencia.dtFim}}</td> -->               
 															<td style="text-align:center">{{parametro.cdEstabelecimento}}</td>
 															<td style="text-align:center">{{parametro.cdEstabelecimentoConsulta}}</td>
 															<td style="text-align:center">{{parametro.tbContaCorrente.banco.NomeExtenso | uppercase}} / {{parametro.tbContaCorrente.nrAgencia}} / {{parametro.tbContaCorrente.nrConta}}</td>
