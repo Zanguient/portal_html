@@ -105,33 +105,33 @@
                                             <select class="form-control form-filter input-sm filtros"
 																										ng-disabled="busca == ''"
 																										ng-model="buscaStatus">
-                                                <!--option value="">Todas</option-->
+																							<!--option value="">Todas</option-->
 																							<option value="">TODOS</option>
-																							<option value="sim">SIM</option>
-																							<option value="nao">NÃO</option>
-                                            </select>
-                                            <i class="fa fa-question-circle"
-                                               ng-show="!usuariologado.grupoempresa"
-                                               popover-placement="bottom"
-                                               popover="É necessário selecionar uma empresa"
-                                               popover-trigger="mouseenter"></i>
-                                        </td>
-                                        <!--BUSCAR E LIMPAR-->
-                                        <td rowspan="1" colspan="1">
-                                            <div class="margin-bottom-5">
-                                                <button class="btn btn-sm red filter-submit margin-bottom"
-                                                        ng-click="filtraParametros()"
-																												ng-disabled="filiais.length == 0 || busca == null || !statusBusca">
-                                                    <i class="fa fa-search"></i> Buscar
-                                                </button>
-                                            </div>
-                                            <button class="btn btn-sm grey filter-cancel"
-                                                    ng-click="resetaBusca()"
-																										ng-disabled="filiais.length == 0">
-                                                <i class="fa fa-times"></i>
-                                                Limpar
-                                            </button>
-                                        </td>
+																							<option value="0">SIM</option>
+																							<option value="1">NÃO</option>
+																				</select>
+																				<i class="fa fa-question-circle"
+																					 ng-show="!usuariologado.grupoempresa"
+																					 popover-placement="bottom"
+																					 popover="É necessário selecionar uma empresa"
+																					 popover-trigger="mouseenter"></i>
+																			</td>
+																			<!--BUSCAR E LIMPAR-->
+																			<td rowspan="1" colspan="1">
+																				<div class="margin-bottom-5">
+																						<button class="btn btn-sm red filter-submit margin-bottom"
+																										ng-click="filtraParametros()"
+																										ng-disabled="filiais.length == 0 || busca == null || !statusBusca">
+																								<i class="fa fa-search"></i> Buscar
+																						</button>
+																				</div>
+																				<button class="btn btn-sm grey filter-cancel"
+																								ng-click="resetaBusca()"
+																								ng-disabled="filiais.length == 0">
+																						<i class="fa fa-times"></i>
+																						Limpar
+																				</button>
+                                      </td>
                                     </tr>
                                 </thead>
                             </table>
@@ -280,8 +280,12 @@
 															<td style="text-align:center">{{parametro.empresa.ds_fantasia | uppercase}}</td>
 															<td style="text-align:center">{{parametro.tbAdquirente.nmAdquirente | uppercase}}</td>
 															<td style="text-align:center">
-																<span ng-if="parametro.tbAdquirente.nmAdquirente == 'CIELO'" class='StatusSenhaValida'>SIM</span>
-																<span ng-if="parametro.tbAdquirente.nmAdquirente != 'CIELO'" class='StatusSenhaInvalida'>NÃO</span>
+																<span ng-if="parametro.status == 0" class='StatusSenhaInvalida'>
+																	<span class="glyphicon glyphicon-ok" ></span>
+																</span>
+																<span ng-if="parametro.status == 1" class='StatusSenhaValida'>
+																	<span class="glyphicon glyphicon-remove"></span>
+																</span>
 															</td>
 															<td style="text-align:center">{{parametro.cdEstabelecimento}}</td>
 															<td style="text-align:center">{{parametro.cdEstabelecimentoConsulta}}</td>

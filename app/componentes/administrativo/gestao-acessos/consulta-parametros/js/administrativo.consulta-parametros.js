@@ -34,8 +34,7 @@ angular.module("administrativo-consulta-parametros", [])
     $scope.busca = ''; // model do input de busca
 		$scope.buscaAdquirente = '';
 		$scope.buscaStatus = '';
-		$scope.teste = '';
-    $scope.parametro = {busca:'', buscaAdquirente:'', itens_pagina : $scope.itens_pagina[0], pagina : 1,
+    $scope.parametro = {busca:'', buscaAdquirente:'', buscaStatus:'', itens_pagina : $scope.itens_pagina[0], pagina : 1,
 												total_registros : 0, faixa_registros : '0-0', total_paginas : 0
 											 };   
     $scope.parametroSelecionada = undefined;
@@ -161,6 +160,7 @@ angular.module("administrativo-consulta-parametros", [])
     $scope.filtraParametros = function(){
 			$scope.parametro.busca = $scope.busca;
 			$scope.parametro.buscaAdquirente = $scope.buscaAdquirente;
+			$scope.parametro.buscaStatus = $scope.buscaStatus;
 			$scope.buscaParametros();
     };
     $scope.alterouFilial = function(){
@@ -210,19 +210,21 @@ angular.module("administrativo-consulta-parametros", [])
 						id: /*$campos.card.tbcontacorrentetbloginadquirenteempresa.ds_fantasia*/ 301,
 						valor: $scope.parametro.buscaAdquirente + '%'
 					});
-				}
+				}			
 				
-				if(1>2){		
-					//Status
-					if($scope.parametro.buscaStatus == "sim") $scope.parametro.buscaStatus = 0;
-					else if($scope.parametro.buscaStatus == "nao") $scope.parametro.buscaStatus = 1;
-					
-					if($scope.parametro.buscaStatus != ''){
+				//Status
+				if($scope.parametro.buscaStatus != ''){
+					if($scope.parametro.buscaStatus == "1"){
 						filtros.push({
-							id: /*$campos.card.tbcontacorrentetbloginadquirenteempresa.ds_fantasia*/ 301,
-							valor: $scope.parametro.buscaStatus + '%'
+							id: /*$campos.card.tbcontacorrentetbloginadquirenteempresa.stLoginAdquirente*/ 608,
+							valor: 1,
 						});
-					}					
+					}else if ($scope.parametro.buscaStatus == "0"){
+						filtros.push({
+							id: /*$campos.card.tbcontacorrentetbloginadquirenteempresa.stLoginAdquirente*/ 608,
+							valor: 0,
+						});        
+					}
 				}
 				
 				$webapi.get($apis.getUrl($apis.card.tbcontacorrentetbloginadquirenteempresa,
