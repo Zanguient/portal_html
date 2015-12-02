@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.1 - 02/12/2015
+ *  - Filtro por status dos dados de acesso
+ *
  *  Versão 1.0 - 17/11/2015
  *
  */
