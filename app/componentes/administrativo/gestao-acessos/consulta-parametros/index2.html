@@ -11,8 +11,8 @@
     Versão 1.0 - 17/11/2015
 -->
 
-<div class="container" ng-controller="administrativo-consulta-parametrosCtrl" 
-     ng-init="administrativo_consultaParametrosInit()">    
+<div class="container" ng-controller="administrativo-sem-nomeCtrl" 
+     ng-init="administrativo_semNomeInit()">    
     <!-- BEGIN PAGE BREADCRUMB -->
     <ul class="page-breadcrumb breadcrumb">
         <li>
@@ -35,7 +35,7 @@
                         <span class="caption-subject font-green-sharp bold uppercase">Filtros</span>
                     </div>
                 </div>
-                <div class="portlet-body" ng-show="exibeTela" ng-disabled="statusLogado == false">
+                <div class="portlet-body" ng-show="exibeTela">
                     <div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">
                         <div class="row">
                             <div class="col-md-8 col-sm-12">
@@ -69,66 +69,65 @@
                                         </th>
                                     </tr>
                                     <tr role="row" class="filter">
-																			<!-- DATA -->
-																			<td rowspan="1" colspan="1">                                    
-                                            <div class="input-group date date-picker margin-bottom-5"
-                                                 data-date-format="dd/mm/yyyy">
-                                                <input type="text" 
-                                                       class="form-control form-filter input-sm" 
-                                                       readonly="" 
-                                                       style="cursor: pointer" 
-                                                       ng-click="exibeCalendarioDataMin($event)" 
-                                                       placeholder="Início" 
-                                                       ng-model="filtro.datamin" 
-                                                       ng-change="alterouDataMin()" 
-                                                       datepicker-append-to-body="true" 
-                                                       datepicker-popup="dd MMMM yyyy" 
-                                                       is-open="abrirCalendarioDataMin" 
-                                                       ng-required="true" 
-                                                       show-button-bar="false" 
-                                                       show-weeks="false" 
-                                                       required="required">
-                                                <span class="input-group-btn">
-                                                    <button class="btn btn-sm default" 
-                                                        type="button" 
-                                                        ng-click="exibeCalendarioDataMin($event)">
-                                                        <i class="fa fa-calendar"></i>
-                                                    </button>
-                                                </span>
-                                            </div>
-                                            <div class="input-group"> <!--  date date-picker margin-bottom-5" -->
-                                                <input type="text" 
-                                                       class="form-control form-filter input-sm" 
-                                                       readonly="" 
-                                                       style="cursor: pointer" 
-                                                       ng-click="exibeCalendarioDataMax($event)" 
-                                                       placeholder="Fim" 
-                                                       ng-model="filtro.datamax" 
-                                                       ng-change="alterouDataMax()" 
-                                                       datepicker-popup="dd MMMM yyyy" 
-                                                       is-open="abrirCalendarioDataMax" 
-                                                       datepicker-append-to-body="true"
-                                                       ng-required="false" 
-                                                       current-text="Hoje" 
-                                                       clear-text="Limpar" 
-                                                       close-text="Fechar" 
-                                                       show-button-bar="true" 
-                                                       show-weeks="false">
-                                                <span class="input-group-btn">
-                                                    <button class="btn btn-sm default" 
-                                                            type="button" 
-                                                            ng-click="exibeCalendarioDataMax($event)">
-                                                        <i class="fa fa-calendar"></i>
-                                                    </button>
-                                                </span>
-                                            </div>                                            
-                                        </td>
+																			<!-- PERÍODO -->
+																			<td rowspan="1" colspan="1">                                             
+																				<div class="input-group date date-picker margin-bottom-5"
+																						 data-date-format="dd/mm/yyyy">
+																						<input type="text" 
+																									 class="form-control form-filter input-sm" 
+																									 readonly="" 
+																									 style="cursor: pointer" 
+																									 ng-click="exibeCalendarioDataMin($event)" 
+																									 placeholder="Início" 
+																									 ng-model="filtro.datamin" 
+																									 ng-change="alterouDataMin()" 
+																									 datepicker-append-to-body="true" 
+																									 datepicker-popup="dd MMMM yyyy" 
+																									 is-open="abrirCalendarioDataMin" 
+																									 ng-required="true" 
+																									 show-button-bar="false" 
+																									 show-weeks="false" 
+																									 required="required">
+																						<span class="input-group-btn">
+																								<button class="btn btn-sm default" 
+																										type="button" 
+																										ng-click="exibeCalendarioDataMin($event)">
+																										<i class="fa fa-calendar"></i>
+																								</button>
+																						</span>
+																				</div>
+																				<div class="input-group"> <!--  date date-picker margin-bottom-5" -->
+																						<input type="text" 
+																									 class="form-control form-filter input-sm" 
+																									 readonly="" 
+																									 style="cursor: pointer" 
+																									 ng-click="exibeCalendarioDataMax($event)" 
+																									 placeholder="Fim" 
+																									 ng-model="filtro.datamax" 
+																									 ng-change="alterouDataMax()" 
+																									 datepicker-popup="dd MMMM yyyy" 
+																									 is-open="abrirCalendarioDataMax" 
+																									 datepicker-append-to-body="true"
+																									 ng-required="false" 
+																									 current-text="Hoje" 
+																									 clear-text="Limpar" 
+																									 close-text="Fechar" 
+																									 show-button-bar="true" 
+																									 show-weeks="false">
+																						<span class="input-group-btn">
+																								<button class="btn btn-sm default" 
+																												type="button" 
+																												ng-click="exibeCalendarioDataMax($event)">
+																										<i class="fa fa-calendar"></i>
+																								</button>
+																						</span>
+																				</div>                                            
+																			</td>
                                         <!-- FILIAIS -->
                                         <td rowspan="1" colspan="1" style="text-align: center">
                                             <select class="form-control form-filter input-sm filtros" 
 																										ng-model="busca"
-																										ng-change="alterouFilial()"
-																										ng-disabled="statusLogado == false">
+																										ng-change="alterouFilial()">
                                                 <!--option value="">Todas</option-->
 																							<option 
 																											ng-repeat="filial in filiais | unique:'empresa.ds_fantasia'">
@@ -140,15 +139,16 @@
                                                popover-placement="bottom"
                                                popover="É necessário selecionar uma empresa"
                                                popover-trigger="mouseenter"></i>
-                                        </td> 
+                                        </td>
+																			<!-- ADQUIRENTES -->
 																			  <td rowspan="1" colspan="1" style="text-align: center">
 																					<select class="form-control form-filter input-sm filtros"></select>
-																			</td>
+																				</td>
                                         <!--BUSCAR E LIMPAR-->
                                         <td rowspan="1" colspan="1">
                                             <div class="margin-bottom-5">
                                                 <button class="btn btn-sm red filter-submit margin-bottom"
-                                                        ng-click="filtraParametros()">
+                                                        ng-click="filtraVendas()">
                                                     <i class="fa fa-search"></i> Buscar
                                                 </button>
                                             </div>
@@ -227,10 +227,10 @@
                             <span class="seperator"></span>Exibindo 
                             <select name="datatable_products_length" aria-controls="datatable_products" 
                                     class="form-control input-xsmall input-sm input-inline"
-                                    ng-model="parametro.itens_pagina"
+                                    ng-model="venda.itens_pagina"
                                     ng-change="alterouItensPagina()"
                                     ng-options="item for item in itens_pagina">                                            
-                            </select> registros de {{parametro.total_registros}}
+                            </select> registros de {{venda.total_registros}}
                         </label>
                     </div>
                 </div>
@@ -239,7 +239,7 @@
                     <div class="pagination-panel centralizarPaginacao"> Página 
                         <a href="javascript:;" ng-click="retrocedePagina()"
                            class="btn btn-sm default prev" 
-                           ng-class="{disabled: parametro.pagina <= 1}" 
+                           ng-class="{disabled: venda.pagina <= 1}" 
                            title="Página anterior">
                                 <i class="fa fa-angle-left"></i>
                         </a>
@@ -250,11 +250,11 @@
                                ng-blur="atualizaPaginaDigitada()">
                         <a href="javascript:;" ng-click="avancaPagina()"
                            class="btn btn-sm default next"
-                           ng-class="{disabled: parametro.pagina >= parametro.total_paginas}"
+                           ng-class="{disabled: venda.pagina >= venda.total_paginas}"
                            title="Próxima página">
                             <i class="fa fa-angle-right"></i>
                         </a>
-                         de <span class="pagination-panel-total">{{parametro.total_paginas}}</span>
+                         de <span class="pagination-panel-total">{{venda.total_paginas}}</span>
                     </div>
                 </div>    
                 <!-- PESQUISA -->
@@ -287,21 +287,40 @@
                     <table class="table table-striped table-hover table-bordered dataTable no-footer conteudoTabelas"
                            role="grid">
 											<thead>
-													<tr role="row">
-														<th tabindex="0" rowspan="1" colspan="1" style="width: 10%;">Filial</th>
-														<th tabindex="1" rowspan="1" colspan="1" style="width: 10%;">Adquirente</th>
-														<th tabindex="2" rowspan="1" colspan="1" style="width: 10%;">Nº Parcela</th>                                    												 <th tabindex="3" rowspan="1" colspan="1" style="width: 10%;">Valor venda</th>
-														<th tabindex="4" rowspan="1" colspan="1" style="width: 10%;">Qnt Vendas</th>
-												 </tr>
+												<tr role="row">
+													<th tabindex="0" rowspan="1" colspan="1" style="width: 10%;">Filial</th>
+													<th tabindex="1" rowspan="1" colspan="1" style="width: 10%;">Adquirente</th>
+													<th tabindex="2" rowspan="1" colspan="1" style="width: 10%;">Nº Parcela</th>                                    												 			<th tabindex="3" rowspan="1" colspan="1" style="width: 10%;">Valor venda</th>
+													<th tabindex="4" rowspan="1" colspan="1" style="width: 10%;">Qnt Vendas</th>
+											 </tr>
 											</thead>
 											<tbody class="centralizarVertical">
+												<div ng-repeat="venda in vendas">
 												<tr role="row" class="odd">
-														<td style="text-align:center"></td>
-														<td style="text-align:center"></td>                                    
-														<td style="text-align:center"></td>
-														<td style="text-align:center"></td>
-														<td style="text-align:center"></td>
-												</tr>   
+													<td style="text-align:center">{{venda.filial | uppercase}}</td>
+													<td style="text-align:center">{{venda.adquirente | uppercase}}</td>                                    
+													<td style="text-align:center">{{venda.nParcela}}</td>
+													<td style="text-align:center">{{venda.valorVenda}}</td>
+													<td style="text-align:center">{{venda.qtVenda}}</td>
+													<script type="text/javascript">
+														totalGeral(1);
+													</script>
+												</tr>
+												<tr class="centralizarVertical">
+													<td style="text-align:center"></td>
+													<td style="text-align:center"></td>
+													<td style="text-align:center"></td>
+													<td tabindex="3" rowspan="1" colspan="1" style="font-size: 110%;">Subtotal:</td>
+													<td style="text-align:center"></td>
+												</tr>
+													</div>
+												<tr role="row" class="odd">
+													<td style="text-align:center"></td>
+													<td style="text-align:center"></td>                                    
+													<td style="text-align:center"></td>
+													<td tabindex="3" rowspan="1" colspan="1" style="font-size: 110%;">Total Geral: R$ {{totalVendas}}												</td>
+													<td style="text-align:center"></td>
+												</tr>
 											</tbody>
                     </table>
                 </div>
@@ -311,7 +330,7 @@
             <div class="row">
                 <div class=" col-sm-4  col-xs-4 col-md-4">
                     <div class="dataTables_info" role="status" aria-live="polite">
-                        <strong>Exibindo os registros {{parametro.faixa_registros}}</strong>
+                        <strong>Exibindo os registros {{venda.faixa_registros}}</strong>
                     </div>
                 </div>
                 <!--PAGINAÇÃO-RODAPÉ-->
@@ -319,7 +338,7 @@
                     <div class="pagination-panel centralizarPaginacao"> Página 
                         <a href="javascript:;" ng-click="retrocedePagina()"
                            class="btn btn-sm default prev" 
-                           ng-class="{disabled: parametro.pagina <= 1}" 
+                           ng-class="{disabled: venda.pagina <= 1}" 
                            title="Página anterior">
                                 <i class="fa fa-angle-left"></i>
                         </a>
@@ -330,11 +349,11 @@
                                ng-blur="atualizaPaginaDigitada()">
                         <a href="javascript:;" ng-click="avancaPagina()"
                            class="btn btn-sm default next"
-                           ng-class="{disabled: parametro.pagina >= parametro.total_paginas}"
+                           ng-class="{disabled: venda.pagina >= venda.total_paginas}"
                            title="Próxima página">
                             <i class="fa fa-angle-right"></i>
                         </a>
-                         de <span class="pagination-panel-total">{{parametro.total_paginas}}</span>
+                         de <span class="pagination-panel-total">{{venda.total_paginas}}</span>
                     </div>
                 </div>    
                 <!-- FIM PAGINAÇÃO -->

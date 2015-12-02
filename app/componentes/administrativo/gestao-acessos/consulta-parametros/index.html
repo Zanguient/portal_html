@@ -58,6 +58,12 @@
                                         <th width="8%" tabindex="0" rowspan="1" colspan="1">
                                             Filiais
                                         </th>
+																			<th width="8%" tabindex="0" rowspan="1" colspan="1">
+                                            Adquirentes
+                                        </th>
+																			<th width="8%" tabindex="0" rowspan="1" colspan="1">
+                                            Status/Bloqueado
+                                        </th>
                                         <th width="4%" tabindex="1" rowspan="1" colspan="1">
                                             Opções
                                         </th>
@@ -70,30 +76,62 @@
 																										ng-change="alterouFilial()"
 																										ng-disabled="filiais.length == 0">
                                                 <!--option value="">Todas</option-->
-																							<option ng-repeat="filial in filiais | unique:'empresa.ds_fantasia'">{{filial.empresa.ds_fantasia}}</option>
+																							<option value="">TODOS</option>
+																							<option ng-repeat="filial in filiais | unique:'empresa.ds_fantasia'">{{filial.empresa.ds_fantasia | uppercase}}</option>
                                             </select>
                                             <i class="fa fa-question-circle"
                                                ng-show="!usuariologado.grupoempresa"
                                                popover-placement="bottom"
                                                popover="É necessário selecionar uma empresa"
                                                popover-trigger="mouseenter"></i>
-                                        </td> 
-                                        <!--BUSCAR E LIMPAR-->
-                                        <td rowspan="1" colspan="1">
-                                            <div class="margin-bottom-5">
-                                                <button class="btn btn-sm red filter-submit margin-bottom"
-                                                        ng-click="filtraParametros()"
-																												ng-disabled="filiais.length == 0">
-                                                    <i class="fa fa-search"></i> Buscar
-                                                </button>
-                                            </div>
-                                            <button class="btn btn-sm grey filter-cancel"
-                                                    ng-click="resetaBusca()"
-																										ng-disabled="filiais.length == 0">
-                                                <i class="fa fa-times"></i>
-                                                Limpar
-                                            </button>
                                         </td>
+																			<!-- ADQUIRENTES -->
+																			<td rowspan="1" colspan="1" style="text-align: center">
+                                            <select class="form-control form-filter input-sm filtros" 
+																										ng-model="buscaAdquirente"
+																										ng-disabled="!statusAdquirente || busca == ''">
+                                                <!--option value="">Todas</option-->
+																							<option value ="">TODOS</option>
+																							<option ng-repeat="adquirente in adquirentes | unique:'tbAdquirente.nmAdquirente'">{{adquirente.tbAdquirente.nmAdquirente | uppercase}}</option>
+                                            </select>
+                                            <i class="fa fa-question-circle"
+                                               ng-show="!usuariologado.grupoempresa"
+                                               popover-placement="bottom"
+                                               popover="É necessário selecionar uma empresa"
+                                               popover-trigger="mouseenter"></i>
+                                        </td>
+																			<!-- STATUS -->
+																			<td rowspan="1" colspan="1" style="text-align: center">
+                                            <select class="form-control form-filter input-sm filtros"
+																										ng-disabled="busca == ''"
+																										ng-model="buscaStatus">
+																							<!--option value="">Todas</option-->
+																							<option value="">TODOS</option>
+																							<option value="0">SIM</option>
+																							<option value="1">NÃO</option>
+																				</select>
+																				<i class="fa fa-question-circle"
+																					 ng-show="!usuariologado.grupoempresa"
+																					 popover-placement="bottom"
+																					 popover="É necessário selecionar uma empresa"
+																					 popover-trigger="mouseenter"></i>
+																			</td>
+																			<!--BUSCAR E LIMPAR-->
+																			<td rowspan="1" colspan="1">
+																				<div class="margin-bottom-5">
+																						<button class="btn btn-sm red filter-submit margin-bottom"
+																										ng-click="filtraParametros()"
+																										ng-disabled="filiais.length == 0 || busca == null || !statusBusca">
+																								<i class="fa fa-search"></i> Buscar
+																						</button>
+																				</div>
+																				<button class="btn btn-sm grey filter-cancel"
+																								ng-click="resetaBusca()"
+																								ng-disabled="filiais.length == 0">
+																						<i class="fa fa-times"></i>
+																						Limpar
+																				</button>
+                                      </td>
                                     </tr>
                                 </thead>
                             </table>
@@ -224,23 +262,36 @@
                            role="grid">
                         <thead>
                             <tr role="row">
-                                <th tabindex="0" rowspan="1" colspan="1" style="width: 10%;">CNPJ</th>
-                                <th tabindex="1" rowspan="1" colspan="1" style="width: 15%;">Fantasia</th>
-                                <th tabindex="2" rowspan="1" colspan="1" style="width: 10%;">Adquirentes</th>                                    
-                                <th tabindex="3" rowspan="1" colspan="1" style="width: 5%;">Estabelecimento</th>
-                                <th tabindex="4" rowspan="1" colspan="1" style="width: 5%;">Estabelecimento Consulta</th>
-                                <th tabindex="5" rowspan="1" colspan="1" style="width: 15%;">Conta Corrente</th>
+															<th tabindex="0" rowspan="1" colspan="1" style="width: 7%;">CNPJ</th>
+															<th tabindex="1" rowspan="1" colspan="1" style="width: 18%;">Fantasia</th>
+															<th tabindex="2" rowspan="1" colspan="1" style="width: 7%;">Adquirentes</th>
+															<th tabindex="2" rowspan="1" colspan="1" style="width: 7%;">Bloqueado</th>
+															<!--<th tabindex="2" rowspan="1" colspan="1" style="width: 10%;">Data Início</th>                      
+															<th tabindex="2" rowspan="1" colspan="1" style="width: 10%;">Data Fim</th>-->                      
+															<th tabindex="3" rowspan="1" colspan="1" style="width: 5%;">Estabelecimento</th>
+															<th tabindex="4" rowspan="1" colspan="1" style="width: 3%;">Estabelecimento Consulta</th>
+															<th tabindex="5" rowspan="1" colspan="1" style="width: 20%;">Conta Corrente</th>
                            </tr>
                         </thead>
                         <tbody class="centralizarVertical">
+													<div>
                             <tr role="row" class="odd" ng-repeat="parametro in parametros">
-                                <td style="text-align:center">{{parametro.empresa.nu_cnpj}}</td>
-                                <td style="text-align:center">{{parametro.empresa.ds_fantasia | uppercase}}</td>
-                                <td style="text-align:center">{{parametro.tbAdquirente.nmAdquirente | uppercase}}</td>                                    
-                                <td style="text-align:center">{{parametro.cdEstabelecimento}}</td>
-                                <td style="text-align:center">{{parametro.cdEstabelecimentoConsulta}}</td>
-                                <td style="text-align:center">{{parametro.tbContaCorrente.banco.NomeExtenso | uppercase}} / {{parametro.tbContaCorrente.nrAgencia}} / {{parametro.tbContaCorrente.nrConta}}</td>
-                            </tr>   
+															<td style="text-align:center">{{parametro.empresa.nu_cnpj}}</td>
+															<td style="text-align:center">{{parametro.empresa.ds_fantasia | uppercase}}</td>
+															<td style="text-align:center">{{parametro.tbAdquirente.nmAdquirente | uppercase}}</td>
+															<td style="text-align:center">
+																<span ng-if="parametro.status == 0" class='StatusSenhaInvalida'>
+																	<span class="glyphicon glyphicon-ok" ></span>
+																</span>
+																<span ng-if="parametro.status == 1" class='StatusSenhaValida'>
+																	<span class="glyphicon glyphicon-remove"></span>
+																</span>
+															</td>
+															<td style="text-align:center">{{parametro.cdEstabelecimento}}</td>
+															<td style="text-align:center">{{parametro.cdEstabelecimentoConsulta}}</td>
+															<td style="text-align:center">{{parametro.tbContaCorrente.banco.NomeExtenso | uppercase}} / {{parametro.tbContaCorrente.nrAgencia}} / {{parametro.tbContaCorrente.nrConta}}</td>
+                            </tr>
+													</div>
                         </tbody>
                     </table>
                 </div>
