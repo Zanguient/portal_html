@@ -8,6 +8,9 @@
     Administrativo > Gestão de Empresas > Filiais
 
 
+    Versão 1.0.1 - 02/12/2015
+    - Dados de último acesso dentro de um json
+
     Versão 1.0 - 03/09/2015
 -->
 
@@ -146,8 +149,8 @@
                                                 <label>Último Acesso:</label>
                                             </div>
                                             <div class="col-sm-8"> 
-                                                <span ng-bind="getDataString(filialSelecionada.dt_ultimoAcesso) !== '01/01/0001' ? getDataTimeString(filialSelecionada.dt_ultimoAcesso) : '-'"></span>                                                                            <span>
-                                                    por {{filialSelecionada.login_ultimoAcesso || ''}}
+                                                <span ng-bind="getDataString(filialSelecionada.ultimoAcesso !== null && filialSelecionada.ultimoAcesso.dt_ultimoAcesso) !== '01/01/0001' ? getDataTimeString(filialSelecionada.ultimoAcesso.dt_ultimoAcesso) : '-'"></span>                                                                            <span>
+                                                    por {{filialSelecionada.ultimoAcesso.login_ultimoAcesso || ''}}
                                                 </span>
                                             </div>
                                         </div>
@@ -423,7 +426,7 @@
                                                 <li ng-show="usuarioPodeAlterarFiliais()" class="ng-hide">
                                                     <a href="javascript:;" ng-click="editarFilial(filial)">Editar</a>
                                                 </li>
-                                                <li ng-show="usuarioPodeExcluirFiliais() && filial.podeExcluir">
+                                                <li ng-show="usuarioPodeExcluirFiliais() && filial.ultimoAcesso === null">
                                                     <a href="javascript:;" ng-click="excluirFilial(filial)">Excluir</a>
                                                 </li> 
                                                 <li>

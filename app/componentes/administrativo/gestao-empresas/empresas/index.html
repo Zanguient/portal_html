@@ -8,6 +8,9 @@
     Administrativo > Gestão de Empresas > Empresas
 
 
+    Versão 1.0.2 - 02/12/2015
+    - Dados de último acesso dentro de um json
+
     Versão 1.0.1 - 23/10/2015
     - Prioridade nas cargas
 
@@ -298,14 +301,14 @@
                                     <!-- DATA ÚLTIMO ACESSO -->
                                     <td class="center">
                                         <div class="dadosEmpresa"
-                                             ng-bind="getDataString(grupoempresa.dt_ultimoAcesso) !== '01/01/0001' ? getDataTimeString(grupoempresa.dt_ultimoAcesso) : '-'" style="text-align:center">
+                                             ng-bind="grupoempresa.ultimoAcesso !== null && getDataString(grupoempresa.ultimoAcesso.dt_ultimoAcesso) !== '01/01/0001' ? getDataTimeString(grupoempresa.ultimoAcesso.dt_ultimoAcesso) : '-'" style="text-align:center">
                                         </div>    
                                     </td>
                                     <!-- LOGIN ÚLTIMO ACESSO -->
                                     <td>
                                         <div class="dadosEmpresa"
                                              style="text-align:center">
-                                            {{grupoempresa.login_ultimoAcesso || ''}}
+                                            {{grupoempresa.ultimoAcesso.login_ultimoAcesso || ''}}
                                         </div>    
                                     </td>
                                     <!-- DATA DE CADASTRO -->
@@ -350,7 +353,7 @@
                                                             Editar
                                                         </a>
                                                     </li>
-                                                    <li ng-show="usuarioPodeExcluirEmpresas() && grupoempresa.podeExcluir">
+                                                    <li ng-show="usuarioPodeExcluirEmpresas() && grupoempresa.ultimoAcesso === null">
                                                         <a href="javascript:;" ng-click="excluirEmpresa(grupoempresa)">
                                                             Excluir
                                                         </a>

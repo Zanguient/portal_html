@@ -54,9 +54,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				fl_taxservices : boolean,
 				fl_proinfo : boolean,
 				fl_ativo : boolean,
-				dt_ultimoAcesso : data,
-				login_ultimoAcesso : string,
-				podeExcluir : boolean,
+				ultimoAcesso : null ou { dt_ultimoAcesso : data, login_ultimoAcesso : string},
 				cdPrioridade : int
 			  }
 			]
