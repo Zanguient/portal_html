@@ -255,7 +255,10 @@ angular.module('webapi', ['utils'])
             dtFim : 103
             // Relacionamentos
             empresa : 200,
-            adquirente : 300
+            adquirente : 300,
+            nu_cnpj : 500,
+            id_grupo : 516,
+            stLoginAdquirenteEmpresa : 608,
         },
         tbextrato : {
             idExtrato : 100,
