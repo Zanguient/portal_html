@@ -62,12 +62,18 @@ angular.module("administrativo-consulta-parametros", [])
 						$scope.busca = null;
 						buscaFiliais(true);
 						$scope.buscaParametros(true);
+						buscaAdquirentes();
 						buscaVigencias(true);
 						$scope.busca = '';
 					}else{ // reseta tudo e não faz buscas 
 						$scope.filiais = []; 
 						$scope.vigencias = [];
 						$scope.parametros = [];
+						$scope.buscaAdquirente = '';
+						$scope.buscaStatus = '';
+						$scope.parametro.buscaAdquirente = '';
+						$scope.parametro.buscaStatus = '';
+						$scope.parametro.busca = '';
 						$scope.grupo = [];
 						$scope.parametro.faixa_registros = '0-0';
 						$scope.parametro.pagina = 1;
@@ -84,6 +90,7 @@ angular.module("administrativo-consulta-parametros", [])
 					$scope.busca = null;
 					buscaFiliais(true);
 					$scope.buscaParametros(true);
+					buscaAdquirentes();
 					buscaVigencias(true);
 					$scope.busca = '';
 				}else{ // reseta tudo e não faz buscas 
@@ -91,6 +98,11 @@ angular.module("administrativo-consulta-parametros", [])
 					$scope.vigencias = [];
 					$scope.parametros = [];
 					$scope.grupo = [];
+					$scope.buscaAdquirente = '';
+					$scope.buscaStatus = '';
+					$scope.parametro.buscaAdquirente = '';
+					$scope.parametro.buscaStatus = '';
+					$scope.parametro.busca = '';
 					$scope.parametro.faixa_registros = '0-0';
 					$scope.parametro.pagina = 1;
 					$scope.parametro.total_paginas = 0;

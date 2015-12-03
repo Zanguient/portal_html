@@ -65,7 +65,7 @@
                                             Adquirentes
                                         </th>
 																			<th width="8%" tabindex="0" rowspan="1" colspan="1">
-                                            Status/Bloqueado
+                                            Status da senha
                                         </th>
                                         <th width="4%" tabindex="1" rowspan="1" colspan="1">
                                             Opções
@@ -92,7 +92,7 @@
 																			<td rowspan="1" colspan="1" style="text-align: center">
                                             <select class="form-control form-filter input-sm filtros" 
 																										ng-model="buscaAdquirente"
-																										ng-disabled="!statusAdquirente || busca == ''">
+																										ng-disabled="filiais.length == 0">
                                                 <!--option value="">Todas</option-->
 																							<option value ="">TODOS</option>
 																							<option ng-repeat="adquirente in adquirentes | unique:'tbAdquirente.nmAdquirente'">{{adquirente.tbAdquirente.nmAdquirente | uppercase}}</option>
@@ -106,12 +106,12 @@
 																			<!-- STATUS -->
 																			<td rowspan="1" colspan="1" style="text-align: center">
                                             <select class="form-control form-filter input-sm filtros"
-																										ng-disabled="busca == ''"
-																										ng-model="buscaStatus">
+																										ng-model="buscaStatus"
+																										ng-disabled="filiais.length == 0">
 																							<!--option value="">Todas</option-->
 																							<option value="">TODOS</option>
-																							<option value="0">SIM</option>
-																							<option value="1">NÃO</option>
+																							<option value="1">VÁLIDO</option>
+																							<option value="0">INVÁLIDO</option>
 																				</select>
 																				<i class="fa fa-question-circle"
 																					 ng-show="!usuariologado.grupoempresa"
@@ -124,7 +124,7 @@
 																				<div class="margin-bottom-5">
 																						<button class="btn btn-sm red filter-submit margin-bottom"
 																										ng-click="filtraParametros()"
-																										ng-disabled="filiais.length == 0 || busca == null || !statusBusca">
+																										ng-disabled="filiais.length == 0">
 																								<i class="fa fa-search"></i> Buscar
 																						</button>
 																				</div>
@@ -268,7 +268,7 @@
 															<th tabindex="0" rowspan="1" colspan="1" style="width: 7%;">CNPJ</th>
 															<th tabindex="1" rowspan="1" colspan="1" style="width: 18%;">Fantasia</th>
 															<th tabindex="2" rowspan="1" colspan="1" style="width: 7%;">Adquirentes</th>
-															<th tabindex="2" rowspan="1" colspan="1" style="width: 7%;">Bloqueado</th>
+															<th tabindex="2" rowspan="1" colspan="1" style="width: 7%;">Status da senha</th>
 															<!--<th tabindex="2" rowspan="1" colspan="1" style="width: 10%;">Data Início</th>                      
 															<th tabindex="2" rowspan="1" colspan="1" style="width: 10%;">Data Fim</th>-->                      
 															<th tabindex="3" rowspan="1" colspan="1" style="width: 5%;">Estabelecimento</th>
@@ -283,11 +283,8 @@
 															<td style="text-align:center">{{parametro.empresa.ds_fantasia | uppercase}}</td>
 															<td style="text-align:center">{{parametro.tbAdquirente.nmAdquirente | uppercase}}</td>
 															<td style="text-align:center">
-																<span ng-if="parametro.status == 0" class='StatusSenhaInvalida'>
-																	<span class="glyphicon glyphicon-ok" ></span>
-																</span>
-																<span ng-if="parametro.status == 1" class='StatusSenhaValida'>
-																	<span class="glyphicon glyphicon-remove"></span>
+																<span ng-if="parametro.status == 0" class='glyphicon glyphicon-remove' style="color: #F3565D">
+																	<!-- <span class="glyphicon glyphicon-remove" ></span> -->
 																</span>
 															</td>
 															<td style="text-align:center">{{parametro.cdEstabelecimento}}</td>
