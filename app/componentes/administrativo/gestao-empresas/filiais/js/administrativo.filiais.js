@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.1 - 02/12/2015
+ *  - Coleção 4
+ *
  *  Versão 1.0 - 03/09/2015
  *
  */
@@ -180,7 +183,7 @@ angular.module("administrativo-filiais", [])
                                                           valor: $scope.usuariologado.empresa.nu_cnpj});
            
            $webapi.get($apis.getUrl($apis.cliente.empresa, 
-                                    [$scope.token, 2, /*$campos.cliente.empresa.ds_fantasia*/ 104, 0, 
+                                    [$scope.token, 4, /*$campos.cliente.empresa.ds_fantasia*/ 104, 0, 
                                      $scope.filial.itens_pagina, $scope.filial.pagina],
                                     filtros)) 
                 .then(function(dados){
