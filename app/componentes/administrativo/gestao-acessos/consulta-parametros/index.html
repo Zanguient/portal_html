@@ -74,13 +74,12 @@
                                     <tr role="row" class="filter">
                                         <!-- FILIAIS -->
                                         <td rowspan="1" colspan="1" style="text-align: center">
-                                            <select class="form-control form-filter input-sm filtros" 
-																										ng-model="busca"
-																										ng-change="alterouFilial()"
-																										ng-disabled="filiais.length == 0">
-                                                <!--option value="">Todas</option-->
-																							<option value="">TODOS</option>
-																							<option ng-repeat="filial in filiais | unique:'empresa.ds_fantasia'">{{filial.empresa.ds_fantasia | uppercase}}</option>
+                                          <select class="form-control form-filter input-sm comboBoxFiltros"
+                                                    ng-disabled="filiais.length == 0"
+                                                    ng-model="busca"
+                                                    ng-change="alterouFilial()"
+                                                    ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
+                                                <option value="">TODAS</option>
                                             </select>
                                             <i class="fa fa-question-circle"
                                                ng-show="!usuariologado.grupoempresa"
@@ -90,12 +89,12 @@
                                         </td>
 																			<!-- ADQUIRENTES -->
 																			<td rowspan="1" colspan="1" style="text-align: center">
-                                            <select class="form-control form-filter input-sm filtros" 
-																										ng-model="buscaAdquirente"
-																										ng-disabled="filiais.length == 0">
-                                                <!--option value="">Todas</option-->
-																							<option value ="">TODOS</option>
-																							<option ng-repeat="adquirente in adquirentes | unique:'tbAdquirente.nmAdquirente'">{{adquirente.tbAdquirente.nmAdquirente | uppercase}}</option>
+                                            <select class="form-control form-filter input-sm comboBoxFiltros"
+                                                    ng-disabled="filiais.length === 0"
+                                                    ng-model="buscaAdquirente"
+                                                    ng-options="adquirente as (adquirente.nmAdquirente | uppercase) for adquirente in adquirentes"
+                                                    >
+                                                <option value="">TODAS</option>
                                             </select>
                                             <i class="fa fa-question-circle"
                                                ng-show="!usuariologado.grupoempresa"
@@ -265,15 +264,15 @@
                            role="grid">
                         <thead>
                             <tr role="row">
-															<th tabindex="0" rowspan="1" colspan="1" style="width: 7%;">CNPJ</th>
-															<th tabindex="1" rowspan="1" colspan="1" style="width: 18%;">Fantasia</th>
+															<th tabindex="0" rowspan="1" colspan="1" style="width: 9%;">CNPJ</th>
+															<th tabindex="1" rowspan="1" colspan="1" style="width: 15%;">Fantasia</th>
 															<th tabindex="2" rowspan="1" colspan="1" style="width: 7%;">Adquirentes</th>
 															<th tabindex="2" rowspan="1" colspan="1" style="width: 7%;">Status da senha</th>
-															<!--<th tabindex="2" rowspan="1" colspan="1" style="width: 10%;">Data Início</th>                      
-															<th tabindex="2" rowspan="1" colspan="1" style="width: 10%;">Data Fim</th>-->                      
-															<th tabindex="3" rowspan="1" colspan="1" style="width: 5%;">Estabelecimento</th>
-															<th tabindex="4" rowspan="1" colspan="1" style="width: 3%;">Estabelecimento Consulta</th>
-															<th tabindex="5" rowspan="1" colspan="1" style="width: 20%;">Conta Corrente</th>
+															<th tabindex="2" rowspan="1" colspan="1" style="width: 11%;">Data Início</th>                      
+															<th tabindex="2" rowspan="1" colspan="1" style="width: 11%;">Data Fim</th>                      
+															<th tabindex="3" rowspan="1" colspan="1" style="width: 9%;">Estabelecimento</th>
+															<th tabindex="4" rowspan="1" colspan="1" style="width: 9%;">Estabelecimento Consulta</th>
+															<th tabindex="5" rowspan="1" colspan="1" style="width: 17%;">Conta Corrente</th>
                            </tr>
                         </thead>
                         <tbody class="centralizarVertical">
@@ -287,6 +286,8 @@
 																	<!-- <span class="glyphicon glyphicon-remove" ></span> -->
 																</span>
 															</td>
+															<td style="text-align:center">{{parametro.dtInicio}}</td>
+															<td style="text-align:center">{{parametro.dtFim}}</td>
 															<td style="text-align:center">{{parametro.cdEstabelecimento}}</td>
 															<td style="text-align:center">{{parametro.cdEstabelecimentoConsulta}}</td>
 															<td style="text-align:center">{{parametro.tbContaCorrente.banco.NomeExtenso | uppercase}} / {{parametro.tbContaCorrente.nrAgencia}} / {{parametro.tbContaCorrente.nrConta}}</td>
