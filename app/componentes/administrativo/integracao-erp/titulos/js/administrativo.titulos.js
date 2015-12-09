@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.3 - 09/12/2015
+ *  - Upload de arquivo CSV
+ *
  *  Versão 1.0.2 - 25/11/2015
  *  - Totais
  *
@@ -25,8 +28,10 @@ angular.module("administrativo-titulos", [])
                                              /*'$campos',*/
                                              '$webapi',
                                              '$apis',
+                                             'Upload',
+                                             '$autenticacao',
                                              function($scope,$state,$filter,$timeout,$http,
-                                                      /*$campos,*/$webapi,$apis){ 
+                                                      /*$campos,*/$webapi,$apis,Upload,$autenticacao){ 
     
     // Exibição
     $scope.itens_pagina = [50, 100, 150, 200];                                             
@@ -44,6 +49,8 @@ angular.module("administrativo-titulos", [])
     //var permissaoAlteracao = false;
     var permissaoCadastro = false;
     //var permissaoRemocao = false;
+    // UPLOAD
+    var uploadEmProgresso = false;                                             
     // Flags
     $scope.exibeTela = false;  
     $scope.abrirCalendarioData = false;                                              
@@ -230,6 +237,7 @@ angular.module("administrativo-titulos", [])
             
                 // Obtém os dados
                 $scope.titulos = dados.Registros;
+                console.log(dados.Registros);
                 $scope.total.totalBaixados = dados.Totais.totalBaixados;
                 $scope.total.totalConciliados = dados.Totais.totalConciliados;
                 $scope.total.valorTotal = dados.Totais.valorTotal;
@@ -304,6 +312,71 @@ angular.module("administrativo-titulos", [])
     
     
     // IMPORTA CSV
+    /**
+      * Retorna true se o upload está em curso
+      */
+    $scope.uploadEmProgresso = function(){
+        return uploadEmProgresso;    
+    }
+    /**
+      * Faz o upload
+      */
+    $scope.upload = function (files) {
+        
+        if(!$scope.usuariologado.grupoempresa || $scope.usuariologado.grupoempresa === null) return; 
+        
+        
+        if (files && files.length) {
+            uploadEmProgresso = true;
+            $scope.type = 'info';
+            $scope.progresso = 0;
+            // Loading progress
+            $scope.showProgress(divPortletBodyFiltrosPos, 10000);
+            $scope.showProgress(divPortletBodyTitulosPos);
+            // Pega o arquivo
+            var file = files[0];
+            // Avalia a extensão
+            var index = file.name.lastIndexOf('.');
+            if(index === -1 || file.name.toLowerCase().substr(index + 1) !== 'csv'){ 
+                // Extensão não é CSV
+                //console.log("ARQUIVO '" + file.name + "' NÃO É UM .csv");
+                $scope.showAlert("O arquivo deve ser do tipo .csv!", true, 'warning', true, false);
+                uploadEmProgresso = false;
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+                $scope.hideProgress(divPortletBodyTitulosPos);
+                return;
+            }
+            
+            // Envia o arquivo
+            var url = $apis.getUrl($apis.card.tituloserp, $scope.token);
+            // Seta para a url de download
+            if(url.slice(0, "http://localhost:".length) !== "http://localhost:")
+                url = url.replace($autenticacao.getUrlBase(), $autenticacao.getUrlBaseDownload());
+            Upload.upload({
+                url: url,
+                file: file,
+                method: 'PATCH'
+            }).success(function (data, status, headers, config) {
+                $timeout(function() {
+                    uploadEmProgresso = false;
+                    $scope.hideProgress(divPortletBodyFiltrosPos);
+                    $scope.hideProgress(divPortletBodyTitulosPos);
+                    $scope.showAlert('Importação concluída com sucesso!', true, 'success', true);
+                });
+            }).error(function (data, status, headers, config){
+                 //console.log("erro");console.log(data);
+                 if(status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(status === 503 || status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else if(status === 500) $scope.showModalAlerta(data);
+                 else $scope.showAlert("Houve uma falha ao fazer upload do CSV '" + file.name + "' (" + status + ")", true, 'danger', true, false);
+                // Remove o progress
+                uploadEmProgresso = false;
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+                $scope.hideProgress(divPortletBodyTitulosPos);
+            });
+        }
+    };         
+    
     $scope.importaCSV = function(){
         
         if(!$scope.usuariologado.grupoempresa || $scope.usuariologado.grupoempresa === null) return; 

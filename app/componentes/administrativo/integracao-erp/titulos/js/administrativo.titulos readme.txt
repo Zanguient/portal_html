@@ -44,7 +44,10 @@ Além deles, é necessária a importação dos seguintes módulos externos.
  
   * card/tituloserp
 	- POST : importa títulos da base da empresa para a base da atoscapital
-			 Espera o JSON { data : string }, que é a data do título		
+			 Espera o JSON { data : string }, que é a data do título
+			 
+    - PATCH : importa títulos a partir do arquivo CSV (upload)	
+	
    
   * card/tbrecebimentotitulo
         - GET : carrega os títulos já importados (coleção 3)
