@@ -8,6 +8,9 @@
     Administrativo > Integração ERP > Títulos
 
 
+    Versão 1.0.3 - 09/12/2015
+    - Upload de arquivo CSV
+
     Versão 1.0.2 - 27/11/2015
     - Empresa que não possui serviço de importação de títulos, pode importar o CSV
 
@@ -95,13 +98,14 @@
                                             <i class="fa fa-upload"></i>
                                             Importar Títulos
                                         </button>
-                                        <!-- BOTÃO PARA IMPORTAR CSV FICA INVISÍVEL => FUNCIONALIDADE NÃO ESTÁ PRONTA -->
                                         <button class="btn btn-sm filter-submit margin-bottom green" 
                                            ng-disabled="!usuariologado.grupoempresa || usuariologado.grupoempresa === null || !usuarioPodeCadastrarTitulos()"
                                            ng-show="!usuariologado.grupoempresa || usuariologado.grupoempresa === null || !usuariologado.grupoempresa.dsAPI || usuariologado.grupoempresa.dsAPI === null"
-                                           ng-click="importaCSV()"
-								           style="width:150px; display: none">
-                                            <i class="fa fa-upload"></i>
+                                           ngf-select ngf-change="upload($files)" 
+                                           ngf-multiple="false" accept=".csv"
+                                           ng-disabled="uploadEmProgresso()"
+								           style="width:150px">
+                                            <i class="fa" ng-class="{'fa-upload' : !uploadEmProgresso(), 'fa-spin fa-spinner' : uploadEmProgresso()}"></i>
                                             Importar CSV
                                         </button>
                                     </div>
