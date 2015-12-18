@@ -789,5 +789,12 @@ angular.module("tax-services-importacao-xml", [])
         if (tabFiltro >= 1 && tabFiltro <= 2) $scope.tabFiltro = tabFiltro;        
     }
       
+    //Opção Importar
     
+    $scope.exibeOpcaoImportar = function(){
+    if($scope.usuariologado.grupoempresa && $scope.usuariologado.grupoempresa.id_grupo === 6)
+        return true;
+    else
+        return false;   
+    }
 }])
