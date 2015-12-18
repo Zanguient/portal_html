@@ -175,6 +175,7 @@ app.controller("loginCtrl", ['$scope',
         $webapi.post($autenticacao.autenticacao.login, jsonAutenticacao)
             .then(function(data){
             //.done(function(data){
+                //console.log(data);
                 // LOGADO! => Vai para a página principal
                 // Atualiza dados de autenticação
                 $autenticacao.atualizaDadosDeAutenticacao(data.token,$scope.lembrar,new Date());

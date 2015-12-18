@@ -638,14 +638,15 @@ angular.module("card-services-conciliacao-bancaria", [])
                 // Desassocia possível conciliação manual não finalizada
                 $scope.desassociaExtratoBancario();
             
-                $scope.totais.contExtrato = $scope.totais.contRecebimentosParcela = totalPreConciliados = totalConciliados = 0;
+                $scope.totais.contExtrato = $scope.totais.contRecebimentosParcela = totalPreConciliados = totalConciliados = $scope.totais.totalExtrato = $scope.totais.totalRecebimentosParcela = 0;
             
                 // Obtém os dados
                 $scope.dadosconciliacao = dados.Registros;
                 
-                $scope.totais.totalExtrato = dados.Totais.valorExtrato;
-                $scope.totais.totalRecebimentosParcela = dados.Totais.valorRecebimento;    
-                
+                if(dados.Totais && dados.Totais !== null){
+                    $scope.totais.totalExtrato = dados.Totais.valorExtrato;
+                    $scope.totais.totalRecebimentosParcela = dados.Totais.valorRecebimento;    
+                }
                 
                 //console.log($scope.dadosconciliacao);
                 //console.log($scope.totais.totalExtrato);
