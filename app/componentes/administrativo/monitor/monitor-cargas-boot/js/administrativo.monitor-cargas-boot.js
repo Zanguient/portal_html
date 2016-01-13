@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.1 - 13/01/2016
+ *  - Modalidade "ARQUIVOS"
+ *
  *  Versão 1.0 - 26/10/2015
  *
  */
@@ -147,7 +150,7 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
                 else filtroMonitorCargas.cdAdquirente = 0;
             }
             // Invoca o método do lado do servidor
-            hub.obtemListaBoot(filtroMonitorCargas).fail(function(error) { 
+            hub.obtemListaBoot(filtroMonitorCargas).fail(function(error) {
                 $rootScope.$broadcast("notifyMonitorFalha", error); 
             });
         };
@@ -155,7 +158,8 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
           *
           */
         monitor.desconectar = function(){
-            hub.connection.stop();    
+            if(typeof hub !== 'undefined' && hub !== null)
+                hub.connection.stop();    
         };
         
         return monitor;
@@ -524,15 +528,15 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
                  if(d === dia){
                      // Para cada modalidade...
                      // Valores pagos -> antecipação
-                     var pagosantecipacao = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'ANTECIPAÇÃO'})[0];
+                     var pagosantecipacao = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'ANTECIPAÇÃO' || d.dsModalidade === 'ARQUIVOS'})[0];
                      if(!pagosantecipacao) pagosantecipacao = {};
                      else pagosantecipacao.flSucesso = tbLogCarga.flStatusPagosAntecipacao;
                      // // Valores pagos -> crédito
-                     var pagoscredito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'CRÉDITO' || d.dsModalidade === 'CRÉDITO/DÉBITO'})[0];
+                     var pagoscredito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'CRÉDITO' || d.dsModalidade === 'CRÉDITO/DÉBITO' || d.dsModalidade === 'ARQUIVOS'})[0];
                      if(!pagoscredito) pagoscredito = {};
                      else pagoscredito.flSucesso = tbLogCarga.flStatusPagosCredito;
                      // Valores pagos -> débito
-                     var pagosdebito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'CRÉDITO/DÉBITO'})[0];
+                     var pagosdebito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'CRÉDITO/DÉBITO' || d.dsModalidade === 'ARQUIVOS'})[0];
                      if(!pagosdebito) pagosdebito = {};
                      else pagosdebito.flSucesso = tbLogCarga.flStatusPagosDebito;
                      // Lançamentos futuros
@@ -540,11 +544,11 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
                      if(!areceber) areceber = {};
                      else areceber.flSucesso = tbLogCarga.flStatusReceber;
                      // Venda à débito
-                     var vendadebito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'DÉBITO' || (loginAdquirenteEmpresa.tbAdquirente.nmAdquirente !== 'REDE' && d.dsModalidade === 'VENDA')})[0];
+                     var vendadebito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'DÉBITO' || d.dsModalidade === 'ARQUIVOS' || (loginAdquirenteEmpresa.tbAdquirente.nmAdquirente !== 'REDE' && d.dsModalidade === 'VENDA')})[0];
                      if(!vendadebito) vendadebito = {};
                      else vendadebito.flSucesso = tbLogCarga.flStatusVendasDebito;
                      // Vendas à crédito
-                     var vendacredito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'VENDA'})[0];
+                     var vendacredito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'VENDA' || d.dsModalidade === 'ARQUIVOS'})[0];
                      if(!vendacredito) vendacredito = {};
                      else vendacredito.flSucesso = tbLogCarga.flStatusVendasCredito;
                      

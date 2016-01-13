@@ -76,8 +76,8 @@ Não é necessário nenhum outro módulo externo.
 													[{
 														dsMensagem : string,
 														dsModalidade : string,
-														dtExecucaoFim : datetime
-														dtExecucaoIni : datetime ou null
+														dtExecucaoFim : datetime ou null
+														dtExecucaoIni : datetime
 														flStatus : int,
 														idLogCargaDetalhe : int,
 														qtTransacoes : int,

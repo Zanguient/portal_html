@@ -261,7 +261,7 @@
                                         <div class="row" ng-repeat="modalidade in modalidades">
                                             <i class="fa"
                                                ng-class="{'element-hidden': !teveProcessamento(tbLogCarga[modalidade]), 'fa-spin fa-spinner iconeMonitorCargasEmExecucao' : tbLogCarga[modalidade].flStatus === 0, 'fa-check-square iconeMonitorCargasSucesso' : tbLogCarga[modalidade].flSucesso && tbLogCarga[modalidade].flStatus === 1, 'fa-times-circle iconeMonitorCargasErro' : !tbLogCarga[modalidade].flSucesso && tbLogCarga[modalidade].flStatus === 2, 'fa-key iconeMonitorCargasSenha' : !tbLogCarga[modalidade].flSucesso && tbLogCarga[modalidade].flStatus === 4, 'fa-upload iconeMonitorCargasElegivel' : tbLogCarga[modalidade].flStatus === 7}"
-                                               title="{{modalidade + ': ' + (tbLogCarga[modalidade].dsMensagem ? tbLogCarga[modalidade].dsMensagem : tbLogCarga[modalidade].flStatus === 0 ? 'Em execução' : '')}}">
+                                               title="{{modalidade + ': ' + (tbLogCarga[modalidade].dsMensagem ? tbLogCarga[modalidade].dsMensagem + ' (realizado em ' + getDataTimeString(tbLogCarga[modalidade].dtExecucaoIni) + ')' : tbLogCarga[modalidade].flStatus === 0 ? 'Em execução (iniciado em ' + getDataTimeString(tbLogCarga[modalidade].dtExecucaoIni) + ')' : '')}}">
                                             </i>
                                         </div>
                                     </td>
