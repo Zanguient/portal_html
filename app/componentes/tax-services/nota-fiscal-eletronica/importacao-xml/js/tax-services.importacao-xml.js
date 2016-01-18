@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.7 - 18/12/2015
+ *  - Opção de importar aparecer apenas para o PETROX
+ *
  *  Versão 1.0.6 - 25/11/2015
  *  - Atualizações Fernando
  *
@@ -789,5 +792,12 @@ angular.module("tax-services-importacao-xml", [])
         if (tabFiltro >= 1 && tabFiltro <= 2) $scope.tabFiltro = tabFiltro;        
     }
       
+    //Opção Importar
     
+    $scope.exibeOpcaoImportar = function(){
+    if($scope.usuariologado.grupoempresa && $scope.usuariologado.grupoempresa.id_grupo === 6)
+        return true;
+    else
+        return false;   
+    }
 }])

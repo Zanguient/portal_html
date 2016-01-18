@@ -5,6 +5,13 @@
  *
  *
  *
+ *  Versão 1.1.7 - 05/01/2016
+ *  - noticias
+ *  - card-services-antecipacao-bancaria
+ *
+ *  Versão 1.1.6 - 04/01/2016
+ *  - ajuste em getDataFromDate()
+ *
  *  Versão 1.1.5 - 18/11/2015
  *  - administrativo-titulos
  *
@@ -89,6 +96,7 @@ angular.module("AtosCapital", ['ui.router',
                                'administrativo-consulta-pos-terminal',
                                'administrativo-titulos',
                                'dashboard',
+                               'card-services-antecipacao-bancaria',
                                'card-services-cash-flow-relatorios',
                                'card-services-relatorio-vendas',
                                'card-services-recebiveis-futuros',
@@ -105,6 +113,7 @@ angular.module("AtosCapital", ['ui.router',
                                'card-services-lancamento-vendas',
                                //'card-services-movimento',
                                //'card-services-resumo-de-movimento',
+                               'noticias',
                                'tax-services-importacao-xml',
                                'tax-services-cadastro-certificado-digital',
                                'tax-services-recebimento-nfe',
@@ -342,6 +351,15 @@ angular.module("AtosCapital", ['ui.router',
       })
 
       // CARD SERVICES
+      .state('card-services-antecipacao-bancaria', {
+        url: prefixo + 'card-services/antecipacao-bancaria',
+        templateUrl: 'componentes/card-services/antecipacao/antecipacao-bancaria/index.html',
+        controller: "card-services-antecipacao-bancariaCtrl",
+        data: {
+            titulo: 'Card Services'
+        }
+      })
+    
       .state('card-services-cash-flow-relatorios', {
         url: prefixo + 'card-services/cash-flow-relatorios',
         templateUrl: 'componentes/card-services/cash-flow/relatorios/index.html',
@@ -486,6 +504,17 @@ angular.module("AtosCapital", ['ui.router',
         }
       })*/
 
+    
+    
+      // NOTÍCIAS
+      .state('noticias', {
+        url: prefixo + 'noticias',
+        templateUrl: 'componentes/noticias/index.html',
+        controller: "noticiasCtrl",
+        data: {
+            titulo: 'Notícias'
+        }
+      })
 
 
       // TAX SERVICES
@@ -629,6 +658,7 @@ angular.module("AtosCapital", ['ui.router',
     var controllerAdministrativoConsultaPOSTerminal = undefined;
     var controllerAdministrativoTitulos = undefined;                        
     var controllerDashboard = undefined;
+    var controllerCardServicesAntecipacaoBancaria = undefined;                        
     var controllerCardServicesCashFlowRelatorios = undefined;
     var controllerCardServicesRelatorioVendas = undefined; 
     var controllerCardServicesRecebiveisFuturos = undefined;                          
@@ -644,7 +674,8 @@ angular.module("AtosCapital", ['ui.router',
     var controllerCardServicesCadastroCodigoAutorizacao = undefined;
     var controllerCardServicesLancamentoVendas = undefined;
     //var controllerCardServicesMovimento = undefined; 
-    //var controllerCardServicesResumoDeMovimento = undefined;                         
+    //var controllerCardServicesResumoDeMovimento = undefined; 
+    var controllerNoticias = undefined;                        
     var controllerTaxServicesImportacaoXML = undefined;
     var controllerTaxServicesCadastroCertificadoDigital = undefined;
     var controllerTaxServicesRecebimentoNfe = undefined;
@@ -679,6 +710,8 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_ADMINISTRATIVO_INTEGRACAO_ERP_TITULOS = false;                         
     $scope.PERMISSAO_DASHBOARD = false;
     $scope.PERMISSAO_CARD_SERVICES = false;
+    $scope.PERMISSAO_CARD_SERVICES_ANTECIPACAO = false;
+    $scope.PERMISSAO_CARD_SERVICES_ANTECIPACAO_ANTECIPACAO_BANCARIA = false;                        
     $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW = false;
     $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW_RECEBIVEIS_FUTUROS = false;                          
     $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW_RELATORIO_VENDAS = false;                        
@@ -697,7 +730,8 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_LANCAMENTO_VENDAS = false;
     $scope.PERMISSAO_CARD_SERVICES_CONSOLIDACAO_MOVIMENTO_TEF = false;
     //$scope.PERMISSAO_CARD_SERVICES_TEF_MOVIMENTO = false;  
-    //$scope.PERMISSAO_CARD_SERVICES_TEF_RESUMO_DE_MOVIMENTO = false;                         
+    //$scope.PERMISSAO_CARD_SERVICES_TEF_RESUMO_DE_MOVIMENTO = false; 
+    $scope.PERMISSAO_NOTICIAS = false;                        
     $scope.PERMISSAO_TAX_SERVICES = false;
     $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA = false;
     $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_IMPORTACAO_XML = false;
@@ -941,6 +975,13 @@ angular.module("AtosCapital", ['ui.router',
         go('dashboard', params);
     };
     /**
+      * Exibe como conteúdo a Antecipação Bancária Antecipação, de Card Services
+      */
+    $scope.goCardServicesAntecipacaoBancaria = function(params){
+        controllerAtual = controllerCardServicesAntecipacaoBancaria;
+        go('card-services-antecipacao-bancaria', params);
+    };                        
+    /**
       * Exibe como conteúdo a Cash Flow Relatórios, de Card Services
       */
     $scope.goCardServicesCashFlowRelatorios = function(params){
@@ -1051,7 +1092,14 @@ angular.module("AtosCapital", ['ui.router',
     $scope.goCardServicesResumoDeMovimento = function(params){
         controllerAtual = controllerCardServicesResumoDeMovimento;
         go('card-services-tef-resumo-de-movimento', params);
-    };  */                       
+    };  */  
+    /**
+      * Exibe como conteúdo o Notícias
+      */
+    $scope.goNoticias = function(params){
+        controllerAtual = controllerNoticias;
+        go('noticias', params);
+    };                        
     /**
       * Exibe como conteúdo a Nota Fiscal Eletrônica Importação XML, de Tax Services
       */
@@ -1284,6 +1332,15 @@ angular.module("AtosCapital", ['ui.router',
             }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'DASHBOARD ATOS')
                      controllerAtual.id_controller !== controllerDashboard.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
+        }else if(url === $state.get('card-services-antecipacao-bancaria').url){
+            // Card Services > Antecipação > Antecipação Bancária
+            if(!$scope.PERMISSAO_CARD_SERVICES || !$scope.PERMISSAO_CARD_SERVICES_ANTECIPACAO || !$scope.PERMISSAO_CARD_SERVICES_ANTECIPACAO_ANTECIPACAO_BANCARIA){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.goUsuarioSemPrivilegios();
+            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'ANTECIPAÇÃO BANCÁRIA')
+                     controllerAtual.id_controller !== controllerCardServicesAntecipacaoBancarias.id_controller)
+                $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
         }else if(url === $state.get('card-services-cash-flow-relatorios').url){
             // Card Services > Cash Flow > Relatórios
             if(!$scope.PERMISSAO_CARD_SERVICES || !$scope.PERMISSAO_CARD_SERVICES_CASH_FLOW || !$scope.PERMISSAO_CARD_SERVICES_CASH_FLOW_RELATORIOS){
@@ -1428,7 +1485,16 @@ angular.module("AtosCapital", ['ui.router',
             }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'RESUMO DE MOVIMENTO')
                      controllerAtual.id_controller !== controllerCardServicesResumoDeMovimento.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
-        }*/else if(url === $state.get('tax-services-nota-fiscal-eletronica-importacao-xml').url){
+        }*/else if(url === $state.get('noticias').url){
+            // Notícias
+            if(!$scope.PERMISSAO_NOTICIAS){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.goUsuarioSemPrivilegios();
+            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'NOTÍCIAS')
+                     controllerAtual.id_controller !== controllerNoticias.id_controller)
+                $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
+        }else if(url === $state.get('tax-services-nota-fiscal-eletronica-importacao-xml').url){
             // Tax Services > Nota Fiscal Eletrônica > Importação XML
             if(!$scope.PERMISSAO_TAX_SERVICES || !$scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA || !$scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_IMPORTACAO_XML){
                 // Não possui permissão!
@@ -1571,7 +1637,17 @@ angular.module("AtosCapital", ['ui.router',
                 if($location.path() === $state.get('dashboard').url) controllerAtual = controller;
                 controllerDashboard = controller;
                 return $scope.goDashboard;
+            // Notícias
+            case 'NOTÍCIAS':
+                if($location.path() === $state.get('noticias').url) controllerAtual = controller;
+                controllerNoticias = controller;
+                return $scope.goNoticias;    
             // Card Services
+            case 'ANTECIPAÇÃO BANCÁRIA':
+                if($location.path() === $state.get('card-services-antecipacao-bancaria').url)
+                    controllerAtual = controller;
+                controllerCardServicesAntecipacaoBancaria = controller;
+                return $scope.goCardServicesAntecipacaoBancaria;     
             case 'RELATÓRIO DE VENDAS':
                 if($location.path() === $state.get('card-services-cash-flow-relatorio-vendas').url)
                     controllerAtual = controller;
@@ -1713,6 +1789,8 @@ angular.module("AtosCapital", ['ui.router',
             case 'TÍTULOS': $scope.PERMISSAO_ADMINISTRATIVO_INTEGRACAO_ERP_TITULOS = true; break;
             // Dashboard
             case 'DASHBOARD ATOS': $scope.PERMISSAO_DASHBOARD = true; break;
+            // Notícias
+            case 'NOTÍCIAS': $scope.PERMISSAO_NOTICIAS = true; break;
             // Tax Services
             case 'TAX SERVICES' : $scope.PERMISSAO_TAX_SERVICES = true; break;
             case 'NOTA FISCAL ELETRÔNICA': $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA = true; break;
@@ -1721,6 +1799,8 @@ angular.module("AtosCapital", ['ui.router',
             case 'RECEBIMENTO NF-E': $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_RECEBIMENTO_NFE = true; break;
             // Card Services
             case 'CARD SERVICES': $scope.PERMISSAO_CARD_SERVICES = true; break;
+            case 'ANTECIPAÇÃO': $scope.PERMISSAO_CARD_SERVICES_ANTECIPACAO = true; break; 
+            case 'ANTECIPAÇÃO BANCÁRIA': $scope.PERMISSAO_CARD_SERVICES_ANTECIPACAO_ANTECIPACAO_BANCARIA = true; break;     
             case 'CASH FLOW' : $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW = true; break;
             case 'RELATÓRIO DE VENDAS': $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW_RELATORIO_VENDAS = true; break;
             case 'RECEBÍVEIS FUTUROS': $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW_RECEBIVEIS_FUTUROS = true; break;
@@ -1775,6 +1855,8 @@ angular.module("AtosCapital", ['ui.router',
             case 'ADMINISTRATIVO' : return state == 'administrativo';
             // Dashboard
             case 'DASHBOARD ATOS': return state == 'dashboard';
+            // Notícias
+            case 'NOTÍCIAS': return state == 'noticias';
             // Card Services
             case 'CARD SERVICES': return state == 'card-services';
             // Tax Services
@@ -1814,6 +1896,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'CADASTRO CERTIFICADO DIGITAL': return state == 'cadastro-certificado-digital';
             case 'RECEBIMENTO NF-E': return state == 'recebimento-nfe';
             // Card Services
+            case 'ANTECIPAÇÃO BANCÁRIA': return state == 'antecipacao-bancaria';    
             case 'RELATÓRIO DE VENDAS': return state == 'relatorio-vendas';
             case 'RECEBÍVEIS FUTUROS': return state == 'recebiveis-futuros';    
             case 'CONCILIAÇÃO BANCÁRIA': return state == 'conciliacao-bancaria';
@@ -2417,13 +2500,16 @@ angular.module("AtosCapital", ['ui.router',
    /**
      * A partir da data proveniente do banco de dados, retorna um Date, com horário zerado
      */
-   $scope.getDataFromDate = function(date){
+   $scope.getDataFromDate = function(date, filtroapi){
+       if(filtroapi)
+           return date.replace("T", " ");
+       
        var ano = date.substr(0, 4);
        var mes = date.substr(5, 2);
        var dia = date.substr(8, 2);
        var hora = date.substr(11, 2);
        var minuto = date.substr(14, 2);
-       var segundo = date.substr(17, 2);
+       var segundo = date.substr(17, 2); 
        return new Date(ano, mes - 1, dia, hora, minuto, segundo, 0);
        //return $filter('date')(new Date(date.replace("T", " ")), "yyyy-MM-dd HH:mm:ss");
    }

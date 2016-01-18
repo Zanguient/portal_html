@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.1 - 04/01/2016
+ *  - Correção do HTTP delete
+ *
  *  Versão 1.0 - 03/09/2015
  *
  */
@@ -447,7 +450,7 @@ angular.module("administrativo-contas-correntes-vigencias", [])
                                      excluiVigencia, 
                                     { cdContaCorrente : $scope.conta.cdContaCorrente,
                                       cdLoginAdquirenteEmpresa : vigencia.cdLoginAdquirenteEmpresa,
-                                      dtInicio : $scope.getDataFromDate(vigencia.dtInicio)}, 
+                                      dtInicio : $scope.getDataFromDate(vigencia.dtInicio, true)}, 
                                     'Sim', 'Não');  
     };                   
     /**

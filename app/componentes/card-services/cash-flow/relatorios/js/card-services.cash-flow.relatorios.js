@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.8 - 18/12/2015
+ *  - Correção na requisição de exportar para CSV (cópia por valor do ultimoFiltro)
+ *
  *  Versão 1.0.7 - 16/11/2015
  *  - Remoção de cargas, vendas e ajustes
  *
@@ -767,7 +770,9 @@ angular.module("card-services-cash-flow-relatorios", [])
             return;
         }
         
-        var filtros = ultimoFiltro;//obtemFiltroDeBusca();
+        var filtros = []; //obtemFiltroDeBusca();
+        // Obtém ultimo filtro
+        angular.copy(ultimoFiltro, filtros);
         
         // Exportar
         filtros.push({id: /*$campos.pos.recebimentoparcela.exportar*/ 9999,
