@@ -5,6 +5,10 @@
  *
  *
  *
+ *  Versão 1.1.8 - 21/01/2016
+ *  - ngSanitize
+ *  - adicionaQuebraLinhaHtml() alterada
+ *
  *  Versão 1.1.7 - 05/01/2016
  *  - noticias
  *  - card-services-antecipacao-bancaria
@@ -67,6 +71,7 @@
 angular.module("AtosCapital", ['ui.router',
                                'ui.bootstrap',
                                'ui.checkbox',
+                               'ngSanitize',
                                'angular.filter',
                                'diretivas',
                                'AngularPrint',
@@ -2623,7 +2628,8 @@ angular.module("AtosCapital", ['ui.router',
     $scope.adicionaQuebraLinhaHtml = function(text){
         //console.log(text);
         //console.log($scope.modalLog.log.msgErro);
-        if(typeof text === 'string') return text.split("\n").join(String.fromCharCode(160));
+        if(typeof text === 'string') //return text.split("\n").join(String.fromCharCode(160));
+            return text.replace(/(\r\n|\n|\r)/gm, "<br>");
         return text;
     }
 
