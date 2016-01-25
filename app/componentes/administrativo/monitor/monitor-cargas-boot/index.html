@@ -8,6 +8,9 @@
     Administrativo > Monitor > Monitor de Cargas do Boot
 
 
+    Versão 1.0.1 - 21/01/2016
+    - Modal auditoria
+
     Versão 1.0 - 26/10/2015
 -->
 
@@ -175,6 +178,58 @@
         <div class="col-md-12">
             <!-- BEGIN TABLE PORTLET-->
             <div class="portlet light">
+                
+                <!-- MODAL AUDITORIA -->
+               <div class="modal fade bs-modal-sm modal-input" 
+                    id="modalAuditoria" aria-hidden="true">
+                   <div class="modal-dialog modal-sm" style="width:400px">
+                       <div class="modal-content">
+                           <div class="modal-header">
+                               <h4 class="modal-title modal-cabecalho">Auditoria</h4>
+                           </div>
+                           <div class="modal-body modal-corpo modalAcessoDeUsuarios" style="text-align: center">
+                               <!-- EMPRESA -->
+                               <div class="row">
+                                   {{modalAuditoria.empresa}}
+                               </div>
+                               <!-- ADQUIRENTE -->
+                               <div class="row">
+                                   {{modalAuditoria.adquirente}}
+                               </div>
+                               <!-- MODALIDADE -->
+                               <div class="row">
+                                   {{modalAuditoria.modalidade}}
+                               </div>
+                               <!-- DATA DE COMPETENCIA -->
+                               <div class="row">
+                                   <span ng-bind="getDataString(modalAuditoria.dtCompetencia)"></span>
+                               </div>
+                               <!-- DATA DE COMPETENCIA -->
+                               <div class="row">
+                                   Processado em 
+                                   <span ng-bind="getDataString(modalAuditoria.detalhe.dtExecucaoIni)">
+                                   </span>
+                               </div>
+                               <!-- AUDITORIA -->
+                               <div class="row" style="margin-top: 30px">
+                                   <label 
+                                    ng-bind-html="adicionaQuebraLinhaHtml(modalAuditoria.detalhe.txAuditoria)">
+                                   </label>
+                               </div>
+                            </div>
+                           <div class="modal-footer">
+                               <div class="col-sm-6 col-sm-offset-3">
+                                   <button type="button" class="btn default" data-dismiss="modal">
+                                       Fechar
+                                   </button>
+                               </div>                           
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <!-- FIM - MODAL AUDITORIA -->
+                
+                
                 <!--TITULO-->
                 <div class="portlet-title">
                     <div class="caption">								
@@ -260,8 +315,9 @@
                                     <td ng-repeat="tbLogCarga in loginAdquirenteEmpresa.tbLogCargas">
                                         <div class="row" ng-repeat="modalidade in modalidades">
                                             <i class="fa"
-                                               ng-class="{'element-hidden': !teveProcessamento(tbLogCarga[modalidade]), 'fa-spin fa-spinner iconeMonitorCargasEmExecucao' : tbLogCarga[modalidade].flStatus === 0, 'fa-check-square iconeMonitorCargasSucesso' : tbLogCarga[modalidade].flSucesso && tbLogCarga[modalidade].flStatus === 1, 'fa-times-circle iconeMonitorCargasErro' : !tbLogCarga[modalidade].flSucesso && tbLogCarga[modalidade].flStatus === 2, 'fa-key iconeMonitorCargasSenha' : !tbLogCarga[modalidade].flSucesso && tbLogCarga[modalidade].flStatus === 4, 'fa-upload iconeMonitorCargasElegivel' : tbLogCarga[modalidade].flStatus === 7}"
-                                               title="{{modalidade + ': ' + (tbLogCarga[modalidade].dsMensagem ? tbLogCarga[modalidade].dsMensagem : tbLogCarga[modalidade].flStatus === 0 ? 'Em execução' : '')}}">
+                                               ng-class="{'element-hidden': !teveProcessamento(tbLogCarga[modalidade]), 'fa-spin fa-spinner iconeMonitorCargasEmExecucao' : tbLogCarga[modalidade].flStatus === 0, 'fa-check-square iconeMonitorCargasSucesso cursorLink' : tbLogCarga[modalidade].flSucesso && tbLogCarga[modalidade].flStatus === 1, 'fa-times-circle iconeMonitorCargasErro' : !tbLogCarga[modalidade].flSucesso && tbLogCarga[modalidade].flStatus === 2, 'fa-key iconeMonitorCargasSenha' : !tbLogCarga[modalidade].flSucesso && tbLogCarga[modalidade].flStatus === 4, 'fa-upload iconeMonitorCargasElegivel' : tbLogCarga[modalidade].flStatus === 7}"
+                                               title="{{modalidade + ': ' + (tbLogCarga[modalidade].dsMensagem ? tbLogCarga[modalidade].dsMensagem + ' (realizado em ' + getDataTimeString(tbLogCarga[modalidade].dtExecucaoIni) + ')' : tbLogCarga[modalidade].flStatus === 0 ? 'Em execução (iniciado em ' + getDataTimeString(tbLogCarga[modalidade].dtExecucaoIni) + ')' : '')}}"
+                                               ng-click="tbLogCarga[modalidade].flSucesso && tbLogCarga[modalidade].flStatus === 1 ? exibeModalAuditoria(loginAdquirenteEmpresa.empresa, loginAdquirenteEmpresa.tbAdquirente, modalidade, tbLogCarga) : 0">
                                             </i>
                                         </div>
                                     </td>

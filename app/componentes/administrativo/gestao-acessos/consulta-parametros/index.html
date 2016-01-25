@@ -286,8 +286,10 @@
 																	<!-- <span class="glyphicon glyphicon-remove" ></span> -->
 																</span>
 															</td>
-															<td style="text-align:center">{{parametro.dtInicio}}</td>
-															<td style="text-align:center">{{parametro.dtFim}}</td>
+															<td style="text-align:center"
+                                                                ng-bind="getDataString(parametro.dtInicio)"></td>
+															<td style="text-align:center"
+                                                                ng-bind="getDataString(parametro.dtFim)"></td>
 															<td style="text-align:center">{{parametro.cdEstabelecimento}}</td>
 															<td style="text-align:center">{{parametro.cdEstabelecimentoConsulta}}</td>
 															<td style="text-align:center">{{parametro.tbContaCorrente.banco.NomeExtenso | uppercase}} / {{parametro.tbContaCorrente.nrAgencia}} / {{parametro.tbContaCorrente.nrConta}}</td>

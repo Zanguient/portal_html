@@ -1,14 +1,12 @@
 # README #
 
 Módulo que:
- - gerencia o layout da tela de títulos de Integração ERP (app/componentes/administrativo/integracao-erp/titulos/index.html);
- - permite a consulta dos títulos já importados da base do cliente
- - permite a importação dos títulos da base do cliente para a base da atoscapital
+ - gerencia o layout da tela de Notícias (app/componentes/noticias/index.html);
  
 
 ### Pra Que Serve Este Módulo? ###
 
-Gerenciar completamente a tela de tela de títulos de Integração ERP (Administrativo). 
+Gerenciar completamente a tela de Notícias.  
 
 
 
@@ -35,41 +33,14 @@ Além deles, é necessária a importação dos seguintes módulos externos.
   * $scope.grupoempresa, do "appCtrl" : grupo empresa informado pelo usuário na barra administrativa
   * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
   * APIS:
-    - card/tituloserp
-	- card/tbrecebimentotitulo
+	- 
 	
  
  
  ### Interação com a WEB API ###
  
-  * card/tituloserp
-	- POST : importa títulos da base da empresa para a base da atoscapital
-			 Espera o JSON { data : string }, que é a data do título
-			 
-    - PATCH : importa títulos a partir do arquivo CSV (upload)	
-	
+  
    
-  * card/tbrecebimentotitulo
-        - GET : carrega os títulos já importados (coleção 3)
-			[
-			  { empresa : { nu_cnpj : string, ds_fantasia : string, filial : string ou null },
-				nrNSU : string,
-				dtVenda : datetime ou null.
-				tbAdquirente : { cdAdquirente : int, nmAdquirente : string },
-				dsBandeira : string,
-				vlVenda : double ou null,
-				qtParcelas : int ou null,
-				dtTitulo : datetime,
-				vlParcela : double
-				nrParcela : int,
-				cdERP : string ou null,
-				dtBaixaERP : datetime ou null
-				conciliado : bool
-			  }
-			]	
-		   Recebe em Totais: - "valorTotal" : double // valor total parcela
-							 - "totalBaixados" : int // total de títulos baixados
-							 - "totalConciliados" : int // total de títulos conciliados
 
    
 ### Desenvolvedores ###

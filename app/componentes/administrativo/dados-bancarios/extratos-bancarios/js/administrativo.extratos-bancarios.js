@@ -430,7 +430,7 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
                  if(status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else if(status === 503 || status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else if(status === 500) $scope.showModalAlerta(data);//"Só são aceitos arquivos PDF de contas do SANTANDER! Se o extrato subido não foi um pdf, então o extrato '" + files[$scope.current].name + "' não corresponde a conta " + $scope.getNomeAmigavelConta($scope.filtro.conta));
-                 else $scope.showAlert("Houve uma falha ao fazer upload do extrato '" + files[$scope.current] + "' (" + status + ")", true, 'danger', true, false);
+                 else $scope.showAlert("Houve uma falha ao fazer upload do extrato '" + file.name + "' (" + status + ")", true, 'danger', true, false);
                 //if(++$scope.current === $scope.total){
                 $scope.type = 'danger';
                 uploadEmProgresso = false;
