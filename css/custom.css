@@ -1,0 +1,1099 @@
+/*
+ *  Atos Capital - www.atoscapital.com.br
+ *  
+ *  suporte@atoscapital.com.br
+ *
+ *
+ *  Versão 1.0.9 - 30/11/2015
+ *  - height aumentada dos cupons da conciliação bancária
+ *
+ *  Versão 1.0.8 - 09/11/2015
+ *  - cupomConciliacaoTitulos
+ *
+ *  Versão 1.0.7 - 16/10/2015
+ *      -Criação dos estilos de importação de Xml.
+ *
+ *  Versão 1.0.6 - 14/10/2015
+ *      -Aumento no tamanho dos cupons de parâmetros bancários.
+ *
+ *  Versão 1.0.5 - 06/10/2015
+ *      -tamanho fixo pra uns cupons conciliação vendas.
+ *
+ *  Versão 1.0.4 - 30/09/2015
+ *      -Criação dos Estilos da tela parâmetros de notícias.
+ *
+ *  Versão 1.0.3 - 13/10/2015
+ *  - valorNegativo e valorPositivo  
+ *
+ *  Versão 1.0.2 - 24/09/2015
+ *      -Criação dos Estilos das divs dos filtros.
+ *
+ *  Versão 1.0.1 - 09/09/2015
+ *      -Criação das classes para quebra de linhas para os dados exibidos no modal na tela ações de usuários.
+ * 
+ *  Versão 1.0 - 03/09/2015
+ *      -Criação dos estilos da tela de cadastro de código de autorização.
+ *
+ */
+
+/* Start by setting display:none to make this hidden.
+   Then we position it in relation to the viewport window
+   with position:fixed. Width, height, top and left speak
+   for themselves. Background we set to 80% white with
+   our animation centered, and no-repeating */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Open Sans Light'), local('OpenSans-Light'), url(../fonts
+      /open-sans-300.woff2) format('woff2'), url(../fonts/open-sans-300.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url(../fonts/open-sans-400.woff2) format('woff2'), url(../fonts/open-sans-400.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Open Sans Semibold'), local('OpenSans-Semibold'), url(../fonts/open-sans-600.woff2) format('woff2'), url(../fonts/open-sans-600.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Open Sans Bold'), local('OpenSans-Bold'), url(../fonts/open-sans-700.woff2) format('woff2'), url(../fonts/open-sans-700.woff) format('woff');
+}
+
+
+#loading {
+    display:inline;
+    background: none;
+    padding: 15px 34px !important;
+    margin-top: 1px;
+}
+
+/*.btn-group:hover>.dropdown-menu {
+  display: block;
+}*/
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
+}
+
+.dragover {
+    border: 5px dashed blue !important;
+}
+
+.drop-box {
+    background: #F8F8F8;
+    border: 5px dashed #DDD;
+    width: 500px;
+    height: 100px;
+    text-align: center;
+    padding-top: 40px;
+    /*margin: 0 100px;*/
+}
+
+.dropdown-menu{
+    z-index : 30000;
+}
+
+.element-hidden{
+    visibility: hidden
+}
+
+/*.page-header .page-header-menu .hor-menu .navbar-nav > li.mega-menu-dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0;
+ }*/
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Impede o scroll do background quando um modal é aberto*/
+body.modal-open {
+    overflow: auto, /*hidden;*/
+    position: relative !important; /* para permitir o scroll => Impedir: fixed; */
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/*Classes Organizadas em ordem alfabética*/
+
+.barrapesquisa{
+  width: 29.33333333%;
+}
+
+.botoesAdicionar{
+  margin-bottom: 3px;
+}
+
+.btn-transparent.btn {
+  background: transparent;
+  color: #888;
+}
+
+.button-bolder{
+  color: red !important;
+  font-weight: bolder;
+}
+
+.botaoGrupoVendendor{
+  color: #7e1416;
+  font-size:20px; 
+  cursor: pointer;
+}
+
+.botaoGrupoVendendor:hover{
+  color: #c22629;
+}
+
+
+
+.botaoCheckCociliacaoVendas{
+margin-top:170px;
+}
+
+.botaoVoltar{
+    background-color: #606060;
+    color:#fff;    
+}
+
+.botaoVoltar:hover{
+    background-color: #9E9E9E;
+    color:#fff;    
+}
+
+.cabecalhoTableAcessoUsuarios{
+  text-align: center;
+  font-weight: bolder;       
+  background-color:#EAEAEA;     
+  border: 1px solid #BDBDBD; 
+  margin:10px -20px -20px -20px; 
+  height: 40px;  
+  padding-top: 5px;     
+}
+
+.cabecalhoVisualizacaoTableAcessoUsuarios{
+  text-align: center;
+  font-weight: bolder;       
+  background-color:#EAEAEA;     
+  border: 1px solid #BDBDBD; 
+  margin:-11px -20px -20px -20px;
+  height: 40px;  
+  padding-top: 5px;     
+}
+
+.cabecalhoEmpresas{
+    margin-bottom: 20px;
+    margin-top: 10px;
+    font-size: 15px;
+    font-weight: bolder;
+    text-align: left;
+}
+
+/* a minha */
+.cabecalhoTheadTabelas{
+    border-bottom: 1px #EAEAEA solid !important;
+    text-align: center;
+}
+
+.formatacaoSubTabelaMaior{
+    border-top-width: 0px !important;
+    border-bottom-width: 0px !important;
+    border-left-width: 0px !important;
+    border-right-width: 0px !important;
+}
+
+.formatacaoSubTabelaMenorEsquerda{
+    border-top-width: 0px !important;
+    border-right-width: 0px !important;
+}
+
+.formatacaoSubTabelaMenorDireita{
+    border-top-width: 0px !important;
+}
+
+.formatacaoLinhaDaTabelaInterna{
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+
+.colunasCenter{
+  text-align: center;  
+}
+
+.colunasLeft{
+  text-align: left;
+}
+
+.comboBoxFiltros{
+  vertical-align: middle;
+  width: 85%;
+  display: inline;
+  margin-right: 5px;
+}
+.componentesTableAcessoUsuarios{
+  text-align: center; 
+  background-color:#fff;     
+  border: 1px solid #BDBDBD; 
+  margin: -11px -20px -20px -20px;
+  height: 40px; 
+  padding-top: 5px;  
+}
+
+.conteudoAcoesUsuarios td{
+  vertical-align: middle;
+  text-align: center;  
+}
+
+/* Estilos dos cumpons de conciliação bancária*/
+
+.alinhamentoDados{
+  text-align: right;
+}
+
+/* BOTÕES*/
+
+div.divTextosBrancos *{
+    color : #fff !important;
+}
+
+.btnConciliacaoBancaria{
+  margin-top: 140px;
+}
+
+.btnConciliacaoBancariaTef{
+    margin-top: 150px;
+    /*text-align: center;*/
+}
+
+.btnPossivelConciliadoConciliacaoBancaria{
+    background-color: #807C15;
+}
+
+.btnRegistrosCupon{
+    height: 20px;
+    width: 30px;
+    padding-top: 0px;
+    text-align: center;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.conteudoCuponsConciliacaobancaria{
+  text-align: center;
+}
+
+.cupomConciliacaoTitulos{
+    height: 300px !important; 
+}
+
+.cupomAzulConciliacaoBancaria{
+    background-color: #eef7fb !important;
+    border-color: #a6e1ec;
+    color: #31708f;
+    border-left:3px solid #a6e1ec;      
+    border-radius: 4px 4px; 
+    padding: 15px 30px 15px 15px;
+    margin-top:40px;
+    height: 290px;
+    width:320px; 
+}
+
+.cupomLaranjaConciliacaoBancaria{
+    background-color: #fcf8e3 !important;
+    border-color: #f5d89e;
+    color: #8a6d3b;
+    border-left: 3px solid #f5d89e;    
+    border-radius: 4px 4px; 
+    padding: 15px 30px 15px 15px;
+    margin-top:40px;
+    height: 290px;
+    width:320px; 
+}
+
+.cupomVermelhoConciliacaoBancaria{
+    background-color: #f9f0f0 !important;
+    border-color: #e4b9c0;
+    color: #a94442;
+    border-left: 3px solid #e4b9c0;  
+    border-radius: 4px 4px; 
+    padding: 15px 30px 15px 15px;
+    margin-top:40px;
+    height: 290px;
+    max-width:320px;    
+    width:320px;    
+}
+
+.cupomAzulConciliacaoBancariaTef{
+    background-color: #eef7fb;
+    border-color: #a6e1ec;
+    color: #31708f;
+    border-left:3px solid #a6e1ec;      
+    border-radius: 4px 4px; 
+    padding: 15px 30px 15px 15px;
+    margin-top:40px;
+    height: 290px;
+    width:300px;  
+}
+
+.cupomVermelhoConciliacaoBancariaTef{
+    background-color: #f9f0f0;
+    border-color: #e4b9c0;
+    color: #a94442;
+    border-left: 3px solid #e4b9c0;      
+    border-radius: 4px 4px; 
+    padding: 15px 30px 15px 15px;
+    margin-top:40px;
+    height: 290px;
+    width:300px;  
+}
+
+.cupomLaranjaConciliacaoBancariaTef{
+    background-color: #fcf8e3;
+    border-color: #f5d89e;
+    color: #8a6d3b;
+    border-left: 3px solid #f5d89e;      
+    border-radius: 4px 4px; 
+    padding: 15px 30px 15px 15px;
+    margin-top:40px;
+    height: 290px;
+    width:300px;  
+}
+.tituloCumponsConciliacaoBancariaExtrato{
+    margin-top:5px; 
+    margin-bottom:30px; 
+}
+
+.tituloCumponsConciliacaoBancariaICard{
+    margin-top:5px; 
+    margin-bottom: 15px; 
+}
+
+/*.subTituloCuponsConciliacaoBancaria{
+    margin-top: 10px;
+         
+}*/
+
+/*FIM Estilos dos cumpons de conciliação bancária*/
+
+/* Estilos de Monitor de Cargas */
+
+.iconeMonitorCargasEmExecucao{
+    color: #000;
+}
+
+.iconeMonitorCargasSucesso{
+    color: #0e830e;
+}
+
+.iconeMonitorCargasErro{
+    color: #e50003;
+}
+
+.iconeMonitorCargasReExecucao{
+    color: #a9a9a9;
+}
+
+.iconeMonitorCargasSenha{
+    color: #daa520;
+}
+
+
+.iconeMonitorCargasElegivel{
+    color: #2771b9;
+}
+
+/* FIM Estilos de Monitor de Cargas */
+
+.conteudoFiliais{
+    margin:8px 10px 0 0;
+    color: #6f6e6e;
+}
+
+.conteudoEmpresas1{
+  vertical-align:middle;
+  text-align: center;  
+  /*margin:0 4px 10px 4px;
+  border-bottom: 1px solid #EAEAEA;*/  
+}
+
+.conteudoFiltros{
+  text-align: center;
+}
+
+
+.conteudoMinhaConta label{
+  font-size: 17px;  
+}
+
+.cursorLink {
+    cursor: pointer;
+}
+
+.conteudoConta{
+  margin-left: -15px;
+}
+
+.conteudoNavegacao{
+  margin-top: -30px;
+}
+
+.conteudoTabelas{
+  text-align: center;
+}
+
+tbody.conteudotabelasCentralizadas > tr > td{
+    text-align: center;
+    vertical-align: middle;
+    fon
+}
+
+.conteudoColunas{
+  text-align: center;
+}
+
+.conteudoRelatorioAnaliticoCash{
+    margin-top: 20px;
+    border-bottom: 1px solid #EAEAEA;    
+}
+
+.cuponsConciliacaoVendas{
+    margin: 40px 0 100px 0;
+}
+
+
+.cuponAzulConciliacaoVendas{
+    width: 250px;
+    background-color: #eef7fb;
+    border-color: #a6e1ec;
+    color: #31708f;
+    border-left: 5px solid #a6e1ec;  
+    border-radius: 0 4px 4px 0; 
+    padding: 15px 30px 15px 15px;
+    margin-top:40px;
+}
+
+.cuponLaranjaConciliacaoVendas{
+    background-color: #fcf8e3;
+    border-color: #f5d89e;
+    color: #8a6d3b;
+    border-left: 5px solid #f5d89e;  
+    border-radius: 0 4px 4px 0; 
+    padding: 15px 30px 15px 15px;
+    margin-top:40px;      
+}
+
+.cuponVermelhoConciliacaoVendas{
+    background-color: #f9f0f0;
+    border-color: #e4b9c0;
+    color: #a94442;
+    border-left: 5px solid #e4b9c0;  
+    border-radius: 0 4px 4px 0; 
+    padding: 15px 30px 15px 15px;
+    margin-top:40px;      
+}
+
+.dadosAlterarSenha{
+    margin-top: 20px;
+    text-align:right;
+}
+
+.dadosEmpresa{   
+    text-align: left;    
+}
+
+
+.dadosGetaoEmpresas{
+    margin:20px 4px 0 4px;
+    padding-bottom:20px;
+    border-bottom:1px  solid #eaeaea;
+    font-size: 15px;
+    
+}
+
+.dadosRelatorioAnaliticoCash{
+    font-weight: bolder;
+    margin-right: 10px;
+}
+
+.filtros{
+  width: 90%;
+  display: inline;
+  margin-right: 7px;
+}
+
+.form-controlModuloseFuncionalidades{
+  display: block;
+  width: 70%;
+      
+}
+
+.fonteTabelaMonitoramentoCargas > tr > th{
+    font-size: 11px;
+}
+
+.fonteTabelaMonitoramentoCargas > tr > td{
+    font-size: 12px;
+}
+
+
+
+.imgPreloader{
+  position: absolute;
+  margin: auto;
+  left: 0; 
+  right: 0;
+  top: 0;
+  bottom: 0;  
+  z-index: 15000;
+}
+
+.imputsConta{
+  margin-top: -7px;
+}
+
+.imputsPessoal{
+  margin-bottom:5px; 
+}
+
+
+
+.labelContaDados{
+  margin-left: 15px;
+}
+
+.labelConta{
+  margin
+}
+
+.labelPessoal{
+  margin-bottom: 12px;
+}
+
+.labelPessoalDados{
+  margin-bottom: 17px;
+}
+
+.large-popover > .popover{
+    width: 200px;
+}
+
+.linhaselecionada {
+    background-color: aqua;
+}
+
+.linhaTotalRelatorios{
+  text-align: center;
+  font-weight:bolder;    
+}
+
+.minhaConta{
+  margin-top: 5px
+}
+
+.minhaContaPessoal{
+  
+}
+
+.modalAcessoDeUsuarios label{
+  font-weight: bold;
+  margin-top: 15px;
+  margin-right: 5px;
+  word-wrap: break-word;
+}
+
+.modalConfig{
+  margin-bottom: 15px;
+  margin-top: 15px;    
+}
+
+.modalContasCorrentes{
+  margin-top: 10px;
+  vertical-align: middle;
+}
+
+.modalFilialDetalhes{
+  border-bottom: 1px solid #eaeaea;
+  margin: 10px 10px;    
+}
+
+.modalFilialDetalhesFim label{
+  font-weight: bold;
+  margin-bottom:10px;  
+}
+
+
+
+.modalFilialDetalhes label{
+  font-weight: bold;
+  margin-bottom:10px;
+}
+
+.modal-input{
+  z-index:13000 !important;   
+}
+
+.modal-mensagem{
+  z-index:14000 !important;   
+}
+
+.modal-simples{
+  z-index:12000 !important;   
+}
+
+.paddingDivs{
+    margin-left: 4px;
+    margin: 4px;
+}
+
+.position-fixed {
+  position: fixed;
+  z-index:9999 !important; 
+}
+
+.rodapeConteudoFiliaias{
+    color: #e5e5e5;
+    font-size: 13px;
+    text-align: center;
+    
+}
+
+.selecionar-empresa {
+    
+}
+.selecionar-empresa .row{
+    margin: 0;
+}
+.selecionar-empresa .col-sm-2 {
+    padding-right: 0;
+    text-align: right;
+}
+.selecionar-empresa span{
+    font-weight: bold;
+    display: block;
+    text-align: right;
+    min-width: 200px;
+    white-space: nowrap;
+}
+
+
+.StatusSenhaValida{
+  background-color: #45B6AF;  
+  color: #fff; 
+  padding: 3px 6px 3px 6px;
+  text-align: center;
+  border-radius: .25em; 
+}
+
+.StatusSenhaInvalida{
+  background-color: #F3565D;  
+  color: #fff;  
+  padding: 3px 6px 3px 6px;
+  text-align: center;
+  border-radius: .25em; 
+}
+
+.statusPositivoValorExtrato{
+  background-color: #45B6AF;   
+  color: #fff;  
+  padding: 3px 6px 3px 6px;
+  text-align: center;
+  border-radius: .25em;
+}
+
+.statusNegativoValorExtrato{
+  background-color: #F3565D;  
+  color: #fff;  
+  padding: 3px 6px 3px 6px;
+  text-align: center;
+  border-radius: .25em;
+}
+
+
+.statusSituacaoFiliaisAtivo{
+  background-color: #45B6AF;  
+  color: #fff; 
+  padding: 3px 6px 3px 6px;
+  text-align: center;
+  border-radius: .25em;     
+}
+
+.statusSituacaoFiliaisInativo{
+  background-color: #F3565D;  
+  color: #fff;  
+  padding: 3px 6px 3px 6px;
+  text-align: center;
+  border-radius: .25em;      
+}
+
+.dropDownAtos{
+  z-index: 15000;
+  left:1000px;    
+}
+#sticky.stick {
+    position: fixed;
+    top: 0;
+    z-index: 10000;
+    border-radius: 0 0 0.5em 0.5em;
+}
+
+.tableAcessoUsuarios{
+  padding: 15px; 
+    
+}
+
+/*.table-scrollable{
+    overflow: visible;
+}*/
+
+.telaManuntencao{
+  text-align:center; 
+  padding-bottom: 20px;
+  padding-top: 20px; 
+  font-size:20px; 
+  color:#7e1415; 
+  font-weight:bold;
+}
+
+.telaDeManuntencao{
+  background-color: #eaeaea;
+  text-align: center;
+    
+}
+
+.titulosconteudos{
+    font-weight: bolder; 
+    margin-bottom:10px
+}
+
+.tituloEmpresa{
+    margin:0 4px 20px 4px;
+    font-size: 15px;
+    font-weight: bolder;
+    text-align: left;
+    border-bottom: 1px solid #EAEAEA;
+}
+
+.tituloFilial{
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: bolder;
+    text-align: center;
+}
+
+.titulosModalFilial h4{
+  text-align:center; 
+  margin-top:1px;
+  margin-bottom:15px;    
+  color:dimgray;
+}
+
+.vakata-context { 
+     z-index:11000 !important; 
+}
+
+.vertical-center {
+   margin: 6px 0 0 15px;    
+}
+/*img:hover{
+ background: red;
+}*/
+
+tbody.centralizarVertical > tr > td {
+   vertical-align: middle;
+}
+
+thead.centralizarVerticalTitulos > tr > th {
+   vertical-align: middle;
+}
+
+.teste col-xs-3{
+  padding-left: -60px;
+}
+
+.valorNegativo{
+  color : red;
+}
+
+.valorPositivo{
+  color : navy;
+}
+
+/*ESTILO CUPONS RELATÓRIOS TÉRMINAIS LÓGICOS*/
+
+.btnRelatoriosTerminal{
+padding-top: 16%;
+}
+
+.conteudoCupomRelatorios{
+    margin-bottom: 20px;
+}
+
+.cuponAzulRelatorios{
+    background-color: #eef7fb; 
+    border-color: #a6e1ec; 
+    color: #31708f;
+    border-left:3px solid #a6e1ec;
+    border-radius: 4px 4px;
+    padding: 15px 30px 15px 15px;
+    text-transform: uppercase;
+    font-size: 12px;
+    width: 275px;
+}
+
+.cuponsRelatoriosTerminais{
+    margin-top: 50px;
+}
+
+.dataHoraCuponRelatorios{
+    margin-bottom: 20px;
+}
+
+.dataHoraCuponRelatorios  label{
+    font-size: 13px;
+    margin-right: 5px; 
+}
+
+.legendaCupomRelatorios{
+    margin-bottom: 20px;
+}
+
+.rodapeCupomRelatorio{
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.textAlinhamentoCupomRelatorio{
+    text-align: right;
+}
+
+.totaisCuponRelatorios{
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+.tituloCuponRelatorios{
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.informacoesCuponRelatorios{
+    margin-bottom: 20px;
+}
+
+/*FIM ESTILO CUPONS RELATÓRIOS TÉRMINAIS LÓGICOS*/
+
+
+/* ESTILO DA TELA DE CADASTRO DE TÉRMINAL LÓGICO */
+
+.btn-alterar{
+    font-size:30px; 
+    color: #1f897f;
+    margin-top: 25px;
+    cursor: pointer;    
+}
+
+.btn-alterar:hover{
+    color: #26a69a;      
+}
+
+.conteudoFormularioCadastroTerminal{
+    margin-top: 10px;
+}
+
+.formularioCadastroTerminal{
+    padding:15px ;
+}
+
+.tituloFormularioCadastroTerminal{
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* FIM ESTILO DA TELA DE CADASTRO DE TÉRMINAL LÓGICO */
+
+
+/*ESTILOS MODAL DETALHES DA NOTA*/
+.campos-detalhe-nota{
+    border:solid 1px #808080; 
+    margin:10px;
+    background:#eaeaea;
+    padding-top:5px;
+    padding-bottom: 10px;    
+}
+
+.campos-imprimir-documento{
+    padding:0 10px 0 10px;
+}
+
+.conteudos-detalhe-nota{
+    border: solid 1px #e5e5e5;
+    margin:0 -1px 0 -1px;
+    font-size: 11px;
+    margin-top:-11px;
+    
+}
+
+.conteudos-detalhe-nota label{
+    font-size: 11px;   
+}
+
+.espacamento-linhas-dados{
+    margin-top: 5px;
+}
+
+.headDetalhesNota{
+    border-bottom: solid 1px #e5e5e5;
+    text-align: center;
+    margin-top: px;
+    padding-bottom: 10px;
+    font-size: 16px;
+    color: #7e1415;
+    font-weight: bolder;
+    background: #eaeaea;       
+}
+
+.headDetalhesNota label{
+
+}
+
+.informacoes-detalhe-nota{
+    border:solid 1px #808080;
+    background:#fff;
+    padding-left:4px;
+    min-height: 20px;
+}
+
+.informacoes-detalhe-nota label{
+    padding-left: 4px;
+}
+
+.titulos-campos-detalhes-nota{
+    margin-left: 1px;
+}
+
+.titulos-campos-detalhes-nota label{
+    font-size: 16px;
+    color: #7e1416;
+    font-weight: bold;    
+}
+
+.titulos-dados-detalhes-nota{
+    padding-left: 4px;
+}
+
+/*FIM ESTILOS MODAL DETALHES DA NOTA*/
+
+
+/*ESTILOS CONSULTA POS/TERMINAL*/
+
+.status-ativo-pos-terminal{
+    background-color: #45B6AF;  
+    color: #fff; 
+    padding: 3px 6px 3px 6px;
+    text-align: center;
+    border-radius: .25em; 
+}
+
+.status-inativo-pos-terminal{
+    background-color: #F3565D;  
+    color: #fff;  
+    padding: 3px 6px 3px 6px;
+    text-align: center;
+    border-radius: .25em;
+}
+
+/*FIM ESTILOS CONSULTA POS/TERMINAL*/
+
+/*ESTILOS CADASTRO DE CÓDIGO DE AUTORIZAÇÃO*/
+
+.btn-salvar-form-cadastro-cod-auto{
+    margin-top: 20px;
+}
+
+.conteudos-form-cadastro-cod-auto{
+    margin-bottom: 20px;
+}
+
+.form-cadastro-cod-auto{
+    margin-top:40px ;
+    border: solid 2px #a6e1ec;
+    background:#eef7fb;
+    color: #31708f;
+    width: 330px;
+}
+.titulo-form-cadastro-cod-auto{
+    margin:20px 0 20px 0;
+    text-align: center;
+    border-bottom: solid 1px #a6e1ec; 
+}
+
+/*FIM ESTILOS CADASTRO DE CÓDIGO DE AUTORIZAÇÃO*/
+
+/*ESTILOS TELA AÇÕES USUÁRIOS*/
+
+.campos-modal-acoes-usuarios{
+    word-wrap: break-word;
+}
+/*FIM ESTILOS TELA AÇÕES USUÁRIOS*/
+
+/*ESTILOS DOS FILTROS*/
+
+.filtro{
+    min-height: 300px;
+}
+
+/*ESTILOS DOS FILTROS*/
+
+/*ESTILOS DA TELA PARÂMETROS BANCÁRIOS*/
+
+.btn-noticias{
+    margin-top: 70px;
+}
+
+.btn-noticias-2{
+    margin-top: 30px;
+}
+
+
+.select-noticias{
+    min-height: 200px;
+}
+
+.titulos-select-noticias{
+    text-align: center;
+}
+
+.titulos-select-noticias label{
+    text-align: center;
+    color: #7e1416;
+    font-size: 20px;
+    font-weight: bolder;
+}
+
+/*FIM ESTILOS DA TELA PARÂMETROS BANCÁRIOS*/
+
+/*ESTILOS TELA IMPORTAÇÃO XML*/
+.select-modal-importacao{
+margin-top: 20px;
+}
+
+.select-modal-importacao label{
+color: #7E1416;
+font-weight: bold;
+}
+
+.button-modal-importacao{
+margin-top: 20px;
+    text-align:right;
+}
+/* FIM ESTILOS TELA IMPORTAÇÃO XML*/

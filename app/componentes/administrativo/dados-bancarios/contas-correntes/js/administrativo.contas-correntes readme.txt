@@ -1,0 +1,121 @@
+# README #
+
+Módulo que:
+ - gerencia o layout da tela de contas correntes de Gestão de Empresas (app/componentes/administracao/gestao-empresas/contas-correntes/index.html);
+ - permite a visualização das contas associadas a um determinado grupo
+ 
+
+### Pra Que Serve Este Módulo? ###
+
+Gerenciar completamente a tela de contas correntes de Gestão de Empresas (Administrativo). 
+
+
+
+### O que é necessário para usar o módulo? ###
+
+Como esse é um controller filho do controller principal "appCtrl" (app.js), ele herda todos os módulos importados por ele.
+Além deles, é necessária a importação dos seguintes módulos externos.
+
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |                MODULO                  |                   DESCRIÇÃO                       |         IMPORT (no app/index.html)        |
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |                       
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+
+
+ 
+### Outras depêndencias ###
+
+  * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
+  * $scope.token do "appCtrl"
+  * Emite evento "acessouTela" no init do controller para que seja feito o log de acesso de tela
+  * Evento "acessoDeTelaNotificado", proveniente do "appCtrl", para de fato exibir a tela e fazer requisições 
+	=> importante para o log correto de requisições HTTP, ao qual identifica corretamente a (tela de) origem
+  * $scope.grupoempresa, do "appCtrl" : grupo empresa informado pelo usuário na barra administrativa
+  * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
+  * Faz referência direta ao controller de vigências de contas correntes da Gestão de Empresas (administrativo.contas-correntes-vigencias.js)
+  * Quando for para exibir as vigências, envia como parâmetro no $state.go o JSON associado às adquirentes-empresas do grupo e a conta
+  * APIS:
+    - card/tbcontacorrente
+	- card/tbloginadquirenteempresa
+	- util/bancos
+	
+ 
+ 
+ ### Interação com a WEB API ###
+ 
+  * util/bancos
+	- GET : listagem dos bancos (coleção 0)
+			[
+			  { Codigo : string,
+				NomeExtenso : string
+			  }
+			]
+	
+  * card/tbcontacorrente
+    - DELETE : exclui uma conta
+	        ?token=....&cdContaCorrente=id
+    - GET : listagem as contas correntes (coleção 2)
+			[
+			  { cdContaCorrente : int,
+				cdGrupo : int,
+				empresa : { nu_cnpj : string, 
+							ds_fantasia : string, 
+							filial : string ou null },
+				banco : { Codigo : string, 
+						  NomeExtenso : string},
+				nrAgencia : string,
+				nrConta : string,
+				flAtivo : boolean,
+				podeAtualizar : boolean // true se pode ser atualizada
+			  }
+			]	
+	- POST : adiciona uma nova conta corrente
+			[
+			  { cdGrupo : int,
+				nrCnpj : string,
+				cdBanco : string, 
+				nrAgencia : string,
+				nrConta : string
+			  }
+			]	
+	- PUT : altera uma conta corrente existente
+			[
+			  { cdContaCorrente : int,
+				nrCnpj : string,
+				cdBanco : string, 
+				nrAgencia : string,
+				nrConta : string,
+				flAtivo : boolean
+			  }
+			]			
+			// OBS: cdGrupo não é alterado
+	
+	
+   * card/tbloginadquirenteempresa
+     - GET : coleção com todas as adquirentes por filial do grupo (coleção 2)
+	     [ {
+			  cdLoginAdquirenteEmpresa: int,
+			  adquirente: {
+				cdAdquirente: int,
+				nmAdquirente: string,
+				dsAdquirente: string,
+				stAdquirente: int
+			  },
+			  grupo_empresa: {
+				id_grupo: int,
+				ds_nome: string
+			  },
+			  empresa: {
+				nu_cnpj: string,
+				ds_fantasia: string
+			  },
+			  stLoginAdquirenteEmpresa: int
+			}
+	    ]
+   
+
+   
+### Desenvolvedores ###
+
+Deivid Marinho - deividgfmarinho@gmail.com

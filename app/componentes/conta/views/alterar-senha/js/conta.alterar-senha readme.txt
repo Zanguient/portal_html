@@ -1,0 +1,45 @@
+# README #
+
+Módulo que:
+ - gerencia o layout da tela de alteração de senha (app/componentes/conta/views/alterar-senha/index.html);
+ 
+
+### Pra Que Serve Este Módulo? ###
+
+Gerenciar a tela de alteração de senha.
+
+
+
+### O que é necessário para usar o módulo? ###
+
+Como esse é um controller filho do controller principal "appCtrl" (app.js), ele herda todos os módulos importados por ele.
+Não é necessário nenhum outro módulo externo.
+
+ 
+### Outras depêndencias ###
+
+  * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
+  * $scope.token do "appCtrl"
+  * Emite evento "acessouTela" no init do controller para que seja feito o log de acesso de tela
+  * Evento "acessoDeTelaNotificado", proveniente do "appCtrl", para de fato exibir a tela e fazer requisições 
+ 	=> importante para o log correto de requisições HTTP, ao qual identifica corretamente a (tela de) origem
+  * APIS:
+    - administracao/webpagesmembership
+	
+ 
+ 
+ ### Interação com a WEB API ###
+ 
+  * api/administracao/webpagesmembership
+     - PUT  : altera a senha 
+	          { userId : -1,  // => indica que é o usuário logado
+			    senhaAtual: string,
+			    novaSenha : string } // password vazio => redefinir senha para a padrão
+ 
+   
+   
+
+   
+### Desenvolvedores ###
+
+Deivid Marinho - deividgfmarinho@gmail.com

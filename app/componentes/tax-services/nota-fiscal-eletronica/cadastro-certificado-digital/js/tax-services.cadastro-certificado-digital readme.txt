@@ -1,0 +1,65 @@
+# README #
+
+Módulo que:
+ - gerencia o layout da tela de cadastro de certificado digital (app/componentes/tax-services/nota-fiscal-eletronica/importacao-xml/index.html);
+
+ 
+ 
+### Pra Que Serve Este Módulo? ###
+
+Gerenciar completamente a tela de cadastro de certificado digital.  
+
+
+
+### O que é necessário para usar o módulo? ###
+
+Como esse é um controller filho do controller principal "appCtrl" (app.js), ele herda todos os módulos importados por ele.
+Não é necessário nenhum outro módulo externo.
+
+ 
+### Outras depêndencias ###
+
+  * Evento "mudancaDeRota", proveniente do "appCtrl", para de fato modificar a rota/estado
+  * $scope.token do "appCtrl"
+  * Emite evento "acessouTela" no init do controller para que seja feito o log de acesso de tela
+  * Evento "acessoDeTelaNotificado", proveniente do "appCtrl", para de fato exibir a tela e fazer requisições 
+	=> importante para o log correto de requisições HTTP, ao qual identifica corretamente a (tela de) origem
+  * $scope.grupoempresa, do "appCtrl" : grupo empresa informado pelo usuário na barra administrativa
+  * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
+  * APIS:
+    - admin/tbempresa
+	
+ 
+ 
+ ### Interação com a WEB API ###
+ 
+  * admin/tbempresa
+   - GET : obtém os registros (coleção 3)
+		{	nrCNPJBase : string,
+			certificadoDigitalPresente : bool,
+			senhaPresente : bool,
+			tbempresagrupo : { cdEmpresaGrupo = int,
+							   dsEmpresaGrupo = string },
+			dtCadastro : datetime ou null,
+			dtValidade : datetime ou null,
+			flSenhaValida : bool ou null,
+		}
+   - PATCH : altera o certificado digital e a senha. Envia como filtros nrCNPJBase e dsCertificadoDigitalSenha (códigos)
+			 Upload do arquivo PFX!
+			 Recebe como resposta o seguite JSON:
+			 {
+				cdMensagem : int,
+				dsMensagem : string,
+			 } 
+			 Ao qual cdMensagem:
+			  = 200 : Certificado Digital e Senha são válidos
+			  = 201 : Senha inválida
+			  = 202 : Certificado Digital é inválido
+   
+
+   
+   
+   
+### Desenvolvedores ###
+
+Deivid Marinho - deividgfmarinho@gmail.com

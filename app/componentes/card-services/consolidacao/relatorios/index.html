@@ -1,0 +1,782 @@
+<!-- 
+
+    Atos Capital - www.atoscapital.com.br
+   
+    suporte@atoscapital.com.br
+ 
+ 
+    Card Services > Consolidação > Relatórios
+
+
+    Versão 1.0.1 - 22/09/2015
+    - Exportar para CSV
+
+    Versão 1.0 - 03/09/2015
+-->
+
+<div class="container" ng-controller="card-services-consolidacao-relatoriosCtrl" ng-init="cardServices_consolidacao_relatoriosInit()">    
+    <!-- BEGIN PAGE BREADCRUMB -->
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href="javascript:;" ng-click="goHome()">Início</a><i class="fa fa-circle"></i>
+        </li>
+        <li class="active">
+             Card Services<i class="fa fa-caret-right"></i>
+             Consolidação<i class="fa fa-caret-right"></i>
+             Relatórios
+        </li>
+    </ul>
+    <!-- END PAGE BREADCRUMB -->
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN TABLE PORTLET-->
+            <div class="portlet light">
+				 
+                <div class="portlet-title">
+                    <div class="caption">								
+                        <span class="caption-subject font-green-sharp bold uppercase">Filtros</span>					
+                    </div>                    
+                </div>
+                <div class="portlet-body" ng-show="exibeTela">
+                    <!-- PORTLET BODY FILTRO INSIDE -->
+                    <div class="dataTables_wrapper dataTables_extended_wrapper no-footer">
+                        <div class="row">                       
+                            <div class="col-md-8 col-sm-12">
+                                <div class="dataTables_paginate paging_bootstrap_extended" id="datatable_ajax_paginate">
+                                </div>
+                                <div class="dataTables_info" id="datatable_ajax_info" role="status" aria-live="polite">
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                <div class="table-group-actions pull-right">
+                                    <span> </span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- TABELA FILTRO -->
+                        <div class="table-scrollable">
+                            <table class="table table-striped table-bordered table-hover dataTable no-footer" id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
+                                <thead>
+                                    <tr role="row" class="heading">
+                                        <th width="8%" tabindex="0" 
+                                            aria-controls="datatable_ajax" 
+                                            rowspan="1" colspan="1">
+                                             Data da Venda
+                                        </th>
+                                        <th width="12%" tabindex="1" 
+                                            aria-controls="datatable_ajax" 
+                                            rowspan="1" colspan="1">
+                                             Filial 
+                                        </th>
+                                        <th width="8%" tabindex="2" 
+                                            aria-controls="datatable_ajax" 
+                                            rowspan="1" colspan="1">
+                                             Adquirente
+                                        </th>
+                                        <th width="8%" tabindex="3" 
+                                            aria-controls="datatable_ajax" 
+                                            rowspan="1" colspan="1">
+                                             Bandeira
+                                        </th>
+                                        <th width="6%" tabindex="4" 
+                                            aria-controls="datatable_ajax" 
+                                            rowspan="1" colspan="1">
+                                             Terminal Lógico
+                                        </th>
+                                        <th width="1%" tabindex="5" 
+                                            aria-controls="datatable_ajax" 
+                                            rowspan="1" colspan="1">
+                                             Ações de filtro
+                                        </th>
+                                    </tr>
+                                    <!-- CONTEUDO DO FILTRO -->
+                                    <tr role="row" class="filter">
+                                        <!-- DATA -->
+                                        <td rowspan="1" colspan="1">                                    
+                                            <div class="input-group date date-picker margin-bottom-5"
+                                                 data-date-format="dd/mm/yyyy">
+                                                <input type="text" 
+                                                       class="form-control form-filter input-sm" 
+                                                       readonly="" 
+                                                       style="cursor: pointer" 
+                                                       ng-click="exibeCalendarioDataMin($event)" 
+                                                       placeholder="Início" 
+                                                       ng-model="filtro.datamin" 
+                                                       ng-change="alterouDataMin()" 
+                                                       datepicker-append-to-body="true" 
+                                                       datepicker-popup="dd MMMM yyyy" 
+                                                       is-open="abrirCalendarioDataMin" 
+                                                       ng-required="true" 
+                                                       show-button-bar="false" 
+                                                       show-weeks="false" 
+                                                       required="required">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-sm default" 
+                                                        type="button" 
+                                                        ng-click="exibeCalendarioDataMin($event)">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                            <div class="input-group"> <!--  date date-picker margin-bottom-5" -->
+                                                <input type="text" 
+                                                       class="form-control form-filter input-sm" 
+                                                       readonly="" 
+                                                       style="cursor: pointer" 
+                                                       ng-click="exibeCalendarioDataMax($event)" 
+                                                       placeholder="Fim" 
+                                                       ng-model="filtro.datamax" 
+                                                       ng-change="alterouDataMax()" 
+                                                       datepicker-popup="dd MMMM yyyy" 
+                                                       is-open="abrirCalendarioDataMax" 
+                                                       datepicker-append-to-body="true"
+                                                       ng-required="false" 
+                                                       current-text="Hoje" 
+                                                       clear-text="Limpar" 
+                                                       close-text="Fechar" 
+                                                       show-button-bar="true" 
+                                                       show-weeks="false">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-sm default" 
+                                                            type="button" 
+                                                            ng-click="exibeCalendarioDataMax($event)">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </button>
+                                                </span>
+                                            </div>                                            
+                                        </td>
+                                        <!-- FILIAIS -->
+                                        <td rowspan="1" colspan="1" style="text-align: center">
+                                            <select class="form-control form-filter input-sm comboBoxFiltros"
+                                                    ng-disabled="filiais.length == 0"
+                                                    ng-model="filtro.filial"
+                                                    ng-change="alterouFilial()"
+                                                    ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
+                                                <option value="">TODAS</option>
+                                            </select>
+                                            <i class="fa fa-question-circle"
+                                               ng-show="!usuariologado.grupoempresa"
+                                               popover-placement="bottom"
+                                               popover="É necessário selecionar uma empresa"
+                                               popover-trigger="mouseenter"></i>
+                                        </td>
+                                        <!-- ADQUIRENTES -->
+                                        <td rowspan="1" colspan="1" style="text-align: center">
+                                            <select class="form-control form-filter input-sm comboBoxFiltros"
+                                                    ng-disabled="!filtro.filial || filtro.filial === null"
+                                                    ng-model="filtro.adquirente"
+                                                    ng-change="alterouAdquirente()"
+                                                    ng-options="adquirente as (adquirente.nmOperadora | uppercase) for adquirente in adquirentes">
+                                                <option value="">TODAS</option>
+                                            </select>
+                                             <i class="fa fa-question-circle"
+                                                ng-show="!usuariologado.grupoempresa || !filtro.filial || filtro.filial === null"
+                                                popover-placement="bottom"
+                                                popover="É necessário selecionar uma filial"
+                                                popover-trigger="mouseenter"></i>
+                                        </td>
+                                        <!-- BANDEIRAS -->
+                                        <td rowspan="1" colspan="1" style="text-align: center">
+                                            <select class="form-control form-filter input-sm comboBoxFiltros"
+                                                    ng-disabled="filtro.adquirente === null"
+                                                    ng-model="filtro.bandeira"
+                                                    ng-change="alterouBandeira()"
+                                                    ng-options="bandeira as (bandeira.desBandeira | uppercase) for bandeira in bandeiras">
+                                                <option value="">TODAS</option>
+                                            </select>
+                                            <i class="fa fa-question-circle"
+                                               ng-show="usuariologado.grupoempresa && filtro.adquirente === null"
+                                               popover-placement="bottom"
+                                               popover="É necessário selecionar uma adquirente"
+                                               popover-trigger="mouseenter"></i>
+                                        </td>
+                                        <!-- TERMINAL LÓGICO -->
+                                        <td rowspan="1" colspan="1" style="text-align: center">
+                                            <select class="form-control form-filter input-sm comboBoxFiltros"
+                                                ng-hide="buscandoTerminaisLogicos"
+                                                ng-disabled="filtro.adquirente === null"
+                                                ng-model="filtro.terminallogico"
+                                                ng-change="alterouTerminalLogico()"
+                                                ng-options="terminal as terminal.dsTerminalLogico for terminal in terminais ">
+                                                <option value="">TODOS</option>
+                                            </select>
+                                            <i class="fa fa-question-circle"
+                                               ng-show="usuariologado.grupoempresa && filtro.adquirente === null"
+                                               popover-placement="bottom"
+                                               popover="É necessário selecionar uma adquirente"
+                                               popover-trigger="mouseenter"></i>
+                                        </td>
+                                        <!-- AÇÕES -->
+                                        <td rowspan="1" colspan="1" style="text-align:center">
+                                            <div class="margin-bottom-5">
+                                                <!-- BOTÃO BUSCAR -->
+                                                <button class="btn btn-sm red filter-submit margin-bottom" 
+                                                        ng-click="buscaRelatorio()">
+                                                    <i class="fa fa-search"></i> 
+                                                    Buscar
+                                                </button>
+                                            </div>
+                                            <!-- BOTÃO LIMPAR -->
+                                            <button class="btn btn-sm grey filter-cancel"
+                                                    ng-click="limpaFiltros()">
+                                                <i class="fa fa-times"></i> 
+                                                Limpar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <!-- END TABELA FILTRO -->
+                    </div>
+                    <!-- END PORTLET BODY FILTRO INSIDE -->
+                </div>  
+                <!-- END PORTLET BODY FILTRO -->
+            </div>
+            <!-- END TABLE PORTLET-->
+        </div>
+    </div>
+    
+    <!-- CONTEUDO -->
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN TABLE PORTLET-->
+            <div class="portlet light">                
+                
+                <!-- TOPO : Nome 'Informações' e botões de 'Opções' e FullScreen -->
+                <div class="portlet-title">
+                    <div class="caption">
+                        <!--i class="fa fa-cogs font-green-sharp"></i-->
+                        <span class="caption-subject font-green-sharp bold uppercase">Informações</span>
+                    </div>
+                    <div class="actions">
+                        <!-- FULLSCREEN -->
+                        <a class="btn btn-circle btn-icon-only btn-default fullscreen" 
+                           href="javascript:;" ng-click="fullScreenClick()"
+                           title="{{telaEstaEmFullScreen() ? 'Tela Normal' : 'Tela Cheia'}}"></a>
+                        <!-- EXPORTAR -->
+                        <div class="btn-group">
+                            <a class="btn btn-default btn-circle" 
+                               href="javascript:;" 
+                               data-toggle="dropdown">
+                                <i class="fa fa-download"></i> 
+                                Exportar 
+                                <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu pull-right"
+                                ng-hide="buscandoRelatorio">
+                                <li>
+                                    <a href="javascript:;"
+                                       ng-click="exportarCSV()">
+                                    CSV </a>
+                                </li>
+                                <li ng-hide="true">
+                                    <a href="javascript:;">
+                                    Excel </a>
+                                </li>
+                                <li ng-hide="true">
+                                    <a href="javascript:;">
+                                    XML </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>                
+                <div class="portlet-body" ng-show="exibeTela">                    
+                    <!-- TABELA -->
+                    <div class="dataTables_wrapper no-footer">
+                        <!-- EXIBIÇÃO E PESQUISA -->
+                        <div class="row">
+                            <!-- EXIBIÇÃO --> 
+                            <div class="col-xs-4 col-sm-4 col-md-4">
+                                <div class="dataTables_length">
+                                    <label>
+                                        <span class="seperator"></span>Exibindo 
+                                        <select name="datatable_products_length" aria-controls="datatable_products" 
+                                                class="form-control input-xsmall input-sm input-inline"
+                                                ng-model="filtro.itens_pagina"
+                                                ng-change="alterouItensPagina()"
+                                                ng-options="item for item in itens_pagina">                                            
+                                        </select> registros de 
+                                        <span ng-show="tabIs(0)">{{filtro.terminal.total_registros}}</span>
+                                        <span ng-show="tabIs(1)">{{filtro.sintetico.total_registros}}</span>
+                                        <span ng-show="tabIs(2)">{{filtro.analitico.total_registros}}</span>
+                                    </label>
+                                </div>
+                            </div>                                                      
+                            <!--PAGINAÇÃO-TOPO-->
+                            <div class="col-xs-4 col-sm-4 col-md-3">
+                                <div class="pagination-panel centralizarPaginacao"> Página 
+                                    <a href="javascript:;" ng-click="retrocedePagina()"
+                                       class="btn btn-sm default prev" 
+                                       ng-class="{disabled: (tabIs(0) && filtro.terminal.pagina <= 1) || (tabIs(1) && filtro.sintetico.pagina  <= 1) || (tabIs(2) && filtro.analitico.pagina <= 1)}" 
+                                       title="Página anterior">
+                                            <i class="fa fa-angle-left"></i>
+                                    </a>
+                                    <input type="text" 
+                                           class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                           maxlength="4" style="text-align:center; margin: 0 5px;"
+                                           ng-model="paginaInformada" valid-integer-number
+                                           ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                                           ng-blur="atualizaPaginaDigitada()">
+                                    <a href="javascript:;" ng-click="avancaPagina()"
+                                       class="btn btn-sm default next"
+                                       ng-class="{disabled: (tabIs(0) && filtro.terminal.pagina >= filtro.terminal.total_paginas) || (tabIs(1) && filtro.sintetico.pagina >= filtro.sintetico.total_paginas) || (tabIs(2) && filtro.analitico.pagina >= filtro.analitico.total_paginas)}"
+                                       title="Próxima página">
+                                        <i class="fa fa-angle-right"></i>
+                                    </a>
+                                     de 
+                                    <span class="pagination-panel-total" ng-show="tabIs(0)">
+                                        {{filtro.terminal.total_paginas}}
+                                    </span>
+                                    <span class="pagination-panel-total" ng-show="tabIs(1)">
+                                        {{filtro.sintetico.total_paginas}}
+                                    </span>
+                                    <span class="pagination-panel-total" ng-show="tabIs(2)">
+                                        {{filtro.analitico.total_paginas}}
+                                    </span>
+                                </div>
+                            </div>
+                            <!--PESQUISA-->
+                            <div class="col-xs-4 col-sm-4 col-md-5" ng-class="{'element-hidden':!tabIs(2)}">
+                                <div class="dataTables_filter"> 
+                                    <div class="col-md-5">
+                                        <div class="dataTables_length" 
+                                             id="datatable_ajax_length">
+                                            <label>
+                                                <span class="seperator"></span>Pesquisar
+                                                <select aria-controls="datatable_products" 
+                                                        class="form-control input-sm input-inline"
+                                                        ng-model="filtro.campo_busca"
+                                                        ng-options="campo as campo.nome for campo in camposBusca">
+                                                </select>
+                                            </label>                                         
+                                        </div>                                    
+                                    </div> 
+                                    <div class="col-md-7 input-group input-icon right">
+                                        <i class="fa fa-times" style="right:50px;cursor:pointer"
+                                           ng-click="resetaBusca()"
+                                           ng-show="filtro.busca"></i>
+                                        <input type="text" 
+                                           class="form-control input-inline" 
+                                           placeholder="Buscar" 
+                                           ng-model="filtro.busca"
+                                           ng-keyup="($event.keyCode == 13 || ($event.keyCode == 8 && !filtro.busca)) && buscaRelatorio()">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-search" style="cursor:pointer"
+                                               ng-click="buscaRelatorio()"></i>
+                                        </span>
+                                    </div>                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">                            
+                            <!--NAVEGAÇÃO-->  
+                            <div class="col-md-12">
+                            <!-- Begin: life time stats -->
+                                <div class="portlet light">
+                                    <!--REFERENCIAS DAS ABAS DE NAVEGAÇÃO-->
+                                    <div class="portlet-title tabbable-line">							
+                                        <ul class="nav nav-tabs">                                            
+                                            <li ng-class="{active : tabIs(0)}">
+                                                <a href="javascript:;" 
+                                                   data-toggle="tab-pane" 
+                                                   ng-click="setTab(0)">
+                                                Terminal Lógico </a>
+                                            </li>                                          
+                                            <li ng-class="{active : tabIs(1)}">
+                                                <a href="javascript:;" 
+                                                   data-toggle="tab"
+                                                   ng-click="setTab(1)">
+                                                Sintético </a>
+                                            </li>
+                                            <li ng-class="{active : tabIs(2)}">
+                                                <a href="javascript:;" 
+                                                   data-toggle="tab"
+                                                   ng-click="setTab(2)">
+                                                Analítico </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!--CONTEUDO DA NAVEGAÇÃO-->
+                                    <div class="portlet-body" ng-show="exibeTela">
+                                        <div class="tab-content">
+                                            <!--CONTEÚDO DO TERMINAL LÓGICO-->
+                                            <div class="tab-pane conteudoNavegacao"
+                                                 ng-class="{active : tabIs(0)}">
+                                                <!--TABELA TÉRMINAL LÓGICO-->
+                                                <div class="table-scrollable">
+                                                    <table class="table table-striped table-hover table-bordered dataTable no-footer conteudoTabelas" 
+                                                           role="grid">
+                                                        <thead>
+                                                            <tr role="row">
+                                                                <th tabindex="0"  
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 30%;">
+                                                                    Filial
+                                                                </th>
+                                                                <th tabindex="1"  
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 10%;">
+                                                                    Terminal
+                                                                </th>
+                                                                <th tabindex="2" 
+                                                                    rowspan="1" 
+                                                                    colspan="1" 
+                                                                    style="width: 20%;">
+                                                                    Bandeira
+                                                                </th>
+                                                                <th tabindex="3" 
+                                                                    rowspan="1" colspan="1"
+                                                                    style="width: 10%;">
+                                                                    Transações
+                                                                </th>
+                                                                <th tabindex="4" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 13%;">
+                                                                    Valor Bruto
+                                                                </th>
+                                                                <th tabindex="5" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 12%;">
+                                                                    Detalhar
+                                                                </th>                                        
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr role="row" class="odd"
+                                                                ng-repeat="relterminal in relatorio.terminal">
+                                                                <!-- FILIAL -->
+                                                                <td style="text-align:left"
+                                                                    ng-bind="getNomeAmigavelFilial(relterminal.empresa)">
+                                                                </td>
+                                                                <!-- TERMINAL -->
+                                                                <td>
+                                                                     {{relterminal.terminal.dsTerminalLogico}}
+                                                                </td>
+                                                                <!-- BANDEIRA -->
+                                                                <td style="text-align:left;">
+                                                                     {{relterminal.bandeira.desBandeira}}
+                                                                </td>
+                                                                <!-- TOTAL DE TRANSAÇÕES -->
+                                                                <td ng-init="total.terminal.totalTransacoes = total.terminal.totalTransacoes + relterminal.totalTransacoes">
+                                                                     {{relterminal.totalTransacoes}} 
+                                                                </td>
+                                                                <!-- VALOR BRUTO -->
+                                                                <td ng-init="total.terminal.valorBruto = total.terminal.valorBruto + relterminal.valorBruto">
+                                                                     {{relterminal.valorBruto | currency:'R$'}}
+                                                                </td>
+                                                                <!-- BOTÃO DETALHAR -->
+                                                                <td class="center btnacoes">
+                                                                    <div class="btn-group">
+                                                                        <a class="btn btn-default btn-circle" 
+                                                                           href="javascript:;" 
+                                                                           ng-click="detalhar(relterminal.empresa.nu_cnpj, relterminal.idOperadora, relterminal.bandeira, relterminal.terminal)">
+                                                                        
+                                                                            Detalhar <i class="fa fa-angle-right"></i>
+                                                                        </a>
+                                                                    </div>
+                                                                </td> 
+                                                            </tr>
+                                                            
+                                                            <tr role="row" class="odd linhaTotalRelatorios"
+                                                                style="font-weight : bolder">
+                                                                <td colspan="3" style="text-align:right;">
+                                                                    Total Exibido
+                                                                </td>
+                                                                <td>
+                                                                    {{total.terminal.totalTransacoes}}
+                                                                </td>
+                                                                <td>
+                                                                    {{total.terminal.valorBruto  | currency:'R$'}}
+                                                                </td>
+                                                                <td>
+                                                                </td>
+                                                            </tr>
+                                                            <tr role="row" class="odd linhaTotalRelatorios"
+                                                                style="font-weight : bolder">
+                                                                <td colspan="3" style="text-align:right;">
+                                                                    Total Filtrado
+                                                                </td>
+                                                                <td>
+                                                                     {{total.terminal.totalTransacoesFiltrado}}
+                                                                </td>
+                                                                <td>
+                                                                     {{total.terminal.valorBrutoFiltrado | currency:'R$'}}
+                                                                </td>
+                                                                <td>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                            
+                                                    </table>
+                                                </div>
+                                                    
+                                            </div>
+                                            <!--FIM CONTEÚDO DA NAVEGAÇÃO-->
+                                            
+                                            <!--CONTEÚDO DO RELATÓRIO SINTÉTICO-->
+                                            <div class="tab-pane conteudoNavegacao"
+                                                 ng-class="{active : tabIs(1)}">
+                                                <!--TABELA RELATÓRIO SINTÉTICO-->
+                                                <div class="table-scrollable">
+                                                    <table class="table table-striped table-hover 
+                                                                  table-bordered dataTable no-footer conteudoTabelas" r
+                                                           ole="grid">
+                                                        <thead>
+                                                            <tr role="row">
+                                                                <th tabindex="0" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 30%;">
+                                                                    Filial
+                                                                </th>
+                                                                <th tabindex="1" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 20%;">
+                                                                    Bandeira
+                                                                </th>
+                                                                <th tabindex="2" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 15%;">
+                                                                    Transações
+                                                                </th>
+                                                                <th tabindex="3" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 15%;">
+                                                                    Valor Bruto
+                                                                </th>
+                                                                <th tabindex="4" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 15%;">
+                                                                    Detalhar
+                                                                </th>                                        
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr role="row" class="odd"
+                                                                ng-repeat="relsintetico in relatorio.sintetico">
+                                                                <!-- FILIAL -->
+                                                                <td style="text-align:left"
+                                                                    ng-bind="getNomeAmigavelFilial(relsintetico.empresa)">
+                                                                </td>
+                                                                <!-- BANDEIRA -->
+                                                                <td style="text-align:left;">
+                                                                     {{relsintetico.bandeira.desBandeira}}
+                                                                </td>
+                                                                <!-- TOTAL DE TRANSAÇÕES -->
+                                                                <td ng-init="total.sintetico.totalTransacoes = total.sintetico.totalTransacoes + relsintetico.totalTransacoes">
+                                                                     {{relsintetico.totalTransacoes}} 
+                                                                </td>
+                                                                <!-- VALOR BRUTO -->
+                                                                <td ng-init="total.sintetico.valorBruto = total.sintetico.valorBruto + relsintetico.valorBruto">
+                                                                     {{relsintetico.valorBruto | currency:'R$'}}
+                                                                </td>
+                                                                <!-- BOTÃO DETALHAR -->
+                                                                <td class="center btnacoes">
+                                                                    <div class="btn-group">
+                                                                        <a class="btn btn-default btn-circle" 
+                                                                           href="javascript:;" 
+                                                                           ng-click="detalhar(relsintetico.empresa.nu_cnpj, relsintetico.idOperadora, relsintetico.bandeira)">
+                                                                        
+                                                                            Detalhar <i class="fa fa-angle-right"></i>
+                                                                        </a>
+                                                                    </div>
+                                                                </td> 
+                                                            </tr>
+                                                            <tr role="row" class="odd linhaTotalRelatorios" 
+                                                                style="font-weight:bolder">
+                                                                <td style="text-align:right;" colspan="2">
+                                                                     Total Exibido
+                                                                </td>
+                                                                <td>
+                                                                     {{total.sintetico.totalTransacoes}}
+                                                                </td>
+                                                                <td>
+                                                                     {{total.sintetico.valorBruto | currency:'R$'}}
+                                                                </td>
+                                                                <!-- BOTÃO DETALHAR -->
+                                                                <td>
+                                                                </td>
+                                                            </tr>
+                                                            <tr role="row" class="odd linhaTotalRelatorios" 
+                                                                style="font-weight:bolder">
+                                                                <td style="text-align:right;" colspan="2">
+                                                                     Total Filtrado
+                                                                </td>
+                                                                <td>
+                                                                     {{total.sintetico.totalTransacoesFiltrado}}
+                                                                </td>
+                                                                <td>
+                                                                     {{total.sintetico.valorBrutoFiltrado | currency:'R$'}}
+                                                                </td>
+                                                                <!-- BOTÃO DETALHAR -->
+                                                                <td>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <!--FIM CONTEÚDO DO RELATÓRIO SINTÉTICO-->
+                                            
+                                            <!--CONTEÚDO DO RELATÓRIO ANALÍTICO-->
+                                            <div class="tab-pane conteudoNavegacao"
+                                                 ng-class="{active : tabIs(2)}">
+                                                <div class="table-scrollable">
+                                                    <table class="table table-striped table-hover table-bordered dataTable no-footer conteudoTabelas" 
+                                                          role="grid">
+                                                        <thead class="centralizarVerticalTitulos">
+                                                            <tr role="row">
+                                                                <th tabindex="0" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 35%;">
+                                                                    Filial
+                                                                </th>
+                                                                <th tabindex="1" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 10%;">
+                                                                    Venda
+                                                                </th>
+                                                                <th tabindex="2" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 20%;">
+                                                                    Bandeira
+                                                                </th>
+                                                                <th tabindex="3" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 15%;">
+                                                                    Terminal<br> Lógico
+                                                                </th>
+                                                                <th tabindex="4" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 10%;">
+                                                                    NSU
+                                                                </th>
+                                                                <th tabindex="5" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 15%;">
+                                                                    Cod. Autorizador
+                                                                </th>
+                                                                <th tabindex="6" 
+                                                                    rowspan="1" colspan="1" 
+                                                                    style="width: 15%;">
+                                                                    Valor Bruto
+                                                                </th> 
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr role="row" class="odd"
+                                                                ng-repeat="relanalitico in relatorio.analitico">
+                                                                <!-- FILIAL -->
+                                                                <td style="text-align:left;">
+                                                                     {{relanalitico.dsFantasia | uppercase}}
+                                                                </td>
+                                                                <!-- DATA DA VENDA -->
+                                                                <td ng-bind="getDataTimeString(relanalitico.dtaVenda)">
+                                                                </td>
+                                                                <!-- BANDEIRA -->
+                                                                <td style="text-align:left;">
+                                                                     {{relanalitico.desBandeira}}
+                                                                </td>
+                                                                <!-- TERMINAL LÓGICO -->
+                                                                <td>
+                                                                     {{relanalitico.dsTerminalLogico}}
+                                                                </td>
+                                                                <!-- NSU -->
+                                                                <td>
+                                                                     {{relanalitico.nsu}}
+                                                                </td>
+                                                                <!-- COD. AUTORIZADOR -->
+                                                                <td>
+                                                                     {{relanalitico.cdAutorizador}} 
+                                                                </td>
+                                                                <!-- VALOR BRUTO -->
+                                                                <td ng-init="total.analitico.valorBruto = total.analitico.valorBruto + relanalitico.valorVendaBruta">
+                                                                     {{relanalitico.valorVendaBruta | currency:'R$'}}
+                                                                </td>
+                                                            </tr>
+                                                            <tr role="row" class="odd linhaTotalRelatorios">
+                                                                <td colspan="6" style="text-align:right;">
+                                                                     Total Exibido
+                                                                </td>                                                     
+                                                                <td>
+                                                                     {{total.analitico.valorBruto | currency:'R$'}}
+                                                                </td> 
+                                                            </tr>
+                                                            <tr role="row" class="odd linhaTotalRelatorios">
+                                                                <td colspan="6" style="text-align:right;">
+                                                                     Total Filtrado
+                                                                </td>                                                     
+                                                                <td>
+                                                                     {{total.analitico.valorBrutoFiltrado | currency:'R$'}}
+                                                                </td> 
+                                                            </tr>
+                                                        </tbody>    
+                                                    </table>
+                                                </div>
+                                            </div>
+                                             <!--FIM CONTEÚDO DO RELATÓRIO ANALÍTICO-->
+                                        </div>
+                                    </div>
+                                    <!--FIM CONTEUDO DA NAVEGAÇÃO-->
+                                </div>
+                            </div>
+                            <!--FIM NAVEGAÇÃO-->
+                        </div>    
+                        <!-- RODAPÉ : Exibição dos resultados e paginação -->
+                        <div class="row" style="margin: 10px 0 20px 0">
+                            <div class="col-xs-4 col-sm-4 col-md-4">
+                                <div class="dataTables_info" role="status" aria-live="polite">
+                                    <strong>Exibindo os registros 
+                                        <span ng-show="tabIs(0)">{{filtro.terminal.faixa_registros}}</span>
+                                        <span ng-show="tabIs(1)">{{filtro.sintetico.faixa_registros}}</span>
+                                        <span ng-show="tabIs(2)">{{filtro.analitico.faixa_registros}}</span>
+                                    </strong>
+                                </div> 
+                            </div>
+                            <!--PAGINAÇÃO-RODAPÉ-->
+                            <div class="col-xs-4 col-sm-4 col-md-3">
+                                <div class="pagination-panel centralizarPaginacao"> Página 
+                                    <a href="javascript:;" ng-click="retrocedePagina()"
+                                       class="btn btn-sm default prev" 
+                                       ng-class="{disabled: (tabIs(0) && filtro.terminal.pagina <= 1) || (tabIs(1) && filtro.sintetico.pagina  <= 1) || (tabIs(2) && filtro.analitico.pagina <= 1)}" 
+                                       title="Página anterior">
+                                            <i class="fa fa-angle-left"></i>
+                                    </a>
+                                    <input type="text" 
+                                           class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                           maxlength="4" style="text-align:center; margin: 0 5px;"
+                                           ng-model="paginaInformada" valid-integer-number
+                                           ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                                           ng-blur="atualizaPaginaDigitada()">
+                                    <a href="javascript:;" ng-click="avancaPagina()"
+                                       class="btn btn-sm default next"
+                                       ng-class="{disabled: (tabIs(0) && filtro.terminal.pagina >= filtro.terminal.total_paginas) || (tabIs(1) && filtro.sintetico.pagina >= filtro.sintetico.total_paginas) || (tabIs(2) && filtro.analitico.pagina >= filtro.analitico.total_paginas)}"
+                                       title="Próxima página">
+                                        <i class="fa fa-angle-right"></i>
+                                    </a>
+                                     de 
+                                    <span class="pagination-panel-total" ng-show="tabIs(0)">
+                                        {{filtro.terminal.total_paginas}}
+                                    </span>
+                                    <span class="pagination-panel-total" ng-show="tabIs(1)">
+                                        {{filtro.sintetico.total_paginas}}
+                                    </span>
+                                    <span class="pagination-panel-total" ng-show="tabIs(2)">
+                                        {{filtro.analitico.total_paginas}}
+                                    </span>    
+                                </div>
+                            </div>
+                            <!-- FIM PAGINAÇÃO -->
+                        </div>
+                        <!-- FIM RODAPÉ-->
+                    </div>
+					<!-- End: life time stats -->
+                </div>
+                <!-- FIM RODAPÉ -->    
+            </div>
+        </div>
+        <!-- FIM TABELA -->
+    </div>
+    <!-- END TABLE PORTLET-->    
+</div>
