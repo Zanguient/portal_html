@@ -82,6 +82,9 @@ Não é necessário nenhum outro módulo externo.
 														idLogCargaDetalhe : int,
 														qtTransacoes : int,
 														vlTotalProcessado : double,
+														qtTransacoesCS : int,
+														vlTotalProcessadoCS : double,
+														txAuditoria : string
 													}]
 									}],
 								ultimaDataExecucaoFim : datetime ou null,
@@ -121,6 +124,9 @@ Não é necessário nenhum outro módulo externo.
 																		idLogCargaDetalhe : int,
 																		qtTransacoes : int,
 																		vlTotalProcessado : double,
+																		qtTransacoesCS : int,
+																		vlTotalProcessadoCS : double,
+																		txAuditoria : string
 																	}],
 														}],
 												ultimaDataExecucaoFim : datetime ou null,

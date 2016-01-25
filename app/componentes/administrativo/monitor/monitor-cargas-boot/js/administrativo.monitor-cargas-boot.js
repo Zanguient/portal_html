@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.2 - 26/01/2016
+ *  - Auditoria
+ *
  *  Versão 1.0.1 - 13/01/2016
  *  - Modalidade "ARQUIVOS"
  *
@@ -149,6 +152,8 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
                 if(typeof filtro.cdAdquirente === 'number') filtroMonitorCargas.cdAdquirente = filtro.cdAdquirente;
                 else filtroMonitorCargas.cdAdquirente = 0;
             }
+            //console.log(filtro);
+            //console.log(filtroMonitorCargas);
             // Invoca o método do lado do servidor
             hub.obtemListaBoot(filtroMonitorCargas).fail(function(error) {
                 $rootScope.$broadcast("notifyMonitorFalha", error); 
@@ -201,7 +206,12 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
                       itens_pagina : $scope.itens_pagina[0], pagina : 1,
                       total_registros : 0, faixa_registros : '0-0', total_paginas : 0, 
                       campo_ordenacao : {id: 103,//$campos.administracao.logacesso.dtAcesso, 
-                                         order : 1}};                                               
+                                         order : 1}}; 
+    $scope.modalAuditoria = { modalidade: '', 
+                              empresa : '',
+                              adquirente : '',
+                              dtCompetencia : '',
+                              detalhe : null}                                            
     // flags
     $scope.abrirCalendarioData = false;                                             
     $scope.exibeTela = false;  
@@ -337,7 +347,7 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
             filtro.nuCnpj = $scope.filtro.filial.nu_cnpj;
         // Adquirente
         if($scope.filtro.adquirente && $scope.filtro.adquirente !== null) 
-            filtro.cdAdquirente = $scope.filtro.adquirente.id;
+            filtro.cdAdquirente = $scope.filtro.adquirente.cdAdquirente;
         
         return filtro;
     }
@@ -700,6 +710,30 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
     $scope.teveProcessamento = function(detalhe){
         if(detalhe && typeof detalhe.flSucesso !== 'undefined') return true;       
         return false;
+    }
+    
+    
+    
+    
+    // AUDITORIA
+    var fechaModalDataRecebimento = function(){
+        $('#modalAuditoria').modal('hide');    
+    }
+    var exibeModalDataRecebimento = function(){
+        $('#modalAuditoria').modal('show');    
+    }
+    
+    $scope.exibeModalAuditoria = function(empresa, tbAdquirente, modalidade, tbLogCarga){
+        if(!tbLogCarga || tbLogCarga === null) return;
+        $scope.modalAuditoria.detalhe = tbLogCarga[modalidade];
+        $scope.modalAuditoria.adquirente = tbAdquirente.nmAdquirente;
+        $scope.modalAuditoria.empresa = $scope.getNomeAmigavelFilial(empresa);
+        $scope.modalAuditoria.modalidade = modalidade;
+        $scope.modalAuditoria.dtCompetencia = tbLogCarga.dtCompetencia;
+        
+        //console.log(tbLogCarga[modalidade].txAuditoria);
+        
+        exibeModalDataRecebimento();
     }
                                                 
                                                 
