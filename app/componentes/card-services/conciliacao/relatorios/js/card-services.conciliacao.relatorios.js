@@ -1,3 +1,5 @@
+
+
 /*
  *  Atos Capital - www.atoscapital.com.br
  *  
@@ -253,8 +255,10 @@ angular.module("card-services-conciliacao-relatorios", [])
 		
 		//IMPRESSÃO
 		$scope.imprimir = function(){
-			$window.open('views/print#?t='+$scope.token, '_blank');
+			if($scope.filtro.filial && $scope.filtro.filial !== null){  
+				$window.open('views/print#?s=' + "relatorioConciliacao" + '&c='+ $scope.filtro.filial.nu_cnpj +
+										 '&d='+$scope.getFiltroData($scope.filtro.data, true), '_blank');
+			}			
 		}
-    
-        
+            
 }]);
