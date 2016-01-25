@@ -1,0 +1,780 @@
+<!-- 
+
+    Atos Capital - www.atoscapital.com.br
+   
+    suporte@atoscapital.com.br
+ 
+ 
+    Card Services > Conciliação > Conciliação de Títulos
+
+
+    Versão 1.0.4 - 27/11/2015
+    - Considerar pré-conciliação com outras filiais do grupo
+ 
+    Versão 1.0.3 - 26/11/2015
+    - Conciliar TEF-NSU
+
+    Versão 1.0.2 - 13/11/2015
+    - Busca título em outra filial
+
+    Versão 1.0.1 - 11/11/2015
+    - DataVenda, Bandeira e Valor exibidos de cada cupom separadamente
+    - Busca títulos
+
+    Versão 1.0 - 09/11/2015
+-->
+
+<div class="container" ng-controller="card-services-conciliacao-titulosCtrl" 
+     ng-init="cardServices_conciliacaoTitulosInit()">    
+    <!-- BEGIN PAGE BREADCRUMB -->
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href="javascript:;" ng-click="goHome()">Início</a><i class="fa fa-circle"></i>
+        </li>
+        <li class="active">
+             Card Services<i class="fa fa-caret-right"></i>
+             Conciliação<i class="fa fa-caret-right"></i>
+             Conciliação de Títulos
+        </li>
+    </ul>
+    <!-- END PAGE BREADCRUMB -->
+    <div class="portlet light" print-remove> 
+        <div class="portlet-title">
+            <div class="caption">								
+                <span class="caption-subject font-green-sharp bold uppercase">Filtros</span>						
+            </div>
+            <div class="actions">
+
+
+            </div>
+        </div>
+        <div class="portlet-body" ng-show="exibeTela">
+            <div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">
+                <div class="row">                       
+                    <div class="col-md-8 col-sm-12">
+                        <div class="dataTables_paginate paging_bootstrap_extended" id="datatable_ajax_paginate">
+                        </div>
+                        <div class="dataTables_info" id="datatable_ajax_info" role="status" aria-live="polite">
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                        <div class="table-group-actions pull-right">
+                            <span> </span>
+                        </div>
+                    </div>
+                </div>
+                <!--div class="table-scrollable"-->
+                <div class="table-scrollable">
+                    <table class="table table-striped table-bordered table-hover dataTable no-footer conteudoTabelas" 
+                           id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
+                        <thead>
+                            <tr role="row" class="heading">
+                                <th tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="20%">
+                                     Data
+                                </th>
+                                <th tabindex="1" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="30%">
+                                     Filial 
+                                </th>
+                                <th tabindex="2" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="20%">
+                                     Adquirente 
+                                </th>
+                                <th tabindex="3" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="20%">
+                                     Tipo
+                                </th>
+                                <th tabindex="4" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="10%">
+                                     Ações
+                                </th>                                
+                            </tr>
+                            <tr role="row" class="filter"> 
+                                <!-- DATA -->
+                                <td rowspan="1" colspan="1">                                    
+                                    <div class="input-group date date-picker margin-bottom-5"
+                                         data-date-format="dd/mm/yyyy">
+                                        <input type="text" 
+                                               class="form-control form-filter input-sm" 
+                                               readonly="" 
+                                               style="cursor: pointer" 
+                                               ng-click="exibeCalendarioDataMin($event)" 
+                                               placeholder="Início" 
+                                               ng-model="filtro.datamin" 
+                                               ng-change="alterouDataMin()" 
+                                               datepicker-append-to-body="true" 
+                                               datepicker-popup="dd MMMM yyyy" 
+                                               is-open="abrirCalendarioDataMin" 
+                                               ng-required="true" 
+                                               show-button-bar="false" 
+                                               show-weeks="false" 
+                                               required="required">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-sm default" 
+                                                type="button"
+                                                ng-click="exibeCalendarioDataMin($event)">
+                                                <i class="fa fa-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                    <div class="input-group"> <!--  date date-picker margin-bottom-5" -->
+                                        <input type="text" 
+                                               class="form-control form-filter input-sm" 
+                                               readonly="" 
+                                               style="cursor: pointer" 
+                                               ng-click="exibeCalendarioDataMax($event)" 
+                                               placeholder="Fim" 
+                                               ng-model="filtro.datamax" 
+                                               ng-change="alterouDataMax()" 
+                                               datepicker-popup="dd MMMM yyyy" 
+                                               is-open="abrirCalendarioDataMax" 
+                                               datepicker-append-to-body="true"
+                                               ng-required="false" 
+                                               current-text="Hoje" 
+                                               clear-text="Limpar" 
+                                               close-text="Fechar" 
+                                               show-button-bar="true" 
+                                               show-weeks="false">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-sm default" 
+                                                    type="button"
+                                                    ng-click="exibeCalendarioDataMax($event)">
+                                                <i class="fa fa-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </div>                                                      
+                                </td>
+                                <!-- FILIAL -->
+                                <td rowspan="1" colspan="1">
+                                    <select class="form-control form-filter input-sm comboBoxFiltros"
+                                            ng-disabled="filiais.length == 0"
+                                            ng-model="filtro.filial"
+                                            ng-change="alterouFilial()"
+                                            ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
+                                        <option value="">TODAS</option>
+                                    </select>
+                                    <i class="fa fa-question-circle"
+                                        ng-show="!usuariologado.grupoempresa"
+                                        popover-placement="bottom"
+                                        popover="É necessário selecionar uma empresa"
+                                        popover-trigger="mouseenter"></i> 
+                                </td>
+                                <!-- ADQUIRENTE -->
+                                <td rowspan="1" colspan="1">
+                                    <select class="form-control form-filter input-sm comboBoxFiltros"
+                                            ng-disabled="adquirentes.length === 0"
+                                            ng-model="filtro.adquirente"
+                                            ng-change="alterouAdquirente()"
+                                            ng-options="adquirente as (adquirente.nmAdquirente | uppercase) for adquirente in adquirentes">
+                                        <option ng-show="filtro.conta && filtro.conta !== null" value="">TODAS</option>
+                                    </select>
+                                </td>
+                                <!-- TIPO -->
+                                <td rowspan="1" colspan="1">
+                                    <div class="row">
+                                        <select style="width: 80%;"
+                                                aria-controls="datatable_products"
+                                                class="form-control input-sm input-inline"
+                                                ng-model="filtro.tipo"
+                                                ng-change="alterouTipo()"
+                                                ng-options="tipo as (tipo.nome | uppercase) for tipo in tipos">
+                                            <option value="">TODOS</option>
+                                        </select>
+                                    </div>
+                                    <div class="row" style="margin-top:10px;"
+                                         ng-class="{'element-hidden' : !isTipoPreConciliado()}">
+                                        <div class="col-sm-4 col-md-4" style="margin-right: -15px;">
+                                            <checkbox normal ng-model="filtro.considerarGrupo"></checkbox>
+                                        </div>
+                                        <div class="col-sm-8 col-md-8" style="text-align:left;">
+                                            <label>Pré-conciliar com outras filiais</label>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td rowspan="1" colspan="1">
+                                    <div class="margin-bottom-5">
+                                        <button class="btn btn-sm red filter-submit margin-bottom"
+                                                ng-click="buscaDadosConciliacao()">
+                                            <i class="fa fa-search"></i> 
+                                            Buscar
+                                        </button>
+                                    </div>
+                                    <button class="btn btn-sm grey filter-cancel"
+                                            ng-click="limpaFiltros()">
+                                        <i class="fa fa-times"></i> 
+                                        Limpar
+                                    </button>
+                                </td>
+                            </tr>                       
+                        </thead>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-8 col-sm-12">
+                        <div class="dataTables_paginate paging_bootstrap_extended">
+                        </div>
+                        <div class="dataTables_info">
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- DADOS DA CONCILIAÇÃO -->
+    <div class="portlet light">
+        
+        <!-- MODAL TÍTULOS -->
+       <div class="modal fade bs-modal-sm modal-input" 
+            id="modalTitulos" aria-hidden="true">
+           <div class="modal-dialog modal-sm" style="width:1000px">
+               <div class="modal-content">
+                   <div class="modal-header">
+                       <h4 class="modal-title modal-cabecalho">Busca títulos</h4>
+                   </div>
+                   <div class="modal-body modal-corpo modalAcessoDeUsuarios" style="text-align: center">
+                       <!-- DADOS DA PARCELA -->
+                       <div class="row">
+                           <div class="col-sm-1">
+                               <label>Parcela</label>
+                           </div>
+                           <div class="col-sm-1">
+                               <label>Valor</label>
+                           </div>
+                           <div class="col-sm-2">
+                               <label>Recebimento</label>
+                           </div>
+                           <div class="col-sm-4">
+                               <label>Bandeira</label>
+                           </div>
+                           <div class="col-sm-2">
+                               <label>NSU</label>
+                           </div>
+                           <div class="col-sm-2">
+                               <label>Venda</label>
+                           </div>
+                       </div>
+                       <div class="row">
+                           <div class="col-sm-1">
+                               <span ng-bind="modalBuscaTitulos.recebimento.NumParcela === 0 ? '1' : modalBuscaTitulos.recebimento.NumParcela"></span>
+                           </div>
+                           <div class="col-sm-1">
+                               {{modalBuscaTitulos.recebimento.Valor | currency:'R$'}}
+                           </div>
+                           <div class="col-sm-2">
+                               <span ng-bind="getDataString(modalBuscaTitulos.recebimento.Data)"></span>
+                           </div>
+                           <div class="col-sm-4">
+                               {{modalBuscaTitulos.recebimento.Bandeira | uppercase}}
+                           </div>
+                           <div class="col-sm-2">
+                               {{modalBuscaTitulos.recebimento.Nsu}}
+                           </div>
+                           <div class="col-sm-2">
+                               <span ng-bind="getDataString(modalBuscaTitulos.recebimento.DataVenda)"></span>
+                           </div>
+                       </div>
+                       
+                       <!-- FILIAL DE CONSULTA -->
+                       <div class="row" style="margin-top: 50px">
+                           <div class="col-sm-2"></div>
+                           <div class="col-sm-8"> 
+                               <label style="margin-right: 20px">Filial</label>
+                               <select class="form-control form-filter input-sm comboBoxFiltros"
+                                       style="width: 60%"
+                                       ng-model="modalBuscaTitulos.filial"
+                                       ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
+                                    <option value="" style="display: none"></option>
+                               </select>
+                               <span style="margin-left: 20px" title="Buscar título">
+                                    <a href="javascript:;" class="btn btn-icon-only default"
+                                       ng-click="buscaTitulosFilial(modalBuscaTitulos.filial.nu_cnpj)"
+                                       ng-disabled="!usuarioPodeAlterarDadosConciliacaoTitulos()">
+                                        <i class="fa fa-search"></i>
+                                    </a>
+                               </span>
+                           </div>
+                           <div class="col-sm-2"></div>
+                       </div>
+                       
+                       <!-- TABELA -->
+                       <div style="margin-top: 50px">
+                           <table class="table table-striped table-hover table-bordered dataTable no-footer conteudoTabelas"
+                                  role="grid">
+                                <thead>
+                                    <tr role="row">
+                                        <th tabindex="0" rowspan="1" colspan="1"                                      
+                                            style="width: 10%; text-align:left">
+                                            Parcela
+                                        </th>
+                                        <th tabindex="1" rowspan="1" colspan="1"                                          
+                                            style="width: 10%;">
+                                            Valor
+                                        </th>
+                                        <th tabindex="2" rowspan="1" colspan="1"                                          
+                                            style="width: 10%;">
+                                             Recebimento
+                                        </th>                                    
+                                        <th tabindex="3" rowspan="1" colspan="1"                                         
+                                            style="width: 40%;">
+                                             Bandeira
+                                        </th>
+                                        <th tabindex="4" rowspan="1" colspan="1"                                          
+                                            style="width: 10%;">
+                                             NSU
+                                        </th>
+                                        <th tabindex="5" rowspan="1" colspan="1"                                          
+                                            style="width: 10%;">
+                                             Venda
+                                        </th>
+                                        <th tabindex="6" rowspan="1" colspan="1"                                        
+                                            style="width: 10%;">
+                                             Ações
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="centralizarVertical">
+                                    <tr role="row" class="odd" 
+                                        ng-repeat="titulo in modalBuscaTitulos.titulos">
+                                        <td ng-bind="titulo.NumParcela === 0 ? '1' : titulo.NumParcela"
+                                            style="text-align:center">
+                                        </td>
+                                        <td style="text-align:center">
+                                              {{titulo.Valor | currency:'R$'}}
+                                        </td>
+                                        <td style="text-align:center"
+                                            ng-bind="getDataString(titulo.Data)">
+                                        </td>                                    
+                                        <td style="text-align:center">
+                                            {{titulo.Bandeira | uppercase}}
+                                        </td>
+                                        <td style="text-align:center">
+                                           {{titulo.Nsu}}
+                                        </td>
+                                        <td ng-bind="getDataString(titulo.DataVenda)"
+                                            style="text-align:center">
+                                        </td>
+                                        <td style="text-align:center">
+                                           <button class="btn-group" ng-click="conciliarTitulo(titulo)">
+                                                Conciliar
+                                            </button>
+                                        </td>
+                                    </tr> 
+                                    <tr role="row" 
+                                        ng-show="!modalBuscaTitulos.buscandotitulos && modalBuscaTitulos.titulos.length === 0">
+                                        <td colspan="7" class="linhaTotalRelatorios">
+                                            Nenhum título encontrado
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                       </div>
+                   </div>
+                   <div class="modal-footer">
+                       <!--div class="col-sm-4">
+                           <button type="button" class="btn default" print-btn>
+                               Imprimir
+                           </button>
+                       </div-->
+                       <div class="col-sm-6">
+                           <button type="button" class="btn default" data-dismiss="modal">
+                               Fechar
+                           </button>
+                       </div>                           
+                   </div>
+               </div>
+           </div>
+       </div>
+       <!-- FIM - MODAL TÍTULOS -->
+        
+        <div class="portlet-title">
+            <div class="caption">								
+                <span class="caption-subject font-green-sharp bold uppercase">Conciliação de Títulos</span>
+            </div>
+            <div class="actions" print-remove>
+                <a class="btn btn-circle btn-icon-only btn-default fullscreen" 
+                   href="javascript:;" 
+                   ng-click="fullScreenClick()"
+                   title="{{telaEstaEmFullScreen() ? 'Tela Normal' : 'Tela Cheia'}}"></a>
+                <div class="btn-group">
+                    <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
+                    <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu pull-right">
+                        <li>
+                            <a href="javascript:;"
+                               ng-click="print()">
+                            Imprimir</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="portlet-body" print-section print-landscape ng-show="exibeTela"> 
+            <div class="row">
+                <!--EXIBIÇÃO-->
+                <div class="col-xs-4 col-sm-4 col-md-4">
+                    <div class="dataTables_length">
+                        <label>
+                            <span class="seperator"></span>Exibindo 
+                            <select name="datatable_products_length" aria-controls="datatable_products" 
+                                    class="form-control input-xsmall input-sm input-inline"
+                                    ng-model="filtro.itens_pagina"
+                                    ng-change="alterouItensPagina()" print-remove
+                                    ng-options="item for item in itens_pagina">                                            
+                            </select>
+                            <span print-only>
+                                {{filtro.itens_pagina}}
+                            </span> registros de {{filtro.total_registros}}
+                        </label>
+                    </div>   
+                </div>
+                <!--PAGINAÇÃO-->
+                <div class="col-xs-4 col-sm-4 col-md-3">
+                    <div class="pagination-panel centralizarPaginacao"> Página 
+                        <a href="javascript:;" ng-click="retrocedePagina()"
+                           class="btn btn-sm default prev" 
+                           ng-class="{disabled: filtro.pagina <= 1}" 
+                           title="Página anterior" print-remove>
+                                <i class="fa fa-angle-left"></i>
+                        </a>
+                        <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                               maxlength="4" style="text-align:center; margin: 0 5px;"
+                               ng-model="paginaInformada" valid-integer-number
+                               ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                               ng-blur="atualizaPaginaDigitada()" print-remove>
+                        <span print-only>
+                                {{paginaInformada}}
+                            </span> 
+                        <a href="javascript:;" ng-click="avancaPagina()"
+                           class="btn btn-sm default next"
+                           ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
+                           title="Próxima página" print-remove>
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                            de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
+                    </div>
+                </div>  
+                <div class="col-xs-4 col-sm-4 col-md-4" print-remove>
+                    <button class="btn btn-warning" 
+                       ng-disabled="!temElementosPreConciliados() || associacaoManual.selecionandoRecebimentos"
+                       ng-click="conciliaPreConciliados()">
+                       Conciliar Pré-Conciliados
+                    </button>
+                    <button class="btn btn-danger" style="padding-left: 10px" 
+                       ng-disabled="!filtro.filial || filtro.filial === null || associacaoManual.selecionandoRecebimentos"
+                       ng-click="conciliaTefNsu()">
+                       Conciliar TEF-NSU
+                    </button>
+                </div>  
+            </div>
+         
+        
+            <div class="table-container" style="margin-bottom:50px">
+                
+                <!--CUPONS-->
+                <div class="row" ng-repeat="dado in dadosconciliacao">
+                    <!--1º CUPOM (CARGA)-->
+                    <div class="col-md-5 col-sm-5" print-avoid-break
+                         ng-class="{'element-hidden' : dado.RecebimentoParcela === null}">
+                        <div class="row">
+                            <div class="col-md-8 col-md-offset-4 col-sm-12"
+                                 ng-class="{'cupomConciliacaoTitulos cupomAzulConciliacaoBancaria' : dado.RecebimentoParcela !== null && dado.Conciliado === 1, 'cupomConciliacaoTitulos cupomVermelhoConciliacaoBancaria' : dado.RecebimentoParcela !== null && dado.Conciliado === 3, 'cupomConciliacaoTitulos cupomLaranjaConciliacaoBancaria' : dado.RecebimentoParcela !== null && dado.Conciliado === 2}">
+                                <!--HEAD-->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <!--TITULO DO CUPON -->
+                                        <div class="row tituloCumponsConciliacaoBancaria">
+                                            <!--TIPO DO CUPON-->
+                                            <div class="col-md-12 conteudoCuponsConciliacaobancaria"
+                                                 ng-bind="dado.RecebimentoParcela !== null ? 'Previsão de Crédito - Adquirente' : ''">
+                                            </div>
+                                        </div>
+                                        <!--SUBTITULO DO CUPON -->
+                                        <div class="row tituloCumponsConciliacaoBancariaICard">
+                                            <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria"
+                                                 ng-bind="dado.RecebimentoParcela !== null ? dado.RecebimentoParcela.Filial : ''"> 
+                                            </div>
+                                        </div>                                 
+                                    </div>
+                                </div>
+                                <!--BODY-->                   
+                                <!--DIVISÓRIA DOS TIPOS DE CUPONS-->
+                                <div class="row">   
+                                    <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria"
+                                         ng-bind="dado.RecebimentoParcela !== null ? '=============================' : ''">
+                                    </div>
+                                </div>
+                                <!--DATA-->
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6">
+                                        <label ng-bind="dado.RecebimentoParcela !== null ? 'Data:' : ''"></label>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados"
+                                         ng-bind="dado.RecebimentoParcela !== null ? getDataString(dado.RecebimentoParcela.Data) : ''">
+                                    </div>
+                                </div>
+                                <!--ADQUIRENTE -->
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6">
+                                        <label ng-bind="dado.RecebimentoParcela !== null ? 'Adquirente:' : ''"></label>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados"
+                                         ng-bind="dado.RecebimentoParcela !== null ? dado.Adquirente : ''">
+                                    </div>                      
+                                </div> 
+                                <!--BANDEIRA -->
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4">
+                                        <label ng-bind="dado.RecebimentoParcela !== null ? 'Bandeira:' : ''"></label>
+                                    </div>
+                                    <div class="col-md-8 col-sm-8 alinhamentoDados"
+                                         ng-bind="dado.RecebimentoParcela !== null ? dado.RecebimentoParcela.Bandeira : ''">
+                                    </div>                      
+                                </div> 
+                                <!--VALOR-->
+                                <div class="row">
+                                    <!--VALOR-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label ng-bind="dado.RecebimentoParcela !== null ? 'Valor:' : ''"></label>
+                                    </div>
+                                    <!--RESULTADO DO VALOR-->
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                        <label ng-show="dado.RecebimentoParcela !== null">
+                                            {{dado.RecebimentoParcela.Valor | currency:'R$'}}
+                                        </label>
+                                    </div>                                              
+                                </div> 
+                                <!--DATA DA VENDA-->
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6">
+                                        <label ng-bind="dado.RecebimentoParcela !== null ? 'Venda:' : ''"></label>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados"
+                                         ng-bind="dado.RecebimentoParcela !== null ? getDataString(dado.RecebimentoParcela.DataVenda) : ''">
+                                    </div>
+                                </div>
+                                <!--NUM PARCELA-->
+                                <div class="row" 
+                                     ng-init="incrementaContRecebimentosParcelas(dado.RecebimentoParcela)">
+                                    <!--Parcela-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label ng-bind="dado.RecebimentoParcela !== null ? 'Parcela:' : ''"></label>
+                                    </div>
+                                    <!--PARCELA-->
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                        <label ng-bind="dado.RecebimentoParcela !== null ? dado.RecebimentoParcela.NumParcela === 0 ? '1' : dado.RecebimentoParcela.NumParcela : ''">
+                                        </label>
+                                    </div>                                              
+                                </div> 
+                                <!--NSU-->
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4">
+                                        <label ng-bind="dado.RecebimentoParcela !== null ? 'NSU:' : ''"></label>
+                                    </div>
+                                    <div class="col-md-8 col-sm-8 alinhamentoDados">
+                                        <label>{{dado.RecebimentoParcela.Nsu || ''}}</label>
+                                    </div>                                              
+                                </div>
+                                <!--RESUMO VENDAS-->
+                                <div class="row" ng-show="dado.RecebimentoParcela !== null && dado.RecebimentoParcela.CodResumoVendas && dado.RecebimentoParcela.CodResumoVendas !== null">
+                                    <!--RESUMO-->
+                                    <div class="col-md-4 col-sm-4">
+                                        <label ng-bind="dado.RecebimentoParcela !== null ? 'Resumo:' : ''"></label>
+                                    </div>
+                                    <div class="col-md-8 col-sm-8 alinhamentoDados">
+                                        <label>{{dado.RecebimentoParcela.CodResumoVendas || ''}}</label>
+                                    </div>                                              
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!--BOTÕES-->
+                    <div class="col-md-2 col-sm-2 btnConciliacaoBancaria" print-hide>
+                        <div class="row" ng-init="incrementaTotalPreConciliados(dado.Conciliado === 2)"
+                             ng-class="{'element-hidden' : dado.Conciliado === 3 && dado.RecebimentoParcela === null}">
+                            <div class="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-4"
+                                 title="{{dado.Conciliado === 1 ? 'Desfazer conciliação' : dado.Conciliado === 2 && !associacaoManual.selecionandoRecebimentos ? 'Conciliar' : dado.Conciliado === 3 && dado.Titulo === null ? 'Buscar título' : ''}}">
+                                <a href="javascript:;" class="btn btn-icon-only default"
+                                   ng-click="dado.Conciliado === 1 ? desconcilia(dado) : dado.Conciliado === 2 ? concilia(dado) : dado.Conciliado === 3 && dado.Titulo === null  ? buscaTitulos(dado) : 0"
+                                   ng-disabled="!usuarioPodeAlterarDadosConciliacaoTitulos()">
+                                    <i class="fa"
+                                       ng-class="{'fa-undo': dado.Conciliado === 1, 'fa-arrow-right': dado.Conciliado === 2, 'fa-search' : dado.Conciliado === 3 && dado.Titulo === null}"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!--2º CUPOM(COMPROVANTE CRÉDITO)-->
+                    <div class="col-md-5 col-sm-5" print-avoid-break
+                         ng-class="{'element-hidden' : dado.Titulo === null}">
+                        <div class="row">
+                            <div class="col-md-8 col-sm-12"
+                                 ng-class="{'cupomConciliacaoTitulos cupomAzulConciliacaoBancaria' : dado.Titulo !== null && dado.Conciliado === 1, 'cupomConciliacaoTitulos cupomVermelhoConciliacaoBancaria' : dado.Titulo !== null && dado.Conciliado === 3, 'cupomConciliacaoTitulos cupomLaranjaConciliacaoBancaria' : dado.Titulo !== null && dado.Conciliado === 2}">
+                                <!--HEAD-->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <!--TITULO DO CUPON -->
+                                        <div class="row tituloCumponsConciliacaoBancaria">
+                                            <!--TIPO DO CUPON-->
+                                            <div class="col-md-12 conteudoCuponsConciliacaobancaria"
+                                                 ng-bind="dado.Titulo !== null ? 'Títulos a Receber - Cliente' : ''">
+                                            </div>
+                                        </div>
+                                        <!--SUBTITULO DO CUPON -->
+                                        <div class="row tituloCumponsConciliacaoBancariaICard">
+                                            <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria"
+                                                 ng-bind="dado.Titulo !== null ? dado.Titulo.Filial : ''"> 
+                                            </div>
+                                        </div>                                 
+                                    </div>
+                                </div>
+                                <!--BODY-->                   
+                                <!--DIVISÓRIA DOS TIPOS DE CUPONS-->
+                                <div class="row">   
+                                    <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria"
+                                         ng-bind="dado.Titulo !== null ? '=============================' : ''">
+                                    </div>
+                                </div>
+                                <!--DATA-->
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6">
+                                        <label ng-bind="dado.Titulo !== null ? 'Data:' : ''"></label>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados"
+                                         ng-bind="dado.Titulo !== null ? getDataString(dado.Titulo.Data) : ''">
+                                    </div>
+                                </div>
+                                <!--ADQUIRENTE -->
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6">
+                                        <label ng-bind="dado.Titulo !== null ? 'Adquirente:' : ''"></label>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados"
+                                         ng-bind="dado.Titulo !== null ? dado.Adquirente : ''">
+                                    </div>                      
+                                </div> 
+                                <!--BANDEIRA -->
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4">
+                                        <label ng-bind="dado.Titulo !== null ? 'Bandeira:' : ''"></label>
+                                    </div>
+                                    <div class="col-md-8 col-sm-8 alinhamentoDados"
+                                         ng-bind="dado.Titulo !== null ? dado.Titulo.Bandeira : ''">
+                                    </div>                      
+                                </div> 
+                                <!--VALOR-->
+                                <div class="row">
+                                    <!--VALOR-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label ng-bind="dado.Titulo !== null ? 'Valor:' : ''"></label>
+                                    </div>
+                                    <!--RESULTADO DO VALOR-->
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                        <label ng-show="dado.Titulo !== null">
+                                            {{dado.Titulo.Valor | currency:'R$'}}
+                                        </label>
+                                    </div>                                              
+                                </div> 
+                                <!--DATA DA VENDA-->
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6">
+                                        <label ng-bind="dado.Titulo !== null ? 'Venda:' : ''"></label>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados"
+                                         ng-bind="dado.Titulo !== null ? getDataString(dado.Titulo.DataVenda) : ''">
+                                    </div>
+                                </div>
+                                <!--NUM PARCELA-->
+                                <div class="row" 
+                                     ng-init="incrementaContTitulos(dado.Titulo)">
+                                    <!--Parcela-->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label ng-bind="dado.Titulo !== null ? 'Parcela:' : ''"></label>
+                                    </div>
+                                    <!--PARCELA-->
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                        <label ng-bind="dado.Titulo !== null ? dado.Titulo.NumParcela === 0 ? '1' : dado.Titulo.NumParcela : ''">
+                                        </label>
+                                    </div>                                              
+                                </div> 
+                                <!--NSU-->
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4">
+                                        <label ng-bind="dado.Titulo !== null ? 'NSU:' : ''"></label>
+                                    </div>
+                                    <div class="col-md-8 col-sm-8 alinhamentoDados">
+                                        <label>{{dado.Titulo.Nsu || ''}}</label>
+                                    </div>                                              
+                                </div>
+                            </div>
+                        </div>    
+                    </div>
+                </div>
+                <!--FIM CUPONS-->
+                
+                
+                <!-- TOTAIS - VALORES -->
+                <div class="row" style="margin-top:30px" print-section>
+                    <!-- RECEBIMENTO PARCELA -->
+                    <div class="col-md-12 col-sm-12" style="text-align:center">
+                        <label style="font-weight:bolder">
+                            TOTAL:&nbsp;{{totais.valorTotal | currency:'R$'}}
+                        </label>    
+                    </div>
+                </div>
+                <!-- TOTAIS - REGISTROS -->
+                <div class="row" style="margin-top:30px" print-section>
+                    <!-- RECEBIMENTO PARCELA -->
+                    <div class="col-md-5 col-sm-5" style="text-align:center">
+                        <label style="font-weight:bolder">
+                            CARGAS:&nbsp;{{totais.contRecebimentosParcela}}
+                        </label>    
+                    </div>
+                    <!-- ESPAÇO DOS BOTOÕES -->
+                    <div class="col-md-2 col-sm-2">
+                    </div>
+                    <!-- EXTRATO BANCÁRIO -->
+                    <div class="col-md-5 col-sm-5" style="text-align:center">
+                        <label style="font-weight:bolder">
+                            TÍTULOS:&nbsp;{{totais.contTitulos}}
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RODAPÉ : Exibição dos resultados e paginação -->
+            <div class="row" print-remove>
+                <div class="col-xs-4 col-sm-4 col-md-4">
+                    <div class="dataTables_info" role="status" aria-live="polite">
+                        <strong>Exibindo os registros {{filtro.faixa_registros}}</strong>
+                    </div>
+                </div>
+                <!--PAGINAÇÃO-RODAPÉ-->
+                <div class="col-xs-4 col-sm-4 col-md-3">
+                    <div class="pagination-panel centralizarPaginacao"> Página 
+                        <a href="javascript:;" ng-click="retrocedePagina()"
+                           class="btn btn-sm default prev" 
+                           ng-class="{disabled: filtro.pagina <= 1}" 
+                           title="Página anterior">
+                                <i class="fa fa-angle-left"></i>
+                        </a>
+                        <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                               maxlength="4" style="text-align:center; margin: 0 5px;"
+                               ng-model="paginaInformada" valid-integer-number
+                               ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                               ng-blur="atualizaPaginaDigitada()">
+                            <a href="javascript:;" ng-click="avancaPagina()"
+                               class="btn btn-sm default next"
+                               ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
+                               title="Próxima página">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                            de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
+                    </div>
+                </div>
+                <!-- FIM PAGINAÇÃO -->
+            </div>   
+        </div>
+    </div>
+</div>

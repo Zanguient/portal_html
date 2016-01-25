@@ -1,0 +1,542 @@
+<!-- 
+
+    Atos Capital - www.atoscapital.com.br
+   
+    suporte@atoscapital.com.br
+ 
+ 
+    Administrativo > Gestão de Empresas > Filiais > Cadastro/Alteração
+
+
+    Versão 1.0 - 03/09/2015
+-->
+
+
+<div class="container" ng-controller="administrativo-filiais-cadastroCtrl" 
+     ng-init="administrativoFiliaisCadastroInit()"
+     ng-show="temPermissao" ng-cloak>
+    <!-- BEGIN PAGE BREADCRUMB -->
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href="javascript:;" ng-click="goHome()">Início</a><i class="fa fa-circle"></i>
+        </li>
+        <li class="active">
+             Administrativo<i class="fa fa-caret-right"></i>
+             Gestão de Empresas<i class="fa fa-caret-right"></i>
+             <a href="javascript:;" ng-click="goAdministrativoFiliais()">Filiais</a><i class="fa fa-circle"></i>
+             {{tela.tipo}}
+        </li>
+    </ul>
+    <!-- END PAGE BREADCRUMB -->
+    <!-- BEGIN PAGE CONTENT INNER -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light" id="form_wizard_1">
+                
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject font-green-sharp bold uppercase">
+                        {{tela.tipo}} de Filial - <span class="step-title">Etapa {{tabCadastro}} de 4 </span>
+                        </span>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <form class="form-horizontal" name="formCadastroFilial" novalidate> <!--action="javascript:;" -->
+                        <div class="form-wizard">
+                            <div class="form-body">
+                                <ul class="nav nav-pills nav-justified steps">
+                                    <li ng-class="{ active:tabCadastroSelecionada(1) }">
+                                        <a href="javascript:;" ng-click="setTabCadastro(1)" 
+                                           data-toggle="tab" class="step">
+                                        <span class="number">
+                                        1 </span>
+                                        <span class="desc">
+                                        <i class="fa fa-check"></i> Dados da Filial </span>
+                                        </a>
+                                    </li>
+                                    <li ng-class="{ active:tabCadastroSelecionada(2) }">
+                                        <a href="javascript:;" ng-click="setTabCadastro(2)" 
+                                           data-toggle="tab" class="step">
+                                        <span class="number">
+                                        2 </span>
+                                        <span class="desc">
+                                        <i class="fa fa-check"></i> Endereço </span>
+                                        </a>
+                                    </li>
+                                    <li ng-class="{ active:tabCadastroSelecionada(3) }">
+                                        <a href="javascript:;" ng-click="setTabCadastro(3)" 
+                                           data-toggle="tab" class="step active">
+                                        <span class="number">
+                                        3 </span>
+                                        <span class="desc">
+                                        <i class="fa fa-check"></i> Contato </span>
+                                        </a>
+                                    </li>
+                                    <li ng-class="{ active:tabCadastroSelecionada(4) }">
+                                        <a href="javascript:;" ng-click="setTabCadastro(4)" 
+                                           data-toggle="tab" class="step">
+                                        <span class="number">
+                                        4 </span>
+                                        <span class="desc">
+                                        <i class="fa fa-check"></i> Confirmação </span>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <!-- PROGRESS -->
+                                <div id="bar" class="progress progress-striped" role="progressbar">
+                                    <div class="progress-bar progress-bar-success">
+                                    </div>
+                                </div>
+                                <!-- CONTEUDO -->
+                                <div class="tab-content">
+                                    <!-- DADOS DA FILIAL -->
+                                    <div class="tab-pane" ng-class="{ active:tabCadastroSelecionada(1) }">
+                                        <h3 class="block">Forneça os dados da Filial</h3>
+                                        <!-- GRUPO EMPRESA -->
+                                        <div class="form-group" >
+                                            <label class="control-label col-sm-3 col-sm-offset-2 col-md-3 col-md-offset-0">
+                                                Empresa <span class="required">* </span>
+                                            </label>
+                                            <div class="col-sm-4 col-md-4">
+                                                <input type="text" disabled 
+                                                       placeholder="Empresa" 
+                                                       class="form-control" 
+                                                       ng-model="usuariologado.grupoempresa.ds_nome" required/>
+                                            </div>
+                                        </div>
+                                        <!-- NOME DA EMPRESA -->
+                                        <div class="form-group" ng-class="{ 'has-error' : formCadastroFilial.filialEmpresa.$invalid && !formCadastroFilial.filialEmpresa.$pristine }">
+                                            <label class="control-label col-sm-offset-2 col-sm-3 col-md-3 col-md-offset-0">
+                                                Nome Fantasia <span class="required">* </span>
+                                            </label>
+                                            <div class="col-sm-4 col-md-4">
+                                                <div class="input-icon right">
+                                                    <i id="icon-nome-fantasia"
+                                                       class="fa" 
+                                                       ng-class="{'fa-check': nomeFantasiaValido(), 'fa-warning': !nomeFantasiaValido()}" 
+                                                       style="display:none" 
+                                                       ng-hide="validandoNomeFantasia"></i>
+                                                    <input type="text" 
+                                                       placeholder="Nome Fantasia" 
+                                                       class="form-control" 
+                                                       ng-class="{'spinner' : validandoNomeFantasia}"    
+                                                       ng-model="filial.ds_fantasia" 
+                                                       ng-blur="validaNomeFantasia()"
+                                                       name="filialEmpresa" required/>
+                                                    <span style="color:red" 
+                                                          ng-show="formCadastroFilial.filialEmpresa.$dirty && formCadastroFilial.filialEmpresa.$invalid">
+                                                        <span ng-show="formCadastroFilial.formCadastroFilial.$error.required">
+                                                            Nome fantasia é obrigatório!
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <!--img ng-src="../img/loading-atos.gif" style="margin-top: 10px" 
+                                                 ng-show="validandoNomeFantasia"/-->
+                                            <label id="labelNomeFantasiaEmUso" class="control-label" hidden>
+                                                <strong>Nome fantasia já está em uso!</strong>
+                                            </label>
+                                        </div>
+                                        <!-- CNPJ -->
+                                        <div class="form-group" ng-class="{ 'has-error' : formCadastroFilial.filialCnpj.$invalid && !formCadastroFilial.filialCnpj.$pristine }">
+                                            <label class="control-label col-sm-3 col-sm-offset-2 col-md-3 col-md-offset-0">
+                                                CNPJ <span class="required">* </span>
+                                            </label>
+                                            <div class="col-sm-4 col-md-4">
+                                                <div class="input-icon right">
+                                                    <i id="icon-cnpj"
+                                                       class="fa" 
+                                                       ng-class="{'fa-check': cnpjValido(), 'fa-warning': !cnpjValido()}" 
+                                                       style="display:none" 
+                                                       ng-hide="validandoCNPJ"></i>
+                                                    <input type="text" 
+                                                       placeholder="CNPJ" 
+                                                       class="form-control"
+                                                       ng-class="{'spinner' : validandoCNPJ}"
+                                                       ng-disabled="!ehCadastro()"
+                                                       ng-model="filial.nu_cnpj" 
+                                                       ng-blur="validaCNPJ()"
+                                                       ng-minlength="14"
+                                                       maxlength="14" valid-integer-number
+                                                       name="filialCnpj" required/>
+                                                    <span style="color:red" 
+                                                          ng-show="formCadastroFilial.filialCnpj.$dirty && formCadastroFilial.filialCnpj.$invalid">
+                                                        <span ng-show="formCadastroFilial.filialCnpj.$error.required">
+                                                            CNPJ é obrigatório!
+                                                        </span>
+                                                        <span ng-show="formCadastroFilial.filialCnpj.$error.minlength">
+                                                            CNPJ deve conter 14 dígitos!
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <!--img ng-src="../img/loading-atos.gif" style="margin-top: 10px" 
+                                                 ng-show="validandoCNPJ"/-->
+                                            <label id="labelCNPJEmUso" class="control-label" hidden>
+                                                <strong>CNPJ já está em uso!</strong>
+                                            </label>
+                                        </div>
+                                        <!-- FILIAL -->
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-3 col-sm-offset-2 col-md-3 col-md-offset-0">
+                                                Filial 
+                                            </label>
+                                            <div class="col-sm-4 col-md-4">
+                                                <input type="text" 
+                                                       placeholder="Filial" 
+                                                       class="form-control" 
+                                                       ng-model="filial.filial" 
+                                                       ng-blur="atualizaProgressoDoCadastro()" 
+                                                       name="filialFilial" />
+                                            </div>
+                                        </div>
+                                        <!-- RAZÃO SOCIAL -->
+                                        <div class="form-group" >
+                                            <label class="control-label col-sm-3 col-sm-offset-2 col-md-3 col-md-offset-0">
+                                                Razão Social 
+                                            </label>
+                                            <div class="col-sm-4 col-md-4">
+                                                <input type="text" 
+                                                       placeholder="Razão social" 
+                                                       class="form-control" 
+                                                       ng-model="filial.ds_razaoSocial" 
+                                                       ng-blur="atualizaProgressoDoCadastro()" 
+                                                       name="filialRazaoSocial" />
+                                            </div>
+                                        </div>
+                                        <!-- INSCRIÇÃO ESTADUAL -->
+                                        <div class="form-group" >
+                                            <label class="control-label col-sm-3 col-sm-offset-2 col-md-3 col-md-offset-0">Inscrição Estadual 
+                                            </label>
+                                            <div class="col-sm-4 col-md-4">
+                                                <input type="text" 
+                                                       placeholder="Inscrição Estadual" 
+                                                       class="form-control" 
+                                                       ng-model="filial.nu_inscEstadual" 
+                                                       ng-blur="atualizaProgressoDoCadastro()" 
+                                                       name="filialInscricaoEstadual" valid-integer-number/>
+                                            </div>
+                                        </div>                                      
+                                    </div>
+                                    
+                                    
+                                    <!-- ENDEREÇO -->
+                                    <div class="tab-pane" ng-class="{ active:tabCadastroSelecionada(2) }">
+                                        <h3 class="block">Forneça o Endereço da Filial</h3>
+                                        <!-- CEP -->
+                                        <div class="form-group" ng-class="{ 'has-error' : formCadastroFilial.filialCep.$invalid && !formCadastroFilial.filialCep.$pristine }">
+                                            <label class="control-label col-sm-3 col-sm-offset-2 col-md-3 col-md-offset-0">CEP
+                                            </label>
+                                            <div class="col-sm-4 col-md-2">
+                                                <div class="input-group input-icon right">
+                                                    <input type="text" 
+                                                           placeholder="00000000" 
+                                                           class="form-control" 
+                                                           ng-model="filial.nu_cep" 
+                                                           name="filialCep" 
+                                                           ng-minlength="8" valid-integer-number 
+                                                           maxlength="8"
+                                                           ng-keypress="($event.which === 13) ? consultaCEP() : 0"/>
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-search" style="cursor: pointer"
+                                                           ng-click="consultaCEP()"></i>
+                                                    </span>
+                                                </div>
+                                                <span style="color:red" 
+                                                      ng-show="formCadastroFilial.filialCep.$dirty && formCadastroFilial.filialCep.$invalid">
+                                                    <span ng-show="formCadastroFilial.filialCep.$error.minlength">
+                                                        O CEP deve conter oito caracteres!
+                                                    </span>    
+                                                </span>
+                                            </div>
+                                            <div class="col-md-1">
+                                                
+                                            </div>
+                                        </div>
+                                        <!-- ENDEREÇO -->
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-3 col-sm-offset-2 col-md-3 col-md-offset-0">
+                                                Logradouro
+                                            </label>
+                                            <div class="col-sm-4 col-md-4">
+                                                <input type="text" 
+                                                       placeholder="Logradouro" 
+                                                       class="form-control" 
+                                                       ng-model="filial.ds_endereco" 
+                                                       ng-blur="atualizaProgressoCadastro()" 
+                                                       name="filialEndereco" />
+                                            </div>                                            
+                                        </div>
+                                        <!-- BAIRRO -->
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-3 col-sm-offset-2 col-md-3 col-md-offset-0">
+                                                Bairro
+                                            </label>
+                                            <div class="col-sm-4 col-md-4">
+                                                <input type="text" 
+                                                       placeholder="Bairro" 
+                                                       class="form-control" 
+                                                       ng-model="filial.ds_bairro" 
+                                                       ng-blur="atualizaProgressoCadastro()" 
+                                                       name="filialBairro" />
+                                            </div>                                            
+                                        </div>
+                                        <!-- CIDADE -->
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-3 col-sm-offset-2 col-md-3 col-md-offset-0">
+                                                Cidade
+                                            </label>
+                                            <div class="col-sm-4 col-md-4">
+                                                <input type="text" 
+                                                       placeholder="Cidade" 
+                                                       class="form-control" 
+                                                       ng-model="filial.ds_cidade" 
+                                                       ng-blur="atualizaProgressoCadastro()" 
+                                                       name="filialCidade" />
+                                            </div>                                            
+                                        </div>
+                                        <!-- ESTADO -->
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-3 col-sm-offset-2 col-md-3 col-md-offset-0">Estado
+                                            </label>
+                                            <div class="col-sm-4 col-md-4">
+                                                <select class="table-group-action-input form-control input-inline input-sm"
+                                                        ng-model="filial.sg_uf">
+                                                    <option value=""></option>
+                                                    <option value="AC">Acre</option>
+                                                    <option value="AL">Alagoas</option>
+                                                    <option value="AP">Amapá</option>
+                                                    <option value="AM">Amazonas</option>
+                                                    <option value="BA">Bahia</option>
+                                                    <option value="CE">Ceará</option>
+                                                    <option value="DF">Distrito Federal</option>
+                                                    <option value="ES">Espirito Santo</option>
+                                                    <option value="GO">Goiás</option>
+                                                    <option value="MA">Maranhão</option>
+                                                    <option value="MS">Mato Grosso do Sul</option>
+                                                    <option value="MT">Mato Grosso</option>
+                                                    <option value="MG">Minas Gerais</option>
+                                                    <option value="PA">Pará</option>
+                                                    <option value="PB">Paraíba</option>
+                                                    <option value="PR">Paraná</option>
+                                                    <option value="PE">Pernambuco</option>
+                                                    <option value="PI">Piauí</option>
+                                                    <option value="RJ">Rio de Janeiro</option>
+                                                    <option value="RN">Rio Grande do Norte</option>
+                                                    <option value="RS">Rio Grande do Sul</option>
+                                                    <option value="RO">Rondônia</option>
+                                                    <option value="RR">Roraima</option>
+                                                    <option value="SC">Santa Catarina</option>
+                                                    <option value="SP">São Paulo</option>
+                                                    <option value="SE">Sergipe</option>
+                                                    <option value="TO">Tocantins</option>
+                                                </select>
+                                            </div>                                            
+                                        </div>                                   
+                                        
+                                    </div>
+                                    
+                                    <!-- CONTATO -->
+                                    <div class="tab-pane" ng-class="{ active:tabCadastroSelecionada(3) }">
+                                        <h3 class="block">Forneça os dados de contato</h3>
+                                        <!-- E-MAIL -->
+                                        <div class="form-group" ng-class="{ 'has-error' : formCadastroFilial.filialEmail.$invalid && !formCadastroFilial.filialEmail.$pristine }">
+                                            <label class="control-label col-sm-3 col-sm-offset-2 col-md-3 col-md-offset-0">
+                                                E-mail <span class="required">* </span>
+                                            </label>
+                                            <div class="col-sm-4 col-md-4">
+                                                <input type="email" 
+                                                       placeholder="email@email.com" 
+                                                       class="form-control" 
+                                                       ng-model="filial.ds_email" 
+                                                       ng-blur="atualizaProgressoDoCadastro()"
+                                                       style="text-transform: lowercase;"
+                                                       name="filialEmail" required/>
+                                                <span style="color:red" ng-show="formCadastroFilial.filialEmail.$dirty && formCadastroFilial.filialEmail.$invalid">
+                                                    <span ng-show="formCadastroFilial.filialEmail.$error.required">
+                                                        E-mail é obrigatório!
+                                                    </span>
+                                                    <span ng-show="formCadastroFilial.filialEmail.$error.email">
+                                                        Endereço de e-mail é inválido!                                                                                       </span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <!-- TELEFONE -->
+                                        <div class="form-group" ng-class="{ 'has-error' : formCadastroFilial.filialTelefone.$invalid && !formCadastroFilial.filialTelefone.$pristine }">
+                                            <label class="control-label col-sm-3 col-sm-offset-2 col-md-3 col-md-offset-0">
+                                                Telefone 
+                                            </label>
+                                            <div class="col-sm-4 col-md-4">
+                                                <input type="text" 
+                                                       class="form-control" 
+                                                       ng-model="filial.nu_telefone" 
+                                                       maxlength="15" 
+                                                       ng-minlength="10"
+                                                       ng-pattern="/\(\d{2}\)\d{8}\d?/"
+                                                       name="filialTelefone" 
+                                                       placeholder="(79)12345678" 
+                                                       valid-telefone
+                                                       ng-blur="atualizaProgressoDoCadastro()" />
+                                                <span style="color:red" ng-show="formCadastroFilial.filialTelefone.$dirty && formCadastroFilial.filialTelefone.$invalid">
+                                                    <span ng-show="formCadastroFilial.filialTelefone.$error.minlength">Telefone deve conter no mínimo 10 dígitos!</span>
+                                                    <span ng-show="formCadastroFilial.filialTelefone.$error.pattern">Telefone informado é inválido!</span>    
+                                                </span>
+                                            </div>
+                                        </div>      
+                                    </div>
+                                    <!-- CONFIRMAÇÃO -->
+                                    <div class="tab-pane" ng-class="{ active:tabCadastroSelecionada(4) }">
+                                        <h3 class="block">Confirme seus dados</h3>
+                                        <!-- FILIAL -->
+                                        <h4 class="form-section">Dados da Filial</h4>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-3 col-sm-offset-2 col-md-3 col-md-offset-0">Empresa:</label>
+                                            <div class="col-sm-4 col-md-4">
+                                                <p class="form-control-static">
+                                                    <strong>{{usuariologado.grupoempresa.ds_nome || ''}}</strong>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-3 col-sm-offset-2 col-md-3 col-md-offset-0">Nome Fantasia:</label>
+                                            <div class="col-sm-4 col-md-4">
+                                                <p class="form-control-static">
+                                                    <strong>{{filial.ds_fantasia}}</strong>
+                                                </p>
+                                            </div>
+                                        </div>                                    
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-3 col-sm-offset-2 col-md-3 col-md-offset-0">CNPJ:</label>
+                                            <div class="col-sm-4 col-md-4">
+                                                <p class="form-control-static">
+                                                    <strong>{{filial.nu_cnpj}}</strong>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-3 col-sm-offset-2 col-md-3 col-md-offset-0">Filial:</label>
+                                            <div class="col-sm-4 col-md-4">
+                                                <p class="form-control-static">
+                                                    <strong>{{filial.filial}}</strong>
+                                                </p>
+                                            </div>
+                                        </div>                                    
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-3 col-sm-offset-2 col-md-3 col-md-offset-0">Razão Social:</label>
+                                            <div class="col-md-4">
+                                                <p class="form-control-static">
+                                                    <strong>{{filial.ds_razaoSocial}}</strong>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-3 col-sm-offset-2 col-md-3 col-md-offset-0">Inscrição Estadual:</label>
+                                            <div class="col-md-4">
+                                                <p class="form-control-static">
+                                                    <strong>{{filial.nu_inscEstadual}}</strong>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <!-- ENDEREÇO -->
+                                        <h4 class="form-section">Endereço</h4>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-3 col-sm-offset-2 col-md-3 col-md-offset-0">CEP:</label>
+                                            <div class="col-sm-4 col-md-4">
+                                                <p class="form-control-static">
+                                                    <strong>{{filial.nu_cep}}</strong>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-3 col-sm-offset-2 col-md-3 col-md-offset-0">Logradouro:</label>
+                                            <div class="col-md-4">
+                                                <p class="form-control-static">
+                                                    <strong>{{filial.ds_endereco}}</strong>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-3 col-sm-offset-2 col-md-3 col-md-offset-0">Bairro:</label>
+                                            <div class="col-sm-4 col-md-4">
+                                                <p class="form-control-static">
+                                                    <strong>{{filial.ds_bairro}}</strong>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-3 col-sm-offset-2 col-md-3 col-md-offset-0">Cidade:</label>
+                                            <div class="col-sm-4 col-md-4">
+                                                <p class="form-control-static">
+                                                    <strong>{{filial.ds_cidade}}</strong>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-3 col-sm-offset-2 col-md-3 col-md-offset-0">Estado:</label>
+                                            <div class="col-sm-4 col-md-4">
+                                                <p class="form-control-static">
+                                                    <strong>{{filial.sg_uf}}</strong>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <!-- CONTATO -->
+                                        <h4 class="form-section">Contato</h4>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-3 col-sm-offset-2 col-md-3 col-md-offset-0">E-mail:</label>
+                                            <div class="col-sm-4 col-md-4">
+                                                <p class="form-control-static">
+                                                    <strong>{{filial.ds_email}}</strong>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-3 col-sm-offset-2 col-md-3 col-md-offset-0">Telefone:</label>
+                                            <div class="col-sm-4 col-md-4">
+                                                <p class="form-control-static">
+                                                    <strong>{{filial.nu_telefone}}</strong>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- BOTÕES -->
+                            <div class="form-actions">
+                                <div class="row">
+                                    <div class="col-sm-offset-3 col-sm-9 col-md-offset-3 col-md-9">
+                                        <a href="javascript:;" ng-click="goAdministrativoFiliais()" 
+                                           class="btn grey button-previous">
+										  <i class="fa fa-times" ng-disabled="cadastrando"></i> Cancelar 
+                                        </a>
+                                        <a href="javascript:;" ng-click="setTabAnterior()" 
+                                           class="btn botaoVoltar button-previous" 
+                                           ng-class="{'element-hidden': tabCadastroSelecionada(1)}">
+                                            <i class="m-icon-swapleft"></i> Voltar 
+                                        </a>
+                                        <a href="javascript:;" ng-click="setProximaTab()" 
+                                           class="btn blue button-next" 
+                                           ng-class="{'element-hidden': tabCadastroSelecionada(4)}">
+                                            Continuar <i class="m-icon-swapright m-icon-white"></i>
+                                        </a>
+                                        <a href="javascript:;" ng-click="armazenaInformacoesDaFilial()"
+                                           class="btn button-submit"
+                                           ng-disabled="validandoCNPJ || validandoNomeFantasia"
+                                           ng-class="{ 'red' : ehCadastro(), 'green': !ehCadastro()}" 
+                                           ng-show="tabCadastroSelecionada(4) && !cadastrando">
+                                            {{tela.acao}} 
+                                            <i class="fa" 
+                                               ng-class="{'fa-plus' : ehCadastro(), 'fa-edit' : !ehCadastro()}">
+                                            </i>
+                                        </a>
+                                        <img ng-src="../img/loading-atos.gif" style="margin-top: 10px" ng-show="cadastrando"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END PAGE CONTENT INNER -->
+</div>

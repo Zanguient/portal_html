@@ -1,0 +1,74 @@
+# README #
+
+Módulo que:
+ - gerencia o layout da tela de filiais da Gestão de empresas (app/componentes/administrativo/gestao-empresas/filiais/index.html);
+ - permite criação e exclusão de uma filial?
+ 
+ 
+
+### Pra Que Serve Este Módulo? ###
+
+Gerenciar completamente a tela de filiais da Gestão de empresas.  
+
+
+
+### O que é necessário para usar o módulo? ###
+
+Como esse é um controller filho do controller principal appCtrl (app.js), ele herda todos os módulos importados por ele.
+Além deles, é necessária a importação dos seguintes módulos externos.
+
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |                MODULO                  |                   DESCRIÇÃO                       |         IMPORT (no app/index.html)        |
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+ |----------------------------------------|---------------------------------------------------|-------------------------------------------|
+
+
+ 
+### Outras depêndencias ###
+
+  * Evento mudancaDeRota, proveniente do appCtrl, para de fato modificar a rota/estado
+  * $scope.token do appCtrl
+  * Emite evento "acessouTela" no init do controller para que seja feito o log de acesso de tela
+  * Evento "acessoDeTelaNotificado", proveniente do "appCtrl", para de fato exibir a tela e fazer requisições 
+	=> importante para o log correto de requisições HTTP, ao qual identifica corretamente a (tela de) origem
+  * $scope.grupoempresa, do appCtrl : grupo empresa informado pelo usuário na barra administrativa
+  * Evento alterouGrupoEmpresa, emitido pelo controller appCtrl, para identificar a mudança do $scope.grupoempresa
+  * APIS:
+    - cliente/empresa
+	
+ 
+ 
+ ### Interação com a WEB API ###
+ 
+  * api/cliente/empresa
+	 - DELETE : deleta uma filial
+				  ?token=...&nu_cnpj=cnpj  OBS: remove tudo que tiver associado
+	 - GET  : listagem de todas as filiais da empresa gerenciada (coleção 4)
+	          [{ 
+				  nu_cnpj: string,
+				  ds_fantasia: string,
+				  ds_razaoSocial: string (ou null),
+				  ds_endereco: string (ou null),
+				  ds_cidade: string (ou null),
+				  sg_uf: string[2] (ou null),
+				  nu_cep: string[20] (ou null),
+				  nu_telefone: string[20] (ou null),
+				  ds_bairro: string (ou null),
+				  ds_email: string,
+				  dt_cadastro: date,
+				  dt_ultimoAcesso : datetime,
+				  login_ultimoAcesso : string,
+				  fl_ativo: boolean,
+				  id_grupo: int,
+				  filial: string,
+				  nu_inscEstadual: int (ou null),
+				  ultimoAcesso : null ou { dt_ultimoAcesso : data, login_ultimoAcesso : string},
+			   }
+			  ]
+ 
+   
+
+   
+### Desenvolvedores ###
+
+Deivid Marinho - deividgfmarinho@gmail.com
