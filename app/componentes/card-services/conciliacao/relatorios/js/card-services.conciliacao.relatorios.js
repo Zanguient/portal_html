@@ -250,6 +250,11 @@ angular.module("card-services-conciliacao-relatorios", [])
         if(!item || item === null) return false;
         return item.collapsed;
     }
+		
+		//IMPRESSÃO
+		$scope.imprimir = function(){
+			$window.open('views/print#?t='+$scope.token, '_blank');
+		}
     
         
 }]);

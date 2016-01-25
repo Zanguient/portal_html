@@ -232,47 +232,211 @@
                    </div>
                    <div class="modal-body modal-corpo modalAcessoDeUsuarios" style="text-align: center">
                        <!-- DADOS DA PARCELA -->
-                       <div class="row">
-                           <div class="col-sm-1">
-                               <label>Parcela</label>
-                           </div>
-                           <div class="col-sm-1">
-                               <label>Valor</label>
-                           </div>
-                           <div class="col-sm-2">
-                               <label>Recebimento</label>
-                           </div>
-                           <div class="col-sm-4">
-                               <label>Bandeira</label>
-                           </div>
-                           <div class="col-sm-2">
-                               <label>NSU</label>
-                           </div>
-                           <div class="col-sm-2">
-                               <label>Venda</label>
-                           </div>
-                       </div>
-                       <div class="row">
-                           <div class="col-sm-1">
-                               <span ng-bind="modalBuscaTitulos.recebimento.NumParcela === 0 ? '1' : modalBuscaTitulos.recebimento.NumParcela"></span>
-                           </div>
-                           <div class="col-sm-1">
-                               {{modalBuscaTitulos.recebimento.Valor | currency:'R$'}}
-                           </div>
-                           <div class="col-sm-2">
-                               <span ng-bind="getDataString(modalBuscaTitulos.recebimento.Data)"></span>
-                           </div>
-                           <div class="col-sm-4">
-                               {{modalBuscaTitulos.recebimento.Bandeira | uppercase}}
-                           </div>
-                           <div class="col-sm-2">
-                               {{modalBuscaTitulos.recebimento.Nsu}}
-                           </div>
-                           <div class="col-sm-2">
-                               <span ng-bind="getDataString(modalBuscaTitulos.recebimento.DataVenda)"></span>
-                           </div>
-                       </div>
-                       
+										 <!--<tr role="row">
+															<th tabindex="0" rowspan="1" colspan="1"                                      
+																	style="width: 10%; text-align:center">
+																	Data
+															</th>-->
+										 <table border=0>
+											 <tbody>
+												 <tr role="row">
+													 <td tabindex="0" rowspan="1" colspan="1"                                      
+																	style="width: 8%; text-align:center">
+														 <label>Parcela</label>
+													 </td>
+													 <td tabindex="1" rowspan="1" colspan="1"                                      
+																	style="width: 8%; text-align:center">
+														 <label>Valor</label>
+													 </td>
+													 <td tabindex="2" rowspan="1" colspan="1"                                      
+																	style="width: 8%; text-align:center">
+														 <label>Recebimento</label>
+													 </td>
+													 <td tabindex="3" rowspan="1" colspan="1"                                      
+																	style="width: 8%; text-align:center">
+														 <label>Bandeira</label>
+													 </td>
+													 <td tabindex="4" rowspan="1" colspan="1"                                      
+																	style="width: 8%; text-align:center">
+														 <label>NSU</label>
+													 </td>
+													 <td tabindex="5" rowspan="1" colspan="1"                                      
+																	style="width: 8%; text-align:center">
+														 <label>Venda</label>
+													 </td>
+													 <td tabindex="6" rowspan="2" colspan="1"                                      
+																	style="width: 50%; text-align:center">
+														 <span style="margin-right: 20px" title="Buscar pelo NSU">
+															 <a href="javascript:;" class="btn btn-icon-only default"
+																	ng-click="buscaTEF()">
+																 <i class="fa fa-search"></i>
+															 </a>
+														 </span>												 
+														 <label style="margin-right: 20px">Pesquisar no TEF</label>
+													 </td>
+												 </tr>
+												 <tr role="row">
+													 <td class="col-sm-1">
+															 <span ng-bind="modalBuscaTitulos.recebimento.NumParcela === 0 ? '1' : modalBuscaTitulos.recebimento.NumParcela"></span>
+													 </td>
+													 <td class="col-sm-1">
+															 {{modalBuscaTitulos.recebimento.Valor | currency:'R$'}}
+													 </td>
+													 <td class="col-sm-2">
+															 <span ng-bind="getDataString(modalBuscaTitulos.recebimento.Data)"></span>
+													 </td>
+													 <td class="col-sm-2">
+															 {{modalBuscaTitulos.recebimento.Bandeira | uppercase}}
+													 </td>
+													 <td class="col-sm-1">
+															 {{modalBuscaTitulos.recebimento.Nsu}}
+													 </td>
+													 <td class="col-sm-2">
+															 <span ng-bind="getDataString(modalBuscaTitulos.recebimento.DataVenda)"></span>
+													 </td>
+												 </tr>
+											 </tbody>
+										 </table>
+										 
+										 <!--<div class="row">
+											 <div class="col-sm-1">
+													 <label>Parcela</label>
+											 </div>
+											 <div class="col-sm-1">
+													 <label>Valor</label>
+											 </div>
+											 <div class="col-sm-2">
+													 <label>Recebimento</label>
+											 </div>
+											 <div class="col-sm-2">
+													 <label>Bandeira</label>
+											 </div>
+											 <div class="col-sm-1">
+													 <label>NSU</label>
+											 </div>
+											 <div class="col-sm-2">
+												 <label>Venda</label>
+											 </div>
+											 <div class="col-sm-3" rowspan="2">
+												 <span style="margin-right: 20px" title="Buscar pelo NSU">
+													 <a href="javascript:;" class="btn btn-icon-only default"
+															ng-click="buscaTEF()">
+														 <i class="fa fa-search"></i>
+													 </a>
+												 </span>												 
+												 <label style="margin-right: 20px">Pesquisar no TEF</label>
+											 </div>
+										 </div>
+										 <div class="row">
+												 <div class="col-sm-1">
+														 <span ng-bind="modalBuscaTitulos.recebimento.NumParcela === 0 ? '1' : modalBuscaTitulos.recebimento.NumParcela"></span>
+												 </div>
+												 <div class="col-sm-1">
+														 {{modalBuscaTitulos.recebimento.Valor | currency:'R$'}}
+												 </div>
+												 <div class="col-sm-2">
+														 <span ng-bind="getDataString(modalBuscaTitulos.recebimento.Data)"></span>
+												 </div>
+												 <div class="col-sm-2">
+														 {{modalBuscaTitulos.recebimento.Bandeira | uppercase}}
+												 </div>
+												 <div class="col-sm-1">
+														 {{modalBuscaTitulos.recebimento.Nsu}}
+												 </div>
+												 <div class="col-sm-2">
+														 <span ng-bind="getDataString(modalBuscaTitulos.recebimento.DataVenda)"></span>
+												 </div>
+										 </div>-->
+										 <!-- TABELA TEF -->
+										 <div style="margin-top: 50px" ng-show="statusPesquisaTef">
+											 <div class="row"><label class="col-sm-12" style="width: 10%;">TEF</label></div>
+											 <table class="table table-striped table-hover table-bordered dataTable no-footer conteudoTabelas"
+															role="grid">
+													<thead>
+														<tr role="row">
+															<th tabindex="0" rowspan="1" colspan="1"                                      
+																	style="width: 10%; text-align:left">
+																	Data
+															</th>
+															<th tabindex="1" rowspan="1" colspan="1"                                          
+																	style="width: 10%;">
+																	Filial
+															</th>
+															<th tabindex="2" rowspan="1" colspan="1"                                          
+																	style="width: 10%;">
+																	 Bandeira
+															</th>                                    
+															<th tabindex="3" rowspan="1" colspan="1"                                         
+																	style="width: 10%;">
+																	 Cartão
+															</th>
+															<th tabindex="4" rowspan="1" colspan="1"                                          
+																	style="width: 10%;">
+																	 Valor(R$)
+															</th>
+															<th tabindex="5" rowspan="1" colspan="1"                                          
+																	style="width: 10%;">
+																	 Parcelas
+															</th>
+															<th tabindex="6" rowspan="1" colspan="1"                                        
+																	style="width: 10%;">
+																	 Tipo
+															</th>
+														<th tabindex="7" rowspan="1" colspan="1"                                        
+																	style="width: 10%;">
+																	 NSU SITEF
+															</th>
+														<th tabindex="8" rowspan="1" colspan="1"                                        
+																	style="width: 10%;">
+																	 PDV
+															</th>
+														<th tabindex="9" rowspan="1" colspan="1"                                        
+																	style="width: 10%;">
+																	 Autorizador
+															</th>
+														<th tabindex="10" rowspan="1" colspan="1"                                        
+																	style="width: 10%;">
+																	 Status
+															</th>
+														</tr>
+													</thead>
+													<tbody class="centralizarVertical">
+														<tr role="row" class="odd">
+															<td style="text-align:center">
+															</td>
+															<td style="text-align:center">
+															</td>
+															<td style="text-align:center">
+															</td>                                    
+															<td style="text-align:center">
+															</td>
+															<td style="text-align:center">
+															</td>
+															<td style="text-align:center">
+															</td>
+															<td style="text-align:center">
+															</td>
+															<td style="text-align:center">
+															</td>
+															<td style="text-align:center">
+															</td>
+															<td style="text-align:center">
+															</td>
+															<td style="text-align:center">
+															</td>
+													</tr> 
+											 </tbody>
+												 <tfoot>
+													 <tr role="row">
+														 <td colspan="11">
+															 <span class="glyphicon glyphicon-chevron-up btn btn-sm grey filter-cancel" ng-click="statusPesquisaTef = false">
+															 </span>
+														 </td>
+													 </tr>
+												 </tfoot>
+											 </table>
+										 </div>
+										 <!-- FIM TABLEA TEF -->
                        <!-- FILIAL DE CONSULTA -->
                        <div class="row" style="margin-top: 50px">
                            <div class="col-sm-2"></div>
@@ -284,16 +448,16 @@
                                        ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
                                     <option value="" style="display: none"></option>
                                </select>
-                               <span style="margin-left: 20px" title="Buscar título">
-                                    <a href="javascript:;" class="btn btn-icon-only default"
-                                       ng-click="buscaTitulosFilial(modalBuscaTitulos.filial.nu_cnpj)"
-                                       ng-disabled="!usuarioPodeAlterarDadosConciliacaoTitulos()">
-                                        <i class="fa fa-search"></i>
-                                    </a>
-                               </span>
-                           </div>
-                           <div class="col-sm-2"></div>
-                       </div>
+														 <span style="margin-right: 20px" title="Buscar título">
+															 <a href="javascript:;" class="btn btn-icon-only default"
+																	ng-click="buscaTitulosFilial(modalBuscaTitulos.filial.nu_cnpj)"
+																	ng-disabled="!usuarioPodeAlterarDadosConciliacaoTitulos()">
+																 <i class="fa fa-search"></i>
+															 </a>
+														 </span>
+												 </div>
+												 <div class="col-sm-2"></div>
+										 </div>
                        
                        <!-- TABELA -->
                        <div style="margin-top: 50px">
@@ -375,7 +539,7 @@
                            </button>
                        </div-->
                        <div class="col-sm-6">
-                           <button type="button" class="btn default" data-dismiss="modal">
+                           <button ng-click="statusPesquisaTef = false" type="button" class="btn default" data-dismiss="modal">
                                Fechar
                            </button>
                        </div>                           

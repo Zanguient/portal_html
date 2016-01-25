@@ -1,0 +1,12 @@
+<head>
+</head>
+<body>
+	<script type="text/javascript">
+		var t = $location.search().t;
+		if(!t) return;
+		// Deleta o parâmetro token da url
+        $location.search('t', null);
+		
+		document.write(t);
+	</script>
+</body>

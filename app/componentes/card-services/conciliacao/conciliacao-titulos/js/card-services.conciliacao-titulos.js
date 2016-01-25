@@ -63,8 +63,9 @@ angular.module("card-services-conciliacao-titulos", [])
     $scope.exibeTela = false;    
     $scope.abrirCalendarioDataMin = $scope.abrirCalendarioDataVendaMin = false;
     $scope.abrirCalendarioDataMax = $scope.abrirCalendarioDataVendaMax = false; 
-    
-    
+    //TEF
+    $scope.statusPesquisaTef = false;
+		$scope.dadosTef = [];
     
     // Inicialização do controller
     $scope.cardServices_conciliacaoTitulosInit = function(){
@@ -117,7 +118,12 @@ angular.module("card-services-conciliacao-titulos", [])
         //if($scope.usuariologado.grupoempresa) buscaFiliais(true);
     };
     
-    
+    //TEF
+		$scope.buscaTEF = function(){
+			$scope.statusPesquisaTef = true;
+		}
+																							 
+																							 
     // PERMISSÕES                                          
     /**
       * Retorna true se o usuário pode alterar dados de conciliação de títulos
@@ -223,8 +229,56 @@ angular.module("card-services-conciliacao-titulos", [])
        else ajustaIntervaloDeData();
     };
                                                  
- 
-          
+ 		//TEF
+    var buscaTEF = function(showMessage){
+
+			if($scope.usuariologado.grupoempresa){
+
+				if($scope.filtro.filial && $scope.filtro.filial !== null){
+           var filtroFilial = {id: /*$campos.card.tbrecebimentotef.nrCNPJ*/ 102, 
+                               valor: $scope.filtro.filial.nu_cnpj};
+           filtros.push(filtroFilial);  
+       }
+				
+				//$scope.showProgress(divPortletBodyFiltrosPos, 10000);    
+				$scope.showProgress(divPortletBodyFilialPos); 
+				var filtros = [];
+				
+				filtros.push({id: /*$campos.cliente.empresa.fl_ativo*/ 114, valor: 1});
+
+       // Filtro do grupo empresa => barra administrativa
+       if($scope.usuariologado.grupoempresa){ 
+           filtros.push({id: /*$campos.cliente.empresa.id_grupo*/ 116, valor: $scope.usuariologado.grupoempresa.id_grupo});
+           if($scope.usuariologado.empresa) filtros.push({id: /*$campos.cliente.empresa.nu_cnpj*/ 100, 
+                                                          valor: $scope.usuariologado.empresa.nu_cnpj});
+       }
+
+				// Somente com status ativo
+				//filtros.push({id: /*$campos.cliente.empresa.fl_ativo*/ 516, valor: $scope.usuariologado.grupoempresa.id_grupo});
+
+				// Filtro do grupo empresa => barra administrativa
+				//if($scope.usuariologado.grupoempresa){ 
+					//filtros.push({id: /*$campos.cliente.empresa.id_grupo*/ 516, valor: $scope.usuariologado.grupoempresa.id_grupo});
+					//if ($scope.usuariologado.tbcontacorrentetbloginadquirenteempresa) filtros.push({
+//						id: /*$campos.card.tbcontacorrentetbloginadquirenteempresa.nu_cnpj*/ 500,
+	//					valor: $scope.usuariologado.tbcontacorrentetbloginadquirenteempresa.nu_cnpj
+		//			});
+
+					$webapi.get($apis.getUrl($apis.cliente.empresa, 
+																	 [$scope.token, 0, /*$campos.cliente.empresa.ds_fantasia*/ 104],
+																	 filtros)) 
+						.then(function(dados){
+						$scope.filiais = dados.Registros;
+					},
+									function(failData){
+						if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+						else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+						else $scope.showAlert('Houve uma falha ao obter filiais (' + failData.status + ')', true, 'danger', true);
+						$scope.hideProgress(divPortletBodyFiltrosPos);
+					});     
+				}
+			};
+																							 
                                                  
     // FILIAIS                                             
     
@@ -592,6 +646,7 @@ angular.module("card-services-conciliacao-titulos", [])
       * Selecionou um recebimentoparcela para buscar títulos
       */
     $scope.buscaTitulos = function(dado){
+			$scope.statusPesquisaTef = false;
         if(!dado.RecebimentoParcela || dado.RecebimentoParcela === null) return;
         $scope.modalBuscaTitulos.recebimento = dado.RecebimentoParcela;
         $scope.modalBuscaTitulos.titulos = [];
