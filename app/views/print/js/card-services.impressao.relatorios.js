@@ -24,6 +24,9 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
    
     //$scope.notadetalhada = undefined;
 		$scope.relatorio = [];
+		$scope.usuariologado = [];
+		//Telas para impressao
+		$scope.conciliacao = ["Competência - Adquirente - Bandeira", "Taxa Média", "Vendas", "Taxa ADM", "Ajustes Crédito", "Ajustes Débito", "Valor Líquido", "Valor Descontado Antecipação", "Valor Líquido Total", "Extratos Bancários", "Diferença", "Status"];
     // flags
     $scope.exibeTela = false;  
     $scope.manutencao = false;                                                                       
@@ -31,16 +34,24 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
     // Inicialização do controller
     $scope.cardServices_impressaoRelatoriosInit = function(){
 			
+			var e = $location.search().e;
 			var s = $location.search().s;
+			var cl = $location.search().cl;
+			var n = $location.search().n;
+			var f = $location.search().f;
+			var d = $location.search().d;
 			
-			if(!s) return;
+			if(!d || !s || !cl || !n || !e || !f) return;
+			
+			$scope.nomeEmpresa = e;
+			$scope.nomeFilial = f;
+			$scope.data = $scope.formataData(d);
 			
 			switch (s) {
 					
 					//RELATORIOS CONCILIACAO
 				case "relatorioConciliacao":
 					var c = $location.search().c;
-					var d = $location.search().d;
 					
 					if(!c || !d) return;				
 					
@@ -130,5 +141,20 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
         $('#modalAlerta').modal('show');
         if(!$scope.$$phase) $scope.$apply();
     }
-    
+		
+		$scope.formataData = function(data){
+			
+			$scope.dtSplit = data.split("");
+			$scope.mes = $scope.dtSplit[4] + $scope.dtSplit[5];
+			$scope.ano = $scope.dtSplit[0] + $scope.dtSplit[1] + $scope.dtSplit[2] + $scope.dtSplit[3];
+			$scope.dataFormatada = "";
+			
+			switch ($scope.mes){
+				case "01":
+					$scope.dataFormatada = "Janeiro " + $scope.ano;
+					break;
+			}
+			return $scope.dataFormatada;
+		}
+		
 }]);
