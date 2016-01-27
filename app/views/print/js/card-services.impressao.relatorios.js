@@ -26,7 +26,7 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 		$scope.relatorio = [];
 		$scope.usuariologado = [];
 		//Telas para impressao
-		$scope.conciliacao = ["Competência - Adquirente - Bandeira", "Taxa Média", "Vendas", "Taxa ADM", "Ajustes Crédito", "Ajustes Débito", "Valor Líquido", "Valor Descontado Antecipação", "Valor Líquido Total", "Extratos Bancários", "Diferença", "Status"];
+		$scope.colunas = [];
     // flags
     $scope.exibeTela = false;  
     $scope.manutencao = false;                                                                       
@@ -52,8 +52,9 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 					//RELATORIOS CONCILIACAO
 				case "relatorioConciliacao":
 					var c = $location.search().c;
-					
 					if(!c || !d) return;				
+					
+					$scope.colunas = ["Competência Adquirente Bandeira", "Taxa Média", "Vendas", "Taxa ADM", "Ajustes Crédito", "Ajustes Débito", "Valor Líquido", "Valor Descontado Antecipação", "Valor Líquido Total", "Extratos Bancários", "Diferença", "Status"];
 					
 					consultaConciliacao(c, d);
 					break;
@@ -153,8 +154,59 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 				case "01":
 					$scope.dataFormatada = "Janeiro " + $scope.ano;
 					break;
+					
+				case "02":
+					$scope.dataFormatada = "Fevereiro " + $scope.ano;
+					break;
+					
+				case "03":
+					$scope.dataFormatada = "Março " + $scope.ano;
+					break;
+					
+				case "04":
+					$scope.dataFormatada = "Abril " + $scope.ano;
+					break;
+				
+				case "05":
+					$scope.dataFormatada = "Maio " + $scope.ano;
+					break;
+				
+				case "06":
+					$scope.dataFormatada = "Junho " + $scope.ano;
+					break;
+									
+				case "07":
+					$scope.dataFormatada = "Julho " + $scope.ano;
+					break;
+					
+				case "08":
+					$scope.dataFormatada = "Agosto " + $scope.ano;
+					break;
+					
+				case "09":
+					$scope.dataFormatada = "Setembro " + $scope.ano;
+					break;
+					
+				case "10":
+					$scope.dataFormatada = "Outubro " + $scope.ano;
+					break;
+					
+				case "11":
+					$scope.dataFormatada = "Novembro " + $scope.ano;
+					break;
+					
+				case "12":
+					$scope.dataFormatada = "Dezembro " + $scope.ano;
+					break;
+					
+				default:
+					break;
 			}
 			return $scope.dataFormatada;
+		}
+		
+		$scope.formaTabela = function(){
+			document.write('<tr><td>Volvo</td><td>S60</td><td>2010</td><td>Saloon</td><td>Yes</td></tr><tr><td colspan="5"><table><colgroup><col class="coluna1"/><col class="coluna2"/><col class="coluna3"/></colgroup><tr><th>Agudo</th><th >Médio</th><th >Grave</th></tr><tr><td>Trompete</td><td>Trompa</td><td>Trombone</td></tr></table> </td></tr><tr><td>Audi</td><td>A4</td><td>2002</td><td>Saloon</td><td>Yes</td></tr>');
 		}
 		
 }]);
