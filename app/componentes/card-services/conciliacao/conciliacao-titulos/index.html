@@ -10,6 +10,10 @@
     Card Services > Conciliação > Conciliação de Títulos
 
 
+    Versão 1.0.5 - 01/02/2016
+    - Data Efetiva
+	- Busca TEF
+
     Versão 1.0.4 - 27/11/2015
     - Considerar pré-conciliação com outras filiais do grupo
  
@@ -243,7 +247,7 @@
 											 <tbody class="centralizarVertical">
 												 <tr role="row">
 													 <td tabindex="0" rowspan="1" colspan="1"                                      
-																	style="width: 8%; text-align:center">
+																	style="width: 6%; text-align:center">
 														 <label>Parcela</label>
 													 </td>
 													 <td tabindex="1" rowspan="1" colspan="1"                                      
@@ -251,22 +255,26 @@
 														 <label>Valor</label>
 													 </td>
 													 <td tabindex="2" rowspan="1" colspan="1"                                      
-																	style="width: 8%; text-align:center">
-														 <label>Recebimento</label>
+														 style="width: 8%; text-align:center">
+														 <label>Data Prevista</label>
 													 </td>
-													 <td tabindex="3" rowspan="1" colspan="1"                                      
+                                                     <td tabindex="3" rowspan="1" colspan="1"                                      
 																	style="width: 8%; text-align:center">
-														 <label>Bandeira</label>
+														 <label>Data Efetiva</label>
 													 </td>
 													 <td tabindex="4" rowspan="1" colspan="1"                                      
 																	style="width: 8%; text-align:center">
-														 <label>NSU</label>
+														 <label>Bandeira</label>
 													 </td>
 													 <td tabindex="5" rowspan="1" colspan="1"                                      
-																	style="width: 8%; text-align:center">
+																	style="width: 6%; text-align:center">
+														 <label>NSU</label>
+													 </td>
+													 <td tabindex="6" rowspan="1" colspan="1"                                      
+																	style="width: 6%; text-align:center">
 														 <label>Venda</label>
 													 </td>
-													 <td tabindex="6" rowspan="2" colspan="1"                                      
+													 <td tabindex="7" rowspan="2" colspan="1"                                      
 																	style="width: 50%; text-align:center">
 														 <span style="margin-right: 20px" title="Buscar pelo NSU">
 															 <a href="javascript:;" class="btn btn-icon-only default"
@@ -278,23 +286,22 @@
 													 </td>
 												 </tr>
 												 <tr role="row">
-													 <td class="col-sm-1">
-															 <span ng-bind="modalBuscaTitulos.recebimento.NumParcela === 0 ? '1' : modalBuscaTitulos.recebimento.NumParcela"></span>
+													 <td ng-bind="modalBuscaTitulos.recebimento.NumParcela === 0 ? '1' : modalBuscaTitulos.recebimento.NumParcela">
 													 </td>
-													 <td class="col-sm-1">
+													 <td>
 															 {{modalBuscaTitulos.recebimento.Valor | currency:'R$'}}
 													 </td>
-													 <td class="col-sm-2">
-															 <span ng-bind="getDataString(modalBuscaTitulos.recebimento.Data)"></span>
+													 <td ng-bind="getDataString(modalBuscaTitulos.recebimento.Data)">
 													 </td>
-													 <td class="col-sm-2">
+													 <td ng-bind="getDataString(modalBuscaTitulos.recebimento.DataEfetiva)">
+													 </td>
+													 <td>
 															 {{modalBuscaTitulos.recebimento.Bandeira | uppercase}}
 													 </td>
-													 <td class="col-sm-1">
+													 <td>
 															 {{("000000000000" + modalBuscaTitulos.recebimento.Nsu).slice(-12)}}
 													 </td>
-													 <td class="col-sm-2">
-															 <span ng-bind="getDataString(modalBuscaTitulos.recebimento.DataVenda)"></span>
+													 <td ng-bind="getDataString(modalBuscaTitulos.recebimento.DataVenda)">
 													 </td>
 												 </tr>
 											 </tbody>
@@ -684,10 +691,19 @@
                                          ng-bind="dado.RecebimentoParcela !== null ? '=============================' : ''">
                                     </div>
                                 </div>
-                                <!--DATA-->
+								<!--DATA EFETIVA-->
+                                <div class="row" ng-show="dado.RecebimentoParcela !== null && dado.RecebimentoParcela.DataEfetiva && dado.RecebimentoParcela.DataEfetiva !== null">
+                                    <div class="col-md-6 col-sm-6">
+                                        <label ng-bind="dado.RecebimentoParcela !== null ? 'Data Efetiva:' : ''"></label>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados"
+                                         ng-bind="dado.RecebimentoParcela !== null ? getDataString(dado.RecebimentoParcela.DataEfetiva) : ''">
+                                    </div>
+                                </div>
+                                <!--DATA PREVISTA-->
                                 <div class="row">
                                     <div class="col-md-6 col-sm-6">
-                                        <label ng-bind="dado.RecebimentoParcela !== null ? 'Data:' : ''"></label>
+                                        <label ng-bind="dado.RecebimentoParcela !== null ? 'Data Prevista:' : ''"></label>
                                     </div>
                                     <div class="col-md-6 col-sm-6 alinhamentoDados"
                                          ng-bind="dado.RecebimentoParcela !== null ? getDataString(dado.RecebimentoParcela.Data) : ''">
@@ -815,6 +831,10 @@
                                     <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria"
                                          ng-bind="dado.Titulo !== null ? '=============================' : ''">
                                     </div>
+                                </div>
+                                <!--DATA EFETIVA-->
+                                <div class="row" ng-show="dado.RecebimentoParcela !== null && dado.RecebimentoParcela.DataEfetiva && dado.RecebimentoParcela.DataEfetiva !== null"
+                                     style="margin-top: 20px">
                                 </div>
                                 <!--DATA-->
                                 <div class="row">
