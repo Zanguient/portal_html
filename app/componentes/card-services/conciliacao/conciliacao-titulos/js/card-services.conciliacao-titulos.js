@@ -63,8 +63,9 @@ angular.module("card-services-conciliacao-titulos", [])
     $scope.exibeTela = false;    
     $scope.abrirCalendarioDataMin = $scope.abrirCalendarioDataVendaMin = false;
     $scope.abrirCalendarioDataMax = $scope.abrirCalendarioDataVendaMax = false; 
-    
-    
+    //TEF
+    $scope.statusPesquisaTef = false;
+		$scope.dadosTef = [];
     
     // Inicialização do controller
     $scope.cardServices_conciliacaoTitulosInit = function(){
@@ -117,7 +118,18 @@ angular.module("card-services-conciliacao-titulos", [])
         //if($scope.usuariologado.grupoempresa) buscaFiliais(true);
     };
     
-    
+    //TEF
+		$scope.buscaTEF = function(){
+			$scope.statusPesquisaTef = true;
+			consultaTef(true);
+		}
+		
+		$scope.limparTef = function(){
+			$scope.statusPesquisaTef = false
+			$scope.dadosTef = [];
+		}
+																							 
+																							 
     // PERMISSÕES                                          
     /**
       * Retorna true se o usuário pode alterar dados de conciliação de títulos
@@ -222,9 +234,76 @@ angular.module("card-services-conciliacao-titulos", [])
        if($scope.filtro.datamax === null) $scope.filtro.datamax = '';
        else ajustaIntervaloDeData();
     };
-                                                 
- 
-          
+             
+																							 
+ 		//TEF
+																							 
+		/*var formatarNsu = function(){
+			//$scope.modalBuscaTitulos.recebimento.Nsu;
+			$scope.nsuFormatado = $scope.modalBuscaTitulos.recebimento.Nsu;
+			
+			do{
+				
+				if ($scope.nsuFormatado.length != 12){
+					
+				}
+			}
+		};*/
+																							 
+																							 
+    var consultaTef = function(showMessage){
+
+			if($scope.usuariologado.grupoempresa){
+				
+				$scope.showProgress();
+				
+				var filtros = [];
+				
+				$scope.valorFiltroTef = $scope.modalBuscaTitulos.recebimento.Valor.toString().replace(".", ",");
+				
+				//FILTROS				
+				//Valor
+				//if($scope.parametro.busca !== '' && $scope.parametro.busca !== null){
+					filtros.push({
+						id: /*$campos.card.tbrecebimentotef.vlVenda*/ 111, 
+						valor: $scope.valorFiltroTef
+					});
+				//}
+				
+				//NSU Host
+				$scope.nsuFormatado = ("000000000000" + $scope.modalBuscaTitulos.recebimento.Nsu).slice(-12);
+				//if($scope.parametro.buscaAdquirente !== '' && $scope.parametro.buscaAdquirente !== null){
+					filtros.push({
+						id: /*$campos.card.tbrecebimentotef.nrNSUHost*/ 105,
+						valor: $scope.nsuFormatado
+					});
+				//}		
+
+				// Somente com status ativo
+				//filtros.push({id: /*$campos.cliente.empresa.fl_ativo*/ 516, valor: $scope.usuariologado.grupoempresa.id_grupo});
+
+				// Filtro do grupo empresa => barra administrativa
+				//if($scope.usuariologado.grupoempresa){ 
+					//filtros.push({id: /*$campos.cliente.empresa.id_grupo*/ 516, valor: $scope.usuariologado.grupoempresa.id_grupo});
+					//if ($scope.usuariologado.tbcontacorrentetbloginadquirenteempresa) filtros.push({
+//						id: /*$campos.card.tbcontacorrentetbloginadquirenteempresa.nu_cnpj*/ 500,
+	//					valor: $scope.usuariologado.tbcontacorrentetbloginadquirenteempresa.nu_cnpj
+		//			});
+
+					$webapi.get($apis.getUrl($apis.card.tbrecebimentotef, [$scope.token, 4, 100], filtros)) 
+						.then(function(dados){
+						$scope.dadosTef = dados.Registros;
+						$scope.hideProgress();
+					},
+									function(failData){
+						if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+						else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+						else $scope.showAlert('Houve uma falha ao obter dados do TEF (' + failData.status + ')', true, 'danger', true);
+						$scope.hideProgress();
+					});     
+				}
+			};
+																							 
                                                  
     // FILIAIS                                             
     
@@ -592,6 +671,7 @@ angular.module("card-services-conciliacao-titulos", [])
       * Selecionou um recebimentoparcela para buscar títulos
       */
     $scope.buscaTitulos = function(dado){
+			$scope.statusPesquisaTef = false;
         if(!dado.RecebimentoParcela || dado.RecebimentoParcela === null) return;
         $scope.modalBuscaTitulos.recebimento = dado.RecebimentoParcela;
         $scope.modalBuscaTitulos.titulos = [];
