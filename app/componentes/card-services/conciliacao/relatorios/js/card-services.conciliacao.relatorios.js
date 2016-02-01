@@ -254,12 +254,12 @@ angular.module("card-services-conciliacao-relatorios", [])
     }
 		
 		//IMPRESSÃO
-		/*$scope.imprimir = function(){
+		$scope.imprimir = function(){
 			if($scope.filtro.filial && $scope.filtro.filial !== null){  
-				$window.open('views/print#?e=' + $scope.usuariologado.grupoempresa.ds_nome + '&s=' + "relatorioConciliacao" + '&n='+ 3
-										 +'&cl='+12+'&c='+$scope.filtro.filial.nu_cnpj+'&f='+$scope.filtro.filial.ds_fantasia+
+				$window.open('views/print#?e=' + $scope.usuariologado.grupoempresa.ds_nome + '&s=' + "Relatório de Conciliação" + '&n='+ 3
+										 +'&cl='+12+'&t='+$scope.token+'&c='+$scope.filtro.filial.nu_cnpj+'&f='+$scope.filtro.filial.ds_fantasia+
 										 '&d='+$scope.getFiltroData($scope.filtro.data, true), '_blank');
 			}			
-		}*/
+		}
             
 }]);
