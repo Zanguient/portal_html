@@ -121,6 +121,12 @@ angular.module("card-services-conciliacao-titulos", [])
     //TEF
 		$scope.buscaTEF = function(){
 			$scope.statusPesquisaTef = true;
+			consultaTef(true);
+		}
+		
+		$scope.limparTef = function(){
+			$scope.statusPesquisaTef = false
+			$scope.dadosTef = [];
 		}
 																							 
 																							 
@@ -228,30 +234,50 @@ angular.module("card-services-conciliacao-titulos", [])
        if($scope.filtro.datamax === null) $scope.filtro.datamax = '';
        else ajustaIntervaloDeData();
     };
-                                                 
+             
+																							 
  		//TEF
-    var buscaTEF = function(showMessage){
+																							 
+		/*var formatarNsu = function(){
+			//$scope.modalBuscaTitulos.recebimento.Nsu;
+			$scope.nsuFormatado = $scope.modalBuscaTitulos.recebimento.Nsu;
+			
+			do{
+				
+				if ($scope.nsuFormatado.length != 12){
+					
+				}
+			}
+		};*/
+																							 
+																							 
+    var consultaTef = function(showMessage){
 
 			if($scope.usuariologado.grupoempresa){
-
-				if($scope.filtro.filial && $scope.filtro.filial !== null){
-           var filtroFilial = {id: /*$campos.card.tbrecebimentotef.nrCNPJ*/ 102, 
-                               valor: $scope.filtro.filial.nu_cnpj};
-           filtros.push(filtroFilial);  
-       }
 				
-				//$scope.showProgress(divPortletBodyFiltrosPos, 10000);    
-				$scope.showProgress(divPortletBodyFilialPos); 
+				$scope.showProgress();
+				
 				var filtros = [];
 				
-				filtros.push({id: /*$campos.cliente.empresa.fl_ativo*/ 114, valor: 1});
-
-       // Filtro do grupo empresa => barra administrativa
-       if($scope.usuariologado.grupoempresa){ 
-           filtros.push({id: /*$campos.cliente.empresa.id_grupo*/ 116, valor: $scope.usuariologado.grupoempresa.id_grupo});
-           if($scope.usuariologado.empresa) filtros.push({id: /*$campos.cliente.empresa.nu_cnpj*/ 100, 
-                                                          valor: $scope.usuariologado.empresa.nu_cnpj});
-       }
+				$scope.valorFiltroTef = $scope.modalBuscaTitulos.recebimento.Valor.toString().replace(".", ",");
+				
+				//FILTROS				
+				//Valor
+				//if($scope.parametro.busca !== '' && $scope.parametro.busca !== null){
+					filtros.push({
+						id: /*$campos.card.tbrecebimentotef.vlVenda*/ 111, 
+						valor: $scope.valorFiltroTef
+					});
+				//}
+				
+				//NSU Host
+				$scope.nsuFormatado = ("000000000000" + $scope.modalBuscaTitulos.recebimento.Nsu).slice(-12);
+				//if($scope.parametro.buscaAdquirente !== '' && $scope.parametro.buscaAdquirente !== null){
+					filtros.push({
+						id: /*$campos.card.tbrecebimentotef.nrNSUHost*/ 105,
+						valor: $scope.nsuFormatado
+					});
+				//}		
 
 				// Somente com status ativo
 				//filtros.push({id: /*$campos.cliente.empresa.fl_ativo*/ 516, valor: $scope.usuariologado.grupoempresa.id_grupo});
@@ -264,17 +290,16 @@ angular.module("card-services-conciliacao-titulos", [])
 	//					valor: $scope.usuariologado.tbcontacorrentetbloginadquirenteempresa.nu_cnpj
 		//			});
 
-					$webapi.get($apis.getUrl($apis.cliente.empresa, 
-																	 [$scope.token, 0, /*$campos.cliente.empresa.ds_fantasia*/ 104],
-																	 filtros)) 
+					$webapi.get($apis.getUrl($apis.card.tbrecebimentotef, [$scope.token, 4, 100], filtros)) 
 						.then(function(dados){
-						$scope.filiais = dados.Registros;
+						$scope.dadosTef = dados.Registros;
+						$scope.hideProgress();
 					},
 									function(failData){
 						if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
 						else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-						else $scope.showAlert('Houve uma falha ao obter filiais (' + failData.status + ')', true, 'danger', true);
-						$scope.hideProgress(divPortletBodyFiltrosPos);
+						else $scope.showAlert('Houve uma falha ao obter dados do TEF (' + failData.status + ')', true, 'danger', true);
+						$scope.hideProgress();
 					});     
 				}
 			};
