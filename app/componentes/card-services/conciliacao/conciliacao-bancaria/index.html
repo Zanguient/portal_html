@@ -10,6 +10,9 @@
 
 
 
+    Versão 1.1.1 - 25/01/2016
+    - Lote
+
     Versão 1.1.0 - 30/11/2015
     - Valor Bruto do cupom de parcelas
 
@@ -294,7 +297,7 @@
        <!-- MODAL DETALHAR DOCUMENTOS -->
        <div class="modal fade bs-modal-sm modal-input" 
             id="modalDetalhes" aria-hidden="true">
-           <div class="modal-dialog modal-sm" style="width:1050px">
+           <div class="modal-dialog modal-sm" style="width:1150px">
                <div class="modal-content">
                    <div class="modal-header">
                        <h4 class="modal-title modal-cabecalho">Detalhes do agrupamento</h4>
@@ -310,7 +313,10 @@
                            <div class="col-sm-2">
                                 <label>Venda</label>
                            </div>
-                           <div class="col-sm-2">
+                           <div class="col-sm-1">
+                                <label>Lote</label>
+                           </div>
+                           <div class="col-sm-1">
                                 <label>NSU</label>
                            </div>
                            <div class="col-sm-2">
@@ -336,7 +342,12 @@
                                 ng-show="item.NumParcela >= 0">
                            </div>
                            <div style="text-align:center"
-                                ng-class="{'col-sm-2' : item.NumParcela >= 0, 'col-sm-6' : item.NumParcela < 0}">
+                                class="col-sm-1"
+                                ng-show="item.NumParcela >= 0"
+                                ng-bind="item.Lote > 0 ? item.Lote : ''">
+                           </div>
+                           <div style="text-align:center"
+                                ng-class="{'col-sm-1' : item.NumParcela >= 0, 'col-sm-6' : item.NumParcela < 0}">
                                 {{item.Documento | uppercase}}
                            </div>
                            <div class="col-sm-2" style="text-align:center"
@@ -449,7 +460,10 @@
                        <div class="col-sm-2">
                             <label>Venda</label>
                        </div>
-                       <div class="col-sm-2">
+                       <div class="col-sm-1">
+                            <label>Lote</label>
+                       </div>
+                       <div class="col-sm-1">
                             <label>NSU</label>
                        </div>
                        <div class="col-sm-2">
@@ -472,7 +486,12 @@
                             ng-show="item.NumParcela >= 0">
                        </div>
                        <div style="text-align:center"
-                            ng-class="{'col-sm-2' : item.NumParcela >= 0, 'col-sm-6' : item.NumParcela < 0}">
+                                class="col-sm-1"
+                                ng-show="item.NumParcela >= 0"
+                                ng-bind="item.Lote > 0 ? item.Lote : ''">
+                           </div>
+                       <div style="text-align:center"
+                            ng-class="{'col-sm-1' : item.NumParcela >= 0, 'col-sm-6' : item.NumParcela < 0}">
                             {{item.Documento | uppercase}}
                        </div>
                        <div class="col-sm-2" style="text-align:center"
@@ -673,7 +692,7 @@
                                                  ng-bind="dado.RecebimentosParcela !== null ? 'Previsão de Crédito' : ''">
                                             </div>
                                             <div class="col-md-2">
-                                                <span ng-class="{'element-hidden' : dado.Conciliado !== 3 || dado.ExtratoBancario !== null || !associacaoManual.selecionandoRecebimentos || !isMesmaDataEAdquirenteExtratoSelecionado(dado)}" print-remove>
+                                                <span ng-class="{'element-hidden' : (dado.Conciliado !== 3 && dado.Conciliado !== 2) || dado.ExtratoBancario !== null || !associacaoManual.selecionandoRecebimentos || !isMesmaDataEAdquirenteExtratoSelecionado(dado)}" print-remove>
                                                     <checkbox normal ng-model="dado.selecionado"></checkbox>
                                                 </span>
                                             </div>
@@ -699,8 +718,14 @@
                                     <div class="col-md-6 col-sm-6">
                                         <label ng-bind="dado.RecebimentosParcela !== null ? 'Data:' : ''"></label>
                                     </div>
-                                    <div class="col-md-6 col-sm-6 alinhamentoDados"
-                                         ng-bind="dado.RecebimentosParcela !== null ? getDataString(dado.Data) : ''">
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                        <span ng-bind="dado.RecebimentosParcela !== null ? getDataString(dado.Data) : ''">
+                                        </span>
+                                        <span ng-show="dado.RecebimentosParcela !== null && dado.Antecipado && dado.Antecipado !== null">
+                                            &nbsp;&nbsp;
+                                            <i class="fa fa-adn" style="color: #7E1416; font-size: 18px"
+                                               title="Cargas antecipadas"></i>
+                                        </span>
                                     </div>
                                 </div>
                                 <!--ADQUIRENTE -->
@@ -721,6 +746,16 @@
                                          ng-bind="dado.RecebimentosParcela !== null ? dado.Bandeira : ''">
                                     </div>                      
                                 </div> 
+                                <!--LOTE -->
+                                <div class="row" 
+                                     ng-show="dado.Lote > 0">
+                                    <div class="col-md-3 col-sm-3">
+                                        <label ng-bind="dado.RecebimentosParcela !== null ? 'Lote:' : ''"></label>
+                                    </div>
+                                    <div class="col-md-9 col-sm-9 alinhamentoDados">
+                                        {{dado.Lote}}
+                                    </div>                      
+                                </div>
                                 <!--VALOR TOTAL-->
                                 <div class="row" 
                                      ng-init="incrementaContRecebimentosParcelas(dado.RecebimentosParcela)">
@@ -764,7 +799,7 @@
                                         </button>
                                     </div>                                              
                                 </div>
-                                <!--CONSULTA DE TITULOS ERP : PETROX ou SAMAM-->
+                                <!--CONSULTA DE TITULOS ERP -->
                                 <div class="row" style="text-align:center"
                                      ng-show="dado.Conciliado === 1" print-remove
                                      style="margin-top: 10px">
@@ -782,13 +817,13 @@
                     <div class="col-md-3 col-md-offset-1 btnConciliacaoBancariaTef" style="padding-left:10%" print-hide>
                         <div class="row" ng-init="incrementaTotalPreConciliados(dado.Conciliado === 2); incrementaTotalConciliados(dado.Conciliado === 1)">
                             <div class="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-4"
-                                 title="{{dado.Conciliado == 1 ? 'Desfazer conciliação' : dado.Conciliado === 2 && !associacaoManual.selecionandoRecebimentos ? 'Conciliar' : dado.Conciliado === 3 && dado.ExtratoBancario === null && !associacaoManual.selecionandoRecebimentos ? 'Alterar data de recebimento' : dado.Conciliado === 3 && dado.RecebimentosParcela === null && !associacaoManual.selecionandoRecebimentos && (!associacaoManual.extrato || associacaoManual.extrato === null) ? 'Conciliar manualmente' : dado.Conciliado === 3 && dado.RecebimentosParcela === null && associacaoManual.selecionandoRecebimentos && isExtratoSelecionado(dado) ? 'Cancelar' : dado.Conciliado === 3 && dado.ExtratoBancario === null && associacaoManual.selecionandoRecebimentos && isMesmaDataEAdquirenteExtratoSelecionado(dado) && dado.selecionado ? 'Conciliar com movimentação bancária selecionada' : ''}}">
+                                 title="{{dado.Conciliado == 1 ? 'Desfazer conciliação' : dado.Conciliado === 2 && !associacaoManual.selecionandoRecebimentos ? 'Conciliar' : dado.Conciliado === 3 && dado.ExtratoBancario === null && !associacaoManual.selecionandoRecebimentos ? 'Alterar data de recebimento' : dado.Conciliado === 3 && dado.RecebimentosParcela === null && !associacaoManual.selecionandoRecebimentos && (!associacaoManual.extrato || associacaoManual.extrato === null) ? 'Conciliar manualmente' : dado.Conciliado === 3 && dado.RecebimentosParcela === null && associacaoManual.selecionandoRecebimentos && isExtratoSelecionado(dado) ? 'Cancelar' : (dado.Conciliado === 2 || (dado.Conciliado === 3 && dado.ExtratoBancario === null)) && associacaoManual.selecionandoRecebimentos && isMesmaDataEAdquirenteExtratoSelecionado(dado) && dado.selecionado ? 'Conciliar com movimentação bancária selecionada' : ''}}">
                                 <a href="javascript:;" class="btn btn-icon-only"
                                    ng-class="{'default' : !associacaoManual.selecionandoRecebimentos || dado.Conciliado !== 3 || dado.RecebimentosParcela !== null || !isExtratoSelecionado(dado), 'btn-primary' : dado.Conciliado === 3 && dado.RecebimentosParcela === null && associacaoManual.selecionandoRecebimentos && isExtratoSelecionado(dado)}"
-                                   ng-click="dado.Conciliado === 1 ? desconcilia(dado) : dado.Conciliado === 2 ? concilia(dado) : dado.Conciliado === 3 && dado.ExtratoBancario === null && !associacaoManual.selecionandoRecebimentos ? exibeModalDataRecebimento(dado) : dado.Conciliado === 3 && dado.RecebimentosParcela === null && !associacaoManual.selecionandoRecebimentos ? associaExtratoBancario(dado) : dado.Conciliado === 3 && dado.RecebimentosParcela === null && associacaoManual.selecionandoRecebimentos ? desassociaExtratoBancario() : dado.Conciliado === 3 && dado.ExtratoBancario === null && associacaoManual.selecionandoRecebimentos && isMesmaDataEAdquirenteExtratoSelecionado(dado) && dado.selecionado ? associaRecebimentosSelecionados() : 0"
-                                   ng-disabled="!usuarioPodeAlterarDadosConciliacaoBancaria() ||  (associacaoManual.selecionandoRecebimentos && (dado.Conciliado === 2 || (dado.Conciliado === 3 && ((dado.ExtratoBancario === null && (!isMesmaDataEAdquirenteExtratoSelecionado(dado) || !dado.selecionado)) || (dado.RecebimentosParcela === null && !isExtratoSelecionado(dado)) ))))">
+                                   ng-click="dado.Conciliado === 1 ? desconcilia(dado) : dado.Conciliado === 2 && !associacaoManual.selecionandoRecebimentos ? concilia(dado) : dado.Conciliado === 3 && dado.ExtratoBancario === null && !associacaoManual.selecionandoRecebimentos ? exibeModalDataRecebimento(dado) : dado.Conciliado === 3 && dado.RecebimentosParcela === null && !associacaoManual.selecionandoRecebimentos ? associaExtratoBancario(dado) : dado.Conciliado === 3 && dado.RecebimentosParcela === null && associacaoManual.selecionandoRecebimentos ? desassociaExtratoBancario() : (dado.Conciliado === 2 || (dado.Conciliado === 3 && dado.ExtratoBancario === null)) && associacaoManual.selecionandoRecebimentos && isMesmaDataEAdquirenteExtratoSelecionado(dado) && dado.selecionado ? associaRecebimentosSelecionados() : 0"
+                                   ng-disabled="!usuarioPodeAlterarDadosConciliacaoBancaria() ||  (associacaoManual.selecionandoRecebimentos && (dado.Conciliado === 3 && ((dado.ExtratoBancario === null && (!isMesmaDataEAdquirenteExtratoSelecionado(dado) || !dado.selecionado)) || (dado.RecebimentosParcela === null && !isExtratoSelecionado(dado)) )))">
                                     <i class="fa"
-                                       ng-class="{'fa-undo': dado.Conciliado === 1, 'fa-arrow-right': dado.Conciliado === 2, 'fa-edit': dado.Conciliado === 3 && dado.ExtratoBancario === null && (!associacaoManual.selecionandoRecebimentos || !isMesmaDataEAdquirenteExtratoSelecionado(dado)), 'fa-search' : dado.Conciliado === 3 && dado.RecebimentosParcela === null && (!associacaoManual.selecionandoRecebimentos || !isExtratoSelecionado(dado)), 'fa-times' : dado.Conciliado === 3 && dado.RecebimentosParcela === null && associacaoManual.selecionandoRecebimentos && isExtratoSelecionado(dado), 'fa-arrow-left': dado.Conciliado === 3 && dado.ExtratoBancario === null && associacaoManual.selecionandoRecebimentos && isMesmaDataEAdquirenteExtratoSelecionado(dado)}"></i>
+                                       ng-class="{'fa-undo': dado.Conciliado === 1, 'fa-arrow-right': dado.Conciliado === 2 && !associacaoManual.selecionandoRecebimentos, 'fa-edit': dado.Conciliado === 3 && dado.ExtratoBancario === null && (!associacaoManual.selecionandoRecebimentos || !isMesmaDataEAdquirenteExtratoSelecionado(dado)), 'fa-search' : dado.Conciliado === 3 && dado.RecebimentosParcela === null && (!associacaoManual.selecionandoRecebimentos || !isExtratoSelecionado(dado)), 'fa-times' : dado.Conciliado === 3 && dado.RecebimentosParcela === null && associacaoManual.selecionandoRecebimentos && isExtratoSelecionado(dado), 'fa-arrow-left': (dado.Conciliado === 2 || (dado.Conciliado === 3 && dado.ExtratoBancario === null)) && associacaoManual.selecionandoRecebimentos && isMesmaDataEAdquirenteExtratoSelecionado(dado)}"></i>
                                 </a>
                             </div>
                         </div>
@@ -863,8 +898,14 @@
                                     <div class="col-md-3 col-sm-3">
                                         <label ng-bind="dado.ExtratoBancario !== null ? 'Memo:' : ''"></label>
                                     </div>
-                                    <div class="col-md-9 col-sm-9 alinhamentoDados"
-                                         ng-bind="dado.ExtratoBancario !== null ? dado.Memo : ''">
+                                    <div class="col-md-9 col-sm-9 alinhamentoDados">
+                                        <span ng-bind="dado.ExtratoBancario !== null ? dado.Memo : ''">
+                                        </span>
+                                        <span ng-show="dado.ExtratoBancario !== null && dado.Antecipado && dado.Antecipado !== null">
+                                            &nbsp;&nbsp;
+                                            <i class="fa fa-adn" style="color: #7E1416; font-size: 18px"
+                                               title="Movimentação bancária de Antecipação"></i>
+                                        </span>
                                     </div>                      
                                 </div> 
                                 <!--FILIAL -->

@@ -8,6 +8,9 @@
     Card Services > Conciliação > Conciliação de Títulos
 
 
+    Versão 1.0.5 - 27/01/2016
+    - Data Efetiva
+
     Versão 1.0.4 - 27/11/2015
     - Considerar pré-conciliação com outras filiais do grupo
  
@@ -225,7 +228,7 @@
         <!-- MODAL TÍTULOS -->
        <div class="modal fade bs-modal-sm modal-input" 
             id="modalTitulos" aria-hidden="true">
-           <div class="modal-dialog modal-sm" style="width:1000px">
+           <div class="modal-dialog modal-sm" style="width:1100px">
                <div class="modal-content">
                    <div class="modal-header">
                        <h4 class="modal-title modal-cabecalho">Busca títulos</h4>
@@ -240,12 +243,15 @@
                                <label>Valor</label>
                            </div>
                            <div class="col-sm-2">
-                               <label>Recebimento</label>
-                           </div>
-                           <div class="col-sm-4">
-                               <label>Bandeira</label>
+                               <label>Data Prevista</label>
                            </div>
                            <div class="col-sm-2">
+                               <label>Data Efetiva</label>
+                           </div>
+                           <div class="col-sm-3">
+                               <label>Bandeira</label>
+                           </div>
+                           <div class="col-sm-1">
                                <label>NSU</label>
                            </div>
                            <div class="col-sm-2">
@@ -262,10 +268,13 @@
                            <div class="col-sm-2">
                                <span ng-bind="getDataString(modalBuscaTitulos.recebimento.Data)"></span>
                            </div>
-                           <div class="col-sm-4">
+                           <div class="col-sm-2">
+                               <span ng-bind="getDataString(modalBuscaTitulos.recebimento.DataEfetiva)"></span>
+                           </div>
+                           <div class="col-sm-3">
                                {{modalBuscaTitulos.recebimento.Bandeira | uppercase}}
                            </div>
-                           <div class="col-sm-2">
+                           <div class="col-sm-1">
                                {{modalBuscaTitulos.recebimento.Nsu}}
                            </div>
                            <div class="col-sm-2">
@@ -504,10 +513,19 @@
                                          ng-bind="dado.RecebimentoParcela !== null ? '=============================' : ''">
                                     </div>
                                 </div>
-                                <!--DATA-->
+                                <!--DATA EFETIVA-->
+                                <div class="row" ng-show="dado.RecebimentoParcela !== null && dado.RecebimentoParcela.DataEfetiva && dado.RecebimentoParcela.DataEfetiva !== null">
+                                    <div class="col-md-6 col-sm-6">
+                                        <label ng-bind="dado.RecebimentoParcela !== null ? 'Data Efetiva:' : ''"></label>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados"
+                                         ng-bind="dado.RecebimentoParcela !== null ? getDataString(dado.RecebimentoParcela.DataEfetiva) : ''">
+                                    </div>
+                                </div>
+                                <!--DATA PREVISTA-->
                                 <div class="row">
                                     <div class="col-md-6 col-sm-6">
-                                        <label ng-bind="dado.RecebimentoParcela !== null ? 'Data:' : ''"></label>
+                                        <label ng-bind="dado.RecebimentoParcela !== null ? 'Data Prevista:' : ''"></label>
                                     </div>
                                     <div class="col-md-6 col-sm-6 alinhamentoDados"
                                          ng-bind="dado.RecebimentoParcela !== null ? getDataString(dado.RecebimentoParcela.Data) : ''">
@@ -635,6 +653,10 @@
                                     <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria"
                                          ng-bind="dado.Titulo !== null ? '=============================' : ''">
                                     </div>
+                                </div>
+                                <!--DATA EFETIVA-->
+                                <div class="row" ng-show="dado.RecebimentoParcela !== null && dado.RecebimentoParcela.DataEfetiva && dado.RecebimentoParcela.DataEfetiva !== null"
+                                     style="margin-top: 20px">
                                 </div>
                                 <!--DATA-->
                                 <div class="row">
