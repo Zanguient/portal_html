@@ -85,6 +85,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 							   Valor : double,
 							   Bandeira : string,
 							   Data : datetime,
+							   DataEfetiva : datetime ou null,
 							   Filial : string,
 							},
 		  Adquirente : string, 

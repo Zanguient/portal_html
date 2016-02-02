@@ -4,6 +4,10 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.5 - 01/02/2016
+ *  - Data Efetiva
+ *  - Busca TEF
+ *
  *  Versão 1.0.4 - 27/11/2015
  *  - Considerar pré-conciliação com outras filiais do grupo
  *
