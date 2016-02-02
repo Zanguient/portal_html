@@ -247,35 +247,35 @@
 											 <tbody class="centralizarVertical">
 												 <tr role="row">
 													 <td tabindex="0" rowspan="1" colspan="1"                                      
-																	style="width: 6%; text-align:center">
+															 style="width: 7%; text-align:center">
 														 <label>Parcela</label>
 													 </td>
 													 <td tabindex="1" rowspan="1" colspan="1"                                      
-																	style="width: 10%; text-align:center">
+															 style="width: 5%; text-align:center">
 														 <label>Valor</label>
 													 </td>
 													 <td tabindex="2" rowspan="1" colspan="1"                                      
-														 style="width: 13%; text-align:center">
+															 style="width: 13%; text-align:center">
 														 <label>Data Prevista</label>
 													 </td>
-                                                     <td tabindex="3" rowspan="1" colspan="1"                                      
-																	style="width: 10%; text-align:center">
+													 <td tabindex="3" rowspan="1" colspan="1"                                      
+															 style="width: 10%; text-align:center">
 														 <label>Data Efetiva</label>
 													 </td>
 													 <td tabindex="4" rowspan="1" colspan="1"                                      
-																	style="width: 20%; text-align:center">
+															 style="width: 15%; text-align:center">
 														 <label>Bandeira</label>
 													 </td>
 													 <td tabindex="5" rowspan="1" colspan="1"                                      
-																	style="width: 10%; text-align:center">
+															 style="width: 10%; text-align:center">
 														 <label>NSU</label>
 													 </td>
 													 <td tabindex="6" rowspan="1" colspan="1"                                      
-																	style="width: 10%; text-align:center">
+															 style="width: 10%; text-align:center">
 														 <label>Venda</label>
 													 </td>
 													 <td tabindex="7" rowspan="2" colspan="1"                                      
-																	style="width: 20%; text-align:center">
+															 style="width: 30%; text-align:center">
 														 <span style="margin-right: 20px" title="Buscar pelo NSU">
 															 <a href="javascript:;" class="btn btn-icon-only default"
 																	ng-click="buscaTEF()">
@@ -286,23 +286,15 @@
 													 </td>
 												 </tr>
 												 <tr role="row">
-													 <td ng-bind="modalBuscaTitulos.recebimento.NumParcela === 0 ? '1' : modalBuscaTitulos.recebimento.NumParcela">
+													 <td ng-bind="modalBuscaTitulos.recebimento.NumParcela === 0 ? '1' :
+																				modalBuscaTitulos.recebimento.NumParcela">
 													 </td>
-													 <td>
-															 {{modalBuscaTitulos.recebimento.Valor | currency:'R$'}}
-													 </td>
-													 <td ng-bind="getDataString(modalBuscaTitulos.recebimento.Data)">
-													 </td>
-													 <td ng-bind="getDataString(modalBuscaTitulos.recebimento.DataEfetiva)">
-													 </td>
-													 <td>
-															 {{modalBuscaTitulos.recebimento.Bandeira | uppercase}}
-													 </td>
-													 <td>
-															 {{("000000000000" + modalBuscaTitulos.recebimento.Nsu).slice(-12)}}
-													 </td>
-													 <td ng-bind="getDataString(modalBuscaTitulos.recebimento.DataVenda)">
-													 </td>
+													 <td>{{modalBuscaTitulos.recebimento.Valor | currency:'R$'}}</td>
+													 <td ng-bind="getDataString(modalBuscaTitulos.recebimento.Data)"></td>
+													 <td ng-bind="getDataString(modalBuscaTitulos.recebimento.DataEfetiva)"></td>
+													 <td>{{modalBuscaTitulos.recebimento.Bandeira | uppercase}}</td>
+													 <td>{{("000000000000" + modalBuscaTitulos.recebimento.Nsu).slice(-12)}}</td>
+													 <td ng-bind="getDataString(modalBuscaTitulos.recebimento.DataVenda)"></td>
 												 </tr>
 											 </tbody>
 										 </table>
@@ -374,7 +366,7 @@
 																	Filial
 															</th>
 															<th tabindex="2" rowspan="1" colspan="1"                                          
-																	style="width: 10%; font-size: 100%">
+																	style="width: 5%; font-size: 100%">
 																	 Bandeira
 															</th>                                    
 															<th tabindex="3" rowspan="1" colspan="1"                                         
@@ -382,7 +374,7 @@
 																	 Cartão
 															</th>
 															<th tabindex="4" rowspan="1" colspan="1"                                          
-																	style="width: 10%; font-size: 100%">
+																	style="width: 5%; font-size: 100%">
 																	 Valor(R$)
 															</th>
 															<th tabindex="5" rowspan="1" colspan="1"                                          
@@ -561,8 +553,8 @@
                                Imprimir
                            </button>
                        </div-->
-                       <div class="col-sm-6">
-                           <button ng-click="statusPesquisaTef = false" type="button" class="btn default" data-dismiss="modal">
+                       <div class="col-sm-12" align="center">
+                           <button align="center" ng-click="statusPesquisaTef = false" type="button" class="btn default" data-dismiss="modal">
                                Fechar
                            </button>
                        </div>                           
