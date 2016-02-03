@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.1.1 - 02/02/2016
+ *  - iconeMonitorCargasProcessandoDados
+ *
  *  Versão 1.1.0 - 25/01/2016
  *  - height aumentada dos cupons da conciliação bancária (320px)
  *
@@ -393,6 +396,10 @@ div.divTextosBrancos *{
 
 .iconeMonitorCargasEmExecucao{
     color: #000;
+}
+
+.iconeMonitorCargasProcessandoDados{
+    color: #00aa00;
 }
 
 .iconeMonitorCargasSucesso{

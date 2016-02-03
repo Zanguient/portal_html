@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.3 - 02/02/2016
+ *  - Não inicia automaticamente a conexão
+ *
  *  Versão 1.0.2 - 26/01/2016
  *  - Auditoria
  *
@@ -24,6 +27,8 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
         var monitor = this;
         
         var conectado = false;
+		
+		var forceClose = false;
 
         //jQuery.support.cors = true;
         
@@ -54,7 +59,7 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
                 conectado = false;
             },
             hubDisconnected: function () {
-                if (hub.connection.lastError) {
+                if (!forceClose && hub.connection.lastError) {
                     console.log("LAST ERROR: " + hub.connection.lastError.message);
                     // Reconecta
                     hub.connection.start();
@@ -106,6 +111,7 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
         }
         
         monitor.conectar = function(){
+			forceClose = false;
             if(!conectado || !hub || hub === null) hub = new Hub("ServerAtosCapital", options); 
             else $rootScope.$broadcast("notifyMonitorConnectionStatus", true);
         }
@@ -163,8 +169,10 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
           *
           */
         monitor.desconectar = function(){
-            if(typeof hub !== 'undefined' && hub !== null)
+            if(typeof hub !== 'undefined' && hub !== null){
+				forceClose = true;
                 hub.connection.stop();    
+			}
         };
         
         return monitor;
@@ -237,12 +245,12 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
                     // Reseta seleção de filtro específico de empresa
                     $scope.filtro.filial = $scope.filtro.adquirente = null;
                     buscaFiliais();
-                    if($scope.monitor.isConnected()){
+                    /*if($scope.monitor.isConnected()){
                         obtendoLista = true;
                         $scope.showProgress(divPortletBodyFiltrosPos, 10000);
                         $scope.showProgress(divPortletBodyMonitorPos);
                         $scope.monitor.obtemLista(obtemFiltroBusca());
-                    }
+                    }*/
                 }else{ // reseta tudo e não faz buscas 
                     $scope.filiais = [];
                     $scope.adquirentes = [];
@@ -291,10 +299,10 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
             // Conecta e obtém lista
             if($scope.usuariologado.grupoempresa){
                 buscaFiliais();
-                $scope.showProgress(divPortletBodyFiltrosPos, 10000);
-                $scope.showProgress(divPortletBodyMonitorPos);
-                conectando = true;
-                $scope.monitor.conectar(); 
+                //$scope.showProgress(divPortletBodyFiltrosPos, 10000);
+                //$scope.showProgress(divPortletBodyMonitorPos);
+                //conectando = true;
+                //$scope.monitor.conectar(); 
             }
         });
         // Acessou a tela
@@ -499,10 +507,19 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
     var obtemListaMonitorCargas = function(){
         if(!$scope.usuariologado.grupoempresa) return;
         if($scope.monitor && $scope.monitor !== null){
-            $scope.showProgress(divPortletBodyFiltrosPos, 10000);
-            $scope.showProgress(divPortletBodyMonitorPos);
-            if($scope.monitor.isConnected) $scope.monitor.obtemLista(obtemFiltroBusca());
-            else $scope.monitor.conectar();
+            if($scope.monitor.isConnected()){ 
+				//console.log("ESTÁ CONECTADO! OBTENDO LISTA...");
+				$scope.showProgress(divPortletBodyFiltrosPos, 10000);
+                $scope.showProgress(divPortletBodyMonitorPos);
+                obtendoLista = true;
+				$scope.monitor.obtemLista(obtemFiltroBusca());
+			}else if(!conectando){ 
+				//console.log("CONECTANDO...");
+				$scope.showProgress(divPortletBodyFiltrosPos, 10000);
+                $scope.showProgress(divPortletBodyMonitorPos);
+                conectando = true;
+				$scope.monitor.conectar();
+			}
         }
     }
     /**
@@ -538,27 +555,33 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
                  if(d === dia){
                      // Para cada modalidade...
                      // Valores pagos -> antecipação
-                     var pagosantecipacao = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'ANTECIPAÇÃO' || d.dsModalidade === 'ARQUIVOS'})[0];
+                     var pagosantecipacao = false;
+					 try{ pagosantecipacao = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'ANTECIPAÇÃO' || d.dsModalidade === 'ARQUIVOS'})[0] }catch(ex){};
                      if(!pagosantecipacao) pagosantecipacao = {};
                      else pagosantecipacao.flSucesso = tbLogCarga.flStatusPagosAntecipacao;
                      // // Valores pagos -> crédito
-                     var pagoscredito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'CRÉDITO' || d.dsModalidade === 'CRÉDITO/DÉBITO' || d.dsModalidade === 'ARQUIVOS'})[0];
+                     var pagoscredito = false;
+					 try{ pagoscredito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'CRÉDITO' || d.dsModalidade === 'CRÉDITO/DÉBITO' || d.dsModalidade === 'ARQUIVOS'})[0]; }catch(ex){};
                      if(!pagoscredito) pagoscredito = {};
                      else pagoscredito.flSucesso = tbLogCarga.flStatusPagosCredito;
                      // Valores pagos -> débito
-                     var pagosdebito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'CRÉDITO/DÉBITO' || d.dsModalidade === 'ARQUIVOS'})[0];
+                     var pagosdebito = false;
+					 try{ pagosdebito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'CRÉDITO/DÉBITO' || d.dsModalidade === 'ARQUIVOS'})[0]; }catch(ex){};
                      if(!pagosdebito) pagosdebito = {};
                      else pagosdebito.flSucesso = tbLogCarga.flStatusPagosDebito;
                      // Lançamentos futuros
-                     var areceber = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'LANÇAMENTOS FUTUROS'})[0];
+                     var areceber = false;
+					 try{ areceber = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'LANÇAMENTOS FUTUROS'})[0]; }catch(ex){};
                      if(!areceber) areceber = {};
                      else areceber.flSucesso = tbLogCarga.flStatusReceber;
                      // Venda à débito
-                     var vendadebito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'DÉBITO' || d.dsModalidade === 'ARQUIVOS' || (loginAdquirenteEmpresa.tbAdquirente.nmAdquirente !== 'REDE' && d.dsModalidade === 'VENDA')})[0];
+                     var vendadebito = false;
+					 try{ vendadebito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'DÉBITO' || d.dsModalidade === 'ARQUIVOS' || (loginAdquirenteEmpresa.tbAdquirente.nmAdquirente !== 'REDE' && d.dsModalidade === 'VENDA')})[0]; }catch(ex){};
                      if(!vendadebito) vendadebito = {};
                      else vendadebito.flSucesso = tbLogCarga.flStatusVendasDebito;
                      // Vendas à crédito
-                     var vendacredito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'VENDA' || d.dsModalidade === 'ARQUIVOS'})[0];
+                     var vendacredito = false;
+					 try{ vendacredito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'VENDA' || d.dsModalidade === 'ARQUIVOS'})[0]; }catch(ex){};
                      if(!vendacredito) vendacredito = {};
                      else vendacredito.flSucesso = tbLogCarga.flStatusVendasCredito;
                      
