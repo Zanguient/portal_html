@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.1.41 - 02/02/2016
+ *  - Itens por página aumentados
+ *
  *  Versão 1.1.4 - 24/11/2015
  *  - Lista somente contas ativas
  *
@@ -71,7 +74,7 @@ angular.module("card-services-conciliacao-bancaria", [])
     
     // flags
     // Exibição
-    $scope.itens_pagina = [50, 100, 150, 200];                                             
+    $scope.itens_pagina = [100, 150, 300, 500];                                             
     $scope.paginaInformada = 1; // página digitada pelo usuário                                             
     // Dados    
     $scope.dadosconciliacao = [];
@@ -88,7 +91,7 @@ angular.module("card-services-conciliacao-bancaria", [])
     $scope.tipos = [{id: 1, nome: 'CONCILIADO'}, {id: 2, nome: 'PRÉ-CONCILIADO'}, {id: 3, nome: 'NÃO CONCILIADO'}];             
     $scope.filtro = {datamin : new Date(), datamax : '', consideraPeriodo : true,
                      tipo : null, adquirente : undefined, filial : undefined, conta : undefined,
-                     itens_pagina : $scope.itens_pagina[1], order : 0,
+                     itens_pagina : $scope.itens_pagina[0], order : 0,
                      pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0
                     };  
     
