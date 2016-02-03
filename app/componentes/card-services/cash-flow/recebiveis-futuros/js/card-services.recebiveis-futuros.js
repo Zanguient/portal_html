@@ -224,5 +224,13 @@ angular.module("card-services-recebiveis-futuros", [])
         if(!recebivel || recebivel === null) return false;
         return recebivel.collapsed;
     }
+		
+		//IMPRESSÃO
+		$scope.imprimir = function(){
+			if($scope.filtro.filial && $scope.filtro.filial !== null){  
+				$window.open('views/print#?e=' + $scope.usuariologado.grupoempresa.ds_nome + '&s=' + "Relatório de Recebíveis Futuros" + '&n='+ 3 +'&cl='+4+'&t='+$scope.token+'&c='+$scope.filtro.filial.nu_cnpj+'&f='+$scope.filtro.filial.ds_fantasia+
+										 '&d='+ ">" + $scope.getFiltroData($scope.filtro.datamin), '_blank');
+			}			
+		}
     
 }])

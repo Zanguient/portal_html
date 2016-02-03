@@ -30,6 +30,7 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
     // flags
     $scope.exibeTela = false;  
     $scope.manutencao = false;                                                                       
+		$scope.total = { valorBruto : 0.0, valorDescontado : 0.0, valorLiquido : 0.0 };
                                                 
     // Inicialização do controller
     $scope.cardServices_impressaoRelatoriosInit = function(){
@@ -69,6 +70,22 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 					
 					consultaConciliacao(function(){ $scope.exibeTela = true; $timeout(function(){$scope.imprime();}, 1500) });
 					break;
+					
+				case "Relatório de Recebíveis Futuros":
+					var c = $location.search().c;
+					var d = $location.search().d;
+					
+					if(!c || !d) return;
+					
+					$scope.colunas = ["Competência Adquirente Bandeira", "Valor Bruto", "Valor Descontado", "Recebíveis Futuros"];
+					$scope.niveis = ["Nível 1", "Nível 2", "Nível 3"];
+					
+					$scope.data = $scope.formataData(d);
+					$scope.dataConsulta = d;
+					$scope.cnpj = c;
+					
+					consultaRecebiveisFuturos(function(){ $scope.exibeTela = true; $timeout(function(){$scope.imprime();}, 1500) });
+					break;
 			}			
 			
 			// Deleta o parâmetro token da url
@@ -107,6 +124,47 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 				else $scope.showAlert('Houve uma falha ao obter dados da Conciliação (' + failData.status + ')', true, 'danger', true);
 				hideProgress();
 			});
+		};
+																							
+		//CONSULTA RECEBIVEIS FUTUROS
+		var consultaRecebiveisFuturos = function(funcaoSucesso){
+			// Abre os progress
+			showProgress();
+			
+			//FILTROS				
+			var filtros = [];	
+			
+			// Filtros Por Data
+			filtros.push({id: /*$campos.card.recebiveisfuturos.data*/ 100,
+										valor: $scope.dataConsulta
+									 });			
+			// Filial
+			filtros.push({id: /*$campos.card.recebiveisfuturos.nu_cnpj*/ 102, 
+										valor: $scope.cnpj
+									 });  
+			
+			
+			//console.log(filtros);
+			$webapi.get($apis.getUrl($apis.card.recebiveisfuturos, [$scope.token, 0], filtros)) 
+				.then(function(dados){
+				//console.log(dados);
+				// Obtém os dados
+				$scope.relatorio = dados.Registros;
+				if(typeof funcaoSucesso === 'function') funcaoSucesso();
+				// Totais
+				$scope.total.valorBruto = dados.Totais.valorBruto;
+				$scope.total.valorDescontado = dados.Totais.valorDescontado;
+				$scope.total.valorLiquido = dados.Totais.valorLiquido;
+				
+				// Fecha os progress
+				hideProgress();
+			},
+							function(failData){
+				if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+				else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+				else $scope.showAlert('Houve uma falha ao obter recebíveis futuros (' + failData.status + ')', true, 'danger', true);
+				hideProgress();
+			});           
 		};
 																							
 		// UTILS
@@ -158,6 +216,9 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 		$scope.formataData = function(data){
 			
 			$scope.dtSplit = data.split("");
+			if ($scope.nomeRelatorio == "Relatório de Recebíveis Futuros"){
+				$scope.dia = $scope.dtSplit[6] + $scope.dtSplit[7];
+			}
 			$scope.mes = $scope.dtSplit[4] + $scope.dtSplit[5];
 			$scope.ano = $scope.dtSplit[0] + $scope.dtSplit[1] + $scope.dtSplit[2] + $scope.dtSplit[3];
 			$scope.dataFormatada = "";
@@ -165,56 +226,102 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 			switch ($scope.mes){
 				case "01":
 					$scope.dataFormatada = "Janeiro " + $scope.ano;
+					if ($scope.nomeRelatorio == "Relatório de Recebíveis Futuros"){
+						$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					}
 					break;
 					
 				case "02":
 					$scope.dataFormatada = "Fevereiro " + $scope.ano;
+					if ($scope.nomeRelatorio == "Relatório de Recebíveis Futuros"){
+						$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					}
 					break;
 					
 				case "03":
 					$scope.dataFormatada = "Março " + $scope.ano;
+					if ($scope.nomeRelatorio == "Relatório de Recebíveis Futuros"){
+						$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					}
 					break;
 					
 				case "04":
 					$scope.dataFormatada = "Abril " + $scope.ano;
+					if ($scope.nomeRelatorio == "Relatório de Recebíveis Futuros"){
+						$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					}
 					break;
 				
 				case "05":
 					$scope.dataFormatada = "Maio " + $scope.ano;
+					if ($scope.nomeRelatorio == "Relatório de Recebíveis Futuros"){
+						$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					}
 					break;
 				
 				case "06":
 					$scope.dataFormatada = "Junho " + $scope.ano;
+					if ($scope.nomeRelatorio == "Relatório de Recebíveis Futuros"){
+						$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					}
 					break;
 									
 				case "07":
 					$scope.dataFormatada = "Julho " + $scope.ano;
+					if ($scope.nomeRelatorio == "Relatório de Recebíveis Futuros"){
+						$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					}
 					break;
 					
 				case "08":
 					$scope.dataFormatada = "Agosto " + $scope.ano;
+					if ($scope.nomeRelatorio == "Relatório de Recebíveis Futuros"){
+						$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					}
 					break;
 					
 				case "09":
 					$scope.dataFormatada = "Setembro " + $scope.ano;
+					if ($scope.nomeRelatorio == "Relatório de Recebíveis Futuros"){
+						$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					}
 					break;
 					
 				case "10":
 					$scope.dataFormatada = "Outubro " + $scope.ano;
+					if ($scope.nomeRelatorio == "Relatório de Recebíveis Futuros"){
+						$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					}
 					break;
 					
 				case "11":
 					$scope.dataFormatada = "Novembro " + $scope.ano;
+					if ($scope.nomeRelatorio == "Relatório de Recebíveis Futuros"){
+						$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					}
 					break;
 					
 				case "12":
 					$scope.dataFormatada = "Dezembro " + $scope.ano;
+					if ($scope.nomeRelatorio == "Relatório de Recebíveis Futuros"){
+						$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					}
 					break;
 					
 				default:
 					break;
 			}
 			return $scope.dataFormatada;
+		}
+		
+		$scope.formataDataDia = function(data){
+			
+			$scope.dtSplit = data.split("");
+			
+			$scope.mes = $scope.dtSplit[4] + $scope.dtSplit[5];
+			$scope.ano = $scope.dtSplit[0] + $scope.dtSplit[1] + $scope.dtSplit[2] + $scope.dtSplit[3];
+			$scope.dataFormatada = "";
+			
 		}
 		
 		$scope.formaTabela = function(){
