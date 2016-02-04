@@ -6,6 +6,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.1 - 03/02/2016
+ *  - Opção de impressão disponível
+ *
  *  Versão 1.0 - 05/11/2015
  *
  */

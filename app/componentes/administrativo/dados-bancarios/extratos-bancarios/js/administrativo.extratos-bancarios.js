@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.5 - 04/12/2016
+ *  - Coleção 2 : extrato conciliado
+ *
  *  Versão 1.0.4 - 24/11/2015
  *  - Upload extrato sem passar pelo porteiro
  *  - Lista somente contas ativas
@@ -484,7 +487,7 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
         var filtros = obtemFiltroDeBusca();
        
         $webapi.get($apis.getUrl($apis.card.tbextrato, 
-                                [$scope.token, 1, /*$campos.card.tbextrato.dtExtrato*/ 102, 0],
+                                [$scope.token, 2, /*$campos.card.tbextrato.dtExtrato*/ 102, 0],
                                 filtros)) 
             .then(function(dados){
                 $scope.totais.extrato = 0;
@@ -517,10 +520,16 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
     
     // REMOVE MOVIMENTAÇÃO
     $scope.removeMovimentacaoBancaria = function(movimentacao){
-        $scope.showModalConfirmacao('Confirmação', 
-                                    'Tem certeza que deseja excluir a movimentação bancária?',
-                                     excluiMovimentacao, movimentacao.idExtrato, 
-                                    'Sim', 'Não'); 
+        if(!movimentacao || movimentacao == null) return;
+        
+        if(movimentacao.conciliado){
+            $scope.showModalAlerta('Não é possível remover a movimentação bancária pois ela está conciliada com recebíveis. Para realizar a remoção, deve-se previamente desconciliar a movimentação bancária!');
+        }else{
+            $scope.showModalConfirmacao('Confirmação', 
+                                        'Tem certeza que deseja excluir a movimentação bancária?',
+                                         excluiMovimentacao, movimentacao.idExtrato, 
+                                        'Sim', 'Não');
+        }
     }
     
     

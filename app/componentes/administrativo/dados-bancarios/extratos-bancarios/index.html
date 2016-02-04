@@ -266,6 +266,7 @@
                                                 <td ng-show="usuarioPodeExcluirExtratos()"
                                                     style="vertical-align: middle" print-remove>
                                                     <a href="javascript:;"
+                                                       ng-show="!movimentacao.conciliado"
                                                        title="Remover movimentação bancária"
                                                        ng-click="removeMovimentacaoBancaria(movimentacao)">
                                                         <i class="fa fa-remove" style="color: red"></i>
@@ -282,6 +283,11 @@
                                                 <!-- DESCRIÇÃO -->
                                                 <td class="contud">
                                                      {{movimentacao.dsDocumento}}
+                                                     <span ng-show="movimentacao.conciliado">
+                                                        &nbsp;&nbsp;
+                                                        <i class="fa fa-euro" style="color: #006400; font-size: 18px"
+                                                           title="Movimentação bancária conciliada"></i>
+                                                    </span>
                                                 </td>
                                                 <!-- DOCUMENTO -->
                                                 <td style="text-align:center">

@@ -4,7 +4,7 @@
  *  suporte@atoscapital.com.br
  *
  *
- *  Versão 1.0 - 25/01/2016
+ *  Versão 1.0 - 03/02/2016
  *
  */
 

@@ -60,7 +60,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 			]
 
    * card/tbextrato 
-     - GET : listagem do extratos (coleção 1) // solicitar ordenado pelo idExtrato, que é a ordem de inserção na base   
+     - GET : listagem do extratos (coleção 2) // solicitar ordenado pelo idExtrato, que é a ordem de inserção na base   
 		  [
 			{
 				idExtrato : int,
@@ -71,6 +71,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				vlMovimento : double,
 				dsTipo : string,
 				dsArquivo : string,
+				conciliado : bool
 			}
 		  ]
 		  
