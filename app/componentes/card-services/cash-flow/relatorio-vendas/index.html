@@ -168,10 +168,6 @@
                         <span class="caption-subject font-green-sharp bold uppercase">Relatório de Vendas</span>
                     </div>
                     <div class="actions">
-                        <a class="btn btn-circle btn-icon-only btn-default fullscreen" 
-                           href="javascript:;" 
-                           ng-click="fullScreenClick()"
-                           title="{{telaEstaEmFullScreen() ? 'Tela Normal' : 'Tela Cheia'}}"></a>
                         <div class="btn-group element-hidden"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -->
                             <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
                             <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
@@ -197,6 +193,22 @@
                                 </li>
                             </ul>
                         </div>
+											<a class="btn btn-circle btn-icon-only btn-default fullscreen" 
+                           href="javascript:;" 
+                           ng-click="fullScreenClick()"
+                           title="{{telaEstaEmFullScreen() ? 'Tela Normal' : 'Tela Cheia'}}"></a>
+											<div class="btn-group">
+												<a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
+													<i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
+												</a>
+												<ul class="dropdown-menu pull-right">
+													<li>
+														<a href="javascript:;" ng-click="imprimir()">
+															Imprimir
+														</a>
+													</li>
+												</ul>
+											</div>
                     </div>
                 </div>
                 <!-- CORPO -->

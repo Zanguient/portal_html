@@ -31,6 +31,7 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
     $scope.exibeTela = false;  
     $scope.manutencao = false;                                                                       
 		$scope.total = { valorBruto : 0.0, valorDescontado : 0.0, valorLiquido : 0.0 };
+		$scope.dtSplit = [];
                                                 
     // Inicialização do controller
     $scope.cardServices_impressaoRelatoriosInit = function(){
@@ -86,6 +87,23 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 					
 					consultaRecebiveisFuturos(function(){ $scope.exibeTela = true; $timeout(function(){$scope.imprime();}, 1500) });
 					break;
+					
+				case "Relatório de Recebíveis Vendas":
+					var c = $location.search().c;
+					var d = $location.search().d;
+					
+					if(!c || !d) return;
+					
+					$scope.colunas = ["Competência Adquirente Bandeira", "Valor Bruto", "Valor Descontado", "Valor Líquido"];
+					$scope.colunas2 = ["Valor Recebido", "Valor A Receber"];
+					$scope.niveis = ["Nível 1", "Nível 2", "Nível 3"];
+					
+					$scope.data = $scope.formataData(d);
+					$scope.dataConsulta = d;
+					$scope.cnpj = c;
+					
+					consultaRecebiveisVendas(function(){ $scope.exibeTela = true; $timeout(function(){$scope.imprime();}, 1500) });
+					break;
 			}			
 			
 			// Deleta o parâmetro token da url
@@ -119,11 +137,11 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 				hideProgress();
 			},
 							function(failData){
-				if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
-				else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-				else $scope.showAlert('Houve uma falha ao obter dados da Conciliação (' + failData.status + ')', true, 'danger', true);
-				hideProgress();
-			});
+                 if(failData.status === 0) showModalAlerta('Falha de comunicação com o servidor'); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.manutencao = true;
+                 else showModalAlerta('Houve uma falha ao obter dados do relatório de conciliação (' + failData.status + ')');
+                 hideProgress();
+              });
 		};
 																							
 		//CONSULTA RECEBIVEIS FUTUROS
@@ -160,11 +178,55 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 				hideProgress();
 			},
 							function(failData){
-				if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
-				else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-				else $scope.showAlert('Houve uma falha ao obter recebíveis futuros (' + failData.status + ')', true, 'danger', true);
+                 if(failData.status === 0) showModalAlerta('Falha de comunicação com o servidor'); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.manutencao = true;
+                 else showModalAlerta('Houve uma falha ao obter recebíveis futuros (' + failData.status + ')');
+                 hideProgress();
+              });           
+		};
+																							
+		//CONSULTA RECEBIVEIS VENDAS
+		var consultaRecebiveisVendas = function(funcaoSucesso){
+			// Abre os progress
+			showProgress();
+			
+			//FILTROS				
+			var filtros = [];	
+			
+			// Filtros Por Data
+			filtros.push({id: /*$campos.card.relatoriovendas.data*/ 100,
+										valor: $scope.dataConsulta
+									 });			
+			// Filial
+			filtros.push({id: /*$campos.card.relatoriovendas.nu_cnpj*/ 102, 
+										valor: $scope.cnpj
+									 });  
+			
+			
+			//console.log(filtros);
+			$webapi.get($apis.getUrl($apis.card.relatoriovendas, [$scope.token, 0], filtros)) 
+            .then(function(dados){
+				//console.log(dados);
+				// Obtém os dados
+				$scope.relatorio = dados.Registros;
+				if(typeof funcaoSucesso === 'function') funcaoSucesso();
+				
+				// Totais
+				$scope.total.valorBruto = dados.Totais.valorBruto;
+				$scope.total.valorDescontado = dados.Totais.valorDescontado;
+				$scope.total.valorLiquido = dados.Totais.valorLiquido;
+				$scope.total.valorRecebido = dados.Totais.valorRecebido;
+				$scope.total.valorAReceber = dados.Totais.valorAReceber;
+				
+				// Fecha os progress
 				hideProgress();
-			});           
+			},
+							function(failData){
+                 if(failData.status === 0) showModalAlerta('Falha de comunicação com o servidor'); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.manutencao = true;
+                 else showModalAlerta('Houve uma falha ao obter recebíveis vendas (' + failData.status + ')');
+                 hideProgress();
+              });           
 		};
 																							
 		// UTILS
@@ -215,12 +277,19 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 		
 		$scope.formataData = function(data){
 			
+			//Split para separar os caracteres que formam a data
 			$scope.dtSplit = data.split("");
+			
 			if ($scope.nomeRelatorio == "Relatório de Recebíveis Futuros"){
-				$scope.dia = $scope.dtSplit[6] + $scope.dtSplit[7];
+				//Nesse caso captura os caracteres uma posição a frente pois na primeira existe um caractere útil apenas para a consulta
+				$scope.dia = $scope.dtSplit[7] + $scope.dtSplit[8];
+				$scope.mes = $scope.dtSplit[5] + $scope.dtSplit[6];
+				$scope.ano = $scope.dtSplit[1] + $scope.dtSplit[2] + $scope.dtSplit[3] + $scope.dtSplit[4];
+			} else {
+				$scope.mes = $scope.dtSplit[4] + $scope.dtSplit[5];
+				$scope.ano = $scope.dtSplit[0] + $scope.dtSplit[1] + $scope.dtSplit[2] + $scope.dtSplit[3];				
 			}
-			$scope.mes = $scope.dtSplit[4] + $scope.dtSplit[5];
-			$scope.ano = $scope.dtSplit[0] + $scope.dtSplit[1] + $scope.dtSplit[2] + $scope.dtSplit[3];
+			
 			$scope.dataFormatada = "";
 			
 			switch ($scope.mes){
@@ -309,19 +378,10 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 					break;
 					
 				default:
+					$scope.dataFormatada = "Erro de formatação"
 					break;
 			}
 			return $scope.dataFormatada;
-		}
-		
-		$scope.formataDataDia = function(data){
-			
-			$scope.dtSplit = data.split("");
-			
-			$scope.mes = $scope.dtSplit[4] + $scope.dtSplit[5];
-			$scope.ano = $scope.dtSplit[0] + $scope.dtSplit[1] + $scope.dtSplit[2] + $scope.dtSplit[3];
-			$scope.dataFormatada = "";
-			
 		}
 		
 		$scope.formaTabela = function(){

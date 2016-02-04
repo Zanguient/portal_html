@@ -7,6 +7,12 @@
  
  
     Website - Tela de impressão de relatórios
+
+    Versão 1.0.2 - 03/02/2016
+    - Imprimindo tela de Recebíveis Futuros
+
+    Versão 1.0.1 - 02/02/2016
+    - Imprimindo tela de Relatórios de Conciliação
     
     Versão 1.0 - 25/01/2016
 -->
@@ -409,6 +415,199 @@
 						</tfoot>
 					</table>
 						<!-- FIM RELATORIO RECEBIVEIS FUTUROS -->
+					
+					<!-- RELATORIO VENDAS -->
+					<table ng-if="nomeRelatorio == 'Relatório de Recebíveis Vendas'" print-table="relatorio" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
+						<thead>
+							<tr role="row">
+								<th align="center" height="40px" colspan="{{nColunas + 3}}">
+									<a ng-click="imprime()"><span style="font-size: 22px" class="glyphicon glyphicon-print large"></span></a>
+								</th>
+							</tr>
+							<tr role="row">
+								<th rowspan="3" width="20%" align="left" colspan="{{7}}">
+									<img ng-src="http://www.atoscapital.com.br/portal/img/AtosCapital.jpg" title="Atos Capital" class="logo-default" width="320px" height="100px" align="center">
+									<!-- title="{{empresa.nome}}" -->
+								</th>
+								<th width="12%" align="center" height="40px" colspan="6">
+									<span class="empresa">{{nomeEmpresa | uppercase}}</span>
+								</th>
+							</tr>
+							<tr role="row">
+								<th width="12%" align="center" height="40px" colspan="6">
+									<span class="empresa">{{nomeFilial | uppercase}}</span>
+								</th>
+							</tr>
+							<tr role="row">
+								<th width="12%" align="center" height="40px" colspan="6">
+									<span class="empresa">{{data | uppercase}}</span>
+								</th>
+							</tr>
+							<tr role="row">
+								<th align="center" width="100%" colspan="{{nColunas + 3}}"></th>
+							</tr>
+							<tr role="row">
+								<th align="center" width="100%" colspan="{{nColunas + 3}}">
+									{{nomeRelatorio | uppercase}}
+								</th>
+							</tr>
+							<tr role="row">
+								<th colspan="3" width="3%" ng-if="nNiveis != 1"></th>
+								<th align="center" rowspan="1" colspan="1" width= "{{97/nColunas}}%" ng-repeat="coluna in colunas">
+									{{coluna}}								
+								</th>
+								<th align="center" rowspan="1" colspan="2" width= "{{97/nColunas}}%" ng-repeat="coluna in colunas2">
+									{{coluna}}								
+								</th>
+							</tr>
+						</thead>
+						<tbody class="centralizarVertical">
+							<tr ng-repeat-start="competencia in relatorio">
+								<td width="3%" colspan="3" style="text-align: center;">
+										<span class="glyphicon glyphicon-chevron-right"></span>
+								</td>
+								<!-- COMPETÊNCIA -->
+								<td width="13%">
+										{{competencia.diaVenda}}
+								</td>
+								<!-- VALOR BRUTO -->
+								<td width="13%" class="linhaTotalRelatorios">
+										{{competencia.valorBruto | currency:'R$'}}
+								</td>
+								<!-- VALOR DESCONTADO -->
+								<td width="10%" class="linhaTotalRelatorios">
+										{{competencia.valorDescontado | currency:'R$'}}
+								</td>
+								<!-- VALOR LÍQUIDO -->
+								<td width="12%" class="linhaTotalRelatorios">
+										{{competencia.valorLiquido | currency:'R$'}}
+								</td>
+								<!-- VALOR RECEBIDO -->
+								<td width="12%" class="linhaTotalRelatorios">
+										{{competencia.valorRecebido | currency:'R$'}}
+								</td>
+								<!-- % RECEBIDO -->
+								<td width="12%" class="linhaTotalRelatorios">
+										{{(competencia.valorRecebido*100)/competencia.valorLiquido | number:2}}%
+								</td>
+								<!-- VALOR A RECEBER -->
+								<td width="12%" class="linhaTotalRelatorios">
+										{{competencia.valorAReceber | currency:'R$'}}
+								</td>
+								<!-- % A RECEBER -->
+								<td width="13%" class="linhaTotalRelatorios">
+										{{(competencia.valorAReceber*100)/competencia.valorLiquido | number:2}}%
+								</td>
+						</tr>
+						<!-- LINHA EXPANSÍVEL -->
+						<tr ng-repeat-start="adquirente in competencia.adquirentes"> 
+								<td></td>
+								<td width="3%" colspan="2" style="text-align: center;">
+										<span class="glyphicon glyphicon-chevron-right"></span>
+								</td>
+								<!-- ADQUIRENTE -->
+								<td width="13%" >
+										{{adquirente.adquirente | uppercase}}
+								</td>
+								<!-- VALOR BRUTO -->
+								<td width="13%" class="linhaTotalRelatorios">
+										{{adquirente.valorBruto | currency:'R$'}}
+								</td>
+								<!-- VALOR DESCONTADO -->
+								<td width="10%" class="linhaTotalRelatorios">
+										{{adquirente.valorDescontado | currency:'R$'}}
+								</td>
+								<!-- VALOR LÍQUIDO -->
+								<td width="12%" class="linhaTotalRelatorios">
+										{{adquirente.valorLiquido | currency:'R$'}}
+								</td>
+								<!-- VALOR RECEBIDO -->
+								<td width="12%" class="linhaTotalRelatorios">
+										{{adquirente.valorRecebido | currency:'R$'}}
+								</td>
+								<!-- % RECEBIDO -->
+								<td width="12%" class="linhaTotalRelatorios">
+										{{(adquirente.valorRecebido*100)/adquirente.valorLiquido | number:2}}%
+								</td>
+								<!-- VALOR A RECEBER -->
+								<td width="12%" class="linhaTotalRelatorios">
+										{{adquirente.valorAReceber | currency:'R$'}}
+								</td>
+								<!-- % A RECEBER -->
+								<td width="13%" class="linhaTotalRelatorios">
+										{{(adquirente.valorAReceber*100)/adquirente.valorLiquido | number:2}}%
+								</td>
+						</tr>
+						<!-- LINHA EXPANSÍVEL -->
+						<tr ng-repeat-end ng-repeat="bandeira in adquirente.bandeiras">
+							<td></td>	
+							<td></td>
+							<td width="3%" colspan="1"><span class="glyphicon glyphicon-chevron-right"></span></td>
+								<td width="13%" >
+										{{bandeira.bandeira | uppercase}}
+								</td>
+								<!-- VALOR BRUTO -->
+								<td width="13%" class="linhaTotalRelatorios">
+										{{bandeira.valorBruto | currency:'R$'}}
+								</td>
+								<!-- VALOR DESCONTADO -->
+								<td width="10%" class="linhaTotalRelatorios">
+										{{bandeira.valorDescontado | currency:'R$'}}
+								</td>
+								<!-- VALOR LÍQUIDO -->
+								<td width="12%" class="linhaTotalRelatorios">
+										{{bandeira.valorLiquido | currency:'R$'}}
+								</td>
+								<!-- VALOR RECEBIDO -->
+								<td width="12%" class="linhaTotalRelatorios">
+										{{bandeira.valorRecebido | currency:'R$'}}
+								</td>
+								<!-- % RECEBIDO -->
+								<td width="12%" class="linhaTotalRelatorios">
+										{{(bandeira.valorRecebido*100)/bandeira.valorLiquido | number:2}}%
+								</td>
+								<!-- VALOR A RECEBER -->
+								<td width="12%" class="linhaTotalRelatorios">
+										{{bandeira.valorAReceber | currency:'R$'}}
+								</td>
+								<!-- % A RECEBER -->
+								<td width="13%" class="linhaTotalRelatorios">
+										{{(bandeira.valorAReceber*100)/bandeira.valorLiquido | number:2}}%
+								</td>
+						</tr>
+						<tr ng-repeat-end></tr>
+						</tbody>
+						<tfoot>
+							<tr class="linhaTotalRelatorios">
+								<!-- TOTAL NF-e -->
+								<td width="30%" colspan="4" style="text-align:right;">
+										 Total Exibido
+								</td> 
+								<td width="10%">
+										 {{total.valorBruto | currency:'R$'}}
+								</td> 
+								<td width="10%">
+										 {{total.valorDescontado | currency:'R$'}}
+								</td> 
+								<td width="10%">
+										 {{total.valorLiquido | currency:'R$'}}
+								</td> 
+								<td width="10%">
+										{{total.valorRecebido | currency:'R$'}}
+								</td>
+								<td width="10%">
+										{{(total.valorRecebido*100)/total.valorLiquido | number:2}}%
+								</td>
+								<td width="10%">
+										{{total.valorAReceber | currency:'R$'}}
+								</td>
+								<td width="10%">
+										{{(total.valorAReceber*100)/total.valorLiquido | number:2}}%
+								</td>
+						</tr>
+						</tfoot>
+					</table>
+					<!-- FIM RELATORIO VENDAS -->
 				</div>
 				</div>
 				</div>

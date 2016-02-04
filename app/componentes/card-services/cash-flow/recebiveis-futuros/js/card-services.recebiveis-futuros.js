@@ -227,6 +227,20 @@ angular.module("card-services-recebiveis-futuros", [])
 		
 		//IMPRESSÃO
 		$scope.imprimir = function(){
+			
+			/*
+			
+			e = Nome da empresa
+			s = Nome da tela
+			n = Número de níveis
+			cl = Número de colunas
+			t = Token
+			c = CNPJ
+			f = Filial
+			d = Data
+			
+			*/
+			
 			if($scope.filtro.filial && $scope.filtro.filial !== null){  
 				$window.open('views/print#?e=' + $scope.usuariologado.grupoempresa.ds_nome + '&s=' + "Relatório de Recebíveis Futuros" + '&n='+ 3 +'&cl='+4+'&t='+$scope.token+'&c='+$scope.filtro.filial.nu_cnpj+'&f='+$scope.filtro.filial.ds_fantasia+
 										 '&d='+ ">" + $scope.getFiltroData($scope.filtro.datamin), '_blank');
