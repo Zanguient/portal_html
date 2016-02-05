@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.1.2 - 05/02/2016
+ *  - tbantecipacaobancaria
+ *
  *  Versão 1.1.1 - 20/11/2015
  *  - tbrecebimentotef
  *  - pdvs
@@ -222,6 +225,16 @@ angular.module('webapi', ['utils'])
             // Relacionamentos
             cnpj : 305,
             id_grupo : 316
+        },
+        tbantecipacaobancaria: {
+            idAntecipacaoBancaria : 100,
+            dtAntecipacaoBancaria : 101,
+            dtVencimento : 102,
+            vlAntecipacao : 103,
+            vlAntecipacaoLiquida : 104,
+            cdAdquirente : 105,
+            cdBandeira : 106
+            cdContaCorrente : 107
         },
         tbbancoparametro : {
             cdBanco : 100,
@@ -692,6 +705,7 @@ angular.module('webapi', ['utils'])
         relatorioconciliacaotitulos : $autenticacao.getUrlBase() + '/card/relatorioconciliacaotitulos/',
         relatoriovendas : $autenticacao.getUrlBase() + '/card/relatoriovendas/',
         tbadquirente : $autenticacao.getUrlBase() + '/card/tbadquirente/',
+        tbantecipacaobancaria : $autenticacao.getUrlBase() + '/card/tbantecipacaobancaria/',
         tbbancoparametro : $autenticacao.getUrlBase() + '/card/tbbancoparametro/',
         tbbandeira : $autenticacao.getUrlBase() + '/card/tbbandeira/',
         tbcontacorrente: $autenticacao.getUrlBase() + '/card/tbcontacorrente/',  
