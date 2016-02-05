@@ -104,6 +104,12 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 					
 					consultaRecebiveisVendas(function(){ $scope.exibeTela = true; $timeout(function(){$scope.imprime();}, 1500) });
 					break;
+					
+				case "Conciliação Bancária":
+					
+					$scope.colunas = ["Filial", "Bandeira", "Venda", "Lote", "NSU", "Data Prevista", "Valor"];
+					$scope.niveis = ["Nível 1"];
+					
 			}			
 			
 			// Deleta o parâmetro token da url
