@@ -2579,6 +2579,16 @@ angular.module("AtosCapital", ['ui.router',
         if(semdia) return valor.substr(0, 6);
         return valor;
     };
+                            
+    $scope.validaData = function(data){
+        if(data){
+            var parts = data.split("/");
+            var dt = new Date(parts[2], parts[1] - 1, parts[0]);//Date.parse($scope.pessoa.data_nasc);
+            // Verifica se a data é válida
+            return parts[0] == dt.getDate() && (parts[1] - 1) == dt.getMonth() && parts[2] == dt.getFullYear();
+        }
+        return false;
+    };                         
 
 
     /**
