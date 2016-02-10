@@ -52,8 +52,7 @@
 <!-- BEGIN BODY -->
 <body ng-class="{'manutencao' : manutencao }" 
       ng-controller="card-services-impressao-relatoriosCtrl" 
-      ng-init="cardServices_impressaoRelatoriosInit()"
-			 print-section>
+      ng-init="cardServices_impressaoRelatoriosInit()">
     
 <!-- MANUTENÇÃO -->
     <div class="centro" ng-show="manutencao" ng-cloak>
@@ -73,7 +72,7 @@
 			<div class="col-md-12" align="center">
 			<div class="portlet-light" align="center">
 			<!--TITULO-->
-			<div class="portlet-body" align="center">
+			<div class="portlet-body" print-landscape align="center">
 				<div align="center">
 					<!-- class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" -->
 					<!-- RELATORIO CONCILIACAO -->
@@ -628,11 +627,12 @@
 							<tr role="row">
 								<th width="12%" align="center" height="40px" colspan="3">
 									<span class="empresa">{{nomeFilial | uppercase}}</span>
+									<!--<span class="empresa" ng-if="nomeFilial == null">{{'todas as filiais' | uppercase}}</span>-->
 								</th>
 							</tr>
 							<tr role="row">
 								<th width="12%" align="center" height="40px" colspan="3">
-									<span class="empresa">{{data | uppercase}}</span>
+									<span class="empresa">{{data| uppercase}}</span>
 								</th>
 							</tr>
 							<tr role="row">
@@ -651,17 +651,17 @@
 							</tr>
 						</thead>
 						<tbody class="centralizarVertical">
-							<tr ng-repeat="item in relatorio">
+							<tr ng-repeat="item in relatorio.RecebimentosParcela">
 								<td ng-if="nNiveis != 1" width="3%" colspan="3" style="text-align: center;">
 									<span class="glyphicon glyphicon-chevron-right"></span>
 								</td>
 								<!-- FILIAL -->
 								<td width="16%" align="center">
-									{{item.Filial | uppercase}}
+									{{item.RecebimentosParcela.Filial | uppercase}}
 								</td>
 								<!-- BANDEIRA -->
 								<td width="13%" class="linhaTotalRelatorios">
-									{{item.Bandeira | uppercase}}
+									{{item.RecebimentosParcela.Bandeira | uppercase}}
 								</td>
 								<!-- VENDA -->
 								<td width="13%" class="linhaTotalRelatorios"

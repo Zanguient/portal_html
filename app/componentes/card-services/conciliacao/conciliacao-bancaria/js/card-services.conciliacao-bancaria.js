@@ -701,12 +701,12 @@ angular.module("card-services-conciliacao-bancaria", [])
     
     // MODAL DETALHES
     $scope.detalhar = function(grupo){
-        $scope.modalDetalhes.grupo = grupo;
-        //console.log(grupo);
-        // Exibe o modal
-        $('#modalDetalhes').modal('show');
-        $scope.modalDetalhesShowing = true;
-        checaVisibilidadeModal();
+			$scope.modalDetalhes.grupo = grupo;
+			//console.log(grupo);
+			// Exibe o modal
+			$('#modalDetalhes').modal('show');
+			$scope.modalDetalhesShowing = true;
+			checaVisibilidadeModal();
     }
     
     var checaVisibilidadeModal = function(){
@@ -1295,9 +1295,8 @@ angular.module("card-services-conciliacao-bancaria", [])
 		
 		//IMPRESSÃO
 		$scope.imprimir = function(){
-			
-			/*
-			
+       
+			/*			
 			e = Nome da empresa
 			s = Nome da tela
 			n = Número de níveis
@@ -1308,22 +1307,50 @@ angular.module("card-services-conciliacao-bancaria", [])
 			d = Data
 			cn = Conta
 			a = Adquirente
-			tp = Tipo
-			
+			tp = Tipo			
 			*/
-			
-			$scope.dataConsulta = "";
-			if($scope.filtro.datamax)
-				$scope.dataConsulta = $scope.getFiltroData($scope.filtro.datamin) + '|' + $scope.getFiltroData($scope.filtro.datamax);
-			else 
-				$scope.dataConsulta = $scope.getFiltroData($scope.filtro.datamin);
-			
-			if($scope.filtro.filial && $scope.filtro.filial !== null){
-				$window.open('views/print#?e=' + $scope.usuariologado.grupoempresa.ds_nome + '&s=' + "Relatório de Detalhes de Agrupamento" +
-										 '&n='+ 1 +'&a='+$scope.filtro.adquirente.cdAdquirente+'&cl='+7+'&cn='+$scope.filtro.conta.cdContaCorrente+'&t='
-										 +$scope.token+'&tp='+$scope.filtro.tipo.id+'&c='+$scope.filtro.filial.nu_cnpj+'&f='
-										 +$scope.filtro.filial.ds_fantasia+'&d='+$scope.dataConsulta, '_blank');
+				
+				
+			//Data
+			$scope.dataConsulta = "data não considerada";
+			if($scope.filtro.consideraPeriodo){ 
+				if($scope.filtro.datamax){
+					$scope.dataConsulta = $scope.getFiltroData($scope.filtro.datamin) + '|' + $scope.getFiltroData($scope.filtro.datamax);
+					$scope.statusData = "v";
+				}
+				else {
+					$scope.dataConsulta = $scope.getFiltroData($scope.filtro.datamin);
+					$scope.statusData = "f";
+				}
 			}
+			
+			// Conta
+			$scope.contaCorrenteImpressao = "todos";
+			if($scope.filtro.conta && $scope.filtro.conta !== null) 
+				$scope.contaCorrenteImpressao = $scope.filtro.conta.cdContaCorrente;
+			
+			// Filial
+			$scope.filialImpressao = "todos";
+			$scope.nomeFilialImpressao = "todas as filiais";
+			if($scope.filtro.filial && $scope.filtro.filial !== null){
+				$scope.filialImpressao = $scope.filtro.filial.nu_cnpj;
+				$scope.nomeFilialImpressao = $scope.filtro.filial.ds_fantasia;
+			}
+			// Adquirente
+			$scope.adquirenteImpressao = "todos";
+			if($scope.filtro.adquirente && $scope.filtro.adquirente !== null)
+				$scope.adquirenteImpressao = $scope.filtro.adquirente.cdAdquirente;
+			
+			// Tipo
+			$scope.tipoImpressao = "todos";
+			if($scope.filtro.tipo && $scope.filtro.tipo !== null)
+				$scope.tipoImpressao = $scope.filtro.tipo.id;
+			
+			//if($scope.filtro.filial && $scope.filtro.filial !== null){
+				$window.open('views/print#?e=' + $scope.usuariologado.grupoempresa.ds_nome + '&s=' + "Relatório de Detalhes de Agrupamento" +
+										 '&n='+ 1 +'&a='+$scope.adquirenteImpressao+'&cl='+7+'&cn='+$scope.contaCorrenteImpressao+'&t='+$scope.token+
+										 '&tp='+$scope.tipoImpressao+'&sd='+$scope.statusData+'&c='+$scope.filialImpressao+'&f='
+										 +$scope.nomeFilialImpressao+'&d='+$scope.dataConsulta, '_blank');
+			//}
 		}
-    
 }]);
