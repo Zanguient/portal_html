@@ -445,68 +445,68 @@
         <div class="portlet-body" print-landscape ng-show="exibeTela"> 
             
            <!-- DETALHES -->
-           <div class="row"  print-section print-only print-if="modalDetalhesShowing"> 
+           <div class="row"  print-section print-only print-if="modalDetalhesShowing">
+						 <div style="text-align: center">
+							 <h4 class="linhaTotalRelatorios">Detalhes do agrupamento</h4>
+						 </div>
                <div style="text-align: center">
-                   <h4 class="linhaTotalRelatorios">Detalhes do agrupamento</h4>
-               </div>
-               <div style="text-align: center">
-                   <div class="row">
-                       <div class="col-sm-2">
-                            <label>Filial</label>
-                       </div>
-                       <div class="col-sm-2">
-                            <label>Bandeira</label>
-                       </div>
-                       <div class="col-sm-2">
-                            <label>Venda</label>
-                       </div>
-                       <div class="col-sm-1">
-                            <label>Lote</label>
-                       </div>
-                       <div class="col-sm-1">
-                            <label>NSU</label>
-                       </div>
-                       <div class="col-sm-2">
-                            <label>Data Prevista</label>
-                       </div>
-                       <div class="col-sm-2">
-                            <label>Valor</label>
-                       </div>
-                   </div>
-                   <div class="row" ng-repeat="item in modalDetalhes.grupo"
-                        print-avoid-break>
-                       <div class="col-sm-2" style="text-align:center">
-                            {{item.Filial | uppercase}}
-                       </div>
-                       <div class="col-sm-2" style="text-align:center">
-                            {{item.Bandeira | uppercase}}
-                       </div>
-                       <div class="col-sm-2" style="text-align:center"
-                            ng-bind="getDataTimeString(item.DataVenda)"
-                            ng-show="item.NumParcela >= 0">
-                       </div>
-                       <div style="text-align:center"
-                                class="col-sm-1"
-                                ng-show="item.NumParcela >= 0"
-                                ng-bind="item.Lote > 0 ? item.Lote : ''">
-                           </div>
-                       <div style="text-align:center"
-                            ng-class="{'col-sm-1' : item.NumParcela >= 0, 'col-sm-6' : item.NumParcela < 0}">
-                            {{item.Documento | uppercase}}
-                       </div>
-                       <div class="col-sm-2" style="text-align:center"
-                            ng-bind="getDataString(item.DataPrevista)"
-                            ng-show="item.NumParcela >= 0">
-                       </div>
-                       <div class="col-sm-2" style="text-align:center"
-                            ng-class="{'linhaTotalRelatorios' : item.NumParcela < 0, 'valorNegativo' : item.Valor < 0, 'valorPositivo' : item.NumParcela < 0 && item.Valor > 0}">
-                            {{item.Valor | currency:'R$'}}
-                       </div>
-                   </div>
-               </div>
-            </div>
-               
-            <div class="row" print-section print-if="!modalDetalhesShowing">
+								 <div class="row">
+									 <div class="col-sm-2">
+										 <label>Filial</label>
+									 </div>
+									 <div class="col-sm-2">
+										 <label>Bandeira</label>
+									 </div>
+									 <div class="col-sm-2">
+										 <label>Venda</label>
+									 </div>
+									 <div class="col-sm-1">
+										 <label>Lote</label>
+									 </div>
+									 <div class="col-sm-1">
+										 <label>NSU</label>
+									 </div>
+									 <div class="col-sm-2">
+										 <label>Data Prevista</label>
+									 </div>
+									 <div class="col-sm-2">
+										 <label>Valor</label>
+									 </div>
+								 </div>
+								 <div class="row" ng-repeat="item in modalDetalhes.grupo"
+											print-avoid-break>
+									 <div class="col-sm-2" style="text-align:center">
+										 {{item.Filial | uppercase}}
+									 </div>
+									 <div class="col-sm-2" style="text-align:center">
+										 {{item.Bandeira | uppercase}}
+									 </div>
+									 <div class="col-sm-2" style="text-align:center"
+												ng-bind="getDataTimeString(item.DataVenda)"
+												ng-show="item.NumParcela >= 0">
+									 </div>
+									 <div style="text-align:center"
+												class="col-sm-1"
+												ng-show="item.NumParcela >= 0"
+												ng-bind="item.Lote > 0 ? item.Lote : ''">
+									 </div>
+									 <div style="text-align:center"
+												ng-class="{'col-sm-1' : item.NumParcela >= 0, 'col-sm-6' : item.NumParcela < 0}">
+										 {{item.Documento | uppercase}}
+									 </div>
+									 <div class="col-sm-2" style="text-align:center"
+												ng-bind="getDataString(item.DataPrevista)"
+												ng-show="item.NumParcela >= 0">
+									 </div>
+									 <div class="col-sm-2" style="text-align:center"
+												ng-class="{'linhaTotalRelatorios' : item.NumParcela < 0, 'valorNegativo' : item.Valor < 0, 'valorPositivo' :
+																	item.NumParcela < 0 && item.Valor > 0}">
+										 {{item.Valor | currency:'R$'}}
+									 </div>
+								 </div>
+						 </div>
+					</div>           
+					<div class="row" print-section print-if="!modalDetalhesShowing">
                 <!--EXIBIÇÃO-->
                 <div class="col-xs-4 col-sm-4 col-md-4">
                     <div class="dataTables_length">

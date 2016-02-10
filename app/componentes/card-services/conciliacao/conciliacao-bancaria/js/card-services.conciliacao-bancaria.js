@@ -1306,13 +1306,24 @@ angular.module("card-services-conciliacao-bancaria", [])
 			c = CNPJ
 			f = Filial
 			d = Data
+			cn = Conta
+			a = Adquirente
+			tp = Tipo
 			
 			*/
 			
-			if($scope.filtro.filial && $scope.filtro.filial !== null){  
-				$window.open('views/print#?e=' + $scope.usuariologado.grupoempresa.ds_nome + '&s=' + "Relatório de Recebíveis Vendas" + '&n='+ 3 +'&cl='+6+'&t='+$scope.token+'&c='+$scope.filtro.filial.nu_cnpj+'&f='+$scope.filtro.filial.ds_fantasia+
-										 '&d='+ $scope.getFiltroData($scope.filtro.data, true), '_blank');
-			}			
+			$scope.dataConsulta = "";
+			if($scope.filtro.datamax)
+				$scope.dataConsulta = $scope.getFiltroData($scope.filtro.datamin) + '|' + $scope.getFiltroData($scope.filtro.datamax);
+			else 
+				$scope.dataConsulta = $scope.getFiltroData($scope.filtro.datamin);
+			
+			if($scope.filtro.filial && $scope.filtro.filial !== null){
+				$window.open('views/print#?e=' + $scope.usuariologado.grupoempresa.ds_nome + '&s=' + "Relatório de Detalhes de Agrupamento" +
+										 '&n='+ 1 +'&a='+$scope.filtro.adquirente.cdAdquirente+'&cl='+7+'&cn='+$scope.filtro.conta.cdContaCorrente+'&t='
+										 +$scope.token+'&tp='+$scope.filtro.tipo.id+'&c='+$scope.filtro.filial.nu_cnpj+'&f='
+										 +$scope.filtro.filial.ds_fantasia+'&d='+$scope.dataConsulta, '_blank');
+			}
 		}
     
 }]);
