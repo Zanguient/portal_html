@@ -84,16 +84,59 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 			  { 
 				idAntecipacaoBancaria : int,
 				dtAntecipacaoBancaria : datetime,
-				dtVencimento : datetime,
-				vlAntecipacao : double,
-				vlAntecipacaoLiquida : double,
 				tbAdquirente : { cdAdquirente : int ,
 								 nmAdquirente : string 
 							   },
-				tbBandeira : null ou { cdBandeira : int,
-									   dsBandeira : string 
-								     },
+				vlOperacao : double,
+				vlLiquido : double,
 				cdContaCorrente : int,
+				antecipacoes : [{ idAntecipacaoBancariaDetalhe : int,
+								  dtVencimento : datetime,
+								  vlAntecipacao : double,
+								  vlAntecipacaoLiquida : double,
+								  tbBandeira : null ou { cdBandeira : int,
+													     dsBandeira : string 
+													   },
+								}]
+				
+				
+			  }
+			]
+			
+	  - POST : cadastra uma nova antecipação bancária
+			[
+			  { 
+				idAntecipacaoBancaria = -1,
+				dtAntecipacaoBancaria : datetime,
+				cdAdquirente : int,
+				cdContaCorrente : int,
+				antecipacoes : [{ idAntecipacaoBancariaDetalhe = -1,
+								  dtVencimento : datetime,
+								  vlAntecipacao : double,
+								  vlAntecipacaoLiquida : double,
+								  cdBandeira : int ou null,
+								}]
+				
+				
+			  }
+			]
+	
+	  - DELETE : deleta a antecipação bancária => envia idAntecipacaoBancaria como filtro
+			
+	  - PUT : altera antecipação bancária existente
+			[
+			  { 
+				idAntecipacaoBancaria : int,
+				dtAntecipacaoBancaria : datetime,
+				cdAdquirente : int,
+				antecipacoes : [{ idAntecipacaoBancariaDetalhe : int, // set -1 para informar que é um novo
+								  dtVencimento : datetime,
+								  vlAntecipacao : double,
+								  vlAntecipacaoLiquida : double,
+								  cdBandeira : int ou null,
+								}]
+				deletar : [ int ] // idAntecipacaoBancariaDetalhe a serem deletados
+				
 			  }
 			]
    
