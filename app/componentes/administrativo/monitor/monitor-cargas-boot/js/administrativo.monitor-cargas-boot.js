@@ -667,7 +667,30 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
                         
                          // Para cada modalidade...
                          // Valores pagos -> antecipação
-                         var pagosantecipacao = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'ANTECIPAÇÃO'})[0];
+                         var pagosantecipacao = false;
+                         try{ pagosantecipacao = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'ANTECIPAÇÃO' || d.dsModalidade === 'ARQUIVOS'})[0] }catch(ex){};
+                         if(pagosantecipacao) pagosantecipacao.flSucesso = tbLogCarga.flStatusPagosAntecipacao;
+                         // // Valores pagos -> crédito
+                         var pagoscredito = false;
+                         try{ pagoscredito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'CRÉDITO' || d.dsModalidade === 'CRÉDITO/DÉBITO' || d.dsModalidade === 'ARQUIVOS'})[0]; }catch(ex){};
+                         if(pagoscredito) pagoscredito.flSucesso = tbLogCarga.flStatusPagosCredito;
+                         // Valores pagos -> débito
+                         var pagosdebito = false;
+                         try{ pagosdebito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'CRÉDITO/DÉBITO' || d.dsModalidade === 'ARQUIVOS'})[0]; }catch(ex){};
+                         if(pagosdebito) pagosdebito.flSucesso = tbLogCarga.flStatusPagosDebito;
+                         // Lançamentos futuros
+                         var areceber = false;
+                         try{ areceber = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'LANÇAMENTOS FUTUROS'})[0]; }catch(ex){};
+                         if(areceber) areceber.flSucesso = tbLogCarga.flStatusReceber;
+                         // Venda à débito
+                         var vendadebito = false;
+                         try{ vendadebito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'DÉBITO' || d.dsModalidade === 'ARQUIVOS' || (loginAdquirenteEmpresa.tbAdquirente.nmAdquirente !== 'REDE' && d.dsModalidade === 'VENDA')})[0]; }catch(ex){};
+                         if(vendadebito) vendadebito.flSucesso = tbLogCarga.flStatusVendasDebito;
+                         // Vendas à crédito
+                         var vendacredito = false;
+                         try{ vendacredito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'VENDA' || d.dsModalidade === 'ARQUIVOS'})[0]; }catch(ex){};
+                         if(vendacredito) vendacredito.flSucesso = tbLogCarga.flStatusVendasCredito;
+                         /*var pagosantecipacao = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'ANTECIPAÇÃO'})[0];
                          if(pagosantecipacao) pagosantecipacao.flSucesso = tbLogCarga.flStatusPagosAntecipacao;
                          // // Valores pagos -> crédito
                          var pagoscredito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'CRÉDITO' || d.dsModalidade === 'CRÉDITO/DÉBITO'})[0];
@@ -683,7 +706,7 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
                          if(vendadebito) vendadebito.flSucesso = tbLogCarga.flStatusVendasDebito;
                          // Vendas à crédito
                          var vendacredito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'VENDA'})[0];
-                         if(vendacredito) vendacredito.flSucesso = tbLogCarga.flStatusVendasCredito;
+                         if(vendacredito) vendacredito.flSucesso = tbLogCarga.flStatusVendasCredito;*/
 
                          // tira da definição o array
                          tbLogCarga.tbLogCargasDetalheMonitor = undefined; 

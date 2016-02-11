@@ -244,7 +244,7 @@
                 
                <!-- MODAL NOVO CADASTRO -->
                <div class="modal fade bs-modal-sm modal-input" 
-                    id="modalNovo" aria-hidden="true">
+                    id="modalNovo" aria-hidden="true" data-backdrop="static">
                    <div class="modal-dialog modal-sm" style="width:1150px">
                        <div class="modal-content">
                            <div class="modal-header">
@@ -284,15 +284,29 @@
                                                autocomplete=off/>  
                                    </div>
                                    <div class="col-sm-4">
-                                        <div class="btn-group">
-                                            <a href="javascript:;" ng-click="novaAntecipacaoModalNovo()"
-                                               ng-class="{'element-hidden' : !usuarioPodeCadastrarAntecipacoes()}">
-                                                <button class="btn red">
-                                                    <i class="fa fa-plus"></i>
-                                            </button></a>
-                                        </div>
+                                        
                                    </div>
                                </div>
+							   <div class="row" style="margin-top: 10px; text-align: center">
+								   <div class="col-sm-3">
+                                        <label>Valor da Operação</label>
+                                   </div>
+                                   <div class="col-sm-2">
+                                        <input type="text" class="form-control" 
+											   ng-model="modalNovo.valorBruto"
+											   input-money ng-blur="calculaTaxa()"
+											   autocomplete=off/>  
+                                   </div>
+                                   <div class="col-sm-3">
+                                        <label>Valor Líquido</label>
+                                   </div>
+                                   <div class="col-sm-2">
+                                       <input type="text" class="form-control" 
+											   ng-model="modalNovo.valorLiquido"
+											   input-money ng-blur="calculaTaxa()"
+											   autocomplete=off/>  
+                                   </div>
+							   </div>
 
                                <!--TABELA-->
                                 <div class="table-scrollable" style="margin-top: 10px">
@@ -302,13 +316,13 @@
                                             <tr role="row">
                                                 <th tabindex="0" 
                                                     rowspan="1" colspan="1" 
-                                                    style="width: 30%; text-align:center">
-                                                    Bandeira
-                                                </th>
-                                                <th tabindex="1" 
-                                                    rowspan="1" colspan="1" 
                                                     style="width: 20%;">
                                                     Data Vencimento
+                                                </th>
+												<th tabindex="1" 
+                                                    rowspan="1" colspan="1" 
+                                                    style="width: 30%; text-align:center">
+                                                    Bandeira
                                                 </th>
                                                 <th tabindex="2" 
                                                     rowspan="1" colspan="1" 
@@ -330,15 +344,6 @@
                                         <tbody>
                                             <tr role="row" class="odd"
                                                 ng-repeat="antecipacao in modalNovo.antecipacoes">
-                                                <!-- BANDEIRA -->
-                                                <td style="text-align:center">
-                                                    <select class="form-control form-filter input-sm comboBoxFiltros"
-                                                            ng-disabled="modalNovo.adquirente === null || modalNovo.bandeiras.length === 0"
-                                                            ng-model="antecipacao.bandeira"
-                                                            ng-options="bandeira as (bandeira.dsBandeira | uppercase) for bandeira in modalNovo.bandeiras">
-                                                        <option value=""></option>
-                                                    </select>
-                                                </td>
                                                 <!-- DATA VENCIMENTO -->
                                                 <td>
                                                     <input type="text" 
@@ -353,18 +358,27 @@
                                                            onPaste="return false" 
                                                            autocomplete=off/>  
                                                 </td>
+												<!-- BANDEIRA -->
+                                                <td style="text-align:center">
+                                                    <select class="form-control form-filter input-sm comboBoxFiltros"
+                                                            ng-disabled="modalNovo.adquirente === null || modalNovo.bandeiras.length === 0"
+                                                            ng-model="antecipacao.bandeira"
+                                                            ng-options="bandeira as (bandeira.dsBandeira | uppercase) for bandeira in modalNovo.bandeiras">
+                                                        <option value=""></option>
+                                                    </select>
+                                                </td>
                                                 <!-- VALOR BRUTO -->
                                                 <td style="text-align:center">
                                                     <input type="text" class="form-control" 
                                                            ng-model="antecipacao.vlAntecipacao"
-                                                           ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
+                                                           input-money ng-blur="calculaValorTotal()"
                                                            autocomplete=off/>  
                                                 </td>
                                                 <!-- VALOR LÍQUIDO -->
                                                 <td style="text-align:center">
-                                                    <input type="text" class="form-control" 
+                                                    <input type="text" class="form-control" readonly="true"
                                                            ng-model="antecipacao.vlAntecipacaoLiquida"
-                                                           ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
+                                                           input-money 
                                                            autocomplete=off/> 
                                                 </td>
                                                 <!-- EXCLUIR-->
@@ -377,14 +391,46 @@
                                                     </a>
                                                 </td> 
                                             </tr>
+											<tr role="row" class="odd">
+												<td colspan="5">
+													<div class="btn-group">
+														<a href="javascript:;" ng-click="novaAntecipacaoModalNovo()"
+														   title="Novo registro de vencimento"
+														   ng-class="{'element-hidden' : !usuarioPodeCadastrarAntecipacoes()}">
+															<button class="btn red">
+																<i class="fa fa-plus"></i>
+															</button>
+														</a>
+													</div>
+												</td>
+											</tr>
                                             <!-- FIM DADOS DE ACESSO -->
+											<tr role="row" class="odd">
+												<td colspan="2">
+													<label>Valor Total</label>
+												</td>
+												<td>
+													<label>{{modalNovo.valorBrutoTotal | currency:'R$'}}</label>
+												</td>
+												<td>
+													<label>{{modalNovo.valorLiquidoTotal | currency:'R$'}}</label>
+												</td>
+												<td></td>
+											</tr>
                                         </tbody>
                                     </table>
                                 </div>  
                                 <!--FIM TABELA-->
                            </div>
                            <div class="modal-footer">
-                               <div class="col-sm-6">
+								<div class="col-sm-5">
+                                   <button type="button" class="btn btn-primary" 
+										   ng-click="cadastraAntecipacao()"
+										   ng-disabled="!valorBrutoModalNovoIgualInformado()">
+                                       Salvar
+                                   </button>
+                               </div>  
+                               <div class="col-sm-3">
                                    <button type="button" class="btn default" data-dismiss="modal">
                                        Fechar
                                    </button>

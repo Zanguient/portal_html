@@ -31,13 +31,18 @@ angular.module("card-services-antecipacao-bancaria", [])
                     };
                                           
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
-    var divPortletBodyRelatorioPos = 1; // posição da div que vai receber o loading progress                            
+    var divPortletBodyAntecipacoesPos = 1; // posição da div que vai receber o loading progress                            
     // Modal Novo
     $scope.modalNovo = { adquirente : null,
                          antecipacoes : [],
                          bandeiras : [],
                          conta : null,
-                         dtAntecipacaoBancaria : ''
+                         dtAntecipacaoBancaria : '',
+						 valorBrutoTotal: 0.0,
+						 valorLiquidoTotal: 0.0,
+						 taxa : 0.0,
+						 valorBruto : '',
+						 valorLiquido : ''
                        }                            
                                 
     // Flags
@@ -480,7 +485,7 @@ angular.module("card-services-antecipacao-bancaria", [])
            return;
         
        $scope.showProgress(divPortletBodyFiltrosPos, 10000);  
-       $scope.showProgress(divPortletBodyRelatorioPos);
+       $scope.showProgress(divPortletBodyAntecipacoesPos);
         
        var filtros = obtemFiltrosDeBusca();
         
@@ -489,7 +494,7 @@ angular.module("card-services-antecipacao-bancaria", [])
        
        $webapi.get($apis.getUrl($apis.card.tbantecipacaobancaria, 
                                 [$scope.token, 2, order, 0, 
-                                 $scope.filtro.itens_pagina, $scope.filtro.analitico.pagina],
+                                 $scope.filtro.itens_pagina, $scope.filtro.pagina],
                                 filtros)) 
             .then(function(dados){
                 $scope.antecipacoes = dados.Registros;
@@ -511,7 +516,7 @@ angular.module("card-services-antecipacao-bancaria", [])
            
                 // Esconde o progress
                 $scope.hideProgress(divPortletBodyFiltrosPos);
-                $scope.hideProgress(divPortletBodyRelatorioPos);
+                $scope.hideProgress(divPortletBodyAntecipacoesPos);
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
@@ -519,7 +524,7 @@ angular.module("card-services-antecipacao-bancaria", [])
                  else $scope.showAlert('Houve uma falha ao obter antecipações bancárias (' + failData.status + ')', true, 'danger', true);
                  // Esconde o progress
                 $scope.hideProgress(divPortletBodyFiltrosPos);
-                $scope.hideProgress(divPortletBodyRelatorioPos);
+                $scope.hideProgress(divPortletBodyAntecipacoesPos);
               });   
     }
     
@@ -536,16 +541,76 @@ angular.module("card-services-antecipacao-bancaria", [])
     
     $scope.novaAntecipacao = function(){
         $scope.modalNovo.conta = $scope.filtro.conta;
-        $scope.modalNovo.adquirente = $scope.filtro.adquirente && $scope.filtro.adquirente !== null ?           
-                                        $scope.filtro.adquirente : $scope.adquirentes[0];
-        $scope.modalNovo.bandeiras = $scope.bandeiras;
+        if($scope.filtro.adquirente && $scope.filtro.adquirente !== null){
+			$scope.modalNovo.adquirente = $scope.filtro.adquirente;
+			angular.copy($scope.modalNovo.bandeiras, $scope.bandeiras);
+		}
+		else{
+			$scope.modalNovo.adquirente = $scope.adquirentes[0];
+			$scope.alterouAdquirenteModalNovo(); // busca bandeiras
+		}
+		$scope.modalNovo.valorBrutoTotal = 0.0;
+		$scope.modalNovo.valorLiquidoTotal = 0.0;
         $scope.modalNovo.antecipacoes = [];
         $scope.modalNovo.dtAntecipacaoBancaria = '';
-        
+		
+		// Adiciona uma linha vazia
+		$scope.novaAntecipacaoModalNovo();
         
         
         exibeModalNovo();
     }
+	
+	$scope.calculaValorTotal = function(){
+		$scope.modalNovo.valorBrutoTotal = 0.0;
+		$scope.modalNovo.valorLiquidoTotal = 0.0;
+		for(var k = 0; k < $scope.modalNovo.antecipacoes.length; k++){
+			var antecipacao = $scope.modalNovo.antecipacoes[k];
+			var valorB = 0.0;
+			if(antecipacao.vlAntecipacao){
+				try{ 
+					 valorB = parseFloat(antecipacao.vlAntecipacao.split('.').join('').split(',').join('.'));
+				}catch(ex){ }
+			}
+			antecipacao.vlAntecipacaoLiquida = valorB * (1 - $scope.modalNovo.taxa);
+			$scope.modalNovo.valorBrutoTotal += valorB;
+		}
+		$scope.modalNovo.valorLiquidoTotal = $scope.modalNovo.valorBrutoTotal * (1 - $scope.modalNovo.taxa);
+	}
+	
+	$scope.valorBrutoModalNovoIgualInformado = function(){
+		var valorBruto = 0.0;
+		if($scope.modalNovo.valorBruto){
+			try{ 
+				valorBruto = parseFloat($scope.modalNovo.valorBruto.split('.').join('').split(',').join('.'));
+			}catch(ex){ }
+		}
+		return valorBruto > 0.0 && $scope.modalNovo.valorBrutoTotal === valorBruto; 
+	}
+	
+	$scope.calculaTaxa = function(){
+		$scope.modalNovo.taxa = 0.0;
+		var valorBruto = 0.0;
+		var valorLiquido = 0.0;
+		if($scope.modalNovo.valorBruto){
+			try{ 
+				valorBruto = parseFloat($scope.modalNovo.valorBruto.split('.').join('').split(',').join('.'));
+			}catch(ex){ }
+		}
+		if($scope.modalNovo.valorLiquido){
+			try{ 
+				valorLiquido = parseFloat($scope.modalNovo.valorLiquido.split('.').join('').split(',').join('.'));
+			}catch(ex) { }
+		}
+		
+		if(valorBruto !== 0.0 && valorBruto >= valorLiquido) 
+			$scope.modalNovo.taxa = (valorBruto - valorLiquido) / valorBruto;
+		
+		$scope.calculaValorTotal();
+		//console.log('Bruto: ' + valorBruto);
+		//console.log('Líquido: ' + valorLiquido);
+		//console.log('Taxa: ' + $scope.modalNovo.taxa);
+	}
     
     $scope.novaAntecipacaoModalNovo = function(){
         $scope.modalNovo.antecipacoes.push({ dtVencimento : '',
@@ -559,13 +624,131 @@ angular.module("card-services-antecipacao-bancaria", [])
             $scope.modalNovo.antecipacoes.splice(index, 1);
     }
     
+	
+	var validaCamposNovaAntecipacao = function(){
+		// Conta
+		if(!$scope.modalNovo.conta || $scope.modalNovo.conta == null){
+			$scope.showModalAlerta('Uma conta deve ser selecionada!');
+			return false;
+		}
+		// Adquirente
+		if(!$scope.modalNovo.adquirente || $scope.modalNovo.adquirente == null){
+			$scope.showModalAlerta('Uma adquirente deve ser selecionada!');
+			return false;
+		}
+		// Data de antecipação bancária
+		if(!$scope.modalNovo.dtAntecipacaoBancaria || $scope.modalNovo.dtAntecipacaoBancaria == null){
+			$scope.showModalAlerta('Uma data de antecipação bancária deve ser informada!');
+			return false;
+		}
+		if(!$scope.validaData($scope.modalNovo.dtAntecipacaoBancaria)){
+			$scope.showModalAlerta('Data de antecipação bancária informada é inválida!');
+			return false;
+		}
+		// Antecipações
+		if(!$scope.modalNovo.antecipacoes ||  $scope.modalNovo.antecipacoes === null || $scope.modalNovo.antecipacoes.length === 0){
+			$scope.showModalAlerta('Deve ser informada ao menos uma informação detalhada de antecipação!');
+			return false;
+		}
+		for(var k = 0; k < $scope.modalNovo.antecipacoes.length; k++){
+			var antecipacao = $scope.modalNovo.antecipacoes[k];
+			/*if(!antecipacao.bandeira || antecipacao.bandeira === null){
+				$scope.showModalAlerta('Deve ser informada a bandeira da antecipação ' + (k + 1) + '!');
+				return false;
+			}*/
+			// Data do vencimento
+			if(!antecipacao.dtVencimento || antecipacao.dtVencimento == null){
+				$scope.showModalAlerta('Uma data de vencimento deve ser informada! (registro ' + (k + 1) + ')');
+				return false;
+			}
+			if(!$scope.validaData(antecipacao.dtVencimento)){
+				$scope.showModalAlerta('Data de vencimento informada do registro ' + (k + 1) + ' é inválida!');
+				return false;
+			}
+			var valorBruto = 0.0;
+			if(antecipacao.vlAntecipacao){
+				try{ 
+					//console.log(antecipacao.vlAntecipacao);
+					//console.log(antecipacao.vlAntecipacao.split('.').join('').split(',').join('.'));
+					valorBruto = parseFloat(antecipacao.vlAntecipacao.split('.').join('').split(',').join('.'));
+				}catch(ex){
+					$scope.showModalAlerta('Valor bruto informado é inválido! (registro ' + (k + 1) + ')');
+					return false;
+				}
+			}
+			//console.log(valorBruto);
+			if(valorBruto === 0.0){
+				$scope.showModalAlerta('Informe o valor bruto do registro ' + (k + 1));
+				return false;
+			}
+			/*var valorLiquido = 0.0;
+			if(antecipacao.vlAntecipacaoLiquida){
+				try{ 
+					//console.log(antecipacao.vlAntecipacaoLiquida);
+					//console.log(antecipacao.vlAntecipacaoLiquida.split('.').join('').split(',').join('.'));
+					valorLiquido = parseFloat(antecipacao.vlAntecipacaoLiquida.split('.').join('').split(',').join('.'));
+				}catch(ex){
+					$scope.showModalAlerta('Valor líquido informado é inválido! (registro ' + (k + 1) + ')');
+					return false;
+				}
+			}
+			//console.log(valorLiquido);
+			if(valorLiquido === 0.0){
+				$scope.showModalAlerta('Informe o valor líquido do registro ' + (k + 1));
+				return false;
+			}*/
+		}
+		return true;
+	}
                                 
     $scope.cadastraAntecipacao = function(){
-        
+        if(!validaCamposNovaAntecipacao())
+			return;
+		// Confirma
+		$scope.showModalConfirmacao('Confirmação', 
+            "A antecipação será armazenada. Confirma?",
+            cadastraAntecipacao, undefined, 'Sim', 'Não'); 
     }   
     
+	
+	
     var cadastraAntecipacao = function(){
+		//if(!validaCamposNovaAntecipacao()) return;
+		
+		$scope.showProgress();
+		
         // $scope.validaData($scope.modalNovo.dtAntecipacaoBancaria);
+		var json = { dtAntecipacaoBancaria : $scope.getDataFromString($scope.modalNovo.dtAntecipacaoBancaria),
+					 cdAdquirente : $scope.modalNovo.adquirente.cdAdquirente,
+					 cdContaCorrente : $scope.modalNovo.conta.cdContaCorrente,
+					 antecipacoes : []
+				   };
+		for(var k = 0; k < $scope.modalNovo.antecipacoes.length; k++){
+			var antecipacao = $scope.modalNovo.antecipacoes[k];		
+			var valorBruto = parseFloat(antecipacao.vlAntecipacao.split('.').join('').split(',').join('.'));
+			var valorLiquido = parseFloat(antecipacao.vlAntecipacaoLiquida.split('.').join('').split(',').join('.'));
+			json.antecipacoes.push({vlAntecipacao : valorBruto,
+									vlAntecipacaoLiquida: valorLiquido,
+									dtVencimento : $scope.getDataFromString(antecipacao.dtVencimento),
+									cdBandeira : antecipacao.bandeira && antecipacao.bandeira !== null ? antecipacao.bandeira.cdBandeira : null});
+		}
+		
+		console.log(json);
+		
+		$webapi.post($apis.getUrl($apis.card.tbantecipacaobancaria, undefined,
+                       {id: 'token', valor: $scope.token}), json)
+            .then(function(dados){
+                    $scope.showAlert('Antecipação bancária cadastrada com sucesso!', true, 'success', true);
+                    // Fecha o modal
+                    fechaModalNovo();
+					// Tira progress
+					$scope.hideProgress();
+                  },function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                     else $scope.showAlert('Houve uma falha ao cadastrar antecipação bancária (' + failData.status + ')', true, 'danger', true); 
+                     $scope.hideProgress();
+                  });  
     }
     
     
