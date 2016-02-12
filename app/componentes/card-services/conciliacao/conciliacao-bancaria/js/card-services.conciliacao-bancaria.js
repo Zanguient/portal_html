@@ -117,7 +117,9 @@ angular.module("card-services-conciliacao-bancaria", [])
     $scope.abrirCalendarioDataMax = $scope.abrirCalendarioDataVendaMax = false;                                           
     $scope.modalDetalhesShowing = false;
     
-    
+    //Data para exibição
+		$scope.dataExibicao = "";
+																							 
     // Inicialização do controller
     $scope.cardServices_conciliacaoBancariaInit = function(){
         // Título da página 
@@ -701,6 +703,7 @@ angular.module("card-services-conciliacao-bancaria", [])
     
     // MODAL DETALHES
     $scope.detalhar = function(grupo){
+			$scope.formatacaoData();
 			$scope.modalDetalhes.grupo = grupo;
 			//console.log(grupo);
 			// Exibe o modal
@@ -1352,5 +1355,161 @@ angular.module("card-services-conciliacao-bancaria", [])
 										 '&tp='+$scope.tipoImpressao+'&sd='+$scope.statusData+'&c='+$scope.filialImpressao+'&f='
 										 +$scope.nomeFilialImpressao+'&d='+$scope.dataConsulta, '_blank');
 			//}
+		}
+		
+		//DATA
+		$scope.formatacaoData = function(){
+			if($scope.filtro.consideraPeriodo){
+				if($scope.filtro.datamax){
+					$scope.dataConsulta = $scope.getFiltroData($scope.filtro.datamin) + '|' + $scope.getFiltroData($scope.filtro.datamax);
+					$scope.dataExibicao = $scope.formataData($scope.dataConsulta);
+				}
+				else {
+					$scope.dataConsulta = $scope.getFiltroData($scope.filtro.datamin);
+					$scope.dataExibicao = $scope.formataData($scope.dataConsulta);
+				}
+			}
+			else $scope.dataExibicao = "Data não considerada";
+		}
+		//FORMATAÇÃO DE DATA
+		$scope.formataData = function(data){
+			
+			//Split para separar os caracteres que formam a data
+			$scope.dtSplit = data.split("");
+			
+			$scope.dia = $scope.dtSplit[6] + $scope.dtSplit[7];
+			$scope.mes = $scope.dtSplit[4] + $scope.dtSplit[5];
+			$scope.ano = $scope.dtSplit[0] + $scope.dtSplit[1] + $scope.dtSplit[2] + $scope.dtSplit[3];
+			if ($scope.filtro.datamax){
+				$scope.dia2 = $scope.dtSplit[15] + $scope.dtSplit[16];
+				$scope.mes2 = $scope.dtSplit[13] + $scope.dtSplit[14];
+				$scope.ano2 = $scope.dtSplit[9] + $scope.dtSplit[10] + $scope.dtSplit[11] + $scope.dtSplit[12];
+			}
+			
+			$scope.dataFormatada = "";
+			
+			switch ($scope.mes){
+				case "01":
+					$scope.dataFormatada = "Janeiro " + $scope.ano;
+					$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					break;
+					
+				case "02":
+					$scope.dataFormatada = "Fevereiro " + $scope.ano;
+					$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					break;
+					
+				case "03":
+					$scope.dataFormatada = "Março " + $scope.ano;
+					$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					break;
+					
+				case "04":
+					$scope.dataFormatada = "Abril " + $scope.ano;
+					$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					break;
+				
+				case "05":
+					$scope.dataFormatada = "Maio " + $scope.ano;
+					$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					break;
+				
+				case "06":
+					$scope.dataFormatada = "Junho " + $scope.ano;
+					$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					break;
+									
+				case "07":
+					$scope.dataFormatada = "Julho " + $scope.ano;
+					$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					break;
+					
+				case "08":
+					$scope.dataFormatada = "Agosto " + $scope.ano;
+					$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					break;
+					
+				case "09":
+					$scope.dataFormatada = "Setembro " + $scope.ano;
+					$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					break;
+					
+				case "10":
+					$scope.dataFormatada = "Outubro " + $scope.ano;
+					$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					break;
+					
+				case "11":
+					$scope.dataFormatada = "Novembro " + $scope.ano;
+					$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					break;
+					
+				case "12":
+					$scope.dataFormatada = "Dezembro " + $scope.ano;
+					$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					break;
+					
+				default:
+					$scope.dataFormatada = "Erro de formatação"
+					break;
+			}
+			
+			//VERIFICAÇÃO DE DATA PARA FORMATOS EM PERÍODO
+			if($scope.filtro.datamax){
+				switch ($scope.mes2){
+				case "01":
+						$scope.dataFormatada = $scope.dataFormatada + " - " + $scope.dia2 + " janeiro " + $scope.ano2;
+						break;
+					
+				case "02":
+						$scope.dataFormatada = $scope.dataFormatada + " - " + $scope.dia2 + " fevereiro " + $scope.ano2;
+						break;
+					
+				case "03":
+						$scope.dataFormatada = $scope.dataFormatada + " - " + $scope.dia2 + " março " + $scope.ano2;
+						break;
+					
+				case "04":
+						$scope.dataFormatada = $scope.dataFormatada + " - " + $scope.dia2 + " abril " + $scope.ano2;
+						break;
+				
+				case "05":
+						$scope.dataFormatada = $scope.dataFormatada + " - " + $scope.dia2 + " maio " + $scope.ano2;
+						break;
+				
+				case "06":
+						$scope.dataFormatada = $scope.dataFormatada + " - " + $scope.dia2 + " junho " + $scope.ano2;
+						break;
+									
+				case "07":
+						$scope.dataFormatada = $scope.dataFormatada + " - " + $scope.dia2 + " julho " + $scope.ano2;
+						break;
+					
+				case "08":
+						$scope.dataFormatada = $scope.dataFormatada + " - " + $scope.dia2 + " agosto " + $scope.ano2;
+						break;
+					
+				case "09":
+						$scope.dataFormatada = $scope.dataFormatada + " - " + $scope.dia2 + " setembro " + $scope.ano2;
+						break;
+					
+				case "10":
+						$scope.dataFormatada = $scope.dataFormatada + " - " + $scope.dia2 + " outubro " + $scope.ano2;
+						break;
+					
+				case "11":
+						$scope.dataFormatada = $scope.dataFormatada + " - " + $scope.dia2 + " novembro " + $scope.ano2;
+						break;
+					
+				case "12":
+						$scope.dataFormatada = $scope.dataFormatada + " - " + $scope.dia2 + " dezembro " + $scope.ano2;
+						break;
+					
+				default:
+					$scope.dataFormatada = "Erro de formatação"
+					break;
+				}
+			}
+			return $scope.dataFormatada;
 		}
 }]);
