@@ -228,13 +228,21 @@ angular.module('webapi', ['utils'])
         },
         tbantecipacaobancaria: {
             idAntecipacaoBancaria : 100,
-            dtAntecipacaoBancaria : 101,
+            cdContaCorrente : 101,
+            dtAntecipacaoBancaria : 102,
+            cdAdquirente : 103,
+            vlOperacao : 104,
+            vlLiquido : 105,
+            // Relacionamentos
+            tbantecipacaobancariadetalhe : 200
+        },
+        tbantecipacaobancariadetalhe: {
+            idAntecipacaoBancariaDetalhe : 100,
+            idAntecipacaoBancaria : 101,
             dtVencimento : 102,
             vlAntecipacao : 103,
             vlAntecipacaoLiquida : 104,
-            cdAdquirente : 105,
-            cdBandeira : 106
-            cdContaCorrente : 107
+            cdBandeira : 105,
         },
         tbbancoparametro : {
             cdBanco : 100,

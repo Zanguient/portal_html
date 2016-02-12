@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.2 - 11/02/2015
+ *  - inputMoney
+ *
  *  Versão 1.0.1 - 16/11/2015
  *  - element[0].maxLength no firefox é igual a -1 quando não definido
  *
