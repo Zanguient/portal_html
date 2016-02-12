@@ -368,7 +368,10 @@
                     </div>
                    <div class="modal-footer">
                        <div class="col-sm-4">
-                           <button type="button" class="btn default" print-btn>
+                           <!--<button type="button" class="btn default" ng-click="imprimir()">
+                               Imprimir
+                           </button>-->
+												 <button type="button" class="btn default" print-btn>
                                Imprimir
                            </button>
                        </div>
@@ -442,71 +445,141 @@
             </div>
         </div>
         
-        <div class="portlet-body" print-landscape ng-show="exibeTela"> 
-            
-           <!-- DETALHES -->
-           <div class="row"  print-section print-only print-if="modalDetalhesShowing"> 
+        <div print-avoid-break class="portlet-body" print-landscape ng-show="exibeTela"> 
+					<!-- FIM DETALHES AGRUPAMENTO PADRAO IMPRESSAO -->
+           <!-- DETALHES 
+           <div class="row" print-only  print-section print-remove print-if="modalDetalhesShowing">-->
+					<div print-only print-section print-if="modalDetalhesShowing"
+							 style="background: white; width: 29.7cm; height: 21cm; margin: 0; padding: 10mm 15mm 10mm 15mm;
+											margin-bottom: 0.5cm; margin-top: 0.5cm; box-shadow: 0; size: auto">
+						<table style="border: 1px solid #eee; margin-top: -20cm;">
+							<thead>
+								<tr role="row" style="border: 1px solid #eee; font-weight: bold;">
+								<td style="border: 1px solid #eee;" rowspan="3" width="60%" align="center" colspan="5">
+									<img ng-src="http://www.atoscapital.com.br/portal/img/AtosCapital.jpg" title="Atos Capital" class="logo-default" width="320px" height="100px" align="center">
+									<!-- title="{{empresa.nome}}" -->
+								</td>
+								<td style="border: 1px solid #eee;" width="40%" align="center" height="40px" colspan="6">
+									<span class="empresa">{{usuariologado.grupoempresa.ds_nome | uppercase}}</span>
+								</td>
+							</tr>
+							<tr role="row" style="border: 1px solid #eee; font-weight: bold;">
+								<td style="border: 1px solid #eee;" width="40%" align="center" height="40px" colspan="6">
+									<span class="empresa">{{filtro.filial.ds_fantasia | uppercase}}</span>
+								</td>
+							</tr>
+							<tr role="row" style="border: 1px solid #eee; font-weight: bold;">
+								<td style="border: 1px solid #eee;" width="40%" align="center" height="40px" colspan="6">
+									<span class="empresa">{{dataExibicao | uppercase}}</span>
+								</td>
+							</tr>
+							<tr role="row" style="border: 1px solid #eee; font-weight: bold;">
+								<td style="border: 1px solid #eee; height: 40px" align="center" width="100%" colspan="8">
+									{{'Detalhes do agrupamento' | uppercase}}
+								</td>
+							</tr>
+						 <tr role="row" style="border: 1px solid #eee; font-weight: bold;" >
+							 <td width="{{100/8}}%" style="border: 1px solid #eee;" align="center">Filial</td>
+							 <td width="{{100/8}}%" style="border: 1px solid #eee;" align="center">Bandeira</td>
+							 <td width="{{100/8}}%" style="border: 1px solid #eee;" align="center">Venda</td>
+							 <td width="{{100/8}}%" style="border: 1px solid #eee;" align="center">Lote</td>
+							 <td width="{{100/8}}%" style="border: 1px solid #eee;" align="center">NSU</td>
+							 <td width="{{100/8}}%" style="border: 1px solid #eee;" align="center">Data Prevista</td>
+							 <td width="{{100/8}}%" style="border: 1px solid #eee;" align="center">Valor</td>
+							 <td width="{{100/8}}%" style="border: 1px solid #eee;" align="center">Baixado</td>
+						 </tr>
+					 </thead>
+					 <tbody>
+						 <tr role="row" style="border: 1px solid #eee;" 
+								 ng-repeat="item in modalDetalhes.grupo">
+							 <td width="{{100/8}}%" style="border: 1px solid #eee;" align="center">
+								 {{item.Filial | uppercase}}
+							 </td>
+							 <td width="{{100/8}}%" style="border: 1px solid #eee;" align="center">
+								 {{item.Bandeira | uppercase}}
+							 </td>
+							 <td width="{{100/8}}%" style="border: 1px solid #eee;" align="center"
+									 ng-bind="getDataTimeString(item.DataVenda)"
+									 ng-show="item.NumParcela >= 0">
+							 </td>
+							 <td width="{{100/8}}%" style="border: 1px solid #eee;" align="center" ng-bind="item.Lote > 0 ? item.Lote : ''"></td>
+							 <td width="{{100/8}}%" style="border: 1px solid #eee;" align="center">{{item.Documento | uppercase}}
+							 </td>
+							 <td width="{{100/8}}%" style="border: 1px solid #eee;" align="center" ng-bind="getDataString(item.DataPrevista)"></td>
+							 <td width="{{100/8}}%" style="border: 1px solid #eee;" align="center">
+								 {{item.Valor | currency:'R$'}}
+							 </td>
+							 <td width="{{100/8}}%" style="border: 1px solid #eee;" align="center">
+								 <i class="fa fa-check" ng-show="item.Baixado" 
+										style="color: green; padding-left: 5px" 
+										title="Título baixado"></i>
+							 </td>
+						 </tr>
+					 </tbody>
+				 </table>
+						<div ng-if="1>2">
+							<div style="text-align: center">
+							 <h4 class="linhaTotalRelatorios">Detalhes do agrupamento</h4>
+						 </div>
                <div style="text-align: center">
-                   <h4 class="linhaTotalRelatorios">Detalhes do agrupamento</h4>
-               </div>
-               <div style="text-align: center">
-                   <div class="row">
-                       <div class="col-sm-2">
-                            <label>Filial</label>
-                       </div>
-                       <div class="col-sm-2">
-                            <label>Bandeira</label>
-                       </div>
-                       <div class="col-sm-2">
-                            <label>Venda</label>
-                       </div>
-                       <div class="col-sm-1">
-                            <label>Lote</label>
-                       </div>
-                       <div class="col-sm-1">
-                            <label>NSU</label>
-                       </div>
-                       <div class="col-sm-2">
-                            <label>Data Prevista</label>
-                       </div>
-                       <div class="col-sm-2">
-                            <label>Valor</label>
-                       </div>
-                   </div>
-                   <div class="row" ng-repeat="item in modalDetalhes.grupo"
-                        print-avoid-break>
-                       <div class="col-sm-2" style="text-align:center">
-                            {{item.Filial | uppercase}}
-                       </div>
-                       <div class="col-sm-2" style="text-align:center">
-                            {{item.Bandeira | uppercase}}
-                       </div>
-                       <div class="col-sm-2" style="text-align:center"
-                            ng-bind="getDataTimeString(item.DataVenda)"
-                            ng-show="item.NumParcela >= 0">
-                       </div>
-                       <div style="text-align:center"
-                                class="col-sm-1"
-                                ng-show="item.NumParcela >= 0"
-                                ng-bind="item.Lote > 0 ? item.Lote : ''">
-                           </div>
-                       <div style="text-align:center"
-                            ng-class="{'col-sm-1' : item.NumParcela >= 0, 'col-sm-6' : item.NumParcela < 0}">
-                            {{item.Documento | uppercase}}
-                       </div>
-                       <div class="col-sm-2" style="text-align:center"
-                            ng-bind="getDataString(item.DataPrevista)"
-                            ng-show="item.NumParcela >= 0">
-                       </div>
-                       <div class="col-sm-2" style="text-align:center"
-                            ng-class="{'linhaTotalRelatorios' : item.NumParcela < 0, 'valorNegativo' : item.Valor < 0, 'valorPositivo' : item.NumParcela < 0 && item.Valor > 0}">
-                            {{item.Valor | currency:'R$'}}
-                       </div>
-                   </div>
-               </div>
-            </div>
-               
-            <div class="row" print-section print-if="!modalDetalhesShowing">
+								 <div class="row">
+									 <div class="col-sm-2">
+										 <label>Filial</label>
+									 </div>
+									 <div class="col-sm-2">
+										 <label>Bandeira</label>
+									 </div>
+									 <div class="col-sm-2">
+										 <label>Venda</label>
+									 </div>
+									 <div class="col-sm-1">
+										 <label>Lote</label>
+									 </div>
+									 <div class="col-sm-1">
+										 <label>NSU</label>
+									 </div>
+									 <div class="col-sm-2">
+										 <label>Data Prevista</label>
+									 </div>
+									 <div class="col-sm-2">
+										 <label>Valor</label>
+									 </div>
+								 </div>
+								 <div class="row" ng-repeat="item in modalDetalhes.grupo"
+											print-avoid-break>
+									 <div class="col-sm-2" style="text-align:center">
+										 {{item.Filial | uppercase}}
+									 </div>
+									 <div class="col-sm-2" style="text-align:center">
+										 {{item.Bandeira | uppercase}}
+									 </div>
+									 <div class="col-sm-2" style="text-align:center"
+												ng-bind="getDataTimeString(item.DataVenda)"
+												ng-show="item.NumParcela >= 0">
+									 </div>
+									 <div style="text-align:center"
+												class="col-sm-1"
+												ng-show="item.NumParcela >= 0"
+												ng-bind="item.Lote > 0 ? item.Lote : ''">
+									 </div>
+									 <div style="text-align:center"
+												ng-class="{'col-sm-1' : item.NumParcela >= 0, 'col-sm-6' : item.NumParcela < 0}">
+										 {{item.Documento | uppercase}}
+									 </div>
+									 <div class="col-sm-2" style="text-align:center"
+												ng-bind="getDataString(item.DataPrevista)"
+												ng-show="item.NumParcela >= 0">
+									 </div>
+									 <div class="col-sm-2" style="text-align:center"
+												ng-class="{'linhaTotalRelatorios' : item.NumParcela < 0, 'valorNegativo' : item.Valor < 0, 'valorPositivo' :
+																	item.NumParcela < 0 && item.Valor > 0}">
+										 {{item.Valor | currency:'R$'}}
+									 </div>
+								 </div>
+						 </div>
+					</div>
+					</div>           
+					<div class="row" print-section print-if="!modalDetalhesShowing">
                 <!--EXIBIÇÃO-->
                 <div class="col-xs-4 col-sm-4 col-md-4">
                     <div class="dataTables_length">
