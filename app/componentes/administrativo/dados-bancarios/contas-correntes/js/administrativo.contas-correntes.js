@@ -195,6 +195,7 @@ angular.module("administrativo-contas-correntes", [])
       * Se nenhum banco foi selecionado, apaga o conteúdo do input text
       */
     $scope.validaBanco = function(){
+        if(!$scope.modalConta.banco || $scope.modalConta.banco === null) return;
         if(!$scope.modalConta.banco.Codigo) $('#buscabanco').val("");    
     }
     /**

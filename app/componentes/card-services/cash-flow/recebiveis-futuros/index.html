@@ -7,6 +7,10 @@
  
     Card Services > Cash Flow > Recebíveis Futuros
  
+    Versão 1.0.2 - 12/02/2016
+    - Conta Corrente
+    - Antecipação Bancária
+
     Versão 1.0.1 - 03/02/2016
     - Opção de impressão disponível
 
@@ -63,7 +67,7 @@
                                              Data inicial
                                         </th>
                                         <th tabindex="1" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="70%">
-                                             Filial
+                                             Conta Corrente
                                         </th>
                                         <th tabindex="6" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="10%">
                                              Ações
@@ -76,7 +80,8 @@
                                                  data-date-format="dd/mm/yyyy">
                                                 <input type="text" 
                                                        class="form-control form-filter input-sm" 
-                                                       readonly="" 
+                                                       readonly="readonly" style="cursor: default"
+                                                       onfocus="this.blur()"
                                                        ng-model="filtro.datamin" 
                                                        datepicker-append-to-body="true" 
                                                        datepicker-popup="dd MMMM yyyy"
@@ -91,15 +96,15 @@
                                                 </span>
                                             </div>                     
                                         </td>
-                                        <!-- FILIAL -->
+                                        <!-- CONTA CORRENTE -->
                                         <td rowspan="1" colspan="1">
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <select class="form-control form-filter input-sm comboBoxFiltros"
-                                                            ng-disabled="filiais.length == 0"
-                                                            ng-model="filtro.filial"
-                                                            ng-change="alterouFilial()"
-                                                            ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
+                                                            ng-disabled="contas.length == 0"
+                                                            ng-model="filtro.conta"
+                                                            ng-change="alterouConta()"
+                                                            ng-options="conta as getNomeAmigavelConta(conta) for conta in contas">
                                                         <option value="">TODAS</option>
                                                     </select>
                                                     <i class="fa fa-question-circle"
@@ -214,8 +219,8 @@
                                 <tr>
                                     <th colspan="3" width="5%">
                                     </th>
-                                    <th width="40" style="text-align: center;">
-                                        Competência - Adquirente - Bandeira
+                                    <th width="30" style="text-align: center;">
+                                        Competência - Adquirente - Dia
                                     </th>
                                     <th width="15%" style="text-align: center;">
                                         Valor Bruto
@@ -223,7 +228,10 @@
                                     <th width="15%" style="text-align: center;">
                                         Valor Descontado
                                     </th>
-                                    <th width="25%" style="text-align: center;">
+                                    <th width="20%" style="text-align: center;">
+                                        Antecipações Bancária
+                                    </th>
+                                    <th width="15%" style="text-align: center;">
                                         Recebíveis Futuros
                                     </th>
                                 </tr>
@@ -250,6 +258,11 @@
                                     <td class="linhaTotalRelatorios"
                                         ng-class="{'valorNegativo' : competencia.valorLiquido != 0.0}">
                                         {{competencia.valorDescontado | currency:'R$'}}
+                                    </td>
+                                    <!-- ANTECIPAÇÕES -->
+                                    <td class="linhaTotalRelatorios"
+                                        ng-class="{'valorNegativo' : competencia.valorAntecipacaoBancaria != 0.0}">
+                                        {{competencia.valorAntecipacaoBancaria | currency:'R$'}}
                                     </td>
                                     <!-- VALOR LÍQUIDO -->
                                     <td class="linhaTotalRelatorios"
@@ -282,6 +295,11 @@
                                         ng-class="{'valorNegativo' : adquirente.valorDescontado != 0.0}">
                                         {{adquirente.valorDescontado | currency:'R$'}}
                                     </td>
+                                    <!-- ANTECIPAÇÕES -->
+                                    <td class="linhaTotalRelatorios"
+                                        ng-class="{'valorNegativo' : adquirente.valorAntecipacaoBancaria != 0.0}">
+                                        {{adquirente.valorAntecipacaoBancaria | currency:'R$'}}
+                                    </td>
                                     <!-- VALOR LÍQUIDO -->
                                     <td class="linhaTotalRelatorios"
                                         ng-class="{'valorPositivo' : adquirente.valorLiquido > 0.0, 'valorNegativo' : adquirente.valorLiquido < 0.0}">
@@ -290,24 +308,28 @@
                                 </tr>
                                 <!-- LINHA EXPANSÍVEL -->
                                 <tr ng-repeat-end ng-show="isExpanded(competencia) && isExpanded(adquirente)"
-                                    ng-repeat="bandeira in adquirente.bandeiras">
+                                    ng-repeat="dia in adquirente.dias">
                                     <td colspan="3"></td>
-                                    <td>
-                                        {{bandeira.bandeira | uppercase}}
+                                    <td ng-bind="getDataString(dia.data)">
                                     </td>
                                     <!-- VALOR BRUTO -->
                                     <td class="linhaTotalRelatorios">
-                                        {{bandeira.valorBruto | currency:'R$'}}
+                                        {{dia.valorBruto | currency:'R$'}}
                                     </td>
                                     <!-- VALOR DESCONTADO -->
                                     <td class="linhaTotalRelatorios"
-                                        ng-class="{'valorNegativo' : bandeira.valorDescontado != 0.0}">
-                                        {{bandeira.valorDescontado | currency:'R$'}}
+                                        ng-class="{'valorNegativo' : dia.valorDescontado != 0.0}">
+                                        {{dia.valorDescontado | currency:'R$'}}
+                                    </td>
+                                    <!-- ANTECIPAÇÕES -->
+                                    <td class="linhaTotalRelatorios"
+                                        ng-class="{'valorNegativo' : dia.valorAntecipacaoBancaria != 0.0}">
+                                        {{dia.valorAntecipacaoBancaria | currency:'R$'}}
                                     </td>
                                     <!-- VALOR LÍQUIDO -->
                                     <td class="linhaTotalRelatorios"
-                                        ng-class="{'valorPositivo' : bandeira.valorLiquido > 0.0, 'valorNegativo' : bandeira.valorLiquido < 0.0}">
-                                        {{bandeira.valorLiquido | currency:'R$'}}
+                                        ng-class="{'valorPositivo' : dia.valorLiquido > 0.0, 'valorNegativo' : dia.valorLiquido < 0.0}">
+                                        {{dia.valorLiquido | currency:'R$'}}
                                     </td>
                                 </tr>
                                 <tr ng-repeat-end></tr>
@@ -322,6 +344,9 @@
                                     <td ng-class="{'valorNegativo' : total.valorDescontado != 0.0}">
                                          {{total.valorDescontado | currency:'R$'}}
                                     </td> 
+                                    <td ng-class="{'valorNegativo' : total.valorAntecipacaoBancaria != 0.0}">
+                                         {{total.valorAntecipacaoBancaria | currency:'R$'}}
+                                    </td>
                                     <td ng-class="{'valorPositivo' : total.valorLiquido > 0.0, 'valorNegativo' : total.valorLiquido < 0.0}">
                                          {{total.valorLiquido | currency:'R$'}}
                                     </td> 

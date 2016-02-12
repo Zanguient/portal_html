@@ -200,7 +200,7 @@ angular.module('webapi', ['utils'])
         recebiveisfuturos : {
             data : 100,
             id_grupo : 101,
-            nu_cnpj : 102,
+            cdContaCorrente : 102,
         },
         relatorioconciliacaotitulos : {
             data = 100,

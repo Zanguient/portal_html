@@ -110,10 +110,11 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				dtAntecipacaoBancaria : datetime,
 				cdAdquirente : int,
 				cdContaCorrente : int,
+				vlOperacao : double,
+				vlLiquido : double,
 				antecipacoes : [{ idAntecipacaoBancariaDetalhe = -1,
 								  dtVencimento : datetime,
 								  vlAntecipacao : double,
-								  vlAntecipacaoLiquida : double,
 								  cdBandeira : int ou null,
 								}]
 				
@@ -129,10 +130,11 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				idAntecipacaoBancaria : int,
 				dtAntecipacaoBancaria : datetime,
 				cdAdquirente : int,
+				vlOperacao : double,
+				vlLiquido : double,
 				antecipacoes : [{ idAntecipacaoBancariaDetalhe : int, // set -1 para informar que é um novo
 								  dtVencimento : datetime,
 								  vlAntecipacao : double,
-								  vlAntecipacaoLiquida : double,
 								  cdBandeira : int ou null,
 								}]
 				deletar : [ int ] // idAntecipacaoBancariaDetalhe a serem deletados

@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.1 - 16/02/2016
+ *  - Envio dos valores do lote em vez de vlAntecipacaoLiquida
+ *
  *  Versão 1.0 - 05/02/2016
  *
  */
@@ -38,6 +41,7 @@ angular.module("card-services-antecipacao-bancaria", [])
                          antecipacoes : [],
                          bandeiras : [],
                          conta : null,
+                         exibeDataAntecipacao : false,
                          dtAntecipacaoBancaria : '',
 						 valorBrutoTotal: 0.0,
 						 valorLiquidoTotal: 0.0,
@@ -550,7 +554,17 @@ angular.module("card-services-antecipacao-bancaria", [])
     
     
     
-    // MODAL NOVO
+    // MODAL ANTECIPAÇÃO
+    $scope.exibeCalendarioData = function($event, obj, flagName) {
+        if($event){
+            $event.preventDefault();
+            $event.stopPropagation();
+        }
+        //console.log(obj);
+        //console.log(obj['exibeDataAntecipacao']);
+        obj[flagName] = !obj[flagName];
+    }
+    
     var fechaModalAntecipacao = function(){
         $('#modalAntecipacao').modal('hide');    
     }
@@ -561,6 +575,7 @@ angular.module("card-services-antecipacao-bancaria", [])
     $scope.novaAntecipacao = function(){
         $scope.modalAntecipacao.conta = $scope.filtro.conta;
         $scope.modalAntecipacao.old = null;
+        $scope.modalAntecipacao.exibeDataAntecipacao = false;
         if($scope.filtro.adquirente && $scope.filtro.adquirente !== null){
 			$scope.modalAntecipacao.adquirente = $scope.filtro.adquirente;
 			angular.copy($scope.bandeiras, $scope.modalAntecipacao.bandeiras);
@@ -661,7 +676,13 @@ angular.module("card-services-antecipacao-bancaria", [])
                 bandeira = lastAntecipacao.bandeira;
             // Data de vencimento
             if(lastAntecipacao.dtVencimento && lastAntecipacao.dtVencimento !== null)
-                dtVencimento = lastAntecipacao.dtVencimento;
+            {
+                dtVencimento = new Date(lastAntecipacao.dtVencimento.getFullYear(), lastAntecipacao.dtVencimento.getMonth(), lastAntecipacao.dtVencimento.getDate());
+                // Próximo dia útil
+                do{ 
+                    dtVencimento.setDate(dtVencimento.getDate() + 1);
+                }while(dtVencimento.getDay() === 6 || dtVencimento.getDay() === 0);
+            }
         }
         
         $scope.modalAntecipacao.antecipacoes.push({ idAntecipacaoBancariaDetalhe : -1,
@@ -669,6 +690,7 @@ angular.module("card-services-antecipacao-bancaria", [])
                                              bandeira : bandeira,
                                              vlAntecipacao : '',
                                              vlAntecipacaoLiquida : '',
+                                             exibeDataVencimento : '',
                                            });
     }
     
@@ -695,10 +717,10 @@ angular.module("card-services-antecipacao-bancaria", [])
 			$scope.showModalAlerta('Uma data de antecipação bancária deve ser informada!');
 			return false;
 		}
-		if(!$scope.validaData($scope.modalAntecipacao.dtAntecipacaoBancaria)){
+		/*if(!$scope.validaData($scope.modalAntecipacao.dtAntecipacaoBancaria)){
 			$scope.showModalAlerta('Data de antecipação bancária informada é inválida!');
 			return false;
-		}
+		}*/
         // Valor bruto total
         var valorOperacao = 0.0;
         if(typeof $scope.modalAntecipacao.vlOperacao === 'string'){
@@ -726,10 +748,10 @@ angular.module("card-services-antecipacao-bancaria", [])
 				$scope.showModalAlerta('Uma data de vencimento deve ser informada! (registro ' + (k + 1) + ')');
 				return false;
 			}
-			if(!$scope.validaData(antecipacao.dtVencimento)){
+			/*if(!$scope.validaData(antecipacao.dtVencimento)){
 				$scope.showModalAlerta('Data de vencimento informada do registro ' + (k + 1) + ' é inválida!');
 				return false;
-			}
+			}*/
 			var valorBruto = 0.0;
 			if(antecipacao.vlAntecipacao){
                 if(typeof antecipacao.vlAntecipacao === 'string'){
@@ -769,8 +791,8 @@ angular.module("card-services-antecipacao-bancaria", [])
 			}*/
 		}
         
-        //console.log(valorOperacao); // 550000,00000000000000000000000000000000000000000000000001
-        //console.log(valorB); // 55000,00
+        //console.log(valorOperacao); 
+        //console.log(valorB);
         if(Math.abs(valorOperacao - valorB) > 0.001){
             $scope.showModalAlerta('Valor da operação informada é diferente do somatório dos valores de cada lançamento de antecipação');
 			return false;
@@ -782,6 +804,7 @@ angular.module("card-services-antecipacao-bancaria", [])
     $scope.cadastraAntecipacao = function(){
         if(!validaCamposModalAntecipacao())
 			return;
+        //console.log($scope.modalAntecipacao.antecipacoes);
 		// Confirma
 		$scope.showModalConfirmacao('Confirmação', 
             "A antecipação será armazenada. Confirma?",
@@ -795,9 +818,14 @@ angular.module("card-services-antecipacao-bancaria", [])
 		
 		$scope.showProgress();
 		
+        var vlOperacao = parseFloat($scope.modalAntecipacao.vlOperacao.split('.').join('').split(',').join('.'));
+        var vlLiquido = parseFloat($scope.modalAntecipacao.vlLiquido.split('.').join('').split(',').join('.'));
+        
         // $scope.validaData($scope.modalAntecipacao.dtAntecipacaoBancaria);
 		var json = { idAntecipacaoBancaria : -1,
-                     dtAntecipacaoBancaria : $scope.getDataFromString($scope.modalAntecipacao.dtAntecipacaoBancaria),
+                     vlOperacao : vlOperacao,
+                     vlLiquido : vlLiquido,
+                     dtAntecipacaoBancaria : $scope.getDataFromString($scope.getDataString($scope.modalAntecipacao.dtAntecipacaoBancaria)),
 					 cdAdquirente : $scope.modalAntecipacao.adquirente.cdAdquirente,
 					 cdContaCorrente : $scope.modalAntecipacao.conta.cdContaCorrente,
 					 antecipacoes : []
@@ -805,11 +833,13 @@ angular.module("card-services-antecipacao-bancaria", [])
 		for(var k = 0; k < $scope.modalAntecipacao.antecipacoes.length; k++){
 			var antecipacao = $scope.modalAntecipacao.antecipacoes[k];
 			var valorBruto = parseFloat(antecipacao.vlAntecipacao.split('.').join('').split(',').join('.'));
-			var valorLiquido = typeof antecipacao.vlAntecipacaoLiquida === 'string' ? parseFloat(antecipacao.vlAntecipacaoLiquida.split('.').join('').split(',').join('.')) : antecipacao.vlAntecipacaoLiquida;
+			//var valorLiquido = typeof antecipacao.vlAntecipacaoLiquida === 'string' ? parseFloat(antecipacao.vlAntecipacaoLiquida.split('.').join('').split(',').join('.')) : antecipacao.vlAntecipacaoLiquida;
+            var dtVencimento = $scope.getDataFromString($scope.getDataString(antecipacao.dtVencimento));
+            //console.log(dtVencimento);
 			json.antecipacoes.push({ idAntecipacaoBancariaDetalhe : -1,  
                                     vlAntecipacao : valorBruto,
-									vlAntecipacaoLiquida: valorLiquido,
-									dtVencimento : $scope.getDataFromString(antecipacao.dtVencimento),
+									//vlAntecipacaoLiquida: valorLiquido,
+									dtVencimento : dtVencimento,
 									cdBandeira : antecipacao.bandeira && antecipacao.bandeira !== null ? antecipacao.bandeira.cdBandeira : null});
 		}
 		
@@ -889,12 +919,14 @@ angular.module("card-services-antecipacao-bancaria", [])
     }
     
     $scope.editaAntecipacao = function(antecipacao){
+        //console.log(antecipacao);
+        $scope.modalAntecipacao.exibeDataAntecipacao = false;
         // Conta
         $scope.modalAntecipacao.conta = $filter('filter')($scope.contas, function(c){return c.cdContaCorrente === antecipacao.cdContaCorrente})[0];
         // Adquirente
         $scope.modalAntecipacao.adquirente = $filter('filter')($scope.adquirentes, function(a){return a.cdAdquirente === antecipacao.tbAdquirente.cdAdquirente})[0];
         // Data de Antecipação
-        $scope.modalAntecipacao.dtAntecipacaoBancaria = $scope.getDataString(antecipacao.dtAntecipacaoBancaria);
+        $scope.modalAntecipacao.dtAntecipacaoBancaria = $scope.getDataFromDate(antecipacao.dtAntecipacaoBancaria);
         // Valores
         $scope.modalAntecipacao.valorBrutoTotal = antecipacao.vlOperacao;
         $scope.modalAntecipacao.valorLiquidoTotal = antecipacao.vlLiquido;
@@ -905,12 +937,13 @@ angular.module("card-services-antecipacao-bancaria", [])
         // Bandeira
         $scope.modalAntecipacao.antecipacoes = [];
         for(var k = 0; k < antecipacao.antecipacoes.length; k++){
-            var a = antecipacao.antecipacoes[k];
+            var a = antecipacao.antecipacoes[k]; // 
             $scope.modalAntecipacao.antecipacoes.push({ idAntecipacaoBancariaDetalhe : a.idAntecipacaoBancariaDetalhe,
-                                                        dtVencimento : $scope.getDataString(a.dtVencimento),
+                                                        dtVencimento : $scope.getDataFromDate(a.dtVencimento),
                                                         bandeira : a.tbBandeira,
                                                         vlAntecipacao : a.vlAntecipacao,
                                                         vlAntecipacaoLiquida : a.vlAntecipacaoLiquida,
+                                                        exibeDataVencimento : false,
                                                        });
         }
         //console.log($scope.modalAntecipacao.antecipacoes);
@@ -934,10 +967,15 @@ angular.module("card-services-antecipacao-bancaria", [])
         if(!validaCamposModalAntecipacao())
 			return;
         
+        var vlOperacao = typeof $scope.modalAntecipacao.vlOperacao === 'string' ?parseFloat($scope.modalAntecipacao.vlOperacao.split('.').join('').split(',').join('.')) : $scope.modalAntecipacao.vlOperacao;
+        var vlLiquido = typeof $scope.modalAntecipacao.vlLiquido === 'string' ? parseFloat($scope.modalAntecipacao.vlLiquido.split('.').join('').split(',').join('.')) : $scope.modalAntecipacao.vlLiquido;
+        
         // Avalia mudanças e controi o JSON
         // $scope.validaData($scope.modalAntecipacao.dtAntecipacaoBancaria);
 		var json = { idAntecipacaoBancaria : $scope.modalAntecipacao.old.idAntecipacaoBancaria,
-                     dtAntecipacaoBancaria : $scope.getDataFromString($scope.modalAntecipacao.dtAntecipacaoBancaria),
+                     vlOperacao : vlOperacao,
+                     vlLiquido : vlLiquido,
+                     dtAntecipacaoBancaria : $scope.getDataFromString($scope.getDataString($scope.modalAntecipacao.dtAntecipacaoBancaria)),
 					 cdAdquirente : $scope.modalAntecipacao.adquirente.cdAdquirente,
 					 cdContaCorrente : $scope.modalAntecipacao.conta.cdContaCorrente,
 					 antecipacoes : [],
@@ -947,18 +985,18 @@ angular.module("card-services-antecipacao-bancaria", [])
 			var antecipacao = $scope.modalAntecipacao.antecipacoes[k];
             var idAntecipacaoBancariaDetalhe = antecipacao.idAntecipacaoBancariaDetalhe;
             var valorBruto = typeof antecipacao.vlAntecipacao === 'string' ? parseFloat(antecipacao.vlAntecipacao.split('.').join('').split(',').join('.')) : antecipacao.vlAntecipacao;
-			var valorLiquido = typeof antecipacao.vlAntecipacaoLiquida === 'string' ? parseFloat(antecipacao.vlAntecipacaoLiquida.split('.').join('').split(',').join('.')) : antecipacao.vlAntecipacaoLiquida;
+			//var valorLiquido = typeof antecipacao.vlAntecipacaoLiquida === 'string' ? parseFloat(antecipacao.vlAntecipacaoLiquida.split('.').join('').split(',').join('.')) : antecipacao.vlAntecipacaoLiquida;
             var dtVencimento = antecipacao.dtVencimento;
             
             //console.log("Detalhe: " + idAntecipacaoBancariaDetalhe);
-            if(idAntecipacaoBancariaDetalhe > 0){
+            /*if(idAntecipacaoBancariaDetalhe > 0){
                 
                 // Obtém o antigo
                 var oldAntecipacao = $filter('filter')($scope.modalAntecipacao.old.antecipacoes, function(a){return a.idAntecipacaoBancariaDetalhe === idAntecipacaoBancariaDetalhe})[0];
                 //console.log(oldAntecipacao);
                 if(oldAntecipacao.vlAntecipacao === valorBruto &&
-                   oldAntecipacao.vlAntecipacaoLiquida === valorLiquido &&
-                   $scope.getDataString(oldAntecipacao.dtVencimento) === dtVencimento &&
+                   //oldAntecipacao.vlAntecipacaoLiquida === valorLiquido &&
+                   //$scope.getDataString(oldAntecipacao.dtVencimento) === dtVencimento &&
                    ((oldAntecipacao.tbBandeira === null && (!antecipacao.bandeira || antecipacao.bandeira === null)) ||
                     (oldAntecipacao.tbBandeira !== null && antecipacao.bandeira && antecipacao.bandeira !== null && oldAntecipacao.tbBandeira.cdBandeira === antecipacao.bandeira.cdBandeira))){
                     // Não houve mudanças!
@@ -971,12 +1009,12 @@ angular.module("card-services-antecipacao-bancaria", [])
                 //console.log($scope.getDataString(oldAntecipacao.dtVencimento) + " = " + dtVencimento + " ? " + ($scope.getDataString(oldAntecipacao.dtVencimento) === dtVencimento));
                 //console.log((oldAntecipacao.tbBandeira && oldAntecipacao.tbBandeira !== null ? oldAntecipacao.tbBandeira.cdBandeira : 'NULL') + " = " + (antecipacao.bandeira && antecipacao.bandeira !== null ? antecipacao.bandeira.cdBandeira : 'NULL') + " ? " + ((oldAntecipacao.tbBandeira === null && (!antecipacao.bandeira || antecipacao.bandeira === null)) || (oldAntecipacao.tbBandeira !== null && antecipacao.bandeira && antecipacao.bandeira !== null && oldAntecipacao.tbBandeira.cdBandeira === antecipacao.bandeira.cdBandeira)));
                 
-            }
+            }*/
 			
 			json.antecipacoes.push({ idAntecipacaoBancariaDetalhe : idAntecipacaoBancariaDetalhe,  
                                     vlAntecipacao : valorBruto,
-									vlAntecipacaoLiquida: valorLiquido,
-									dtVencimento : $scope.getDataFromString(dtVencimento),
+									//vlAntecipacaoLiquida: valorLiquido,
+									dtVencimento : $scope.getDataFromString($scope.getDataString(dtVencimento)),
 									cdBandeira : antecipacao.bandeira && antecipacao.bandeira !== null ? antecipacao.bandeira.cdBandeira : null});
 		}
         
@@ -990,11 +1028,11 @@ angular.module("card-services-antecipacao-bancaria", [])
 		
 		//console.log(json);
         
-        if(json.deletar.length === 0 && json.antecipacoes.length === 0 &&
+        /*if(json.deletar.length === 0 && json.antecipacoes.length === 0 &&
            $scope.getDataString($scope.modalAntecipacao.old.dtAntecipacaoBancaria) === $scope.modalAntecipacao.dtAntecipacaoBancaria && $scope.modalAntecipacao.old.tbAdquirente.cdAdquirente === $scope.modalAntecipacao.adquirente.cdAdquirente){
             fechaModalAntecipacao();
             return;
-        }
+        }*/
         
 		// Confirma
 		$scope.showModalConfirmacao('Confirmação', 

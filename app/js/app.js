@@ -2642,7 +2642,6 @@ angular.module("AtosCapital", ['ui.router',
             return text.replace(/(\r\n|\n|\r)/gm, "<br>");
         return text;
     }
-
     
     /**
       * Imprime

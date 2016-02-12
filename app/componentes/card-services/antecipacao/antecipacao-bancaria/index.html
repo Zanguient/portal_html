@@ -272,7 +272,7 @@
                                         <label>Data da Antecipação</label>
                                    </div>
                                    <div class="col-sm-2">
-                                        <input type="text" 
+                                        <!--input type="text" 
                                                placeholder="DD/MM/YYYY" 
                                                maxlength="10" 
                                                class="form-control" 
@@ -282,7 +282,31 @@
                                                onDrag="return false" 
                                                onDrop="return false" 
                                                onPaste="return false" 
-                                               autocomplete=off/>  
+                                               autocomplete=off/-->  
+                                       <div class="input-group date date-picker margin-bottom-5"
+                                             data-date-format="dd/mm/yyyy">
+                                            <input type="text" 
+                                                   class="form-control form-filter input-sm" 
+                                                   readonly="" 
+                                                   style="cursor: pointer" 
+                                                   ng-click="exibeCalendarioData($event, modalAntecipacao, 'exibeDataAntecipacao')" 
+                                                   placeholder="Data" 
+                                                   ng-model="modalAntecipacao.dtAntecipacaoBancaria" 
+                                                   datepicker-append-to-body="true" 
+                                                   datepicker-popup="dd MMMM yyyy" 
+                                                   is-open="modalAntecipacao.exibeDataAntecipacao" 
+                                                   ng-required="true" 
+                                                   show-button-bar="false" 
+                                                   show-weeks="false" 
+                                                   required="required">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-sm default" 
+                                                    type="button" 
+                                                    ng-click="exibeCalendarioData($event, modalAntecipacao, 'exibeDataAntecipacao')">
+                                                    <i class="fa fa-calendar"></i>
+                                                </button>
+                                            </span>
+                                        </div>
                                    </div>
                                    <div class="col-sm-4">
                                         
@@ -347,7 +371,7 @@
                                                 ng-repeat="antecipacao in modalAntecipacao.antecipacoes">
                                                 <!-- DATA VENCIMENTO -->
                                                 <td>
-                                                    <input type="text" 
+                                                    <!--input type="text" 
                                                            placeholder="DD/MM/YYYY" 
                                                            maxlength="10" 
                                                            class="form-control" 
@@ -357,7 +381,31 @@
                                                            onDrag="return false" 
                                                            onDrop="return false" 
                                                            onPaste="return false" 
-                                                           autocomplete=off/>  
+                                                           autocomplete=off/-->  
+                                                    <div class="input-group date date-picker margin-bottom-5"
+                                                         data-date-format="dd/mm/yyyy">
+                                                        <input type="text" 
+                                                               class="form-control form-filter input-sm" 
+                                                               readonly="" 
+                                                               style="cursor: pointer" 
+                                                               ng-click="exibeCalendarioData($event, antecipacao, 'exibeDataVencimento')" 
+                                                               placeholder="Data" 
+                                                               ng-model="antecipacao.dtVencimento" 
+                                                               datepicker-append-to-body="true" 
+                                                               datepicker-popup="dd MMMM yyyy" 
+                                                               is-open="antecipacao.exibeDataVencimento" 
+                                                               ng-required="true" 
+                                                               show-button-bar="false" 
+                                                               show-weeks="false" 
+                                                               required="required">
+                                                        <span class="input-group-btn">
+                                                            <button class="btn btn-sm default" 
+                                                                type="button" 
+                                                                ng-click="exibeCalendarioData($event, antecipacao, 'exibeDataVencimento')">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </button>
+                                                        </span>
+                                                    </div>
                                                 </td>
 												<!-- BANDEIRA -->
                                                 <td style="text-align:center">
