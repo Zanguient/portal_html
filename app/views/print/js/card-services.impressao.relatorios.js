@@ -59,12 +59,15 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 					
 					//RELATORIOS CONCILIACAO
 				case "Relatório de Conciliação":
+					
+					$scope.formataMargin();
+					
 					var c = $location.search().c;
 					var d = $location.search().d;
 					
 					if(!c || !d) return;				
 					
-					$scope.colunas = ["Competência Adquirente Bandeira", "Taxa Média", "Vendas", "Taxa ADM", "Ajustes Crédito", "Ajustes Débito", "Valor Líquido", "Valor Descontado Antecipação", "Valor Líquido Total", "Extratos Bancários", "Diferença", "Status"];
+					$scope.colunas = ["Competência - Adquirente - Bandeira", "Taxa Média", "Vendas", "Taxa ADM", "Ajustes Crédito", "Ajustes Débito", "Valor Líquido", "Valor Descontado Antecipação", "Valor Líquido Total", "Extratos Bancários", "Diferença", "Status"];
 					$scope.niveis = ["Nivel 1", "Nível 2", "Nivel 3"];
 										
 					$scope.data = $scope.formataData(d);
@@ -75,28 +78,35 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 					break;
 					
 				case "Relatório de Recebíveis Futuros":
-					var c = $location.search().c;
+					
+					$scope.formataMargin();
+					
+					var cc = $location.search().cc;
 					var d = $location.search().d;
 					
-					if(!c || !d) return;
+					if(!cc || !d) return;
 					
-					$scope.colunas = ["Competência Adquirente Bandeira", "Valor Bruto", "Valor Descontado", "Recebíveis Futuros"];
+					$scope.colunas = ["Competência - Adquirente - Dia", "Valor Bruto", "Valor Descontado", "Antecipações Bancária",
+														"Recebíveis Futuros"];
 					$scope.niveis = ["Nível 1", "Nível 2", "Nível 3"];
 					
 					$scope.data = $scope.formataData(d);
 					$scope.dataConsulta = d;
-					$scope.cnpj = c;
+					$scope.contaCorrente = cc;
 					
 					consultaRecebiveisFuturos(function(){ $scope.exibeTela = true; $timeout(function(){$scope.imprime();}, 1500) });
 					break;
 					
 				case "Relatório de Recebíveis Vendas":
+					
+					$scope.formataMargin();
+					
 					var c = $location.search().c;
 					var d = $location.search().d;
 					
 					if(!c || !d) return;
 					
-					$scope.colunas = ["Competência Adquirente Bandeira", "Valor Bruto", "Valor Descontado", "Valor Líquido"];
+					$scope.colunas = ["Competência - Adquirente - Bandeira", "Valor Bruto", "Valor Descontado", "Valor Líquido"];
 					$scope.colunas2 = ["Valor Recebido", "Valor A Receber"];
 					$scope.niveis = ["Nível 1", "Nível 2", "Nível 3"];
 					
@@ -127,10 +137,12 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 			});
 			
 			//Filial - CNPJ
-			filtros.push({
-				id: /*$campos.card.conciliacaorelatorios.nu_cnpj*/ 102,
-				valor: $scope.cnpj
-			});
+			if ($scope.cnpj != "todos"){
+				filtros.push({
+					id: /*$campos.card.conciliacaorelatorios.nu_cnpj*/ 102,
+					valor: $scope.cnpj
+				});
+			}
 			
 			$webapi.get($apis.getUrl($apis.card.conciliacaorelatorios, [$scope.token, 0], filtros)) 
 				.then(function(dados){
@@ -158,15 +170,16 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 			filtros.push({id: /*$campos.card.recebiveisfuturos.data*/ 100,
 										valor: $scope.dataConsulta
 									 });			
-			// Filial
-			filtros.push({id: /*$campos.card.recebiveisfuturos.nu_cnpj*/ 102, 
-										valor: $scope.cnpj
-									 });  
-			
+			// Conta Corrente
+			if ($scope.contaCorrente != "todos"){
+				filtros.push({id: /*$campos.card.recebiveisfuturos.cdContaCorrente*/ 102, 
+											valor: $scope.contaCorrente
+										 });  
+			}
 			
 			//console.log(filtros);
 			$webapi.get($apis.getUrl($apis.card.recebiveisfuturos, [$scope.token, 0], filtros)) 
-				.then(function(dados){
+            .then(function(dados){
 				//console.log(dados);
 				// Obtém os dados
 				$scope.relatorio = dados.Registros;
@@ -175,6 +188,7 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 				$scope.total.valorBruto = dados.Totais.valorBruto;
 				$scope.total.valorDescontado = dados.Totais.valorDescontado;
 				$scope.total.valorLiquido = dados.Totais.valorLiquido;
+				$scope.total.valorAntecipacaoBancaria = dados.Totais.valorAntecipacaoBancaria;
 				
 				// Fecha os progress
 				hideProgress();
@@ -200,10 +214,11 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 										valor: $scope.dataConsulta
 									 });			
 			// Filial
-			filtros.push({id: /*$campos.card.relatoriovendas.nu_cnpj*/ 102, 
-										valor: $scope.cnpj
-									 });  
-			
+			if($scope.cnpj != "todos"){
+				filtros.push({id: /*$campos.card.relatoriovendas.nu_cnpj*/ 102, 
+											valor: $scope.cnpj
+										 });  
+			}
 			
 			//console.log(filtros);
 			$webapi.get($apis.getUrl($apis.card.relatoriovendas, [$scope.token, 0], filtros)) 
@@ -385,6 +400,21 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 			}
 			return $scope.dataFormatada;
 		}
+		
+		$scope.getDataString = function(data){
+			$scope.dataSplit = data.split("");
+			$scope.diaString = $scope.dataSplit[8] + $scope.dataSplit[9];
+			$scope.mesString = $scope.dataSplit[5] + $scope.dataSplit[6];
+			$scope.anoString = $scope.dataSplit[0] + $scope.dataSplit[1] + $scope.dataSplit[2] + $scope.dataSplit[3];
+			return $scope.diaString + "/" + $scope.mesString + "/" + $scope.anoString;
+		}
+		
+		
+		$scope.formataMargin = function(){
+			if(jQuery.browser.mozilla) $scope.margin = "0cm";
+			else $scope.margin = "-13px";
+		}
+		
 		
 		$scope.formaTabela = function(){
 			document.write('<tr><td>Volvo</td><td>S60</td><td>2010</td><td>Saloon</td><td>Yes</td></tr><tr><td colspan="5"><table><colgroup><col class="coluna1"/><col class="coluna2"/><col class="coluna3"/></colgroup><tr><th>Agudo</th><th >Médio</th><th >Grave</th></tr><tr><td>Trompete</td><td>Trompa</td><td>Trombone</td></tr></table> </td></tr><tr><td>Audi</td><td>A4</td><td>2002</td><td>Saloon</td><td>Yes</td></tr>');

@@ -241,13 +241,21 @@ angular.module("card-services-recebiveis-futuros", [])
 			c = CNPJ
 			f = Filial
 			d = Data
+			cc = Conta Corrente
 			
 			*/
 			
-			/*if($scope.filtro.conta && $scope.filtro.conta !== null){  
-				$window.open('views/print#?e=' + $scope.usuariologado.grupoempresa.ds_nome + '&s=' + "Relatório de Recebíveis Futuros" + '&n='+ 3 +'&cl='+4+'&t='+$scope.token+'&c='+$scope.filtro.conta.cdContaCorrente+'&f='+$scope.+
-										 '&d='+ ">" + $scope.getFiltroData($scope.filtro.datamin), '_blank');
-			}*/			
+			$scope.cc = "todos";
+			$scope.f = "todas";
+			
+			if($scope.filtro.conta && $scope.filtro.conta !== null){
+				$scope.cc = $scope.filtro.conta.cdContaCorrente;
+				$scope.f = $scope.filtro.conta.empresa.ds_fantasia;
+			}
+			
+			$window.open('views/print#?e=' + $scope.usuariologado.grupoempresa.ds_nome + '&s=' + "Relatório de Recebíveis Futuros" +
+									 '&n='+3+'&cc='+$scope.cc+'&cl='+5+'&t='+$scope.token+'&f='+$scope.f+
+									 '&d='+ ">" + $scope.getFiltroData($scope.filtro.datamin), '_blank');			
 		}
-    
+		
 }])

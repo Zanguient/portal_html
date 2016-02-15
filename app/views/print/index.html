@@ -53,7 +53,8 @@
 <body ng-class="{'manutencao' : manutencao }" 
       ng-controller="card-services-impressao-relatoriosCtrl" 
       ng-init="cardServices_impressaoRelatoriosInit()"
-			 print-section>
+			 print-section
+			>
     
 <!-- MANUTENÇÃO -->
     <div class="centro" ng-show="manutencao" ng-cloak>
@@ -65,7 +66,7 @@
     </div>
 	
 	<!--margin-left: -28px-->
-	<div style="margin-left: -13px; padding: 0; border: 0;"class="container" ng-show="!manutencao" ng-cloak align="center">
+	<div style="margin-left: {{margin}}; padding: 0; border: 0;" class="container" ng-show="!manutencao" ng-cloak align="center">
 		<!-- BEGIN PAGE BREADCRUMB -->
 		
 		<!-- END PAGE BREADCRUMB -->
@@ -285,7 +286,7 @@
 					</table>
 					<!-- FIM CONCILIACAO -->
 					<!-- RELATORIO RECEBIVEIS FUTUROS -->
-					<table ng-if="nomeRelatorio == 'Relatório de Recebíveis Futuros'" print-table="relatorio" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
+					<table ng-if="nomeRelatorio == 'Relatório de Recebíveis Futuros'" print-table="relatorio" class="table table-striped table-bordered table-hover dataTable no-footer" style="margin-top: 0cm" align="center" role="grid">
 						<thead>
 							<tr role="row">
 								<th align="center" height="40px" colspan="{{nColunas + 3}}">
@@ -332,19 +333,23 @@
 									<span class="glyphicon glyphicon-chevron-right"></span>
 								</td>
 								<!-- COMPETÊNCIA -->
-								<td width="22%">
+								<td width="17%">
 									{{competencia.competencia | uppercase}}
 								</td>
 								<!-- VALOR BRUTO -->
-								<td width="25%" class="linhaTotalRelatorios">
+								<td width="20%" class="linhaTotalRelatorios">
 									{{competencia.valorBruto | currency:'R$'}}
 								</td>
 								<!-- VALOR DESCONTADO -->
-								<td width="25%" class="linhaTotalRelatorios">
+								<td width="20%" class="linhaTotalRelatorios">
 									{{competencia.valorDescontado | currency:'R$'}}
 								</td>
+								<!-- ANTECIPAÇÕES -->
+								<td width="20%" class="linhaTotalRelatorios">
+									{{competencia.valorAntecipacaoBancaria | currency:'R$'}}
+								</td>
 								<!-- VALOR LÍQUIDO -->
-								<td width="25%" class="linhaTotalRelatorios">
+								<td width="20%" class="linhaTotalRelatorios">
 									{{competencia.valorLiquido | currency:'R$'}}
 								</td>
 							</tr>
@@ -355,43 +360,49 @@
 									<span class="glyphicon glyphicon-chevron-right"></span>
 								</td>
 								<!-- ADQUIRENTE -->
-								<td width="22%">
+								<td width="17%">
 									{{adquirente.adquirente | uppercase}}
 								</td>
 								<!-- VALOR BRUTO -->
-								<td width="25%" class="linhaTotalRelatorios">
+								<td width="20%" class="linhaTotalRelatorios">
 									{{adquirente.valorBruto | currency:'R$'}}
 								</td>
 								<!-- VALOR DESCONTADO -->
-								<td width="25%" class="linhaTotalRelatorios">
+								<td width="20%" class="linhaTotalRelatorios">
 									{{adquirente.valorDescontado | currency:'R$'}}
 								</td>
+								<!-- ANTECIPAÇÕES -->
+								<td width="20%" class="linhaTotalRelatorios">
+									{{adquirente.valorAntecipacaoBancaria | currency:'R$'}}
+								</td>
 								<!-- VALOR LÍQUIDO -->
-								<td width="25%" class="linhaTotalRelatorios">
-									{{adquirente.valorLiquido | currency:'R$'}}
+								<td width="20%" class="linhaTotalRelatorios">
+								{{adquirente.valorLiquido | currency:'R$'}}
 								</td>
 							</tr>
 							<!-- LINHA EXPANSÍVEL -->
-							<tr ng-repeat-end ng-repeat="bandeira in adquirente.bandeiras">
+							<tr ng-repeat-end ng-repeat="dia in adquirente.dias">
 								<td></td>
 								<td></td>
 								<td width="3%" colspan="1" style="text-align: center;">
 									<span class="glyphicon glyphicon-chevron-right"></span>
 								</td>
-								<td width="22%">
-									{{bandeira.bandeira | uppercase}}
-								</td>
+								<td width="17%" ng-bind="getDataString(dia.data)"></td>
 								<!-- VALOR BRUTO -->
-								<td width="25%" class="linhaTotalRelatorios">
-									{{bandeira.valorBruto | currency:'R$'}}
+								<td width="20%" class="linhaTotalRelatorios">
+									{{dia.valorBruto | currency:'R$'}}
 								</td>
 								<!-- VALOR DESCONTADO -->
-								<td width="25%" class="linhaTotalRelatorios">
-									{{bandeira.valorDescontado | currency:'R$'}}
+								<td width="20%" class="linhaTotalRelatorios">
+									{{dia.valorDescontado | currency:'R$'}}
+								</td>
+								<!-- ANTECIPAÇÕES -->
+								<td width="20%" class="linhaTotalRelatorios">
+									{{dia.valorAntecipacaoBancaria | currency:'R$'}}
 								</td>
 								<!-- VALOR LÍQUIDO -->
-								<td width="25%" class="linhaTotalRelatorios">
-									{{bandeira.valorLiquido | currency:'R$'}}
+								<td width="20%" class="linhaTotalRelatorios">
+									{{dia.valorLiquido | currency:'R$'}}
 								</td>
 							</tr>
 							<tr ng-repeat-end></tr>
@@ -399,18 +410,21 @@
 						<tfoot>
 							<tr class="linhaTotalRelatorios">
 								<!-- TOTAL NF-e -->
-								<td colspan="4" style="text-align:right;" width="25%" class="linhaTotalRelatorios">
+								<td colspan="4" style="text-align:right;" width="20%" class="linhaTotalRelatorios">
 									Total Exibido
 								</td> 
-								<td width="25%" class="linhaTotalRelatorios">
+								<td width="20%" class="linhaTotalRelatorios">
 									{{total.valorBruto | currency:'R$'}}
 								</td> 
-								<td width="25%" class="linhaTotalRelatorios">
+								<td width="20%" class="linhaTotalRelatorios">
 									{{total.valorDescontado | currency:'R$'}}
 								</td> 
-								<td width="25%" class="linhaTotalRelatorios">
+								<td width="20%" class="linhaTotalRelatorios">
+									{{total.valorAntecipacaoBancaria | currency:'R$'}}
+								</td>
+								<td width="20%" class="linhaTotalRelatorios">
 									{{total.valorLiquido | currency:'R$'}}
-								</td> 
+								</td>
 							</tr>
 						</tfoot>
 					</table>

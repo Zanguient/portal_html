@@ -270,10 +270,15 @@ angular.module("card-services-relatorio-vendas", [])
 			
 			*/
 			
-			if($scope.filtro.filial && $scope.filtro.filial !== null){  
-				$window.open('views/print#?e=' + $scope.usuariologado.grupoempresa.ds_nome + '&s=' + "Relatório de Recebíveis Vendas" + '&n='+ 3 +'&cl='+6+'&t='+$scope.token+'&c='+$scope.filtro.filial.nu_cnpj+'&f='+$scope.filtro.filial.ds_fantasia+
-										 '&d='+ $scope.getFiltroData($scope.filtro.data, true), '_blank');
-			}			
-		}
-    
-}])
+			$scope.f = "todas";
+			$scope.c = "todos";
+			if($scope.filtro.filial && $scope.filtro.filial !== null){
+				$scope.f = $scope.filtro.filial.ds_fantasia;
+				$scope.c = $scope.filtro.filial.nu_cnpj;
+			}	
+			
+			$window.open('views/print#?e=' + $scope.usuariologado.grupoempresa.ds_nome + '&s=' + "Relatório de Recebíveis Vendas" +
+									 '&n='+ 3 +'&cl='+6+'&t='+$scope.token+'&c='+$scope.c+'&f='+$scope.f+
+									 '&d='+ $scope.getFiltroData($scope.filtro.data, true), '_blank');
+		}			
+  }])

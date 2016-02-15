@@ -73,6 +73,8 @@ angular.module("card-services-conciliacao-bancaria", [])
                                                       /*$campos,*/$webapi,$autenticacao,$apis,$window){ 
     
     // flags
+		//Tamanho da margem de acordo com o navegador
+		$scope.margin = "";
     // Exibição
     $scope.itens_pagina = [100, 150, 300, 500];                                             
     $scope.paginaInformada = 1; // página digitada pelo usuário                                             
@@ -122,6 +124,8 @@ angular.module("card-services-conciliacao-bancaria", [])
 																							 
     // Inicialização do controller
     $scope.cardServices_conciliacaoBancariaInit = function(){
+				//Identifica o navegador para dizer a margem correta
+				$scope.identificaBrowser();
         // Título da página 
         $scope.pagina.titulo = 'Card Services';                          
         $scope.pagina.subtitulo = 'Conciliação Bancária';
@@ -1511,5 +1515,14 @@ angular.module("card-services-conciliacao-bancaria", [])
 				}
 			}
 			return $scope.dataFormatada;
+		}
+		
+		//VERIFICA O NAVEGADOR PARA DAR O VALOR DA MARGEM
+		$scope.identificaBrowser = function(){
+			if(jQuery.browser.mozilla){
+				$scope.margin = 0;
+			}else{
+				$scope.margin = -20;
+			}
 		}
 }]);
