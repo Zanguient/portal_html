@@ -61,6 +61,7 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 				case "Relatório de Conciliação":
 					
 					$scope.formataMargin();
+					$scope.formataStyle();
 					
 					var c = $location.search().c;
 					var d = $location.search().d;
@@ -106,7 +107,7 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 					
 					if(!c || !d) return;
 					
-					$scope.colunas = ["Competência - Adquirente - Bandeira", "Valor Bruto", "Valor Descontado", "Valor Líquido"];
+					$scope.colunas = ["Competência - Adquirente - Bandeira", "Valor Bruto", "Valor Descontado", "Valor Líquido"]; 
 					$scope.colunas2 = ["Valor Recebido", "Valor A Receber"];
 					$scope.niveis = ["Nível 1", "Nível 2", "Nível 3"];
 					
@@ -413,6 +414,11 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 		$scope.formataMargin = function(){
 			if(jQuery.browser.mozilla) $scope.margin = "0cm";
 			else $scope.margin = "-13px";
+		}
+		
+		$scope.formataStyle = function(){
+			if(jQuery.browser.mozilla) $scope.style = "margin-left: -0.7cm;";
+			else $scope.style = "margin-left: -1.5cm;";
 		}
 		
 		
