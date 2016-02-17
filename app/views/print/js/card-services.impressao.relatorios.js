@@ -60,8 +60,7 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 					//RELATORIOS CONCILIACAO
 				case "Relatório de Conciliação":
 					
-					$scope.formataMargin();
-					$scope.formataStyle();
+					$scope.formataStyleConciliacao();
 					
 					var c = $location.search().c;
 					var d = $location.search().d;
@@ -80,7 +79,7 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 					
 				case "Relatório de Recebíveis Futuros":
 					
-					$scope.formataMargin();
+					$scope.formataStyleFuturos();
 					
 					var cc = $location.search().cc;
 					var d = $location.search().d;
@@ -100,7 +99,7 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 					
 				case "Relatório de Recebíveis Vendas":
 					
-					$scope.formataMargin();
+					$scope.formataStyleVendas();
 					
 					var c = $location.search().c;
 					var d = $location.search().d;
@@ -410,17 +409,47 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 			return $scope.diaString + "/" + $scope.mesString + "/" + $scope.anoString;
 		}
 		
-		
-		$scope.formataMargin = function(){
-			if(jQuery.browser.mozilla) $scope.margin = "0cm";
-			else $scope.margin = "-13px";
-		}
-		
 		$scope.formataStyle = function(){
-			if(jQuery.browser.mozilla) $scope.style = "margin-left: -0.7cm;";
+			if(jQuery.browser.mozilla) $scope.style = "margin-left: -1.5cm;";
 			else $scope.style = "margin-left: -1.5cm;";
 		}
 		
+		$scope.formataStyleFuturos = function(){
+			if(jQuery.browser.mozilla) {
+				$scope.style = "margin-top: 0.5cm;";
+				$scope.page = "";	
+			}
+			else {
+				$scope.style = "";
+				$scope.page = "A8";
+			}
+		}
+		
+		$scope.formataStyleVendas = function(){
+			if(jQuery.browser.mozilla) {
+				$scope.style = "margin-left: -2cm;";
+				$scope.page = "";
+			}
+			else {
+				$scope.style = "";
+				$scope.page = "A8";
+			}
+		}
+		
+		$scope.formataStyleConciliacao = function(){
+			if(jQuery.browser.mozilla){
+				$scope.styleThead = "font-size: 67%;";
+				$scope.styleTbody = "font-size: 67%;";
+				$scope.page = "";
+				$scope.style = "margin-top: 1cm; margin-left: 0.5cm; margin-right: 1cm;";
+			}
+			else{
+				$scope.styleThead = "";
+				$scope.styleTbody = "";
+				$scope.page = "";
+				$scope.style = "margin-top: 1cm;";
+			}
+		}
 		
 		$scope.formaTabela = function(){
 			document.write('<tr><td>Volvo</td><td>S60</td><td>2010</td><td>Saloon</td><td>Yes</td></tr><tr><td colspan="5"><table><colgroup><col class="coluna1"/><col class="coluna2"/><col class="coluna3"/></colgroup><tr><th>Agudo</th><th >Médio</th><th >Grave</th></tr><tr><td>Trompete</td><td>Trompa</td><td>Trombone</td></tr></table> </td></tr><tr><td>Audi</td><td>A4</td><td>2002</td><td>Saloon</td><td>Yes</td></tr>');

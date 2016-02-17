@@ -16,7 +16,7 @@
     
     Versão 1.0 - 25/01/2016
 -->
-<html lang="pt-BR" class="no-js" ng-app="card-services-impressao-relatorios">
+<html lang="pt-BR" class="no-js" ng-app="card-services-impressao-relatorios" print-landscape print-section>
 	<!-- BEGIN HEAD -->
 	<head>
 		<meta charset="utf-8">
@@ -53,10 +53,10 @@
 				margin: 10mm 15mm 10mm 15mm;
 			}
 			
-			page[size="A4"] {
+			page[size="A8"] {
 				background: white;
-				width: 21cm;
-				height: 29.7cm;
+				width: 29.7cm;
+				height: 21cm;
 				display: block;
 				margin: 0 auto;
 				padding: 10mm 15mm 10mm 15mm;
@@ -92,7 +92,7 @@
 			
 			/* STYLE PARA IMPRESSÃO */
 			@media print {
-				body, page[size="A4"] {
+				body, page[size="A8"] {
 					margin: 0;
 					box-shadow: 0;
 				}
@@ -129,10 +129,46 @@
 					border: 1px solid #eee; 
 					text-align: center;
 					padding: 10px;
-					font-size: 85%
 				}
 			}
 		</style>
+		<!--<style type="text/css" media="print">
+			@page { 
+				size: landscape; 
+			}
+		</style>
+		<style type="text/css" media="print">
+			@page{
+				-webkit-transform: rotate(-90deg); 
+				-moz-transform:rotate(-90deg);
+				filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+			}
+		</style>
+		<style type="text/css" media="print">
+			.page
+			{
+				-webkit-transform: rotate(-90deg); 
+				-moz-transform:rotate(-90deg);
+				filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+			}
+		</style>
+		<style type="text/css" media="print">
+			@media screen and (orientation: landscape) {
+				#toolbar {
+					position: fixed;
+					width: 2.65em;
+					height: 100%;
+				}
+				
+				p {
+					margin-left: 2em;
+				}
+				
+				li + li {
+					margin-top: .5em;
+				}
+			}
+		</style>-->
 		<!-- END STYLE -->
 	</head>
 	<!-- END HEAD -->
@@ -141,8 +177,7 @@
 	<body ng-class="{'manutencao' : manutencao }" 
 				ng-controller="card-services-impressao-relatoriosCtrl" 
 				ng-init="cardServices_impressaoRelatoriosInit()"
-				print-section
-				>
+				print-section>
 		
 		<!-- MANUTENÇÃO -->
 		<div class="centro" ng-show="manutencao" ng-cloak>
@@ -153,10 +188,10 @@
 			</div>    
 		</div>
 		
-		<div ng-show="!manutencao" ng-cloak  print-landscape>
-			<page size="A4" ng-if="nomeRelatorio == 'Relatório de Recebíveis Futuros'">
+		<div ng-show="!manutencao" ng-cloak>
+			<page size="{{page}}" ng-if="nomeRelatorio == 'Relatório de Recebíveis Futuros'">
 				<!-- TABELA PADRÃO RELATÓRIO RECEBÍVEIS FUTUROS -->
-				<table print-avoid-break>
+				<table print-avoid-break style="{{style}}">
 					<thead>
 						<tr>
 							<th colspan="{{nColunas + 3}}">
@@ -246,9 +281,9 @@
 				</table>
 				<!-- FIM TABELA PADRÃO RELATÓRIO RECEBÍVEIS FUTUROS -->
 			</page>
-			<page size="A4" ng-if="nomeRelatorio == 'Relatório de Recebíveis Vendas'">
+			<page size="{{page}}" ng-if="nomeRelatorio == 'Relatório de Recebíveis Vendas'">
 				<!-- TABELA PADRÃO RELATÓRIO RECEBÍVEIS VENDAS -->
-				<table print-avoid-break style="{{margin}}">
+				<table print-avoid-break  style="">
 					<thead>
 						<tr>
 							<th colspan="{{nColunas + 3}}">
@@ -360,9 +395,10 @@
 				</table>
 				<!-- FIM TABELA PADRÃO RELATÓRIO RECEBÍVEIS VENDAS -->
 			</page>
-			<page size="A4" ng-if="nomeRelatorio == 'Relatório de Conciliação'">
-				<table print-avoid-break  style="{{style}}">
-					<thead>
+			<!-- TABELA PADRÃO RELATÓRIO CONCILIAÇÃO -->
+			<page ng-if="nomeRelatorio == 'Relatório de Conciliação'">
+				<table print-avoid-break style="{{style}}">
+					<thead style="{{styleThead}}">
 						<tr>
 							<th colspan="{{nColunas + 3}}">
 								<a ng-click="imprime()"><span style="font-size: 22px" class="glyphicon glyphicon-print large"></span></a>
@@ -392,9 +428,9 @@
 							<th rowspan="1" colspan="1" ng-repeat="coluna in colunas">{{coluna}}</th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody style="{{styleTbody}}">
 						<tr ng-repeat-start="competencia in relatorio">
-							<td colspan="3"><span class="glyphicon glyphicon-chevron-right"></span></td>
+							<td colspan="3" style="padding: 5px;"><span class="glyphicon glyphicon-chevron-right"></span></td>
 							<!-- COMPETÊNCIA -->
 							<td>{{competencia.competencia}}</td>
 							<!-- TAXA MÉDIA -->
@@ -422,8 +458,8 @@
 						</tr>
 						<!-- LINHA EXPANSÍVEL -->
 						<tr ng-repeat-start="adquirente in competencia.adquirentes">
-							<td></td>
-							<td colspan="2"><span class="glyphicon glyphicon-chevron-right"></span></td>
+							<td style="padding: 5px;"></td>
+							<td style="padding: 5px;" colspan="2"><span class="glyphicon glyphicon-chevron-right"></span></td>
 							<!-- ADQUIRENTE -->
 							<td>{{adquirente.adquirente | uppercase}}</td>
 							<!-- TAXA MÉDIA -->
@@ -451,9 +487,9 @@
 						</tr>
 						<!-- LINHA EXPANSÍVEL -->
 						<tr ng-repeat-end ng-repeat="bandeira in adquirente.bandeiras">
-							<td></td>
-							<td></td>
-							<td colspan="1"><span class="glyphicon glyphicon-chevron-right"></span></td>
+							<td style="padding: 5px;"></td>
+							<td style="padding: 5px;"></td>
+							<td style="padding: 5px;" colspan="1"><span class="glyphicon glyphicon-chevron-right"></span></td>
 							<td>{{bandeira.bandeira | uppercase}}</td>
 							<!-- TAXA MÉDIA -->
 							<td>{{bandeira.taxaMedia | number:2}}%</td>
