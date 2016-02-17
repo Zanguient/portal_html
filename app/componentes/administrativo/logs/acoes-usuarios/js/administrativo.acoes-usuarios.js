@@ -76,7 +76,7 @@ angular.module("administrativo-acoes-usuarios", [])
         });
         // Quando houver alteração do grupo empresa na barra administrativa                                           
         $scope.$on('alterouGrupoEmpresa', function(event){
-            if($scope.exibeTela) buscaLogs();
+            //if($scope.exibeTela) buscaLogs();
         }); 
         // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
         $scope.$on('acessoDeTelaNotificado', function(event){
