@@ -16,9 +16,9 @@
  */
 
 // App
-angular.module("card-services-recebiveis-futuros", []) 
+angular.module("card-services-antecipacao-simulacao", []) 
 
-.controller("card-services-recebiveis-futurosCtrl", ['$scope',   
+.controller("card-services-antecipacao-simulacaoCtrl", ['$scope',   
                                             '$state',
                                             '$http',
                                             '$window',
@@ -31,19 +31,21 @@ angular.module("card-services-recebiveis-futuros", [])
                                                      $webapi,$apis,$timeout,$filter){ 
    
     $scope.contas = [];   
-    $scope.recebiveis = [];                                      
-    $scope.filtro = { datamin : new Date(), conta : null }; 
+    $scope.adquirentes = [];                                            
+    $scope.vencimentos = [];                                      
+    $scope.filtro = { today : new Date(), dataoperacao : new Date(), conta : null, adquirente : null }; 
     $scope.total = { valorBruto : 0.0, valorDescontado : 0.0, valorLiquido : 0.0, valorAntecipacaoBancaria : 0.0 };  
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyRecebiveisPos = 1; // posição da div que vai receber o loading progress                                         
     // flags                                   
-    $scope.exibeTela = false;                                                      
+    $scope.exibeTela = false;    
+    $scope.abrirCalendarioDataOperacao = false;                                            
                                                 
     // Inicialização do controller
-    $scope.cardServices_recebiveisFuturosInit = function(){
+    $scope.cardServices_antecipacaoSimulacaoInit = function(){
         // Título da página 
-        $scope.pagina.titulo = 'Cash Flow';                          
-        $scope.pagina.subtitulo = 'Recebíveis Futuros';
+        $scope.pagina.titulo = 'Antecipação';                          
+        $scope.pagina.subtitulo = 'Simulação';
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
@@ -55,10 +57,13 @@ angular.module("card-services-recebiveis-futuros", [])
                 if($scope.usuariologado.grupoempresa){ 
                     // Reseta seleção de filtro específico de empresa
                     $scope.filtro.conta = null;
+                    $scope.filtro.adquirente = null;
                     buscaContas();
                 }else{ // reseta tudo e não faz buscas 
                     $scope.contas = []; 
+                    $scope.adquirentes = [];
                     $scope.filtro.conta = null;
+                    $scope.filtro.adquirente = null;
                 }
             }
         }); 
@@ -68,11 +73,10 @@ angular.module("card-services-recebiveis-futuros", [])
             // Carrega contas
             buscaContas();
         }); 
-        $scope.filtro.datamin.setDate($scope.filtro.datamin.getDate()+1);
         // Acessou a tela
-        $scope.$emit("acessouTela");
-        //$scope.exibeTela = true;
-        //buscaContas();
+        //$scope.$emit("acessouTela");
+        $scope.exibeTela = true;
+        buscaContas();
     };                                           
                                                 
                                             
@@ -89,12 +93,12 @@ angular.module("card-services-recebiveis-futuros", [])
         
         // Filtros Por Data
         filtros.push({id: /*$campos.card.recebiveisfuturos.data*/ 100,
-                      valor: ">" + $scope.getFiltroData($scope.filtro.datamin)});
+                      valor: ">" + $scope.getFiltroData($scope.filtro.dataoperacao)});
 
         // Conta
-        if($scope.filtro.conta && $scope.filtro.conta !== null){
-           filtros.push({id: /*$campos.card.recebiveisfuturos.cdContaCorrente*/ 102, 
-                         valor: $scope.filtro.conta.cdContaCorrente});  
+        if($scope.filtro.adquirente && $scope.filtro.adquirente !== null){
+           filtros.push({id: /*$campos.card.recebiveisfuturos.cdAdquirente*/ 103, 
+                         valor: $scope.filtro.adquirente.cdAdquirente});  
         }
 
         return filtros;
@@ -106,6 +110,14 @@ angular.module("card-services-recebiveis-futuros", [])
     $scope.limpaFiltros = function(){
         $scope.filtro.conta = null; 
     }
+    
+    $scope.exibeCalendarioDataOperacao = function($event) {
+        if($event){
+            $event.preventDefault();
+            $event.stopPropagation();
+        }
+        $scope.abrirCalendarioDataOperacao = !$scope.abrirCalendarioDataOperacao;
+    };
     
     
                                                  
@@ -133,8 +145,10 @@ angular.module("card-services-recebiveis-futuros", [])
                 $scope.contas = dados.Registros;
                 if($scope.filtro.conta && $scope.filtro.conta !== null)
                     $scope.filtro.conta = $filter('filter')($scope.contas, function(c) {return c.cdContaCorrente === $scope.filtro.conta.cdContaCorrente;})[0];
-                // Esconde o progress
-                $scope.hideProgress(divPortletBodyFiltrosPos);
+                else
+                    $scope.filtro.conta = $scope.contas[0];
+                // Busca Adquirentes
+                buscaAdquirentes();
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
@@ -147,8 +161,59 @@ angular.module("card-services-recebiveis-futuros", [])
       * Selecionou uma conta
       */
     $scope.alterouConta = function(){
-        // ...
+        if($scope.filtro.conta && $scope.filtro.conta !== null){
+            // Adquirentes
+            buscaAdquirentes();
+        }else{
+            $scope.adquirentes = [];
+            $scope.filtro.adquirente = null;
+        }
     }; 
+                                                
+                                                
+                                                
+    // ADQUIRENTES
+    /**
+      * Busca as adquirentes associadas à conta
+      */
+    var buscaAdquirentes = function(progressEstaAberto){ 
+        
+       if(!$scope.filtro.conta || $scope.filtro.conta === null){ 
+           $scope.filtro.adquirente = null;
+           if(progressEstaAberto) $scope.hideProgress(divPortletBodyFiltrosPos);
+           return;
+       }
+            
+        
+       if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
+        
+       var filtros = [{id: /*$campos.card.tbcontacorrentetbloginadquirenteempresa.cdContaCorrente*/ 100, 
+                       valor: $scope.filtro.conta.cdContaCorrente}];
+       
+       
+       $webapi.get($apis.getUrl($apis.card.tbcontacorrentetbloginadquirenteempresa, 
+                                [$scope.token, 4],
+                                filtros))
+            .then(function(dados){
+                $scope.adquirentes = dados.Registros;
+                // Reseta
+                $scope.filtro.adquirente = $scope.adquirentes[0]; 
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter adquirentes da conta (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+              });        
+    }  
+    /**
+      * Selecionou uma adquirente
+      */
+    $scope.alterouAdquirente = function(){
+        // ...
+    };
+                                                
                                                 
                                                 
                                                 
@@ -157,7 +222,7 @@ angular.module("card-services-recebiveis-futuros", [])
     /**
       * Obtem os recebíveis a partir dos filtros
       */
-    $scope.buscaRecebiveisFuturos = function(){
+    $scope.buscaVencimentos = function(){
         // Avalia se há um grupo empresa selecionado
         if(!$scope.usuariologado.grupoempresa){
             $scope.showModalAlerta('Por favor, selecione uma empresa', 'Atos Capital', 'OK', 
@@ -167,12 +232,22 @@ angular.module("card-services-recebiveis-futuros", [])
                                   );
             return;   
         }
+        // Data deve ser superior ou igual a data corrente
+        var dtNow = new Date();
+        if($scope.filtro.dataoperacao && ($scope.filtro.dataoperacao.getFullYear() < dtNow.getFullYear() || ($scope.filtro.dataoperacao.getFullYear() === dtNow.getFullYear() && $scope.filtro.dataoperacao.getMonth() < dtNow.getMonth()) || ($scope.filtro.dataoperacao.getFullYear() === dtNow.getFullYear() && $scope.filtro.dataoperacao.getMonth() === dtNow.getMonth() && $scope.filtro.dataoperacao.getDate() < dtNow.getDate()))){
+            $scope.showModalAlerta('Data da operação deve ser igual ou superior a data corrente!', 'Atos Capital', 'OK', 
+               function(){
+                     $timeout(function(){$scope.exibeCalendarioDataOperacao();}, 300);
+                }
+              );
+            return; 
+        }
         // Nova busca
-        buscaRecebiveisFuturos();
+        buscaVencimentos();
     }
                                                 
                                                 
-    var buscaRecebiveisFuturos = function(){
+    var buscaVencimentos = function(){
         // Abre os progress
        $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
        $scope.showProgress(divPortletBodyRecebiveisPos);
@@ -181,7 +256,7 @@ angular.module("card-services-recebiveis-futuros", [])
        var filtros = obtemFiltrosBusca();
            
        //console.log(filtros);
-       $webapi.get($apis.getUrl($apis.card.recebiveisfuturos, [$scope.token, 0], filtros)) 
+       /*$webapi.get($apis.getUrl($apis.card.recebiveisfuturos, [$scope.token, 0], filtros)) 
             .then(function(dados){
                 //console.log(dados);
                 // Obtém os dados
@@ -199,27 +274,27 @@ angular.module("card-services-recebiveis-futuros", [])
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                 else $scope.showAlert('Houve uma falha ao obter recebíveis futuros (' + failData.status + ')', true, 'danger', true);
+                 else $scope.showAlert('Houve uma falha ao obter vencimentos (' + failData.status + ')', true, 'danger', true);
                  $scope.hideProgress(divPortletBodyFiltrosPos);
                  $scope.hideProgress(divPortletBodyRecebiveisPos);
-              });           
+              }); */          
     }
                                                 
                                                 
                                                 
     // TABELA EXPANSÍVEL
-    $scope.toggle = function(recebivel){
-        if(!recebivel || recebivel === null) return;
-        if(recebivel.collapsed) recebivel.collapsed = false;
-        else recebivel.collapsed = true;
+    $scope.toggle = function(vencimento){
+        if(!vencimento || vencimento === null) return;
+        if(vencimento.collapsed) vencimento.collapsed = false;
+        else vencimento.collapsed = true;
     }
-    $scope.isExpanded = function(recebivel){
-        if(!recebivel || recebivel === null) return false;
-        return recebivel.collapsed;
+    $scope.isExpanded = function(vencimento){
+        if(!vencimento || vencimento === null) return false;
+        return vencimento.collapsed;
     }
 		
 		//IMPRESSÃO
-		$scope.imprimir = function(){
+		/*$scope.imprimir = function(){
 			
 			/*
 			
@@ -233,7 +308,7 @@ angular.module("card-services-recebiveis-futuros", [])
 			d = Data
 			cc = Conta Corrente
 			
-			*/
+			* /
 			
 			$scope.cc = "todos";
 			$scope.f = "todas";
@@ -245,7 +320,7 @@ angular.module("card-services-recebiveis-futuros", [])
 			
 			$window.open('views/print#?e=' + $scope.usuariologado.grupoempresa.ds_nome + '&s=' + "Relatório de Recebíveis Futuros" +
 									 '&n='+3+'&cc='+$scope.cc+'&cl='+5+'&t='+$scope.token+'&f='+$scope.f+
-									 '&d='+ ">" + $scope.getFiltroData($scope.filtro.datamin), '_blank');			
-		}
+									 '&d='+ ">" + $scope.getFiltroData($scope.filtro.dataoperacao), '_blank');			
+		}*/
 		
 }])

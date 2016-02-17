@@ -102,6 +102,7 @@ angular.module("AtosCapital", ['ui.router',
                                'administrativo-titulos',
                                'dashboard',
                                'card-services-antecipacao-bancaria',
+                               'card-services-antecipacao-simulacao',
                                'card-services-cash-flow-relatorios',
                                'card-services-relatorio-vendas',
                                'card-services-recebiveis-futuros',
@@ -360,6 +361,15 @@ angular.module("AtosCapital", ['ui.router',
         url: prefixo + 'card-services/antecipacao-bancaria',
         templateUrl: 'componentes/card-services/antecipacao/antecipacao-bancaria/index.html',
         controller: "card-services-antecipacao-bancariaCtrl",
+        data: {
+            titulo: 'Card Services'
+        }
+      })
+    
+      .state('card-services-antecipacao-simulacao', {
+        url: prefixo + 'card-services/antecipacao-simulacao',
+        templateUrl: 'componentes/card-services/antecipacao/simulacao/index.html',
+        controller: "card-services-antecipacao-simulacaoCtrl",
         data: {
             titulo: 'Card Services'
         }
@@ -663,7 +673,8 @@ angular.module("AtosCapital", ['ui.router',
     var controllerAdministrativoConsultaPOSTerminal = undefined;
     var controllerAdministrativoTitulos = undefined;                        
     var controllerDashboard = undefined;
-    var controllerCardServicesAntecipacaoBancaria = undefined;                        
+    var controllerCardServicesAntecipacaoBancaria = undefined;
+    var controllerCardServicesAntecipacaoSimulacao = undefined;                         
     var controllerCardServicesCashFlowRelatorios = undefined;
     var controllerCardServicesRelatorioVendas = undefined; 
     var controllerCardServicesRecebiveisFuturos = undefined;                          
@@ -716,7 +727,8 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_DASHBOARD = false;
     $scope.PERMISSAO_CARD_SERVICES = false;
     $scope.PERMISSAO_CARD_SERVICES_ANTECIPACAO = false;
-    $scope.PERMISSAO_CARD_SERVICES_ANTECIPACAO_ANTECIPACAO_BANCARIA = false;                        
+    $scope.PERMISSAO_CARD_SERVICES_ANTECIPACAO_ANTECIPACAO_BANCARIA = false;
+    $scope.PERMISSAO_CARD_SERVICES_ANTECIPACAO_SIMULACAO = false;
     $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW = false;
     $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW_RECEBIVEIS_FUTUROS = false;                          
     $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW_RELATORIO_VENDAS = false;                        
@@ -985,6 +997,13 @@ angular.module("AtosCapital", ['ui.router',
     $scope.goCardServicesAntecipacaoBancaria = function(params){
         controllerAtual = controllerCardServicesAntecipacaoBancaria;
         go('card-services-antecipacao-bancaria', params);
+    };  
+    /**
+      * Exibe como conteúdo a Simulação Antecipação, de Card Services
+      */
+    $scope.goCardServicesAntecipacaoSimulacao = function(params){
+        controllerAtual = controllerCardServicesAntecipacaoSimulacao;
+        go('card-services-antecipacao-simulacao', params);
     };                        
     /**
       * Exibe como conteúdo a Cash Flow Relatórios, de Card Services
@@ -1344,7 +1363,16 @@ angular.module("AtosCapital", ['ui.router',
                 event.preventDefault();
                 $scope.goUsuarioSemPrivilegios();
             }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'ANTECIPAÇÃO BANCÁRIA')
-                     controllerAtual.id_controller !== controllerCardServicesAntecipacaoBancarias.id_controller)
+                     controllerAtual.id_controller !== controllerCardServicesAntecipacaoBancaria.id_controller)
+                $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
+        }else if(url === $state.get('card-services-antecipacao-simulacao').url){
+            // Card Services > Antecipação > Simulação
+            if(!$scope.PERMISSAO_CARD_SERVICES || !$scope.PERMISSAO_CARD_SERVICES_ANTECIPACAO || !$scope.PERMISSAO_CARD_SERVICES_ANTECIPACAO_SIMULACAO){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.goUsuarioSemPrivilegios();
+            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'SIMULAÇÃO')
+                     controllerAtual.id_controller !== controllerCardServicesAntecipacaoSimulacao.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
         }else if(url === $state.get('card-services-cash-flow-relatorios').url){
             // Card Services > Cash Flow > Relatórios
@@ -1652,7 +1680,12 @@ angular.module("AtosCapital", ['ui.router',
                 if($location.path() === $state.get('card-services-antecipacao-bancaria').url)
                     controllerAtual = controller;
                 controllerCardServicesAntecipacaoBancaria = controller;
-                return $scope.goCardServicesAntecipacaoBancaria;     
+                return $scope.goCardServicesAntecipacaoBancaria; 
+             case 'SIMULAÇÃO':
+                if($location.path() === $state.get('card-services-antecipacao-simulacao').url)
+                    controllerAtual = controller;
+                controllerCardServicesAntecipacaoSimulacao = controller;
+                return $scope.goCardServicesAntecipacaoSimulacao;
             case 'RELATÓRIO DE VENDAS':
                 if($location.path() === $state.get('card-services-cash-flow-relatorio-vendas').url)
                     controllerAtual = controller;
@@ -1805,7 +1838,8 @@ angular.module("AtosCapital", ['ui.router',
             // Card Services
             case 'CARD SERVICES': $scope.PERMISSAO_CARD_SERVICES = true; break;
             case 'ANTECIPAÇÃO': $scope.PERMISSAO_CARD_SERVICES_ANTECIPACAO = true; break; 
-            case 'ANTECIPAÇÃO BANCÁRIA': $scope.PERMISSAO_CARD_SERVICES_ANTECIPACAO_ANTECIPACAO_BANCARIA = true; break;     
+            case 'ANTECIPAÇÃO BANCÁRIA': $scope.PERMISSAO_CARD_SERVICES_ANTECIPACAO_ANTECIPACAO_BANCARIA = true; break;  
+            case 'SIMULAÇÃO': $scope.PERMISSAO_CARD_SERVICES_ANTECIPACAO_SIMULACAO = true; break;  
             case 'CASH FLOW' : $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW = true; break;
             case 'RELATÓRIO DE VENDAS': $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW_RELATORIO_VENDAS = true; break;
             case 'RECEBÍVEIS FUTUROS': $scope.PERMISSAO_CARD_SERVICES_CASH_FLOW_RECEBIVEIS_FUTUROS = true; break;
@@ -1901,7 +1935,8 @@ angular.module("AtosCapital", ['ui.router',
             case 'CADASTRO CERTIFICADO DIGITAL': return state == 'cadastro-certificado-digital';
             case 'RECEBIMENTO NF-E': return state == 'recebimento-nfe';
             // Card Services
-            case 'ANTECIPAÇÃO BANCÁRIA': return state == 'antecipacao-bancaria';    
+            case 'ANTECIPAÇÃO BANCÁRIA': return state == 'antecipacao-bancaria'; 
+            case 'SIMULAÇÃO': return state == 'antecipacao-simulacao'; 
             case 'RELATÓRIO DE VENDAS': return state == 'relatorio-vendas';
             case 'RECEBÍVEIS FUTUROS': return state == 'recebiveis-futuros';    
             case 'CONCILIAÇÃO BANCÁRIA': return state == 'conciliacao-bancaria';
