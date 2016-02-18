@@ -62,23 +62,14 @@ Não é necessário nenhum outro módulo externo.
 			]
 	
     * card/recebiveisfuturos	
-	   - GET : dados relativos à busca de recebíveis futuros do grupo ou filial (coleção 0)
+	   - GET : dados relativos à busca de recebíveis futuros para a conta e adquirente (coleção 2)
 			[
 			  {
-			    competencia : string,
+			    competencia : datetime,
 			    valorBruto : double,
 			    valorDescontado : double,
+				valorAntecipacaoBancaria : double,
 			    valorLiquido : double,
-			    adquirentes : [{ adquirente : string,
-						   valorBruto : double,
-						   valorDescontado : double,
-						   valorLiquido : double,
-						   bandeiras : [{  bandeira : string,
-										   valorBruto : double,
-										   valorDescontado : double,
-										   valorLiquido : double
-										}]
-						 }]
 			  } 
 			]
 			Envia no JSON a chave "Totais" com: "valorBruto", "valorDescontado", "valorLiquido" e "valorAntecipacaoBancaria" (todos double)
