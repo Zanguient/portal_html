@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.3 - 18/02/2016
+ *  - Adquirente
+ *
  *  Versão 1.0.2 - 12/02/2016
  *  - Conta corrente
  *  - Antecipação Bancária
@@ -31,8 +34,9 @@ angular.module("card-services-recebiveis-futuros", [])
                                                      $webapi,$apis,$timeout,$filter){ 
    
     $scope.contas = [];   
+    $scope.adquirentes = [];                                            
     $scope.recebiveis = [];                                      
-    $scope.filtro = { datamin : new Date(), conta : null }; 
+    $scope.filtro = { datamin : new Date(), conta : null, adquirente : null }; 
     $scope.total = { valorBruto : 0.0, valorDescontado : 0.0, valorLiquido : 0.0, valorAntecipacaoBancaria : 0.0 };  
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyRecebiveisPos = 1; // posição da div que vai receber o loading progress                                         
@@ -91,6 +95,11 @@ angular.module("card-services-recebiveis-futuros", [])
         filtros.push({id: /*$campos.card.recebiveisfuturos.data*/ 100,
                       valor: ">" + $scope.getFiltroData($scope.filtro.datamin)});
 
+        // Adquirente
+        if($scope.filtro.adquirente && $scope.filtro.adquirente !== null){
+           filtros.push({id: /*$campos.card.recebiveisfuturos.cdAdquirente*/ 103, 
+                         valor: $scope.filtro.adquirente.cdAdquirente});  
+        }else 
         // Conta
         if($scope.filtro.conta && $scope.filtro.conta !== null){
            filtros.push({id: /*$campos.card.recebiveisfuturos.cdContaCorrente*/ 102, 
@@ -104,7 +113,8 @@ angular.module("card-services-recebiveis-futuros", [])
       * Limpa os filtros
       */
     $scope.limpaFiltros = function(){
-        $scope.filtro.conta = null; 
+        $scope.filtro.conta = null;
+        $scope.filtro.adquirente = null;
     }
     
     
@@ -133,8 +143,8 @@ angular.module("card-services-recebiveis-futuros", [])
                 $scope.contas = dados.Registros;
                 if($scope.filtro.conta && $scope.filtro.conta !== null)
                     $scope.filtro.conta = $filter('filter')($scope.contas, function(c) {return c.cdContaCorrente === $scope.filtro.conta.cdContaCorrente;})[0];
-                // Esconde o progress
-                $scope.hideProgress(divPortletBodyFiltrosPos);
+                // Busca Adquirentes
+                buscaAdquirentes(true);
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
@@ -147,8 +157,59 @@ angular.module("card-services-recebiveis-futuros", [])
       * Selecionou uma conta
       */
     $scope.alterouConta = function(){
+        if($scope.filtro.conta && $scope.filtro.conta !== null){
+            // Adquirentes
+            buscaAdquirentes();
+        }else{
+            $scope.adquirentes = [];
+            $scope.filtro.adquirente = null;
+        }
+    };
+                                                
+                                                
+                                                
+    // ADQUIRENTES
+    /**
+      * Busca as adquirentes associadas à conta
+      */
+    var buscaAdquirentes = function(progressEstaAberto){ 
+        
+       if(!$scope.filtro.conta || $scope.filtro.conta === null){ 
+           $scope.filtro.adquirente = null;
+           if(progressEstaAberto) $scope.hideProgress(divPortletBodyFiltrosPos);
+           return;
+       }
+            
+        
+       if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
+        
+       var filtros = [{id: /*$campos.card.tbcontacorrentetbloginadquirenteempresa.cdContaCorrente*/ 100, 
+                       valor: $scope.filtro.conta.cdContaCorrente}];
+       
+       
+       $webapi.get($apis.getUrl($apis.card.tbcontacorrentetbloginadquirenteempresa, 
+                                [$scope.token, 4],
+                                filtros))
+            .then(function(dados){
+                $scope.adquirentes = dados.Registros;
+                // Reseta
+                $scope.filtro.adquirente = null; 
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter adquirentes da conta (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+              });        
+    }  
+    /**
+      * Selecionou uma adquirente
+      */
+    $scope.alterouAdquirente = function(){
         // ...
-    }; 
+    };                                            
+                                                
                                                 
                                                 
                                                 

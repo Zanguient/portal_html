@@ -66,8 +66,11 @@
                                         <th tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="20%">
                                              Data inicial
                                         </th>
-                                        <th tabindex="1" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="70%">
+                                        <th tabindex="1" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="55%">
                                              Conta Corrente
+                                        </th>
+                                        <th tabindex="3" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="15%">
+                                             Adquirente
                                         </th>
                                         <th tabindex="6" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="10%">
                                              Ações
@@ -113,6 +116,26 @@
                                                         popover="É necessário selecionar uma empresa"
                                                         popover-trigger="mouseenter"
                                                         popover-append-to-body="true"></i> 
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <!-- ADQUIRENTE -->
+                                        <td rowspan="1" colspan="1">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <select class="form-control form-filter input-sm comboBoxFiltros"
+                                                        ng-disabled="adquirentes.length === 0"
+                                                        ng-model="filtro.adquirente"
+                                                        ng-change="alterouAdquirente()"
+                                                        ng-options="adquirente as (adquirente.nmAdquirente | uppercase) for adquirente in adquirentes">
+                                                        <option value="">TODAS</option>
+                                                    </select>
+                                                    <i class="fa fa-question-circle"
+                                                        ng-show="!filtro.conta || filtro.conta === null"
+                                                        popover-placement="bottom"
+                                                        popover="É necessário selecionar uma conta corrente"
+                                                        popover-trigger="mouseenter"
+                                                        popover-append-to-body="true"></i>
                                                 </div>
                                             </div>
                                         </td>

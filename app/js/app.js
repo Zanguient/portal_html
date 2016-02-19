@@ -5,6 +5,10 @@
  *
  *
  *
+ *  Versão 1.1.9 - 18/02/2016
+ *  - Simulação - Antecipação
+ *  - dateDiffInDays()
+ *
  *  Versão 1.1.8 - 21/01/2016
  *  - ngSanitize
  *  - adicionaQuebraLinhaHtml() alterada
@@ -2623,7 +2627,18 @@ angular.module("AtosCapital", ['ui.router',
             return parts[0] == dt.getDate() && (parts[1] - 1) == dt.getMonth() && parts[2] == dt.getFullYear();
         }
         return false;
-    };                         
+    }; 
+                            
+    /**
+      * Obtém a diferença em dias entre duas datas
+      */ 
+    $scope.dateDiffInDays = function(startDate, endDate){
+      // Discard the time and time-zone information.
+      var utc1 = Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+      var utc2 = Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+
+      return Math.floor((utc2 - utc1) / (1000 * 60 * 60 * 24));
+    }                        
 
 
     /**

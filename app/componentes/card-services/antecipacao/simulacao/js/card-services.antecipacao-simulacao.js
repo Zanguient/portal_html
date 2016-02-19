@@ -30,16 +30,23 @@ angular.module("card-services-antecipacao-simulacao", [])
                                             function($scope,$state,$http,$window,/*$campos,*/
                                                      $webapi,$apis,$timeout,$filter){ 
    
+    var IOF = 0.0041; // % a.d.
+    var IOFfixo = 0.38; // %                                            
     $scope.contas = [];   
-    $scope.adquirentes = [];                                            
+    $scope.adquirentes = []; 
+    $scope.recebiveis = [];                                             
     $scope.vencimentos = [];                                      
-    $scope.filtro = { today : new Date(), dataoperacao : new Date(), conta : null, adquirente : null }; 
+    $scope.filtro = { today : new Date(), dtCorte : new Date(), dtOperacao : new Date(), conta : null, adquirente : null,
+                      valorDesejado: 0.0, taxa : 0.0, iof : IOF, iofFixo : IOFfixo }; 
     $scope.total = { valorBruto : 0.0, valorDescontado : 0.0, valorLiquido : 0.0, valorAntecipacaoBancaria : 0.0 };  
+    $scope.totalVencimento = { valorAntecipado : 0.0, valorJuros : 0.0, valorIOF : 0.0, valorLiquido : 0.0 };
+                                                
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyRecebiveisPos = 1; // posição da div que vai receber o loading progress                                         
     // flags                                   
     $scope.exibeTela = false;    
-    $scope.abrirCalendarioDataOperacao = false;                                            
+    $scope.abrirCalendarioDataOperacao = false;  
+    $scope.abrirCalendarioDataCorte = false;                                          
                                                 
     // Inicialização do controller
     $scope.cardServices_antecipacaoSimulacaoInit = function(){
@@ -73,6 +80,7 @@ angular.module("card-services-antecipacao-simulacao", [])
             // Carrega contas
             buscaContas();
         }); 
+        $scope.filtro.dtCorte.setMonth($scope.filtro.dtCorte.getMonth() + 1);
         // Acessou a tela
         //$scope.$emit("acessouTela");
         $scope.exibeTela = true;
@@ -91,11 +99,19 @@ angular.module("card-services-antecipacao-simulacao", [])
     var obtemFiltrosBusca = function(){
         var filtros = [];
         
+        // Data para consulta dos recebíveis futuros contabiliza a partir do dia posterior à data da operação
+        var data = new Date($scope.filtro.dtCorte.getFullYear(), $scope.filtro.dtCorte.getMonth(), $scope.filtro.dtCorte.getDate());
+        //console.log(data);
+        data.setDate(data.getDate() + 1);
+        
+        //console.log($scope.filtro.dtCorte);
+        //console.log(data);
+        
         // Filtros Por Data
         filtros.push({id: /*$campos.card.recebiveisfuturos.data*/ 100,
-                      valor: ">" + $scope.getFiltroData($scope.filtro.dataoperacao)});
+                      valor: ">" + $scope.getFiltroData(data)});
 
-        // Conta
+        // Adquirente
         if($scope.filtro.adquirente && $scope.filtro.adquirente !== null){
            filtros.push({id: /*$campos.card.recebiveisfuturos.cdAdquirente*/ 103, 
                          valor: $scope.filtro.adquirente.cdAdquirente});  
@@ -108,7 +124,11 @@ angular.module("card-services-antecipacao-simulacao", [])
       * Limpa os filtros
       */
     $scope.limpaFiltros = function(){
-        $scope.filtro.conta = null; 
+        if($scope.filtro.conta && $scope.filtro.conta === null && $scope.filtro.conta.cdContaCorrente !== $scope.contas[0].cdContaCorrente){
+            $scope.filtro.conta = $scope.contas[0]; 
+            $scope.filtro.adquirente = null;
+            $scope.alterouConta();
+        }
     }
     
     $scope.exibeCalendarioDataOperacao = function($event) {
@@ -118,6 +138,35 @@ angular.module("card-services-antecipacao-simulacao", [])
         }
         $scope.abrirCalendarioDataOperacao = !$scope.abrirCalendarioDataOperacao;
     };
+                                                
+    $scope.alterouDataOperacao = function(){
+        var dt = new Date($scope.filtro.dtOperacao.getFullYear(), $scope.filtro.dtOperacao.getMonth(), $scope.filtro.dtOperacao.getDate());
+        var newMonth = ($scope.filtro.dtOperacao.getMonth() + 1) % 12;
+        dt.setMonth(dt.getMonth() + 1);
+        
+        while(dt.getMonth() !== newMonth){
+            dt.setDate(dt.getDate() - 1);
+        }
+        
+        if(dt.getFullYear() < $scope.filtro.today.getFullYear() || (dt.getFullYear() === $scope.filtro.today.getFullYear() && dt.getMonth() < $scope.filtro.today.getMonth()) || (dt.getFullYear() === $scope.filtro.today.getFullYear() && dt.getMonth() === $scope.filtro.today.getMonth() && dt.getDate() < $scope.filtro.today.getDate())){
+            // Data de corte deve ser igual ou superior a data corrente 
+            dt = new Date(); 
+        }
+        
+        // coloca data de corte para um mês depois
+        $scope.filtro.dtCorte = dt;
+        //console.log($scope.filtro.dtCorte);
+        //if(!$scope.$$phase) $scope.$apply();
+    }                                           
+                                                
+                                                
+    $scope.exibeCalendarioDataCorte = function($event) {
+        if($event){
+            $event.preventDefault();
+            $event.stopPropagation();
+        }
+        $scope.abrirCalendarioDataCorte = !$scope.abrirCalendarioDataCorte;
+    };                                            
     
     
                                                  
@@ -148,7 +197,7 @@ angular.module("card-services-antecipacao-simulacao", [])
                 else
                     $scope.filtro.conta = $scope.contas[0];
                 // Busca Adquirentes
-                buscaAdquirentes();
+                buscaAdquirentes(true);
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
@@ -218,11 +267,11 @@ angular.module("card-services-antecipacao-simulacao", [])
                                                 
                                                 
     
-    // RECEBÍVEIS FUTUROS                                            
+    // VENCIMENTOS A RECEBER                                            
     /**
       * Obtem os recebíveis a partir dos filtros
       */
-    $scope.buscaVencimentos = function(){
+    $scope.buscaRecebiveisFuturos = function(){
         // Avalia se há um grupo empresa selecionado
         if(!$scope.usuariologado.grupoempresa){
             $scope.showModalAlerta('Por favor, selecione uma empresa', 'Atos Capital', 'OK', 
@@ -233,21 +282,20 @@ angular.module("card-services-antecipacao-simulacao", [])
             return;   
         }
         // Data deve ser superior ou igual a data corrente
-        var dtNow = new Date();
-        if($scope.filtro.dataoperacao && ($scope.filtro.dataoperacao.getFullYear() < dtNow.getFullYear() || ($scope.filtro.dataoperacao.getFullYear() === dtNow.getFullYear() && $scope.filtro.dataoperacao.getMonth() < dtNow.getMonth()) || ($scope.filtro.dataoperacao.getFullYear() === dtNow.getFullYear() && $scope.filtro.dataoperacao.getMonth() === dtNow.getMonth() && $scope.filtro.dataoperacao.getDate() < dtNow.getDate()))){
-            $scope.showModalAlerta('Data da operação deve ser igual ou superior a data corrente!', 'Atos Capital', 'OK', 
+        if($scope.filtro.dtCorte && ($scope.filtro.dtCorte.getFullYear() < $scope.filtro.today.getFullYear() || ($scope.filtro.dtCorte.getFullYear() === $scope.filtro.today.getFullYear() && $scope.filtro.dtCorte.getMonth() < $scope.filtro.today.getMonth()) || ($scope.filtro.dtCorte.getFullYear() === $scope.filtro.today.getFullYear() && $scope.filtro.dtCorte.getMonth() === $scope.filtro.today.getMonth() && $scope.filtro.dtCorte.getDate() < $scope.filtro.today.getDate()))){
+            $scope.showModalAlerta('Data de corte deve ser igual ou superior a data corrente!', 'Atos Capital', 'OK', 
                function(){
-                     $timeout(function(){$scope.exibeCalendarioDataOperacao();}, 300);
+                     $timeout(function(){$scope.exibeCalendarioDataCorte();}, 300);
                 }
               );
             return; 
         }
         // Nova busca
-        buscaVencimentos();
+        buscaRecebiveisFuturos();
     }
                                                 
                                                 
-    var buscaVencimentos = function(){
+    var buscaRecebiveisFuturos = function(){
         // Abre os progress
        $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
        $scope.showProgress(divPortletBodyRecebiveisPos);
@@ -256,17 +304,18 @@ angular.module("card-services-antecipacao-simulacao", [])
        var filtros = obtemFiltrosBusca();
            
        //console.log(filtros);
-       /*$webapi.get($apis.getUrl($apis.card.recebiveisfuturos, [$scope.token, 0], filtros)) 
+       $webapi.get($apis.getUrl($apis.card.recebiveisfuturos, [$scope.token, 1], filtros)) 
             .then(function(dados){
                 //console.log(dados);
                 // Obtém os dados
                 $scope.recebiveis = dados.Registros;
+                //console.log($scope.recebiveis);
                 // Totais
                 $scope.total.valorBruto = dados.Totais.valorBruto;
                 $scope.total.valorDescontado = dados.Totais.valorDescontado;
-                $scope.total.valorLiquido = dados.Totais.valorLiquido;
                 $scope.total.valorAntecipacaoBancaria = dados.Totais.valorAntecipacaoBancaria;
-
+                $scope.total.valorLiquido = dados.Totais.valorLiquido;
+                
                 // Fecha os progress
                 $scope.hideProgress(divPortletBodyFiltrosPos);
                 $scope.hideProgress(divPortletBodyRecebiveisPos);
@@ -277,50 +326,185 @@ angular.module("card-services-antecipacao-simulacao", [])
                  else $scope.showAlert('Houve uma falha ao obter vencimentos (' + failData.status + ')', true, 'danger', true);
                  $scope.hideProgress(divPortletBodyFiltrosPos);
                  $scope.hideProgress(divPortletBodyRecebiveisPos);
-              }); */          
+              });          
+        //$scope.hideProgress(divPortletBodyFiltrosPos);
+        //$scope.hideProgress(divPortletBodyRecebiveisPos);
     }
-                                                
-                                                
-                                                
-    // TABELA EXPANSÍVEL
-    $scope.toggle = function(vencimento){
-        if(!vencimento || vencimento === null) return;
-        if(vencimento.collapsed) vencimento.collapsed = false;
-        else vencimento.collapsed = true;
+    
+    
+    
+    
+    /**
+      * Reseta taxas de IOF para os valores padrão
+      */
+    $scope.resetaIOF = function(){
+        $scope.filtro.iof = IOF;
+        $scope.filtro.iofFixo = IOFfixo;
     }
-    $scope.isExpanded = function(vencimento){
-        if(!vencimento || vencimento === null) return false;
-        return vencimento.collapsed;
+    
+    /**
+      * Realiza a simulação
+      */
+    $scope.simular = function(){
+        
+        if(!$scope.recebiveis || $scope.recebiveis === null || $scope.recebiveis.length == 0){
+            $scope.showModalAlerta('Não há recebíveis futuros!', 'Atos Capital', 'OK');
+            return;
+        }
+        
+        if(!$scope.filtro.valorDesejado || $scope.filtro.valorDesejado === null){
+            $scope.showModalAlerta('Por favor, informe o valor desejado para antecipação', 'Atos Capital', 'OK');
+            return;
+        }
+        
+        // Data de corte
+        if($scope.filtro.dtCorte && ($scope.filtro.dtCorte.getFullYear() < $scope.filtro.dtOperacao.getFullYear() || ($scope.filtro.dtCorte.getFullYear() === $scope.filtro.dtOperacao.getFullYear() && $scope.filtro.dtCorte.getMonth() < $scope.filtro.dtOperacao.getMonth()) || ($scope.filtro.dtCorte.getFullYear() === $scope.filtro.dtOperacao.getFullYear() && $scope.filtro.dtCorte.getMonth() === $scope.filtro.dtOperacao.getMonth() && $scope.filtro.dtCorte.getDate() <= $scope.filtro.dtOperacao.getDate()))){
+            $scope.showModalAlerta('Data de corte operação deve ser superior a data da operação!', 'Atos Capital', 'OK', 
+               function(){
+                     $timeout(function(){$scope.exibeCalendarioDataCorte();}, 300);
+                }
+              );
+            return; 
+        }
+        
+        // VALOR DESEJADO
+        var valDesejado;
+        if(typeof $scope.filtro.valorDesejado === 'string'){
+            try{ 
+                valDesejado = parseFloat($scope.filtro.valorDesejado.split('.').join('').split(',').join('.'));
+            }catch(ex){
+                $scope.showModalAlerta('Valor desejado informado é inválido!');
+                return;
+            }
+        }else valDesejado = $scope.filtro.valorDesejado;
+        
+        if(valDesejado <= 0.0){
+            $scope.showModalAlerta('Valor desejado não pode ser nulo nem negativo!', 'Atos Capital', 'OK');
+            return;
+        }
+        
+        if(valDesejado > $scope.total.valorLiquido){
+            $scope.showModalAlerta('Valor desejado não pode ser superior ao valor total disponível para antecipação!', 'Atos Capital', 'OK');
+            return;
+        }
+        
+        // TAXA
+        if(!$scope.filtro.taxa || $scope.filtro.taxa === null){
+            $scope.showModalAlerta('Por favor, informe a taxa aplicada (% a.m.)', 'Atos Capital', 'OK');
+            return;
+        }
+        
+        var valTaxa;
+        if(typeof $scope.filtro.taxa === 'string'){
+            try{ 
+                valTaxa = parseFloat($scope.filtro.taxa.split('.').join('').split(',').join('.'));
+            }catch(ex){
+                $scope.showModalAlerta('Valor da taxa informado é inválido!');
+                return;
+            }
+        }else valTaxa = $scope.filtro.taxa;
+        
+        if(valTaxa <= 0.0){
+            $scope.showModalAlerta('Valor da taxa não pode ser nulo nem negativo!', 'Atos Capital', 'OK');
+            return;
+        }
+        
+        
+        // IOF
+        if(!$scope.filtro.iof || $scope.filtro.iof === null){
+            $scope.showModalAlerta('Por favor, informe o IOF (% a.d.)', 'Atos Capital', 'OK');
+            return;
+        }
+        
+         if(!$scope.filtro.iofFixo || $scope.filtro.iofFixo === null){
+            $scope.showModalAlerta('Por favor, informe o IOF fixo (%)', 'Atos Capital', 'OK');
+            return;
+        }
+        
+        var valIOF;
+        if(typeof $scope.filtro.iof === 'string'){
+            try{ 
+                valIOF = parseFloat($scope.filtro.iof.split('.').join('').split(',').join('.'));
+            }catch(ex){
+                $scope.showModalAlerta('Valor do IOF informado é inválido!');
+                return;
+            }
+        }else valIOF = $scope.filtro.iof;
+        
+        var valIOFFixo;
+        if(typeof $scope.filtro.iofFixo === 'string'){
+            try{ 
+                valIOFFixo = parseFloat($scope.filtro.iofFixo.split('.').join('').split(',').join('.'));
+            }catch(ex){
+                $scope.showModalAlerta('Valor do IOF fixo informado é inválido!');
+                return;
+            }
+        }else valIOFFixo = $scope.filtro.iofFixo;
+        
+        if(valIOF <= 0.0 || valIOFFixo <= 0.0){
+            $scope.showModalAlerta('Valor o IOF não pode ser nulo nem negativo!', 'Atos Capital', 'OK');
+            return;
+        }
+        
+        $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
+        $scope.showProgress(divPortletBodyRecebiveisPos);
+        
+        $scope.totalVencimento.valorAntecipado = 0.0;
+        $scope.totalVencimento.valorIOF = 0.0;
+        $scope.totalVencimento.valorJuros = 0.0;
+        $scope.totalVencimento.valorLiquido = 0.0;
+        
+        $scope.vencimentos = [];
+        
+        //console.log(valDesejado);
+        //console.log("Taxa: " + valTaxa);
+        //console.log("IOF: " + valIOF);
+        //console.log("IOF fixo: " + valIOFFixo);
+        
+        for(var k = 0; k < $scope.recebiveis.length && valDesejado > $scope.totalVencimento.valorAntecipado; k++){
+            var recebivel = $scope.recebiveis[k];
+            //console.log(recebivel);
+            if(recebivel.valorLiquido > 0.0){
+                var valorAntecipado = recebivel.valorLiquido;
+                if(valDesejado < $scope.totalVencimento.valorAntecipado + valorAntecipado)
+                    valorAntecipado = valDesejado - $scope.totalVencimento.valorAntecipado;
+                
+                //var parts = recebivel.competencia.split("/");
+                //var competencia = new Date(parts[2], parts[1] - 1, parts[0]);
+                var  competencia = $scope.getDataFromDate(recebivel.competencia);
+                
+                var diffDays = $scope.dateDiffInDays($scope.filtro.dtOperacao, competencia);
+                //console.log(recebivel.competencia + " => " + diffDays + " dias");
+                var valorJuros = valorAntecipado * diffDays * valTaxa / (30 * 100);
+                //console.log("Juros: " + valorJuros);
+                var valComJuros = valorAntecipado - valorJuros;
+                var percentualIOF = valIOFFixo + diffDays * valIOF;
+                var valorIOF = Math.trunc(valComJuros * percentualIOF) / 100.0; 
+                //console.log("IOF: " + percentualIOF + "% => " + (valComJuros * percentualIOF / 100.0) + " => " + valorIOF);
+                var valorLiquido = valComJuros - valorIOF;
+                
+                $scope.vencimentos.push({competencia : recebivel.competencia,
+                                         //bandeira : recebivel.bandeira,
+                                         valorAntecipado : valorAntecipado,
+                                         dias : diffDays,
+                                         valorJuros : valorJuros,
+                                         valorIOF : valorIOF,
+                                         valorLiquido : valorLiquido
+                                        });
+                
+                $scope.totalVencimento.valorAntecipado += valorAntecipado;
+                $scope.totalVencimento.valorIOF += valorIOF;
+                $scope.totalVencimento.valorJuros += valorJuros;
+                $scope.totalVencimento.valorLiquido += valorLiquido;
+                
+                //console.log($scope.totalVencimento.valorAntecipado);
+            }
+        }
+        
+        //console.log($scope.vencimentos);
+        
+        $scope.hideProgress(divPortletBodyFiltrosPos);
+        $scope.hideProgress(divPortletBodyRecebiveisPos);
     }
-		
-		//IMPRESSÃO
-		/*$scope.imprimir = function(){
-			
-			/*
-			
-			e = Nome da empresa
-			s = Nome da tela
-			n = Número de níveis
-			cl = Número de colunas
-			t = Token
-			c = CNPJ
-			f = Filial
-			d = Data
-			cc = Conta Corrente
-			
-			* /
-			
-			$scope.cc = "todos";
-			$scope.f = "todas";
-			
-			if($scope.filtro.conta && $scope.filtro.conta !== null){
-				$scope.cc = $scope.filtro.conta.cdContaCorrente;
-				$scope.f = $scope.filtro.conta.empresa.ds_fantasia;
-			}
-			
-			$window.open('views/print#?e=' + $scope.usuariologado.grupoempresa.ds_nome + '&s=' + "Relatório de Recebíveis Futuros" +
-									 '&n='+3+'&cc='+$scope.cc+'&cl='+5+'&t='+$scope.token+'&f='+$scope.f+
-									 '&d='+ ">" + $scope.getFiltroData($scope.filtro.dataoperacao), '_blank');			
-		}*/
 		
 }])

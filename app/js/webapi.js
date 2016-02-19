@@ -201,6 +201,7 @@ angular.module('webapi', ['utils'])
             data : 100,
             id_grupo : 101,
             cdContaCorrente : 102,
+            cdAdquirente : 103,
         },
         relatorioconciliacaotitulos : {
             data = 100,
