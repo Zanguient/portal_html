@@ -31,7 +31,10 @@ angular.module("card-services-antecipacao-simulacao", [])
                                                      $webapi,$apis,$timeout,$filter){ 
    
     var IOF = 0.0041; // % a.d.
-    var IOFfixo = 0.38; // %                                            
+    var IOFfixo = 0.38; // %   
+		$scope.statusSimulacao = false;
+		$scope.dataOperacao = "";
+		$scope.dataCorte = "";
     $scope.contas = [];   
     $scope.adquirentes = []; 
     $scope.recebiveis = [];                                             
@@ -50,6 +53,7 @@ angular.module("card-services-antecipacao-simulacao", [])
                                                 
     // Inicialização do controller
     $scope.cardServices_antecipacaoSimulacaoInit = function(){
+        $scope.statusSimulacao = false;			
         // Título da página 
         $scope.pagina.titulo = 'Antecipação';                          
         $scope.pagina.subtitulo = 'Simulação';
@@ -110,6 +114,8 @@ angular.module("card-services-antecipacao-simulacao", [])
         // Filtros Por Data
         filtros.push({id: /*$campos.card.recebiveisfuturos.data*/ 100,
                       valor: ">" + $scope.getFiltroData(data)});
+			
+			$scope.formataData($scope.getFiltroData($scope.filtro.dtCorte, $scope.filtro.dtOperacao));
 
         // Adquirente
         if($scope.filtro.adquirente && $scope.filtro.adquirente !== null){
@@ -346,6 +352,9 @@ angular.module("card-services-antecipacao-simulacao", [])
       * Realiza a simulação
       */
     $scope.simular = function(){
+			
+			//LIBERA A IMPRESSÃO
+			$scope.statusSimulacao = true;
         
         if(!$scope.recebiveis || $scope.recebiveis === null || $scope.recebiveis.length == 0){
             $scope.showModalAlerta('Não há recebíveis futuros!', 'Atos Capital', 'OK');
@@ -507,4 +516,108 @@ angular.module("card-services-antecipacao-simulacao", [])
         $scope.hideProgress(divPortletBodyRecebiveisPos);
     }
 		
+		//IMPRESSÃO
+		$scope.imprimir = function(){
+			
+			/*
+			
+			e = Nome da empresa
+			s = Nome da tela
+			n = Número de níveis
+			cl = Número de colunas
+			t = Token
+			c = CNPJ
+			f = Filial
+			d = Data
+			cc = Conta Corrente
+			
+			*/
+			
+			$scope.cc = "todos";
+			$scope.f = "todas";
+			
+			$window.open('views/print#?e=' + $scope.usuariologado.grupoempresa.ds_nome + '&s=' + "Relatório de Recebíveis Futuros" +
+									 '&n='+3+'&cc='+"conta"+'&cl='+5+'&t='+$scope.token+'&f='+""+
+									 '&d='+ "data", '_blank');			
+		}
+		
+		//FORMATAÇÃO DE DATA
+		$scope.formataData = function(dataC, dataO){
+			
+			$scope.dtSplitC = dataC.split("");
+			$scope.dtSplitO = dataO.split("");
+			
+			$scope.dia = $scope.dtSplitC[6] + $scope.dtSplitC[7];
+			$scope.mes = $scope.dtSplitC[4] + $scope.dtSplitC[5];
+			$scope.ano = $scope.dtSplitC[0] + $scope.dtSplitC[1] + $scope.dtSplitC[2] + $scope.dtSplitC[3];
+			
+			$scope.dataCorte = $scope.formataMes($scope.dia, $scope.ano, $scope.mes);
+			
+			$scope.dia = $scope.dtSplitO[6] + $scope.dtSplitO[7];
+			$scope.mes = $scope.dtSplitO[4] + $scope.dtSplitO[5];
+			$scope.ano = $scope.dtSplitO[0] + $scope.dtSplitO[1] + $scope.dtSplitO[2] + $scope.dtSplitO[3];
+			
+			$scope.dataOperacao = $scope.formataMes($scope.dia, $scope.ano, $scope.mes);
+		}
+		
+		$scope.formataMes = function(dia, ano, mes){
+			
+			$scope.dataFormatada = "";
+			
+			switch (mes){
+				case "01":
+					$scope.dataFormatada = dia + " " + "Janeiro " + ano;
+					break;
+					
+				case "02":
+					$scope.dataFormatada = dia + " " + "fevereiro " + ano;
+					break;
+					
+				case "03":
+					$scope.dataFormatada = dia + " " + "março " + ano;
+					break;
+									
+				case "04":
+					$scope.dataFormatada = dia + " " + "abril " + ano;
+					break;
+					
+				case "05":
+					$scope.dataFormatada = dia + " " + "maio " + ano;
+					break;
+					
+				case "06":
+					$scope.dataFormatada = dia + " " + "junho " + ano;
+					break;
+					
+				case "07":
+					$scope.dataFormatada = dia + " " + "julho " + ano;
+					break;
+					
+				case "08":
+					$scope.dataFormatada = dia + " " + "agosto " + ano;
+					break;
+					
+				case "09":
+					$scope.dataFormatada = dia + " " + "setembro " + ano;
+					break;
+					
+				case "10":
+					$scope.dataFormatada = dia + " " + "outubro " + ano;
+					break;
+					
+				case "11":
+					$scope.dataFormatada = dia + " " + "novembro " + ano;
+					break;
+					
+				case "12":
+					$scope.dataFormatada = dia + " " + "dezembro " + ano;
+					break;
+					
+				default:
+					$scope.dataFormatada = "Erro de formatação"
+					break;
+			}
+			
+			return $scope.dataFormatada;
+		}
 }])
