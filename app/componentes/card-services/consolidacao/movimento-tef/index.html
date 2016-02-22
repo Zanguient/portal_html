@@ -41,33 +41,43 @@
                    <table class="table table-striped table-bordered table-hover dataTable no-footer" 
                            id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
                         <thead>
-                            <tr role="row" class="heading">
-                                <th width="20%" tabindex="0" 
-                                    aria-controls="datatable_ajax" 
-                                    rowspan="1" colspan="1">
-                                     Data
-                                </th>
-                                <th width="40%" tabindex="1" 
-                                    aria-controls="datatable_ajax" 
-                                    rowspan="1" colspan="1">
-                                     Filial 
-                                </th>
-                                <th width="20%" tabindex="2" 
-                                    aria-controls="datatable_ajax" 
-                                    rowspan="1" colspan="1">
-                                     PDV
-                                </th>
-                                <!--th width="8%" tabindex="3" 
-                                    aria-controls="datatable_ajax" 
-                                    rowspan="1" colspan="1">
-                                     Bandeira
-                                </th-->
-                                <th width="20%" tabindex="5" 
-                                    aria-controls="datatable_ajax" 
-                                    rowspan="1" colspan="1">
-                                     Ações de filtro
-                                </th>
-                            </tr>
+													<tr role="row" class="heading">
+														<th width="20%" tabindex="0" 
+																aria-controls="datatable_ajax" 
+																rowspan="1" colspan="1">
+															Data
+														</th>
+														<th width="20%" tabindex="1" 
+																aria-controls="datatable_ajax" 
+																rowspan="1" colspan="1">
+															Filial 
+														</th>
+														<th width="15%" tabindex="2" 
+																aria-controls="datatable_ajax" 
+																rowspan="1" colspan="1">
+															PDV
+														</th>
+														<!--th width="8%" tabindex="3" 
+																aria-controls="datatable_ajax" 
+																rowspan="1" colspan="1">
+															Bandeira
+														</th-->
+														<th width="15%" tabindex="3" 
+																aria-controls="datatable_ajax" 
+																rowspan="1" colspan="1">
+															NSU
+														</th>
+														<th width="15%" tabindex="4" 
+																aria-controls="datatable_ajax" 
+																rowspan="1" colspan="1">
+															VALOR
+														</th>
+														<th width="15%" tabindex="5" 
+																aria-controls="datatable_ajax" 
+																rowspan="1" colspan="1">
+															Ações de filtro
+														</th>
+													</tr>
                             <!-- CONTEUDO DO FILTRO -->
                             <tr role="row" class="filter">
                                 <!-- DATA DA VENDA -->
@@ -173,23 +183,47 @@
                                        popover="É necessário selecionar uma adquirente"
                                        popover-trigger="mouseenter"></i>
                                 </td-->
+															<!-- NSU -->
+															<td>
+																<input type="text" class="form-control" 
+																			 ng-model="filtro.nsu"/>
+																<i class="fa fa-question-circle"
+																	 ng-show="!usuariologado.grupoempresa"
+																	 popover-placement="bottom"
+																	 popover="É necessário selecionar uma empresa"
+																	 popover-trigger="mouseenter">
+																</i>
+															</td>
+															<!-- VALOR -->
+															<td>
+																<input type="text" class="form-control" 
+																			 ng-model="filtro.valor"
+																			 input-money
+																			 autocomplete=off/>
+																<i class="fa fa-question-circle"
+																	 ng-show="!usuariologado.grupoempresa"
+																	 popover-placement="bottom"
+																	 popover="É necessário selecionar uma empresa"
+																	 popover-trigger="mouseenter">
+																</i>
+															</td>
                                 <!-- AÇÕES -->
-                                <td rowspan="1" colspan="1" style="text-align:center">
-                                    <div class="margin-bottom-5">
-                                        <!-- BOTÃO BUSCAR -->
-                                        <button class="btn btn-sm red filter-submit margin-bottom" 
-                                                ng-click="buscaRecebimentoTEF()">
-                                            <i class="fa fa-search"></i> 
-                                            Buscar
-                                        </button>
-                                    </div>
-                                    <!-- BOTÃO LIMPAR -->
-                                    <button class="btn btn-sm grey filter-cancel"
-                                            ng-click="limpaFiltros()">
-                                        <i class="fa fa-times"></i> 
-                                        Limpar
-                                    </button>
-                                </td>
+															<td rowspan="1" colspan="1" style="text-align:center">
+																<div class="margin-bottom-5">
+																		<!-- BOTÃO BUSCAR -->
+																		<button class="btn btn-sm red filter-submit margin-bottom" 
+																						ng-click="buscaRecebimentoTEF()">
+																				<i class="fa fa-search"></i> 
+																				Buscar
+																		</button>
+																</div>
+																<!-- BOTÃO LIMPAR -->
+																<button class="btn btn-sm grey filter-cancel"
+																				ng-click="limpaFiltros()">
+																		<i class="fa fa-times"></i> 
+																		Limpar
+																</button>
+															</td>
                             </tr>
                         </thead>
                     </table>

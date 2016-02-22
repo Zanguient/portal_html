@@ -10,10 +10,10 @@
     Versão 1.0 - 20/10/2015
 -->
 
-<div class="container" ng-controller="card-services-antecipacao-simulacaoCtrl" ng-init="cardServices_antecipacaoSimulacaoInit()">   
+<div class="container" ng-controller="card-services-antecipacao-simulacaoCtrl" ng-init="cardServices_antecipacaoSimulacaoInit()" print-section>   
     
     <!-- BEGIN PAGE BREADCRUMB -->
-    <ul class="page-breadcrumb breadcrumb">
+    <ul class="page-breadcrumb breadcrumb" print-remove>
         <li>
             <a href="javascript:;" ng-click="goHome()">Início</a><i class="fa fa-circle"></i>
         </li>
@@ -26,7 +26,8 @@
     <!-- END PAGE BREADCRUMB -->
     
     <!-- FILTROS -->
-    <div class="row">
+    <div class="row" print-remove>
+			<!--<span style="font-size: 22px" class="glyphicon glyphicon-print" aria-hidden="false">-->
         <div class="col-md-12">
             <!-- PORTLET FILTROS -->
             <div class="portlet light"> 
@@ -204,7 +205,7 @@
     
     
     <!-- CONTEUDO -->
-    <div class="row">
+    <div class="row" print-remove>
         <div class="col-md-12">
             <!-- BEGIN TABLE PORTLET-->
             <div class="portlet light">
@@ -215,11 +216,11 @@
                         <span class="caption-subject font-green-sharp bold uppercase">Recebíveis Futuros</span>
                     </div>
                     <div class="actions">
-                        <div class="btn-group element-hidden"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -->
+                        <div class="btn-group" ng-if="1>2"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -->
                             <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
                             <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
                             </a>
-                            <ul class="dropdown-menu pull-right">
+                            <ul class="dropdown-menu pull-right element-hidden">
                                 <li>
                                     <a href="javascript:;">
                                     Export to Excel </a>
@@ -239,6 +240,13 @@
                                     Print Invoices </a>
                                 </li>
                             </ul>
+													<ul class="dropdown-menu pull-right">
+													<li>
+														<a href="javascript:;" print-btn>
+															Imprimir
+														</a>
+													</li>
+												</ul>
                         </div>
                     </div>
                 </div>
@@ -456,6 +464,115 @@
             </div>
             <!--FIM TABLE PORTLET-->
         </div>
-    </div>  
+    </div>
+	<div print-only>
+		<table style="border: 1px solid #eee; page-break-before: auto; margin-right: auto; margin-left: auto; margin-bottom: auto;
+									margin-top: 1cm;" align="center" print-avoid-avoid>
+			<thead style="text-align: center; font-weight: bold;">
+				<tr style="border: 1px solid #eee;">
+					<td style="border: 1px solid #eee; padding: 10px;" colspan="8">
+						<a print-btn><span style="font-size: 22px" class="glyphicon glyphicon-print"></span></a>
+					</td>
+				</tr>
+				<tr style="border: 1px solid #eee;">
+					<td style="border: 1px solid #eee; padding: 5px;" colspan="5" rowspan="4">
+						<img ng-src="http://www.atoscapital.com.br/portal/img/AtosCapital.jpg" title="Atos Capital" class="logo-default"
+								 width="320px" height="100px" align="center">
+					</td>
+					<td style="border: 1px solid #eee; padding: 10px;" colspan="3">{{usuariologado.grupoempresa.ds_nome | uppercase}}</td>
+				</tr>
+				<tr style="border: 1px solid #eee;">
+					<td style="border: 1px solid #eee; padding: 10px;" colspan="3">{{filtro.conta.empresa.ds_fantasia | uppercase}}</td>
+				</tr>
+				<tr style="border: 1px solid #eee;">
+					<td style="border: 1px solid #eee; padding: 10px;" colspan="3">{{'DATA OPERAÇÃO: ' + dataOperacao | uppercase}}</td>
+				</tr>
+				<tr style="border: 1px solid #eee;">
+					<td style="border: 1px solid #eee; padding: 10px;" colspan="3">{{'DATA CORTE: ' + dataCorte | uppercase}}</td>
+				</tr>
+				<tr style="border: 1px solid #eee;">
+					<td style="border: 1px solid #eee; padding: 10px;" colspan="8"></td>
+				</tr>
+				<tr style="border: 1px solid #eee;">
+					<td style="border: 1px solid #eee; padding: 10px;" colspan="8">{{'Relatório de Simulação' | uppercase}}</td>
+				</tr>
+				<tr style="border: 1px solid #eee;">
+					<td style="border: 1px solid #eee; padding: 10px;" width="10">Vencimento</td>
+					<td style="border: 1px solid #eee; padding: 10px;" width="10%">Dias</td>
+					<td style="border: 1px solid #eee; padding: 10px;" width="25%" style="text-align: center;">Valor Antecipado</td>
+					<td style="border: 1px solid #eee; padding: 10px;" width="20%" style="text-align: center;">Juros</td>
+					<td style="border: 1px solid #eee; padding: 10px;" width="10%" style="text-align: center;">IOF</td>
+					<td style="border: 1px solid #eee; padding: 10px;" width="25%" style="text-align: center;">Valor Líquido</td>				
+				</tr>
+			</thead>
+			<tbody style="text-align: center;">
+				<tr ng-repeat="vencimento in vencimentos">
+					<!-- VENCIMENTO -->
+					<td style="border: 1px solid #eee; padding: 10px;" ng-bind="getDataString(vencimento.competencia)"></td>
+					<!-- DIAS -->
+					<td style="border: 1px solid #eee; padding: 10px;" ng-bind="vencimento.dias === 0 ? '0' : vencimento.dias"></td>
+					<!-- VALOR ANTECIPADO -->
+					<td style="border: 1px solid #eee; padding: 10px;">{{vencimento.valorAntecipado | currency:'R$'}}</td>
+					<!-- JUROS -->
+					<td style="border: 1px solid #eee; padding: 10px;">{{vencimento.valorJuros | currency:'R$'}}</td>
+					<!-- IOF -->
+					<td style="border: 1px solid #eee; padding: 10px;">{{vencimento.valorIOF | currency:'R$'}}</td>
+					<!-- VALOR LÍQUIDO -->
+					<td style="border: 1px solid #eee; padding: 10px;">{{vencimento.valorLiquido | currency:'R$'}}</td>
+				</tr>
+			</tbody>
+			<tfoot style="text-align: center;">
+				<tr>
+					<!-- TOTAL NF-e -->
+					<td colspan="2" style="text-align:right; border: 1px solid #eee; padding: 10px;">Total Exibido</td> 
+					<td style="border: 1px solid #eee; padding: 10px;">{{totalVencimento.valorAntecipado | currency:'R$'}}</td>
+					<td style="border: 1px solid #eee; padding: 10px;">{{totalVencimento.valorJuros | currency:'R$'}}</td>
+					<td style="border: 1px solid #eee; padding: 10px;">{{totalVencimento.valorIOF | currency:'R$'}}</td>
+					<td style="border: 1px solid #eee; padding: 10px;">{{totalVencimento.valorLiquido | currency:'R$'}}</td>
+				</tr>
+			</tfoot>
+		</table>
+		<!--<table style="border: 1px solid #eee; page-break-before: auto;">
+		<thead style="border: 1px solid #eee; text-align: center; font-weight: bold;">
+			<tr>
+				<th colspan="9">
+					<a print-btn><span style="font-size: 22px" class="glyphicon glyphicon-print large"></span></a>
+				</th>
+			</tr>
+			<tr>
+				<th colspan="6" rowspan="4">
+					<img ng-src="http://www.atoscapital.com.br/portal/img/AtosCapital.jpg" title="Atos Capital" class="logo-default"
+							 width="320px" height="100px" align="center">
+				</th>
+				<th colspan="3">{{usuariologado.grupoempresa.ds_nome | uppercase}}</th>
+			</tr>
+			<tr>
+				<th colspan="3">{{filtro.conta.empresa.ds_fantasia | uppercase}}</th>
+			</tr>
+			<tr>
+				<th colspan="3">{{dtSplit | uppercase}}</th>
+			</tr>
+			<tr>
+				<th colspan="3">{{data | uppercase}}</th>
+			</tr>
+			<tr>
+				<th colspan="9"></th>
+			</tr>
+			<tr>
+				<th colspan="9">{{'Relatório de Simulação' | uppercase}}</th>
+			</tr>
+			<tr>
+				<th width="10">Vencimento</th>
+				<th width="10%">Dias</th>
+				<th width="25%" style="text-align: center;">Valor Antecipado</th>
+				<th width="20%" style="text-align: center;">Juros</th>
+				<th width="10%" style="text-align: center;">IOF</th>
+				<th width="25%" style="text-align: center;">Valor Líquido</th>
+			</tr>
+		</thead>
+		<tbody style="border: 1px solid #eee; text-align: center;"></tbody>
+		<tfoot style="border: 1px solid #eee; text-align: center; font-weight: bold;"></tfoot>
+	</table>-->
+		</div>
 </div>
 <!-- END PAGE CONTENT INNER -->

@@ -1522,7 +1522,7 @@ angular.module("card-services-conciliacao-bancaria", [])
 			if(jQuery.browser.mozilla){
 				$scope.margin = 0;
 			}else{
-				$scope.margin = -20;
+				$scope.margin = -27.5;
 			}
 		}
 }]);
