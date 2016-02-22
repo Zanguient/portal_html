@@ -27,6 +27,7 @@
     
     <!-- FILTROS -->
     <div class="row" print-remove>
+			<!--<span style="font-size: 22px" class="glyphicon glyphicon-print" aria-hidden="false">-->
         <div class="col-md-12">
             <!-- PORTLET FILTROS -->
             <div class="portlet light"> 
@@ -215,7 +216,7 @@
                         <span class="caption-subject font-green-sharp bold uppercase">Recebíveis Futuros</span>
                     </div>
                     <div class="actions">
-                        <div class="btn-group" ng-if="statusSimulacao"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -->
+                        <div class="btn-group" ng-if="1>2"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -->
                             <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
                             <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
                             </a>
@@ -466,11 +467,11 @@
     </div>
 	<div print-only>
 		<table style="border: 1px solid #eee; page-break-before: auto; margin-right: auto; margin-left: auto; margin-bottom: auto;
-									margin-top: 1cm;" align="center">
+									margin-top: 1cm;" align="center" print-avoid-avoid>
 			<thead style="text-align: center; font-weight: bold;">
 				<tr style="border: 1px solid #eee;">
-					<td style="border: 1px solid #eee; padding: 10px;" colspan="8" style="border: 1px solid #eee; padding: 10px;">
-						<a print-btn><span style="font-size: 22px" class="glyphicon glyphicon-print large"></span></a>
+					<td style="border: 1px solid #eee; padding: 10px;" colspan="8">
+						<a print-btn><span style="font-size: 22px" class="glyphicon glyphicon-print"></span></a>
 					</td>
 				</tr>
 				<tr style="border: 1px solid #eee;">
@@ -484,10 +485,10 @@
 					<td style="border: 1px solid #eee; padding: 10px;" colspan="3">{{filtro.conta.empresa.ds_fantasia | uppercase}}</td>
 				</tr>
 				<tr style="border: 1px solid #eee;">
-					<td style="border: 1px solid #eee; padding: 10px;" colspan="3">{{dataCorte | uppercase}}</td>
+					<td style="border: 1px solid #eee; padding: 10px;" colspan="3">{{'DATA OPERAÇÃO: ' + dataOperacao | uppercase}}</td>
 				</tr>
 				<tr style="border: 1px solid #eee;">
-					<td style="border: 1px solid #eee; padding: 10px;" colspan="3">{{dataOperacao | uppercase}}</td>
+					<td style="border: 1px solid #eee; padding: 10px;" colspan="3">{{'DATA CORTE: ' + dataCorte | uppercase}}</td>
 				</tr>
 				<tr style="border: 1px solid #eee;">
 					<td style="border: 1px solid #eee; padding: 10px;" colspan="8"></td>
@@ -504,24 +505,30 @@
 					<td style="border: 1px solid #eee; padding: 10px;" width="25%" style="text-align: center;">Valor Líquido</td>				
 				</tr>
 			</thead>
-			<tbody>
-				<tr>
-					<td>fddasdsa</td>
-					<td>fddasdsa</td>
-					<td>fddasdsa</td>
-					<td>fddasdsa</td>
-					<td>fddasdsa</td>
-					<td>fddasdsa</td>
+			<tbody style="text-align: center;">
+				<tr ng-repeat="vencimento in vencimentos">
+					<!-- VENCIMENTO -->
+					<td style="border: 1px solid #eee; padding: 10px;" ng-bind="getDataString(vencimento.competencia)"></td>
+					<!-- DIAS -->
+					<td style="border: 1px solid #eee; padding: 10px;" ng-bind="vencimento.dias === 0 ? '0' : vencimento.dias"></td>
+					<!-- VALOR ANTECIPADO -->
+					<td style="border: 1px solid #eee; padding: 10px;">{{vencimento.valorAntecipado | currency:'R$'}}</td>
+					<!-- JUROS -->
+					<td style="border: 1px solid #eee; padding: 10px;">{{vencimento.valorJuros | currency:'R$'}}</td>
+					<!-- IOF -->
+					<td style="border: 1px solid #eee; padding: 10px;">{{vencimento.valorIOF | currency:'R$'}}</td>
+					<!-- VALOR LÍQUIDO -->
+					<td style="border: 1px solid #eee; padding: 10px;">{{vencimento.valorLiquido | currency:'R$'}}</td>
 				</tr>
 			</tbody>
-			<tfoot>
+			<tfoot style="text-align: center;">
 				<tr>
-					<td>ffsfsd</td>
-					<td>ffsfsd</td>
-					<td>ffsfsd</td>
-					<td>fddasdsa</td>
-					<td>fddasdsa</td>
-					<td>fddasdsa</td>
+					<!-- TOTAL NF-e -->
+					<td colspan="2" style="text-align:right; border: 1px solid #eee; padding: 10px;">Total Exibido</td> 
+					<td style="border: 1px solid #eee; padding: 10px;">{{totalVencimento.valorAntecipado | currency:'R$'}}</td>
+					<td style="border: 1px solid #eee; padding: 10px;">{{totalVencimento.valorJuros | currency:'R$'}}</td>
+					<td style="border: 1px solid #eee; padding: 10px;">{{totalVencimento.valorIOF | currency:'R$'}}</td>
+					<td style="border: 1px solid #eee; padding: 10px;">{{totalVencimento.valorLiquido | currency:'R$'}}</td>
 				</tr>
 			</tfoot>
 		</table>

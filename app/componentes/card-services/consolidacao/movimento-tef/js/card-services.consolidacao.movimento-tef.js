@@ -64,12 +64,12 @@ angular.module("card-services-movimento-tef", [])
                 // Avalia grupo empresa
                 if($scope.usuariologado.grupoempresa){ 
                     // Reseta seleção de filtro específico de empresa
-                    $scope.filtro.filial = $scope.filtro.pdv = null;
+                    $scope.filtro.filial = $scope.filtro.pdv = $scope.filtro.nsu = $scope.filtro.valor = null;
                     buscaFiliais(true);
                 }else{ // reseta tudo e não faz buscas 
                     $scope.filiais = []; 
                     $scope.pdvs = [];
-                    $scope.filtro.filial = $scope.filtro.pdv = null;
+                    $scope.filtro.filial = $scope.filtro.pdv = $scope.filtro.nsu = $scope.filtro.valor = null;
                 }
             }
         }); 
@@ -147,22 +147,25 @@ angular.module("card-services-movimento-tef", [])
       * Limpa os filtros
       */
     $scope.limpaFiltros = function(){
-        
-        ultimoFiltro = undefined;
-        
-        // Limpar data => Refazer busca?
-        $scope.filtro.datamin = new Date();
-        $scope.filtro.datamax = ''; 
-        
-        $scope.filtro.filial = null; 
 
-        // Limpa relatórios
-        $scope.relatorio.analitico = [];
-        $scope.relatorio.sintetico = [];
-        $scope.filtro.analitico.pagina = $scope.filtro.sintetico.pagina = 1;
-        $scope.filtro.analitico.total_registros = $scope.filtro.sintetico.total_registros = 0;
-        $scope.filtro.analitico.faixa_registros = $scope.filtro.sintetico.faixa_registros = '0-0';
-        $scope.filtro.analitico.total_paginas = $scope.filtro.sintetico.total_paginas = 0;
+			ultimoFiltro = undefined;
+
+			// Limpar data => Refazer busca?
+			$scope.filtro.datamin = new Date();
+			$scope.filtro.datamax = ''; 
+
+			$scope.filtro.filial = null;
+			$scope.filtro.nsu = null;
+			$scope.filtro.valor = null;
+
+
+			// Limpa relatórios
+			$scope.relatorio.analitico = [];
+			$scope.relatorio.sintetico = [];
+			$scope.filtro.analitico.pagina = $scope.filtro.sintetico.pagina = 1;
+			$scope.filtro.analitico.total_registros = $scope.filtro.sintetico.total_registros = 0;
+			$scope.filtro.analitico.faixa_registros = $scope.filtro.sintetico.faixa_registros = '0-0';
+			$scope.filtro.analitico.total_paginas = $scope.filtro.sintetico.total_paginas = 0;
     }
     
     // DATA RECEBIMENTO
@@ -345,6 +348,21 @@ angular.module("card-services-movimento-tef", [])
                                valor: $scope.filtro.pdv.CodPdvHostPagamento};
            filtros.push(filtroPDV);  
        } 
+			
+			//NSU
+			if($scope.filtro.nsu !== null && $scope.filtro.nsu !== undefined && $scope.filtro.nsu !== ""){
+				var filtroNSU = {id: /*$campos.card.tbrecebimentotef.nrNSUHost*/ 105,
+												valor: $scope.filtro.nsu};
+				filtros.push(filtroNSU);
+			}
+			
+			//VALOR
+			if($scope.filtro.valor !== null && $scope.filtro.valor !== "0,00" && $scope.filtro.valor !== undefined && 
+				 $scope.filtro.valor !== ""){
+				var filtroValor = {id: /*$campos.card.tbrecebimentotef.vlVenda*/ 111,
+													valor: $scope.filtro.valor};
+				filtros.push(filtroValor);
+			}
         
        // Retorna    
        return filtros;

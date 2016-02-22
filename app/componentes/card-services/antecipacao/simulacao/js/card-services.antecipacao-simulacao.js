@@ -115,7 +115,7 @@ angular.module("card-services-antecipacao-simulacao", [])
         filtros.push({id: /*$campos.card.recebiveisfuturos.data*/ 100,
                       valor: ">" + $scope.getFiltroData(data)});
 			
-			$scope.formataData($scope.getFiltroData($scope.filtro.dtCorte, $scope.filtro.dtOperacao));
+			$scope.formataData($scope.getFiltroData($scope.filtro.dtCorte), $scope.getFiltroData($scope.filtro.dtOperacao));
 
         // Adquirente
         if($scope.filtro.adquirente && $scope.filtro.adquirente !== null){
@@ -278,6 +278,11 @@ angular.module("card-services-antecipacao-simulacao", [])
       * Obtem os recebíveis a partir dos filtros
       */
     $scope.buscaRecebiveisFuturos = function(){
+			
+			//BLOQUEIA A IMPRESSÃO
+			$scope.statusSimulacao = false;
+			
+			
         // Avalia se há um grupo empresa selecionado
         if(!$scope.usuariologado.grupoempresa){
             $scope.showModalAlerta('Por favor, selecione uma empresa', 'Atos Capital', 'OK', 
@@ -308,7 +313,7 @@ angular.module("card-services-antecipacao-simulacao", [])
         
        // Filtros    
        var filtros = obtemFiltrosBusca();
-           
+			
        //console.log(filtros);
        $webapi.get($apis.getUrl($apis.card.recebiveisfuturos, [$scope.token, 1], filtros)) 
             .then(function(dados){
@@ -352,9 +357,6 @@ angular.module("card-services-antecipacao-simulacao", [])
       * Realiza a simulação
       */
     $scope.simular = function(){
-			
-			//LIBERA A IMPRESSÃO
-			$scope.statusSimulacao = true;
         
         if(!$scope.recebiveis || $scope.recebiveis === null || $scope.recebiveis.length == 0){
             $scope.showModalAlerta('Não há recebíveis futuros!', 'Atos Capital', 'OK');
@@ -514,6 +516,9 @@ angular.module("card-services-antecipacao-simulacao", [])
         
         $scope.hideProgress(divPortletBodyFiltrosPos);
         $scope.hideProgress(divPortletBodyRecebiveisPos);
+			
+			//LIBERA A IMPRESSÃO
+			$scope.statusSimulacao = true;
     }
 		
 		//IMPRESSÃO
