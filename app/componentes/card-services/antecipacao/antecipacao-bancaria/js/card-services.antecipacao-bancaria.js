@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.2 - 22/02/2016
+ *  - Banese
+ *
  *  Versão 1.0.1 - 16/02/2016
  *  - Envio dos valores do lote em vez de vlAntecipacaoLiquida
  *
@@ -20,6 +23,9 @@ angular.module("card-services-antecipacao-bancaria", [])
                               '$webapi',
                               '$apis',
                             function($scope,$state,$filter,$webapi,$apis){ 
+                                
+    var IOF = 0.0041; // % a.d.
+    var IOFAdicional = 0.38; // %                              
     $scope.itens_pagina = [50, 100, 150, 200]; 
     $scope.paginaInformada = 1; // página digitada pelo usuário                                             
     // Filtros
@@ -44,10 +50,16 @@ angular.module("card-services-antecipacao-bancaria", [])
                          exibeDataAntecipacao : false,
                          dtAntecipacaoBancaria : '',
 						 valorBrutoTotal: 0.0,
+                         valorIOFTotal : 0.0,
+                         valorIOFAdicionalTotal : 0.0,
+                         valorJurosTotal : 0.0,
 						 valorLiquidoTotal: 0.0,
-						 taxa : 0.0,
+						 //taxa : 0.0,
 						 vlOperacao : '',
-						 vlLiquido : ''
+						 vlLiquido : '',
+                         txIOF : IOF,
+                         txIOFAdicional : IOFAdicional,
+                         txJuros : 0.0
                        }                            
                                 
     // Flags
@@ -590,6 +602,9 @@ angular.module("card-services-antecipacao-bancaria", [])
         $scope.modalAntecipacao.dtAntecipacaoBancaria = '';
         $scope.modalAntecipacao.vlOperacao = '';
         $scope.modalAntecipacao.vlLiquido = '';
+        $scope.modalAntecipacao.txIOF = IOF;
+        $scope.modalAntecipacao.txIOFAdicional = IOFAdicional;
+        $scope.modalAntecipacao.txJuros = 0.0;
 		
 		// Adiciona uma linha vazia
 		$scope.novaAntecipacaoModalAntecipacao();
@@ -599,23 +614,71 @@ angular.module("card-services-antecipacao-bancaria", [])
     }
 	
 	$scope.calculaValorTotal = function(){
+        //console.log("valor total");
 		$scope.modalAntecipacao.valorBrutoTotal = 0.0;
+        $scope.modalAntecipacao.valorIOFTotal = 0.0;
+        $scope.modalAntecipacao.valorIOFAdicionalTotal = 0.0;
+        $scope.modalAntecipacao.valorJurosTotal = 0.0;
 		$scope.modalAntecipacao.valorLiquidoTotal = 0.0;
 		for(var k = 0; k < $scope.modalAntecipacao.antecipacoes.length; k++){
 			var antecipacao = $scope.modalAntecipacao.antecipacoes[k];
-			var valorB = 0.0;
+			var vlAntecipacao = 0.0;
+            var vlJuros = 0.0;
+            var vlIOF = 0.0;
+            var vlIOFAdicional = 0.0;
+            var vlAntecipacaoLiquida = 0.0;
 			if(antecipacao.vlAntecipacao){
                 if(typeof antecipacao.vlAntecipacao === 'string'){
                     try{ 
-                         valorB = parseFloat(antecipacao.vlAntecipacao.split('.').join('').split(',').join('.'));
+                         vlAntecipacao = parseFloat(antecipacao.vlAntecipacao.split('.').join('').split(',').join('.'));
                     }catch(ex){ }
                 }
-                else valorB = antecipacao.vlAntecipacao;
+                else vlAntecipacao = antecipacao.vlAntecipacao;
 			}
-			antecipacao.vlAntecipacaoLiquida = valorB * (1 - $scope.modalAntecipacao.taxa);
-			$scope.modalAntecipacao.valorBrutoTotal += valorB;
+            if(antecipacao.vlJuros){
+                if(typeof antecipacao.vlJuros === 'string'){
+                    try{ 
+                         vlJuros = parseFloat(antecipacao.vlJuros.split('.').join('').split(',').join('.'));
+                    }catch(ex){ }
+                }
+                else vlJuros = antecipacao.vlJuros;
+			}
+            if(antecipacao.vlIOF){
+                if(typeof antecipacao.vlIOF === 'string'){
+                    try{ 
+                         vlIOF = parseFloat(antecipacao.vlIOF.split('.').join('').split(',').join('.'));
+                    }catch(ex){ }
+                }
+                else vlIOF = antecipacao.vlIOF;
+			}
+            if(antecipacao.vlIOFAdicional){
+                if(typeof antecipacao.vlIOFAdicional === 'string'){
+                    try{ 
+                         vlIOFAdicional = parseFloat(antecipacao.vlIOFAdicional.split('.').join('').split(',').join('.'));
+                    }catch(ex){ }
+                }
+                else vlIOFAdicional = antecipacao.vlIOFAdicional;
+			}
+            if(antecipacao.vlAntecipacaoLiquida){
+                if(typeof antecipacao.vlAntecipacaoLiquida === 'string'){
+                    try{ 
+                         vlAntecipacaoLiquida = parseFloat(antecipacao.vlAntecipacaoLiquida.split('.').join('').split(',').join('.'));
+                    }catch(ex){ }
+                }
+                else vlAntecipacaoLiquida = antecipacao.vlAntecipacaoLiquida;
+			}
+            //console.log("Juros: " + vlJuros);
+            //console.log("IOF: " + vlIOF);
+            //console.log("IOF Adicional: " + vlIOFAdicional);
+            //antecipacao.vlAntecipacaoLiquida = valorB - vlIOFAdicional - vlIOF - vlJuros;
+			//antecipacao.vlAntecipacaoLiquida = valorB * (1 - $scope.modalAntecipacao.taxa);
+			$scope.modalAntecipacao.valorBrutoTotal += vlAntecipacao;
+            $scope.modalAntecipacao.valorJurosTotal += vlJuros.toFixed(2);
+            $scope.modalAntecipacao.valorIOFTotal += vlIOF.toFixed(2);
+            $scope.modalAntecipacao.valorIOFAdicionalTotal += vlIOFAdicional.toFixed(2);
+            $scope.modalAntecipacao.valorLiquidoTotal += vlAntecipacaoLiquida.toFixed(2);
 		}
-		$scope.modalAntecipacao.valorLiquidoTotal = $scope.modalAntecipacao.valorBrutoTotal * (1 - $scope.modalAntecipacao.taxa);
+		//$scope.modalAntecipacao.valorLiquidoTotal = $scope.modalAntecipacao.valorBrutoTotal * (1 - $scope.modalAntecipacao.taxa);
 	}
 	
 	$scope.valorBrutoModalAntecipacaoIgualInformado = function(){
@@ -632,30 +695,131 @@ angular.module("card-services-antecipacao-bancaria", [])
         //console.log($scope.modalAntecipacao.valorBrutoTotal);
 		return valorBruto > 0.0 && Math.abs($scope.modalAntecipacao.valorBrutoTotal - valorBruto) <= 0.001; 
 	}
+    
+    $scope.calculaValoresTaxas =  function(antecipacao){
+        
+        //console.log("valores das taxas");
+        
+        if(!$scope.modalAntecipacao.dtAntecipacaoBancaria || $scope.modalAntecipacao.dtAntecipacaoBancaria === null)
+            return;
+        
+        var dtAntecipacaoBancaria = $scope.modalAntecipacao.dtAntecipacaoBancaria;
+        if(typeof dtAntecipacaoBancaria.getFullYear !== 'function')
+            dtAntecipacaoBancaria = $scope.getDataFromDate(dtAntecipacaoBancaria);
+        
+        var antecipacoes = [];
+        if(!antecipacao || antecipacao == null){
+            // Faz para todos!
+            antecipacoes = $scope.modalAntecipacao.antecipacoes;
+        }
+        else
+            antecipacoes.push(antecipacao);
+        
+        // Taxa de Juros
+        var txJuros = 0.0;
+        if(typeof $scope.modalAntecipacao.txJuros === 'string'){
+            try{ 
+                txJuros = parseFloat($scope.modalAntecipacao.txJuros.split('.').join('').split(',').join('.'));
+            }catch(ex){ }
+        }else txJuros = $scope.modalAntecipacao.txJuros;
+        // Taxa IOF
+        var txIOF = 0.0;
+        if(typeof $scope.modalAntecipacao.txIOF === 'string'){
+            try{ 
+                txIOF = parseFloat($scope.modalAntecipacao.txIOF.split('.').join('').split(',').join('.'));
+            }catch(ex){ }
+        }else txIOF = $scope.modalAntecipacao.txIOF;
+        // Taxa IOF Adicional
+        var txIOFAdicional = 0.0;
+        if(typeof $scope.modalAntecipacao.txIOFAdicional === 'string'){
+            try{ 
+                txIOFAdicional = parseFloat($scope.modalAntecipacao.txIOFAdicional.split('.').join('').split(',').join('.'));
+            }catch(ex){ }
+        }else txIOFAdicional = $scope.modalAntecipacao.txIOFAdicional;
+        
+        for(var k = 0; k < antecipacoes.length; k++){
+			var a = antecipacoes[k];
+            
+            if(!a.dtVencimento || a.dtVencimento === null)
+                continue;
+            
+            var competencia = a.dtVencimento;
+            if(typeof competencia.getFullYear !== 'function')
+                competencia = $scope.getDataFromDate(competencia);
+            
+            var vlAntecipacao = 0.0;
+            if(a.vlAntecipacao){
+                if(typeof a.vlAntecipacao === 'string'){
+                    try{ 
+                         vlAntecipacao = parseFloat(a.vlAntecipacao.split('.').join('').split(',').join('.'));
+                    }catch(ex){ }
+                }
+                else vlAntecipacao = a.vlAntecipacao;
+            }
+            
+            
+            var diffDays = $scope.dateDiffInDays(dtAntecipacaoBancaria, competencia);
+            
+            var vlJuros = vlAntecipacao * diffDays * txJuros / (30 * 100);
+            var valComJuros = vlAntecipacao - vlJuros;
+            var percentualIOF = txIOFAdicional + diffDays * txIOF;
+            var valorIOF = Math.trunc(valComJuros * percentualIOF) / 100.0;
+            var vlIOF = ((valorIOF * (diffDays * txIOF)) / percentualIOF).toFixed(2);
+            var vlIOFAdicional = ((valorIOF * txIOFAdicional) / percentualIOF).toFixed(2);
+            
+            //console.log("Juros: " + vlJuros);
+            //console.log("IOF: " + vlIOF);
+            //console.log("IOF Adicional: " + vlIOFAdicional);
+            a.vlJuros = vlJuros;
+            a.vlIOF = vlIOF;
+            a.vlIOFAdicional = vlIOFAdicional;
+            a.vlAntecipacaoLiquida = vlAntecipacao - vlJuros - vlIOF - vlIOFAdicional;
+        }
+        
+        $scope.calculaValorTotal();
+    }
 	
-	$scope.calculaTaxa = function(){
-		$scope.modalAntecipacao.taxa = 0.0;
-		var valorBruto = 0.0;
-		var valorLiquido = 0.0;
-		if($scope.modalAntecipacao.vlOperacao){
-            if(typeof $scope.modalAntecipacao.vlOperacao === 'string'){
+	$scope.calculaValorLiquido = function(antecipacao){
+		
+        if(!antecipacao || antecipacao === null) return;
+        
+        var vlAntecipacao = 0.0;
+        var vlJuros = 0.0;
+        var vlIOF = 0.0;
+        var vlIOFAdicional = 0.0;
+        if(antecipacao.vlAntecipacao){
+            if(typeof antecipacao.vlAntecipacao === 'string'){
                 try{ 
-                    valorBruto = parseFloat($scope.modalAntecipacao.vlOperacao.split('.').join('').split(',').join('.'));
+                     vlAntecipacao = parseFloat(antecipacao.vlAntecipacao.split('.').join('').split(',').join('.'));
                 }catch(ex){ }
             }
-            else valorBruto = $scope.modalAntecipacao.vlOperacao;
-		}
-		if($scope.modalAntecipacao.vlLiquido){
-            if(typeof $scope.modalAntecipacao.vlLiquido === 'string'){
+            else vlAntecipacao = antecipacao.vlAntecipacao;
+        }
+        if(antecipacao.vlJuros){
+            if(typeof antecipacao.vlJuros === 'string'){
                 try{ 
-                    valorLiquido = parseFloat($scope.modalAntecipacao.vlLiquido.split('.').join('').split(',').join('.'));
-                }catch(ex) { }
+                     vlJuros = parseFloat(antecipacao.vlJuros.split('.').join('').split(',').join('.'));
+                }catch(ex){ }
             }
-            else valorLiquido = $scope.modalAntecipacao.vlLiquido;
-		}
-		
-		if(valorBruto !== 0.0 && valorBruto >= valorLiquido) 
-			$scope.modalAntecipacao.taxa = (valorBruto - valorLiquido) / valorBruto;
+            else vlJuros = antecipacao.vlJuros;
+        }
+        if(antecipacao.vlIOF){
+            if(typeof antecipacao.vlIOF === 'string'){
+                try{ 
+                     vlIOF = parseFloat(antecipacao.vlIOF.split('.').join('').split(',').join('.'));
+                }catch(ex){ }
+            }
+            else vlIOF = antecipacao.vlIOF;
+        }
+        if(antecipacao.vlIOFAdicional){
+            if(typeof antecipacao.vlIOFAdicional === 'string'){
+                try{ 
+                     vlIOFAdicional = parseFloat(antecipacao.vlIOFAdicional.split('.').join('').split(',').join('.'));
+                }catch(ex){ }
+            }
+            else vlIOFAdicional = antecipacao.vlIOFAdicional;
+        }
+        antecipacao.vlAntecipacaoLiquida = vlAntecipacao - vlIOFAdicional - vlIOF - vlJuros;
 		
 		$scope.calculaValorTotal();
 		//console.log('Bruto: ' + valorBruto);
@@ -689,6 +853,9 @@ angular.module("card-services-antecipacao-bancaria", [])
                                              dtVencimento : dtVencimento,
                                              bandeira : bandeira,
                                              vlAntecipacao : '',
+                                             vlJuros : 0.0,
+                                             vlIOF : 0.0,
+                                             vlIOFAdicional : 0.0,
                                              vlAntecipacaoLiquida : '',
                                              exibeDataVencimento : '',
                                            });
@@ -731,6 +898,36 @@ angular.module("card-services-antecipacao-bancaria", [])
                 return false;
             }
         }else valorOperacao = $scope.modalAntecipacao.vlOperacao;
+        // Taxa de Juros
+        var txJuros = 0.0;
+        if(typeof $scope.modalAntecipacao.txJuros === 'string'){
+            try{ 
+                txJuros = parseFloat($scope.modalAntecipacao.txJuros.split('.').join('').split(',').join('.'));
+            }catch(ex){
+                $scope.showModalAlerta('Taxa aplicada informada é inválida!');
+                return false;
+            }
+        }else txJuros = $scope.modalAntecipacao.txJuros;
+        // Taxa IOF
+        var txIOF = 0.0;
+        if(typeof $scope.modalAntecipacao.txIOF === 'string'){
+            try{ 
+                txIOF = parseFloat($scope.modalAntecipacao.txIOF.split('.').join('').split(',').join('.'));
+            }catch(ex){
+                $scope.showModalAlerta('Taxa IOF (% a.d.) informada é inválida!');
+                return false;
+            }
+        }else txIOF = $scope.modalAntecipacao.txIOF;
+        // Taxa IOF Adicional
+        var txIOFAdicional = 0.0;
+        if(typeof $scope.modalAntecipacao.txIOFAdicional === 'string'){
+            try{ 
+                txIOFAdicional = parseFloat($scope.modalAntecipacao.txIOFAdicional.split('.').join('').split(',').join('.'));
+            }catch(ex){
+                $scope.showModalAlerta('Taxa IOF adicional (%) informada é inválida!');
+                return false;
+            }
+        }else txIOFAdicional = $scope.modalAntecipacao.txIOFAdicional;
 		// Antecipações
 		if(!$scope.modalAntecipacao.antecipacoes ||  $scope.modalAntecipacao.antecipacoes === null || $scope.modalAntecipacao.antecipacoes.length === 0){
 			$scope.showModalAlerta('Deve ser informada ao menos uma informação detalhada de antecipação!');
@@ -770,6 +967,51 @@ angular.module("card-services-antecipacao-bancaria", [])
 			if(valorBruto === 0.0){
 				$scope.showModalAlerta('Informe o valor bruto do registro ' + (k + 1));
 				return false;
+			}
+            
+            var vlJuros = 0.0;
+			if(antecipacao.vlJuros){
+                if(typeof antecipacao.vlJuros === 'string'){
+                    try{ 
+                        //console.log(antecipacao.vlAntecipacao);
+                        //console.log(antecipacao.vlAntecipacao.split('.').join('').split(',').join('.'));
+                        vlJuros = parseFloat(antecipacao.vlJuros.split('.').join('').split(',').join('.'));
+                    }catch(ex){
+                        $scope.showModalAlerta('Valor cobrado de juros informado é inválido! (registro ' + (k + 1) + ')');
+                        return false;
+                    }
+                }
+                else vlJuros = antecipacao.vlJuros;
+			}
+            
+            var vlIOF = 0.0;
+			if(antecipacao.vlIOF){
+                if(typeof antecipacao.vlIOF === 'string'){
+                    try{ 
+                        //console.log(antecipacao.vlAntecipacao);
+                        //console.log(antecipacao.vlAntecipacao.split('.').join('').split(',').join('.'));
+                        vlJuros = parseFloat(antecipacao.vlIOF.split('.').join('').split(',').join('.'));
+                    }catch(ex){
+                        $scope.showModalAlerta('Valor cobrado de IOF a.d. informado é inválido! (registro ' + (k + 1) + ')');
+                        return false;
+                    }
+                }
+                else vlIOF = antecipacao.vlIOF;
+			}
+            
+            var vlIOFAdicional = 0.0;
+			if(antecipacao.vlIOFAdicional){
+                if(typeof antecipacao.vlIOFAdicional === 'string'){
+                    try{ 
+                        //console.log(antecipacao.vlAntecipacao);
+                        //console.log(antecipacao.vlAntecipacao.split('.').join('').split(',').join('.'));
+                        vlIOFAdicional = parseFloat(antecipacao.vlIOFAdicional.split('.').join('').split(',').join('.'));
+                    }catch(ex){
+                        $scope.showModalAlerta('Valor cobrado de IOF adicional informado é inválido! (registro ' + (k + 1) + ')');
+                        return false;
+                    }
+                }
+                else vlIOFAdicional = antecipacao.vlIOFAdicional;
 			}
             
             valorB += valorBruto;
@@ -818,12 +1060,19 @@ angular.module("card-services-antecipacao-bancaria", [])
 		
 		$scope.showProgress();
 		
-        var vlOperacao = parseFloat($scope.modalAntecipacao.vlOperacao.split('.').join('').split(',').join('.'));
-        var vlLiquido = parseFloat($scope.modalAntecipacao.vlLiquido.split('.').join('').split(',').join('.'));
+        var vlOperacao = typeof $scope.modalAntecipacao.vlOperacao === 'string' ?parseFloat($scope.modalAntecipacao.vlOperacao.split('.').join('').split(',').join('.')) : $scope.modalAntecipacao.vlOperacao;
+        var vlLiquido = typeof $scope.modalAntecipacao.vlLiquido === 'string' ? parseFloat($scope.modalAntecipacao.vlLiquido.split('.').join('').split(',').join('.')) : $scope.modalAntecipacao.vlLiquido;
+        var txJuros = typeof $scope.modalAntecipacao.txJuros === 'string' ? parseFloat($scope.modalAntecipacao.txJuros.split('.').join('').split(',').join('.')) : $scope.modalAntecipacao.txJuros;
+        var txIOF = typeof $scope.modalAntecipacao.txIOF === 'string' ? parseFloat($scope.modalAntecipacao.txIOF.split('.').join('').split(',').join('.')) : $scope.modalAntecipacao.txIOF;
+        var txIOFAdicional = typeof $scope.modalAntecipacao.txIOFAdicional === 'string' ? parseFloat($scope.modalAntecipacao.txIOFAdicional.split('.').join('').split(',').join('.')) : $scope.modalAntecipacao.txIOFAdicional;
+        
         
         // $scope.validaData($scope.modalAntecipacao.dtAntecipacaoBancaria);
 		var json = { idAntecipacaoBancaria : -1,
                      vlOperacao : vlOperacao,
+                     txJuros : txJuros,
+                     txIOF : txIOF,
+                     txIOFAdicional : txIOFAdicional,
                      vlLiquido : vlLiquido,
                      dtAntecipacaoBancaria : $scope.getDataFromString($scope.getDataString($scope.modalAntecipacao.dtAntecipacaoBancaria)),
 					 cdAdquirente : $scope.modalAntecipacao.adquirente.cdAdquirente,
@@ -833,12 +1082,17 @@ angular.module("card-services-antecipacao-bancaria", [])
 		for(var k = 0; k < $scope.modalAntecipacao.antecipacoes.length; k++){
 			var antecipacao = $scope.modalAntecipacao.antecipacoes[k];
 			var valorBruto = parseFloat(antecipacao.vlAntecipacao.split('.').join('').split(',').join('.'));
+            var vlJuros = typeof antecipacao.vlJuros === 'string' ?parseFloat(antecipacao.vlJuros.split('.').join('').split(',').join('.')) : antecipacao.vlJuros;
+            var vlIOF = typeof antecipacao.vlIOF === 'string' ? parseFloat(antecipacao.vlIOF.split('.').join('').split(',').join('.')) : antecipacao.vlIOF;
+            var vlIOFAdicional = typeof antecipacao.vlIOFAdicional === 'string' ?parseFloat(antecipacao.vlIOFAdicional.split('.').join('').split(',').join('.'))  : antecipacao.vlIOFAdicional;
 			//var valorLiquido = typeof antecipacao.vlAntecipacaoLiquida === 'string' ? parseFloat(antecipacao.vlAntecipacaoLiquida.split('.').join('').split(',').join('.')) : antecipacao.vlAntecipacaoLiquida;
             var dtVencimento = $scope.getDataFromString($scope.getDataString(antecipacao.dtVencimento));
             //console.log(dtVencimento);
 			json.antecipacoes.push({ idAntecipacaoBancariaDetalhe : -1,  
                                     vlAntecipacao : valorBruto,
-									//vlAntecipacaoLiquida: valorLiquido,
+									vlJuros : vlJuros.toFixed(2),
+								    vlIOF : vlIOF.toFixed(2),
+								    vlIOFAdicional : vlIOFAdicional.toFixed(2),
 									dtVencimento : dtVencimento,
 									cdBandeira : antecipacao.bandeira && antecipacao.bandeira !== null ? antecipacao.bandeira.cdBandeira : null});
 		}
@@ -932,6 +1186,9 @@ angular.module("card-services-antecipacao-bancaria", [])
         $scope.modalAntecipacao.valorLiquidoTotal = antecipacao.vlLiquido;
         $scope.modalAntecipacao.vlOperacao = antecipacao.vlOperacao;
         $scope.modalAntecipacao.vlLiquido = antecipacao.vlLiquido;
+        $scope.modalAntecipacao.txIOF = antecipacao.txIOF;
+        $scope.modalAntecipacao.txJuros = antecipacao.txJuros;
+        $scope.modalAntecipacao.txIOFAdicional = antecipacao.txIOFAdicional;
         // Old Info
         $scope.modalAntecipacao.old = antecipacao;
         // Bandeira
@@ -942,6 +1199,9 @@ angular.module("card-services-antecipacao-bancaria", [])
                                                         dtVencimento : $scope.getDataFromDate(a.dtVencimento),
                                                         bandeira : a.tbBandeira,
                                                         vlAntecipacao : a.vlAntecipacao,
+                                                        vlIOF : a.vlIOF,
+                                                        vlIOFAdicional : a.vlAntecipacaoLiquida,
+                                                        vlJuros : a.vlJuros,
                                                         vlAntecipacaoLiquida : a.vlAntecipacaoLiquida,
                                                         exibeDataVencimento : false,
                                                        });
@@ -955,8 +1215,8 @@ angular.module("card-services-antecipacao-bancaria", [])
         }
 	
 
-        // Calcula a taxa
-        $scope.calculaTaxa();
+        // Calcula demais valores
+        $scope.calculaValorTotal();
         
                 
         exibeModalAntecipacao();
@@ -969,11 +1229,17 @@ angular.module("card-services-antecipacao-bancaria", [])
         
         var vlOperacao = typeof $scope.modalAntecipacao.vlOperacao === 'string' ?parseFloat($scope.modalAntecipacao.vlOperacao.split('.').join('').split(',').join('.')) : $scope.modalAntecipacao.vlOperacao;
         var vlLiquido = typeof $scope.modalAntecipacao.vlLiquido === 'string' ? parseFloat($scope.modalAntecipacao.vlLiquido.split('.').join('').split(',').join('.')) : $scope.modalAntecipacao.vlLiquido;
+        var txJuros = typeof $scope.modalAntecipacao.txJuros === 'string' ? parseFloat($scope.modalAntecipacao.txJuros.split('.').join('').split(',').join('.')) : $scope.modalAntecipacao.txJuros;
+        var txIOF = typeof $scope.modalAntecipacao.txIOF === 'string' ? parseFloat($scope.modalAntecipacao.txIOF.split('.').join('').split(',').join('.')) : $scope.modalAntecipacao.txIOF;
+        var txIOFAdicional = typeof $scope.modalAntecipacao.txIOFAdicional === 'string' ? parseFloat($scope.modalAntecipacao.txIOFAdicional.split('.').join('').split(',').join('.')) : $scope.modalAntecipacao.txIOFAdicional;
         
         // Avalia mudanças e controi o JSON
         // $scope.validaData($scope.modalAntecipacao.dtAntecipacaoBancaria);
 		var json = { idAntecipacaoBancaria : $scope.modalAntecipacao.old.idAntecipacaoBancaria,
                      vlOperacao : vlOperacao,
+                     txJuros : txJuros,
+                     txIOF : txIOF,
+                     txIOFAdicional : txIOFAdicional,
                      vlLiquido : vlLiquido,
                      dtAntecipacaoBancaria : $scope.getDataFromString($scope.getDataString($scope.modalAntecipacao.dtAntecipacaoBancaria)),
 					 cdAdquirente : $scope.modalAntecipacao.adquirente.cdAdquirente,
@@ -985,6 +1251,9 @@ angular.module("card-services-antecipacao-bancaria", [])
 			var antecipacao = $scope.modalAntecipacao.antecipacoes[k];
             var idAntecipacaoBancariaDetalhe = antecipacao.idAntecipacaoBancariaDetalhe;
             var valorBruto = typeof antecipacao.vlAntecipacao === 'string' ? parseFloat(antecipacao.vlAntecipacao.split('.').join('').split(',').join('.')) : antecipacao.vlAntecipacao;
+            var vlJuros = typeof antecipacao.vlJuros === 'string' ? parseFloat(antecipacao.vlJuros.split('.').join('').split(',').join('.')) : antecipacao.vlJuros;
+            var vlIOF = typeof antecipacao.vlIOF === 'string' ? parseFloat(antecipacao.vlIOF.split('.').join('').split(',').join('.')) : antecipacao.vlIOF;
+            var vlIOFAdicional = typeof antecipacao.vlIOFAdicional === 'string' ? parseFloat(antecipacao.vlIOFAdicional.split('.').join('').split(',').join('.')) : antecipacao.vlIOFAdicional;
 			//var valorLiquido = typeof antecipacao.vlAntecipacaoLiquida === 'string' ? parseFloat(antecipacao.vlAntecipacaoLiquida.split('.').join('').split(',').join('.')) : antecipacao.vlAntecipacaoLiquida;
             var dtVencimento = antecipacao.dtVencimento;
             
@@ -1013,6 +1282,9 @@ angular.module("card-services-antecipacao-bancaria", [])
 			
 			json.antecipacoes.push({ idAntecipacaoBancariaDetalhe : idAntecipacaoBancariaDetalhe,  
                                     vlAntecipacao : valorBruto,
+                                    vlIOFAdicional : vlIOFAdicional.toFixed(2),
+                                    vlIOF : vlIOF.toFixed(2),
+                                    vlJuros : vlJuros.toFixed(2),
 									//vlAntecipacaoLiquida: valorLiquido,
 									dtVencimento : $scope.getDataFromString($scope.getDataString(dtVencimento)),
 									cdBandeira : antecipacao.bandeira && antecipacao.bandeira !== null ? antecipacao.bandeira.cdBandeira : null});

@@ -8,6 +8,9 @@
     Administrativo > Dados Bancários > Extratos Bancários
 
 
+    Versão 1.0.2 - 22/12/2016
+    - Paginação
+
     Versão 1.0.1 - 18/11/2015
     - Exclusão de movimentações bancárias
 
@@ -169,6 +172,48 @@
                 </div>                
                 <div class="portlet-body" ng-show="exibeTela" style="min-height:300px"> 
                     
+                    <!-- EXIBIÇÃO E PESQUISA -->
+                    <div class="row paddingDivs">
+                        <!-- EXIBIÇÃO --> 
+                        <div class="col-xs-4 col-sm-4">
+                            <div class="dataTables_length">
+                                <label>
+                                    <span class="seperator"></span>Exibindo 
+                                    <select name="datatable_products_length" aria-controls="datatable_products" 
+                                            class="form-control input-xsmall input-sm input-inline"
+                                            ng-model="filtro.itens_pagina"
+                                            ng-change="alterouItensPagina()"
+                                            ng-options="item for item in itens_pagina">                                            
+                                    </select> registros de {{filtro.total_registros}}
+                                </label>
+                            </div>
+                        </div> 
+                        <!--PAGINAÇÃO-TOPO-->
+                        <div class="col-xs-4 col-sm-4 col-md-3">
+                            <div class="pagination-panel centralizarPaginacao"> Página 
+                                <a href="javascript:;" ng-click="retrocedePagina()"
+                                   class="btn btn-sm default prev" 
+                                   ng-class="{disabled: filtro.pagina <= 1}" 
+                                   title="Página anterior">
+                                        <i class="fa fa-angle-left"></i>
+                                </a>
+                                <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                       maxlength="4" style="text-align:center; margin: 0 5px;"
+                                       ng-model="paginaInformada" valid-integer-number
+                                       ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                                       ng-blur="atualizaPaginaDigitada()">
+                                    <a href="javascript:;" ng-click="avancaPagina()"
+                                       class="btn btn-sm default next"
+                                       ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
+                                       title="Próxima página">
+                                        <i class="fa fa-angle-right"></i>
+                                    </a>
+                                    de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
+                            </div>
+                        </div>                            
+                        <!-- FIM PAGINAÇÃO -->
+                    </div>
+                    
                     <!-- ANO -->
                     <div class="row">
                         <div class="col-sm-4"></div>
@@ -294,8 +339,7 @@
                                                      {{movimentacao.nrDocumento}}
                                                 </td>
                                                 <!-- VALOR -->
-                                                <td style="text-align:center"
-                                                    ng-init="incrementaValorTotalExtrato(movimentacao.vlMovimento)">
+                                                <td style="text-align:center">
                                                     <span ng-class="{'statusPositivoValorExtrato' : movimentacao.vlMovimento >= 0.0, 'statusNegativoValorExtrato' : movimentacao.vlMovimento < 0.0}"
                                                           style="width:100%; min-width: 100%">
                                                         {{movimentacao.vlMovimento | currency:'R$'}}
@@ -354,6 +398,40 @@
                         </div>
                     </div>
                     <!-- FIM CONTEUDO -->
+                    
+                    <!-- RODAPÉ : Exibição dos resultados e paginação -->
+                    <div class="row">
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class="dataTables_info" role="status" aria-live="polite">
+                                <strong>Exibindo os registros {{filtro.faixa_registros}}</strong>
+                            </div>
+                        </div>
+                        <!--PAGINAÇÃO-RODAPÉ-->
+                        <div class="col-xs-4 col-sm-4 col-md-3">
+                            <div class="pagination-panel centralizarPaginacao"> Página 
+                                <a href="javascript:;" ng-click="retrocedePagina()"
+                                   class="btn btn-sm default prev" 
+                                   ng-class="{disabled: filtro.pagina <= 1}" 
+                                   title="Página anterior">
+                                        <i class="fa fa-angle-left"></i>
+                                </a>
+                                <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                                       maxlength="4" style="text-align:center; margin: 0 5px;"
+                                       ng-model="paginaInformada" valid-integer-number
+                                       ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                                       ng-blur="atualizaPaginaDigitada()">
+                                    <a href="javascript:;" ng-click="avancaPagina()"
+                                       class="btn btn-sm default next"
+                                       ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
+                                       title="Próxima página">
+                                        <i class="fa fa-angle-right"></i>
+                                    </a>
+                                    de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
+                            </div>
+                        </div>
+                        <!-- FIM PAGINAÇÃO -->
+                    </div>
+                    <!-- FIM RODAPÉ -->  
                 </div>
                 <!-- FIM PORTLET BODY -->
             </div> 

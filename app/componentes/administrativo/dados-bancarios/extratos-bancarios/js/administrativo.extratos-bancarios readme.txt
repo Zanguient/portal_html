@@ -74,6 +74,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				conciliado : bool
 			}
 		  ]
+	          obtém valor total através de "Totais" > "valor"
 		  
      - PATCH: upload do extrato através do arquivo ofx. Envia como filtro o idContaCorrente (código)
 			  Recebe como retorno
