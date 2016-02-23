@@ -280,6 +280,7 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
     $scope.alterouConta = function(progressemexecucao){
         // Set para o ano e mês corrente 
         $scope.filtro.ano = dataAtual.getFullYear(); 
+        $scope.atualizaAnoDigitado();
         $scope.filtro.mes = dataAtual.getMonth();
         $scope.setTab($scope.filtro.mes + 1);
         ajustaTabs();
@@ -478,6 +479,7 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
                     if(data && data !== null){
                         if(data.mes > 0 && data.ano > 0){
                             $scope.filtro.ano = data.ano;
+                            $scope.atualizaAnoDigitado();
                             $scope.filtro.mes = data.mes - 1;
                             $scope.tab = data.mes;
                             ajustaTabs();
@@ -553,6 +555,22 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
                 $scope.totais.movimentacao = dados.TotalDeRegistros;
                 $scope.extrato = dados.Registros;
                 $scope.totais.extrato = dados.Totais.valor;
+            
+                // Set valores de exibição
+                $scope.filtro.total_registros = dados.TotalDeRegistros;
+                $scope.filtro.total_paginas = Math.ceil($scope.filtro.total_registros / $scope.filtro.itens_pagina);
+                if($scope.extrato.length === 0) $scope.filtro.faixa_registros = '0-0';
+                else{
+                    var registroInicial = ($scope.filtro.pagina - 1)*$scope.filtro.itens_pagina + 1;
+                    var registroFinal = registroInicial - 1 + $scope.filtro.itens_pagina;
+                    if(registroFinal > $scope.filtro.total_registros) registroFinal = $scope.filtro.total_registros;
+                    $scope.filtro.faixa_registros =  registroInicial + '-' + registroFinal;
+                }
+
+                // Verifica se a página atual é maior que o total de páginas
+                if($scope.filtro.pagina > $scope.filtro.total_paginas)
+                    setPagina(1); // volta para a primeira página e refaz a busca
+            
                 $scope.buscandoExtrato = false;
                 $scope.hideProgress(divPortletBodyFiltrosPos);
                 $scope.hideProgress(divPortletBodyExtratosPos);

@@ -86,9 +86,12 @@ angular.module("card-services-antecipacao-simulacao", [])
         }); 
         $scope.filtro.dtCorte.setMonth($scope.filtro.dtCorte.getMonth() + 1);
         // Acessou a tela
-        //$scope.$emit("acessouTela");
-        $scope.exibeTela = true;
-        buscaContas();
+        $scope.$emit("acessouTela");
+        //$scope.exibeTela = true;
+        //buscaContas();
+        
+        // Mensagem informativa
+        $scope.showAlert('Simulação disponível para banco BRADESCO. Em breve será disponibilizado para outros bancos.', true, 'info', true, false, 0, 'warning');
     };                                           
                                                 
                                             
