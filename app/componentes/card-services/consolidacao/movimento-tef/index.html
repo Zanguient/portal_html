@@ -183,47 +183,57 @@
                                        popover="É necessário selecionar uma adquirente"
                                        popover-trigger="mouseenter"></i>
                                 </td-->
-															<!-- NSU -->
-															<td>
-																<input type="text" class="form-control" 
-																			 ng-model="filtro.nsu"/>
-																<i class="fa fa-question-circle"
-																	 ng-show="!usuariologado.grupoempresa"
-																	 popover-placement="bottom"
-																	 popover="É necessário selecionar uma empresa"
-																	 popover-trigger="mouseenter">
-																</i>
-															</td>
-															<!-- VALOR -->
-															<td>
-																<input type="text" class="form-control" 
-																			 ng-model="filtro.valor"
-																			 input-money
-																			 autocomplete=off/>
-																<i class="fa fa-question-circle"
-																	 ng-show="!usuariologado.grupoempresa"
-																	 popover-placement="bottom"
-																	 popover="É necessário selecionar uma empresa"
-																	 popover-trigger="mouseenter">
-																</i>
-															</td>
-                                <!-- AÇÕES -->
-															<td rowspan="1" colspan="1" style="text-align:center">
-																<div class="margin-bottom-5">
-																		<!-- BOTÃO BUSCAR -->
-																		<button class="btn btn-sm red filter-submit margin-bottom" 
-																						ng-click="buscaRecebimentoTEF()">
-																				<i class="fa fa-search"></i> 
-																				Buscar
-																		</button>
-																</div>
-																<!-- BOTÃO LIMPAR -->
-																<button class="btn btn-sm grey filter-cancel"
-																				ng-click="limpaFiltros()">
-																		<i class="fa fa-times"></i> 
-																		Limpar
-																</button>
-															</td>
+                                <!-- NSU -->
+                                <td style="text-align: center">
+                                    <input type="text" class="form-control" 
+                                           ng-model="filtro.nsu"/>
+                                    <!--i class="fa fa-question-circle"
+                                         ng-show="!usuariologado.grupoempresa"
+                                         popover-placement="bottom"
+                                         popover="É necessário selecionar uma empresa"
+                                         popover-trigger="mouseenter">
+                                    </i-->
+                                    <div class="row" style="margin-top:10px;"
+                                         ng-class="{'element-hidden' : !filtro.nsu || filtro.nsu === null}">
+                                        <div class="col-sm-4 col-md-4" style="margin-right: -15px;">
+                                            <checkbox normal ng-model="filtro.consideraPeriodo">
+                                            </checkbox>
+                                        </div>
+                                        <div class="col-sm-8 col-md-8" style="text-align:left;">
+                                            <label>Considerar período informado</label>
+                                        </div>
+                                    </div>
+                                </td>
+                                <!-- VALOR -->
+                                <td>
+                                    <input type="text" class="form-control" 
+                                                 ng-model="filtro.valor"
+                                                 input-money
+                                                 autocomplete=off/>
+                                    <i class="fa fa-question-circle"
+                                         ng-show="!usuariologado.grupoempresa"
+                                         popover-placement="bottom"
+                                         popover="É necessário selecionar uma empresa"
+                                         popover-trigger="mouseenter">
+                                    </i>
+                                </td>
+    <!-- AÇÕES -->
+                                <td rowspan="1" colspan="1" style="text-align:center">
+                                    <div class="margin-bottom-5">
+                                            <!-- BOTÃO BUSCAR -->
+                                            <button class="btn btn-sm red filter-submit margin-bottom" 
+                                                            ng-click="buscaRecebimentoTEF()">
+                                                    <i class="fa fa-search"></i> 
+                                                    Buscar
+                                            </button>
+                                    </div>
+                                    <!-- BOTÃO LIMPAR -->
+                                    <button class="btn btn-sm grey filter-cancel"
+                                                    ng-click="limpaFiltros()">
+                                            <i class="fa fa-times"></i> 
+                                            Limpar
+                                    </button>
+                                </td>
                             </tr>
                         </thead>
                     </table>
