@@ -57,7 +57,8 @@ Não é necessário nenhum outro módulo externo.
 				}
 	- PUT : altera os dados de uma filial
 				{ 
-				  nu_cnpj: string, (obrigatório!)
+				  novo_cnpj : string, (obrigatório!) (cnpj atualizado)
+				  nu_cnpj: string, (obrigatório!)  (cnpj que estava registrado)
 				  ds_fantasia: string,
 				  ds_razaoSocial: string (ou null),
 				  ds_endereco: string (ou null),
@@ -67,7 +68,6 @@ Não é necessário nenhum outro módulo externo.
 				  nu_telefone: string[20] (ou null),
 				  ds_bairro: string (ou null),
 				  ds_email: string,
-				  dt_cadastro: date,
 				  fl_ativo: boolean, (obrigatório!)
 				  id_grupo: int, (obrigatório!)
 				  filial: string,

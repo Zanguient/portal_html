@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.1 - 24/02/2016
+ *  - Alteração do CNPJ
+ *
  *  Versão 1.0 - 03/09/2015
  *
  */
@@ -437,6 +440,8 @@ angular.module("administrativo-filiais-cadastro", [])
       */
     var houveAlteracoes = function(){
         if($scope.old === null) return false;
+        if($scope.filial.nu_cnpj !== $scope.old.nu_cnpj) 
+            return true;
         if($scope.filial.ds_fantasia !== $scope.old.ds_fantasia) 
             return true;
         if($scope.filial.ds_email.toLowerCase() !== $scope.old.ds_email.toLowerCase()) 
@@ -482,7 +487,8 @@ angular.module("administrativo-filiais-cadastro", [])
        }
        
         // Obrigatórios
-        var jsonFilial = { nu_cnpj: $scope.filial.nu_cnpj,
+        var jsonFilial = { novo_cnpj : $scope.filial.nu_cnpj,
+                           nu_cnpj: $scope.old.nu_cnpj,
                            id_grupo: $scope.usuariologado.grupoempresa.id_grupo,
                            fl_ativo : $scope.old.fl_ativo
                          };
