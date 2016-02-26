@@ -388,7 +388,7 @@
         
        <!-- MODAL ALTERAR DATA DE RECEBIMENTO -->
        <div class="modal fade bs-modal-sm modal-input" 
-            id="modalDataRecebimento" aria-hidden="true">
+            id="modalDataRecebimento" aria-hidden="true" print-remove>
            <div class="modal-dialog modal-sm" style="width:400px">
                <div class="modal-content">
                    <div class="modal-header">
@@ -449,7 +449,7 @@
 					<!-- FIM DETALHES AGRUPAMENTO PADRAO IMPRESSAO -->
            <!-- DETALHES 
            <div class="row" print-only  print-section print-remove print-if="modalDetalhesShowing">-->
-					<div print-only print-section print-if="modalDetalhesShowing"
+					<!--<div print-only print-section print-if="modalDetalhesShowing"
 							 style="background: white; width: 29.7cm; height: 21cm; margin: 5cm; padding: 10mm 15mm 10mm 15mm;
 											margin-bottom: 0.5cm; margin-top: 0.5cm; box-shadow: 0; size: auto">
 						<table style="border: 1px solid #eee; margin-top: {{margin}}cm;">							
@@ -458,7 +458,7 @@
 								<td style="border: 1px solid #eee;" rowspan="3" width="60%" align="center" colspan="5">
 									<img ng-src="http://www.atoscapital.com.br/portal/img/AtosCapital.jpg" title="Atos Capital" class="logo-default" width="320px" height="100px" align="center">
 									<!-- title="{{empresa.nome}}" -->
-								</td>
+								<!--</td>
 								<td style="border: 1px solid #eee;" width="40%" align="center" height="40px" colspan="6">
 									<span class="empresa">{{usuariologado.grupoempresa.ds_nome | uppercase}}</span>
 								</td>
@@ -517,7 +517,7 @@
 						 </tr>
 					 </tbody>
 				 </table>
-						<div ng-if="1>2">
+						<!--<div ng-if="1>2">
 							<div style="text-align: center">
 							 <h4 class="linhaTotalRelatorios">Detalhes do agrupamento</h4>
 						 </div>
@@ -578,7 +578,7 @@
 								 </div>
 						 </div>
 					</div>
-					</div>           
+					</div>-->      
 					<div class="row" print-section print-if="!modalDetalhesShowing">
                 <!--EXIBIÇÃO-->
                 <div class="col-xs-4 col-sm-4 col-md-4">
@@ -887,7 +887,7 @@
                     </div>
                     
                     <!--BOTÕES-->
-                    <div class="col-md-3 col-md-offset-1 btnConciliacaoBancariaTef" style="padding-left:10%" print-hide>
+                    <div class="col-md-3 col-md-offset-1 btnConciliacaoBancariaTef" style="padding-left:10%" print-remove>
                         <div class="row" ng-init="incrementaTotalPreConciliados(dado.Conciliado === 2); incrementaTotalConciliados(dado.Conciliado === 1)">
                             <div class="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-4"
                                  title="{{dado.Conciliado == 1 ? 'Desfazer conciliação' : dado.Conciliado === 2 && !associacaoManual.selecionandoRecebimentos ? 'Conciliar' : dado.Conciliado === 3 && dado.ExtratoBancario === null && !associacaoManual.selecionandoRecebimentos ? 'Alterar data de recebimento' : dado.Conciliado === 3 && dado.RecebimentosParcela === null && !associacaoManual.selecionandoRecebimentos && (!associacaoManual.extrato || associacaoManual.extrato === null) ? 'Conciliar manualmente' : dado.Conciliado === 3 && dado.RecebimentosParcela === null && associacaoManual.selecionandoRecebimentos && isExtratoSelecionado(dado) ? 'Cancelar' : (dado.Conciliado === 2 || (dado.Conciliado === 3 && dado.ExtratoBancario === null)) && associacaoManual.selecionandoRecebimentos && isMesmaDataEAdquirenteExtratoSelecionado(dado) && dado.selecionado ? 'Conciliar com movimentação bancária selecionada' : ''}}">
