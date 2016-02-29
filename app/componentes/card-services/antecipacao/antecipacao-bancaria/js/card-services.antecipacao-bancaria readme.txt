@@ -93,6 +93,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				taxaIOF : double,
 				taxaIOFFixo : double,
 				cdContaCorrente : int,
+				cdBanco : string,
 				antecipacoes : [{ idAntecipacaoBancariaDetalhe : int,
 								  dtVencimento : datetime,
 								  vlAntecipacao : double,
@@ -100,6 +101,8 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 								  tbBandeira : null ou { cdBandeira : int,
 													     dsBandeira : string 
 													   },
+								  valorDisponivelCS : double,
+								  valorAntecipadoCS : double
 								}]
 				
 				

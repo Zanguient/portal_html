@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.3 - 26/02/2016
+ *  - Validação dos dados quando existir uma adquirente inválida na listagem
+ *
  *  Versão 1.0.2 - 22/10/2015
  *  - Filial centralizadora
  *  - Estabelecimento para consulta
@@ -458,8 +461,8 @@ angular.module("administrativo-dados-acesso", [])
            $scope.showModalAlerta('Preencha uma senha com no mínimo 3 caracteres!');
            return false;
        }
-       if(typeof old === 'undefined' || old.operadora.desOperadora.toUpperCase() !== d.operadora.desOperadora.toUpperCase()){ 
-           if($filter('filter')($scope.dadosAcesso, function(d){return d.operadora.desOperadora.toUpperCase() === $scope.cadastro.adquirente.descricao.toUpperCase();}).length > 0){
+       if(typeof old === 'undefined' || !old.operadora || old.operadora === null || !old.operadora.desOperadora || old.operadora.desOperadora === null || old.operadora.desOperadora.toUpperCase() !== $scope.cadastro.adquirente.descricao.toUpperCase()){ 
+           if($filter('filter')($scope.dadosAcesso, function(d){return d.operadora && d.operadora !== null && d.operadora.desOperadora && d.operadora.desOperadora !== null && d.operadora.desOperadora.toUpperCase() === $scope.cadastro.adquirente.descricao.toUpperCase();}).length > 0){
                $scope.showModalAlerta("Já consta um registro para a adquirente '" + $scope.cadastro.adquirente.descricao + "'!");
                return false;
            }
@@ -483,7 +486,7 @@ angular.module("administrativo-dados-acesso", [])
            estabelecimento : $scope.cadastro.estabelecimento ? $scope.cadastro.estabelecimento : null, 
            nrCNPJCentralizadora : $scope.cadastro.centralizadora && $scope.cadastro.centralizadora !== null ? $scope.cadastro.centralizadora.nu_cnpj : null,
            cdEstabelecimentoConsulta : $scope.cadastro.estabelecimentoConsulta ? $scope.cadastro.estabelecimentoConsulta : null, 
-           operadora : { nmOperadora : $scope.cadastro.adquirente.nome/*descricao*/ }
+           operadora : { nmOperadora : $scope.cadastro.adquirente.nome }
        };
        //console.log(jsonDadoAcesso);
        /*
@@ -520,7 +523,7 @@ angular.module("administrativo-dados-acesso", [])
         $scope.alteracao.estabelecimento = dadoacesso.estabelecimento && dadoacesso.estabelecimento !== null ? dadoacesso.estabelecimento : '';
         $scope.alteracao.senha = dadoacesso.senha;
         $scope.alteracao.estabelecimentoConsulta = dadoacesso.cdEstabelecimentoConsulta && dadoacesso.cdEstabelecimentoConsulta !== null ? dadoacesso.cdEstabelecimentoConsulta : '';
-        console.log(dadoacesso);
+        //console.log(dadoacesso);
         $scope.alteracao.centralizadora = dadoacesso.empresaCentralizadora && dadoacesso.empresaCentralizadora !== null ? $filter('filter')($scope.filiais, function(f){ return f.nu_cnpj === dadoacesso.empresaCentralizadora.nu_cnpj})[0] : null;
         // Exibe na linha
         $scope.alterando = true;       

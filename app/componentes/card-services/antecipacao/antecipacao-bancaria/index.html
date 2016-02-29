@@ -749,6 +749,18 @@
                                                             Excluir
                                                         </a>
                                                     </li> 
+                                                    <li>
+                                                        <a href="javascript:;" 
+                                                           ng-click="anteciparParcelas(antecipacao)">
+                                                            Antecipar parcelas
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;" 
+                                                           ng-click="anteciparParcelas(antecipacao, null, true)">
+                                                            Desfazer antecipações
+                                                        </a>
+                                                    </li> 
                                                     
                                                 </ul>
                                             </div>
@@ -764,15 +776,15 @@
                                                 <thead>
                                                     <tr role="row">
                                                         <th rowspan="1" colspan="1" 
-                                                            style="width: 15%">
-                                                            Data Vencimento
+                                                            style="width: 10%">
+                                                            Vencimento
                                                         </th>
                                                         <th rowspan="1" colspan="1" 
-                                                            style="width: 30%">
+                                                            ng-style="informaValoresCS(antecipacao) ? {'width': '10%'} : {'width': '35%'}">
                                                             Bandeira
                                                         </th>
                                                         <th rowspan="1" colspan="1"
-                                                            style="width: 15%">
+                                                            ng-style="informaValoresCS(antecipacao) ? {'width': '10%'} : {'width': '15%'}">
                                                             Valor Bruto
                                                         </th>
                                                         <th rowspan="1" colspan="1"
@@ -788,11 +800,24 @@
                                                             Juros
                                                         </th>
                                                         
-                                                        <th tabindex="3" 
-                                                            rowspan="1" colspan="1" 
-                                                            style="width: 15%">
+                                                        <th rowspan="1" colspan="1" 
+                                                            ng-style="informaValoresCS(antecipacao) ? {'width': '10%'} : {'width': '15%'}">
                                                             Valor Líquido
-                                                        </th>    
+                                                        </th> 
+                                                        
+                                                        <!-- VALORES DE PARCELAS -->
+                                                        <th style="13%"
+                                                            ng-show="informaValoresCS(antecipacao)">
+                                                            Valor Disponível CS
+                                                        </th>
+                                                        <th style="12%"
+                                                            ng-show="informaValoresCS(antecipacao)">
+                                                            Valor Antecipado CS
+                                                        </th>
+                                                        <th style="10%"
+                                                            ng-show="informaValoresCS(antecipacao)">
+                                                            Ações
+                                                        </th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -823,6 +848,38 @@
                                                         <!-- VALOR LÍQUIDO -->
                                                         <td>
                                                             {{vencimento.vlAntecipacaoLiquida | currency:'R$'}}
+                                                        </td>
+                                                        <!-- PARCELA -->
+                                                        <td ng-show="informaValoresCS(antecipacao)">
+                                                            {{vencimento.vlDisponivelCS | currency:'R$'}}
+                                                        </td>
+                                                        <td ng-show="informaValoresCS(antecipacao)">
+                                                            {{vencimento.vlAntecipadoCS | currency:'R$'}}
+                                                        </td>
+                                                        <td ng-show="informaValoresCS(antecipacao)">
+                                                            <div class="btn-group" dropdown dropdown-append-to-body>
+                                                                <a class="btn btn-default btn-circle" 
+                                                                   href="javascript:;" dropdown-toggle>
+                                                                    <i class="fa fa-pencil"></i>
+                                                                     Ações 
+                                                                    <i class="fa fa-angle-down"></i>
+                                                                </a>
+                                                                <ul class="dropdown-menu dropDownAtos">
+                                                                    <li>
+                                                                        <a href="javascript:;" 
+                                                                           ng-click="anteciparParcelas(antecipacao, vencimento)">
+                                                                            Antecipar parcelas
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="javascript:;" 
+                                                                           ng-click="anteciparParcelas(antecipacao, vencimento, true)">
+                                                                            Desfazer antecipações
+                                                                        </a>
+                                                                    </li> 
+
+                                                                </ul>
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 </tbody>

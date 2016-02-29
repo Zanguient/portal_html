@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.4 - 29/02/2016
+ *  - AJUSTES E TARIFAS
+ *
  *  Versão 1.0.3 - 02/02/2016
  *  - Não inicia automaticamente a conexão
  *
@@ -561,12 +564,12 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
                      else pagosantecipacao.flSucesso = tbLogCarga.flStatusPagosAntecipacao;
                      // // Valores pagos -> crédito
                      var pagoscredito = false;
-					 try{ pagoscredito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'CRÉDITO' || d.dsModalidade === 'CRÉDITO/DÉBITO' || d.dsModalidade === 'ARQUIVOS'})[0]; }catch(ex){};
+					 try{ pagoscredito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'CRÉDITO' || d.dsModalidade === 'CRÉDITO/DÉBITO' || d.dsModalidade === 'ARQUIVOS' || d.dsModalidade === 'AJUSTES E TARIFAS'})[0]; }catch(ex){};
                      if(!pagoscredito) pagoscredito = {};
                      else pagoscredito.flSucesso = tbLogCarga.flStatusPagosCredito;
                      // Valores pagos -> débito
                      var pagosdebito = false;
-					 try{ pagosdebito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'CRÉDITO/DÉBITO' || d.dsModalidade === 'ARQUIVOS'})[0]; }catch(ex){};
+					 try{ pagosdebito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'CRÉDITO/DÉBITO' || d.dsModalidade === 'ARQUIVOS' || d.dsModalidade === 'AJUSTES E TARIFAS'})[0]; }catch(ex){};
                      if(!pagosdebito) pagosdebito = {};
                      else pagosdebito.flSucesso = tbLogCarga.flStatusPagosDebito;
                      // Lançamentos futuros
@@ -672,11 +675,11 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
                          if(pagosantecipacao) pagosantecipacao.flSucesso = tbLogCarga.flStatusPagosAntecipacao;
                          // // Valores pagos -> crédito
                          var pagoscredito = false;
-                         try{ pagoscredito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'CRÉDITO' || d.dsModalidade === 'CRÉDITO/DÉBITO' || d.dsModalidade === 'ARQUIVOS'})[0]; }catch(ex){};
+                         try{ pagoscredito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'CRÉDITO' || d.dsModalidade === 'CRÉDITO/DÉBITO' || d.dsModalidade === 'ARQUIVOS' || d.dsModalidade === 'AJUSTES E TARIFAS'})[0]; }catch(ex){};
                          if(pagoscredito) pagoscredito.flSucesso = tbLogCarga.flStatusPagosCredito;
                          // Valores pagos -> débito
                          var pagosdebito = false;
-                         try{ pagosdebito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'CRÉDITO/DÉBITO' || d.dsModalidade === 'ARQUIVOS'})[0]; }catch(ex){};
+                         try{ pagosdebito = $filter('filter')(tbLogCarga.tbLogCargasDetalheMonitor, function(d){return d.dsModalidade === 'CRÉDITO/DÉBITO' || d.dsModalidade === 'ARQUIVOS' || d.dsModalidade === 'AJUSTES E TARIFAS'})[0]; }catch(ex){};
                          if(pagosdebito) pagosdebito.flSucesso = tbLogCarga.flStatusPagosDebito;
                          // Lançamentos futuros
                          var areceber = false;

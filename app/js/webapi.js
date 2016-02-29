@@ -715,6 +715,7 @@ angular.module('webapi', ['utils'])
         relatoriovendas : $autenticacao.getUrlBase() + '/card/relatoriovendas/',
         tbadquirente : $autenticacao.getUrlBase() + '/card/tbadquirente/',
         tbantecipacaobancaria : $autenticacao.getUrlBase() + '/card/tbantecipacaobancaria/',
+        tbantecipacaobancariadetalhe : $autenticacao.getUrlBase() + '/card/tbantecipacaobancariadetalhe/',
         tbbancoparametro : $autenticacao.getUrlBase() + '/card/tbbancoparametro/',
         tbbandeira : $autenticacao.getUrlBase() + '/card/tbbandeira/',
         tbcontacorrente: $autenticacao.getUrlBase() + '/card/tbcontacorrente/',  
