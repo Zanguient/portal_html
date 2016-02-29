@@ -1525,4 +1525,55 @@ angular.module("card-services-conciliacao-bancaria", [])
 				$scope.margin = -27.5;
 			}
 		}
+		
+		$scope.imprimir = function(){
+				
+			/*			
+			e = Nome da empresa
+			s = Nome da tela
+			n = Número de níveis
+			cl = Número de colunas
+			t = Token
+			c = CNPJ
+			f = Filial
+			d = Data		
+			a = Adquirente
+			tp = Tipo
+			*/
+			
+			// Data
+			$scope.d = "Data não considerada";
+			$scope.statusData = "1";
+			if($scope.filtro.consideraPeriodo){
+           $scope.d = $scope.getFiltroData($scope.filtro.datamin);
+           if($scope.filtro.datamax) {
+						 $scope.d = $scope.d + '|' + $scope.getFiltroData($scope.filtro.datamax);
+						 $scope.statusData = "2";
+					 }
+			}
+        
+       // Conta
+			$scope.cn = "todos";
+       if($scope.filtro.conta && $scope.filtro.conta !== null) $scope.cn = $scope.filtro.conta.cdContaCorrente;
+        
+       // Filial
+			$scope.c = "todos";
+			$scope.f = "todos";
+       if($scope.filtro.filial && $scope.filtro.filial !== null){
+				 $scope.c = $scope.filtro.filial.nu_cnpj;
+				 $scope.f = $scope.filtro.filial.ds_fantasia;
+			 }
+			
+       // Adquirente
+			$scope.a = "todos";
+       if($scope.filtro.adquirente && $scope.filtro.adquirente !== null) $scope.a = $scope.filtro.adquirente.cdAdquirente;
+        
+       // Tipo
+			$scope.tp = "todos";
+       if($scope.filtro.tipo && $scope.filtro.tipo !== null) $scope.tp = $scope.filtro.tipo.id;
+			
+			$window.open('views/print#?e=' + $scope.usuariologado.grupoempresa.ds_nome + '&s=' + "Detalhes Conciliação Bancária" + '&n='+ 1
+									 +'&st='+$scope.statusData+'&cl='+8+'&t='+$scope.token+'&cn='+$scope.cn+'&c='+$scope.c+'&tp='+$scope.tp+
+									 '&a='+$scope.a+'&f='+$scope.f+'&d='+$scope.d, '_blank');
+		}
 }]);

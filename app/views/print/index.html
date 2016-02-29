@@ -518,6 +518,74 @@
 					</tbody>
 				</table>
 			</page>
+			<!-- DETALHES CONCILIAÇÃO BANCÁRIA -->
+			<page ng-if="nomeRelatorio == 'Detalhes Conciliação Bancária'">
+			<table>
+				<thead>
+					<tr>
+						<td rowspan="3" width="60%" colspan="5">
+							<img ng-src="http://www.atoscapital.com.br/portal/img/AtosCapital.jpg" title="Atos Capital" class="logo-default"
+									 width="320px" height="100px" align="center">
+							<!-- title="{{empresa.nome}}" -->
+						</td>
+						<td width="40%" height="40px" colspan="6">
+							<span class="empresa">{{nomeEmpresa | uppercase}}</span>
+						</td>
+					</tr>
+					<tr>
+						<td width="40%" height="40px" colspan="6">
+							<span class="empresa">{{nomeFilial | uppercase}}</span>
+						</td>
+					</tr>
+					<tr>
+						<td width="40%" height="40px" colspan="6">
+							<span class="empresa">{{data | uppercase}}</span>
+						</td>
+					</tr>
+					<tr>
+						<td width="100%" colspan="8">
+							{{nomeRelatorio | uppercase}}
+						</td>
+					</tr>
+					<tr>
+						<td width="{{100/8}}%">Filial</td>
+						<td width="{{100/8}}%">Bandeira</td>
+						<td width="{{100/8}}%">Venda</td>
+						<td width="{{100/8}}%">Lote</td>
+						<td width="{{100/8}}%">NSU</td>
+						<td width="{{100/8}}%">Data Prevista</td>
+						<td width="{{100/8}}%">Valor</td>
+						<td width="{{100/8}}%">Baixado</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="item in relatorio">
+						<td width="{{100/8}}%">
+							{{item.RecebimentosParcela.Filial | uppercase}}
+						</td>
+						<td width="{{100/8}}%">
+							{{item.RecebimentosParcela.Bandeira | uppercase}}
+						</td>
+						<td width="{{100/8}}%" ng-bind="getDataTimeString(item.RecebimentosParcela.DataVenda)" 
+								ng-show="item.RecebimentosParcela.NumParcela >= 0">
+						</td>
+						<td width="{{100/8}}%" ng-bind="item.RecebimentosParcela.Lote > 0 ? item.Lote : ''"></td>
+						<td width="{{100/8}}%" >
+							{{item.RecebimentosParcela.Documento | uppercase}}
+						</td>
+						<td width="{{100/8}}%" ng-bind="getDataString(item.RecebimentosParcela.DataPrevista)"></td>
+						<td width="{{100/8}}%">
+							{{item.RecebimentosParcela.Valor | currency:'R$'}}
+						</td>
+						<td width="{{100/8}}%">
+							<i class="fa fa-check" ng-show="item.RecebimentosParcela.Baixado" 
+								 style="color: green; padding-left: 5px" 
+								 title="Título baixado"></i>
+						</td>
+					</tr>
+				</tbody>
+				</table>
+			</page>
 		</div>
 		<!-- BEGIN JAVASCRIPTS (Load javascripts at bottom, this will reduce page load time) -->
 		<!-- JQUERY -->
@@ -545,9 +613,7 @@
 		<script src="../../js/webapi.js?v=1.0" type="text/javascript"></script>
 		<script src="js/card-services.impressao.relatorios.js?v=1.0" type="text/javascript"></script>
 		<!-- END ANGULAR SCRIPTS -->
-		<!-- END JAVASCRIPTS -->    
-		
+		<!-- END JAVASCRIPTS -->    		
 	</body>
-	<!-- END BODY -->
-	
+	<!-- END BODY -->	
 </html>
