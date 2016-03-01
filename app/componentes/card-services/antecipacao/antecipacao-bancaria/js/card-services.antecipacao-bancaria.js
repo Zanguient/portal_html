@@ -1421,7 +1421,7 @@ angular.module("card-services-antecipacao-bancaria", [])
         $webapi.update($apis.getUrl($apis.card.tbantecipacaobancariadetalhe, undefined,
                        {id: 'token', valor: $scope.token}), json)
             .then(function(dados){
-                    $scope.showAlert('Parcela foram antecipadas com sucesso!', true, 'success', true);
+                    $scope.showAlert('Operação realizada com sucesso!', true, 'success', true);
 					// Atualiza...
                     buscaAntecipacoes(true);
                     //$scope.hideProgress(divPortletBodyAntecipacoesPos);

@@ -792,11 +792,11 @@
                                                             IOF (a.d.)
                                                         </th>
                                                         <th rowspan="1" colspan="1"
-                                                            style="width: 7%;">
+                                                            ng-style="informaValoresCS(antecipacao) ? {'width': '5%'} : {'width': '7%'}">
                                                             IOF 
                                                         </th>
                                                         <th rowspan="1" colspan="1"
-                                                            style="width: 10%;">
+                                                            ng-style="informaValoresCS(antecipacao) ? {'width': '7%'} : {'width': '10%'}">
                                                             Juros
                                                         </th>
                                                         
@@ -813,6 +813,10 @@
                                                         <th style="12%"
                                                             ng-show="informaValoresCS(antecipacao)">
                                                             Valor Antecipado CS
+                                                        </th>
+                                                        <th style="5%"
+                                                            ng-show="informaValoresCS(antecipacao)">
+                                                            Saldo
                                                         </th>
                                                         <th style="10%"
                                                             ng-show="informaValoresCS(antecipacao)">
@@ -855,6 +859,9 @@
                                                         </td>
                                                         <td ng-show="informaValoresCS(antecipacao)">
                                                             {{vencimento.vlAntecipadoCS | currency:'R$'}}
+                                                        </td>
+                                                        <td ng-show="informaValoresCS(antecipacao)">
+                                                            {{vencimento.saldoCS | currency:'R$'}}
                                                         </td>
                                                         <td ng-show="informaValoresCS(antecipacao)">
                                                             <div class="btn-group" dropdown dropdown-append-to-body>
