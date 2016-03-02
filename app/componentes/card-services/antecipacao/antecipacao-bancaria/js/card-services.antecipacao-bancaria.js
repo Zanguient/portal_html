@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.3 - 26/02/2016
+ *  - Processamento das parcelas
+ *
  *  Versão 1.0.2 - 22/02/2016
  *  - Juros e IOF
  *
@@ -1374,5 +1377,62 @@ angular.module("card-services-antecipacao-bancaria", [])
                   });
     }
     
+    
+    
+    
+    
+    // ANTECIPAÇÃO QUE AJUSTA PARCELAS DO CARD SERVICES
+    $scope.informaValoresCS = function(antecipacao){
+        return $scope.PERMISSAO_ADMINISTRATIVO && // somente quem tem permissão administrativa!
+               antecipacao && antecipacao !== null && antecipacao.cdBanco === '047'; // BANESE
+    }
+    
+    $scope.anteciparParcelas = function(antecipacao, vencimento, desfazerAntecipacao){
+        
+        if(!$scope.PERMISSAO_ADMINISTRATIVO){
+            $scope.showAlert('Você não possui permissão para realizar essa operação!'); 
+            return;
+        }
+        
+        var ids = [];
+        if(vencimento && vencimento !== null){
+            // Somente o vencimento
+            ids.push(vencimento.idAntecipacaoBancariaDetalhe);
+        }else{
+            for(var k = 0; k < antecipacao.antecipacoes.length; k++)
+                ids.push(antecipacao.antecipacoes[k].idAntecipacaoBancariaDetalhe);
+        }
+        
+        var json = { desfazerAntecipacoes : desfazerAntecipacao ? true : false,
+                     idsAntecipacaoBancariaDetalhe : ids
+                   };
+        
+        var text = desfazerAntecipacao ? "Confirma desfazer as antecipações das parcelas?" :
+                                         "Para que o processo seja efetivo, é necessário que todas as cargas (modalidade 'VENDAS'), de competência inferior a " + $scope.getDataString(antecipacao.dtAntecipacaoBancaria) + ", tenham sido carregadas corretamente. Confirma a antecipação das parcelas?";
+        
+        // Confirma
+		$scope.showModalConfirmacao('Confirmação', text, anteciparParcelas, json, 'Sim', 'Não');
+    }
+    
+    var anteciparParcelas = function(json){
+        $scope.showProgress(divPortletBodyAntecipacoesPos);
+        $scope.showProgress(divPortletBodyFiltrosPos);
+        
+        $webapi.update($apis.getUrl($apis.card.tbantecipacaobancariadetalhe, undefined,
+                       {id: 'token', valor: $scope.token}), json)
+            .then(function(dados){
+                    $scope.showAlert('Operação realizada com sucesso!', true, 'success', true);
+					// Atualiza...
+                    buscaAntecipacoes(true);
+                    //$scope.hideProgress(divPortletBodyAntecipacoesPos);
+                    //$scope.hideProgress(divPortletBodyFiltrosPos);
+                  },function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                     else $scope.showAlert('Houve uma falha ao realizar a antecipação das parcelas (' + failData.status + ')', true, 'danger', true); 
+                     $scope.hideProgress(divPortletBodyAntecipacoesPos);
+                     $scope.hideProgress(divPortletBodyFiltrosPos);
+                  });
+    }
     
 }]);
