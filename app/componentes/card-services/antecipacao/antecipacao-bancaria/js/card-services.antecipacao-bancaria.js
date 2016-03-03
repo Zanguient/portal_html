@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.4 - 03/03/2016
+ *  - Sem restrição para perfil da Atos
+ *
  *  Versão 1.0.3 - 26/02/2016
  *  - Processamento das parcelas
  *
@@ -1383,16 +1386,16 @@ angular.module("card-services-antecipacao-bancaria", [])
     
     // ANTECIPAÇÃO QUE AJUSTA PARCELAS DO CARD SERVICES
     $scope.informaValoresCS = function(antecipacao){
-        return $scope.PERMISSAO_ADMINISTRATIVO && // somente quem tem permissão administrativa!
+        return //$scope.PERMISSAO_ADMINISTRATIVO && // somente quem tem permissão administrativa!
                antecipacao && antecipacao !== null && antecipacao.cdBanco === '047'; // BANESE
     }
     
     $scope.anteciparParcelas = function(antecipacao, vencimento, desfazerAntecipacao){
         
-        if(!$scope.PERMISSAO_ADMINISTRATIVO){
+        /*if(!$scope.PERMISSAO_ADMINISTRATIVO){
             $scope.showAlert('Você não possui permissão para realizar essa operação!'); 
             return;
-        }
+        }*/
         
         var ids = [];
         if(vencimento && vencimento !== null){
