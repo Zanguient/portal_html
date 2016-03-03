@@ -560,22 +560,23 @@
 				</thead>
 				<tbody>
 					<tr ng-repeat="item in relatorio">
-						<td width="{{100/8}}%">
-							{{item.RecebimentosParcela.Filial | uppercase}}
+						<td width="{{100/8}}%" ng-bind="item.RecebimentosParcela.Filial">
+							<!--{{item.RecebimentosParcela.Id | uppercase}}-->
 						</td>
 						<td width="{{100/8}}%">
-							{{item.RecebimentosParcela.Bandeira | uppercase}}
+							{{item.RecebimentosParcela.Documento | uppercase}}
 						</td>
-						<td width="{{100/8}}%" ng-bind="getDataTimeString(item.RecebimentosParcela.DataVenda)" 
-								ng-show="item.RecebimentosParcela.NumParcela >= 0">
+						<!-- ng-bind="getDataTimeString(item.RecebimentosParcela.DataVenda)" -->
+						<td width="{{100/8}}%" ng-show="item.RecebimentosParcela.NumParcela >= 0">
 						</td>
 						<td width="{{100/8}}%" ng-bind="item.RecebimentosParcela.Lote > 0 ? item.Lote : ''"></td>
 						<td width="{{100/8}}%" >
-							{{item.RecebimentosParcela.Documento | uppercase}}
+							{{item.RecebimentosParcela.Filial | uppercase}}
 						</td>
-						<td width="{{100/8}}%" ng-bind="getDataString(item.RecebimentosParcela.DataPrevista)"></td>
+						<!--  ng-bind="getDataString(item.RecebimentosParcela.DataPrevista)" -->
+						<td width="{{100/8}}%"></td>
 						<td width="{{100/8}}%">
-							{{item.RecebimentosParcela.Valor | currency:'R$'}}
+							{{item.RecebimentosParcela.Bandeira | uppercase}}
 						</td>
 						<td width="{{100/8}}%">
 							<i class="fa fa-check" ng-show="item.RecebimentosParcela.Baixado" 
