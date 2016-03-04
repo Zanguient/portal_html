@@ -438,8 +438,7 @@
                     </a>
                     <ul class="dropdown-menu pull-right">
                         <li>
-                            <a href="javascript:;"
-                               print-btn>
+                            <a href="javascript:;" ng-click="imprimir()">
                             Imprimir</a>
                         </li>
                     </ul>
@@ -1647,9 +1646,9 @@
 						<div print-only print-section print-if="modalDetalhesShowing"
 							 style="background: white; width: 29.7cm; height: 21cm; margin: 5cm; padding: 10mm 15mm 10mm 15mm;
 											margin-bottom: 0.5cm; margin-top: 0.5cm; box-shadow: 0; size: auto">
-							<table style="border: 1px solid #eee; margin-top: {{margin}}cm;"> -->
+							<table style="border: 1px solid #eee; margin-top: {{margin}}cm;">  padding: 10px; style="margin-top: -1.6cm;"  print-table="modalDetalhes.grupo" -->
 	<page size="A8" ng-if="modalDetalhesShowing" print-section print-only>
-		<table print-table="modalDetalhes.grupo">
+		<table print-avoid-break style="margin-top: 0;">
 			<thead>
 				<tr>
 					<td rowspan="3" colspan="5">

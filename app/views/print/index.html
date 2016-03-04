@@ -518,74 +518,62 @@
 					</tbody>
 				</table>
 			</page>
-			<!-- DETALHES CONCILIAÇÃO BANCÁRIA -->
-			<page ng-if="nomeRelatorio == 'Detalhes Conciliação Bancária'">
-			<table>
-				<thead>
-					<tr>
-						<td rowspan="3" width="60%" colspan="5">
-							<img ng-src="http://www.atoscapital.com.br/portal/img/AtosCapital.jpg" title="Atos Capital" class="logo-default"
-									 width="320px" height="100px" align="center">
-							<!-- title="{{empresa.nome}}" -->
-						</td>
-						<td width="40%" height="40px" colspan="6">
-							<span class="empresa">{{nomeEmpresa | uppercase}}</span>
-						</td>
-					</tr>
-					<tr>
-						<td width="40%" height="40px" colspan="6">
-							<span class="empresa">{{nomeFilial | uppercase}}</span>
-						</td>
-					</tr>
-					<tr>
-						<td width="40%" height="40px" colspan="6">
-							<span class="empresa">{{data | uppercase}}</span>
-						</td>
-					</tr>
-					<tr>
-						<td width="100%" colspan="8">
-							{{nomeRelatorio | uppercase}}
-						</td>
-					</tr>
-					<tr>
-						<td width="{{100/8}}%">Filial</td>
-						<td width="{{100/8}}%">Bandeira</td>
-						<td width="{{100/8}}%">Venda</td>
-						<td width="{{100/8}}%">Lote</td>
-						<td width="{{100/8}}%">NSU</td>
-						<td width="{{100/8}}%">Data Prevista</td>
-						<td width="{{100/8}}%">Valor</td>
-						<td width="{{100/8}}%">Baixado</td>
-					</tr>
-				</thead>
-				<tbody>
-					<tr ng-repeat="item in relatorio">
-						<td width="{{100/8}}%" ng-bind="item.RecebimentosParcela.Filial">
-							<!--{{item.RecebimentosParcela.Id | uppercase}}-->
-						</td>
-						<td width="{{100/8}}%">
-							{{item.RecebimentosParcela.Documento | uppercase}}
-						</td>
-						<!-- ng-bind="getDataTimeString(item.RecebimentosParcela.DataVenda)" -->
-						<td width="{{100/8}}%" ng-show="item.RecebimentosParcela.NumParcela >= 0">
-						</td>
-						<td width="{{100/8}}%" ng-bind="item.RecebimentosParcela.Lote > 0 ? item.Lote : ''"></td>
-						<td width="{{100/8}}%" >
-							{{item.RecebimentosParcela.Filial | uppercase}}
-						</td>
-						<!--  ng-bind="getDataString(item.RecebimentosParcela.DataPrevista)" -->
-						<td width="{{100/8}}%"></td>
-						<td width="{{100/8}}%">
-							{{item.RecebimentosParcela.Bandeira | uppercase}}
-						</td>
-						<td width="{{100/8}}%">
-							<i class="fa fa-check" ng-show="item.RecebimentosParcela.Baixado" 
-								 style="color: green; padding-left: 5px" 
-								 title="Título baixado"></i>
-						</td>
-					</tr>
-				</tbody>
+			<!-- CONCILIAÇÃO BANCÁRIA -->
+			<page size="" ng-if="nomeRelatorio == 'Conciliação Bancária'">
+				<!-- TABELA PADRÃO RELATÓRIO RECEBÍVEIS FUTUROS -->
+				<table print-avoid-break style="margin-top: 0.5cm; margin-right: auto; margin-left: auto;">
+					<thead>
+						<tr>
+							<th colspan="{{nColunas}}">
+								<a ng-click="imprime()"><span style="font-size: 22px" class="glyphicon glyphicon-print large"></span></a>
+							</th>
+						</tr>
+						<tr>
+							<th colspan="{{nColunas - 2}}" rowspan="3">
+								<img ng-src="http://www.atoscapital.com.br/portal/img/AtosCapital.jpg" title="Atos Capital" class="logo-default"
+										 width="320px" height="100px" align="center">
+							</th>
+							<th colspan="3">{{nomeEmpresa | uppercase}}</th>
+						</tr>
+						<tr>
+							<th colspan="3">{{nomeFilial | uppercase}}</th>
+						</tr>
+						<tr>
+							<th colspan="3">{{data | uppercase}}</th>
+						</tr>
+						<tr>
+							<th colspan="{{nColunas}}"></th>
+						</tr>
+						<tr>
+							<th colspan="{{nColunas}}">{{nomeRelatorio | uppercase}}</th>
+						</tr>
+						<tr>
+							<th rowspan="1" colspan="1" ng-repeat="coluna in colunas">{{coluna}}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="item in relatorio">
+							<!-- DATA -->
+							<td ng-bind="formataDataConcilicaoBancaria(item.Data)"></td>
+							<!-- ADQUIRENTE -->
+							<td>{{item.Adquirente | uppercase}}</td>
+							<!-- BANDEIRA -->
+							<td>{{item.Bandeira | uppercase}}</td>
+							<!-- LOTE -->
+							<td ng-bind="verificaLote(item.Lote)"></td>
+							<!-- VALOR BRUTO -->
+							<td>{{item.ValorTotalBruto | currency:'R$'}}</td>
+							<!-- VALOR LÍQUIDO -->
+							<td>{{item.ValorTotalRecebimento | currency:'R$'}}</td>
+							<!-- STATUS -->
+							<td ng-bind="verificaStatus(item.Conciliado)"></td>
+						</tr>
+					</tbody>
 				</table>
+				<!-- 3 = Não conciliado
+						 2 = Pré-conciliado
+						 1 = Conciliado -->
+				<!-- FIM TABELA PADRÃO RELATÓRIO RECEBÍVEIS FUTUROS -->
 			</page>
 		</div>
 		<!-- BEGIN JAVASCRIPTS (Load javascripts at bottom, this will reduce page load time) -->

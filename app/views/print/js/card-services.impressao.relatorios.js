@@ -58,7 +58,7 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 			switch (s) {
 					
 					//RELATORIO DETALHES
-				case "Detalhes Conciliação Bancária":
+				case "Conciliação Bancária":
 					
 					var d = $location.search().d;
 					var cn = $location.search().cn;
@@ -69,7 +69,7 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 					
 					if(!d || !cn || !c || !a || !tp || !st) return;
 					
-					$scope.colunas = ["Filial", "Bandeira", "Venda", "Lote", "NSU", "Data Prevista", "Valor"];
+					$scope.colunas = ["Data", "Adquirente", "Bandeira", "Lote", "Valor Bruto", "Valor Líquido", "Status"];
 					$scope.niveis = ["Nivel 1"];
 					
 					$scope.status = st;
@@ -82,8 +82,9 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 					$scope.conta = cn;
 					$scope.adquirente = a;
 					$scope.tipo = tp;
+					$scope.loteExibicao = "";
 					
-					consultaDetalhe(function(){ $scope.exibeTela = true; $timeout(function(){$scope.imprime();}, 1500) });
+					consultaConciliacaoBancaria(function(){ $scope.exibeTela = true; $timeout(function(){$scope.imprime();}, 1500) });
 					break;
 					
 					
@@ -153,7 +154,7 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 		}     
 		
 		//CONSULTA DETALHES CONCILIACAO BANCARIA
-		var consultaDetalhe = function(funcaoSucesso){
+		var consultaConciliacaoBancaria = function(funcaoSucesso){
 			
 			showProgress();
 			
@@ -564,6 +565,25 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 			return $scope.diaString + "/" + $scope.mesString + "/" + $scope.anoString;
 		}
 		
+		$scope.formataDataConcilicaoBancaria = function(data){
+			$scope.splitTemp = data.split("");
+			$scope.diaTemp = $scope.splitTemp[8] + $scope.splitTemp[9];
+			$scope.mesTemp = $scope.splitTemp[5] + $scope.splitTemp[6];
+			$scope.anoTemp = $scope.splitTemp[0] + $scope.splitTemp[1] + $scope.splitTemp[2] + $scope.splitTemp[3];
+			return $scope.diaTemp + "/" + $scope.mesTemp + "/" + $scope.anoTemp;
+		}
+		
+		$scope.verificaLote = function(lote){
+			if (lote == 0) return "";
+			else return lote;
+		}
+		
+		$scope.verificaStatus = function(status){
+			if (status == 1) return "Conciliado";
+			else if (status == 2) return "Pré-conciliado";
+			else if (status == 3) return "Não conciliado";
+		}
+		
 		$scope.formataStyle = function(){
 			if(jQuery.browser.mozilla) $scope.style = "margin-left: -1.5cm;";
 			else $scope.style = "margin-left: -1.5cm;";
@@ -575,8 +595,8 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 				$scope.page = "";	
 			}
 			else {
-				$scope.style = "";
-				$scope.page = "A8";
+				$scope.style = "margin-top: 0.5cm; margin-right: 1cm; margin-left: 1cm;";
+				$scope.page = "";
 			}
 		}
 		

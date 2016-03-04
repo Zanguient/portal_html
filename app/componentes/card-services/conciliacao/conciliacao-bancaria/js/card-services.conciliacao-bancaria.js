@@ -1572,8 +1572,8 @@ angular.module("card-services-conciliacao-bancaria", [])
 			$scope.tp = "todos";
        if($scope.filtro.tipo && $scope.filtro.tipo !== null) $scope.tp = $scope.filtro.tipo.id;
 			
-			$window.open('views/print#?e=' + $scope.usuariologado.grupoempresa.ds_nome + '&s=' + "Detalhes Conciliação Bancária" + '&n='+ 1
-									 +'&st='+$scope.statusData+'&cl='+8+'&t='+$scope.token+'&cn='+$scope.cn+'&c='+$scope.c+'&tp='+$scope.tp+
+			$window.open('views/print#?e=' + $scope.usuariologado.grupoempresa.ds_nome + '&s=' + "Conciliação Bancária" + '&n='+ 1
+									 +'&st='+$scope.statusData+'&cl='+7+'&t='+$scope.token+'&cn='+$scope.cn+'&c='+$scope.c+'&tp='+$scope.tp+
 									 '&a='+$scope.a+'&f='+$scope.f+'&d='+$scope.d, '_blank');
 		}
 }]);
