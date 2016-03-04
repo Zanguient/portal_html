@@ -780,11 +780,11 @@
                                                             Vencimento
                                                         </th>
                                                         <th rowspan="1" colspan="1" 
-                                                            ng-style="informaValoresCS(antecipacao) ? {'width': '10%'} : {'width': '35%'}">
+                                                            ng-style="informaValoresCS ? {'width': '10%'} : {'width': '35%'}">
                                                             Bandeira
                                                         </th>
                                                         <th rowspan="1" colspan="1"
-                                                            ng-style="informaValoresCS(antecipacao) ? {'width': '10%'} : {'width': '15%'}">
+                                                            ng-style="informaValoresCS ? {'width': '10%'} : {'width': '15%'}">
                                                             Valor Bruto
                                                         </th>
                                                         <th rowspan="1" colspan="1"
@@ -792,34 +792,34 @@
                                                             IOF (a.d.)
                                                         </th>
                                                         <th rowspan="1" colspan="1"
-                                                            ng-style="informaValoresCS(antecipacao) ? {'width': '5%'} : {'width': '7%'}">
+                                                            ng-style="informaValoresCS ? {'width': '5%'} : {'width': '7%'}">
                                                             IOF 
                                                         </th>
                                                         <th rowspan="1" colspan="1"
-                                                            ng-style="informaValoresCS(antecipacao) ? {'width': '7%'} : {'width': '10%'}">
+                                                            ng-style="informaValoresCS ? {'width': '7%'} : {'width': '10%'}">
                                                             Juros
                                                         </th>
                                                         
                                                         <th rowspan="1" colspan="1" 
-                                                            ng-style="informaValoresCS(antecipacao) ? {'width': '10%'} : {'width': '15%'}">
+                                                            ng-style="informaValoresCS ? {'width': '10%'} : {'width': '15%'}">
                                                             Valor Líquido
                                                         </th> 
                                                         
                                                         <!-- VALORES DE PARCELAS -->
                                                         <th style="13%"
-                                                            ng-show="informaValoresCS(antecipacao)">
+                                                            ng-show="informaValoresCS">
                                                             Valor Disponível CS
                                                         </th>
                                                         <th style="12%"
-                                                            ng-show="informaValoresCS(antecipacao)">
+                                                            ng-show="informaValoresCS">
                                                             Valor Antecipado CS
                                                         </th>
                                                         <th style="5%"
-                                                            ng-show="informaValoresCS(antecipacao)">
+                                                            ng-show="informaValoresCS">
                                                             Saldo
                                                         </th>
                                                         <th style="10%"
-                                                            ng-show="informaValoresCS(antecipacao)">
+                                                            ng-show="informaValoresCS">
                                                             Ações
                                                         </th>
                                                     </tr>
@@ -854,16 +854,16 @@
                                                             {{vencimento.vlAntecipacaoLiquida | currency:'R$'}}
                                                         </td>
                                                         <!-- PARCELA -->
-                                                        <td ng-show="informaValoresCS(antecipacao)">
+                                                        <td ng-show="informaValoresCS">
                                                             {{vencimento.vlDisponivelCS | currency:'R$'}}
                                                         </td>
-                                                        <td ng-show="informaValoresCS(antecipacao)">
+                                                        <td ng-show="informaValoresCS">
                                                             {{vencimento.vlAntecipadoCS | currency:'R$'}}
                                                         </td>
-                                                        <td ng-show="informaValoresCS(antecipacao)">
+                                                        <td ng-show="informaValoresCS">
                                                             {{vencimento.saldoCS | currency:'R$'}}
                                                         </td>
-                                                        <td ng-show="informaValoresCS(antecipacao)">
+                                                        <td ng-show="informaValoresCS">
                                                             <div class="btn-group" dropdown dropdown-append-to-body>
                                                                 <a class="btn btn-default btn-circle" 
                                                                    href="javascript:;" dropdown-toggle>

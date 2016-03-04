@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.41 - 04/03/2016
+ *  - Correção da exibição dos valores CS
+ *
  *  Versão 1.0.4 - 03/03/2016
  *  - Sem restrição para perfil da Atos
  *
@@ -71,7 +74,8 @@ angular.module("card-services-antecipacao-bancaria", [])
     // Flags
     $scope.exibeTela = false; 
     $scope.abrirCalendarioDataMin = false;
-    $scope.abrirCalendarioDataMax = false;                              
+    $scope.abrirCalendarioDataMax = false; 
+    $scope.informaValoresCS = false;                            
     var permissaoAlteracao = false;
     var permissaoCadastro = false;
     var permissaoRemocao = false;
@@ -317,6 +321,7 @@ angular.module("card-services-antecipacao-bancaria", [])
                     $scope.filtro.conta = $filter('filter')($scope.contas, function(c) {return c.cdContaCorrente === $scope.filtro.conta.cdContaCorrente;})[0];
                 else
                     $scope.filtro.conta = $scope.contas[0];
+                
                 // Busca adquirentes
                 buscaAdquirentes(true);
               },
@@ -338,7 +343,13 @@ angular.module("card-services-antecipacao-bancaria", [])
             $scope.adquirentes = [];
             $scope.bandeiras = [];
         }    
-    };    
+    }; 
+                                
+    var atualizaFlagInformaValoresCS = function(){
+        console.log($scope.filtro.conta);
+        $scope.informaValoresCS = $scope.filtro.conta && $scope.filtro.conta !== null && $scope.filtro.conta.banco && $scope.filtro.conta.banco !== null && $scope.filtro.conta.banco.Codigo === '047';
+        console.log($scope.informaValoresCS);
+    }                            
                                 
                                 
                                 
@@ -528,6 +539,8 @@ angular.module("card-services-antecipacao-bancaria", [])
                                 filtros)) 
             .then(function(dados){
                 $scope.antecipacoes = dados.Registros;
+           
+                atualizaFlagInformaValoresCS();
            
                 // Set valores de exibição
                 $scope.filtro.total_registros = dados.TotalDeRegistros;
@@ -1385,10 +1398,11 @@ angular.module("card-services-antecipacao-bancaria", [])
     
     
     // ANTECIPAÇÃO QUE AJUSTA PARCELAS DO CARD SERVICES
-    $scope.informaValoresCS = function(antecipacao){
+    /*$scope.informaValoresCS = function(antecipacao){
+        //console.log(antecipacao && antecipacao !== null && antecipacao.cdBanco === '047');
         return //$scope.PERMISSAO_ADMINISTRATIVO && // somente quem tem permissão administrativa!
                antecipacao && antecipacao !== null && antecipacao.cdBanco === '047'; // BANESE
-    }
+    }*/
     
     $scope.anteciparParcelas = function(antecipacao, vencimento, desfazerAntecipacao){
         
@@ -1396,6 +1410,10 @@ angular.module("card-services-antecipacao-bancaria", [])
             $scope.showAlert('Você não possui permissão para realizar essa operação!'); 
             return;
         }*/
+        if(!$scope.informaValoresCS){
+            $scope.showAlert('Essa operação não permitida para a conta selecionada!'); 
+            return;
+        }
         
         var ids = [];
         if(vencimento && vencimento !== null){
