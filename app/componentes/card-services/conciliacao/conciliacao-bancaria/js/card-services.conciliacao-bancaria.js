@@ -1520,9 +1520,9 @@ angular.module("card-services-conciliacao-bancaria", [])
 		//VERIFICA O NAVEGADOR PARA DAR O VALOR DA MARGEM
 		$scope.identificaBrowser = function(){
 			if(jQuery.browser.mozilla){
-				$scope.margin = 0;
+				$scope.margin = "margin-top: 1cm;";
 			}else{
-				$scope.margin = -27.5;
+				$scope.margin = "margin-top: 1cm;";
 			}
 		}
 		

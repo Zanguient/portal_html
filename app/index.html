@@ -160,12 +160,11 @@
                        ng-mouseover="expandItem(item)">
                         {{item.ds_controller}}<i class="fa fa-angle-down"></i>
                     </a>
-					<ul ng-show="item.subControllers && item.subControllers.length > 0" 
-                        class="dropdown-menu">
-                        <li>
-                            <div class="mega-menu-content">
-                                <div class="row">
-                                    <div class="col-xs-1" 
+					<ul ng-show="item.subControllers && item.subControllers.length > 0" class="dropdown-menu">
+						<li>
+							<div class="mega-menu-content">
+								<div class="row">
+									<div class="col-xs-1" 
                                          style="width: inherit !important" 
                                          ng-repeat="subController1 in item.subControllers">
                                         <ul class="mega-menu-submenu" ng-show="subController1.temLink">
