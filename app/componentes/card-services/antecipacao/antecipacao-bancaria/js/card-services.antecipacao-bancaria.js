@@ -1449,8 +1449,8 @@ angular.module("card-services-antecipacao-bancaria", [])
                     //$scope.hideProgress(divPortletBodyFiltrosPos);
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
-                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                     else $scope.showAlert('Houve uma falha ao realizar a antecipação das parcelas (' + failData.status + ')', true, 'danger', true); 
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login 
+                     else $scope.showModalAlerta('Houve uma falha ao realizar a operação. (' + (failData.dados && failData.dados !== null ? failData.dados : failData.status) + ')', 'Erro');
                      $scope.hideProgress(divPortletBodyAntecipacoesPos);
                      $scope.hideProgress(divPortletBodyFiltrosPos);
                   });

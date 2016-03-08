@@ -860,7 +860,8 @@
                                                         <td ng-show="informaValoresCS">
                                                             {{vencimento.vlAntecipadoCS | currency:'R$'}}
                                                         </td>
-                                                        <td ng-show="informaValoresCS">
+                                                        <td ng-show="informaValoresCS"
+                                                            ng-class="{'valorPositivo' : vencimento.saldoCS > 0.0, 'valorNegativo' : vencimento.saldoCS < 0.0}">
                                                             {{vencimento.saldoCS | currency:'R$'}}
                                                         </td>
                                                         <td ng-show="informaValoresCS">
