@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.6 - 08/03/2016
+ *  - Busca NSU
+ *
  *  Versão 1.0.5 - 01/02/2016
  *  - Data Efetiva
  *  - Busca TEF
@@ -51,7 +54,7 @@ angular.module("card-services-conciliacao-titulos", [])
     $scope.adquirentes = [];
     $scope.filiais = [];                                                                                       
     $scope.tipos = [{id: 1, nome: 'CONCILIADO'}, {id: 2, nome: 'PRÉ-CONCILIADO'}, {id: 3, nome: 'NÃO CONCILIADO'}];             
-    $scope.filtro = {datamin : new Date(), datamax : '',
+    $scope.filtro = {datamin : new Date(), datamax : '', nsu : '',
                      tipo : null, adquirente : undefined, filial : undefined, considerarGrupo : false,
                      itens_pagina : $scope.itens_pagina[0], order : 0,
                      pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0
@@ -198,10 +201,16 @@ angular.module("card-services-conciliacao-titulos", [])
        }   
         
        // Pré-Conciliação considerando grupo
-        if($scope.isTipoPreConciliado()){
+       if($scope.isTipoPreConciliado()){
             filtros.push({id: /*$campos.card.conciliacaotitulos.preconcilia_grupo*/104, 
                           valor: $scope.filtro.considerarGrupo ? true : false});
-        }
+       }
+        
+       // NSU
+       if($scope.filtro.nsu && $scope.filtro.nsu !== null){
+           filtros.push({id: /*$campos.card.conciliacaotitulos.nsu*/105, 
+                          valor: $scope.filtro.nsu + '%'});
+       }
         
        // Retorna    
        return filtros;
@@ -792,6 +801,15 @@ angular.module("card-services-conciliacao-titulos", [])
                     $scope.hideProgress(divPortletBodyFiltrosPos);
                     $scope.hideProgress(divPortletBodyDadosPos);
                   });     
+    }
+    
+    
+    
+    
+    // NSU
+    $scope.resetaBuscaNSU = function(){
+        $scope.filtro.nsu = '';
+        $scope.buscaDadosConciliacao();
     }
     
     

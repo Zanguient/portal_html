@@ -283,7 +283,9 @@
                    <h4 class="modal-title modal-cabecalho">{{input.titulo}}</h4>
                </div>
                <div class="modal-body modal-corpo" style="text-align: center">
-                    {{input.mensagem}}
+                    <!--{{input.mensagem}}-->
+                    <span ng-bind-html="adicionaQuebraLinhaHtml(input.mensagem)">
+                    </span>
                     <input class="form-control modalConfig" type="text" ng-model="input.text"
                            ng-keypress="($event.which === 13) ? input.funcaoConfirma(input.text) : 0">
                     <span ng-show="input.showCheckbox" style="margin-top: 10px"> 
@@ -320,7 +322,9 @@
                    <h4 class="modal-title modal-cabecalho">{{modal_titulo}}</h4>
                </div>
                <div class="modal-body">
-                    {{modal_mensagem}}
+                   <!--{{modal_mensagem}}-->
+                   <span ng-bind-html="adicionaQuebraLinhaHtml(modal_mensagem)">
+                   </span>
                </div>
                <div class="modal-footer">
                    <button type="button" class="btn default" data-dismiss="modal">
@@ -349,7 +353,9 @@
                    <h4 class="modal-title modal-cabecalho">{{alerta.titulo}}</h4>
                </div>
                <div class="modal-body modal-corpo" style="text-align: center">
-                    {{alerta.mensagem}}
+                    <!--{{alerta.mensagem}}-->
+                    <span ng-bind-html="adicionaQuebraLinhaHtml(alerta.mensagem)">
+                    </span>
                </div>
                <div class="modal-footer" style="text-align: center">                           
                    <button type="button" class="btn blue"

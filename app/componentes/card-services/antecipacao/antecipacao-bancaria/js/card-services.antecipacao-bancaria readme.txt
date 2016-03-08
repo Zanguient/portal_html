@@ -94,6 +94,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				taxaIOFFixo : double,
 				cdContaCorrente : int,
 				cdBanco : string,
+				vlAntecipadoCS : double,
 				antecipacoes : [{ idAntecipacaoBancariaDetalhe : int,
 								  dtVencimento : datetime,
 								  vlAntecipacao : double,
