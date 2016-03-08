@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.5 - 08/03/2016
+ *  - Mensagem da antecipação das parcelas indicando lançamentos futuros
+ *
  *  Versão 1.0.41 - 04/03/2016
  *  - Correção da exibição dos valores CS
  *
@@ -1429,7 +1432,7 @@ angular.module("card-services-antecipacao-bancaria", [])
                    };
         
         var text = desfazerAntecipacao ? "Confirma desfazer as antecipações das parcelas?" :
-                                         "Para que o processo seja efetivo, é necessário que todas as cargas (modalidade 'VENDAS'), de competência inferior a " + $scope.getDataString(antecipacao.dtAntecipacaoBancaria) + ", tenham sido carregadas corretamente. Confirma a antecipação das parcelas?";
+                                         "Para que o processo seja efetivo, é necessário que todas as cargas de 'VENDAS' (de competência inferior a " + $scope.getDataString(antecipacao.dtAntecipacaoBancaria) + ") tenham sido carregadas corretamente, as cargas de 'AJUSTES E TARIFAS' para os vencimentos inferiores a data corrente, assim como 'LANÇAMENTOS FUTUROS' para os vencimentos superior ou igual a data corrente. Confirma a antecipação das parcelas?";
         
         // Confirma
 		$scope.showModalConfirmacao('Confirmação', text, anteciparParcelas, json, 'Sim', 'Não');

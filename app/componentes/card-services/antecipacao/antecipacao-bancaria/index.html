@@ -843,7 +843,8 @@
                                                             {{(vencimento.tbBandeira.dsBandeira | uppercase) || ''}}
                                                         </td>
                                                         <!-- VALOR BRUTO -->
-                                                        <td>
+                                                        <td ng-class="{'valorNegativo' : informaValoresCS && vencimento.vlAntecipacao > vencimento.vlDisponivelCS}"
+                                                            title="{{informaValoresCS && vencimento.vlAntecipacao > vencimento.vlDisponivelCS ? 'Valor da Operação é superior ao valor disponível no Card Services' : ''}}">
                                                             {{vencimento.vlAntecipacao | currency:'R$'}}
                                                         </td>
                                                         <!-- IOF a.d. -->
