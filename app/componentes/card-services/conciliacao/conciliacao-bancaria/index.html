@@ -56,6 +56,104 @@
 
 <div class="container" ng-controller="card-services-conciliacao-bancariaCtrl" 
      ng-init="cardServices_conciliacaoBancariaInit()">
+	<!-- IMPRESSÃO DETALHES -->
+	<!-- IMPRESSÃO PADRÃO DOS DETALHES -->
+	<style>
+		/* STYLE PARA IMPRESSÃO */
+			@media print {
+				page[size="A8"] {
+					margin: 0;
+					box-shadow: 0;
+					/*background: white;				
+					width: 29.7cm;
+					height: 21cm;
+					display: block;
+					margin: 0 auto;
+					padding: 10mm 15mm 10mm 15mm;
+					margin-bottom: 0.5cm;
+					box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);*/
+				}
+				@page 
+				{
+					size:  auto;   /* auto is the initial value */
+					margin: 0mm;  /* this affects the margin in the printer settings */
+				}
+				
+				table { 
+					border: 1px solid #eee;
+					padding: 10px;
+					/*page-break-before: auto;*/
+				}
+				
+				tr { 
+					border: 1px solid #eee;
+					text-align: center;
+				}
+				
+				th {
+					border: 1px solid #eee; 
+					text-align: center;
+					font-weight: bold;
+					padding: 10px;
+				}
+				
+				td {
+					border: 1px solid #eee; 
+					text-align: center;
+					padding: 10px;
+				}
+			}
+	</style>
+	<page size="A8" ng-if="modalDetalhesShowing" print-section print-only>
+		<table print-avoid-break style="{{margin}}">
+			<thead>
+				<tr>
+					<td rowspan="3" colspan="5">
+						<img ng-src="http://www.atoscapital.com.br/portal/img/AtosCapital.jpg" title="Atos Capital"
+								 width="320px" height="100px"/>
+					</td>
+					<td colspan="6">{{usuariologado.grupoempresa.ds_nome | uppercase}}</td>
+				</tr>
+				<tr>
+					<td colspan="6">{{filtro.filial.ds_fantasia | uppercase}}</td>
+				</tr>
+				<tr>
+					<td colspan="6">{{dataExibicao | uppercase}}</td>
+				</tr>
+				<tr><td colspan="8"></td></tr>
+				<tr>
+					<td colspan="8">{{'Detalhes do agrupamento' | uppercase}}</td>
+				</tr>
+				<tr>
+					<td width="{{100/8}}%">Filial</td>
+					<td width="{{100/8}}%">Bandeira</td>
+					<td width="{{100/8}}%">Venda</td>
+					<td width="{{100/8}}%">Lote</td>
+					<td width="{{100/8}}%">NSU</td>
+					<td width="{{100/8}}%">Data Prevista</td>
+					<td width="{{100/8}}%">Valor</td>
+					<td width="{{100/8}}%">Baixado</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in modalDetalhes.grupo">
+					<td width="{{100/8}}%">{{item.Filial | uppercase}}</td>
+					<td width="{{100/8}}%">{{item.Bandeira | uppercase}}</td>
+					<td width="{{100/8}}%" ng-bind="getDataTimeString(item.DataVenda)" ng-show="item.NumParcela >= 0"></td>
+					<td width="{{100/8}}%" ng-bind="item.Lote > 0 ? item.Lote : ''"></td>
+					<td width="{{100/8}}%">{{item.Documento | uppercase}}</td>
+					<td width="{{100/8}}%" ng-bind="getDataString(item.DataPrevista)"></td>
+					<td width="{{100/8}}%">{{item.Valor | currency:'R$'}}</td>
+					<td width="{{100/8}}%">
+						<i class="fa fa-check" ng-show="item.Baixado" 
+						 style="color: green; padding-left: 5px" 
+						 title="Título baixado"></i>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		</page>
+	<!-- FIM IMPRESSÃO DETALHES -->
     <!-- BEGIN PAGE BREADCRUMB -->
     <ul class="page-breadcrumb breadcrumb" print-remove>
         <li>
@@ -438,8 +536,7 @@
                     </a>
                     <ul class="dropdown-menu pull-right">
                         <li>
-                            <a href="javascript:;"
-                               print-btn>
+                            <a href="javascript:;" print-btn>
                             Imprimir</a>
                         </li>
                     </ul>
@@ -1603,97 +1700,33 @@
             </div>   
         </div>
     </div>
-	<!-- IMPRESSÃO PADRÃO DOS DETALHES -->
-	<style>
-		/* STYLE PARA IMPRESSÃO */
-			@media print {
-				page[size="A8"] {
-					margin: 0;
-					box-shadow: 0;
-				}
-				@page 
-				{
-					size:  auto;   /* auto is the initial value */
-					margin: 0mm;  /* this affects the margin in the printer settings */
-				}
-				
-				table { 
-					border: 1px solid #eee;
-					padding: 10px;
-					page-break-before: auto;
-				}
-				
-				tr { 
-					border: 1px solid #eee;
-					text-align: center;
-				}
-				
-				th {
-					border: 1px solid #eee; 
-					text-align: center;
-					font-weight: bold;
-					padding: 10px;
-				}
-				
-				td {
-					border: 1px solid #eee; 
-					text-align: center;
-					padding: 10px;
-				}
-			}
-	</style>
 	<!-- style="margin-top: -27.5cm;" -->
 	<!-- <div class="row" print-only  print-section ng-if="modalDetalhesShowing">
 						<div print-only print-section print-if="modalDetalhesShowing"
 							 style="background: white; width: 29.7cm; height: 21cm; margin: 5cm; padding: 10mm 15mm 10mm 15mm;
 											margin-bottom: 0.5cm; margin-top: 0.5cm; box-shadow: 0; size: auto">
-							<table style="border: 1px solid #eee; margin-top: {{margin}}cm;"> -->
-	<page size="A8" ng-if="modalDetalhesShowing" print-section print-only>
-		<table print-table="modalDetalhes.grupo">
-			<thead>
-				<tr>
-					<td rowspan="3" colspan="5">
-						<img ng-src="http://www.atoscapital.com.br/portal/img/AtosCapital.jpg" title="Atos Capital"
-								 width="320px" height="100px"/>
-					</td>
-					<td colspan="6">{{usuariologado.grupoempresa.ds_nome | uppercase}}</td>
-				</tr>
-				<tr>
-					<td colspan="6">{{filtro.filial.ds_fantasia | uppercase}}</td>
-				</tr>
-				<tr>
-					<td colspan="6">{{dataExibicao | uppercase}}</td>
-				</tr>
-				<tr>
-					<td colspan="8">{{'Detalhes do agrupamento' | uppercase}}</td>
-				</tr>
-				<tr>
-					<td width="{{100/8}}%">Filial</td>
-					<td width="{{100/8}}%">Bandeira</td>
-					<td width="{{100/8}}%">Venda</td>
-					<td width="{{100/8}}%">Lote</td>
-					<td width="{{100/8}}%">NSU</td>
-					<td width="{{100/8}}%">Data Prevista</td>
-					<td width="{{100/8}}%">Valor</td>
-					<td width="{{100/8}}%">Baixado</td>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-repeat="item in modalDetalhes.grupo">
-					<td width="{{100/8}}%">{{item.Filial | uppercase}}</td>
-					<td width="{{100/8}}%">{{item.Bandeira | uppercase}}</td>
-					<td width="{{100/8}}%" ng-bind="getDataTimeString(item.DataVenda)" ng-show="item.NumParcela >= 0"></td>
-					<td width="{{100/8}}%" ng-bind="item.Lote > 0 ? item.Lote : ''"></td>
-					<td width="{{100/8}}%">{{item.Documento | uppercase}}</td>
-					<td width="{{100/8}}%" ng-bind="getDataString(item.DataPrevista)"></td>
-					<td width="{{100/8}}%">{{item.Valor | currency:'R$'}}</td>
-					<td width="{{100/8}}%">
-						<i class="fa fa-check" ng-show="item.Baixado" 
-						 style="color: green; padding-left: 5px" 
-						 title="Título baixado"></i>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</page>
+							<table style="border: 1px solid #eee; margin-top: {{margin}}cm;">  padding: 10px; style="margin-top: -1.6cm;"  print-table="modalDetalhes.grupo" print-avoid-break 
+<div print-section print-only ng-if="modalDetalhesShowing">-->
+	<!--<table>
+		<thead>
+			<tr>
+				<th>TESTE 1</th>
+				<th>TESTE 2</th>
+			</tr>
+			<tr>
+				<th>TESTE 3</th>
+				<th>TESTE 4</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>TTESTE 1</td>
+				<td>TTESTE 2</td>
+			</tr>
+			<tr>
+				<td>TTESTE 3</td>
+				<td>TTESTE 4</td>
+			</tr>
+		</tbody>
+	</table>-->
 </div>
