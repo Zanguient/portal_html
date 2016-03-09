@@ -11,6 +11,8 @@
 
 
 
+    Versão 1.1.2 - 09/03/2016
+    - Paginação no modalDetalhes
 
     Versão 1.1.1 - 25/01/2016
     - Lote
@@ -403,6 +405,69 @@
                        <h4 class="modal-title modal-cabecalho">Detalhes do agrupamento</h4>
                    </div>
                    <div class="modal-body modal-corpo modalAcessoDeUsuarios" style="text-align: center">
+                       <!-- PAGINAÇÃO -->
+                       <div class="row" style="margin-bottom: 20px">
+                            <!--ng-show="modalDetalhes.grupo && modalDetalhes.grupo !== null && modalDetalhes.grupo.length > modalDetalhes.itens_pagina"-->
+                           <div class="col-sm-12">
+                               <label style="font-weight: bolder">
+                                    Exibindo {{modalDetalhes.faixa_registros}}
+                                    de {{modalDetalhes.total_registros}} registros
+                               </label>
+                           </div>
+                           <div class="col-sm-12">
+                                <dir-pagination-controls pagination-id="detalhes" max-size="20"
+                                                         on-page-change="alterouPaginaModalDetalhes()">
+                                </dir-pagination-controls>
+                           </div>
+                       </div>
+                       
+                       <!-- BUSCA -->
+                       <div class="row" style="margin-bottom: 20px">
+                           <div class="col-sm-4"></div>
+                           <div class="col-sm-4">
+                                <div class="dataTables_filter"> 
+                                    <div class="col-md-5">
+                                        <div class="dataTables_length">
+                                            <label>
+                                                <span class="seperator"></span>NSU
+                                            </label>                                         
+                                        </div>                                    
+                                    </div> 
+                                    <div class="col-md-7 input-group input-icon right">
+                                        <input type="text" 
+                                           class="form-control input-inline" 
+                                           placeholder="NSU" 
+                                           ng-model="modalDetalhes.nsu">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-times"
+                                               ng-disabled="!modalDetalhes.nsu"
+                                               style="cursor:pointer"
+                                               ng-click="resetaBuscaNSU()"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                           </div>
+                           <div class="col-sm-4" 
+                                ng-show="modalDetalhes.grupo && modalDetalhes.grupo !== null && modalDetalhes.grupo.length > 0 && modalDetalhes.grupo[0].Baixado !== undefined">
+                                <div class="col-md-5">
+                                    <div class="dataTables_length">
+                                        <label>
+                                            <span class="seperator"></span>Status de Baixa
+                                        </label>                                         
+                                    </div>                                    
+                                </div> 
+                                <div class="col-md-7">
+                                    <select style="width: 80%;"
+                                            aria-controls="datatable_products"
+                                            class="form-control input-sm input-inline"
+                                            ng-model="modalDetalhes.statusbaixa"
+                                            ng-options="status as (status.nome | uppercase) for status in statusbaixa">
+                                        <option value="" style="display: none"></option>
+                                    </select>
+                               </div>
+                            </div>
+                       </div>
+                       
                        <div class="row">
                            <div class="col-sm-2">
                                 <label>Filial</label>
@@ -430,7 +495,8 @@
                                 <label>Baixado</label>
                            </div>
                        </div>
-                       <div class="row" ng-repeat="item in modalDetalhes.grupo">
+                        <!--ng-repeat="item in modalDetalhes.grupo"-->
+                       <div class="row" dir-paginate="item in modalDetalhes.grupo | filterModalDetalhes : modalDetalhes | itemsPerPage: modalDetalhes.itens_pagina" current-page="modalDetalhes.pagina" pagination-id="detalhes">
                            <div class="col-sm-2" style="text-align:center">
                                 {{item.Filial | uppercase}}
                            </div>
@@ -463,6 +529,22 @@
                                 <i class="fa fa-check" ng-show="item.Baixado" 
                                    style="color: green; padding-left: 5px" 
                                    title="Título baixado"></i>
+                           </div>
+                       </div>
+                       
+                       <!-- PAGINAÇÃO -->
+                       <div class="row" style="margin-top: 20px">
+                            <!--ng-show="modalDetalhes.grupo && modalDetalhes.grupo !== null && modalDetalhes.grupo.length > modalDetalhes.itens_pagina"-->
+                           <div class="col-sm-12">
+                               <dir-pagination-controls pagination-id="detalhes" max-size="20"
+                                                        on-page-change="alterouPaginaModalDetalhes()">
+                               </dir-pagination-controls>
+                           </div>
+                           <div class="col-sm-12">
+                               <label style="font-weight: bolder">
+                                    Exibindo {{modalDetalhes.faixa_registros}}
+                                    de {{modalDetalhes.total_registros}} registros
+                                </label>
                            </div>
                        </div>
                     </div>
