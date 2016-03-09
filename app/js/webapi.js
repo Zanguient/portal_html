@@ -757,6 +757,10 @@ angular.module('webapi', ['utils'])
         consultatitulos : $autenticacao.getUrlBaseDealernet() + '/dealernet/consultatitulos/',   
     },
       
+          // TOTVS
+    totvs: {
+        tbmercadoria : $autenticacao.getUrlBaseTotvs() + '/tax/tbmercadoria/',   
+    },
       
     // REZENDE
     rezende : {
