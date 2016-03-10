@@ -41,9 +41,10 @@ angular.module("tax-services-importacao-xml", [])
                                             '$webapi',
                                             '$apis', 
                                             '$timeout',
+                                            'Upload',
                                             '$filter',
                                             function($scope,$state,$http,$window,/*$campos,*/
-                                                     $webapi,$apis,$timeout,$filter){ 
+                                                     $webapi,$apis,$timeout,Upload,$filter){ 
    
     $scope.paginaInformada = 1;
     $scope.filiais = [];   
@@ -62,6 +63,7 @@ angular.module("tax-services-importacao-xml", [])
     $scope.notadetalhada = undefined;  
     $scope.nrChave = ''; //chave da nota para importação
     $scope.dadosImportacao = {}; //Dados para importação da NFe
+    $scope.uploadXml = {cdGrupo:'',xml:''};
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyManifestoPos = 1; // posição da div que vai receber o loading progress                                         
     // flags
@@ -108,7 +110,42 @@ angular.module("tax-services-importacao-xml", [])
     };                                           
                                                 
                                             
-    
+       $scope.mudouXml = function(){
+       if($scope.uploadXml.xml && $scope.uploadXml.xml !== null){
+            
+$scope.showProgress();
+           console.log($scope.usuariologado.grupoempresa.id_grupo);
+       Upload.upload({
+                //url: $apis.getUrl($apis.administracao.tbempresa, undefined, { id : 'token', valor : $scope.token }),
+                url: $apis.getUrl($apis.tax.tbmanifesto, $scope.token, 
+                                  [
+                                   { id: /*tax.tbmanifesto.cdGrupo*/ 103, 
+                                     valor : $scope.usuariologado.grupoempresa.id_grupo}
+                                  ]),
+                file: $scope.uploadXml.xml,
+                method: 'PATCH',
+            }).success(function (data, status, headers, config) {
+                $timeout(function() {
+                    $scope.hideProgress();
+                    // Avalia se o arquivo enviado é válido
+                    if(data && data != null){
+                        if(data.cdMensagem === 200){
+                            $scope.showAlert('Upload realizado com sucesso!', true, 'success', true);
+                        }else if(data.cdMensagem === 201){
+                            $scope.showModalAlerta('Senha informada é inválida!');    
+                        }
+                    }
+                });
+            }).error(function (data, status, headers, config){
+                 if(status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(status === 503 || status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 //else if(status === 500) $scope.showModalAlerta("Só é aceito arquivo XML!");
+                 else $scope.showAlert("Houve uma falha ao fazer upload do XML da Nota Fiscal (" + status + ")", true, 'danger', true, false);
+                //uploadEmProgresso = false;
+                $scope.hideProgress();
+            });
+           }
+   }
     
     
     // PAGINAÇÃO

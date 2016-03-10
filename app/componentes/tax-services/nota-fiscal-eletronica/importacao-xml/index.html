@@ -1983,6 +1983,27 @@
                 </div>
                 <!-- CORPO -->
                 <div class="portlet-body" ng-show="exibeTela">
+                    <div style="text-align:right;">
+                                        <button class="btn btn-primary"
+                                                ng-click=""
+                                                ng-model="uploadXml.xml"
+                                                ngf-select
+                                                ngf-change="mudouXml()"
+                                                ng-multiple="false" accept=".xml">
+                                            Upload XML
+                                        </button>  
+                        
+<!--
+                                                                    <button class="btn btn-primary" ngf-select
+                                                    ng-model="modalCertificadoDigital.certificado"
+                                                    ngf-change="mudouCertificado($files)"
+                                                    ngf-multiple="false" accept=".pfx"
+                                                    ng-disabled="uploadEmProgresso()">
+                                                Selecionar Certificado Digital
+                                            </button>
+-->
+                        
+                    </div>
                     <div class="row paddingDivs">
                        <!--EXIBIÇÃO-->
                         <div class="col-xs-4 col-sm-4 col-md-4">
