@@ -194,8 +194,8 @@
                                                        ng-model="filtro.emitente"
                                                        onfocus="this.select();" 
                                                        onmouseup="return false;"
-                                                       maxlength="44"
-                                                       ng-pattern="/\(\d{2}\)\d{8}\d?/"
+                                                       maxlength="14"
+                                                       ng-pattern=""
                                                        valid-integer-number/>
                                             </td>
                                             <!-- STATUS -->
@@ -1988,7 +1988,7 @@
                                                 ng-click=""
                                                 ng-model="uploadXml.xml"
                                                 ngf-select
-                                                ngf-change="mudouXml()"
+                                                ngf-change="importaXml()"
                                                 ng-multiple="false" accept=".xml">
                                             Upload XML
                                         </button>  

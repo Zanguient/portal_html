@@ -110,10 +110,18 @@ angular.module("tax-services-importacao-xml", [])
     };                                           
                                                 
                                             
-       $scope.mudouXml = function(){
+       $scope.importaXml = function(){
        if($scope.uploadXml.xml && $scope.uploadXml.xml !== null){
-            
-$scope.showProgress();
+        // Avalia se há um grupo empresa selecionado
+        if(!$scope.usuariologado.grupoempresa){
+            $scope.showModalAlerta('Por favor, selecione uma empresa', 'Atos Capital', 'OK', 
+                                   function(){
+                                         $timeout(function(){ $scope.setVisibilidadeBoxGrupoEmpresa(true);}, 300);
+                                    }
+                                  );
+            return;   
+        }  
+           $scope.showProgress();
            console.log($scope.usuariologado.grupoempresa.id_grupo);
        Upload.upload({
                 //url: $apis.getUrl($apis.administracao.tbempresa, undefined, { id : 'token', valor : $scope.token }),
@@ -130,9 +138,12 @@ $scope.showProgress();
                     // Avalia se o arquivo enviado é válido
                     if(data && data != null){
                         if(data.cdMensagem === 200){
-                            $scope.showAlert('Upload realizado com sucesso!', true, 'success', true);
-                        }else if(data.cdMensagem === 201){
-                            $scope.showModalAlerta('Senha informada é inválida!');    
+                            $scope.tabFiltro = 2
+                            $scope.filtro.chaveAcesso = data.dsMensagem;
+                            buscaManifestos();
+                            //$scope.showAlert('Upload realizado com sucesso!', true, 'success', true);
+                        }else{
+                            $scope.showModalAlerta(data.dsMensagem);    
                         }
                     }
                 });
@@ -229,8 +240,8 @@ $scope.showProgress();
 
             // Emitente
             if($scope.filtro.emitente && $scope.filtro.emitente !== ''){
-                filtros.push({id: /*$campos.card.tbmanifesto.nmEmitente */ 106,
-                              valor: '%' + $scope.filtro.emitente});
+                filtros.push({id: /*$campos.card.tbmanifesto.nmEmitente */ 105,
+                              valor: $scope.filtro.emitente});
             }
 
             // Status Manifesto
