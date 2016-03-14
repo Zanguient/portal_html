@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.8 - 14/03/2016
+ *  - Atualizações Fernando
+ *
  *  Versão 1.0.7 - 18/12/2015
  *  - Opção de importar aparecer apenas para o PETROX
  *

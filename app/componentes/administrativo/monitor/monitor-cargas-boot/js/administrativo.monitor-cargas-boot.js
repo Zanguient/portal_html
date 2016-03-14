@@ -251,11 +251,14 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
         $scope.pagina.subtitulo = 'Monitor de Cargas do Boot';
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state, params){
-            changeState = true;
-            changeState_state = state;
-            changeState_params = params;
-            $scope.monitor.desconectar();
-            //$state.go(state, params);
+            if($scope.monitor && $scope.monitor !== null && $scope.monitor.isConnected()){
+                changeState = true;
+                changeState_state = state;
+                changeState_params = params;
+                $scope.monitor.desconectar();
+            }
+            else 
+                $state.go(state, params);
         });
         // Quando houver alteração do grupo empresa na barra administrativa                                           
         $scope.$on('alterouGrupoEmpresa', function(event){ 
