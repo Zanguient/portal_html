@@ -122,7 +122,6 @@ angular.module("tax-services-importacao-xml", [])
             return;   
         }  
            $scope.showProgress();
-           console.log($scope.usuariologado.grupoempresa.id_grupo);
        Upload.upload({
                 //url: $apis.getUrl($apis.administracao.tbempresa, undefined, { id : 'token', valor : $scope.token }),
                 url: $apis.getUrl($apis.tax.tbmanifesto, $scope.token, 
