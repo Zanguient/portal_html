@@ -612,7 +612,6 @@ angular.module("AtosCapital", ['ui.router',
 }])
 
 
-
 // CONTROLLER  PAI
 .controller("appCtrl", ['$scope',
                         '$rootScope',
@@ -637,9 +636,9 @@ angular.module("AtosCapital", ['ui.router',
     $rootScope.token = $scope.token = '';
     $scope.nome_usuario = 'Usuário';
     // Dados da empresa
-    $scope.empresa = $empresa;
+    $scope.empresa = $empresa;                    
     $rootScope.signalRRootPath = $scope.signalRRootPath = $autenticacao.getUrlBaseIMessage() + "/signalr";
-    $scope.signalRHubsPath = $sce.trustAsResourceUrl($scope.signalRRootPath + "/hubs");
+    $scope.signalRHubsPath = $sce.trustAsResourceUrl($scope.signalRRootPath + "/hubs");                    
     // Grupo empresa selecionado
     var empresaId = -1; // se > 0 indica que já estava associado a um grupo empresa
     $scope.usuariologado = { grupoempresa : undefined, empresa : undefined } ; // grupo empresa em uso

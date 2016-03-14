@@ -71,8 +71,8 @@ angular.module("card-services-cash-flow-relatorios", [])
                      sintetico : { pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0},
                      analitico : { pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0},
                     };
-    $scope.abrirCalendarioDataMin = $scope.abrirCalendarioDataVendaMin = false;
-    $scope.abrirCalendarioDataMax = $scope.abrirCalendarioDataVendaMax = false;                                           
+    $scope.abrirCalendarioDataMin = false;
+    $scope.abrirCalendarioDataMax = false;                                           
                                                  
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyRelatorioPos = 1; // posição da div que vai receber o loading progress

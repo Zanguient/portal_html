@@ -193,6 +193,7 @@ angular.module('webapi', ['utils'])
             id_grupo = 102,
             nu_cnpj = 103,
             preconcilia_grupo = 104,
+            nsu = 105,
             // Relacionamentos
             tbadquirente : 200,
             recebimentoparcela : 300
