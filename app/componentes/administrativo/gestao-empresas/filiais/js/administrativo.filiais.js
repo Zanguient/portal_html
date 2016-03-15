@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.2 - 15/03/2016
+ *  - podeExcluir
+ *
  *  Versão 1.0.1 - 02/12/2015
  *  - Coleção 4
  *
@@ -270,6 +273,7 @@ angular.module("administrativo-filiais", [])
       * Solicita confirmação para excluir a filial
       */
     $scope.excluirFilial = function(filial){
+        if(!filial || filial === null || !filial.podeExcluir) return;
         $scope.showModalConfirmacao('Confirmação', 
                                     'Tem certeza que deseja excluir ' + filial.ds_fantasia.toUpperCase() + ' ?',
                                      excluiFilial, filial.nu_cnpj, 'Sim', 'Não');
