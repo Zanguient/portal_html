@@ -217,6 +217,7 @@ angular.module('webapi', ['utils'])
             data : 100,
             id_grupo : 101,
             nu_cnpj : 102,
+            cdAdquirente : 103,
         },
         tbadquirente : {
             cdAdquirente : 100,

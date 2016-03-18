@@ -8,6 +8,11 @@
     Card Services > Cash Flow > Relatório de Vendas
 
 
+
+    Versão 1.0.2 - 18/03/2016
+    - Valor site
+    - Adquirente
+
     Versão 1.0.1 - 03/02/2016
     - Opção de impressão disponível
 
@@ -62,8 +67,11 @@
                                         <th tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1" width="30%">
                                             Período de venda
                                         </th>
-                                        <th tabindex="1" aria-controls="datatable_ajax" rowspan="1" colspan="1" width="60%">
+                                        <th tabindex="1" aria-controls="datatable_ajax" rowspan="1" colspan="1" width="40%">
                                             Filial
+                                        </th>
+                                        <th tabindex="1" aria-controls="datatable_ajax" rowspan="1" colspan="1" width="20%">
+                                            Adquirente
                                         </th>
                                         <th tabindex="6" aria-controls="datatable_ajax" rowspan="1" colspan="1" width="10%">
                                             Ações
@@ -117,6 +125,20 @@
                                                        popover="É necessário selecionar uma empresa"
                                                        popover-trigger="mouseenter"
                                                        popover-append-to-body="true"></i>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <!-- ADQUIRENTE -->
+                                        <td rowspan="1" colspan="1">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <select class="form-control form-filter input-sm comboBoxFiltros"
+                                                        ng-disabled="adquirentes.length === 0"
+                                                        ng-model="filtro.adquirente"
+                                                        ng-change="alterouAdquirente()"
+                                                        ng-options="adquirente as (adquirente.nmAdquirente | uppercase) for adquirente in adquirentes">
+                                                        <option value="">TODAS</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </td>
@@ -231,19 +253,25 @@
                                     <th width="30%" style="text-align: center;">
                                        Competência - Adquirente - Bandeira
                                     </th>
-                                    <th width="13%" style="text-align: center;">
+                                    <th width="10%" style="text-align: center;">
+                                        Valor Site
+                                    </th>
+                                    <th width="10%" style="text-align: center;">
                                         Valor Bruto
                                     </th>
-                                    <th width="15%" style="text-align: center;">
+                                    <th width="10%" style="text-align: center;">
+                                        Diferença
+                                    </th>
+                                    <th width="10%" style="text-align: center;">
                                         Valor Descontado
                                     </th>
-                                    <th width="13%" style="text-align: center;">
+                                    <th width="10%" style="text-align: center;">
                                         Valor Líquido
                                     </th>
-                                    <th width="12%" style="text-align: center;" colspan="2">
+                                    <th width="10%" style="text-align: center;" colspan="2">
                                         Valor Recebido
                                     </th>
-                                    <th width="12%" style="text-align: center;" colspan="2">
+                                    <th width="10%" style="text-align: center;" colspan="2">
                                         Valor A Receber
                                     </th>
                                 </tr>
@@ -262,9 +290,19 @@
                                     <td>
                                         {{competencia.diaVenda}}
                                     </td>
+                                    <!-- VALOR SITE -->
+                                    <td class="linhaTotalRelatorios"
+                                        ng-class="{'valorNegativo' : !competencia.processouVenda}"
+                                        title="{{competencia.processouVenda ? '' : 'Vendas não foram completamente processadas'}}">
+                                        {{(competencia.valorSite || '0.00') | currency:'R$'}}
+                                    </td>
                                     <!-- VALOR BRUTO -->
                                     <td class="linhaTotalRelatorios">
                                         {{competencia.valorBruto | currency:'R$'}}
+                                    </td>
+                                    <!-- DIFERENÇA -->
+                                    <td class="linhaTotalRelatorios"
+                                        ng-bind="(competencia.valorSite && competencia.valorSite !== null ? Math.abs(competencia.valorSite - competencia.valorBruto) : 0.00) | currency:'R$'">
                                     </td>
                                     <!-- VALOR DESCONTADO -->
                                     <td class="linhaTotalRelatorios valorNegativo">
@@ -309,9 +347,19 @@
                                     <td>
                                         {{adquirente.adquirente | uppercase}}
                                     </td>
+                                    <!-- VALOR SITE -->
+                                    <td class="linhaTotalRelatorios"
+                                        ng-class="{'valorNegativo' : !adquirente.processouVenda}"
+                                        title="{{adquirente.processouVenda ? '' : 'Vendas não foram completamente processadas'}}">
+                                        {{(adquirente.valorSite || '0.00') | currency:'R$'}}
+                                    </td>
                                     <!-- VALOR BRUTO -->
                                     <td class="linhaTotalRelatorios">
                                         {{adquirente.valorBruto | currency:'R$'}}
+                                    </td>
+                                    <!-- DIFERENÇA -->
+                                    <td class="linhaTotalRelatorios"
+                                        ng-bind="(adquirente.valorSite && adquirente.valorSite !== null ? Math.abs(adquirente.valorSite - adquirente.valorBruto) : 0.00) | currency:'R$'">
                                     </td>
                                     <!-- VALOR DESCONTADO -->
                                     <td class="linhaTotalRelatorios valorNegativo">
@@ -347,9 +395,15 @@
                                     <td>
                                         {{bandeira.bandeira | uppercase}}
                                     </td>
+                                    <!-- VALOR SITE -->
+                                    <td class="linhaTotalRelatorios">
+                                    </td>
                                     <!-- VALOR BRUTO -->
                                     <td class="linhaTotalRelatorios">
                                         {{bandeira.valorBruto | currency:'R$'}}
+                                    </td>
+                                    <!-- DIFERENÇA -->
+                                    <td class="linhaTotalRelatorios">
                                     </td>
                                     <!-- VALOR DESCONTADO -->
                                     <td class="linhaTotalRelatorios valorNegativo">
@@ -385,7 +439,12 @@
                                         Total Exibido
                                     </td>
                                     <td>
+                                        {{total.valorSite | currency:'R$'}}
+                                    </td>
+                                    <td>
                                         {{total.valorBruto | currency:'R$'}}
+                                    </td>
+                                    <td ng-bind="Math.abs(total.valorSite - total.valorBruto) | currency:'R$'">
                                     </td>
                                     <td ng-class="{'valorNegativo' : total.valorDescontado !== 0.0}">
                                         {{total.valorDescontado | currency:'R$'}}

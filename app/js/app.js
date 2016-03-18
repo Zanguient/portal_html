@@ -632,6 +632,8 @@ angular.module("AtosCapital", ['ui.router',
                                  $autenticacao,$apis,$webapi,$sce,$empresa/*,$campos*/){
     // Título da página
     $scope.pagina = {'titulo': 'Home', 'subtitulo': ''};
+    // Math
+    $scope.Math = window.Math;
     // Usuário
     $rootScope.token = $scope.token = '';
     $scope.nome_usuario = 'Usuário';
