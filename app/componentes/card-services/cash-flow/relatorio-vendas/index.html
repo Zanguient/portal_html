@@ -302,7 +302,7 @@
                                     </td>
                                     <!-- DIFERENÇA -->
                                     <td class="linhaTotalRelatorios"
-                                        ng-bind="(competencia.valorSite && competencia.valorSite !== null ? Math.abs(competencia.valorSite - competencia.valorBruto) : 0.00) | currency:'R$'">
+                                        ng-bind="(Math.abs(competencia.valorSite - competencia.valorBruto) || 0.00) | currency:'R$'">
                                     </td>
                                     <!-- VALOR DESCONTADO -->
                                     <td class="linhaTotalRelatorios valorNegativo">
@@ -319,7 +319,7 @@
                                     </td>
                                     <!-- % RECEBIDO -->
                                     <td class="linhaTotalRelatorios">
-                                        {{(competencia.valorRecebido*100)/competencia.valorLiquido | number:2}}%
+                                        {{((competencia.valorRecebido*100)/competencia.valorLiquido || 0.00) | number:2}}%
                                     </td>
                                     <!-- VALOR A RECEBER -->
                                     <td class="linhaTotalRelatorios"
@@ -328,7 +328,7 @@
                                     </td>
                                     <!-- % A RECEBER -->
                                     <td class="linhaTotalRelatorios">
-                                        {{(competencia.valorAReceber*100)/competencia.valorLiquido | number:2}}%
+                                        {{((competencia.valorAReceber*100)/competencia.valorLiquido || 0.00) | number:2}}%
                                     </td>
                                 </tr>
                                 <!-- LINHA EXPANSÍVEL -->
@@ -359,7 +359,7 @@
                                     </td>
                                     <!-- DIFERENÇA -->
                                     <td class="linhaTotalRelatorios"
-                                        ng-bind="(adquirente.valorSite && adquirente.valorSite !== null ? Math.abs(adquirente.valorSite - adquirente.valorBruto) : 0.00) | currency:'R$'">
+                                        ng-bind="(Math.abs(adquirente.valorSite - adquirente.valorBruto) || 0.00) | currency:'R$'">
                                     </td>
                                     <!-- VALOR DESCONTADO -->
                                     <td class="linhaTotalRelatorios valorNegativo">
@@ -376,7 +376,7 @@
                                     </td>
                                     <!-- % RECEBIDO -->
                                     <td class="linhaTotalRelatorios">
-                                        {{(adquirente.valorRecebido*100)/adquirente.valorLiquido | number:2}}%
+                                        {{((adquirente.valorRecebido*100)/adquirente.valorLiquido || 0.00) | number:2}}%
                                     </td>
                                     <!-- VALOR A RECEBER -->
                                     <td class="linhaTotalRelatorios"
@@ -385,7 +385,7 @@
                                     </td>
                                     <!-- % A RECEBER -->
                                     <td class="linhaTotalRelatorios">
-                                        {{(adquirente.valorAReceber*100)/adquirente.valorLiquido | number:2}}%
+                                        {{((adquirente.valorAReceber*100)/adquirente.valorLiquido || 0.00) | number:2}}%
                                     </td>
                                 </tr>
                                 <!-- LINHA EXPANSÍVEL -->
@@ -420,7 +420,7 @@
                                     </td>
                                     <!-- % RECEBIDO -->
                                     <td class="linhaTotalRelatorios">
-                                        {{(bandeira.valorRecebido*100)/bandeira.valorLiquido | number:2}}%
+                                        {{((bandeira.valorRecebido*100)/bandeira.valorLiquido || 0.00) | number:2}}%
                                     </td>
                                     <!-- VALOR A RECEBER -->
                                     <td class="linhaTotalRelatorios"
@@ -429,7 +429,7 @@
                                     </td>
                                     <!-- % A RECEBER -->
                                     <td class="linhaTotalRelatorios">
-                                        {{(bandeira.valorAReceber*100)/bandeira.valorLiquido | number:2}}%
+                                        {{((bandeira.valorAReceber*100)/bandeira.valorLiquido || 0.00) | number:2}}%
                                     </td>
                                 </tr>
                                 <tr ng-repeat-end></tr>
@@ -456,13 +456,13 @@
                                         {{total.valorRecebido | currency:'R$'}}
                                     </td>
                                     <td>
-                                        {{(total.valorRecebido*100)/total.valorLiquido | number:2}}%
+                                        {{((total.valorRecebido*100)/total.valorLiquido || 0.00) | number:2}}%
                                     </td>
                                     <td ng-class="{'valorPositivo' : total.valorAReceber !== 0.0}">
                                         {{total.valorAReceber | currency:'R$'}}
                                     </td>
                                     <td>
-                                        {{(total.valorAReceber*100)/total.valorLiquido | number:2}}%
+                                        {{((total.valorAReceber*100)/total.valorLiquido || 0.00) | number:2}}%
                                     </td>
                                 </tr>
                             </tbody>
