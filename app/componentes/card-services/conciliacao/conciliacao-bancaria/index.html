@@ -11,6 +11,9 @@
 
 
 
+    Versão 1.1.3 - 22/03/2016
+    - Data Recebimento Original
+
     Versão 1.1.2 - 09/03/2016
     - Paginação no modalDetalhes
 
@@ -1471,6 +1474,11 @@
                                             &nbsp;&nbsp;
                                             <i class="fa fa-adn" style="color: #7E1416; font-size: 18px"
                                                title="Cargas antecipadas"></i>
+                                        </span>
+                                        <span ng-show="dado.RecebimentosParcela !== null && dado.DataRecebimentoDiferente && dado.DataRecebimentoDiferente !== null && (!dado.Antecipado || dado.Antecipado === null)">
+                                            &nbsp;&nbsp;
+                                            <i class="fa fa-exclamation-triangle" style="color: #FFA500; font-size: 18px"
+                                               title="Parcelas não recebidas na data prevista"></i>
                                         </span>
                                     </div>
                                 </div>
