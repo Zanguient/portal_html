@@ -4,6 +4,11 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.1.3 - 28/03/2016
+ *  - vendaserp
+ *  - tbrecebimentovenda
+ *  - correcaovendaerp
+ *
  *  Versão 1.1.2 - 05/02/2016
  *  - tbantecipacaobancaria
  *
@@ -198,6 +203,10 @@ angular.module('webapi', ['utils'])
             tbadquirente : 200,
             recebimentoparcela : 300
         },
+        correcaovendaerp : {
+            idExtrato : 100, // A DEFINIR!
+            id_grupo : 101
+        },
         recebiveisfuturos : {
             data : 100,
             id_grupo : 101,
@@ -364,7 +373,23 @@ angular.module('webapi', ['utils'])
             id_grupo = 216,
             idExtrato = 306,
         },
+        tbrecebimentovenda: {
+            idrecebimentotitulo : 100,
+            nrCNPJ : 101,
+            nrNsu : 102,
+            dtVenda : 103,
+            cdAdquirente : 104,
+            dsBandeira : 106,
+            vlVenda : 107,
+            qtParcelas : 108,
+            // RELACIONAMENTOS
+            id_grupo = 216,
+        },
         tituloserp : {
+            data : 100,
+            id_grupo : 101
+        },
+        vendaserp : {
             data : 100,
             id_grupo : 101
         }
@@ -712,6 +737,7 @@ angular.module('webapi', ['utils'])
         conciliacaobancaria : $autenticacao.getUrlBase() + '/card/conciliacaobancaria/',
         conciliacaorelatorios : $autenticacao.getUrlBase() + '/card/conciliacaorelatorios/',
         conciliacaotitulos : $autenticacao.getUrlBase() + '/card/conciliacaotitulos/',
+        correcaovendaerp : $autenticacao.getUrlBase() + '/card/correcaovendaerp/',
         recebiveisfuturos : $autenticacao.getUrlBase() + '/card/recebiveisfuturos/',
         relatorioconciliacaotitulos : $autenticacao.getUrlBase() + '/card/relatorioconciliacaotitulos/',
         relatoriovendas : $autenticacao.getUrlBase() + '/card/relatoriovendas/',
@@ -727,7 +753,9 @@ angular.module('webapi', ['utils'])
         tbrecebimentoajuste : $autenticacao.getUrlBase() + '/card/tbrecebimentoajuste/', 
         tbrecebimentotef : $autenticacao.getUrlBase() + '/card/tbrecebimentotef/', 
         tbrecebimentotitulo : $autenticacao.getUrlBase() + '/card/tbrecebimentotitulo/', 
+        tbrecebimentovenda : $autenticacao.getUrlBase() + '/card/tbrecebimentovenda/', 
         tituloserp : $autenticacao.getUrlBase() + '/card/tituloserp/', 
+        vendaserp : $autenticacao.getUrlBase() + '/card/vendaserp/', 
         uploadextrato : $autenticacao.getUrlBase() + '/card/testeupload/',    
     },
     cartao : {
