@@ -8,6 +8,9 @@
     Antecipação Bancária
 
 
+    Versão 1.0.2 - 29/03/2016
+    - Destaque no valor antecipado CS quando diferente do valor líquido da operação
+
     Versão 1.0.1 - 22/02/2016
     - BANESE
 
@@ -867,7 +870,9 @@
                                                         <td ng-show="informaValoresCS">
                                                             {{vencimento.vlDisponivelCS | currency:'R$'}}
                                                         </td>
-                                                        <td ng-show="informaValoresCS">
+                                                        <td ng-show="informaValoresCS"
+                                                            ng-class="{'valorNegativo' : vencimento.vlAntecipadoCS > 0.0 && Math.abs(vencimento.vlAntecipadoCS - vencimento.vlAntecipacaoLiquida) > 0.01}"
+                                                            title="{{vencimento.vlAntecipadoCS > 0.0 && Math.abs(vencimento.vlAntecipadoCS - vencimento.vlAntecipacaoLiquida) > 0.01 ? 'Valor líquido da antecipação não pode ser diferente do valor antecipado no Card Services! É altamente recomendável que seja refeita a antecipação das parcelas para esse vencimento' : ''}}">
                                                             {{vencimento.vlAntecipadoCS | currency:'R$'}}
                                                         </td>
                                                         <td ng-show="informaValoresCS"
