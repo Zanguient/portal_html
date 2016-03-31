@@ -107,7 +107,7 @@ angular.module("administrativo-vendas", [])
     /**
       * Retorna true se o usuário pode cadastrar títulos
       */
-    $scope.usuarioPodeCadastrarTitulos = function(){
+    $scope.usuarioPodeCadastrarVendas = function(){
         return permissaoCadastro;   
     }
     /**
@@ -422,7 +422,7 @@ angular.module("administrativo-vendas", [])
         var filtros = obtemFiltrosBusca();
         
         $webapi.get($apis.getUrl($apis.card.tbrecebimentovenda,
-                                [$scope.token, 3, /*$campos.card.tbrecebimentovenda.dtVenda*/ 103, 0, 
+                                [$scope.token, 2, /*$campos.card.tbrecebimentovenda.dtVenda*/ 103, 0, 
                                  $scope.filtro.itens_pagina, $scope.filtro.pagina],
                                 filtros)) 
             .then(function(dados){           
@@ -433,7 +433,7 @@ angular.module("administrativo-vendas", [])
                 // Obtém os dados
                 $scope.vendas = dados.Registros;
                 console.log(dados.Registros);
-                $scope.total.totalCorrigidos = dados.Totais.totalCorrigidos;
+                //$scope.total.totalCorrigidos = dados.Totais.totalCorrigidos;
                 $scope.total.totalConciliados = dados.Totais.totalConciliados;
                 $scope.total.valorTotal = dados.Totais.valorTotal;
                 
@@ -522,6 +522,10 @@ angular.module("administrativo-vendas", [])
       * Faz o upload
       */
     $scope.upload = function (files) {
+        
+        // temp...
+        $scope.showAlert("Serviço indisponível!", true, 'warning', true, false);
+        return; 
         
         if(!$scope.usuariologado.grupoempresa || $scope.usuariologado.grupoempresa === null) return; 
         

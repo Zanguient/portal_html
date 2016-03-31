@@ -81,15 +81,15 @@
                                 <td rowspan="1" colspan="1">
                                     <div class="margin-bottom-5">
                                         <button class="btn btn-sm filter-submit margin-bottom btn-primary" 
-                                           ng-disabled="!usuarioPodeCadastrarTitulos()"
+                                           ng-disabled="!usuarioPodeCadastrarVendas()"
                                            ng-show="usuariologado.grupoempresa && usuariologado.grupoempresa !== null && usuariologado.grupoempresa.dsAPI && usuariologado.grupoempresa.dsAPI !== null"
-                                           ng-click="importaTitulos()"
+                                           ng-click="importaVendas()"
 								           style="width:150px">
                                             <i class="fa fa-upload"></i>
                                             Importar Vendas
                                         </button>
                                         <button class="btn btn-sm filter-submit margin-bottom green" 
-                                           ng-disabled="!usuariologado.grupoempresa || usuariologado.grupoempresa === null || !usuarioPodeCadastrarTitulos()"
+                                           ng-disabled="!usuariologado.grupoempresa || usuariologado.grupoempresa === null || !usuarioPodeCadastrarVendas()"
                                            ng-show="!usuariologado.grupoempresa || usuariologado.grupoempresa === null || !usuariologado.grupoempresa.dsAPI || usuariologado.grupoempresa.dsAPI === null"
                                            ngf-select ngf-change="upload($files)" 
                                            ngf-multiple="false" accept=".csv"
@@ -124,8 +124,8 @@
                     <table class="table table-striped table-bordered table-hover dataTable no-footer conteudoTabelas" id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
                         <thead>
                             <tr role="row" class="heading">
-                                <th width="25%">
-                                     Data {{filtro.data}}
+                                <th width="20%">
+                                     Data
                                 </th>
                                 <th width="30%">
                                      Filial 
@@ -133,7 +133,7 @@
                                 <th width="20%">
                                      Adquirente 
                                 </th>
-                                <th width="15%">
+                                <th width="20%">
                                      NSU 
                                 </th>
                                 <th width="10%">
@@ -143,27 +143,6 @@
                             <tr role="row" class="filter">  
                                 <!-- DATA -->
                                 <td rowspan="1" colspan="1">
-                                    <div class="clearfix" style="text-align:center; margin-bottom:10px">
-                                        <div class="btn-group" data-toggle="buttons">
-                                            <div class="col-md-7 col-sm-12" style="margin-bottom:5px;">
-                                                <label class="btn" 
-                                                       ng-class="{ 'red': filtro.data === 'Recebimento', 'grey': filtro.data !== 'Recebimento'}"
-                                                       ng-model="filtro.data" 
-                                                       btn-radio="'Recebimento'">
-                                                    Recebimento
-                                                </label> 
-                                            </div>
-                                            <div class="col-md-5 col-sm-12">
-                                                <label class="btn" 
-                                                       ng-class="{ 'red': filtro.data === 'Venda', 'grey': filtro.data !== 'Venda'}"
-                                                       ng-model="filtro.data" 
-                                                       btn-radio="'Venda'">
-                                                    Venda
-                                                </label>
-                                            </div>    
-                                        </div>
-                                    </div>
-
                                     <div class="input-group date date-picker margin-bottom-5"
                                          data-date-format="dd/mm/yyyy">
                                         <input type="text" 
@@ -268,7 +247,7 @@
                                     <div class="margin-bottom-5">
                                         <!-- BOTÃO BUSCAR -->
                                         <button class="btn btn-sm red filter-submit margin-bottom" 
-                                                ng-click="buscaTitulos()">
+                                                ng-click="buscaVendas()">
                                             <i class="fa fa-search"></i> 
                                             Buscar
                                         </button>
@@ -294,7 +273,7 @@
         
         <div class="portlet-title">
             <div class="caption">								
-                <span class="caption-subject font-green-sharp bold uppercase">TÍTULOS</span>
+                <span class="caption-subject font-green-sharp bold uppercase">VENDAS</span>
             </div>
             <div class="actions">
                 <a class="btn btn-circle btn-icon-only btn-default fullscreen" 
@@ -380,10 +359,10 @@
                     </div>
                     <div class="col-sm-4">
                         <div class="row">
-                            <label>Baixados: </label>
+                            <label>Corrigidos: </label>
                         </div>
                         <div class="row">
-                            {{total.totalBaixados}}
+                            {{total.totalCorrigidos}}
                         </div>
                     </div>
                     <div class="col-sm-4">
@@ -427,7 +406,7 @@
                                Cod <br>ERP
                             </th>
                             <th tabindex="11" rowspan="1" colspan="1" style="width: 10%;">
-                               Data <br>Baixa
+                               Data <br>Correção
                             </th>    
                             <th tabindex="12" rowspan="1" colspan="1" style="width: 5%;">
                                Conciliado

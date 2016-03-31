@@ -203,10 +203,6 @@ angular.module('webapi', ['utils'])
             tbadquirente : 200,
             recebimentoparcela : 300
         },
-        correcaovendaerp : {
-            idExtrato : 100, // A DEFINIR!
-            id_grupo : 101
-        },
         recebiveisfuturos : {
             data : 100,
             id_grupo : 101,
@@ -369,19 +365,22 @@ angular.module('webapi', ['utils'])
             dtTitulo : 109,
             vlParcela : 110,
             nrParcela : 111,
+            cdERP : 112,
+            dtBaixaERP : 113,
             // RELACIONAMENTOS
             id_grupo = 216,
             idExtrato = 306,
         },
         tbrecebimentovenda: {
-            idrecebimentotitulo : 100,
+            idRecebimentoVenda : 100,
             nrCNPJ : 101,
-            nrNsu : 102,
+            nrNSU : 102,
             dtVenda : 103,
             cdAdquirente : 104,
             dsBandeira : 106,
             vlVenda : 107,
             qtParcelas : 108,
+            cdERP : 109,
             // RELACIONAMENTOS
             id_grupo = 216,
         },

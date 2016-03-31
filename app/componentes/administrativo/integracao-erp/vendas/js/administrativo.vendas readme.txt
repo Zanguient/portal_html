@@ -46,7 +46,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 	- POST : importa vendas da base da empresa para a base da atoscapital
 			 Espera o JSON { data : string }, que é a data do título
 			 
-    - PATCH : importa vendas a partir do arquivo CSV (upload)	
+        - PATCH : importa vendas a partir do arquivo CSV (upload)	
 	
    
   * card/tbrecebimentovenda
@@ -60,13 +60,13 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				vlVenda : double ou null,
 				qtParcelas : int ou null,
 				cdERP : string ou null,
-				dtCorrecaoERP : datetime ou null
+				//dtCorrecaoERP : datetime ou null
 				conciliado : bool
 			  }
 			]	
 		   Recebe em Totais: - "valorTotal" : double // valor total parcela
-							 - "totalCorrigidos" : int // total de títulos baixados
-							 - "totalConciliados" : int // total de títulos conciliados
+				     //- "totalCorrigidos" : int // total de títulos baixados
+		      		     - "totalConciliados" : int // total de títulos conciliados
 
    
 ### Desenvolvedores ###
