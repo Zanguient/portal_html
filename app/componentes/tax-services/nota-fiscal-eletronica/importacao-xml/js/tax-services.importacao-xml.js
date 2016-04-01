@@ -747,7 +747,7 @@ angular.module("tax-services-importacao-xml", [])
         // Obtém o JSON
         var jsonImportar = { nrChave : $scope.nrChave,
                           codAlmoxarifado : $scope.dadosImportacao.almoxarifado.cod_almoxarifado,
-                          codNaturezaOperacao : $scope.dadosImportacao.natOperacao.cdNaturezaOperacao,
+                          codNaturezaOperacao : $scope.dadosImportacao.natOperacao.cod_natureza_operacao,
                             dtEntrega: $scope.dtEntrega,
                         };
 
