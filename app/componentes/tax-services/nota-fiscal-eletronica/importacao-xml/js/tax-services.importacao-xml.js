@@ -744,7 +744,7 @@ angular.module("tax-services-importacao-xml", [])
         // Obtém o JSON
         var jsonImportar = { nrChave : $scope.nrChave,
                           codAlmoxarifado : $scope.dadosImportacao.almoxarifado.cod_almoxarifado,
-                          codNaturezaOperacao : $scope.dadosImportacao.natOperacao.cod_natureza_operacao,
+                          codNaturezaOperacao : $scope.dadosImportacao.natOperacao.cdNaturezaOperacao,
                             dtEntrega: $scope.dtEntrega,
                         };
 
@@ -842,7 +842,7 @@ angular.module("tax-services-importacao-xml", [])
     //Opção Importar
     
     $scope.exibeOpcaoImportar = function(){
-    if($scope.usuariologado.grupoempresa && $scope.usuariologado.grupoempresa.id_grupo === 6)
+    if($scope.usuariologado.grupoempresa && ($scope.usuariologado.grupoempresa.id_grupo === 6 || $scope.usuariologado.grupoempresa.id_grupo === 15))
         return true;
     else
         return false;   
