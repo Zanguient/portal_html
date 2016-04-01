@@ -33,6 +33,8 @@
     Versão 1.0 - 09/11/2015
 -->
 
+            <div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">
+                <div class="row">                       
 <div class="container" ng-controller="card-services-conciliacao-titulosCtrl" 
      ng-init="cardServices_conciliacaoTitulosInit()">    
     <!-- BEGIN PAGE BREADCRUMB -->
@@ -58,8 +60,9 @@
             </div>
         </div>
         <div class="portlet-body" ng-show="exibeTela">
-            <div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">
-                <div class="row">                       
+            <!-- PORTLET BODY FILTRO INSIDE -->
+            <div class="dataTables_wrapper dataTables_extended_wrapper no-footer">
+                <div class="row"> 
                     <div class="col-md-8 col-sm-12">
                         <div class="dataTables_paginate paging_bootstrap_extended" id="datatable_ajax_paginate">
                         </div>

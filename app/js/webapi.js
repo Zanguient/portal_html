@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.1.4 - 01/04/2016
+ *  - conciliacaovendas
+ *
  *  Versão 1.1.3 - 28/03/2016
  *  - vendaserp
  *  - tbrecebimentovenda
@@ -202,6 +205,17 @@ angular.module('webapi', ['utils'])
             // Relacionamentos
             tbadquirente : 200,
             recebimentoparcela : 300
+        },
+        conciliacaovendas : {
+            data = 100, 
+            tipo = 101,
+            id_grupo = 102,
+            nu_cnpj = 103,
+            preconcilia_grupo = 104,
+            nsu = 105,
+            // Relacionamentos
+            tbadquirente : 200,
+            recebimento : 300
         },
         recebiveisfuturos : {
             data : 100,
@@ -736,6 +750,7 @@ angular.module('webapi', ['utils'])
         conciliacaobancaria : $autenticacao.getUrlBase() + '/card/conciliacaobancaria/',
         conciliacaorelatorios : $autenticacao.getUrlBase() + '/card/conciliacaorelatorios/',
         conciliacaotitulos : $autenticacao.getUrlBase() + '/card/conciliacaotitulos/',
+        conciliacaovendas : $autenticacao.getUrlBase() + '/card/conciliacaovendas/',
         correcaovendaerp : $autenticacao.getUrlBase() + '/card/correcaovendaerp/',
         recebiveisfuturos : $autenticacao.getUrlBase() + '/card/recebiveisfuturos/',
         relatorioconciliacaotitulos : $autenticacao.getUrlBase() + '/card/relatorioconciliacaotitulos/',

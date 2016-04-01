@@ -39,7 +39,69 @@ Além deles, é necessária a importação dos seguintes módulos externos.
  
  ### Interação com a WEB API ###
  
+  * cliente/empresa
+    - GET : listagem das filiais (coleção 0)
+			[
+			  { nu_cnpj : string,
+				ds_fantasia : string,
+				filial : string ou null,
+				id_grupo : int
+			  }
+			]
+ 
+  * card/tbadquirente : listagem das adquirentes
+	- GET : listagem das adquirentes (coleção 1)
+			[
+			  { cdAdquirente : int,
+                nmAdquirente : string,
+                dsAdquirente : string,
+                stAdquirente : int,  // igual a 1
+				hrExecucao : datetime,
+			  }
+			]
+ 
+  * card/conciliacaovendas
+    - GET : obtém as informações para conciliação de vendas (coleção 0)
+	  [
+		{ Venda : null ou // se null => não tem info do lado do título 
+				  {  Id : int,
+				     Nsu : string,
+				     Valor : double,
+				     Bandeira : string,
+				     Data : datetime,
+				     Filial : string,
+                                     Parcelas : int,
+				  }, 
+		  Recebimento : 
+				 {  Id : int,
+				    Nsu : string,
+				    CodResumoVendas : string,
+				    Valor : double,
+			            Bandeira : string,
+				    Data : datetime,
+				    Filial : string,
+				    Parcelas : int,	
+				 },
+		  Adquirente : string, 
+		  Conciliado : int, // 1 : CONCILIADO | 2 : PRÉ-CONCILIADO | 3 : NÃO-CONCILIADO
+		}
+	  ]
+	  
   
+	- PUT : seta os itens recebimento para apontar para determinada venda ou desassociar de uma venda
+			[{ idRecebimentoVenda : int, // set -1 para desassociar de uma venda
+			   idRecebimento: int
+			 }]
+			
+	- POST : Faz a conciliação TEF
+			{ 
+			    data : string,
+			    nrCNPJ : string,
+			    cdAdquirente : int
+			}	
+	
+	
+	
  
    
 

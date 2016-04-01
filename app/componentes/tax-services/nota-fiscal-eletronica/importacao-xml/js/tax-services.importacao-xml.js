@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.9 - 01/04/2016
+ *  - Atualizações Fernando
+ *
  *  Versão 1.0.8 - 14/03/2016
  *  - Atualizações Fernando
  *
@@ -746,10 +749,11 @@ angular.module("tax-services-importacao-xml", [])
         
         // Obtém o JSON
         var jsonImportar = { nrChave : $scope.nrChave,
-                          codAlmoxarifado : $scope.dadosImportacao.almoxarifado.cod_almoxarifado,
-                          codNaturezaOperacao : $scope.dadosImportacao.natOperacao.cdNaturezaOperacao,
-                            dtEntrega: $scope.dtEntrega,
-                        };
+                             codAlmoxarifado : $scope.dadosImportacao.almoxarifado.cod_almoxarifado,
+                             //codNaturezaOperacao : $scope.dadosImportacao.natOperacao.cdNaturezaOperacao,
+                             codNaturezaOperacao : $scope.dadosImportacao.natOperacao.cod_natureza_operacao,
+                             dtEntrega: $scope.dtEntrega,
+                           };
 
         // POST
         $scope.showProgress();
