@@ -3,11 +3,12 @@
  *  
  *  suporte@atoscapital.com.br
  *
- *  Versão 1.0.2 - 07/10/2015
- *      - Modelo da conciliação de títulos 
+ *
+ *  Versão 1.0.2 - 04/04/2016
+ *  - Modelo da conciliação de títulos 
  *
  *  Versão 1.0.1 - 07/10/2015
- *      - Criação das tabs para as abas.  
+ *  - Criação das tabs para as abas.  
  *
  *  Versão 1.0 - 03/09/2015
  *
@@ -432,7 +433,7 @@ angular.module("card-services-conciliacao-vendas", [])
                                 filtros)) 
             .then(function(dados){       
             
-                $scope.totais.contVendas = $scope.totais.contRecebimentosParcela = totalPreConciliados = 0;
+                $scope.totais.contVendas = $scope.totais.contRecebimentos = totalPreConciliados = 0;
             
                 // Obtém os dados
                 $scope.dadosconciliacao = dados.Registros;
@@ -474,10 +475,10 @@ angular.module("card-services-conciliacao-vendas", [])
     }
     
     /**
-      * Incrementa o total de registros associados a recebimentoparcela
+      * Incrementa o total de registros associados a recebimento
       */
-    $scope.incrementaContRecebimentosParcelas = function(RecebimentoParcela){
-        if(RecebimentoParcela != null) $scope.totais.contRecebimentosParcela += 1;
+    $scope.incrementaContRecebimentos = function(Recebimento){
+        if(Recebimento != null) $scope.totais.contRecebimentos += 1;
     }
     /**
       * Incrementa o total de registros associados a venda
@@ -494,13 +495,13 @@ angular.module("card-services-conciliacao-vendas", [])
       * Solicita confirmação para o usuário quanto a desconciliação
       */
     $scope.desconcilia = function(dado){
-        var dadoT = angular.copy(dado);
-        dadoT.Venda.Id = -1; // desfazer conciliação
+        var dadoV = angular.copy(dado);
+        dadoV.Venda.Id = -1; // desfazer conciliação
         //console.log(dado);
-        //console.log(dadoT);
+        //console.log(dadoV);
         $scope.showModalConfirmacao('Confirmação', 
             "Tem certeza que deseja desfazer a conciliação selecionada?",
-            concilia, [dadoT], 'Sim', 'Não');  
+            concilia, [dadoV], 'Sim', 'Não');  
     }
     /**
       * Solicita confirmação para o usuário quanto a conciliação
@@ -546,10 +547,8 @@ angular.module("card-services-conciliacao-vendas", [])
             var dado = dadosConciliacao[k];
             //console.log("DADO");console.log(dado);
             jsonConciliacaoVendas.push({ idRecebimentoVenda : parseInt(dado.Venda.Id), 
-                                          recebimentoParcela : { idRecebimento : parseInt(dado.RecebimentoParcela.Id),
-                                                                  numParcela : parseInt(dado.RecebimentoParcela.NumParcela)
-                                                                }
-                                         });
+                                         idRecebimento : parseInt(dado.Recebimento.Id),
+                                       });
         }
         
         //console.log(jsonConciliacaoVendas);
@@ -579,16 +578,15 @@ angular.module("card-services-conciliacao-vendas", [])
 
                                                  
                                                  
-    // BUSCA TÍTULOS   
+    // BUSCA VENDAS   
     /**
-      * Selecionou um recebimentoparcela para buscar vendas
+      * Selecionou um recebimento para buscar vendas
       */
-    $scope.buscaVendas = function(dado){
-			$scope.statusPesquisaTef = false;
-        if(!dado.RecebimentoParcela || dado.RecebimentoParcela === null) return;
-        $scope.modalBuscaVendas.recebimento = dado.RecebimentoParcela;
+    $scope.buscaVendas = function(dado){        
+        if(!dado.Recebimento || dado.Recebimento === null) return;
+        $scope.modalBuscaVendas.recebimento = dado.Recebimento;
         $scope.modalBuscaVendas.vendas = [];
-        $scope.modalBuscaVendas.filial = $filter('filter')($scope.filiais, function(f){return $scope.getNomeAmigavelFilial(f) === dado.RecebimentoParcela.Filial})[0];
+        $scope.modalBuscaVendas.filial = $filter('filter')($scope.filiais, function(f){return $scope.getNomeAmigavelFilial(f) === dado.Recebimento.Filial})[0];
         // Exibe o modal
         $('#modalVendas').modal('show');
         buscaVendas();
@@ -622,10 +620,8 @@ angular.module("card-services-conciliacao-vendas", [])
         $scope.showProgress();
         
         // Filtro  
-        var filtros = [{id: /*$campos.card.conciliacaovendas.recebimentoparcela + $campos.pos.recebimentoparcela.idrecebimento - 100*/ 300, 
-                        valor: $scope.modalBuscaVendas.recebimento.Id},
-                      {id: /*$campos.card.conciliacaovendas.recebimentoparcela + $campos.pos.recebimentoparcela.numparcela - 100*/ 301, 
-                        valor: $scope.modalBuscaVendas.recebimento.NumParcela}];
+        var filtros = {id: /*$campos.card.conciliacaovendas.recebimento + $campos.pos.recebimento.id - 100*/ 300, 
+                        valor: $scope.modalBuscaVendas.recebimento.Id};
         
         // Busca para uma filial específica
         if(typeof nu_cnpj === 'string'){
@@ -653,16 +649,16 @@ angular.module("card-services-conciliacao-vendas", [])
     
     
     /**
-      * Concilia parcela selecionada com o venda
+      * Concilia recebível selecionada com o venda
       */
     $scope.conciliarVenda = function(venda){
         //console.log(venda);
-        var dado = {RecebimentoParcela : $scope.modalBuscaVendas.recebimento,
+        var dado = {Recebimento : $scope.modalBuscaVendas.recebimento,
                     Venda : venda};
         //console.log(dado);
         // Confirma conciliação
         $scope.showModalConfirmacao('Confirmação', 
-            "Uma vez confirmada a conciliação, o venda e a carga não poderão se envolver em outra conciliação de vendas. Confirma essa conciliação da parcela com valor de " + $filter('currency')($scope.modalBuscaVendas.recebimento.Valor, 'R$', 2) + ' e o venda com valor de ' + $filter('currency')(venda.Valor, 'R$', 2) + ' (diferença de ' + $filter('currency')(Math.abs(venda.Valor - $scope.modalBuscaVendas.recebimento.Valor), 'R$', 2) + ')?',
+            "Uma vez confirmada a conciliação, o venda e a carga não poderão se envolver em outra conciliação de vendas. Confirma essa conciliação do recebível com valor de " + $filter('currency')($scope.modalBuscaVendas.recebimento.Valor, 'R$', 2) + ' e a venda com valor de ' + $filter('currency')(venda.Valor, 'R$', 2) + ' (diferença de ' + $filter('currency')(Math.abs(venda.Valor - $scope.modalBuscaVendas.recebimento.Valor), 'R$', 2) + ')?',
             function(){ fechaModalVendas(); 
                        $timeout(function(){concilia([dado], true);}, 300);}, undefined, 'Sim', 'Não');
     }
@@ -670,8 +666,10 @@ angular.module("card-services-conciliacao-vendas", [])
     
     /**
       * Concilia TEF-NSU
-      */
+      * /
     $scope.conciliaTefNsu = function(){
+        
+        return;
         
         if(!$scope.filtro.filial || $scope.filtro.filial === null ||
            !$scope.filtro.adquirente || $scope.filtro.adquirente === null)
@@ -701,7 +699,7 @@ angular.module("card-services-conciliacao-vendas", [])
                     $scope.hideProgress(divPortletBodyFiltrosPos);
                     $scope.hideProgress(divPortletBodyDadosPos);
                   });     
-    }
+    }*/
     
     
     
@@ -710,6 +708,85 @@ angular.module("card-services-conciliacao-vendas", [])
     $scope.resetaBuscaNSU = function(){
         $scope.filtro.nsu = '';
         $scope.buscaDadosConciliacao();
+    }
+    
+    
+    
+    
+    
+    // CORRIGE VENDAS
+    
+    /**
+      * Correção da venda no ERP
+      */
+    $scope.corrigeVenda = function(dado)
+    {
+        if(!dado || dado === null || !dado.Venda || dado.Venda === null || !dado.Recebimento || dado.Recebimento === null || dado.Conciliado !== 1)
+            return;
+
+        $scope.showProgress(divPortletBodyFiltrosPos, 10000);
+        $scope.showProgress(divPortletBodyDadosPos);
+     
+        var url = $apis.getUrl($apis.card.correcaovendaerp, undefined, {id: 'token', valor: $scope.token});
+        
+        // Seta para a url de download
+        if(url.slice(0, "http://localhost:".length) !== "http://localhost:")
+            url = url.replace($autenticacao.getUrlBase(), $autenticacao.getUrlBaseDownload());
+        
+        // Apenas uma venda
+        var json = { idsRecebimento : [dado.Recebimento.Id] };
+        
+        $webapi.update(url, json)
+            .then(function(dados){   
+                buscaDadosConciliacaoVendas(true);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showModalAlerta('Houve uma falha ao realizar a correção no ERP. (' + (failData.dados && failData.dados !== null ? failData.dados : failData.status) + ')', 'Erro');
+                 // Fecha os progress
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+                 $scope.hideProgress(divPortletBodyDadosPos);
+              }); 
+    }
+    
+    /**
+      * Correção das vendas conciliadas
+      */
+    $scope.corrigeVendas = function()
+    {
+        if(!$scope.filtro.adquirente || $scope.filtro.adquirente === null)
+            return;
+
+        $scope.showProgress(divPortletBodyFiltrosPos, 10000);
+        $scope.showProgress(divPortletBodyDadosPos);
+     
+        var url = $apis.getUrl($apis.card.correcaovendaerp, undefined, {id: 'token', valor: $scope.token});
+        
+        // Seta para a url de download
+        if(url.slice(0, "http://localhost:".length) !== "http://localhost:")
+            url = url.replace($autenticacao.getUrlBase(), $autenticacao.getUrlBaseDownload());
+        
+        // Filtros
+        var json = { data : $scope.getFiltroData($scope.filtro.datamin),
+                     nrCNPJ : $scope.filtro.filial && $scope.filtro.filial !== null ? $scope.filtro.filial.nu_cnpj : null,
+                     cdAdquirente : $scope.filtro.adquirente.cdAdquirente
+                   }; 
+        if($scope.filtro.datamax)
+            json.data = json.data + '|' + $scope.getFiltroData($scope.filtro.datamax); 
+        
+        $webapi.update(url, json)
+            .then(function(dados){   
+                buscaDadosConciliacaoVendas(true);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showModalAlerta('Houve uma falha ao realizar a correção no ERP. (' + (failData.dados && failData.dados !== null ? failData.dados : failData.status) + ')', 'Erro');
+                 // Fecha os progress
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+                 $scope.hideProgress(divPortletBodyDadosPos);
+              }); 
     }
     
 }]);

@@ -1084,7 +1084,7 @@ angular.module("card-services-conciliacao-bancaria", ['angularUtils.directives.d
       */
     $scope.baixaAutomatica = function(dado)
     {
-        if(!dado || dado === null || !dado.ExtratoBancario || dado.ExtratoBancario === null)
+        if(!dado || dado === null || !dado.ExtratoBancario || dado.ExtratoBancario === null || dado.Conciliado !== 1)
             return;
 
         $scope.showProgress(divPortletBodyFiltrosPos, 10000);

@@ -34,11 +34,12 @@ Além deles, é necessária a importação dos seguintes módulos externos.
   * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
   * APIS:
     - card/tbcontacorrente
-	- card/tbcontacorrentetbloginadquirenteempresa (adquirentes da conta)
+    - card/tbcontacorrentetbloginadquirenteempresa (adquirentes da conta)
     - cliente/empresa
     - card/tbadquirente
     - card/conciliacaobancaria
-	- card/tbrecebimentotitulo
+    - card/tbrecebimentotitulo
+    - card/baixaautomaticaerp
 	
  
  
@@ -189,6 +190,11 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 		  OBS2: recebe em Totais:
 		        - "valorTotal"
 				- "totalBaixados"
+
+
+  * card/baixaautomaticaerp
+    - GET : realiza a baixa automática no ERP do cliente
+            ENVIA como filtro o idExtrato
  
    
 

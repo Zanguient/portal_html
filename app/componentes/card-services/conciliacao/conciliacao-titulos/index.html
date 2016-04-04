@@ -653,12 +653,12 @@
                 </div>  
                 <div class="col-xs-4 col-sm-4 col-md-4" print-remove>
                     <button class="btn btn-warning" 
-                       ng-disabled="!temElementosPreConciliados() || associacaoManual.selecionandoRecebimentos"
+                       ng-disabled="!temElementosPreConciliados()"
                        ng-click="conciliaPreConciliados()">
                        Conciliar Pré-Conciliados
                     </button>
                     <button class="btn btn-danger" style="padding-left: 10px" 
-                       ng-disabled="!filtro.filial || filtro.filial === null || associacaoManual.selecionandoRecebimentos"
+                       ng-disabled="!filtro.filial || filtro.filial === null"
                        ng-click="conciliaTefNsu()">
                        Conciliar TEF-NSU
                     </button>
@@ -832,7 +832,7 @@
                         <div class="row" ng-init="incrementaTotalPreConciliados(dado.Conciliado === 2)"
                              ng-class="{'element-hidden' : dado.Conciliado === 3 && dado.RecebimentoParcela === null}">
                             <div class="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-4"
-                                 title="{{dado.Conciliado === 1 ? 'Desfazer conciliação' : dado.Conciliado === 2 && !associacaoManual.selecionandoRecebimentos ? 'Conciliar' : dado.Conciliado === 3 && dado.Titulo === null ? 'Buscar título' : ''}}">
+                                 title="{{dado.Conciliado === 1 ? 'Desfazer conciliação' : dado.Conciliado === 2 ? 'Conciliar' : dado.Conciliado === 3 && dado.Titulo === null ? 'Buscar título' : ''}}">
                                 <a href="javascript:;" class="btn btn-icon-only default"
                                    ng-click="dado.Conciliado === 1 ? desconcilia(dado) : dado.Conciliado === 2 ? concilia(dado) : dado.Conciliado === 3 && dado.Titulo === null  ? buscaTitulos(dado) : 0"
                                    ng-disabled="!usuarioPodeAlterarDadosConciliacaoTitulos()">

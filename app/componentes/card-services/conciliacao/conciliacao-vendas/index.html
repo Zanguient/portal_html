@@ -216,6 +216,266 @@
     <!-- DADOS DA CONCILIAÇÃO -->
     <div class="portlet light">
         
+         <!-- MODAL VENDAS -->
+       <div class="modal fade bs-modal-sm modal-input" 
+            id="modalVendas" aria-hidden="true">
+           <div class="modal-dialog modal-sm" style="width:1000px">
+               <div class="modal-content">
+                   <div class="modal-header">
+                       <h4 class="modal-title modal-cabecalho">Busca vendas</h4>
+                   </div>
+                   <div class="modal-body modal-corpo modalAcessoDeUsuarios" style="text-align: center">
+                         <!-- DADOS DO RECEBÍVEL PARCELA -->
+                         <table border=0>
+                             <tbody class="centralizarVertical">
+                                 <tr role="row">
+                                     <td rowspan="1" colspan="1"                                      
+                                         style="width: 10%; text-align:center">
+                                         <label>Venda</label>
+                                     </td>
+                                     <td rowspan="1" colspan="1"                                      
+                                         style="width: 10%; text-align:center">
+                                         <label>Valor</label>
+                                     </td>
+                                     <td rowspan="1" colspan="1"                                      
+                                         style="width: 10%; text-align:center">
+                                         <label>Parcelas</label>
+                                     </td>
+                                     <td rowspan="1" colspan="1"                                      
+                                         style="width: 40%; text-align:center">
+                                         <label>Bandeira</label>
+                                     </td>
+                                     <td rowspan="1" colspan="1"                                      
+                                         style="width: 10%; text-align:center">
+                                         <label>NSU</label>
+                                     </td>
+                                     <td rowspan="2" colspan="1"                                      
+                                         style="width: 20%; text-align:center">
+                                         <!--span style="margin-right: 20px" title="Buscar pelo NSU">
+                                             <a href="javascript:;" class="btn btn-icon-only default"
+                                                    ng-click="buscaTEF()">
+                                                 <i class="fa fa-search"></i>
+                                             </a>
+                                         </span>												 
+                                         <label style="margin-right: 20px">Pesquisar no TEF</label-->
+                                     </td>
+                                 </tr>
+                                 <tr role="row">
+                                     <td ng-bind="getDataString(modalBuscaVendas.recebimento.Data)"></td>
+                                     <td>{{modalBuscaVendas.recebimento.Valor | currency:'R$'}}</td>
+                                     <td>{{modalBuscaVendas.recebimento.Parcelas}}</td>
+                                     <td>{{modalBuscaVendas.recebimento.Bandeira | uppercase}}</td>
+                                     <td>{{("000000000000" + modalBuscaVendas.recebimento.Nsu).slice(-12)}}</td>
+                                 </tr>
+                             </tbody>
+                         </table>
+										 
+                         <!-- TABELA TEF -->
+                         <!--div style="margin-top: 50px" ng-show="statusPesquisaTef">
+                             <div class="row">
+                                <label class="col-sm-12" style="width: 10%;">TEF</label></div>
+                                 <div class="col-xs-12 col-sm-12 col-md-12">
+                                     <div class="table-scrollable">
+                                 <table class="table table-striped table-hover table-bordered dataTable no-footer conteudoTabelas"
+                                                role="grid">
+                                        <thead>
+                                            <tr role="row">
+                                                <th tabindex="0" rowspan="1" colspan="1"                                      
+                                                        style="width: 10%; text-align:center; font-size: 100%">
+                                                        Data
+                                                </th>
+                                                <th tabindex="1" rowspan="1" colspan="1"                                          
+                                                        style="width: 10%; font-size: 100%">
+                                                        Filial
+                                                </th>
+                                                <th tabindex="2" rowspan="1" colspan="1"                                          
+                                                        style="width: 5%; font-size: 100%">
+                                                         Bandeira
+                                                </th>                                    
+                                                <th tabindex="3" rowspan="1" colspan="1"                                         
+                                                        style="width: 10%; font-size: 100%">
+                                                         Cartão
+                                                </th>
+                                                <th tabindex="4" rowspan="1" colspan="1"                                          
+                                                        style="width: 5%; font-size: 100%">
+                                                         Valor(R$)
+                                                </th>
+                                                <th tabindex="5" rowspan="1" colspan="1"                                          
+                                                        style="width: 10%; font-size: 100%">
+                                                         Parcelas
+                                                </th>
+                                                <th tabindex="6" rowspan="1" colspan="1"                                        
+                                                        style="width: 10%; font-size: 100%">
+                                                         Tipo
+                                                </th>
+                                                <th tabindex="7" rowspan="1" colspan="1"                                        
+                                                        style="width: 10%; font-size: 100%">
+                                                         NSU HOST
+                                                </th>
+                                                <th tabindex="8" rowspan="1" colspan="1"                                        
+                                                        style="width: 10%; font-size: 100%">
+                                                         PDV
+                                                </th>
+                                                <th tabindex="9" rowspan="1" colspan="1"                                        
+                                                        style="width: 10%; font-size: 100%">
+                                                         Autorizador
+                                                </th>
+                                                <th tabindex="10" rowspan="1" colspan="1"                                        
+                                                        style="width: 10%; font-size: 100%">
+                                                         Status
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="centralizarVertical">
+                                            <tr role="row" class="odd" ng-repeat="dados in dadosTef">
+                                                <td style="text-align:center; font-size: 80%" ng-bind="getDataString(dados.dtVenda)"></td>
+                                                <td style="text-align:center; font-size: 80%">
+                                                    {{dados.empresa.ds_fantasia | uppercase}}
+                                                </td>
+                                                <td style="text-align:center; font-size: 80%">
+                                                    {{dados.dsBandeira | uppercase}}
+                                                </td>                                    
+                                                <td style="text-align:center; font-size: 80%">
+                                                    {{dados.nrCartao}}
+                                                </td>
+                                                <td style="text-align:center; font-size: 80%">
+                                                    {{dados.vlVenda | currency:'R$'}}
+                                                </td>
+                                                <td style="text-align:center; font-size: 80%">
+                                                    {{dados.qtParcelas}}
+                                                </td>
+                                                <td style="text-align:center; font-size: 80%">
+                                                    {{dados.tipoProduto | uppercase}}
+                                                </td>
+                                                <td style="text-align:center; font-size: 80%">
+                                                    {{dados.nrNSUHost}}
+                                                </td>
+                                                <td style="text-align:center; font-size: 80%">
+                                                    {{dados.nrPDVTEF}}
+                                                </td>
+                                                <td style="text-align:center; font-size: 80%">
+                                                    {{dados.tbRedeTEF.dsRedeTef | uppercase}}
+                                                </td>
+                                                <td style="text-align:center; font-size: 80%">
+                                                    {{dados.dsEstadoTransacaoTef | uppercase}}
+                                                </td>
+                                            </tr> 
+                                        </tbody>
+                                         <tfoot>
+                                             <tr>
+                                                 <td colspan="11">
+                                                     <span class="glyphicon glyphicon-chevron-up btn btn-sm grey filter-cancel" 
+                                                                 ng-click="limparTef()">
+                                                     </span>
+                                                 </td>
+                                             </tr>
+                                         </tfoot>
+                                     </table>
+                                 </div>
+                             </div>
+                         </div-->
+                         <!-- FIM TABLEA TEF -->
+                       
+                       <!-- FILIAL DE CONSULTA -->
+                       <div class="row" style="margin-top: 50px">
+                           <div class="col-sm-2"></div>
+                           <div class="col-sm-8"> 
+                               <label style="margin-right: 20px">Filial</label>
+                               <select class="form-control form-filter input-sm comboBoxFiltros"
+                                       style="width: 60%"
+                                       ng-model="modalBuscaVendas.filial"
+                                       ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
+                                    <option value="" style="display: none"></option>
+                               </select>
+                               <span style="margin-right: 20px" title="Buscar venda">
+                                    <a href="javascript:;" class="btn btn-icon-only default"
+                                       ng-click="buscaVendasFilial(modalBuscaVendas.filial.nu_cnpj)"
+                                       ng-disabled="!usuarioPodeAlterarDadosConciliacaoVendas()">
+                                        <i class="fa fa-search"></i>
+                                    </a>
+                              </span>
+                          </div>
+                          <div class="col-sm-2"></div>
+                     </div>
+                       
+                       <!-- TABELA -->
+                       <div style="margin-top: 50px">
+                           <table class="table table-striped table-hover table-bordered dataTable no-footer conteudoTabelas"
+                                  role="grid">
+                                <thead>
+                                    <tr role="row">
+                                        <th style="width: 20%">
+                                            Data Venda
+                                        </th>
+                                        <th style="width: 15%">
+                                            Valor
+                                        </th>
+                                        <th style="width: 10%">
+                                             Parcelas
+                                        </th>                                    
+                                        <th style="width: 30%">
+                                             Bandeira
+                                        </th>
+                                        <th style="width: 10%">
+                                             NSU
+                                        </th>
+                                        <th style="width: 15%">
+                                             Ações
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="centralizarVertical">
+                                    <tr role="row" class="odd" 
+                                        ng-repeat="venda in modalBuscaVendas.vendas">
+                                        <td style="text-align:center"
+                                            ng-bind="getDataString(venda.Data)">
+                                        </td>  
+                                        <td style="text-align:center">
+                                              {{venda.Valor | currency:'R$'}}
+                                        </td>
+                                        <td style="text-align:center">
+                                           {{venda.Parcelas}}
+                                        </td>                            
+                                        <td style="text-align:center">
+                                            {{venda.Bandeira | uppercase}}
+                                        </td>
+                                        <td style="text-align:center">
+                                           {{venda.Nsu}}
+                                        </td>
+                                        <td style="text-align:center">
+                                           <button class="btn-group" ng-click="conciliarVenda(venda)">
+                                                Conciliar
+                                            </button>
+                                        </td>
+                                    </tr> 
+                                    <tr role="row" 
+                                        ng-show="!modalBuscaVendas.buscandovendas && modalBuscaVendas.vendas.length === 0">
+                                        <td colspan="8" class="linhaTotalRelatorios">
+                                            Nenhum venda encontrada
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                       </div>
+                   </div>
+                   <div class="modal-footer">
+                       <!--div class="col-sm-4">
+                           <button type="button" class="btn default" print-btn>
+                               Imprimir
+                           </button>
+                       </div-->
+                       <div class="col-sm-12" align="center">
+                           <button align="center" ng-click="statusPesquisaTef = false" type="button" class="btn default" data-dismiss="modal">
+                               Fechar
+                           </button>
+                       </div>                           
+                   </div>
+               </div>
+           </div>
+       </div>
+       <!-- FIM - MODAL VENDAS -->
+        
+        
         <div class="portlet-title">
             <div class="caption">								
                 <span class="caption-subject font-green-sharp bold uppercase">Conciliação de Vendas</span>
@@ -287,15 +547,21 @@
                 </div>  
                 <div class="col-xs-4 col-sm-4 col-md-4" print-remove>
                     <button class="btn btn-warning" 
-                       ng-disabled="!temElementosPreConciliados() || associacaoManual.selecionandoRecebimentos"
+                       ng-disabled="!temElementosPreConciliados()"
                        ng-click="conciliaPreConciliados()">
                        Conciliar Pré-Conciliados
                     </button>
-                    <button class="btn btn-danger" style="padding-left: 10px" 
-                       ng-disabled="!filtro.filial || filtro.filial === null || associacaoManual.selecionandoRecebimentos"
+                    <button class="btn btn-primary" style="padding-left: 10px" 
+                       ng-disabled="!filtro.adquirente || filtro.adquirente === null"
+                       title="Efetua a correção no ERP das vendas conciliadas com recebíveis, considerando o filtro selecionado"
+                       ng-click="corrigeVendas()">
+                       Corrige Vendas
+                    </button>
+                    <!--button class="btn btn-danger" style="padding-left: 10px" 
+                       ng-disabled="!filtro.filial || filtro.filial === null"
                        ng-click="conciliaTefNsu()">
                        Conciliar TEF-NSU
-                    </button>
+                    </button-->
                 </div>  
             </div>
             
@@ -346,14 +612,14 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <!--TITULO DO CUPON -->
-                                        <div class="row tituloCumponsConciliacaoBancaria">
+                                        <div class="row vendaCumponsConciliacaoBancaria">
                                             <!--TIPO DO CUPON-->
                                             <div class="col-md-12 conteudoCuponsConciliacaobancaria"
                                                  ng-bind="dado.Recebimento !== null ? 'Vendas - Adquirente' : ''">
                                             </div>
                                         </div>
                                         <!--SUBTITULO DO CUPON -->
-                                        <div class="row tituloCumponsConciliacaoBancariaICard">
+                                        <div class="row vendaCumponsConciliacaoBancariaICard">
                                             <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria"
                                                  ng-bind="dado.Recebimento !== null ? dado.Recebimento.Filial : ''"> 
                                             </div>
@@ -368,7 +634,8 @@
                                     </div>
                                 </div>
                                 <!--DATA DA VENDA-->
-                                <div class="row">
+                                <div class="row"
+                                     ng-init="incrementaContRecebimentos(dado.Recebimento)">
                                     <div class="col-md-6 col-sm-6">
                                         <label ng-bind="dado.Recebimento !== null ? 'Data da Venda:' : ''"></label>
                                     </div>
@@ -444,7 +711,7 @@
                         <div class="row" ng-init="incrementaTotalPreConciliados(dado.Conciliado === 2)"
                              ng-class="{'element-hidden' : dado.Conciliado === 3 && dado.Recebimento === null}">
                             <div class="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-4"
-                                 title="{{dado.Conciliado === 1 ? 'Desfazer conciliação' : dado.Conciliado === 2 && !associacaoManual.selecionandoRecebimentos ? 'Conciliar' : dado.Conciliado === 3 && dado.Venda === null ? 'Buscar venda' : ''}}">
+                                 title="{{dado.Conciliado === 1 ? 'Desfazer conciliação' : dado.Conciliado === 2 ? 'Conciliar' : dado.Conciliado === 3 && dado.Venda === null ? 'Buscar venda' : ''}}">
                                 <a href="javascript:;" class="btn btn-icon-only default"
                                    ng-click="dado.Conciliado === 1 ? desconcilia(dado) : dado.Conciliado === 2 ? concilia(dado) : dado.Conciliado === 3 && dado.Venda === null  ? buscaVendas(dado) : 0"
                                    ng-disabled="!usuarioPodeAlterarDadosConciliacaoVendas()">
@@ -465,14 +732,14 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <!--TITULO DO CUPON -->
-                                        <div class="row tituloCumponsConciliacaoBancaria">
+                                        <div class="row vendaCumponsConciliacaoBancaria">
                                             <!--TIPO DO CUPON-->
                                             <div class="col-md-12 conteudoCuponsConciliacaobancaria"
                                                  ng-bind="dado.Venda !== null ? 'Vendas - Cliente' : ''">
                                             </div>
                                         </div>
                                         <!--SUBTITULO DO CUPON -->
-                                        <div class="row tituloCumponsConciliacaoBancariaICard">
+                                        <div class="row vendaCumponsConciliacaoBancariaICard">
                                             <div class="col-md-12 col-sm-12 conteudoCuponsConciliacaobancaria"
                                                  ng-bind="dado.Venda !== null ? dado.Venda.Filial : ''"> 
                                             </div>
@@ -487,7 +754,8 @@
                                     </div>
                                 </div>
                                 <!--DATA DA VENDA-->
-                                <div class="row">
+                                <div class="row"
+                                     ng-init="incrementaContVendas(dado.Venda)">
                                     <div class="col-md-6 col-sm-6">
                                         <label ng-bind="dado.Venda !== null ? 'Data:' : ''"></label>
                                     </div>
@@ -543,6 +811,17 @@
                                     <div class="col-md-8 col-sm-8 alinhamentoDados">
                                         <label>{{dado.Venda.Nsu || ''}}</label>
                                     </div>                                              
+                                </div>
+                                <!--BOTÃO CORRIGE -->
+                                <div class="row" style="text-align:center"
+                                     ng-show="dado.Conciliado === 1">
+                                    <div class="col-md-12">
+                                        <button class="btn green"
+                                                style="margin-bottom:-25px" print-remove
+                                                ng-click="corrigeVenda(dado)">
+                                            Corrige Venda ERP    
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>    
