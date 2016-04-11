@@ -871,8 +871,8 @@
                                                             {{vencimento.vlDisponivelCS | currency:'R$'}}
                                                         </td>
                                                         <td ng-show="informaValoresCS"
-                                                            ng-class="{'valorNegativo' : vencimento.vlAntecipadoCS > 0.0 && Math.abs(vencimento.vlAntecipadoCS - vencimento.vlAntecipacaoLiquida) > 0.01}"
-                                                            title="{{vencimento.vlAntecipadoCS > 0.0 && Math.abs(vencimento.vlAntecipadoCS - vencimento.vlAntecipacaoLiquida) > 0.01 ? 'Valor líquido da antecipação não pode ser diferente do valor antecipado no Card Services! É altamente recomendável que seja refeita a antecipação das parcelas para esse vencimento' : ''}}">
+                                                            ng-class="{'valorNegativo' : vencimento.vlAntecipadoCS > 0.0 && Math.abs(vencimento.vlAntecipadoCS - vencimento.vlAntecipacaoLiquida) > 0.02}"
+                                                            title="{{vencimento.vlAntecipadoCS > 0.0 && Math.abs(vencimento.vlAntecipadoCS - vencimento.vlAntecipacaoLiquida) > 0.02 ? 'Valor líquido da antecipação não pode ser diferente do valor antecipado no Card Services! É altamente recomendável que seja refeita a antecipação das parcelas para esse vencimento' : ''}}">
                                                             {{vencimento.vlAntecipadoCS | currency:'R$'}}
                                                         </td>
                                                         <td ng-show="informaValoresCS"

@@ -8,6 +8,10 @@
     Card Services > Cash Flow > Relatórios
 
 
+
+    Versão 1.0.7 - 11/04/2016
+    - Exibir ajustes de antecipação 
+
     Versão 1.0.6 - 16/11/2015
     - Remoção de vendas, parcelas e ajustes
 
@@ -77,27 +81,27 @@
                                    id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
                                 <thead>
                                     <tr role="row" class="heading">
-                                        <th width="8%" tabindex="0" 
+                                        <th width="23%" tabindex="0" 
                                             aria-controls="datatable_ajax" 
                                             rowspan="1" colspan="1">
                                              Data {{filtro.data}}
                                         </th>
-                                        <th width="11%" tabindex="1" 
+                                        <th width="24%" tabindex="1" 
                                             aria-controls="datatable_ajax" 
                                             rowspan="1" colspan="1">
                                              Filial 
                                         </th>
-                                        <th width="5%" tabindex="2" 
+                                        <th width="15%" tabindex="2" 
                                             aria-controls="datatable_ajax" 
                                             rowspan="1" colspan="1">
                                              Adquirente
                                         </th>
-                                        <th width="8%" tabindex="3" 
+                                        <th width="19%" tabindex="3" 
                                             aria-controls="datatable_ajax" 
                                             rowspan="1" colspan="1">
                                              Bandeira
                                         </th>
-                                        <th width="1%" tabindex="5" 
+                                        <th width="17%" tabindex="5" 
                                             aria-controls="datatable_ajax" 
                                             rowspan="1" colspan="1">
                                              Ações de filtro
@@ -231,20 +235,33 @@
                                         </td>
                                         <!-- AÇÕES -->
                                         <td rowspan="1" colspan="1" style="text-align:center">
-                                            <div class="margin-bottom-5">
-                                                <!-- BOTÃO BUSCAR -->
-                                                <button class="btn btn-sm red filter-submit margin-bottom" 
-                                                        ng-click="buscaRelatorio()">
-                                                    <i class="fa fa-search"></i> 
-                                                    Buscar
-                                                </button>
+                                            <div class="row" style="margin-top:10px;">
+                                                <div class="col-sm-6">
+                                                    <!-- BOTÃO BUSCAR -->
+                                                    <button class="btn btn-sm red filter-submit margin-bottom" 
+                                                            ng-click="buscaRelatorio()">
+                                                        <i class="fa fa-search"></i> 
+                                                        Buscar
+                                                    </button>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <!-- BOTÃO LIMPAR -->
+                                                    <button class="btn btn-sm grey filter-cancel"
+                                                            ng-click="limpaFiltros()">
+                                                        <i class="fa fa-times"></i> 
+                                                        Limpar
+                                                    </button>
+                                                </div>
                                             </div>
-                                            <!-- BOTÃO LIMPAR -->
-                                            <button class="btn btn-sm grey filter-cancel"
-                                                    ng-click="limpaFiltros()">
-                                                <i class="fa fa-times"></i> 
-                                                Limpar
-                                            </button>
+                                            <div class="row" style="margin-top:20px;">
+                                                <div class="col-sm-4 col-md-4" style="margin-right: -15px;">
+                                                    <checkbox normal ng-model="filtro.ajustesAntecipacao">
+                                                    </checkbox>
+                                                </div>
+                                                <div class="col-sm-8 col-md-8" style="text-align:left;">
+                                                    <label>Exibir ajustes de antecipação</label>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 </thead>

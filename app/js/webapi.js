@@ -520,7 +520,9 @@ angular.module('webapi', ['utils'])
             bandeira : 500,
             recebimento : 600,
             tbadquirente : 700,
-            tbbandeira : 800
+            tbbandeira : 800,
+            tbContaCorrente : 900,
+            sem_ajustes_antecipacao : 1000,
             // EXPORTAR
             exportar : 9999
         },

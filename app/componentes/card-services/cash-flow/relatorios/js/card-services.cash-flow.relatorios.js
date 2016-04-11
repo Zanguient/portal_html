@@ -4,6 +4,10 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *
+ *  Versão 1.0.9 - 11/04/2016
+ *  - Opção para exibir ajustes de antecipação
+ *
  *  Versão 1.0.8 - 18/12/2015
  *  - Correção na requisição de exportar para CSV (cópia por valor do ultimoFiltro)
  *
@@ -65,7 +69,7 @@ angular.module("card-services-cash-flow-relatorios", [])
                           },
                          ];                                             
     $scope.filtro = {datamin : new Date(), datamax : '', data : 'Recebimento',
-                     filial : null, adquirente : null, bandeira : null,
+                     filial : null, adquirente : null, bandeira : null, ajustesAntecipacao : false,
                      itens_pagina : $scope.itens_pagina[0], order : 0,
                      busca : '', campo_busca : $scope.camposBusca[0],
                      sintetico : { pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0},
@@ -494,9 +498,13 @@ angular.module("card-services-cash-flow-relatorios", [])
        }
         
        // Verifica se tem algum valor para ser filtrado (NSU ou Cod. Autorizador)   
-       if($scope.filtro.busca.length > 0) 
-           filtros.push({id: $scope.filtro.campo_busca.id, valor: $scope.filtro.busca + '%'});     
+       if($scope.filtro.busca.length > 0)
+           filtros.push({id: $scope.filtro.campo_busca.id, valor: $scope.filtro.busca + '%'}); 
        
+       // Ajustes de antecipação
+       filtros.push({id: 1000, //$campos.pos.recebimentoparcela.sem_ajustes_antecipacao  
+                     valor: $scope.filtro.ajustesAntecipacao && $scope.filtro.ajustesAntecipacao !== null ? false : true});  
+        
        // Retorna    
        return filtros;
     };
