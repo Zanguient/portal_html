@@ -4,6 +4,14 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.1.4 - 01/04/2016
+ *  - conciliacaovendas
+ *
+ *  Versão 1.1.3 - 28/03/2016
+ *  - vendaserp
+ *  - tbrecebimentovenda
+ *  - correcaovendaerp
+ *
  *  Versão 1.1.2 - 05/02/2016
  *  - tbantecipacaobancaria
  *
@@ -193,9 +201,21 @@ angular.module('webapi', ['utils'])
             id_grupo = 102,
             nu_cnpj = 103,
             preconcilia_grupo = 104,
+            nsu = 105,
             // Relacionamentos
             tbadquirente : 200,
             recebimentoparcela : 300
+        },
+        conciliacaovendas : {
+            data = 100, 
+            tipo = 101,
+            id_grupo = 102,
+            nu_cnpj = 103,
+            preconcilia_grupo = 104,
+            nsu = 105,
+            // Relacionamentos
+            tbadquirente : 200,
+            recebimento : 300
         },
         recebiveisfuturos : {
             data : 100,
@@ -216,6 +236,7 @@ angular.module('webapi', ['utils'])
             data : 100,
             id_grupo : 101,
             nu_cnpj : 102,
+            cdAdquirente : 103,
         },
         tbadquirente : {
             cdAdquirente : 100,
@@ -358,11 +379,30 @@ angular.module('webapi', ['utils'])
             dtTitulo : 109,
             vlParcela : 110,
             nrParcela : 111,
+            cdERP : 112,
+            dtBaixaERP : 113,
             // RELACIONAMENTOS
             id_grupo = 216,
             idExtrato = 306,
         },
+        tbrecebimentovenda: {
+            idRecebimentoVenda : 100,
+            nrCNPJ : 101,
+            nrNSU : 102,
+            dtVenda : 103,
+            cdAdquirente : 104,
+            dsBandeira : 106,
+            vlVenda : 107,
+            qtParcelas : 108,
+            cdERP : 109,
+            // RELACIONAMENTOS
+            id_grupo = 216,
+        },
         tituloserp : {
+            data : 100,
+            id_grupo : 101
+        },
+        vendaserp : {
             data : 100,
             id_grupo : 101
         }
@@ -710,6 +750,8 @@ angular.module('webapi', ['utils'])
         conciliacaobancaria : $autenticacao.getUrlBase() + '/card/conciliacaobancaria/',
         conciliacaorelatorios : $autenticacao.getUrlBase() + '/card/conciliacaorelatorios/',
         conciliacaotitulos : $autenticacao.getUrlBase() + '/card/conciliacaotitulos/',
+        conciliacaovendas : $autenticacao.getUrlBase() + '/card/conciliacaovendas/',
+        correcaovendaerp : $autenticacao.getUrlBase() + '/card/correcaovendaerp/',
         recebiveisfuturos : $autenticacao.getUrlBase() + '/card/recebiveisfuturos/',
         relatorioconciliacaotitulos : $autenticacao.getUrlBase() + '/card/relatorioconciliacaotitulos/',
         relatoriovendas : $autenticacao.getUrlBase() + '/card/relatoriovendas/',
@@ -725,7 +767,9 @@ angular.module('webapi', ['utils'])
         tbrecebimentoajuste : $autenticacao.getUrlBase() + '/card/tbrecebimentoajuste/', 
         tbrecebimentotef : $autenticacao.getUrlBase() + '/card/tbrecebimentotef/', 
         tbrecebimentotitulo : $autenticacao.getUrlBase() + '/card/tbrecebimentotitulo/', 
+        tbrecebimentovenda : $autenticacao.getUrlBase() + '/card/tbrecebimentovenda/', 
         tituloserp : $autenticacao.getUrlBase() + '/card/tituloserp/', 
+        vendaserp : $autenticacao.getUrlBase() + '/card/vendaserp/', 
         uploadextrato : $autenticacao.getUrlBase() + '/card/testeupload/',    
     },
     cartao : {

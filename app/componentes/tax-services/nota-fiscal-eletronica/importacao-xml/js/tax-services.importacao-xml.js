@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.8 - 14/03/2016
+ *  - Atualizações Fernando
+ *
  *  Versão 1.0.7 - 18/12/2015
  *  - Opção de importar aparecer apenas para o PETROX
  *
@@ -41,9 +44,10 @@ angular.module("tax-services-importacao-xml", [])
                                             '$webapi',
                                             '$apis', 
                                             '$timeout',
+                                            'Upload',
                                             '$filter',
                                             function($scope,$state,$http,$window,/*$campos,*/
-                                                     $webapi,$apis,$timeout,$filter){ 
+                                                     $webapi,$apis,$timeout,Upload,$filter){ 
    
     $scope.paginaInformada = 1;
     $scope.filiais = [];   
@@ -62,6 +66,7 @@ angular.module("tax-services-importacao-xml", [])
     $scope.notadetalhada = undefined;  
     $scope.nrChave = ''; //chave da nota para importação
     $scope.dadosImportacao = {}; //Dados para importação da NFe
+    $scope.uploadXml = {cdGrupo:'',xml:''};
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyManifestoPos = 1; // posição da div que vai receber o loading progress                                         
     // flags
@@ -108,7 +113,52 @@ angular.module("tax-services-importacao-xml", [])
     };                                           
                                                 
                                             
-    
+       $scope.importaXml = function(){
+       if($scope.uploadXml.xml && $scope.uploadXml.xml !== null){
+        // Avalia se há um grupo empresa selecionado
+        if(!$scope.usuariologado.grupoempresa){
+            $scope.showModalAlerta('Por favor, selecione uma empresa', 'Atos Capital', 'OK', 
+                                   function(){
+                                         $timeout(function(){ $scope.setVisibilidadeBoxGrupoEmpresa(true);}, 300);
+                                    }
+                                  );
+            return;   
+        }  
+           $scope.showProgress();
+       Upload.upload({
+                //url: $apis.getUrl($apis.administracao.tbempresa, undefined, { id : 'token', valor : $scope.token }),
+                url: $apis.getUrl($apis.tax.tbmanifesto, $scope.token, 
+                                  [
+                                   { id: /*tax.tbmanifesto.cdGrupo*/ 103, 
+                                     valor : $scope.usuariologado.grupoempresa.id_grupo}
+                                  ]),
+                file: $scope.uploadXml.xml,
+                method: 'PATCH',
+            }).success(function (data, status, headers, config) {
+                $timeout(function() {
+                    $scope.hideProgress();
+                    // Avalia se o arquivo enviado é válido
+                    if(data && data != null){
+                        if(data.cdMensagem === 200){
+                            $scope.tabFiltro = 2
+                            $scope.filtro.chaveAcesso = data.dsMensagem;
+                            buscaManifestos();
+                            //$scope.showAlert('Upload realizado com sucesso!', true, 'success', true);
+                        }else{
+                            $scope.showModalAlerta(data.dsMensagem);    
+                        }
+                    }
+                });
+            }).error(function (data, status, headers, config){
+                 if(status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(status === 503 || status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 //else if(status === 500) $scope.showModalAlerta("Só é aceito arquivo XML!");
+                 else $scope.showAlert("Houve uma falha ao fazer upload do XML da Nota Fiscal (" + status + ")", true, 'danger', true, false);
+                //uploadEmProgresso = false;
+                $scope.hideProgress();
+            });
+           }
+   }
     
     
     // PAGINAÇÃO
@@ -192,8 +242,8 @@ angular.module("tax-services-importacao-xml", [])
 
             // Emitente
             if($scope.filtro.emitente && $scope.filtro.emitente !== ''){
-                filtros.push({id: /*$campos.card.tbmanifesto.nmEmitente */ 106,
-                              valor: '%' + $scope.filtro.emitente});
+                filtros.push({id: /*$campos.card.tbmanifesto.nmEmitente */ 105,
+                              valor: $scope.filtro.emitente});
             }
 
             // Status Manifesto
@@ -697,7 +747,7 @@ angular.module("tax-services-importacao-xml", [])
         // Obtém o JSON
         var jsonImportar = { nrChave : $scope.nrChave,
                           codAlmoxarifado : $scope.dadosImportacao.almoxarifado.cod_almoxarifado,
-                          codNaturezaOperacao : $scope.dadosImportacao.natOperacao.cod_natureza_operacao,
+                          codNaturezaOperacao : $scope.dadosImportacao.natOperacao.cdNaturezaOperacao,
                             dtEntrega: $scope.dtEntrega,
                         };
 
@@ -795,7 +845,7 @@ angular.module("tax-services-importacao-xml", [])
     //Opção Importar
     
     $scope.exibeOpcaoImportar = function(){
-    if($scope.usuariologado.grupoempresa && $scope.usuariologado.grupoempresa.id_grupo === 6)
+    if($scope.usuariologado.grupoempresa && ($scope.usuariologado.grupoempresa.id_grupo === 6 || $scope.usuariologado.grupoempresa.id_grupo === 15))
         return true;
     else
         return false;   

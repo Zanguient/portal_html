@@ -4,6 +4,15 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.5 - 08/03/2016
+ *  - Mensagem da antecipação das parcelas indicando lançamentos futuros
+ *
+ *  Versão 1.0.41 - 04/03/2016
+ *  - Correção da exibição dos valores CS
+ *
+ *  Versão 1.0.4 - 03/03/2016
+ *  - Sem restrição para perfil da Atos
+ *
  *  Versão 1.0.3 - 26/02/2016
  *  - Processamento das parcelas
  *
@@ -68,7 +77,8 @@ angular.module("card-services-antecipacao-bancaria", [])
     // Flags
     $scope.exibeTela = false; 
     $scope.abrirCalendarioDataMin = false;
-    $scope.abrirCalendarioDataMax = false;                              
+    $scope.abrirCalendarioDataMax = false; 
+    $scope.informaValoresCS = false;                            
     var permissaoAlteracao = false;
     var permissaoCadastro = false;
     var permissaoRemocao = false;
@@ -314,6 +324,7 @@ angular.module("card-services-antecipacao-bancaria", [])
                     $scope.filtro.conta = $filter('filter')($scope.contas, function(c) {return c.cdContaCorrente === $scope.filtro.conta.cdContaCorrente;})[0];
                 else
                     $scope.filtro.conta = $scope.contas[0];
+                
                 // Busca adquirentes
                 buscaAdquirentes(true);
               },
@@ -335,7 +346,13 @@ angular.module("card-services-antecipacao-bancaria", [])
             $scope.adquirentes = [];
             $scope.bandeiras = [];
         }    
-    };    
+    }; 
+                                
+    var atualizaFlagInformaValoresCS = function(){
+        console.log($scope.filtro.conta);
+        $scope.informaValoresCS = $scope.filtro.conta && $scope.filtro.conta !== null && $scope.filtro.conta.banco && $scope.filtro.conta.banco !== null && $scope.filtro.conta.banco.Codigo === '047';
+        console.log($scope.informaValoresCS);
+    }                            
                                 
                                 
                                 
@@ -526,6 +543,8 @@ angular.module("card-services-antecipacao-bancaria", [])
             .then(function(dados){
                 $scope.antecipacoes = dados.Registros;
            
+                atualizaFlagInformaValoresCS();
+           
                 // Set valores de exibição
                 $scope.filtro.total_registros = dados.TotalDeRegistros;
                 $scope.filtro.total_paginas = Math.ceil($scope.filtro.total_registros / $scope.filtro.itens_pagina);
@@ -548,7 +567,7 @@ angular.module("card-services-antecipacao-bancaria", [])
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                 else $scope.showAlert('Houve uma falha ao obter antecipações bancárias (' + failData.status + ')', true, 'danger', true);
+                 else $scope.showAlert('Houve uma falha ao obter antecipações bancárias (' + failData.status + ')', true, 'danger', true); 
                  // Esconde o progress
                 $scope.hideProgress(divPortletBodyFiltrosPos);
                 $scope.hideProgress(divPortletBodyAntecipacoesPos);
@@ -1382,15 +1401,20 @@ angular.module("card-services-antecipacao-bancaria", [])
     
     
     // ANTECIPAÇÃO QUE AJUSTA PARCELAS DO CARD SERVICES
-    $scope.informaValoresCS = function(antecipacao){
-        return $scope.PERMISSAO_ADMINISTRATIVO && // somente quem tem permissão administrativa!
+    /*$scope.informaValoresCS = function(antecipacao){
+        //console.log(antecipacao && antecipacao !== null && antecipacao.cdBanco === '047');
+        return //$scope.PERMISSAO_ADMINISTRATIVO && // somente quem tem permissão administrativa!
                antecipacao && antecipacao !== null && antecipacao.cdBanco === '047'; // BANESE
-    }
+    }*/
     
     $scope.anteciparParcelas = function(antecipacao, vencimento, desfazerAntecipacao){
         
-        if(!$scope.PERMISSAO_ADMINISTRATIVO){
+        /*if(!$scope.PERMISSAO_ADMINISTRATIVO){
             $scope.showAlert('Você não possui permissão para realizar essa operação!'); 
+            return;
+        }*/
+        if(!$scope.informaValoresCS){
+            $scope.showAlert('Essa operação não permitida para a conta selecionada!'); 
             return;
         }
         
@@ -1408,7 +1432,7 @@ angular.module("card-services-antecipacao-bancaria", [])
                    };
         
         var text = desfazerAntecipacao ? "Confirma desfazer as antecipações das parcelas?" :
-                                         "Para que o processo seja efetivo, é necessário que todas as cargas (modalidade 'VENDAS'), de competência inferior a " + $scope.getDataString(antecipacao.dtAntecipacaoBancaria) + ", tenham sido carregadas corretamente. Confirma a antecipação das parcelas?";
+                                         "Para que o processo seja efetivo, é necessário que todas as cargas de 'VENDAS' (de competência inferior a " + $scope.getDataString(antecipacao.dtAntecipacaoBancaria) + ") tenham sido carregadas corretamente, as cargas de 'AJUSTES E TARIFAS' para os vencimentos inferiores a data corrente, assim como 'LANÇAMENTOS FUTUROS' para os vencimentos superior ou igual a data corrente. Confirma a antecipação das parcelas?";
         
         // Confirma
 		$scope.showModalConfirmacao('Confirmação', text, anteciparParcelas, json, 'Sim', 'Não');
@@ -1421,15 +1445,15 @@ angular.module("card-services-antecipacao-bancaria", [])
         $webapi.update($apis.getUrl($apis.card.tbantecipacaobancariadetalhe, undefined,
                        {id: 'token', valor: $scope.token}), json)
             .then(function(dados){
-                    $scope.showAlert('Parcela foram antecipadas com sucesso!', true, 'success', true);
+                    $scope.showAlert('Operação realizada com sucesso!', true, 'success', true);
 					// Atualiza...
                     buscaAntecipacoes(true);
                     //$scope.hideProgress(divPortletBodyAntecipacoesPos);
                     //$scope.hideProgress(divPortletBodyFiltrosPos);
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
-                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                     else $scope.showAlert('Houve uma falha ao realizar a antecipação das parcelas (' + failData.status + ')', true, 'danger', true); 
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login 
+                     else $scope.showModalAlerta('Houve uma falha ao realizar a operação. (' + (failData.dados && failData.dados !== null ? failData.dados : failData.status) + ')', 'Erro');
                      $scope.hideProgress(divPortletBodyAntecipacoesPos);
                      $scope.hideProgress(divPortletBodyFiltrosPos);
                   });

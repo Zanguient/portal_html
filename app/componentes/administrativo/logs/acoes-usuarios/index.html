@@ -251,7 +251,10 @@
                                    </div>
                                    <div class="col-sm-12 campos-modal-acoes-usuarios" ng-show="modalLog.log.msgErro && modalLog.log.msgErro !== null">
                                         <label>Mensagem de erro:</label>
-                                        <span ng-bind="adicionaQuebraLinhaHtml(modalLog.log.msgErro)"></span>
+                                        <!--span ng-bind="adicionaQuebraLinhaHtml(modalLog.log.msgErro)"></span-->
+                                        <span 
+                                            ng-bind-html="adicionaQuebraLinhaHtml(modalLog.log.msgErro)">
+                                        </span>
                                    </div>
                                </div>
                             </div>

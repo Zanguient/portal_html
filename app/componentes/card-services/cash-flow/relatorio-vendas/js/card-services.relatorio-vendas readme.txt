@@ -49,15 +49,19 @@ Não é necessário nenhum outro módulo externo.
 			[
 			  {
 			    diaVenda : string,
+                            valorSite : double,
+                            processouVenda : bool,
 			    valorBruto : double,
 			    valorDescontado : double,
 			    valorLiquido : double,
-				valorRecebido : double,
-				valorAReceber : double,
+			    valorRecebido : double,
+			    valorAReceber : double,
 			    adquirentes : [{ adquirente : string,
-						   valorBruto : double,
-						   valorDescontado : double,
-						   valorLiquido : double,
+					     valorSite : double,
+                            		     processouVenda : bool,
+					     valorBruto : double,
+					     valorDescontado : double,
+					     valorLiquido : double,
 						   valorRecebido : double,
 						   valorAReceber : double,
 						   bandeiras : [{  bandeira : string,
@@ -70,7 +74,7 @@ Não é necessário nenhum outro módulo externo.
 						 }]
 			  } 
 			]
-			Envia no JSON a chave "Totais" com: "valorBruto", "valorDescontado", "valorLiquido", "valorRecebido" e "valorAReceber"  (todos double)
+			Envia no JSON a chave "Totais" com: "valorSite", "valorBruto", "valorDescontado", "valorLiquido", "valorRecebido" e "valorAReceber"  (todos double)
 			
    
 

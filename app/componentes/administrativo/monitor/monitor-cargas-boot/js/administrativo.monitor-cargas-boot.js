@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.5 - 11/03/2016
+ *  - Tratamento de hub persistente
+ *
  *  Versão 1.0.4 - 29/02/2016
  *  - AJUSTES E TARIFAS
  *
@@ -115,8 +118,16 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
         
         monitor.conectar = function(){
 			forceClose = false;
-            if(!conectado || !hub || hub === null) hub = new Hub("ServerAtosCapital", options); 
-            else $rootScope.$broadcast("notifyMonitorConnectionStatus", true);
+            if(!conectado || typeof hub === 'undefined') 
+            {
+                if(typeof hub === 'undefined')
+                    hub = new Hub("ServerAtosCapital", options); 
+                else
+                    hub.connect();
+            }else{ 
+                conectado = true;
+                $rootScope.$broadcast("notifyMonitorConnectionStatus", true);
+            }
         }
         
         // Filtros
@@ -160,6 +171,7 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
                 // Adquirente
                 if(typeof filtro.cdAdquirente === 'number') filtroMonitorCargas.cdAdquirente = filtro.cdAdquirente;
                 else filtroMonitorCargas.cdAdquirente = 0;
+                
             }
             //console.log(filtro);
             //console.log(filtroMonitorCargas);
@@ -195,7 +207,7 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
                                             function($scope,$rootScope,$state,$http,/*$campos,*/
                                                      $webapi,$apis,$filter,$timeout,$locale,monitorService){ 
    
-    $scope.monitor = monitorService;                                         
+    $scope.monitor = null;                                         
     $scope.monitorCargas = [];   
     $scope.filiais = [];
     $scope.adquirentes = []; 
@@ -227,7 +239,9 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
     $scope.abrirCalendarioData = false;                                             
     $scope.exibeTela = false;  
     var obtendoLista = false; 
-    var conectando = false;                                            
+    var conectando = false;  
+    var changeState = false;
+    var changeState_state, changeState_params;                                            
  
                                                 
     // Inicialização do controller
@@ -237,8 +251,14 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
         $scope.pagina.subtitulo = 'Monitor de Cargas do Boot';
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state, params){
-            $scope.monitor.desconectar();
-            $state.go(state, params);
+            if($scope.monitor && $scope.monitor !== null && $scope.monitor.isConnected()){
+                changeState = true;
+                changeState_state = state;
+                changeState_params = params;
+                $scope.monitor.desconectar();
+            }
+            else 
+                $state.go(state, params);
         });
         // Quando houver alteração do grupo empresa na barra administrativa                                           
         $scope.$on('alterouGrupoEmpresa', function(event){ 
@@ -274,7 +294,8 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
         $rootScope.$on('notifyMonitorMudancas', function(event, mudancas){
             //console.log("RECEBEU MUDANÇAS");
             //console.log(mudancas);
-            mudancasNaListaMonitorCargas(mudancas);
+            if($scope.monitor && $scope.monitor !== null)
+                mudancasNaListaMonitorCargas(mudancas);
             //$rootScope.$apply();
         });
         $rootScope.$on('notifyMonitorLista', function(event, lista){
@@ -290,15 +311,26 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
         $rootScope.$on('notifyMonitorConnectionStatus', function(event, conectado){
             conectando = false;
             if(conectado){ 
-                //console.log("CONECTADO");
-                obtendoLista = true;
-                $scope.monitor.obtemLista(obtemFiltroBusca());
+                if($scope.monitor !== null){
+                    //console.log("CONECTADO");
+                    obtendoLista = true;
+                    var f = obtemFiltroBusca();
+                    //console.log($scope.monitor);
+                    //console.log("f [2]  "  + f.data);
+                    $scope.monitor.obtemLista(f);
+                }//else console.log("monitor null");
+                
             }//else console.log("NÃO CONECTADO!"); 
+            else if(changeState){
+                $scope.monitor = null;
+                $state.go(changeState_state, changeState_params);
+            }
             //$rootScope.$apply();
         });
         // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
         $scope.$on('acessoDeTelaNotificado', function(event){
             $scope.exibeTela = true;
+            $scope.monitor = monitorService;
             // Conecta e obtém lista
             if($scope.usuariologado.grupoempresa){
                 buscaFiliais();
@@ -328,10 +360,11 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
     /* FILTRO */
     
     $scope.totalDiasMesFiltrado = function(){
-        return $scope.monitor.getTotalDiasMesFiltrado();    
+        return $scope.monitor !== null ? $scope.monitor.getTotalDiasMesFiltrado() : 0;    
     }
     
     $scope.getAnoMesFiltrado = function(){
+        if(!$scope.monitor || $scope.monitor === null) return '';
         var periodo = $scope.monitor.getMesAnoFiltrado(); 
         var ano = parseInt(periodo.substr(0, 4));
         var mes = parseInt(periodo.substr(4, 2));
@@ -515,7 +548,9 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
 				$scope.showProgress(divPortletBodyFiltrosPos, 10000);
                 $scope.showProgress(divPortletBodyMonitorPos);
                 obtendoLista = true;
-				$scope.monitor.obtemLista(obtemFiltroBusca());
+                var f = obtemFiltroBusca();
+                //console.log("f [1]  "  + f.data);
+				$scope.monitor.obtemLista(f);
 			}else if(!conectando){ 
 				//console.log("CONECTANDO...");
 				$scope.showProgress(divPortletBodyFiltrosPos, 10000);
@@ -536,22 +571,40 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
         
         if(!lista || lista === null) return;
         
+        // Lista por cópia
+        var l = [];
+        angular.copy(lista, l);
         
         var totalDias = $scope.totalDiasMesFiltrado();
         
         $scope.diasMesFiltrado = [];
         for(var k = 1; k <= totalDias; k++) $scope.diasMesFiltrado.push(k);
         
-        for(var k = 0; k < lista.length; k++){
-            var loginAdquirenteEmpresa = lista[k];
+        //var novaLista = true;
+        
+        for(var k = 0; k < l.length; k++){
+            var loginAdquirenteEmpresa = l[k];
             //console.log(loginoperadora);
             // Coloca para todos os dias
             var logs = [];
             var cont = 0;
+            
             var tbLogCarga = loginAdquirenteEmpresa.tbLogCargas[cont];
+            
+            if(!tbLogCarga)
+                return;
+            
+            
+            if(!tbLogCarga.tbLogCargasDetalheMonitor || tbLogCarga.tbLogCargasDetalheMonitor === null)
+            {
+                // Lista já atualizada...
+                //novaLista = false;
+                break;
+            }
+            
             //console.log(logExecution);
-            var dt = $scope.getDataString(tbLogCarga.dtCompetencia);
-            var dia = parseInt(dt.substr(0, dt.indexOf('/')));
+            var dt = tbLogCarga ? $scope.getDataString(tbLogCarga.dtCompetencia) : '';
+            var dia = tbLogCarga ? parseInt(dt.substr(0, dt.indexOf('/'))) : 0;
             //console.log("DIA L: " + dia);
             for(var d = 1; d <= totalDias; d++){
                  //console.log("DIA: " + d + " ? A " + dia);   
@@ -615,8 +668,7 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
             //console.log(logs);
             loginAdquirenteEmpresa.tbLogCargas = logs;
         }
-        $scope.monitorCargas = lista;
-        //console.log("MONITOR CARGAS");console.log($scope.monitorCargas);
+        $scope.monitorCargas = l;
         
         // Set valores de exibição
         $scope.filtro.total_registros = $scope.monitorCargas.length;
@@ -642,13 +694,17 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
         
         if(!mudancas || mudancas === null) return;
         
+        // Lista por cópia
+        var m = [];
+        angular.copy(mudancas, m);
+        
         //console.log(mudancas);
         
         var linhasPromovidas = 0;
         
         // Atualiza
-        for(var k = 0; k < mudancas.objetos.length; k++){
-            var obj = mudancas.objetos[k];
+        for(var k = 0; k < m.objetos.length; k++){
+            var obj = m.objetos[k];
             //console.log(obj);
             //var loginoperadora = $filter('filter')($scope.monitorCargas, function(l){return l.id === obj.id})[0];
             var loginAdquirenteEmpresa = $filter('filter')($scope.monitorCargas, function(l){return l.empresa.nu_cnpj === obj.empresa.nu_cnpj && l.tbAdquirente.cdAdquirente === obj.tbAdquirente.cdAdquirente})[0];
@@ -656,17 +712,21 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
             if(loginAdquirenteEmpresa){
                 for(var j = 0; j < obj.tbLogCargas.length; j++){
                     var tbLogCarga = obj.tbLogCargas[j];
+                    
+                    if(!tbLogCarga.tbLogCargasDetalheMonitor || tbLogCarga.tbLogCargasDetalheMonitor === null)
+                        break;
+                    
                     var dt = $scope.getDataString(tbLogCarga.dtCompetencia);
                     var dia = parseInt(dt.substr(0, dt.indexOf('/')));
                     
-                    if(mudancas.NotificationInfo === 'DELETE'){
+                    if(m.NotificationInfo === 'DELETE'){
                         // "Deleta"
                         loginAdquirenteEmpresa.tbLogCargas[dia - 1] = {}; 
                         promoveLoginAdquirenteEmpresa = true;
-                    }else if(mudancas.NotificationInfo === 'INSERT' || mudancas.NotificationInfo === 'UPDATE'){
+                    }else if(m.NotificationInfo === 'INSERT' || m.NotificationInfo === 'UPDATE'){
                         // Novo registro ou Alteração
                         
-                         var oldtbLogCarga = loginAdquirenteEmpresa.tbLogCargas[dia - 1];
+                         var oldtbLogCarga = angular.copy(loginAdquirenteEmpresa.tbLogCargas[dia - 1]);
                         
                          // Para cada modalidade...
                          // Valores pagos -> antecipação
@@ -715,7 +775,7 @@ angular.module("administrativo-monitor-cargas-boot", ['SignalR','ngLocale'])
                          tbLogCarga.tbLogCargasDetalheMonitor = undefined; 
                          // Define eles como estáticos
                          tbLogCarga['PAGOS ANTECIPAÇÃO'] = pagosantecipacao ? pagosantecipacao : oldtbLogCarga['PAGOS ANTECIPAÇÃO'];
-                         tbLogCarga['PAGOS CRÉDITO'] = pagoscredito ? pagoscredito : oldtbLogCarga['PAGOS ANTECIPAÇÃO'];
+                         tbLogCarga['PAGOS CRÉDITO'] = pagoscredito ? pagoscredito : oldtbLogCarga['PAGOS CRÉDITO'];
                          tbLogCarga['PAGOS DÉBITO'] = pagosdebito ? pagosdebito : oldtbLogCarga['PAGOS DÉBITO'];
                          tbLogCarga['LANÇAMENTOS FUTUROS'] = areceber ? areceber : oldtbLogCarga['LANÇAMENTOS FUTUROS'];
                          tbLogCarga['VENDA CRÉDITO'] = vendacredito ? vendacredito : oldtbLogCarga['VENDA CRÉDITO'];

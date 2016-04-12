@@ -6,6 +6,9 @@
  * Versão 1.2.1 - 07/03/2016
  * - Criação da tela Consulta Mercadoria 
  *
+ *  Versão 1.2.1 - 28/03/2016
+ *  - administrativo-vendas
+ *
  *  Versão 1.2.0 - 23/02/2016
  *  - ShowAlert -> icon
  *
@@ -108,6 +111,7 @@ angular.module("AtosCapital", ['ui.router',
                                'administrativo-monitor-cargas-boot',
                                'administrativo-consulta-pos-terminal',
                                'administrativo-titulos',
+                               'administrativo-vendas',
                                'dashboard',
                                'card-services-antecipacao-bancaria',
                                'card-services-antecipacao-simulacao',
@@ -348,6 +352,15 @@ angular.module("AtosCapital", ['ui.router',
         url: prefixo + 'administrativo/titulos',
         templateUrl: 'componentes/administrativo/integracao-erp/titulos/index.html',
         controller: "administrativo-titulosCtrl",
+        data: {
+            titulo: 'Administrativo'
+        }
+      })
+    
+      .state('administrativo-integracao-erp-vendas', {
+        url: prefixo + 'administrativo/vendas',
+        templateUrl: 'componentes/administrativo/integracao-erp/vendas/index.html',
+        controller: "administrativo-vendasCtrl",
         data: {
             titulo: 'Administrativo'
         }
@@ -622,7 +635,6 @@ angular.module("AtosCapital", ['ui.router',
 }])
 
 
-
 // CONTROLLER  PAI
 .controller("appCtrl", ['$scope',
                         '$rootScope',
@@ -643,13 +655,15 @@ angular.module("AtosCapital", ['ui.router',
                                  $autenticacao,$apis,$webapi,$sce,$empresa/*,$campos*/){
     // Título da página
     $scope.pagina = {'titulo': 'Home', 'subtitulo': ''};
+    // Math
+    $scope.Math = window.Math;
     // Usuário
     $rootScope.token = $scope.token = '';
     $scope.nome_usuario = 'Usuário';
     // Dados da empresa
-    $scope.empresa = $empresa;
+    $scope.empresa = $empresa;                    
     $rootScope.signalRRootPath = $scope.signalRRootPath = $autenticacao.getUrlBaseIMessage() + "/signalr";
-    $scope.signalRHubsPath = $sce.trustAsResourceUrl($scope.signalRRootPath + "/hubs");
+    $scope.signalRHubsPath = $sce.trustAsResourceUrl($scope.signalRRootPath + "/hubs");                    
     // Grupo empresa selecionado
     var empresaId = -1; // se > 0 indica que já estava associado a um grupo empresa
     $scope.usuariologado = { grupoempresa : undefined, empresa : undefined } ; // grupo empresa em uso
@@ -688,7 +702,8 @@ angular.module("AtosCapital", ['ui.router',
     var controllerAdministrativoMonitorCargas = undefined;
     var controllerAdministrativoMonitorCargasBoot = undefined; 
     var controllerAdministrativoConsultaPOSTerminal = undefined;
-    var controllerAdministrativoTitulos = undefined;                        
+    var controllerAdministrativoTitulos = undefined;   
+    var controllerAdministrativoVendas = undefined;                          
     var controllerDashboard = undefined;
     var controllerCardServicesAntecipacaoBancaria = undefined;
     var controllerCardServicesAntecipacaoSimulacao = undefined;                         
@@ -741,7 +756,8 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_ADMINISTRATIVO_MONITOR_MONITOR_CARGAS = false;
     $scope.PERMISSAO_ADMINISTRATIVO_MONITOR_MONITOR_CARGAS_BOOT = false; 
     $scope.PERMISSAO_ADMINISTRATIVO_INTEGRACAO_ERP = false;                        
-    $scope.PERMISSAO_ADMINISTRATIVO_INTEGRACAO_ERP_TITULOS = false;                         
+    $scope.PERMISSAO_ADMINISTRATIVO_INTEGRACAO_ERP_TITULOS = false;
+    $scope.PERMISSAO_ADMINISTRATIVO_INTEGRACAO_ERP_VENDAS = false;                        
     $scope.PERMISSAO_DASHBOARD = false;
     $scope.PERMISSAO_CARD_SERVICES = false;
     $scope.PERMISSAO_CARD_SERVICES_ANTECIPACAO = false;
@@ -1002,7 +1018,14 @@ angular.module("AtosCapital", ['ui.router',
     $scope.goAdministrativoTitulos = function(params){
         controllerAtual = controllerAdministrativoTitulos;
         go('administrativo-integracao-erp-titulos', params);
-    };                        
+    }; 
+    /**
+      * Exibe como conteúdo a Integração ERP Vendas, de Administrativo
+      */                        
+    $scope.goAdministrativoVendas = function(params){
+        controllerAtual = controllerAdministrativoVendas;
+        go('administrativo-integracao-erp-vendas', params);
+    };                         
     /**
       * Exibe como conteúdo o Dashboard
       */
@@ -1373,6 +1396,15 @@ angular.module("AtosCapital", ['ui.router',
             }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'Títulos')
                      controllerAtual.id_controller !== controllerAdministrativoTitulos.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual 
+        }else if(url === $state.get('administrativo-integracao-erp-vendas').url){ 
+            // Administrativo > Integração ERP > Vendas
+            if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_INTEGRACAO_ERP || !$scope.PERMISSAO_ADMINISTRATIVO_INTEGRACAO_ERP_VENDAS){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.goUsuarioSemPrivilegios();
+            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'Títulos')
+                     controllerAtual.id_controller !== controllerAdministrativoVendas.id_controller)
+                $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual 
         }else if(url === $state.get('dashboard').url){
             // Dashboard
             if(!$scope.PERMISSAO_DASHBOARD){
@@ -1699,7 +1731,12 @@ angular.module("AtosCapital", ['ui.router',
                 if($location.path() === $state.get('administrativo-integracao-erp-titulos').url) 
                     controllerAtual = controller;
                 controllerAdministrativoTitulos = controller;
-                return $scope.goAdministrativoTitulos;    
+                return $scope.goAdministrativoTitulos; 
+            case 'VENDAS':
+                if($location.path() === $state.get('administrativo-integracao-erp-vendas').url) 
+                    controllerAtual = controller;
+                controllerAdministrativoVendas = controller;
+                return $scope.goAdministrativoVendas;     
             // Dashboard
             case 'DASHBOARD ATOS':
                 if($location.path() === $state.get('dashboard').url) controllerAtual = controller;
@@ -1865,6 +1902,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'MONITOR DE CARGAS DO BOOT': $scope.PERMISSAO_ADMINISTRATIVO_MONITOR_MONITOR_CARGAS_BOOT = true; break;
             case 'INTEGRAÇÃO ERP': $scope.PERMISSAO_ADMINISTRATIVO_INTEGRACAO_ERP = true; break;    
             case 'TÍTULOS': $scope.PERMISSAO_ADMINISTRATIVO_INTEGRACAO_ERP_TITULOS = true; break;
+            case 'VENDAS': $scope.PERMISSAO_ADMINISTRATIVO_INTEGRACAO_ERP_VENDAS = true; break;    
             // Dashboard
             case 'DASHBOARD ATOS': $scope.PERMISSAO_DASHBOARD = true; break;
             // Notícias
@@ -1971,6 +2009,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'MONITOR DE CARGAS': return state == 'monitor-cargas';
             case 'MONITOR DE CARGAS DO BOOT': return state == 'monitor-cargas-boot'; 
             case 'TÍTULOS': return state == 'titulos';    
+            case 'VENDAS': return state == 'vendas';    
             // Tax Services
             case 'IMPORTAÇÃO XML': return state == 'importacao-xml';
             case 'CADASTRO CERTIFICADO DIGITAL': return state == 'cadastro-certificado-digital';
