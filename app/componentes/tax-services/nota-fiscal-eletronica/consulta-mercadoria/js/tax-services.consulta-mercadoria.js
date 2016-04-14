@@ -119,11 +119,11 @@ angular.module("tax-services-consulta-mercadoria", [])
    /**
       * Obtém os filtros de busca
       */
-    var obtemFiltrosBusca = function(){
+    var obtemFiltrosBuscaMercadoria = function(){
         var filtros = [];
         
         if($scope.filtro.chaveAcesso && $scope.filtro.chaveAcesso !== null){
-               filtros.push({id: /*$campos.tax.tbmanifesto.nrCNPJ*/ 101, 
+               filtros.push({id: /*$campos.tax.tbmanifesto.nrCNPJ*/ 130, 
                              valor: $scope.filtro.chaveAcesso}); 
            }
          return filtros.length > 0 ? filtros : undefined;
@@ -131,9 +131,9 @@ angular.module("tax-services-consulta-mercadoria", [])
     
     
     /**
-      * Obtem o manifesto a partir da Chave de Acesso
+      * Obtem as mercadorias a partir da Chave de Acesso
       */
-    $scope.buscaManifestos = function(){
+    $scope.buscaMercadorias = function(){
         // Avalia se há um grupo empresa selecionado
         if(!$scope.usuariologado.grupoempresa){
             $scope.showModalAlerta('Por favor, selecione uma empresa', 'Atos Capital', 'OK', 
@@ -149,40 +149,37 @@ angular.module("tax-services-consulta-mercadoria", [])
         }*/
         
         // Nova busca
-        buscaManifestos();
+        buscaMercadorias();
     }
                                                 
-    var buscaManifestos = function(){
+    var buscaMercadorias = function(){
         // Abre os progress
        $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
        $scope.showProgress(divPortletBodyManifestoPos);
         
        // Filtros    
-       var filtros = obtemFiltrosBusca();
-           
+       var filtros = obtemFiltrosBuscaMercadoria();
+    console.log(filtros);       
        //console.log(filtros);
        if( filtros !=  undefined)
        {
-           $scope.manifestos = undefined;
-           $scope.confirmRecebimento = false;
+           $scope.mercadorias = undefined;
+           //$scope.confirmRecebimento = false;
            
-           $webapi.get($apis.getUrl($apis.tax.tbmanifesto, 
-                                    [$scope.token, 6, /* $campos.tax.tbmanifesto.dtemissao */101],
+           $webapi.get($apis.getUrl($apis.tax.tbmercadoria, 
+                                    [$scope.token, 2],
                                     filtros)) 
                 .then(function(dados){
                     // Guarda o último filtro utilizado
                     ultimoFiltroBusca = filtros;
 
                     // Obtém os dados
-                    $scope.manifestos = dados.Registros;
-
-                   if( ($scope.manifestos.length > 0) && (!$scope.manifestos[0].flEntrega) )
-                       $scope.confirmRecebimento = true;
+                    $scope.mercadorias = dados.Registros;
                
                     // Set valores de exibição
                     $scope.filtro.total_registros = dados.TotalDeRegistros;
                     $scope.filtro.total_paginas = Math.ceil($scope.filtro.total_registros / $scope.filtro.itens_pagina);
-                    if($scope.manifestos.length === 0) $scope.faixa_registros = '0-0';
+                    if($scope.mercadorias.length === 0) $scope.faixa_registros = '0-0';
                     else{
                         var registroInicial = ($scope.filtro.pagina - 1)*$scope.filtro.itens_pagina + 1;
                         var registroFinal = registroInicial - 1 + $scope.filtro.itens_pagina;
@@ -200,7 +197,7 @@ angular.module("tax-services-consulta-mercadoria", [])
                   function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                      else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                     else $scope.showAlert('Houve uma falha ao obter manifestos (' + failData.status + ')', true, 'danger', true);
+                     else $scope.showAlert('Houve uma falha ao obter mercadorias (' + failData.status + ')', true, 'danger', true);
                     // Quando a busca for por chave de acesso, força o usuário digitar a Chave de Acesso
                
                      // Fecha os progress
@@ -213,6 +210,7 @@ angular.module("tax-services-consulta-mercadoria", [])
        }
         
     }
+    
     
     /**
       * Confirma Recebimento da NF-e
