@@ -11,7 +11,7 @@
     Versão 1.0 - 03/09/2015
 -->
 
-<div class="container" ng-controller="tax-services-consulta-mercadoriaCtrl" ng-init="taxServices_recebimentoNfeInit()">   
+<div class="container" ng-controller="tax-services-consulta-mercadoriaCtrl" ng-init="taxServices_consultaMercadoriaInit()">   
     
     <!-- BEGIN PAGE BREADCRUMB -->
     <ul class="page-breadcrumb breadcrumb">
@@ -21,7 +21,7 @@
         <li class="active">
              Tax Services<i class="fa fa-caret-right"></i>
              Nota Fiscal Eletrônica<i class="fa fa-caret-right"></i>
-             Recebimento NFE
+             Consulta Mercadoria
         </li>
     </ul>
     <!-- END PAGE BREADCRUMB -->
@@ -83,23 +83,22 @@
                                             <td rowspan="1" colspan="1">
                                                        <input type="text" class="form-control"
                                                        placeholder="Código" 
-                                                       ng-model=""
+                                                              ng-model="filtro.cdMercadoria"
                                                        onfocus="" 
                                                        onmouseup=""
                                                        maxlength="10"
-                                                       ng-pattern=""
-                                                       valid-integer-number/>                                 
+                                                       ng-pattern=""/>                                 
                                             </td>
                                             <!-- DESCRIÇÃO -->
                                             <td rowspan="1" colspan="1" style="text-align: left">
                                                        <input type="text" class="form-control"
                                                        placeholder="Descrição" 
-                                                       ng-model=""
+                                                       ng-model="filtro.dsMercadoria"
                                                        onfocus="" 
                                                        onmouseup=""
                                                        maxlength="60"
                                                        ng-pattern=""
-                                                       valid-integer-number/>   
+                                                       />   
                                             </td>
                                             <!-- AÇÕES -->
                                             <td rowspan="1" colspan="1" style="text-align:center">
@@ -113,7 +112,7 @@
                                                 </div>
                                                 <!-- BOTÃO LIMPAR -->
                                                 <button class="btn btn-sm grey filter-cancel"
-                                                        ng-click="">
+                                                        ng-click="limpaFiltros()">
                                                     <i class="fa fa-times"></i> 
                                                     Limpar
                                                 </button>
@@ -265,11 +264,11 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="mercadoria in mercadorias">
+                                <tr ng-repeat-start="mercadoria in mercadorias">
                                     <td width="5%" style="text-align: center;">
-                                        <a href="javascript:;" ng-click="" >
+                                        <a href="javascript:;" ng-click="toggle(mercadoria)" >
                                             <i class="fa"
-                                            ng-class=""
+                                            ng-class="{'fa-plus-square' : !isExpanded(mercadoria), 'fa-minus-square' : isExpanded(mercadoria)}"
                                                style="margin-top: -3px;"> 
                                             </i> 
                                         </a>
@@ -312,6 +311,79 @@
                                                 </li>
                                             </ul>
                                         </div>
+                                    </td>
+                                </tr>
+                                 <!-- LINHA EXPANSÍVEL -->
+                                <tr ng-repeat-end ng-show="isExpanded(mercadoria)">
+                                    <td colspan="6">
+                                        <!-- TABELA INTERNA -->
+                                        <table class="table table-striped table-bordered table-hover dataTable no-footer">
+                                            <thead> 
+                                                <tr>
+                                                    <!-- DADOS MERCADORIA CLASSIFCADA -->
+                                                    <th width="10%" >
+                                                    Data
+                                                    </th>
+                                                    <th width="10%">
+                                                        NCM
+                                                    </th>
+                                                    <th width="10%" style="text-align: center;">
+                                                        Alíquota IPI 
+                                                    </th>
+                                                    <th width="10%" style="text-align: center;">
+                                                        Alíquota ICMS 
+                                                    </th>
+                                                    <th width="10%" style="text-align: center;">
+                                                        Alíquota PIS 
+                                                    </th>
+                                                    <th width="10%" style="text-align: center;">
+                                                        Alíquota COFINS
+                                                    </th>
+                                                    <th width="33%" style="text-align: center;">
+                                                        Observações
+                                                    </th>
+                                                    <!-- BOTÃO -->
+                                                    <th width="7%"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                 <!-- DADOS MERCADORIA CLASSIFCADA -->
+                                                 <tr ng-repeat="classificacao in mercadoria.classificacoes">
+                                                     <!-- DATA DE CLASSIFICACÃO -->
+                                                     <td ng-bind="getDataString(classificacao.dtClassificacao)">
+                                                         
+                                                     </td>
+                                                     <!-- NCM -->
+                                                    <td >
+                                                        {{classificacao.nrNCM}}
+                                                    </td>
+                                                    <!-- IPI -->
+                                                    <td>
+                                                        {{classificacao.prIPI}}
+                                                    </td>
+                                                    <!-- ICMS -->
+                                                    <td>
+                                                        {{classificacao.prICMS}}
+                                                    </td>
+                                                    <!-- PIS --> 
+                                                    <td>
+                                                        {{classificacao.prPIS}}
+                                                    </td>
+                                                    <!-- COFINS -->  
+                                                    <td>
+                                                        {{classificacao.prCOFINS}}
+                                                    </td>
+                                                    <!-- OBSERVAÇÕES --> 
+                                                    <td >
+                                                        {{classificacao.dsObsercacao}}
+                                                    </td>
+                                                    <!-- BOTÃO -->
+                                                    <td>
+                                                    
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table> 
                                     </td>
                                 </tr>
                             </tbody>

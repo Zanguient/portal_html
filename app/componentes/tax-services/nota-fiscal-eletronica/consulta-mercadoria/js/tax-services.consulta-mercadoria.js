@@ -27,7 +27,7 @@ angular.module("tax-services-consulta-mercadoria", [])
     $scope.paginaInformada = 1;                                          
     $scope.itens_pagina = [50, 100, 150, 200];                                      
     $scope.filtro = { itens_pagina : $scope.itens_pagina[0], pagina : 1,
-                      total_registros : 0, faixa_registros : '0-0', total_paginas : 0, chaveAcesso : null};
+                      total_registros : 0, faixa_registros : '0-0', total_paginas : 0, chaveAcesso : null,cdMercadoria: null,dsMercadoria:null};
     $scope.tabFiltro = 1; 
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyManifestoPos = 1; // posição da div que vai receber o loading progress                                         
@@ -35,7 +35,7 @@ angular.module("tax-services-consulta-mercadoria", [])
     $scope.exibeTela = false;                                                                                                    
                                                 
     // Inicialização do controller
-    $scope.taxServices_recebimentoNfeInit = function(){
+    $scope.taxServices_consultaMercadoriaInit = function(){
         // Título da página 
         $scope.pagina.titulo = 'Nota Fiscal Eletrônica';                          
         $scope.pagina.subtitulo = 'Consulta Mercadoria';
@@ -64,11 +64,17 @@ angular.module("tax-services-consulta-mercadoria", [])
         //$scope.$emit("acessouTela");
         $scope.exibeTela = true;
         // ... busca inicial
-    };                                           
-                                                
+    };                                                                                      
                                             
-    
-    
+        /**
+      * Limpa os filtros
+      */
+    $scope.limpaFiltros = function(){   
+        ultimoFiltroBusca = undefined;
+        $scope.filtro.cdMercadoria = null; 
+        $scope.filtro.dsMercadoria = null;
+        $scope.filtro.chaveAcesso = null;
+    }
     
     // PAGINAÇÃO
     /**
@@ -77,7 +83,7 @@ angular.module("tax-services-consulta-mercadoria", [])
     var setPagina = function(pagina){
        if(pagina >= 1 && pagina <= $scope.filtro.total_paginas){ 
            $scope.filtro.pagina = pagina;
-           // busca recebimentos.... 
+           // busca mercadorias.... 
        }
        $scope.atualizaPaginaDigitada();    
     };
@@ -122,9 +128,29 @@ angular.module("tax-services-consulta-mercadoria", [])
     var obtemFiltrosBuscaMercadoria = function(){
         var filtros = [];
         
-        if($scope.filtro.chaveAcesso && $scope.filtro.chaveAcesso !== null){
+            // Filtros Por Mercoria
+       if($scope.tabFiltro === 1)
+       {
+           
+           var filtroData = undefined;
+            // Filtro Por Código 
+            if($scope.filtro.cdMercadoria && $scope.filtro.cdMercadoria !== ''){
+                filtros.push({id: /*$campos.tax.tbmercadoria.cdmercadoria */ 103,
+                              valor: $scope.filtro.cdMercadoria});
+            }
+
+            // Filtro Por Descrição
+            if($scope.filtro.dsMercadoria && $scope.filtro.dsMercadoria !== null){
+                filtros.push({id: /*$campos.tax.tbmercadoria.dsmercadoria */ 104,
+                              valor: $scope.filtro.dsMercadoria}); 
+            }
+       }
+        else
+           {
+            if($scope.filtro.chaveAcesso && $scope.filtro.chaveAcesso !== null){
                filtros.push({id: /*$campos.tax.tbmanifesto.nrCNPJ*/ 130, 
                              valor: $scope.filtro.chaveAcesso}); 
+           }
            }
          return filtros.length > 0 ? filtros : undefined;
     }
@@ -158,16 +184,15 @@ angular.module("tax-services-consulta-mercadoria", [])
        $scope.showProgress(divPortletBodyManifestoPos);
         
        // Filtros    
-       var filtros = obtemFiltrosBuscaMercadoria();
-    console.log(filtros);       
-       //console.log(filtros);
+       var filtros = obtemFiltrosBuscaMercadoria();   
+     
        if( filtros !=  undefined)
        {
            $scope.mercadorias = undefined;
            //$scope.confirmRecebimento = false;
            
            $webapi.get($apis.getUrl($apis.tax.tbmercadoria, 
-                                    [$scope.token, 2],
+                                    [$scope.token, 1, /* $campos.tax.tbmercadoria.dsmercadoria */104,0],
                                     filtros)) 
                 .then(function(dados){
                     // Guarda o último filtro utilizado
@@ -175,7 +200,7 @@ angular.module("tax-services-consulta-mercadoria", [])
 
                     // Obtém os dados
                     $scope.mercadorias = dados.Registros;
-               
+               console.log($scope.mercadorias);
                     // Set valores de exibição
                     $scope.filtro.total_registros = dados.TotalDeRegistros;
                     $scope.filtro.total_paginas = Math.ceil($scope.filtro.total_registros / $scope.filtro.itens_pagina);
@@ -208,45 +233,26 @@ angular.module("tax-services-consulta-mercadoria", [])
                      $scope.showModalAlerta('Por favor, digite a Chave de Acesso', 'Atos Capital', 'OK', function(){} );
                   });           
        }
+        else
+            { 
+                $scope.mercadorias = undefined;
+                
+                // Fecha os progress
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+                $scope.hideProgress(divPortletBodyManifestoPos);
+            }
         
     }
     
-    
-    /**
-      * Confirma Recebimento da NF-e
-      */
-    $scope.confirmaVirgencia = function(){
-        
-        // Verifica se a busca foi executada, se houve resultado e a confirmação já ocorreu
-        if( $scope.manifestos.length === 0 && $scope.confirmRecebimento === false)  return;
-        
-        // Parametros 
-        var jsonRecebimento = {
-                                  idManifesto: $scope.manifestos[0].idManifesto,
-                                  cdGrupo: $scope.manifestos[0].cdGrupo,
-                                  flEntrega: true
-                                };; 
-        
-        
-        // UPDATE
-        $scope.showProgress();
-        $webapi.update($apis.getUrl($apis.tax.tbmanifesto, undefined,
-                                 {id : 'token', valor : $scope.token}), jsonRecebimento) 
-            .then(function(dados){           
-                $scope.showAlert('Recebimento de NF-e confirmado com sucesso!', true, 'success', true);
-                // Fecha os progress
-                $scope.hideProgress();
-              },
-              function(failData){
-                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
-                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                 else if(failData.status === 500) $scope.showAlert('Houve uma falha ao confirmar o recebimento da NF-e (' + failData.status + ')', true, 'danger', true);
-                 else $scope.showAlert('Houve uma falha ao confirmar o recebimento da NF-e (' + failData.status + ')', true, 'danger', true);
-                 // Fecha os progress
-                 $scope.hideProgress();
-              });   
-        
-        $scope.confirmRecebimento = false;
+    // TABELA EXPANSÍVEL
+    $scope.toggle = function(mercadoria){
+        if(!mercadoria || mercadoria === null) return;
+        if(mercadoria.collapsed) mercadoria.collapsed = false;
+        else mercadoria.collapsed = true;
+    }
+    $scope.isExpanded = function(mercadoria){
+        if(!mercadoria || mercadoria === null) return;
+        return mercadoria.collapsed;
     }
     
     //TAB FILTROS
