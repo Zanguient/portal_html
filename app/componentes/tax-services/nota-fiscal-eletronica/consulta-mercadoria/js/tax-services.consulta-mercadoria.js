@@ -28,6 +28,7 @@ angular.module("tax-services-consulta-mercadoria", [])
     $scope.itens_pagina = [50, 100, 150, 200];                                      
     $scope.filtro = { itens_pagina : $scope.itens_pagina[0], pagina : 1,
                       total_registros : 0, faixa_registros : '0-0', total_paginas : 0, chaveAcesso : null,cdMercadoria: null,dsMercadoria:null};
+    $scope.classificacao = {idMercadoria: null,nrNCM: null,prIPI: null,prICMS: null,prPIS: null,prCOFINS: null,dsObservacao: null,idUsers: null};
     $scope.tabFiltro = 1; 
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyManifestoPos = 1; // posição da div que vai receber o loading progress                                         
@@ -131,7 +132,6 @@ angular.module("tax-services-consulta-mercadoria", [])
             // Filtros Por Mercoria
        if($scope.tabFiltro === 1)
        {
-           
            var filtroData = undefined;
             // Filtro Por Código 
             if($scope.filtro.cdMercadoria && $scope.filtro.cdMercadoria !== ''){
@@ -148,7 +148,7 @@ angular.module("tax-services-consulta-mercadoria", [])
         else
            {
             if($scope.filtro.chaveAcesso && $scope.filtro.chaveAcesso !== null){
-               filtros.push({id: /*$campos.tax.tbmanifesto.nrCNPJ*/ 130, 
+                filtros.push({id: /*$campos.tax.tbmanifesto.nrCNPJ*/ 130, 
                              valor: $scope.filtro.chaveAcesso}); 
            }
            }
@@ -200,7 +200,6 @@ angular.module("tax-services-consulta-mercadoria", [])
 
                     // Obtém os dados
                     $scope.mercadorias = dados.Registros;
-               console.log($scope.mercadorias);
                     // Set valores de exibição
                     $scope.filtro.total_registros = dados.TotalDeRegistros;
                     $scope.filtro.total_paginas = Math.ceil($scope.filtro.total_registros / $scope.filtro.itens_pagina);
@@ -229,8 +228,6 @@ angular.module("tax-services-consulta-mercadoria", [])
                      $scope.hideProgress(divPortletBodyFiltrosPos);
                      $scope.hideProgress(divPortletBodyManifestoPos);
                
-                     // Exibe o modal informando a obrigatoriedade da chave de acesso
-                     $scope.showModalAlerta('Por favor, digite a Chave de Acesso', 'Atos Capital', 'OK', function(){} );
                   });           
        }
         else

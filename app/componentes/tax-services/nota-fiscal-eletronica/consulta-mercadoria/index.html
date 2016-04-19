@@ -5,10 +5,10 @@
     suporte@atoscapital.com.br
  
  
-    Tax Services > Nota Fiscal Eletrônica > Recebimento NFe
+    Tax Services > Nota Fiscal Eletrônica > Consulta Mercadoria
  
 
-    Versão 1.0 - 03/09/2015
+    Versão 1.0 - 01/03/2016
 -->
 
 <div class="container" ng-controller="tax-services-consulta-mercadoriaCtrl" ng-init="taxServices_consultaMercadoriaInit()">   
@@ -196,7 +196,7 @@
                 <!--TITULO-->
                 <div class="portlet-title">
                     <div class="caption">								
-                        <span class="caption-subject font-green-sharp bold uppercase"><!--Recebimento NF-e-->Detalhes NFe</span>
+                        <span class="caption-subject font-green-sharp bold uppercase"><!--Consulta Mercadoria-->Detalhes Mercadoria</span>
                     </div>
                     <div class="actions">
                         <a class="btn btn-circle btn-icon-only btn-default fullscreen" 
@@ -300,13 +300,13 @@
                                                 <li>
                                                     <a href="javascript:;" 
                                                        ng-click="">
-                                                        Downlaod DANFEs
+                                                        Detalhes Nota Fornecedor
                                                     </a>
                                                 </li>
                                                 <li>
                                                     <a href="javascript:;" 
                                                        ng-click="">
-                                                        Download XMLs
+                                                        Detalhes Nota Cliente
                                                     </a>
                                                 </li>
                                             </ul>
@@ -339,11 +339,11 @@
                                                     <th width="10%" style="text-align: center;">
                                                         Alíquota COFINS
                                                     </th>
-                                                    <th width="33%" style="text-align: center;">
+                                                    <th width="30%" style="text-align: center;">
                                                         Observações
                                                     </th>
                                                     <!-- BOTÃO -->
-                                                    <th width="7%"></th>
+                                                    <th width="10%"></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -380,6 +380,78 @@
                                                     <!-- BOTÃO -->
                                                     <td>
                                                     
+                                                    </td>
+                                                </tr>
+                                                    <tr  >
+                                                     <!-- DATA DE CLASSIFICACÃO -->
+                                                     <td >
+                                                         
+                                                     </td>
+                                                     <!-- NCM -->
+                                                    <td >
+                                                       <input type="text" class="form-control"
+                                                       placeholder="NCM"
+                                                       onfocus="" 
+                                                              ng-model="classificacao.nrNCM"
+                                                       onmouseup=""
+                                                       maxlength="10"
+                                                       ng-pattern=""/>
+                                                    </td>
+                                                    <!-- IPI -->
+                                                    <td>
+                                                       <input type="text" class="form-control"
+                                                       placeholder="IPI"
+                                                       onfocus="" 
+                                                              ng-model="classificacao.nrIPI"
+                                                       onmouseup=""
+                                                       maxlength="10"
+                                                       ng-pattern=""/>
+                                                    </td>
+                                                    <!-- ICMS -->
+                                                    <td>
+                                                      <input type="text" class="form-control"
+                                                       placeholder="ICMS"
+                                                              ng-model="classificacao.nrICMS"
+                                                       onfocus="" 
+                                                       onmouseup=""
+                                                       maxlength="10"
+                                                       ng-pattern=""/>
+                                                    </td>
+                                                    <!-- PIS --> 
+                                                    <td>
+                                                    <input type="text" class="form-control"
+                                                       placeholder="PIS"
+                                                            ng-model="classificacao.nrPIS"
+                                                       onfocus="" 
+                                                       onmouseup=""
+                                                       maxlength="10"
+                                                       ng-pattern=""/>
+                                                    </td>
+                                                    <!-- COFINS -->  
+                                                    <td>
+                                                      <input type="text" class="form-control"
+                                                       placeholder="COFINS"
+                                                             ng-model="classificacao.nrCOFINS"
+                                                       onfocus="" 
+                                                       onmouseup=""
+                                                       maxlength="10"
+                                                       ng-pattern=""/>
+                                                    </td>
+                                                    <!-- OBSERVAÇÕES --> 
+                                                    <td >
+                                                       <input type="text" class="form-control"
+                                                       placeholder="OBSERVAÇÕES"
+                                                       onfocus="" 
+                                                               ng-model="classificacao.dsObservacao"
+                                                       onmouseup=""
+                                                       maxlength="60"
+                                                       ng-pattern=""/>
+                                                    </td>
+                                                    <!-- BOTÃO -->
+                                                    <td>
+                                                    <button class="btn red">
+                                                    Classificar <i class="fa fa-plus"></i>
+                                                    </button>
                                                     </td>
                                                 </tr>
                                             </tbody>

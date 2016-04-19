@@ -156,7 +156,9 @@ angular.module('utils', [ ])
   //var urlBaseIMessage = 'http://localhost:50780';
   var urlBaseIMessage = 'http://imessage.atoscapital.com.br';
   // Totvs
-  var urlBaseTotvs = 'http://localhost:64721';
+  //var urlBaseTotvs = 'http://localhost:64721';
+  var urlBaseTotvs = 'http://apitotvs.atoscapital.com.br';
+    
   // Rezende
   //var urlBaseRezende = 'http://localhost:50939';
   var urlBaseRezende = 'http://apirezende.atoscapital.com.br';
