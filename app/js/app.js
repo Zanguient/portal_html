@@ -3,7 +3,8 @@
  *
  *  suporte@atoscapital.com.br
  *
- *
+ * Versão 1.2.1 - 07/03/2016
+ * - Criação da tela Consulta Mercadoria 
  *
  *  Versão 1.2.1 - 28/03/2016
  *  - administrativo-vendas
@@ -134,6 +135,7 @@ angular.module("AtosCapital", ['ui.router',
                                'tax-services-importacao-xml',
                                'tax-services-cadastro-certificado-digital',
                                'tax-services-recebimento-nfe',
+                               'tax-services-consulta-mercadoria',
                                'conta',
                                'conta-alterar-senha',
                                'usuario-sem-link'])
@@ -579,7 +581,15 @@ angular.module("AtosCapital", ['ui.router',
             titulo: 'Tax Services'
         }
       })
-
+    
+      .state('tax-services-nota-fiscal-eletronica-consulta-mercadoria', {
+        url: prefixo + 'tax-services/consulta-mercadoria',
+        templateUrl: 'componentes/tax-services/nota-fiscal-eletronica/consulta-mercadoria/index.html',
+        controller: "tax-services-consulta-mercadoriaCtrl",
+        data: {
+            titulo: 'Tax Services'
+        }
+      })
 
 
       // CONTA
@@ -717,6 +727,7 @@ angular.module("AtosCapital", ['ui.router',
     var controllerTaxServicesImportacaoXML = undefined;
     var controllerTaxServicesCadastroCertificadoDigital = undefined;
     var controllerTaxServicesRecebimentoNfe = undefined;
+    var controllerTaxServicesConsultaMercadoria = undefined;
     var controllerMinhaConta = {id_controller : 91, ds_controller : 'Minha Conta', methods : []};
     // Permissões
     //$scope.usuarioTemAcesso = false;
@@ -777,6 +788,7 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_IMPORTACAO_XML = false;
     $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_CADASTRO_CERTIFICADO_DIGITAL = false;
     $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_RECEBIMENTO_NFE = false;
+    $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_CONSULTA_MERCADORIA = false;
 
 
     // Fullscreen
@@ -1174,6 +1186,13 @@ angular.module("AtosCapital", ['ui.router',
     $scope.goTaxServicesRecebimentoNfe = function(params){
         controllerAtual = controllerTaxServicesRecebimentoNfe;
         go('tax-services-nota-fiscal-eletronica-recebimento-nfe', params);
+    };
+     /**
+      * Exibe como conteúdo a Nota Fiscal Eletrônica Consulta Mercadoria, de Tax Services
+      */
+    $scope.goTaxServicesConsultaMercadoria = function(params){
+        controllerAtual = controllerTaxServicesConsultaMercadoria;
+        go('tax-services-nota-fiscal-eletronica-consulta-mercadoria', params);
     };
     /**
       * Exibe a tela de perfil de conta
@@ -1593,6 +1612,15 @@ angular.module("AtosCapital", ['ui.router',
             }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'RECEBIMENTO NF-E')
                      controllerAtual.id_controller !== controllerTaxServicesRecebimentoNfe.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
+        }else if(url === $state.get('tax-services-nota-fiscal-eletronica-consulta-mercadoria').url){
+            // Tax Services > Nota Fiscal Eletrônica > Consulta Mercadoria
+            if(!$scope.PERMISSAO_TAX_SERVICES || !$scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA || !$scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_CONSULTA_MERCADORIA){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.goUsuarioSemPrivilegios();
+            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'CONSULTA MERCADORIA')
+                     controllerAtual.id_controller !== controllerTaxServicesConsultaMercadoria.id_controller)
+                $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
         }
         //else event.preventDefault();//console.log("VAI PARA ONDE?");
      });
@@ -1811,6 +1839,11 @@ angular.module("AtosCapital", ['ui.router',
                     controllerAtual = controller;
                 controllerTaxServicesRecebimentoNfe = controller;
                 return $scope.goTaxServicesRecebimentoNfe;
+            case 'CONSULTA MERCADORIA':
+                if($location.path() === $state.get('tax-services-nota-fiscal-eletronica-consulta-mercadoria').url)
+                    controllerAtual = controller;
+                controllerTaxServicesConsultaMercadoria = controller;
+                return $scope.goTaxServicesConsultaMercadoria;
 
             // AMBÍGUOS
             case 'RELATÓRIOS':
@@ -1878,8 +1911,9 @@ angular.module("AtosCapital", ['ui.router',
             case 'TAX SERVICES' : $scope.PERMISSAO_TAX_SERVICES = true; break;
             case 'NOTA FISCAL ELETRÔNICA': $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA = true; break;
             case 'IMPORTAÇÃO XML':  $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_IMPORTACAO_XML = true; break;
-            case 'CADASTRO CERTIFICADO DIGITAL': $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_CADASTRO_CERTIFICADO_DIGITAL = true;
+            case 'CADASTRO CERTIFICADO DIGITAL': $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_CADASTRO_CERTIFICADO_DIGITAL = true;break;
             case 'RECEBIMENTO NF-E': $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_RECEBIMENTO_NFE = true; break;
+            case 'CONSULTA MERCDORIA': $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_CONSULTA_MERCADORIA = true; break;
             // Card Services
             case 'CARD SERVICES': $scope.PERMISSAO_CARD_SERVICES = true; break;
             case 'ANTECIPAÇÃO': $scope.PERMISSAO_CARD_SERVICES_ANTECIPACAO = true; break; 
@@ -1980,6 +2014,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'IMPORTAÇÃO XML': return state == 'importacao-xml';
             case 'CADASTRO CERTIFICADO DIGITAL': return state == 'cadastro-certificado-digital';
             case 'RECEBIMENTO NF-E': return state == 'recebimento-nfe';
+            case 'CONSULTA MERCADORIA': return state == 'consulta-mercadoria';
             // Card Services
             case 'ANTECIPAÇÃO BANCÁRIA': return state == 'antecipacao-bancaria'; 
             case 'SIMULAÇÃO': return state == 'antecipacao-simulacao'; 
