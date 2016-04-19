@@ -791,7 +791,8 @@ angular.module('webapi', ['utils'])
         terminallogico : $autenticacao.getUrlBase() + '/pos/terminallogico/'
     },
     tax : {
-        tbmanifesto : $autenticacao.getUrlBase() + '/tax/tbmanifesto/',    
+        tbmanifesto : $autenticacao.getUrlBase() + '/tax/tbmanifesto/',
+        tbmercadoria : $autenticacao.getUrlBaseTotvs() + '/tax/tbmercadoria/',
     },
     util : {
         bancos : $autenticacao.getUrlBase() + '/util/bancos/',   
@@ -802,7 +803,6 @@ angular.module('webapi', ['utils'])
     dealernet: {
         consultatitulos : $autenticacao.getUrlBaseDealernet() + '/dealernet/consultatitulos/',   
     },
-      
       
     // REZENDE
     rezende : {
