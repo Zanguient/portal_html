@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.7 - 20/04/2016
+ *  - Não inicializa consulta ao acessar a página
+ *
  *  Versão 1.0.6 - 01/02/2016
  *  - Parâmetro bancário referente à antecipação
  *
@@ -133,7 +136,7 @@ angular.module("administrativo-parametros-bancarios", [])
         $scope.$on('acessoDeTelaNotificado', function(event){
             $scope.exibeTela = true;
             // Carrega adquirentes
-            buscaAdquirentes(false, true, true, true);
+            buscaAdquirentes(false, false, true, true);
         });
         // Acessou a tela
         $scope.$emit("acessouTela");
