@@ -375,7 +375,7 @@
                                                     </td>
                                                     <!-- OBSERVAÇÕES --> 
                                                     <td >
-                                                        {{classificacao.dsObsercacao}}
+                                                        {{classificacao.dsObservacao}}
                                                     </td>
                                                     <!-- BOTÃO -->
                                                     <td>
@@ -402,7 +402,7 @@
                                                        <input type="text" class="form-control"
                                                        placeholder="IPI"
                                                        onfocus="" 
-                                                              ng-model="classificacao.nrIPI"
+                                                              ng-model="classificacao.prIPI"
                                                        onmouseup=""
                                                        maxlength="10"
                                                        ng-pattern=""/>
@@ -411,7 +411,7 @@
                                                     <td>
                                                       <input type="text" class="form-control"
                                                        placeholder="ICMS"
-                                                              ng-model="classificacao.nrICMS"
+                                                              ng-model="classificacao.prICMS"
                                                        onfocus="" 
                                                        onmouseup=""
                                                        maxlength="10"
@@ -421,7 +421,7 @@
                                                     <td>
                                                     <input type="text" class="form-control"
                                                        placeholder="PIS"
-                                                            ng-model="classificacao.nrPIS"
+                                                            ng-model="classificacao.prPIS"
                                                        onfocus="" 
                                                        onmouseup=""
                                                        maxlength="10"
@@ -431,7 +431,7 @@
                                                     <td>
                                                       <input type="text" class="form-control"
                                                        placeholder="COFINS"
-                                                             ng-model="classificacao.nrCOFINS"
+                                                             ng-model="classificacao.prCOFINS"
                                                        onfocus="" 
                                                        onmouseup=""
                                                        maxlength="10"
@@ -449,7 +449,7 @@
                                                     </td>
                                                     <!-- BOTÃO -->
                                                     <td>
-                                                    <button class="btn red">
+                                                    <button class="btn red" ng-click="insereClassificacao()">
                                                     Classificar <i class="fa fa-plus"></i>
                                                     </button>
                                                     </td>
