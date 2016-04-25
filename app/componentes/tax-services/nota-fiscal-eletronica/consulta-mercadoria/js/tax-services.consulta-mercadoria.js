@@ -135,7 +135,7 @@ angular.module("tax-services-consulta-mercadoria", [])
            var filtroData = undefined;
             // Filtro Por Código 
             if($scope.filtro.cdMercadoria && $scope.filtro.cdMercadoria !== ''){
-                filtros.push({id: /*$campos.tax.tbmercadoria.cdmercadoria */ 103,
+                filtros.push({id: /*$campos.tax.tbmercadoria.cdmercadoriaerp */ 103,
                               valor: $scope.filtro.cdMercadoria});
             }
 
@@ -148,7 +148,7 @@ angular.module("tax-services-consulta-mercadoria", [])
         else
            {
             if($scope.filtro.chaveAcesso && $scope.filtro.chaveAcesso !== null){
-                filtros.push({id: /*$campos.tax.tbmanifesto.nrCNPJ*/ 130, 
+                filtros.push({id: /*$campos.tax.tbmercadoria.nrchave*/ 130, 
                              valor: $scope.filtro.chaveAcesso}); 
            }
            }
@@ -296,6 +296,65 @@ angular.module("tax-services-consulta-mercadoria", [])
        
     }
     
+    
+        /** 
+      * Detalha a nota
+      */
+    $scope.detalhar = function(mercadorias, indexNota){
+        var mercadoria = mercadorias[indexNota];
+console.log(mercadoria);
+        //if(!$scope.notadetalhada || $scope.notadetalhada.idManifesto !== nota.idManifesto)
+            obtemDetalhesNota(mercadoria.nrChave, function(){$('#modalDetalhes').modal('show');});
+        //else
+          //  $('#modalDetalhes').modal('show');
+    }
+    
+    
+        /**
+      * Requisita informações detalhadas da nota fiscal eletrônica
+      */
+    var obtemDetalhesNota = function(nrChave, funcaoSucesso){
+       $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
+       $scope.showProgress(divPortletBodyManifestoPos);
+        
+       // Filtros    
+       var filtro = {id : /*$campos.tax.tbmanifesto.nrchave.*/ 101,
+                     valor : nrChave};
+           
+       console.log(filtro);
+       
+       $webapi.get($apis.getUrl($apis.tax.tbmanifesto, [$scope.token, 4], filtro)) 
+            .then(function(dados){
+                // Obtém os dados
+                $scope.notadetalhada = undefined;
+                //console.log(dados);
+           
+                if(dados.Registros.length > 0){ 
+                    $scope.notadetalhada = dados.Registros[0].notas[0];
+                    $scope.notadetalhada.nrChave = nrChave;
+                }
+                else{
+                        // Fecha os progress
+                        $scope.hideProgress(divPortletBodyFiltrosPos);
+                        $scope.hideProgress(divPortletBodyManifestoPos);
+                        $scope.showModalAlerta('A Nota Fiscal não está disponível.'); 
+                        return;
+                }
+                if(typeof funcaoSucesso === 'function') funcaoSucesso();
+           
+                // Fecha os progress
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+                $scope.hideProgress(divPortletBodyManifestoPos);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter detalhes da NF-e (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+                 $scope.hideProgress(divPortletBodyManifestoPos);
+              });     
+    }
+    
     // TABELA EXPANSÍVEL
     $scope.toggle = function(mercadoria){
         if(!mercadoria || mercadoria === null) return;
@@ -303,8 +362,24 @@ angular.module("tax-services-consulta-mercadoria", [])
         else mercadoria.collapsed = true;
     }
     $scope.isExpanded = function(mercadoria){
+        console.log(mercadoria);
         if(!mercadoria || mercadoria === null) return;
         return mercadoria.collapsed;
+    }
+    
+    
+    //TAB MODAL
+    /**
+      * Retorna true se a tab informada corresponde a tab em exibição
+      */
+    $scope.tabIs = function (tab){
+        return $scope.tab === tab;
+    }
+    /**
+      * Altera a tab em exibição
+      */
+    $scope.setTab = function (tab){
+        if (tab >= 1 && tab <= 8) $scope.tab = tab;        
     }
     
     //TAB FILTROS
