@@ -362,7 +362,6 @@ console.log(mercadoria);
         else mercadoria.collapsed = true;
     }
     $scope.isExpanded = function(mercadoria){
-        console.log(mercadoria);
         if(!mercadoria || mercadoria === null) return;
         return mercadoria.collapsed;
     }
