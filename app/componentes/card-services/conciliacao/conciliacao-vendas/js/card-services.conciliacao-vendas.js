@@ -50,7 +50,7 @@ angular.module("card-services-conciliacao-vendas", [])
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyDadosPos = 1;  
     // Modal Busca Vendas
-    $scope.modalBuscaVendas = {recebimento : null, vendas : [], buscandovendas : false, filial : null };   
+    $scope.modalBuscaVendas = {venda : null, vendas : [], buscandovendas : false, filial : null };   
     // Permissões                                           
     var permissaoAlteracao = false;   
     // flags                                                  
@@ -293,7 +293,7 @@ angular.module("card-services-conciliacao-vendas", [])
             .then(function(dados){
                 $scope.adquirentes = dados.Registros;
                 // Reseta
-                if(!cdAdquirente) $scope.filtro.adquirente = $scope.adquirentes[0]; //null; 
+                if(!cdAdquirente) $scope.filtro.adquirente = null; 
                 else $scope.filtro.adquirente = $filter('filter')($scope.adquirentes, function(a) {return a.cdAdquirente === cdAdquirente;})[0];
                 $scope.hideProgress(divPortletBodyFiltrosPos);
               },
@@ -393,10 +393,10 @@ angular.module("card-services-conciliacao-vendas", [])
                                   );
             return;   
         }
-        if(!$scope.filtro.adquirente || $scope.usuariologado.adquirente === null){
+        /*if(!$scope.filtro.adquirente || $scope.usuariologado.adquirente === null){
            $scope.showModalAlerta('É necessário selecionar uma adquirente!');
            return;
-        }
+        }*/
         // Intervalo de data
         if($scope.filtro.datamax){
             var timeDiff = Math.abs($scope.filtro.datamax.getTime() - $scope.filtro.datamin.getTime());
@@ -415,7 +415,7 @@ angular.module("card-services-conciliacao-vendas", [])
     }
     
     var buscaDadosConciliacaoVendas = function(progressoemexecucao){
-        if(!$scope.usuariologado.grupoempresa || (!$scope.filtro.adquirente || $scope.usuariologado.adquirente === null)) 
+        if(!$scope.usuariologado.grupoempresa)// || (!$scope.filtro.adquirente || $scope.usuariologado.adquirente === null)) 
             return;
         
         if(!progressoemexecucao){
@@ -583,10 +583,12 @@ angular.module("card-services-conciliacao-vendas", [])
       * Selecionou um recebimento para buscar vendas
       */
     $scope.buscaVendas = function(dado){        
-        if(!dado.Recebimento || dado.Recebimento === null) return;
-        $scope.modalBuscaVendas.recebimento = dado.Recebimento;
+        //console.log(dado.Venda.Filial);
+        if(!dado.Venda || dado.Venda === null) return;
+        $scope.modalBuscaVendas.venda = dado.Venda;
         $scope.modalBuscaVendas.vendas = [];
-        $scope.modalBuscaVendas.filial = $filter('filter')($scope.filiais, function(f){return $scope.getNomeAmigavelFilial(f) === dado.Recebimento.Filial})[0];
+        $scope.modalBuscaVendas.filial = $filter('filter')($scope.filiais, function(f){return $scope.getNomeAmigavelFilial(f).toUpperCase() === dado.Venda.Filial})[0];
+        console.log($scope.modalBuscaVendas.filial);
         // Exibe o modal
         $('#modalVendas').modal('show');
         buscaVendas();
@@ -612,7 +614,8 @@ angular.module("card-services-conciliacao-vendas", [])
       * Busca vendas
       */
     var buscaVendas = function(nu_cnpj){
-       if(!$scope.modalBuscaVendas.recebimento || $scope.modalBuscaVendas.recebimento === null)
+        //console.log($scope.modalBuscaVenda);
+       if(!$scope.modalBuscaVendas.venda || $scope.modalBuscaVendas.venda === null)
             return;
         
         $scope.modalBuscaVendas.buscandovendas = true;
@@ -620,8 +623,8 @@ angular.module("card-services-conciliacao-vendas", [])
         $scope.showProgress();
         
         // Filtro  
-        var filtros = {id: /*$campos.card.conciliacaovendas.recebimento + $campos.pos.recebimento.id - 100*/ 300, 
-                        valor: $scope.modalBuscaVendas.recebimento.Id};
+        var filtros = {id: /*$campos.card.conciliacaovendas.tbrecebimentovenda + $campos.card.tbrecebimentovenda.idRecebimentoVenda - 100*/ 300, 
+                        valor: $scope.modalBuscaVendas.venda.Id};
         
         // Busca para uma filial específica
         if(typeof nu_cnpj === 'string'){
@@ -653,12 +656,12 @@ angular.module("card-services-conciliacao-vendas", [])
       */
     $scope.conciliarVenda = function(venda){
         //console.log(venda);
-        var dado = {Recebimento : $scope.modalBuscaVendas.recebimento,
-                    Venda : venda};
+        var dado = {Recebimento : venda,
+                    Venda : $scope.modalBuscaVendas.venda};
         //console.log(dado);
         // Confirma conciliação
         $scope.showModalConfirmacao('Confirmação', 
-            "Uma vez confirmada a conciliação, o venda e a carga não poderão se envolver em outra conciliação de vendas. Confirma essa conciliação do recebível com valor de " + $filter('currency')($scope.modalBuscaVendas.recebimento.Valor, 'R$', 2) + ' e a venda com valor de ' + $filter('currency')(venda.Valor, 'R$', 2) + ' (diferença de ' + $filter('currency')(Math.abs(venda.Valor - $scope.modalBuscaVendas.recebimento.Valor), 'R$', 2) + ')?',
+            "Uma vez confirmada a conciliação, o venda e a carga não poderão se envolver em outra conciliação de vendas. Confirma essa conciliação do recebível com valor de " + $filter('currency')($scope.modalBuscaVendas.venda.Valor, 'R$', 2) + ' e a venda com valor de ' + $filter('currency')(venda.Valor, 'R$', 2) + ' (diferença de ' + $filter('currency')(Math.abs(venda.Valor - $scope.modalBuscaVendas.venda.Valor), 'R$', 2) + ')?',
             function(){ fechaModalVendas(); 
                        $timeout(function(){concilia([dado], true);}, 300);}, undefined, 'Sim', 'Não');
     }
@@ -666,13 +669,10 @@ angular.module("card-services-conciliacao-vendas", [])
     
     /**
       * Concilia TEF-NSU
-      * /
+      */
     $scope.conciliaTefNsu = function(){
         
-        return;
-        
-        if(!$scope.filtro.filial || $scope.filtro.filial === null ||
-           !$scope.filtro.adquirente || $scope.filtro.adquirente === null)
+        if(!$scope.filtro.filial || $scope.filtro.filial === null)
             return;
         
         $scope.showProgress(divPortletBodyFiltrosPos, 10000);
@@ -681,7 +681,7 @@ angular.module("card-services-conciliacao-vendas", [])
         // Obtém o json
         var json = { data : $scope.getFiltroData($scope.filtro.datamin),
                      nrCNPJ : $scope.filtro.filial.nu_cnpj,
-                     cdAdquirente : $scope.filtro.adquirente.cdAdquirente
+                     cdAdquirente : 0
                    }; 
         if($scope.filtro.datamax)
             json.data = json.data + '|' + $scope.getFiltroData($scope.filtro.datamax);        
@@ -699,7 +699,7 @@ angular.module("card-services-conciliacao-vendas", [])
                     $scope.hideProgress(divPortletBodyFiltrosPos);
                     $scope.hideProgress(divPortletBodyDadosPos);
                   });     
-    }*/
+    }
     
     
     

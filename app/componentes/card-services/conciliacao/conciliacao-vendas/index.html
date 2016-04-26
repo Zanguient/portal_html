@@ -156,7 +156,7 @@
                                             ng-model="filtro.adquirente"
                                             ng-change="alterouAdquirente()"
                                             ng-options="adquirente as (adquirente.nmAdquirente | uppercase) for adquirente in adquirentes">
-                                        <option ng-show="filtro.conta && filtro.conta !== null" value="">TODAS</option>
+                                        <option value="">TODAS</option>
                                     </select>
                                 </td>
                                 <!-- TIPO -->
@@ -261,11 +261,11 @@
                                      </td>
                                  </tr>
                                  <tr role="row">
-                                     <td ng-bind="getDataString(modalBuscaVendas.recebimento.Data)"></td>
-                                     <td>{{modalBuscaVendas.recebimento.Valor | currency:'R$'}}</td>
-                                     <td>{{modalBuscaVendas.recebimento.Parcelas}}</td>
-                                     <td>{{modalBuscaVendas.recebimento.Bandeira | uppercase}}</td>
-                                     <td>{{("000000000000" + modalBuscaVendas.recebimento.Nsu).slice(-12)}}</td>
+                                     <td ng-bind="getDataString(modalBuscaVendas.venda.Data)"></td>
+                                     <td>{{modalBuscaVendas.venda.Valor | currency:'R$'}}</td>
+                                     <td>{{modalBuscaVendas.venda.Parcelas}}</td>
+                                     <td>{{modalBuscaVendas.venda.Bandeira | uppercase}}</td>
+                                     <td>{{("000000000000" + modalBuscaVendas.venda.Nsu).slice(-12)}}</td>
                                  </tr>
                              </tbody>
                          </table>
@@ -546,10 +546,15 @@
                     </div>
                 </div>  
                 <div class="col-xs-4 col-sm-4 col-md-4" print-remove>
-                    <button class="btn btn-warning" 
+                    <!--button class="btn btn-warning" 
                        ng-disabled="!temElementosPreConciliados()"
                        ng-click="conciliaPreConciliados()">
                        Conciliar Pré-Conciliados
+                    </button-->
+                    <button class="btn btn-danger" style="padding-left: 10px" 
+                       ng-disabled="!filtro.filial || filtro.filial === null"
+                       ng-click="conciliaTefNsu()">
+                       Conciliar TEF-NSU
                     </button>
                     <button class="btn btn-primary" style="padding-left: 10px" 
                        ng-disabled="!filtro.adquirente || filtro.adquirente === null"
@@ -557,11 +562,6 @@
                        ng-click="corrigeVendas()">
                        Corrige Vendas
                     </button>
-                    <!--button class="btn btn-danger" style="padding-left: 10px" 
-                       ng-disabled="!filtro.filial || filtro.filial === null"
-                       ng-click="conciliaTefNsu()">
-                       Conciliar TEF-NSU
-                    </button-->
                 </div>  
             </div>
             
@@ -709,14 +709,14 @@
                     <!--BOTÕES-->
                     <div class="col-md-2 col-sm-2 btnConciliacaoBancaria" print-hide>
                         <div class="row" ng-init="incrementaTotalPreConciliados(dado.Conciliado === 2)"
-                             ng-class="{'element-hidden' : dado.Conciliado === 3 && dado.Recebimento === null}">
+                             ng-class="{'element-hidden' : dado.Conciliado === 3 && dado.Venda === null}">
                             <div class="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-4"
-                                 title="{{dado.Conciliado === 1 ? 'Desfazer conciliação' : dado.Conciliado === 2 ? 'Conciliar' : dado.Conciliado === 3 && dado.Venda === null ? 'Buscar venda' : ''}}">
+                                 title="{{dado.Conciliado === 1 ? 'Desfazer conciliação' : dado.Conciliado === 2 ? 'Conciliar' : dado.Conciliado === 3 && dado.Recebimento === null ? 'Buscar venda' : ''}}">
                                 <a href="javascript:;" class="btn btn-icon-only default"
-                                   ng-click="dado.Conciliado === 1 ? desconcilia(dado) : dado.Conciliado === 2 ? concilia(dado) : dado.Conciliado === 3 && dado.Venda === null  ? buscaVendas(dado) : 0"
+                                   ng-click="dado.Conciliado === 1 ? desconcilia(dado) : dado.Conciliado === 2 ? concilia(dado) : dado.Conciliado === 3 && dado.Recebimento === null  ? buscaVendas(dado) : 0"
                                    ng-disabled="!usuarioPodeAlterarDadosConciliacaoVendas()">
                                     <i class="fa"
-                                       ng-class="{'fa-undo': dado.Conciliado === 1, 'fa-arrow-right': dado.Conciliado === 2, 'fa-search' : dado.Conciliado === 3 && dado.Venda === null}"></i>
+                                       ng-class="{'fa-undo': dado.Conciliado === 1, 'fa-arrow-left': dado.Conciliado === 2, 'fa-search' : dado.Conciliado === 3 && dado.Recebimento === null}"></i>
                                 </a>
                             </div>
                         </div>

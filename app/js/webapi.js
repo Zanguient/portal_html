@@ -215,7 +215,7 @@ angular.module('webapi', ['utils'])
             nsu = 105,
             // Relacionamentos
             tbadquirente : 200,
-            recebimento : 300
+            tbrecebimentovenda : 300
         },
         recebiveisfuturos : {
             data : 100,
