@@ -302,11 +302,7 @@ angular.module("tax-services-consulta-mercadoria", [])
       */
     $scope.detalhar = function(mercadorias, indexNota){
         var mercadoria = mercadorias[indexNota];
-console.log(mercadoria);
-        //if(!$scope.notadetalhada || $scope.notadetalhada.idManifesto !== nota.idManifesto)
             obtemDetalhesNota(mercadoria.nrChave, function(){$('#modalDetalhes').modal('show');});
-        //else
-          //  $('#modalDetalhes').modal('show');
     }
     
     
@@ -320,8 +316,6 @@ console.log(mercadoria);
        // Filtros    
        var filtro = {id : /*$campos.tax.tbmanifesto.nrchave.*/ 101,
                      valor : nrChave};
-           
-       console.log(filtro);
        
        $webapi.get($apis.getUrl($apis.tax.tbmanifesto, [$scope.token, 4], filtro)) 
             .then(function(dados){
