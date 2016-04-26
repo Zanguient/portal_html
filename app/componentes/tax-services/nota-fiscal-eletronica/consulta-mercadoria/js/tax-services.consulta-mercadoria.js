@@ -135,7 +135,7 @@ angular.module("tax-services-consulta-mercadoria", [])
            var filtroData = undefined;
             // Filtro Por Código 
             if($scope.filtro.cdMercadoria && $scope.filtro.cdMercadoria !== ''){
-                filtros.push({id: /*$campos.tax.tbmercadoria.cdmercadoria */ 103,
+                filtros.push({id: /*$campos.tax.tbmercadoria.cdmercadoriaerp */ 103,
                               valor: $scope.filtro.cdMercadoria});
             }
 
@@ -148,7 +148,7 @@ angular.module("tax-services-consulta-mercadoria", [])
         else
            {
             if($scope.filtro.chaveAcesso && $scope.filtro.chaveAcesso !== null){
-                filtros.push({id: /*$campos.tax.tbmanifesto.nrCNPJ*/ 130, 
+                filtros.push({id: /*$campos.tax.tbmercadoria.nrchave*/ 130, 
                              valor: $scope.filtro.chaveAcesso}); 
            }
            }
@@ -169,22 +169,27 @@ angular.module("tax-services-consulta-mercadoria", [])
                                   );
             return;   
         }
-        /*if($scope.filtro.filial === null){
-           $scope.showModalAlerta('É necessário selecionar uma filial!');
-           return;
-        }*/
         
         // Nova busca
         buscaMercadorias();
     }
                                                 
-    var buscaMercadorias = function(){
+    var buscaMercadorias = function(idMercadoria){
         // Abre os progress
        $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
        $scope.showProgress(divPortletBodyManifestoPos);
         
-       // Filtros    
-       var filtros = obtemFiltrosBuscaMercadoria();   
+        var filtros = [];
+       // Filtros
+        if(idMercadoria)
+            {
+                filtros.push({id: /*$campos.tax.tbmercadoria.idMercadoria */ 100,
+                              valor: idMercadoria}); 
+            }
+        else
+            {
+            filtros = obtemFiltrosBuscaMercadoria(); 
+            }
      
        if( filtros !=  undefined)
        {
@@ -200,6 +205,11 @@ angular.module("tax-services-consulta-mercadoria", [])
 
                     // Obtém os dados
                     $scope.mercadorias = dados.Registros;
+                    if($scope.mercadorias.length > 0)
+                        {
+                        $scope.classificacao = $scope.mercadorias[0].ultimaClassificacao;
+                        }
+                    
                     // Set valores de exibição
                     $scope.filtro.total_registros = dados.TotalDeRegistros;
                     $scope.filtro.total_paginas = Math.ceil($scope.filtro.total_registros / $scope.filtro.itens_pagina);
@@ -241,6 +251,104 @@ angular.module("tax-services-consulta-mercadoria", [])
         
     }
     
+    /*
+    Insere uma nova classificação
+    */
+    $scope.insereClassificacao = function(){
+        // Avalia se há um grupo empresa selecionado
+        if(!$scope.usuariologado.grupoempresa){
+            $scope.showModalAlerta('Por favor, selecione uma empresa', 'Atos Capital', 'OK', 
+                                   function(){
+                                         $timeout(function(){ $scope.setVisibilidadeBoxGrupoEmpresa(true);}, 300);
+                                    }
+                                  );
+            return;   
+        }
+        
+        // Nova busca
+        insereClassificaco();
+        //console.log($scope.classificacao);
+    }
+                                                
+    var insereClassificaco = function(){
+        // Abre os progress
+       $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
+       $scope.showProgress(divPortletBodyManifestoPos);
+        
+           
+        $webapi.post($apis.getUrl($apis.tax.tbmercadoriaclassificada, undefined,
+                                  {id: 'token', valor: $scope.token}), $scope.classificacao)
+                .then(function(dados){
+            
+                    // Fecha os progress
+                    $scope.hideProgress(divPortletBodyFiltrosPos);
+                    $scope.hideProgress(divPortletBodyManifestoPos);
+            
+                    buscaMercadorias($scope.classificacao.idMercadoria);
+                  },function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                     else $scope.showAlert('Houve uma falha ao inserir uma classificação (' + failData.status + ')', true, 'danger', true);
+                     // Hide progress
+                     $scope.hideProgress(divPortletBodyFiltrosPos);
+                     $scope.hideProgress(divPortletBodyManifestoPos);
+                  });          
+       
+    }
+    
+    
+        /** 
+      * Detalha a nota
+      */
+    $scope.detalhar = function(mercadorias, indexNota){
+        var mercadoria = mercadorias[indexNota];
+            obtemDetalhesNota(mercadoria.nrChave, function(){$('#modalDetalhes').modal('show');});
+    }
+    
+    
+        /**
+      * Requisita informações detalhadas da nota fiscal eletrônica
+      */
+    var obtemDetalhesNota = function(nrChave, funcaoSucesso){
+       $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
+       $scope.showProgress(divPortletBodyManifestoPos);
+        
+       // Filtros    
+       var filtro = {id : /*$campos.tax.tbmanifesto.nrchave.*/ 101,
+                     valor : nrChave};
+       
+       $webapi.get($apis.getUrl($apis.tax.tbmanifesto, [$scope.token, 4], filtro)) 
+            .then(function(dados){
+                // Obtém os dados
+                $scope.notadetalhada = undefined;
+                //console.log(dados);
+           
+                if(dados.Registros.length > 0){ 
+                    $scope.notadetalhada = dados.Registros[0].notas[0];
+                    $scope.notadetalhada.nrChave = nrChave;
+                }
+                else{
+                        // Fecha os progress
+                        $scope.hideProgress(divPortletBodyFiltrosPos);
+                        $scope.hideProgress(divPortletBodyManifestoPos);
+                        $scope.showModalAlerta('A Nota Fiscal não está disponível.'); 
+                        return;
+                }
+                if(typeof funcaoSucesso === 'function') funcaoSucesso();
+           
+                // Fecha os progress
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+                $scope.hideProgress(divPortletBodyManifestoPos);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter detalhes da NF-e (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+                 $scope.hideProgress(divPortletBodyManifestoPos);
+              });     
+    }
+    
     // TABELA EXPANSÍVEL
     $scope.toggle = function(mercadoria){
         if(!mercadoria || mercadoria === null) return;
@@ -250,6 +358,21 @@ angular.module("tax-services-consulta-mercadoria", [])
     $scope.isExpanded = function(mercadoria){
         if(!mercadoria || mercadoria === null) return;
         return mercadoria.collapsed;
+    }
+    
+    
+    //TAB MODAL
+    /**
+      * Retorna true se a tab informada corresponde a tab em exibição
+      */
+    $scope.tabIs = function (tab){
+        return $scope.tab === tab;
+    }
+    /**
+      * Altera a tab em exibição
+      */
+    $scope.setTab = function (tab){
+        if (tab >= 1 && tab <= 8) $scope.tab = tab;        
     }
     
     //TAB FILTROS
