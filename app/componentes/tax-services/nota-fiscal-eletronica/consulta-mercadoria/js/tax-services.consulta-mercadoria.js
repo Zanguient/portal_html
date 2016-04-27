@@ -23,15 +23,38 @@ angular.module("tax-services-consulta-mercadoria", [])
                                             function($scope,$state,$http,$window,/*$campos,*/
                                                      $webapi,$apis,$timeout,$filter){ 
    
-    $scope.confirmRecebimento = false;
     $scope.paginaInformada = 1;                                          
     $scope.itens_pagina = [50, 100, 150, 200];                                      
     $scope.filtro = { itens_pagina : $scope.itens_pagina[0], pagina : 1,
                       total_registros : 0, faixa_registros : '0-0', total_paginas : 0, chaveAcesso : null,cdMercadoria: null,dsMercadoria:null};
-    $scope.classificacao = {idMercadoria: null,nrNCM: null,prIPI: null,prICMS: null,prPIS: null,prCOFINS: null,dsObservacao: null,idUsers: null};
+    $scope.classificacao = {idMercadoria: null,
+                                    nrNCM: null,
+                                    dsNCM: null,
+                                    dsCstICMS: null,
+                                    prICMS: 0.0,
+                                    prBaseICMS: 0,
+                                    prEfetivaICMS: 0.0,
+                                    dsBaseLegalICMS: null,
+                                    prIPI: 0.0,
+                                    dsCstIPI: null,
+                                    dsBaseLegalIPI: null,
+                                    prII: 0.0,
+                                    dsCstPisCofins: null,
+                                    prPIS: 0.0,
+                                    prCOFINS: 0.0,
+                                    dsBaseLegalPisCofins: null,
+                                    dsObservacao: null,
+                                    idUsers: null,
+                                    dtClassificacao: null,
+                                    flAceite: null,
+                                    idUsersAceite: null};
     $scope.tabFiltro = 1; 
+    $scope.tab = 1;
+    $scope.tabDetalhes = 1;
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyManifestoPos = 1; // posição da div que vai receber o loading progress                                         
+    
+    $scope.ultimaClassificacao = null;                                            
     // flags                                   
     $scope.exibeTela = false;                                                                                                    
                                                 
@@ -251,6 +274,61 @@ angular.module("tax-services-consulta-mercadoria", [])
         
     }
     
+    /**
+      * Obtem a última classificação a partir do id da mercadoria
+      */
+    $scope.buscaUltimaClassficacao = function(mercadorias,indexNota){
+        // Abre os progress
+       $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
+       $scope.showProgress(divPortletBodyManifestoPos);
+        
+        var mercadoria = mercadorias[indexNota];
+        
+        var filtros = [{id: /*$campos.tax.tbmercadoriaclassificada.idMercadoria */ 101,
+                              valor: mercadoria.idMercadoria}];
+     
+           $webapi.get($apis.getUrl($apis.tax.tbmercadoriaclassificada, 
+                                    [$scope.token, 2], 
+                                    filtros)) 
+                .then(function(dados){
+
+                    // Obtém os dados
+                    $scope.classificacao = dados.Registros[0];
+                    $scope.ultimaClassificacao = $scope.classificacao;      
+               
+                    // Fecha os progress
+                    $scope.hideProgress(divPortletBodyFiltrosPos);
+                    $scope.hideProgress(divPortletBodyManifestoPos);
+               
+               exibeModal();
+                  
+           },
+                  function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                     else $scope.showAlert('Houve uma falha ao obter a última classificação (' + failData.status + ')', true, 'danger', true);
+                    // Quando a busca for por chave de acesso, força o usuário digitar a Chave de Acesso
+               
+                     // Fecha os progress
+                     $scope.hideProgress(divPortletBodyFiltrosPos);
+                     $scope.hideProgress(divPortletBodyManifestoPos);
+               
+                  });           
+
+        
+    }
+    
+    var exibeModal = function(){
+        $('#modalClassificar').modal('show');
+    
+    }
+    /*
+    Fecha o modal Importar
+    */                                            
+    var fechaModalClassificar = function(){
+        $('#modalClassificar').modal('hide');       
+    }
+    
     /*
     Insere uma nova classificação
     */
@@ -265,7 +343,49 @@ angular.module("tax-services-consulta-mercadoria", [])
             return;   
         }
         
-        // Nova busca
+        // Alíquota ICMS
+        if(typeof $scope.classificacao.prICMS === 'string'){
+            try{ 
+                $scope.classificacao.prICMS = parseFloat($scope.classificacao.prICMS.split('.').join('').split(',').join('.'));
+            }catch(ex){ }
+        }
+        
+                // Alíquota Efetiva ICMS
+        if(typeof $scope.classificacao.prEfetivaICMS === 'string'){
+            try{ 
+                $scope.classificacao.prEfetivaICMS = parseFloat($scope.classificacao.prEfetivaICMS.split('.').join('').split(',').join('.'));
+            }catch(ex){ }
+        }
+        
+                // Alíquota IPI
+        if(typeof $scope.classificacao.prIPI === 'string'){
+            try{ 
+                $scope.classificacao.prIPI = parseFloat($scope.classificacao.prIPI.split('.').join('').split(',').join('.'));
+            }catch(ex){ }
+        }
+        
+                // Alíquota II
+        if(typeof $scope.classificacao.prII === 'string'){
+            try{ 
+                $scope.classificacao.prII = parseFloat($scope.classificacao.prII.split('.').join('').split(',').join('.'));
+            }catch(ex){ }
+        }
+        
+                // Alíquota PIS
+        if(typeof $scope.classificacao.prPIS === 'string'){
+            try{ 
+                $scope.classificacao.prPIS = parseFloat($scope.classificacao.prPIS.split('.').join('').split(',').join('.'));
+            }catch(ex){ }
+        }
+        
+                // Alíquota COFINS
+        if(typeof $scope.classificacao.prCOFINS === 'string'){
+            try{ 
+                $scope.classificacao.prCOFINS = parseFloat($scope.classificacao.prCOFINS.split('.').join('').split(',').join('.'));
+            }catch(ex){ }
+        }
+        
+        
         insereClassificaco();
         //console.log($scope.classificacao);
     }
@@ -283,7 +403,8 @@ angular.module("tax-services-consulta-mercadoria", [])
                     // Fecha os progress
                     $scope.hideProgress(divPortletBodyFiltrosPos);
                     $scope.hideProgress(divPortletBodyManifestoPos);
-            
+                    fechaModalClassificar();
+                    $scope.showModalAlerta('Classificação inserida com sucesso!'); 
                     buscaMercadorias($scope.classificacao.idMercadoria);
                   },function(failData){
                      if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
@@ -292,6 +413,7 @@ angular.module("tax-services-consulta-mercadoria", [])
                      // Hide progress
                      $scope.hideProgress(divPortletBodyFiltrosPos);
                      $scope.hideProgress(divPortletBodyManifestoPos);
+                    fechaModalClassificar();
                   });          
        
     }
@@ -373,6 +495,20 @@ angular.module("tax-services-consulta-mercadoria", [])
       */
     $scope.setTab = function (tab){
         if (tab >= 1 && tab <= 8) $scope.tab = tab;        
+    }
+    
+    //TAB DETALHES MERCADORIA
+    /**
+      * Retorna true se a tab informada corresponde a tab em exibição
+      */
+    $scope.tabDetalhesIs = function (tabDetalhes){
+        return $scope.tabDetalhes === tabDetalhes;
+    }
+    /**
+      * Altera a tab em exibição
+      */
+    $scope.setTabDetalhes = function (tabDetalhes){
+        if (tabDetalhes >= 1 && tabDetalhes <= 2) $scope.tabDetalhes = tabDetalhes;        
     }
     
     //TAB FILTROS
