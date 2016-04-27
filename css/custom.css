@@ -4,6 +4,10 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.1.2 - 27/04/2016
+ *  - cupomConciliacaoVendas
+ *  - cupomAzulMarinhoConciliacaoBancaria
+ *
  *  Versão 1.1.1 - 02/02/2016
  *  - iconeMonitorCargasProcessandoDados
  *
@@ -301,6 +305,22 @@ div.divTextosBrancos *{
 
 .cupomConciliacaoTitulos{
     height: 330px !important; 
+}
+
+.cupomConciliacaoVendas{
+    height: 310px !important; 
+}
+
+.cupomAzulMarinhoConciliacaoBancaria{
+    background-color: #eef7fb;
+    border-color: #483D8B;
+    color: #191970;
+    border-left:3px solid #483D8B;      
+    border-radius: 4px 4px; 
+    padding: 15px 30px 15px 15px;
+    margin-top:40px;
+    height: 320px;
+    width:320px; 
 }
 
 .cupomAzulConciliacaoBancaria{

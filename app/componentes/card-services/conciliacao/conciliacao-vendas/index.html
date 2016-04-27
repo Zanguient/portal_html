@@ -8,6 +8,9 @@
     Card Services > Conciliação > Conciliação de Vendas
  
 
+    Versão 1.0.3 - 27/04/2016
+    - Conciliação de vendas: venda do erp é a referência
+
     Versão 1.0.2 - 01/04/2016
     - Index no modelo da conciliação de venda
      
@@ -384,7 +387,7 @@
                                <select class="form-control form-filter input-sm comboBoxFiltros"
                                        style="width: 60%"
                                        ng-model="modalBuscaVendas.filial"
-                                       ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
+                                       ng-options="filial as getNomeAmigavelFilial(filial) for filial in $scope.modalBuscaVendas.filiais">
                                     <option value="" style="display: none"></option>
                                </select>
                                <span style="margin-right: 20px" title="Buscar venda">
@@ -557,7 +560,7 @@
                        Conciliar TEF-NSU
                     </button>
                     <button class="btn btn-primary" style="padding-left: 10px" 
-                       ng-disabled="!filtro.adquirente || filtro.adquirente === null"
+                       ng-disabled="!filtro.filial || filtro.filial === null"
                        title="Efetua a correção no ERP das vendas conciliadas com recebíveis, considerando o filtro selecionado"
                        ng-click="corrigeVendas()">
                        Corrige Vendas
@@ -607,7 +610,7 @@
                          ng-class="{'element-hidden' : dado.Recebimento === null}">
                         <div class="row">
                             <div class="col-md-8 col-md-offset-4 col-sm-12"
-                                 ng-class="{'cupomConciliacaoVendas cupomAzulConciliacaoBancaria' : dado.Recebimento !== null && dado.Conciliado === 1, 'cupomConciliacaoVendas cupomVermelhoConciliacaoBancaria' : dado.Recebimento !== null && dado.Conciliado === 3, 'cupomConciliacaoVendas cupomLaranjaConciliacaoBancaria' : dado.Recebimento !== null && dado.Conciliado === 2}">
+                                 ng-class="{'cupomConciliacaoVendas cupomAzulConciliacaoBancaria' : dado.Venda !== null && dado.Conciliado === 1, 'cupomConciliacaoVendas cupomAzulMarinhoConciliacaoBancaria' : dado.Venda !== null && dado.Conciliado === 4, 'cupomConciliacaoVendas cupomVermelhoConciliacaoBancaria' : dado.Venda === null && dado.Conciliado === 3, 'cupomConciliacaoVendas cupomLaranjaConciliacaoBancaria' : dado.Venda !== null && dado.Conciliado === 2}">
                                 <!--HEAD-->
                                 <div class="row">
                                     <div class="col-md-12">
@@ -708,15 +711,15 @@
                     
                     <!--BOTÕES-->
                     <div class="col-md-2 col-sm-2 btnConciliacaoBancaria" print-hide>
-                        <div class="row" ng-init="incrementaTotalPreConciliados(dado.Conciliado === 2)"
+                        <div class="row" ng-init="incrementaTotalConciliadosDivergentes(dado.Conciliado === 4)"
                              ng-class="{'element-hidden' : dado.Conciliado === 3 && dado.Venda === null}">
                             <div class="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-4"
-                                 title="{{dado.Conciliado === 1 ? 'Desfazer conciliação' : dado.Conciliado === 2 ? 'Conciliar' : dado.Conciliado === 3 && dado.Recebimento === null ? 'Buscar venda' : ''}}">
+                                 title="{{dado.Conciliado === 1 || dado.Conciliado === 4 ? 'Desfazer conciliação' : dado.Conciliado === 2 ? 'Conciliar' : dado.Conciliado === 3 && dado.Recebimento === null ? 'Buscar venda' : ''}}">
                                 <a href="javascript:;" class="btn btn-icon-only default"
-                                   ng-click="dado.Conciliado === 1 ? desconcilia(dado) : dado.Conciliado === 2 ? concilia(dado) : dado.Conciliado === 3 && dado.Recebimento === null  ? buscaVendas(dado) : 0"
+                                   ng-click="dado.Conciliado === 1 || dado.Conciliado === 4 ? desconcilia(dado) : dado.Conciliado === 2 ? concilia(dado) : dado.Conciliado === 3 && dado.Recebimento === null  ? buscaVendas(dado) : 0"
                                    ng-disabled="!usuarioPodeAlterarDadosConciliacaoVendas()">
                                     <i class="fa"
-                                       ng-class="{'fa-undo': dado.Conciliado === 1, 'fa-arrow-left': dado.Conciliado === 2, 'fa-search' : dado.Conciliado === 3 && dado.Recebimento === null}"></i>
+                                       ng-class="{'fa-undo': dado.Conciliado === 1 || dado.Conciliado === 4, 'fa-arrow-left': dado.Conciliado === 2, 'fa-search' : dado.Conciliado === 3 && dado.Recebimento === null}"></i>
                                 </a>
                             </div>
                         </div>
@@ -727,7 +730,7 @@
                          ng-class="{'element-hidden' : dado.Venda === null}">
                         <div class="row">
                             <div class="col-md-8 col-sm-12"
-                                 ng-class="{'cupomConciliacaoVendas cupomAzulConciliacaoBancaria' : dado.Venda !== null && dado.Conciliado === 1, 'cupomConciliacaoVendas cupomVermelhoConciliacaoBancaria' : dado.Venda !== null && dado.Conciliado === 3, 'cupomConciliacaoVendas cupomLaranjaConciliacaoBancaria' : dado.Venda !== null && dado.Conciliado === 2}">
+                                 ng-class="{'cupomConciliacaoVendas cupomAzulConciliacaoBancaria' : dado.Recebimento !== null && dado.Conciliado === 1, 'cupomConciliacaoVendas cupomAzulMarinhoConciliacaoBancaria' : dado.Recebimento !== null && dado.Conciliado === 4, 'cupomConciliacaoVendas cupomVermelhoConciliacaoBancaria' : dado.Recebimento === null && dado.Conciliado === 3, 'cupomConciliacaoVendas cupomLaranjaConciliacaoBancaria' : dado.Recebimento !== null && dado.Conciliado === 2}">
                                 <!--HEAD-->
                                 <div class="row">
                                     <div class="col-md-12">
@@ -814,7 +817,7 @@
                                 </div>
                                 <!--BOTÃO CORRIGE -->
                                 <div class="row" style="text-align:center"
-                                     ng-show="dado.Conciliado === 1">
+                                     ng-show="dado.Conciliado === 4">
                                     <div class="col-md-12">
                                         <button class="btn green"
                                                 style="margin-bottom:-25px" print-remove
