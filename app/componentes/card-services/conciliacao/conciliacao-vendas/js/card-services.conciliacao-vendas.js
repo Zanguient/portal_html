@@ -81,7 +81,7 @@ angular.module("card-services-conciliacao-vendas", [])
                 }else{ // reseta tudo e não faz buscas 
                     $scope.dadosconciliacao = []; 
                     $scope.filiais = [];
-                    $scope.modalBuscaVendas.filiais = [];
+                    //$scope.modalBuscaVendas.filiais = [];
                     $scope.filtro.filial = $scope.filtro.adquirente = null;
                     
                     $scope.filtro.faixa_registros = '0-0';
@@ -249,8 +249,8 @@ angular.module("card-services-conciliacao-vendas", [])
                                 filtros)) 
             .then(function(dados){
                 $scope.filiais = dados.Registros;
-                $scope.modalBuscaVendas.filiais = [];
-                angular.copy($scope.filiais, $scope.modalBuscaVendas.filiais);
+                //$scope.modalBuscaVendas.filiais = [];
+                //angular.copy($scope.filiais, $scope.modalBuscaVendas.filiais);
                 // Reseta
                 if(!nu_cnpj) $scope.filtro.filial = $scope.filiais[0];
                 else $scope.filtro.filial = $filter('filter')($scope.filiais, function(f) {return f.nu_cnpj === nu_cnpj;})[0];
@@ -593,8 +593,8 @@ angular.module("card-services-conciliacao-vendas", [])
         if(!dado.Venda || dado.Venda === null) return;
         $scope.modalBuscaVendas.venda = dado.Venda;
         $scope.modalBuscaVendas.vendas = [];
-        $scope.modalBuscaVendas.filial = $filter('filter')($scope.modalBuscaVendas.filiais, function(f){return $scope.getNomeAmigavelFilial(f).toUpperCase() === dado.Venda.Filial})[0];
-        console.log($scope.modalBuscaVendas.filial);
+        $scope.modalBuscaVendas.filial = $filter('filter')($scope.filiais, function(f){return $scope.getNomeAmigavelFilial(f).toUpperCase() === dado.Venda.Filial})[0];
+        //console.log($scope.modalBuscaVendas.filial);
         // Exibe o modal
         $('#modalVendas').modal('show');
         buscaVendas();

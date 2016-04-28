@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.1 - 27/04/2016
+ *  - Mensagem do erro da importação
+ *
  *  Versão 1.0 - 28/03/2016
  *
  */
@@ -433,7 +436,7 @@ angular.module("administrativo-vendas", [])
                 // Obtém os dados
                 $scope.vendas = dados.Registros;
                 console.log(dados.Registros);
-                //$scope.total.totalCorrigidos = dados.Totais.totalCorrigidos;
+                $scope.total.totalCorrigidos = dados.Totais.totalCorrigidos;
                 $scope.total.totalConciliados = dados.Totais.totalConciliados;
                 $scope.total.valorTotal = dados.Totais.valorTotal;
                 
@@ -501,7 +504,8 @@ angular.module("administrativo-vendas", [])
                  if(failData.status === 0) $scope.showAlert('O servidor está demorando muito para responder. O processo de importação ainda está sendo realizado. Por favor, realize a consulta dos vendas mais tarde.', true, 'warning', true, true, 0); 
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else if(failData.status === 401) $scope.showModalAlerta(failData.dados);
-                 else $scope.showAlert('Houve uma falha ao carregar vendas (' + failData.status + ')', true, 'danger', true);
+                 else //$scope.showAlert('Houve uma falha ao carregar vendas (' + failData.status + ')', true, 'danger', true);
+                     $scope.showModalAlerta('Houve uma falha ao importar as vendas. (' + (failData.dados && failData.dados !== null ? failData.dados : failData.status) + ')', 'Erro');
                  // Fecha o progress
                 $scope.hideProgress(divPortletBodyImportacaoPos);
                 $scope.hideProgress(divPortletBodyFiltrosPos);

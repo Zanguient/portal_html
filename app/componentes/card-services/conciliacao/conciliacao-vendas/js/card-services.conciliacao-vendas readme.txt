@@ -69,22 +69,26 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 		{ Venda : {  Id : int,
 			     Nsu : string,
 			     Valor : double,
+			     Sacado : string ou null, (null se não informado na importação)
 			     Bandeira : string,
 			     Data : datetime,
 			     Filial : string,
                              Parcelas : int,
+			     Adquirente : string, 
 			  }, 
 		  Recebimento :  null ou // se null => não tem info do lado da adquirente
 				 {  Id : int,
 				    Nsu : string,
 				    CodResumoVendas : string,
 				    Valor : double,
+				    Sacado : string ou null, (null se bandeira não mapeado para sacado do cliente)
 			            Bandeira : string,
 				    Data : datetime,
 				    Filial : string,
 				    Parcelas : int,	
+				    Adquirente : string, 
 				 },
-		  Adquirente : string, 
+		  
 		  Conciliado : int, // 1 : CONCILIADO | 2 : PRÉ-CONCILIADO | 3 : NÃO-CONCILIADO | 4 : CONCILIADO COM DIVERGÊNCIA
 		}
 	  ]

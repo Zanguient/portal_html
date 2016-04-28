@@ -387,7 +387,7 @@
                                <select class="form-control form-filter input-sm comboBoxFiltros"
                                        style="width: 60%"
                                        ng-model="modalBuscaVendas.filial"
-                                       ng-options="filial as getNomeAmigavelFilial(filial) for filial in $scope.modalBuscaVendas.filiais">
+                                       ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
                                     <option value="" style="display: none"></option>
                                </select>
                                <span style="margin-right: 20px" title="Buscar venda">
@@ -661,17 +661,23 @@
                                         <label ng-bind="dado.Recebimento !== null ? 'Adquirente:' : ''"></label>
                                     </div>
                                     <div class="col-md-6 col-sm-6 alinhamentoDados"
-                                         ng-bind="dado.Recebimento !== null ? dado.Adquirente : ''">
+                                         ng-bind="dado.Recebimento !== null ? dado.Recebimento.Adquirente : ''">
                                     </div>                      
                                 </div> 
                                 <!--BANDEIRA -->
                                 <div class="row">
-                                    <div class="col-md-4 col-sm-4">
+                                    <div class="col-md-3 col-sm-3">
                                         <label ng-bind="dado.Recebimento !== null ? 'Bandeira:' : ''"></label>
                                     </div>
-                                    <div class="col-md-8 col-sm-8 alinhamentoDados"
-                                         ng-bind="dado.Recebimento !== null ? dado.Recebimento.Bandeira : ''">
-                                    </div>                      
+                                    <div class="col-md-9 col-sm-9 alinhamentoDados">
+                                        <span ng-bind="dado.Recebimento !== null ? dado.Recebimento.Bandeira : ''">
+                                        </span>
+                                        <span ng-show="dado.Recebimento !== null && (!dado.Recebimento.Sacado || dado.Recebimento.Sacado === null)">
+                                            &nbsp;&nbsp;
+                                            <i class="fa fa-exclamation-triangle" style="color: #FFA500; font-size: 18px"
+                                               title="Bandeira não mapeada para o sacado do cliente"></i>
+                                        </span>
+                                    </div>
                                 </div> 
                                 <!--VALOR-->
                                 <div class="row">
@@ -781,17 +787,24 @@
                                         <label ng-bind="dado.Venda !== null ? 'Adquirente:' : ''"></label>
                                     </div>
                                     <div class="col-md-6 col-sm-6 alinhamentoDados"
-                                         ng-bind="dado.Venda !== null ? dado.Adquirente : ''">
+                                         ng-bind="dado.Venda !== null ? dado.Venda.Adquirente : ''">
                                     </div>                      
                                 </div> 
                                 <!--BANDEIRA -->
                                 <div class="row">
-                                    <div class="col-md-4 col-sm-4">
+                                    <div class="col-md-3 col-sm-3">
                                         <label ng-bind="dado.Venda !== null ? 'Bandeira:' : ''"></label>
                                     </div>
-                                    <div class="col-md-8 col-sm-8 alinhamentoDados"
-                                         ng-bind="dado.Venda !== null ? dado.Venda.Bandeira : ''">
-                                    </div>                      
+                                    <div class="col-md-9 col-sm-9 alinhamentoDados">
+                                        <span ng-bind="dado.Venda !== null ? dado.Venda.Bandeira : ''"
+                                              title="{{ dado.Venda !== null && dado.Venda.Sacado && dado.Venda.Sacado !== null ? 'Sacado: ' + dado.Venda.Sacado : ''}}">
+                                        </span>
+                                        <span ng-show="dado.Venda !== null && (!dado.Venda.Sacado || dado.Venda.Sacado === null)">
+                                            &nbsp;&nbsp;
+                                            <i class="fa fa-exclamation-triangle" style="color: #FFA500; font-size: 18px"
+                                               title="Código do sacado não informado na importação"></i>
+                                        </span>
+                                    </div>
                                 </div> 
                                 <!--VALOR-->
                                 <div class="row">

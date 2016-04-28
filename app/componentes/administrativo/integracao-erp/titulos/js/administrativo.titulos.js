@@ -4,6 +4,10 @@
  *  suporte@atoscapital.com.br
  *
  *
+ * 
+ *  Versão 1.0.5 - 27/04/2016
+ *  - Mensagem do erro da importação
+ *
  *  Versão 1.0.4 - 10/03/2016
  *  - Filtros
  *
@@ -517,7 +521,8 @@ angular.module("administrativo-titulos", [])
                  if(failData.status === 0) $scope.showAlert('O servidor está demorando muito para responder. O processo de importação ainda está sendo realizado. Por favor, realize a consulta dos títulos mais tarde.', true, 'warning', true, true, 0); 
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else if(failData.status === 401) $scope.showModalAlerta(failData.dados);
-                 else $scope.showAlert('Houve uma falha ao carregar títulos (' + failData.status + ')', true, 'danger', true);
+                 else //$scope.showAlert('Houve uma falha ao carregar títulos (' + failData.status + ')', true, 'danger', true);
+                    $scope.showModalAlerta('Houve uma falha ao importar os títulos. (' + (failData.dados && failData.dados !== null ? failData.dados : failData.status) + ')', 'Erro');
                  // Fecha o progress
                 $scope.hideProgress(divPortletBodyImportacaoPos);
                 $scope.hideProgress(divPortletBodyFiltrosPos);

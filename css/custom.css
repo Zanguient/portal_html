@@ -312,7 +312,7 @@ div.divTextosBrancos *{
 }
 
 .cupomAzulMarinhoConciliacaoBancaria{
-    background-color: #eef7fb;
+    background-color: rgba(1, 183, 74, 0.36);
     border-color: #483D8B;
     color: #191970;
     border-left:3px solid #483D8B;      
