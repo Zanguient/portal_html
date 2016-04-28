@@ -47,7 +47,8 @@ angular.module("tax-services-consulta-mercadoria", [])
                                     idUsers: null,
                                     dtClassificacao: null,
                                     flAceite: null,
-                                    idUsersAceite: null};
+                                    idUsersAceite: null,
+                                    dsMensagemAceite:null};
     $scope.tabFiltro = 1; 
     $scope.tab = 1;
     $scope.tabDetalhes = 1;
@@ -414,6 +415,69 @@ angular.module("tax-services-consulta-mercadoria", [])
                      $scope.hideProgress(divPortletBodyFiltrosPos);
                      $scope.hideProgress(divPortletBodyManifestoPos);
                     fechaModalClassificar();
+                  });          
+       
+    }
+    
+            $scope.habilita = function(classificacao){
+                    if(classificacao.flAceite !== null)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                         return false;
+                    }
+            }
+            
+        $scope.aceite = function(mercadoria,index,aceiteGestor){
+            
+        // Avalia se há um grupo empresa selecionado
+        if(!$scope.usuariologado.grupoempresa){
+            $scope.showModalAlerta('Por favor, selecione uma empresa', 'Atos Capital', 'OK', 
+                                   function(){
+                                         $timeout(function(){ $scope.setVisibilidadeBoxGrupoEmpresa(true);}, 300);
+                                    }
+                                  );
+            return;   
+        }
+        
+        // Informa o aceite do gestor
+        aceite(mercadoria,index,aceiteGestor);
+    }
+    
+        var aceite = function(mercadoria,index,aceiteGestor){
+        // Abre os progress
+       $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
+       $scope.showProgress(divPortletBodyManifestoPos);
+           var classificacao = mercadoria.classificacoes[index];
+           var json = {idMercadoriaClassificada: classificacao.idMercadoriaClassificada,flAceite:aceiteGestor};
+            
+            $webapi.update($apis.getUrl($apis.tax.tbmercadoriaclassificada, undefined,
+                                  {id: 'token', valor: $scope.token}), json)
+                .then(function(dados){
+            
+                    classificacao.flAceite = aceiteGestor;
+                    if(aceiteGestor === 'true'){
+                        classificacao.dsMensagemAceite = 'Classficação Aceita!';
+                    }
+                    else{ 
+                        classificacao.dsMensagemAceite = 'Classificação Não Aceita!';
+                    }
+                
+                    //Fecha os progress
+                    $scope.hideProgress(divPortletBodyFiltrosPos);
+                    $scope.hideProgress(divPortletBodyManifestoPos);
+                    
+
+                  },function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                     else $scope.showAlert('Houve uma falha ao realizar o aceite da classificação (' + failData.status + ')', true, 'danger', true);
+                     // Hide progress
+                     $scope.hideProgress(divPortletBodyFiltrosPos);
+                     $scope.hideProgress(divPortletBodyManifestoPos);
+
                   });          
        
     }
