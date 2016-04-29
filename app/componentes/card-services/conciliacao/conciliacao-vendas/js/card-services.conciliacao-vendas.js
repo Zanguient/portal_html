@@ -41,11 +41,11 @@ angular.module("card-services-conciliacao-vendas", [])
                       contVendas : 0, contRecebimentos : 0,
                     };
     var totalConciliadosDivergentes = 0;                                            
-    $scope.adquirentes = [];
+    //$scope.adquirentes = [];
     $scope.filiais = [];                                                                                       
-    $scope.tipos = [{id: 1, nome: 'CONCILIADO'}, {id: 2, nome: 'PRÉ-CONCILIADO'}, {id: 3, nome: 'NÃO CONCILIADO'}, {id: 4, nome: 'CONCILIADO COM DIVERGÊNCIA'}];             
-    $scope.filtro = {datamin : new Date(), datamax : '', nsu : '',
-                     tipo : null, adquirente : undefined, filial : undefined, considerarGrupo : false,
+    $scope.tipos = [{id: 1, nome: 'CONCILIADO'}, {id: 2, nome: 'PRÉ-CONCILIADO'}, {id: 3, nome: 'NÃO CONCILIADO'}, {id: 4, nome: 'CONCILIADO COM DIVERGÊNCIA'}, {id: 5, nome: 'CONCILIADO SEM SACADO'}];             
+    $scope.filtro = {datamin : new Date(), datamax : '', nsu : '', //adquirente : undefined, 
+                     tipo : null, filial : undefined, considerarGrupo : false,
                      itens_pagina : $scope.itens_pagina[0], order : 0,
                      pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0
                     };  
@@ -76,13 +76,15 @@ angular.module("card-services-conciliacao-vendas", [])
                 // Avalia grupo empresa
                 if($scope.usuariologado.grupoempresa){ 
                     // Reseta seleção de filtro específico de empresa
-                    $scope.filtro.filial = $scope.filtro.adquirente = null;
+                    $scope.filtro.filial = null;
+                    //$scope.filtro.adquirente = null;
                     buscaFiliais(true);
                 }else{ // reseta tudo e não faz buscas 
                     $scope.dadosconciliacao = []; 
                     $scope.filiais = [];
                     //$scope.modalBuscaVendas.filiais = [];
-                    $scope.filtro.filial = $scope.filtro.adquirente = null;
+                    $scope.filtro.filial = null;
+                    //$scope.filtro.adquirente = null;
                     
                     $scope.filtro.faixa_registros = '0-0';
                     $scope.filtro.total_registros = 0;
@@ -131,11 +133,12 @@ angular.module("card-services-conciliacao-vendas", [])
         $scope.filtro.datamin = new Date();
         $scope.filtro.datamax = ''; 
         
-        $scope.filtro.adquirente = $scope.filtro.tipo = null; 
+        //$scope.filtro.adquirente = null;
+        $scope.filtro.tipo = null; 
         
         if($scope.filiais.length > 0 && $scope.filtro.filial !== $scope.filiais[0]){
             $scope.filtro.filial = $scope.filiais[0]; 
-            buscaAdquirentes(false); 
+            //buscaAdquirentes(false); 
         }
     }
     
@@ -160,11 +163,11 @@ angular.module("card-services-conciliacao-vendas", [])
        }
         
        // Adquirente
-       if($scope.filtro.adquirente && $scope.filtro.adquirente !== null){
+       /*if($scope.filtro.adquirente && $scope.filtro.adquirente !== null){
            var filtroAdquirente = {id: 200,//$campos.card.conciliacaovendas.tbadquirente + $campos.card.tbadquirente.cdAdquirente - 100, 
                                    valor: $scope.filtro.adquirente.cdAdquirente};
            filtros.push(filtroAdquirente);
-       } 
+       } */
         
        // Tipo
        if($scope.filtro.tipo && $scope.filtro.tipo !== null){
@@ -254,9 +257,9 @@ angular.module("card-services-conciliacao-vendas", [])
                 // Reseta
                 if(!nu_cnpj) $scope.filtro.filial = $scope.filiais[0];
                 else $scope.filtro.filial = $filter('filter')($scope.filiais, function(f) {return f.nu_cnpj === nu_cnpj;})[0];
-                if(buscarAdquirentes)//$scope.filtro.filial && $scope.filtro.filial !== null)
+                /*if(buscarAdquirentes)//$scope.filtro.filial && $scope.filtro.filial !== null)
                     buscaAdquirentes(true, cdAdquirente); // Busca adquirentes
-                else
+                else*/
                     $scope.hideProgress(divPortletBodyFiltrosPos);
               },
               function(failData){
@@ -271,30 +274,30 @@ angular.module("card-services-conciliacao-vendas", [])
       */
     $scope.alterouFilial = function(){
         //console.log($scope.filtro.filial);
-        buscaAdquirentes(false);
+        //buscaAdquirentes(false);
     };
     
                                                                                          
     // ADQUIRENTES                                     
     /**
       * Busca as adquirentes
-      */
+      * /
     var buscaAdquirentes = function(progressEstaAberto, cdAdquirente){ 
         
        if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
         
-       var filtros = [{id : /*$campos.card.tbadquirente.stAdquirente*/ 103,
+       var filtros = [{id : 103, //$campos.card.tbadquirente.stAdquirente
                        valor : 1}];
         
        if($scope.filtro.filial && $scope.filtro.filial !== null){
            // Filtro do grupo empresa => barra administrativa
-           filtros.push({id: /*$campos.card.tbadquirente.cnpj*/ 305,
+           filtros.push({id: 305, //$campos.card.tbadquirente.cnpj
                          valor: $scope.filtro.filial.nu_cnpj});
        }  
        
        
        $webapi.get($apis.getUrl($apis.card.tbadquirente, 
-                                [$scope.token, 0, /*$campos.card.tbadquirente.nmAdquirente*/ 101],
+                                [$scope.token, 0, 101], //$campos.card.tbadquirente.nmAdquirente
                                 filtros)) 
             .then(function(dados){
                 $scope.adquirentes = dados.Registros;
@@ -312,10 +315,10 @@ angular.module("card-services-conciliacao-vendas", [])
     }
     /**
       * Selecionou uma adquirente
-      */
+      * /
     $scope.alterouAdquirente = function(){
         // ...
-    };
+    };*/
     
     
     // TIPO CONCILIAÇÃO
@@ -567,7 +570,14 @@ angular.module("card-services-conciliacao-vendas", [])
                         buscaDadosConciliacaoVendas(true);
                     else{
                         // Altera o status da conciliação
-                        for(var k = 0; k < dadosConciliacao.length; k++) dadosConciliacao[k].Conciliado = 1;  
+                        for(var k = 0; k < dadosConciliacao.length; k++){ 
+                            // Tem divergência?
+                            var dd = dadosConciliacao[k];
+                            if($scope.possuiDivergencia(dd))
+                                dd.Conciliado = 4;
+                            else
+                                dd.Conciliado = 1;  
+                        }
                         if(!$scope.$$phase) $scope.$apply();
                         // Esconde o progress
                         $scope.hideProgress(divPortletBodyFiltrosPos);
@@ -760,23 +770,7 @@ angular.module("card-services-conciliacao-vendas", [])
       * Correção das vendas conciliadas
       */
     $scope.corrigeVendas = function()
-    {
-        /*var conciliadosDivergentes = $filter('filter')($scope.dadosconciliacao, function(c){ return c.Conciliado === 4 }); 
-        var total = conciliadosDivergentes.length;
-        // Tem elementos pré-conciliados?
-        if(total === 0){
-            $scope.showModalAlerta('Não há dados conciliados com divergência em exibição!');
-            return;        
-        } 
-        // Prepara o texto
-        var texto = "";
-        if(total === 1){
-            texto += "Foi encontrada 1 conciliação com divergência. Confirma essa correção?"
-        }else texto += "Foram encontradas " + total + " conciliações com divergência. Confirma essas correções?";
-        // Exibe o modal de confirmação
-        $scope.showModalConfirmacao('Confirmação', texto, concilia, conciliadosDivergentes, 'Sim', 'Não');
-        */
-        
+    {        
         if(!$scope.filtro.filial || $scope.filtro.filial === null)
             return;
         
@@ -809,5 +803,87 @@ angular.module("card-services-conciliacao-vendas", [])
                  $scope.hideProgress(divPortletBodyDadosPos);
               }); 
     }
+    
+    
+    
+    
+    
+    // DIVERGÊNCIAS
+    
+    
+    $scope.dataDiverge = function(dado){
+        if(!dado || dado === null || dado.Venda === null || dado.Recebimento === null || 
+           (dado.Conciliado !== 1 && dado.Conciliado !== 4))
+            return false;
+        
+        return $scope.getDataString(dado.Venda.Data) !== $scope.getDataString(dado.Recebimento.Data);
+    }
+    
+    $scope.nsuDiverge = function(dado){
+        /*if(!dado || dado === null || dado.Venda === null || dado.Recebimento === null || 
+           (dado.Conciliado !== 1 && dado.Conciliado !== 4))
+            return false;
+        
+        var nsuV = dado.Venda.Nsu;
+        var nsuR = dado.Recebimento.Nsu;
+        while(nsuV.length < nsuR.length) nsuV = "0" + nsuV;
+        while(nsuR.length < nsuV.length) nsuR = "0" + nsuR;
+        
+        return nsuV !== nsuR;*/
+        return false;
+    }
+    
+    $scope.parcelasDiverge = function(dado){
+        if(!dado || dado === null || dado.Venda === null || dado.Recebimento === null || 
+           (dado.Conciliado !== 1 && dado.Conciliado !== 4))
+            return false;
+        
+        return dado.Venda.Parcelas !== dado.Recebimento.Parcelas;
+    }
+    
+    $scope.sacadoDiverge = function(dado){
+        if(!dado || dado === null || dado.Venda === null || dado.Recebimento === null || 
+           (dado.Conciliado !== 1 && dado.Conciliado !== 4) || 
+           !dado.Recebimento.Sacado || dado.Recebimento.Sacado === null ||
+           !dado.Venda.Sacado || dado.Venda.Sacado === null ||
+           !dado.Venda.Adquirente || dado.Venda.Adquirente === null)
+            return false;
+        
+        return dado.Venda.Sacado !== dado.Recebimento.Sacado;
+    }
+    
+    $scope.valorDiverge = function(dado){
+        if(!dado || dado === null || dado.Venda === null || dado.Recebimento === null || 
+           (dado.Conciliado !== 1 && dado.Conciliado !== 4))
+            return false;
+        
+        return dado.Venda.Valor !== dado.Recebimento.Valor;
+    }
+    
+    $scope.possuiDivergencia = function(dado){
+        if(!dado || dado === null || dado.Venda === null || dado.Recebimento === null || 
+           (dado.Conciliado !== 1 && dado.Conciliado !== 4))
+            return false;
+        
+        if(dado.Venda.Valor !== dado.Recebimento.Valor) return true;
+        if(dado.Venda.Parcelas !== dado.Recebimento.Parcelas) return true;
+        if($scope.getDataString(dado.Venda.Data) !== $scope.getDataString(dado.Recebimento.Data)) return true;
+        
+        if(dado.Recebimento.Sacado && dado.Recebimento.Sacado !== null && 
+           dado.Venda.Sacado && dado.Venda.Sacado !== null && 
+           dado.Venda.Adquirente && dado.Venda.Adquirente !== null &&
+           dado.Venda.Sacado !== dado.Recebimento.Sacado) 
+            return true;
+        
+        /*var nsuV = dado.Venda.Nsu;
+        var nsuR = dado.Recebimento.Nsu;
+        while(nsuV.length < nsuR.length) nsuV = "0" + nsuV;
+        while(nsuR.length < nsuV.length) nsuR = "0" + nsuR;
+        
+        return nsuV !== nsuR;*/
+        return false;
+    }
+    
+    
     
 }]);

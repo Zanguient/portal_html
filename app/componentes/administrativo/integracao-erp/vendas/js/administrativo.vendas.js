@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.2 - 29/04/2016
+ *  - Sem filtro de adquirente
+ *
  *  Versão 1.0.1 - 27/04/2016
  *  - Mensagem do erro da importação
  *
@@ -33,10 +36,10 @@ angular.module("administrativo-vendas", [])
     // Dados    
     $scope.vendas = [];
     $scope.filiais = [];
-    $scope.adquirentes = [];
-    $scope.filtro = { dtImportacao : new Date(),
+    //$scope.adquirentes = [];
+    $scope.filtro = { dtImportacao : new Date(), filialImportacao : null,
                       datamin : new Date(), datamax : '', consideraPeriodo : true,
-                      filial : null, adquirente : null, nsu : '',
+                      filial : null, nsu : '', //adquirente : null, 
                       itens_pagina : $scope.itens_pagina[0], order : 0, 
                       pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0
                     };   
@@ -73,13 +76,15 @@ angular.module("administrativo-vendas", [])
             if($scope.exibeTela){
                 // Avalia grupo empresa
                 if($scope.usuariologado.grupoempresa){ 
-                    $scope.filtro.filial = $scope.filtro.adquirente = null;
+                    $scope.filtro.filial = null;
+                    //$scope.filtro.adquirente = null;
                     buscaFiliais(true);
                 }else{ // reseta filiais e refaz a busca dos parâmetros 
-                    $scope.filtro.filial = $scope.filtro.adquirente = null;
+                    $scope.filtro.filial = null;
+                    //$scope.filtro.adquirente = null;
                     $scope.vendas = [];
                     $scope.filiais = [];
-                    $scope.adquirentes = [];
+                    //$scope.adquirentes = [];
                 }
                 
             }
@@ -256,12 +261,12 @@ angular.module("administrativo-vendas", [])
                 else $scope.filtro.filial = $filter('filter')($scope.filiais, function(f) {return f.nu_cnpj === nu_cnpj;})[0];
                 //$scope.filtro.filial = $scope.filiais.length > 0 ? $scope.filiais[0] : null;
                 //if($scope.filtro.filial && $scope.filtro.filial !== null)
-                if(buscarAdquirentes)
+                /*if(buscarAdquirentes)
                     buscaAdquirentes(true, cdAdquirente); // Busca adquirentes
-                else{
+                else{*/
                     $scope.hideProgress(divPortletBodyFiltrosPos);
                     $scope.hideProgress(divPortletBodyImportacaoPos);
-                }
+                //}
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
@@ -276,14 +281,14 @@ angular.module("administrativo-vendas", [])
       */
     $scope.alterouFilial = function(){
         //console.log($scope.filtro.filial); 
-        buscaAdquirentes(false);
+        //buscaAdquirentes(false);
     };
     
                                                                                          
     // ADQUIRENTES 
     /**
       * Busca as adquirentes
-      */
+      * /
     var buscaAdquirentes = function(progressEstaAberto, cdAdquirente){
  
        if(!progressEstaAberto){ 
@@ -291,17 +296,17 @@ angular.module("administrativo-vendas", [])
            $scope.showProgress(divPortletBodyImportacaoPos, 10000);
        }
         
-       var filtros = [{id : /*$campos.card.tbadquirente.stAdquirente*/ 103,
+       var filtros = [{id : 103, //$campos.card.tbadquirente.stAdquirente
                        valor : 1}];
         
        if($scope.filtro.filial && $scope.filtro.filial !== null){
            // Filtro do grupo empresa => barra administrativa
-           filtros.push({id: /*$campos.card.tbadquirente.cnpj*/ 305,
+           filtros.push({id: 305, // campos.card.tbadquirente.cnpj
                          valor: $scope.filtro.filial.nu_cnpj});
        }     
        
        $webapi.get($apis.getUrl($apis.card.tbadquirente, 
-                                [$scope.token, 1, /*$campos.card.tbadquirente.nmAdquirente*/ 101],
+                                [$scope.token, 1, 101], //$campos.card.tbadquirente.nmAdquirente
                                 filtros)) 
             .then(function(dados){
                 $scope.adquirentes = dados.Registros;
@@ -323,10 +328,10 @@ angular.module("administrativo-vendas", [])
     }
     /**
       * Selecionou uma adquirente
-      */
+      * /
     $scope.alterouAdquirente = function(){
         // ....
-    };                                             
+    }; */                                            
                                                  
                                                  
                                                  
@@ -356,8 +361,9 @@ angular.module("administrativo-vendas", [])
         // Limpar data => Refazer busca?
         $scope.filtro.datamin = new Date();
         $scope.filtro.datamax = ''; 
-        
-        $scope.filtro.adquirente = $scope.filtro.filial = null; 
+                
+        //$scope.filtro.adquirente = null;
+        $scope.filtro.filial = null; 
         $scope.filtro.nsu = '';
         $scope.filtro.consideraPeriodo = true;
     }
@@ -384,12 +390,12 @@ angular.module("administrativo-vendas", [])
            filtros.push(filtroFilial);  
        }
         
-       // Adquirente
+       /* Adquirente
        if($scope.filtro.adquirente !== null){
            var filtroAdquirente = {id: 104,//$campos.card.tbrecebimentovenda.cdAdquirente, 
                                    valor: $scope.filtro.adquirente.cdAdquirente};
            filtros.push(filtroAdquirente);
-       } 
+       } */
         
         
         //NSU
@@ -435,7 +441,7 @@ angular.module("administrativo-vendas", [])
             
                 // Obtém os dados
                 $scope.vendas = dados.Registros;
-                console.log(dados.Registros);
+                //console.log(dados.Registros);
                 $scope.total.totalCorrigidos = dados.Totais.totalCorrigidos;
                 $scope.total.totalConciliados = dados.Totais.totalConciliados;
                 $scope.total.valorTotal = dados.Totais.valorTotal;
@@ -472,7 +478,7 @@ angular.module("administrativo-vendas", [])
     };
                                                  
                                                  
-    // IMPORTA TÍTULOS
+    // IMPORTA VENDAS
     $scope.importaVendas = function(){
 
         if(!$scope.usuariologado.grupoempresa || $scope.usuariologado.grupoempresa === null) return; 
@@ -485,10 +491,14 @@ angular.module("administrativo-vendas", [])
         $scope.showProgress(divPortletBodyFiltrosPos, 10000);
         $scope.showProgress(divPortletBodyVendasPos);
         
+        var json = { data: $scope.getFiltroData($scope.filtro.dtImportacao),
+                     nrCNPJ: $scope.filtro.filialImportacao && $scope.filtro.filialImportacao !== null ? $scope.filtro.filialImportacao.nu_cnpj : null
+                   };
+        
         // Requisita 
         $webapi.post($apis.getUrl($apis.card.vendaserp, undefined,
                                   {id : 'token', valor: $scope.token}), 
-                                  {data: $scope.getFiltroData($scope.filtro.dtImportacao)}) 
+                                  json) 
             .then(function(dados){           
 
                 $scope.showAlert('Vendas importadas com sucesso!', true, 'success', true);
@@ -591,6 +601,12 @@ angular.module("administrativo-vendas", [])
         
         console.log("importa csv");
         
+    }
+    
+    
+    $scope.avaliaNsu = function(){
+        if(!$scope.filtro.nsu)
+            $scope.filtro.consideraPeriodo = true;
     }
                        
     

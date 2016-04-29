@@ -263,7 +263,8 @@
                                 <!-- NSU -->
                                 <td style="text-align: center">
                                     <input type="text" class="form-control" 
-                                           ng-model="filtro.nsu"/>
+                                           ng-model="filtro.nsu"
+                                           ng-keypress="avaliaNsu()" />
                                     <div class="row" style="margin-top:10px;"
                                          ng-class="{'element-hidden' : !filtro.nsu || filtro.nsu === null}">
                                         <div class="col-sm-4 col-md-4" style="margin-right: -15px;">

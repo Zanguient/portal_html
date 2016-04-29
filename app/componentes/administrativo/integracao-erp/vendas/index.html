@@ -8,6 +8,9 @@
     Administrativo > Integração ERP > Vendas
 
 
+    Versão 1.0.1 - 29/04/2016
+    - Nova tela
+
     Versão 1.0 - 28/03/2016
 -->
 
@@ -34,16 +37,19 @@
             </div>
         </div>
         <div class="portlet-body" ng-show="exibeTela">
-            <div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer" style="width:50%; margin:auto; min-width:400px">
+            <div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer" style="width:80%; margin:auto; min-width:400px">
                 
                 <div class="table-scrollable">
                     <table class="table table-striped table-bordered table-hover dataTable no-footer conteudoTabelas" id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
                         <thead>
                             <tr role="row" class="heading">
-                                <th tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="85%">
+                                <th tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="30%">
                                      Data
                                 </th>
-                                <th tabindex="6" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="15%">
+                                <th tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="50%">
+                                     Filial
+                                </th>
+                                <th tabindex="6" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="20%">
                                      Ações
                                 </th>                                
                             </tr>
@@ -76,6 +82,21 @@
                                             </button>
                                         </span>
                                     </div>
+                                </td>
+                                <!-- FILIAIS -->
+                                <td rowspan="1" colspan="1" style="text-align: center;">
+                                    <select class="form-control form-filter input-sm comboBoxFiltros"
+                                            ng-disabled="filiais.length == 0"
+                                            ng-model="filtro.filialImportacao"
+                                            ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
+                                        <option value="">TODAS</option>
+                                    </select>
+                                    <i class="fa fa-question-circle"
+                                        ng-show="!usuariologado.grupoempresa"
+                                        popover-placement="bottom"
+                                        popover="É necessário selecionar uma empresa"
+                                        popover-trigger="mouseenter"
+                                        ></i> 
                                 </td>
                                 <!--AÇÕES-->
                                 <td rowspan="1" colspan="1">
@@ -127,13 +148,13 @@
                                 <th width="20%">
                                      Data
                                 </th>
-                                <th width="30%">
+                                <th width="40%">
                                      Filial 
                                 </th>
-                                <th width="20%">
+                                <!--th width="20%">
                                      Adquirente 
-                                </th>
-                                <th width="20%">
+                                </th-->
+                                <th width="30%">
                                      NSU 
                                 </th>
                                 <th width="10%">
@@ -211,7 +232,7 @@
                                         popover-trigger="mouseenter"
                                         ></i> 
                                 </td>
-                                <!-- ADQUIRENTES -->
+                                <!-- ADQUIRENTES -- >
                                 <td rowspan="1" colspan="1" style="text-align: center">
                                     <select class="form-control form-filter input-sm comboBoxFiltros"
                                             ng-disabled="adquirentes.length === 0"
@@ -225,12 +246,13 @@
                                        ng-show="!usuariologado.grupoempresa || !filtro.filial || filtro.filial === null"
                                        popover-placement="bottom"
                                        popover="É necessário selecionar uma filial"
-                                       popover-trigger="mouseenter"></i-->
+                                       popover-trigger="mouseenter"></i-- >
                                 </td>
                                 <!-- NSU -->
                                 <td style="text-align: center">
                                     <input type="text" class="form-control" 
-                                           ng-model="filtro.nsu"/>
+                                           ng-model="filtro.nsu"
+                                           ng-keypress="avaliaNsu()" />
                                     <div class="row" style="margin-top:10px;"
                                          ng-class="{'element-hidden' : !filtro.nsu || filtro.nsu === null}">
                                         <div class="col-sm-4 col-md-4" style="margin-right: -15px;">

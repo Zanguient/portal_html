@@ -5,6 +5,9 @@
  *
  *
  * 
+ *  Versão 1.0.6 - 29/04/2016
+ *  - Avalia nsu
+ *
  *  Versão 1.0.5 - 27/04/2016
  *  - Mensagem do erro da importação
  *
@@ -604,6 +607,13 @@ angular.module("administrativo-titulos", [])
         
         console.log("importa csv");
         
+    }
+    
+    
+    
+    $scope.avaliaNsu = function(){
+        if(!$scope.filtro.nsu)
+            $scope.filtro.consideraPeriodo = true;
     }
                        
     

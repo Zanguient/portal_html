@@ -72,13 +72,13 @@
                                 <th tabindex="1" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="30%">
                                      Filial 
                                 </th>
-                                <th tabindex="2" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="20%">
+                                <!--th tabindex="2" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="20%">
                                      Adquirente 
-                                </th>
-                                <th tabindex="3" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="20%">
+                                </th-->
+                                <th tabindex="3" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="30%">
                                      Tipo
                                 </th>
-                                <th tabindex="4" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="10%">
+                                <th tabindex="4" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="20%">
                                      Ações
                                 </th>                                
                             </tr>
@@ -152,7 +152,7 @@
                                         popover="É necessário selecionar uma empresa"
                                         popover-trigger="mouseenter"></i> 
                                 </td>
-                                <!-- ADQUIRENTE -->
+                                <!-- ADQUIRENTE -- >
                                 <td rowspan="1" colspan="1">
                                     <select class="form-control form-filter input-sm comboBoxFiltros"
                                             ng-disabled="adquirentes.length === 0"
@@ -185,7 +185,25 @@
                                     </div>
                                 </td>
                                 <td rowspan="1" colspan="1">
-                                    <div class="margin-bottom-5">
+                                    <div class="row col-sm-12" style="margin-top:10px;">
+                                        <div class="col-sm-7">
+                                            <!-- BOTÃO BUSCAR -->
+                                            <button class="btn btn-sm red filter-submit margin-bottom" 
+                                                    ng-click="buscaDadosConciliacao()">
+                                                <i class="fa fa-search"></i> 
+                                                Buscar
+                                            </button>
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <!-- BOTÃO LIMPAR -->
+                                            <button class="btn btn-sm grey filter-cancel"
+                                                    ng-click="limpaFiltros()">
+                                                <i class="fa fa-times"></i> 
+                                                Limpar
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <!--div class="margin-bottom-5">
                                         <button class="btn btn-sm red filter-submit margin-bottom"
                                                 ng-click="buscaDadosConciliacao()">
                                             <i class="fa fa-search"></i> 
@@ -196,7 +214,7 @@
                                             ng-click="limpaFiltros()">
                                         <i class="fa fa-times"></i> 
                                         Limpar
-                                    </button>
+                                    </button-->
                                 </td>
                             </tr>                       
                         </thead>
@@ -643,7 +661,8 @@
                                         <label ng-bind="dado.Recebimento !== null ? 'Data da Venda:' : ''"></label>
                                     </div>
                                     <div class="col-md-6 col-sm-6 alinhamentoDados"
-                                         ng-bind="dado.Recebimento !== null ? getDataString(dado.Recebimento.Data) : ''">
+                                         ng-bind="dado.Recebimento !== null ? getDataString(dado.Recebimento.Data) : ''"
+                                         ng-class="{'negrito' : dataDiverge(dado)}">
                                     </div>
                                 </div>
                                 <!-- PARCELAS -->
@@ -652,7 +671,8 @@
                                         <label ng-bind="dado.Recebimento !== null ? 'Parcelas:' : ''"></label>
                                     </div>
                                     <div class="col-md-6 col-sm-6 alinhamentoDados"
-                                         ng-bind="dado.Recebimento !== null ? dado.Recebimento.Parcelas : ''">
+                                         ng-bind="dado.Recebimento !== null ? dado.Recebimento.Parcelas : ''"
+                                         ng-class="{'negrito' : parcelasDiverge(dado)}">
                                     </div>
                                 </div>
                                 <!--ADQUIRENTE -->
@@ -670,7 +690,9 @@
                                         <label ng-bind="dado.Recebimento !== null ? 'Bandeira:' : ''"></label>
                                     </div>
                                     <div class="col-md-9 col-sm-9 alinhamentoDados">
-                                        <span ng-bind="dado.Recebimento !== null ? dado.Recebimento.Bandeira : ''">
+                                        <span ng-bind="dado.Recebimento !== null ? dado.Recebimento.Bandeira : ''"
+                                              title="{{ dado.Recebimento !== null && dado.Recebimento.Sacado && dado.Recebimento.Sacado !== null ? 'Sacado: ' + dado.Recebimento.Sacado : ''}}"
+                                              ng-class="{'negrito' : sacadoDiverge(dado)}">
                                         </span>
                                         <span ng-show="dado.Recebimento !== null && (!dado.Recebimento.Sacado || dado.Recebimento.Sacado === null)">
                                             &nbsp;&nbsp;
@@ -687,7 +709,8 @@
                                     </div>
                                     <!--RESULTADO DO VALOR-->
                                     <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        <label ng-show="dado.Recebimento !== null">
+                                        <label ng-show="dado.Recebimento !== null"
+                                               ng-class="{'negrito' : valorDiverge(dado)}">
                                             {{dado.Recebimento.Valor | currency:'R$'}}
                                         </label>
                                     </div>                                              
@@ -698,7 +721,7 @@
                                         <label ng-bind="dado.Recebimento !== null ? 'NSU:' : ''"></label>
                                     </div>
                                     <div class="col-md-8 col-sm-8 alinhamentoDados">
-                                        <label>{{dado.Recebimento.Nsu || ''}}</label>
+                                        <label ng-class="{'negrito' : nsuDiverge(dado)}">{{dado.Recebimento.Nsu || ''}}</label>
                                     </div>                                              
                                 </div>
                                 <!--RESUMO VENDAS-->
@@ -769,7 +792,8 @@
                                         <label ng-bind="dado.Venda !== null ? 'Data:' : ''"></label>
                                     </div>
                                     <div class="col-md-6 col-sm-6 alinhamentoDados"
-                                         ng-bind="dado.Venda !== null ? getDataString(dado.Venda.Data) : ''">
+                                         ng-bind="dado.Venda !== null ? getDataString(dado.Venda.Data) : ''"
+                                         ng-class="{'negrito' : dataDiverge(dado)}">
                                     </div>
                                 </div>
                                 <!-- PARCELAS -->
@@ -778,7 +802,8 @@
                                         <label ng-bind="dado.Venda !== null ? 'Parcelas:' : ''"></label>
                                     </div>
                                     <div class="col-md-6 col-sm-6 alinhamentoDados"
-                                         ng-bind="dado.Venda !== null ? dado.Venda.Parcelas : ''">
+                                         ng-bind="dado.Venda !== null ? dado.Venda.Parcelas : ''"
+                                         ng-class="{'negrito' : parcelasDiverge(dado)}">
                                     </div>
                                 </div>
                                 <!--ADQUIRENTE -->
@@ -786,9 +811,15 @@
                                     <div class="col-md-6 col-sm-6">
                                         <label ng-bind="dado.Venda !== null ? 'Adquirente:' : ''"></label>
                                     </div>
-                                    <div class="col-md-6 col-sm-6 alinhamentoDados"
-                                         ng-bind="dado.Venda !== null ? dado.Venda.Adquirente : ''">
-                                    </div>                      
+                                    <div class="col-md-6 col-sm-6 alinhamentoDados">
+                                        <span ng-bind="dado.Venda !== null && dado.Venda.Adquirente && dado.Venda.Adquirente !== null ? dado.Venda.Adquirente : ''">
+                                        </span>
+                                        <span ng-show="dado.Venda !== null && (!dado.Venda.Adquirente || dado.Venda.Adquirente === null)">
+                                            &nbsp;&nbsp;
+                                            <i class="fa fa-exclamation-triangle" style="color: #FFA500; font-size: 18px"
+                                               title="Código do sacado não associado a uma bandeira do Card Services"></i>
+                                        </span>
+                                    </div>
                                 </div> 
                                 <!--BANDEIRA -->
                                 <div class="row">
@@ -797,7 +828,8 @@
                                     </div>
                                     <div class="col-md-9 col-sm-9 alinhamentoDados">
                                         <span ng-bind="dado.Venda !== null ? dado.Venda.Bandeira : ''"
-                                              title="{{ dado.Venda !== null && dado.Venda.Sacado && dado.Venda.Sacado !== null ? 'Sacado: ' + dado.Venda.Sacado : ''}}">
+                                              title="{{ dado.Venda !== null && dado.Venda.Sacado && dado.Venda.Sacado !== null ? 'Sacado: ' + dado.Venda.Sacado : ''}}"
+                                              ng-class="{'negrito' : sacadoDiverge(dado)}">
                                         </span>
                                         <span ng-show="dado.Venda !== null && (!dado.Venda.Sacado || dado.Venda.Sacado === null)">
                                             &nbsp;&nbsp;
@@ -814,7 +846,8 @@
                                     </div>
                                     <!--RESULTADO DO VALOR-->
                                     <div class="col-md-6 col-sm-6 alinhamentoDados">
-                                        <label ng-show="dado.Venda !== null">
+                                        <label ng-show="dado.Venda !== null"
+                                               ng-class="{'negrito' : valorDiverge(dado)}">
                                             {{dado.Venda.Valor | currency:'R$'}}
                                         </label>
                                     </div>                                              
@@ -825,7 +858,7 @@
                                         <label ng-bind="dado.Venda !== null ? 'NSU:' : ''"></label>
                                     </div>
                                     <div class="col-md-8 col-sm-8 alinhamentoDados">
-                                        <label>{{dado.Venda.Nsu || ''}}</label>
+                                        <label ng-class="{'negrito' : nsuDiverge(dado)}">{{dado.Venda.Nsu || ''}}</label>
                                     </div>                                              
                                 </div>
                                 <!--BOTÃO CORRIGE -->

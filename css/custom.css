@@ -801,6 +801,10 @@ tbody.conteudotabelasCentralizadas > tr > td{
     
 }
 
+.negrito{
+    font-weight: bolder;
+}
+
 .titulosconteudos{
     font-weight: bolder; 
     margin-bottom:10px
