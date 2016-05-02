@@ -4,14 +4,14 @@
  *  suporte@atoscapital.com.br
  *
  *
- *  Versão 1.0 - 01/03/2016
+ *  Versão 1.0 - 29/04/2016
  *
  */
 
 // App
-angular.module("tax-services-consulta-mercadoria", []) 
+angular.module("tax-services-aceite-classificacao", []) 
 
-.controller("tax-services-consulta-mercadoriaCtrl", ['$scope',   
+.controller("tax-services-aceite-classificacaoCtrl", ['$scope',   
                                             '$state',
                                             '$http',
                                             '$window',
@@ -60,7 +60,7 @@ angular.module("tax-services-consulta-mercadoria", [])
     $scope.exibeTela = false;                                                                                                    
                                                 
     // Inicialização do controller
-    $scope.taxServices_consultaMercadoriaInit = function(){
+    $scope.taxServices_aceiteClassificacaoInit = function(){
         // Título da página 
         $scope.pagina.titulo = 'Nota Fiscal Eletrônica';                          
         $scope.pagina.subtitulo = 'Consulta Mercadoria';
