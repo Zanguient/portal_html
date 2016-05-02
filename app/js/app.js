@@ -3,7 +3,10 @@
  *
  *  suporte@atoscapital.com.br
  *
- * Versão 1.2.1 - 07/03/2016
+ * Versão 1.0.0 - 29/04/2016
+ * - Criação da tela Aceite Classificação 
+ *
+ * Versão 1.0.0 - 07/03/2016
  * - Criação da tela Consulta Mercadoria 
  *
  *  Versão 1.2.1 - 28/03/2016
@@ -136,6 +139,7 @@ angular.module("AtosCapital", ['ui.router',
                                'tax-services-cadastro-certificado-digital',
                                'tax-services-recebimento-nfe',
                                'tax-services-consulta-mercadoria',
+                               'tax-services-aceite-classificacao',
                                'conta',
                                'conta-alterar-senha',
                                'usuario-sem-link'])
@@ -591,6 +595,14 @@ angular.module("AtosCapital", ['ui.router',
         }
       })
 
+     .state('tax-services-nota-fiscal-eletronica-aceite-classificacao', {
+        url: prefixo + 'tax-services/aceite-classificacao',
+        templateUrl: 'componentes/tax-services/nota-fiscal-eletronica/aceite-classificacao/index.html',
+        controller: "tax-services-aceite-classificacaoCtrl",
+        data: {
+            titulo: 'Tax Services'
+        }
+      })
 
       // CONTA
       .state('minha-conta', {
@@ -728,6 +740,7 @@ angular.module("AtosCapital", ['ui.router',
     var controllerTaxServicesCadastroCertificadoDigital = undefined;
     var controllerTaxServicesRecebimentoNfe = undefined;
     var controllerTaxServicesConsultaMercadoria = undefined;
+    var controllerTaxServicesAceiteClassificacao = undefined;
     var controllerMinhaConta = {id_controller : 91, ds_controller : 'Minha Conta', methods : []};
     // Permissões
     //$scope.usuarioTemAcesso = false;
@@ -789,7 +802,7 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_CADASTRO_CERTIFICADO_DIGITAL = false;
     $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_RECEBIMENTO_NFE = false;
     $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_CONSULTA_MERCADORIA = false;
-
+    $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_ACEITE_CLASSIFICACAO = false;
 
     // Fullscreen
     var estaEmFullScreen = false;
@@ -1193,6 +1206,13 @@ angular.module("AtosCapital", ['ui.router',
     $scope.goTaxServicesConsultaMercadoria = function(params){
         controllerAtual = controllerTaxServicesConsultaMercadoria;
         go('tax-services-nota-fiscal-eletronica-consulta-mercadoria', params);
+    };
+    /**
+      * Exibe como conteúdo as classificações para aceite do gestor, de Tax Services
+      */
+    $scope.goTaxServicesAceiteClassificacao = function(params){
+        controllerAtual = controllerTaxServicesAceiteClassificacao;
+        go('tax-services-nota-fiscal-eletronica-aceite-classificacao', params);
     };
     /**
       * Exibe a tela de perfil de conta
@@ -1622,6 +1642,16 @@ angular.module("AtosCapital", ['ui.router',
                      controllerAtual.id_controller !== controllerTaxServicesConsultaMercadoria.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
         }
+        else if(url === $state.get('tax-services-nota-fiscal-eletronica-aceite-classificacao').url){
+            // Tax Services > Nota Fiscal Eletrônica > Aceite Classificação
+            if(!$scope.PERMISSAO_TAX_SERVICES || !$scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA || !$scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_ACEITE_CLASSIFICACAO){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.goUsuarioSemPrivilegios();
+            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'ACEITE CLASSIFICACAO')
+                     controllerAtual.id_controller !== controllerTaxServicesAceiteClassificacao.id_controller)
+                $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
+        }
         //else event.preventDefault();//console.log("VAI PARA ONDE?");
      });
 
@@ -1844,6 +1874,11 @@ angular.module("AtosCapital", ['ui.router',
                     controllerAtual = controller;
                 controllerTaxServicesConsultaMercadoria = controller;
                 return $scope.goTaxServicesConsultaMercadoria;
+            case 'ACEITE CLASSIFICACAO':
+                if($location.path() === $state.get('tax-services-nota-fiscal-eletronica-aceite-classificacao').url)
+                    controllerAtual = controller;
+                controllerTaxServicesAceiteClassificacao = controller;
+                return $scope.goTaxServicesAceiteClassificacao;
 
             // AMBÍGUOS
             case 'RELATÓRIOS':
@@ -1914,6 +1949,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'CADASTRO CERTIFICADO DIGITAL': $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_CADASTRO_CERTIFICADO_DIGITAL = true;break;
             case 'RECEBIMENTO NF-E': $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_RECEBIMENTO_NFE = true; break;
             case 'CONSULTA MERCDORIA': $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_CONSULTA_MERCADORIA = true; break;
+            case 'ACEITE CLASSIFICACAO': $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_ACEITE_CLASSIFICACAO = true; break;
             // Card Services
             case 'CARD SERVICES': $scope.PERMISSAO_CARD_SERVICES = true; break;
             case 'ANTECIPAÇÃO': $scope.PERMISSAO_CARD_SERVICES_ANTECIPACAO = true; break; 
@@ -2015,6 +2051,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'CADASTRO CERTIFICADO DIGITAL': return state == 'cadastro-certificado-digital';
             case 'RECEBIMENTO NF-E': return state == 'recebimento-nfe';
             case 'CONSULTA MERCADORIA': return state == 'consulta-mercadoria';
+            case 'ACEITE CLASSIFICACAO': return state == 'aceite-classificacao';
             // Card Services
             case 'ANTECIPAÇÃO BANCÁRIA': return state == 'antecipacao-bancaria'; 
             case 'SIMULAÇÃO': return state == 'antecipacao-simulacao'; 
