@@ -1648,7 +1648,7 @@ angular.module("AtosCapital", ['ui.router',
                 // Não possui permissão!
                 event.preventDefault();
                 $scope.goUsuarioSemPrivilegios();
-            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'ACEITE CLASSIFICACAO')
+            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'ACEITE CLASSIFICAÇÃO')
                      controllerAtual.id_controller !== controllerTaxServicesAceiteClassificacao.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual
         }
@@ -1874,7 +1874,7 @@ angular.module("AtosCapital", ['ui.router',
                     controllerAtual = controller;
                 controllerTaxServicesConsultaMercadoria = controller;
                 return $scope.goTaxServicesConsultaMercadoria;
-            case 'ACEITE CLASSIFICACAO':
+            case 'ACEITE CLASSIFICAÇÃO':
                 if($location.path() === $state.get('tax-services-nota-fiscal-eletronica-aceite-classificacao').url)
                     controllerAtual = controller;
                 controllerTaxServicesAceiteClassificacao = controller;
@@ -1949,7 +1949,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'CADASTRO CERTIFICADO DIGITAL': $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_CADASTRO_CERTIFICADO_DIGITAL = true;break;
             case 'RECEBIMENTO NF-E': $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_RECEBIMENTO_NFE = true; break;
             case 'CONSULTA MERCDORIA': $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_CONSULTA_MERCADORIA = true; break;
-            case 'ACEITE CLASSIFICACAO': $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_ACEITE_CLASSIFICACAO = true; break;
+            case 'ACEITE CLASSIFICAÇÃO': $scope.PERMISSAO_TAX_SERVICES_NOTA_FISCAL_ELETRONICA_ACEITE_CLASSIFICACAO = true; break;
             // Card Services
             case 'CARD SERVICES': $scope.PERMISSAO_CARD_SERVICES = true; break;
             case 'ANTECIPAÇÃO': $scope.PERMISSAO_CARD_SERVICES_ANTECIPACAO = true; break; 
@@ -2051,7 +2051,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'CADASTRO CERTIFICADO DIGITAL': return state == 'cadastro-certificado-digital';
             case 'RECEBIMENTO NF-E': return state == 'recebimento-nfe';
             case 'CONSULTA MERCADORIA': return state == 'consulta-mercadoria';
-            case 'ACEITE CLASSIFICACAO': return state == 'aceite-classificacao';
+            case 'ACEITE CLASSIFICAÇÃO': return state == 'aceite-classificacao';
             // Card Services
             case 'ANTECIPAÇÃO BANCÁRIA': return state == 'antecipacao-bancaria'; 
             case 'SIMULAÇÃO': return state == 'antecipacao-simulacao'; 
