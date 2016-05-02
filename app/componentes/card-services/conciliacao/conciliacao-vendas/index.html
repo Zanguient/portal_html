@@ -814,7 +814,7 @@
                                     <div class="col-md-6 col-sm-6 alinhamentoDados">
                                         <span ng-bind="dado.Venda !== null && dado.Venda.Adquirente && dado.Venda.Adquirente !== null ? dado.Venda.Adquirente : ''">
                                         </span>
-                                        <span ng-show="dado.Venda !== null && (!dado.Venda.Adquirente || dado.Venda.Adquirente === null)">
+                                        <span ng-show="dado.Venda !== null && dado.Venda.Sacado && dado.Venda.Sacado !== null && (!dado.Venda.Adquirente || dado.Venda.Adquirente === null)">
                                             &nbsp;&nbsp;
                                             <i class="fa fa-exclamation-triangle" style="color: #FFA500; font-size: 18px"
                                                title="Código do sacado não associado a uma bandeira do Card Services"></i>
