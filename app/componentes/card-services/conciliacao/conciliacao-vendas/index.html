@@ -828,7 +828,7 @@
                                     </div>
                                     <div class="col-md-9 col-sm-9 alinhamentoDados">
                                         <span ng-bind="dado.Venda !== null ? dado.Venda.Bandeira : ''"
-                                              title="{{ dado.Venda !== null && dado.Venda.Sacado && dado.Venda.Sacado !== null ? 'Sacado: ' + dado.Venda.Sacado : ''}}"
+                                              title="{{ dado.Venda !== null && dado.Venda.Sacado && dado.Venda.Sacado !== null && (!dado.Venda.Bandeira || dado.Venda.Bandeira === null || dado.Venda.Bandeira !== dado.Venda.Sacado) ? 'Sacado: ' + dado.Venda.Sacado : ''}}"
                                               ng-class="{'negrito' : sacadoDiverge(dado)}">
                                         </span>
                                         <span ng-show="dado.Venda !== null && (!dado.Venda.Sacado || dado.Venda.Sacado === null)">
@@ -857,8 +857,12 @@
                                     <div class="col-md-4 col-sm-4">
                                         <label ng-bind="dado.Venda !== null ? 'NSU:' : ''"></label>
                                     </div>
-                                    <div class="col-md-8 col-sm-8 alinhamentoDados">
-                                        <label ng-class="{'negrito' : nsuDiverge(dado)}">{{dado.Venda.Nsu || ''}}</label>
+                                    <div class="col-md-8 col-sm-8 alinhamentoDados"
+                                         title="{{ dado.Venda !== null && dado.Venda.Nsu !== null && dado.Venda.Nsu && dado.Venda.Nsu.length > 20 ? dado.Venda.Nsu : ''}}">
+                                        <label ng-class="{'negrito' : nsuDiverge(dado)}">
+                                            {{(dado.Venda.Nsu | limitTo:15) || ''}}
+                                            {{dado.Venda.Nsu.length > 15 ? '...' : ''}}
+                                        </label>
                                     </div>                                              
                                 </div>
                                 <!--BOTÃO CORRIGE -->

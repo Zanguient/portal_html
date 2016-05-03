@@ -3,10 +3,8 @@
  *
  *  suporte@atoscapital.com.br
  *
- * Versão 1.0.0 - 29/04/2016
+ * Versão 1.2.2 - 29/04/2016
  * - Criação da tela Aceite Classificação 
- *
- * Versão 1.0.0 - 07/03/2016
  * - Criação da tela Consulta Mercadoria 
  *
  *  Versão 1.2.1 - 28/03/2016

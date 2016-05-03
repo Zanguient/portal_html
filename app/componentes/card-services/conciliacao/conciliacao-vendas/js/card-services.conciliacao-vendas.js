@@ -820,8 +820,14 @@ angular.module("card-services-conciliacao-vendas", [])
     }
     
     $scope.nsuDiverge = function(dado){
-        /*if(!dado || dado === null || dado.Venda === null || dado.Recebimento === null || 
+        if(!dado || dado === null || dado.Venda === null || dado.Recebimento === null || 
            (dado.Conciliado !== 1 && dado.Conciliado !== 4))
+            return false;
+        
+        if(dado.Recebimento.Adquirente === 'POLICARD' ||
+           dado.Recebimento.Adquirente === 'GETNET' || 
+           dado.Recebimento.Adquirente === 'VALECARD' ||
+           dado.Recebimento.Adquirente === 'SODEXO')
             return false;
         
         var nsuV = dado.Venda.Nsu;
@@ -829,8 +835,8 @@ angular.module("card-services-conciliacao-vendas", [])
         while(nsuV.length < nsuR.length) nsuV = "0" + nsuV;
         while(nsuR.length < nsuV.length) nsuR = "0" + nsuR;
         
-        return nsuV !== nsuR;*/
-        return false;
+        return nsuV !== nsuR;
+        //return false;
     }
     
     $scope.parcelasDiverge = function(dado){
@@ -875,12 +881,19 @@ angular.module("card-services-conciliacao-vendas", [])
            dado.Venda.Sacado !== dado.Recebimento.Sacado) 
             return true;
         
-        /*var nsuV = dado.Venda.Nsu;
-        var nsuR = dado.Recebimento.Nsu;
-        while(nsuV.length < nsuR.length) nsuV = "0" + nsuV;
-        while(nsuR.length < nsuV.length) nsuR = "0" + nsuR;
+        if(dado.Recebimento.Adquirente !== 'POLICARD' &&
+           dado.Recebimento.Adquirente !== 'GETNET' && 
+           dado.Recebimento.Adquirente !== 'VALECARD' &&
+           dado.Recebimento.Adquirente !== 'SODEXO'){
+            
+            var nsuV = dado.Venda.Nsu;
+            var nsuR = dado.Recebimento.Nsu;
+            while(nsuV.length < nsuR.length) nsuV = "0" + nsuV;
+            while(nsuR.length < nsuV.length) nsuR = "0" + nsuR;
+
+            return nsuV !== nsuR;
+        }
         
-        return nsuV !== nsuR;*/
         return false;
     }
     
