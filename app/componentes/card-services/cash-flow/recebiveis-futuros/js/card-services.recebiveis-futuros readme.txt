@@ -27,20 +27,27 @@ Não é necessário nenhum outro módulo externo.
   * $scope.grupoempresa, do "appCtrl" : grupo empresa informado pelo usuário na barra administrativa
   * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
   * APIS:
-    - cliente/empresa 
+    - card/cdContaCorrente
 	- card/recebiveisfuturos
 	
  
  
  ### Interação com a WEB API ###
  
-  * cliente/empresa
-    - GET : listagem das filiais (coleção 0)
+  * card/cdContaCorrente
+    - GET : listagem as contas correntes (coleção 2)
 			[
-			  { nu_cnpj : string,
-				ds_fantasia : string,
-				filial : string ou null,
-				id_grupo : int
+			  { cdContaCorrente : int,
+				cdGrupo : int,
+				empresa : { nu_cnpj : string, 
+							ds_fantasia : string, 
+							filial : string ou null },
+				banco : { Codigo : string, 
+						  NomeExtenso : string},
+				nrAgencia : string,
+				nrConta : string,
+				flAtivo : boolean,
+				podeAtualizar : boolean
 			  }
 			]
 	
@@ -51,20 +58,23 @@ Não é necessário nenhum outro módulo externo.
 			    competencia : string,
 			    valorBruto : double,
 			    valorDescontado : double,
+				valorAntecipacaoBancaria : double,
 			    valorLiquido : double,
 			    adquirentes : [{ adquirente : string,
 						   valorBruto : double,
 						   valorDescontado : double,
+						   valorAntecipacaoBancaria : double,
 						   valorLiquido : double,
-						   bandeiras : [{  bandeira : string,
-										   valorBruto : double,
-										   valorDescontado : double,
-										   valorLiquido : double
-										}]
+						   dias : [{  dia : string,
+									  valorBruto : double,
+									  valorDescontado : double,
+									  valorAntecipacaoBancaria : double,
+									  valorLiquido : double
+								   }]
 						 }]
 			  } 
 			]
-			Envia no JSON a chave "Totais" com: "valorBruto", "valorDescontado" e "valorLiquido" (todos double)
+			Envia no JSON a chave "Totais" com: "valorBruto", "valorDescontado", "valorLiquido" e "valorAntecipacaoBancaria" (todos double)
 			
    
 

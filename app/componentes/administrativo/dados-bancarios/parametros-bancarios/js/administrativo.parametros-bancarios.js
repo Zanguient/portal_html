@@ -4,6 +4,12 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.7 - 20/04/2016
+ *  - Não inicializa consulta ao acessar a página
+ *
+ *  Versão 1.0.6 - 01/02/2016
+ *  - Parâmetro bancário referente à antecipação
+ *
  *  Versão 1.0.5 - 18/11/2015
  *  - Pesquisa parâmetros ocultos
  *
@@ -60,7 +66,8 @@ angular.module("administrativo-parametros-bancarios", [])
     var divPortletBodyParametrosPos = 1;                                             
     // Modal Parâmetro
     $scope.modalParametro = { titulo : '', banco : undefined, dsTipo : '', filial : undefined,
-                              adquirente : undefined, dsMemo: '', flVisivel : true, estabelecimento : '',
+                              adquirente : undefined, dsMemo: '', flVisivel : true, 
+                              estabelecimento : '', flAntecipacao : false,
                               bandeira : undefined, dsTipoCartao : '', bandeiras : [],
                               textoConfirma : '', funcaoConfirma : function(){} };
     var old = null;    
@@ -129,7 +136,7 @@ angular.module("administrativo-parametros-bancarios", [])
         $scope.$on('acessoDeTelaNotificado', function(event){
             $scope.exibeTela = true;
             // Carrega adquirentes
-            buscaAdquirentes(false, true, true, true);
+            buscaAdquirentes(false, false, true, true);
         });
         // Acessou a tela
         $scope.$emit("acessouTela");
@@ -635,6 +642,8 @@ angular.module("administrativo-parametros-bancarios", [])
         $scope.modalParametro.bandeira = null;
         $scope.modalParametro.dsTipoCartao = '';
         $scope.modalParametro.estabelecimento = '';
+        $scope.modalParametro.flAntecipacao = false;
+        $scope.modalParametro.flVisivel = true;
         
         old = null;
         
@@ -744,6 +753,7 @@ angular.module("administrativo-parametros-bancarios", [])
         $scope.modalParametro.dsMemo = parametro.dsMemo;
         $scope.modalParametro.dsTipo = parametro.dsTipo.toUpperCase();
         $scope.modalParametro.flVisivel = parametro.flVisivel;
+        $scope.modalParametro.flAntecipacao = parametro.flAntecipacao;
         $scope.modalParametro.estabelecimento = '';
         // Tipo cartão
         $scope.modalParametro.dsTipoCartao =  '';
@@ -776,6 +786,7 @@ angular.module("administrativo-parametros-bancarios", [])
         
         // Houve alterações?
         if($scope.modalParametro.banco.Codigo === old.banco.Codigo &&
+           $scope.modalParametro.flAntecipacao === old.flAntecipacao &&
            $scope.modalParametro.dsMemo.toUpperCase() === old.dsMemo.toUpperCase() &&
            $scope.modalParametro.dsTipo.toUpperCase() === old.dsTipo.toUpperCase() &&
            // Alterou tipo cartão?
@@ -822,6 +833,7 @@ angular.module("administrativo-parametros-bancarios", [])
                               cdBandeira : cdBandeira,
                               dsTipoCartao : dsTipoCartao,
                               flVisivel : $scope.modalParametro.flVisivel,
+                              flAntecipacao : $scope.modalParametro.flAntecipacao,
                               deletar : false
                             };
         //console.log(jsonParametro);
@@ -1127,6 +1139,7 @@ angular.module("administrativo-parametros-bancarios", [])
                               //nrCnpj : nrCnpj,
                               //cdBandeira : cdBandeira,
                               //dsTipoCartao : dsTipoCartao,
+                              // não envia flAntecipacao
                               flVisivel : true,
                               deletar : false,
                             };  

@@ -1,8 +1,13 @@
+
+
 /*
  *  Atos Capital - www.atoscapital.com.br
  *  
  *  suporte@atoscapital.com.br
  *
+ *
+ *  Versão 1.0.1 - 03/02/2016
+ *  - Opção de impressão disponível
  *
  *  Versão 1.0 - 05/11/2015
  *
@@ -250,6 +255,34 @@ angular.module("card-services-conciliacao-relatorios", [])
         if(!item || item === null) return false;
         return item.collapsed;
     }
-    
-        
+		
+		//IMPRESSÃO
+		$scope.imprimir = function(){
+			
+			/*
+			
+			e = Nome da empresa
+			s = Nome da tela
+			n = Número de níveis
+			cl = Número de colunas
+			t = Token
+			c = CNPJ
+			f = Filial
+			d = Data
+			
+			*/
+			
+			$scope.c = "todos";
+			$scope.f = "todas";
+			if($scope.filtro.filial && $scope.filtro.filial !== null){  
+				$scope.c = $scope.filtro.filial.nu_cnpj;
+				$scope.f = $scope.filtro.filial.ds_fantasia;				
+			}
+			
+				$window.open('views/print#?e=' + $scope.usuariologado.grupoempresa.ds_nome + '&s=' + "Relatório de Conciliação" + '&n='+ 3
+										 +'&cl='+12+'&t='+$scope.token+'&c='+$scope.c+'&f='+$scope.f+
+										 '&d='+$scope.getFiltroData($scope.filtro.data, true), '_blank');
+			}			
+		
+            
 }]);

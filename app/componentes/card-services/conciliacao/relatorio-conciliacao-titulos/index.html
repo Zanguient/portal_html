@@ -8,6 +8,9 @@
     Card Services > Conciliação > Relatórios
     
 
+    Versão 1.0.1 - 16/02/2016
+    - Data Efetiva
+
     Versão 1.0 - 13/11/2015
 -->
 <div class="container" ng-controller="card-services-relatorio-conciliacao-titulosCtrl" 
@@ -336,10 +339,10 @@
                                 Data <br>Parcela
                             </th>
                             <th width="5%" style="text-align: center;">
-                                Valor <br>Bruto
+                                Data <br>Efetiva
                             </th>
                             <th width="5%" style="text-align: center;">
-                                Valor <br>Líquido
+                                Valor <br>Bruto
                             </th>
                             <th width="5%" style="text-align: center;">
                                 Num. <br>Parcela
@@ -390,11 +393,14 @@
                             <!-- DATA DA PARCELA -->
                             <td ng-bind="getDataString(dado.RecebimentoParcela.Data)">
                             </td>
+                            <!-- DATA DA PARCELA -->
+                            <td ng-bind="getDataString(dado.RecebimentoParcela.DataEfetiva)">
+                            </td>
                             <!-- VALOR BRUTO DA PARCELA -->
                             <td class="linhaTotalRelatorios">
                                 {{dado.RecebimentoParcela.Valor | currency:'R$'}}
                             </td>
-                            <!-- VALOR LÍQUIDO DA PARCELA -->
+                            <!-- VALOR LÍQUIDO DA PARCELA -- >
                             <td>
                                 {{dado.RecebimentoParcela.ValorLiquido | currency:'R$'}}
                             </td>
@@ -467,10 +473,10 @@
                                 Data <br>Parcela
                             </th>
                             <th width="5%" style="text-align: center;">
-                                Valor <br>Bruto
+                                Data <br>Efetiva
                             </th>
                             <th width="5%" style="text-align: center;">
-                                Valor <br>Líquido
+                                Valor <br>Bruto
                             </th>
                             <th width="5%" style="text-align: center;">
                                 Num. <br>Parcela
@@ -521,11 +527,14 @@
                             <!-- DATA DA PARCELA -->
                             <td ng-bind="getDataString(dado.RecebimentoParcela.Data)">
                             </td>
+                            <!-- DATA DA PARCELA -->
+                            <td ng-bind="getDataString(dado.RecebimentoParcela.DataEfetiva)">
+                            </td>
                             <!-- VALOR BRUTO DA PARCELA -->
                             <td class="linhaTotalRelatorios">
                                 {{dado.RecebimentoParcela.Valor | currency:'R$'}}
                             </td>
-                            <!-- VALOR LÍQUIDO DA PARCELA -->
+                            <!-- VALOR LÍQUIDO DA PARCELA -- >
                             <td>
                                 {{dado.RecebimentoParcela.ValorLiquido | currency:'R$'}}
                             </td>
@@ -574,8 +583,8 @@
                         {{total.valorTotalBruto | currency:'R$'}}
                     </div>
                     <div class="col-sm-6">
-                        <label style="font-weight: bolder">Total Líquido: </label>
-                        {{total.valorTotalLiquido | currency:'R$'}}
+                        <label style="font-weight: bolder">Total ERP: </label>
+                        {{total.valorTotalERP | currency:'R$'}}
                     </div>
                 </div>
                 <div class="col-sm-12" ng-show="total.filiais.length > 0"
@@ -592,7 +601,7 @@
                     </div>
                     <div class="col-sm-3">
                         <label style="font-weight: bolder">Total Líquido: </label>
-                        {{filial.valorTotalLiquido | currency:'R$'}}
+                        {{filial.valorTotalERP | currency:'R$'}}
                     </div>
                 </div-->
             </div>
@@ -612,7 +621,7 @@
                                     Valor Bruto
                                 </th>
                                 <th width="20%" style="text-align: center !important;">
-                                    Valor Líquido
+                                    Valor ERP
                                 </th>
                             </tr>
                         </thead>
@@ -628,7 +637,7 @@
                                 </td>
                                 <!-- VALOR LÍQUIDO -->
                                 <td style="text-align: center !important;">
-                                    {{filial.valorTotalLiquido | currency:'R$'}}
+                                    {{filial.valorTotalERP | currency:'R$'}}
                                 </td>
                             </tr>
                         </tbody>
@@ -647,7 +656,7 @@
                                     Valor Bruto
                                 </th>
                                 <th width="20%" style="text-align: center;">
-                                    Valor Líquido
+                                    Valor ERP
                                 </th>
                             </tr>
                         </thead>
@@ -663,7 +672,7 @@
                                 </td>
                                 <!-- VALOR LÍQUIDO -->
                                 <td style="text-align: center !important;">
-                                    {{filial.valorTotalLiquido | currency:'R$'}}
+                                    {{filial.valorTotalERP | currency:'R$'}}
                                 </td>
                             </tr>
                         </tbody>

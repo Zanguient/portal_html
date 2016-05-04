@@ -8,6 +8,9 @@
     Administrativo > Integração ERP > Títulos
 
 
+    Versão 1.0.4 - 10/03/2016
+    - Filtros
+
     Versão 1.0.3 - 09/12/2015
     - Upload de arquivo CSV
 
@@ -35,14 +38,13 @@
     </ul>
     <!-- END PAGE BREADCRUMB -->
 
-    <!-- PORTLET FILTROS -->
+    <!-- PORTLET IMPORTAÇÃO -->
     <div class="portlet light"> 
         <div class="portlet-title">
             <div class="caption">								
-                <span class="caption-subject font-green-sharp bold uppercase">Filtros</span>						
+                <span class="caption-subject font-green-sharp bold uppercase">Importação</span>						
             </div>
         </div>
-        <!-- FILTROS -->
         <div class="portlet-body" ng-show="exibeTela">
             <div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer" style="width:50%; margin:auto; min-width:400px">
                 
@@ -67,13 +69,13 @@
                                                class="form-control form-filter input-sm" 
                                                readonly="" 
                                                style="cursor: pointer" 
-                                               ng-click="exibeCalendarioData($event)" 
+                                               ng-click="exibeCalendarioDataImportacao($event)" 
                                                placeholder="Início" 
-                                               ng-model="filtro.data" 
-                                               ng-change="alterouData()" 
+                                               ng-model="filtro.dtImportacao" 
+                                               ng-change="alterouDataImportacao()" 
                                                datepicker-append-to-body="true" 
                                                datepicker-popup="dd MMMM yyyy" 
-                                               is-open="abrirCalendarioData" 
+                                               is-open="abrirCalendarioDataImportacao" 
                                                ng-required="true" 
                                                show-button-bar="false" 
                                                show-weeks="false" 
@@ -81,7 +83,7 @@
                                         <span class="input-group-btn">
                                             <button class="btn btn-sm default" 
                                                 type="button"
-                                                ng-click="exibeCalendarioData($event)">
+                                                ng-click="exibeCalendarioDataImportacao($event)">
                                                 <i class="fa fa-calendar"></i>
                                             </button>
                                         </span>
@@ -109,13 +111,187 @@
                                             Importar CSV
                                         </button>
                                     </div>
+                                </td>
+                            </tr>                   
+                        </thead>
+                    </table>
+                </div>
+			</div>
+        </div>
+    </div>
+    <!-- FIM PORTLET IMPORTAÇÃO -->
+    
+    <!-- PORTLET FILTROS -->
+    <div class="portlet light"> 
+        <div class="portlet-title">
+            <div class="caption">								
+                <span class="caption-subject font-green-sharp bold uppercase">Filtros</span>						
+            </div>
+        </div>
+        <!-- FILTROS -->
+        <div class="portlet-body" ng-show="exibeTela">
+            <div class="dataTables_wrapper dataTables_extended_wrapper no-footer">
+                
+                <div class="table-scrollable">
+                    <table class="table table-striped table-bordered table-hover dataTable no-footer conteudoTabelas" id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
+                        <thead>
+                            <tr role="row" class="heading">
+                                <th width="25%">
+                                     Data {{filtro.data}}
+                                </th>
+                                <th width="30%">
+                                     Filial 
+                                </th>
+                                <th width="20%">
+                                     Adquirente 
+                                </th>
+                                <th width="15%">
+                                     NSU 
+                                </th>
+                                <th width="10%">
+                                     Ações
+                                </th>                                
+                            </tr>
+                            <tr role="row" class="filter">  
+                                <!-- DATA -->
+                                <td rowspan="1" colspan="1">
+                                    <div class="clearfix" style="text-align:center; margin-bottom:10px">
+                                        <div class="btn-group" data-toggle="buttons">
+                                            <div class="col-md-7 col-sm-12" style="margin-bottom:5px;">
+                                                <label class="btn" 
+                                                       ng-class="{ 'red': filtro.data === 'Recebimento', 'grey': filtro.data !== 'Recebimento'}"
+                                                       ng-model="filtro.data" 
+                                                       btn-radio="'Recebimento'">
+                                                    Recebimento
+                                                </label> 
+                                            </div>
+                                            <div class="col-md-5 col-sm-12">
+                                                <label class="btn" 
+                                                       ng-class="{ 'red': filtro.data === 'Venda', 'grey': filtro.data !== 'Venda'}"
+                                                       ng-model="filtro.data" 
+                                                       btn-radio="'Venda'">
+                                                    Venda
+                                                </label>
+                                            </div>    
+                                        </div>
+                                    </div>
+
+                                    <div class="input-group date date-picker margin-bottom-5"
+                                         data-date-format="dd/mm/yyyy">
+                                        <input type="text" 
+                                               class="form-control form-filter input-sm" 
+                                               readonly="" 
+                                               style="cursor: pointer" 
+                                               ng-click="exibeCalendarioDataMin($event)" 
+                                               placeholder="Início" 
+                                               ng-model="filtro.datamin" 
+                                               ng-change="alterouDataMin()" 
+                                               datepicker-append-to-body="true" 
+                                               datepicker-popup="dd MMMM yyyy" 
+                                               is-open="abrirCalendarioDataMin" 
+                                               ng-required="true" 
+                                               show-button-bar="false" 
+                                               show-weeks="false" 
+                                               required="required">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-sm default" 
+                                                type="button" 
+                                                ng-click="exibeCalendarioDataMin($event)">
+                                                <i class="fa fa-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                    <div class="input-group"> <!--  date date-picker margin-bottom-5" -->
+                                        <input type="text" 
+                                               class="form-control form-filter input-sm" 
+                                               readonly="" 
+                                               style="cursor: pointer" 
+                                               ng-click="filtro.consideraPeriodo ? exibeCalendarioDataMax($event) : 0" 
+                                               placeholder="Fim" 
+                                               ng-model="filtro.datamax" 
+                                               ng-change="alterouDataMax()" 
+                                               datepicker-popup="dd MMMM yyyy" 
+                                               is-open="abrirCalendarioDataMax" 
+                                               datepicker-append-to-body="true"
+                                               ng-required="false" 
+                                               current-text="Hoje" 
+                                               clear-text="Limpar" 
+                                               close-text="Fechar" 
+                                               show-button-bar="true" 
+                                               show-weeks="false">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-sm default" 
+                                                    type="button" ng-disabled="!filtro.consideraPeriodo"
+                                                    ng-click="exibeCalendarioDataMax($event)">
+                                                <i class="fa fa-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </div>  
+                                </td>
+                                <!-- FILIAIS -->
+                                <td rowspan="1" colspan="1" style="text-align: center;">
+                                    <select class="form-control form-filter input-sm comboBoxFiltros"
+                                            ng-disabled="filiais.length == 0"
+                                            ng-model="filtro.filial"
+                                            ng-change="alterouFilial()"
+                                            ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
+                                        <option value="">TODAS</option>
+                                    </select>
+                                    <i class="fa fa-question-circle"
+                                        ng-show="!usuariologado.grupoempresa"
+                                        popover-placement="bottom"
+                                        popover="É necessário selecionar uma empresa"
+                                        popover-trigger="mouseenter"
+                                        ></i> 
+                                </td>
+                                <!-- ADQUIRENTES -->
+                                <td rowspan="1" colspan="1" style="text-align: center">
+                                    <select class="form-control form-filter input-sm comboBoxFiltros"
+                                            ng-disabled="adquirentes.length === 0"
+                                            ng-model="filtro.adquirente"
+                                            ng-change="alterouAdquirente()"
+                                            ng-options="adquirente as (adquirente.nmAdquirente | uppercase) for adquirente in adquirentes"
+                                            >
+                                        <option value="">TODAS</option>
+                                    </select>
+                                    <!--i class="fa fa-question-circle"
+                                       ng-show="!usuariologado.grupoempresa || !filtro.filial || filtro.filial === null"
+                                       popover-placement="bottom"
+                                       popover="É necessário selecionar uma filial"
+                                       popover-trigger="mouseenter"></i-->
+                                </td>
+                                <!-- NSU -->
+                                <td style="text-align: center">
+                                    <input type="text" class="form-control" 
+                                           ng-model="filtro.nsu"
+                                           ng-keypress="avaliaNsu()" />
+                                    <div class="row" style="margin-top:10px;"
+                                         ng-class="{'element-hidden' : !filtro.nsu || filtro.nsu === null}">
+                                        <div class="col-sm-4 col-md-4" style="margin-right: -15px;">
+                                            <checkbox normal ng-model="filtro.consideraPeriodo">
+                                            </checkbox>
+                                        </div>
+                                        <div class="col-sm-8 col-md-8" style="text-align:left;">
+                                            <label>Considerar período informado</label>
+                                        </div>
+                                    </div>
+                                </td>
+                                <!--AÇÕES-->
+                                <td rowspan="1" colspan="1">
                                     <div class="margin-bottom-5">
-                                        <button class="btn btn-sm red filter-submit margin-bottom"
+                                        <!-- BOTÃO BUSCAR -->
+                                        <button class="btn btn-sm red filter-submit margin-bottom" 
                                                 ng-click="buscaTitulos()">
-                                            <i class="fa fa-search"></i>
-                                            Títulos Carregados
+                                            <i class="fa fa-search"></i> 
+                                            Buscar
                                         </button>
                                     </div>
+                                    <!-- BOTÃO LIMPAR -->
+                                    <button class="btn btn-sm grey filter-cancel"
+                                            ng-click="limpaFiltros()">
+                                        <i class="fa fa-times"></i> 
+                                        Limpar
+                                    </button>
                                 </td>
                             </tr>                   
                         </thead>

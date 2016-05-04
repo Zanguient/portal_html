@@ -194,8 +194,8 @@
                                                        ng-model="filtro.emitente"
                                                        onfocus="this.select();" 
                                                        onmouseup="return false;"
-                                                       maxlength="44"
-                                                       ng-pattern="/\(\d{2}\)\d{8}\d?/"
+                                                       maxlength="14"
+                                                       ng-pattern=""
                                                        valid-integer-number/>
                                             </td>
                                             <!-- STATUS -->
@@ -1880,7 +1880,7 @@
                                    <div class="col-md-9">
                                         <select class="form-control form-filter input-sm"
                                                 ng-model="dadosImportacao.natOperacao"
-                                                ng-options="natOperacao.des_natureza_operacao for natOperacao in natOperacoes">
+                                                ng-options="natOperacao.dsNaturezaOperacao for natOperacao in natOperacoes">
                                             <option value=""></option>
                                         </select>
                                    </div>
@@ -1983,6 +1983,27 @@
                 </div>
                 <!-- CORPO -->
                 <div class="portlet-body" ng-show="exibeTela">
+                    <div style="text-align:right;">
+                                        <button class="btn btn-primary"
+                                                ng-click=""
+                                                ng-model="uploadXml.xml"
+                                                ngf-select
+                                                ngf-change="importaXml()"
+                                                ng-multiple="false" accept=".xml">
+                                            Upload XML
+                                        </button>  
+                        
+<!--
+                                                                    <button class="btn btn-primary" ngf-select
+                                                    ng-model="modalCertificadoDigital.certificado"
+                                                    ngf-change="mudouCertificado($files)"
+                                                    ngf-multiple="false" accept=".pfx"
+                                                    ng-disabled="uploadEmProgresso()">
+                                                Selecionar Certificado Digital
+                                            </button>
+-->
+                        
+                    </div>
                     <div class="row paddingDivs">
                        <!--EXIBIÇÃO-->
                         <div class="col-xs-4 col-sm-4 col-md-4">

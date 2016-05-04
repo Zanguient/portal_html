@@ -4,8 +4,18 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.1.2 - 27/04/2016
+ *  - cupomConciliacaoVendas
+ *  - cupomAzulMarinhoConciliacaoBancaria
+ *
+ *  Versão 1.1.1 - 02/02/2016
+ *  - iconeMonitorCargasProcessandoDados
+ *
+ *  Versão 1.1.0 - 25/01/2016
+ *  - height aumentada dos cupons da conciliação bancária (320px)
+ *
  *  Versão 1.0.9 - 30/11/2015
- *  - height aumentada dos cupons da conciliação bancária
+ *  - height aumentada dos cupons da conciliação bancária (290px)
  *
  *  Versão 1.0.8 - 09/11/2015
  *  - cupomConciliacaoTitulos
@@ -294,7 +304,23 @@ div.divTextosBrancos *{
 }
 
 .cupomConciliacaoTitulos{
-    height: 300px !important; 
+    height: 330px !important; 
+}
+
+.cupomConciliacaoVendas{
+    height: 310px !important; 
+}
+
+.cupomAzulMarinhoConciliacaoBancaria{
+    background-color: rgba(1, 183, 74, 0.36);
+    border-color: #483D8B;
+    color: #191970;
+    border-left:3px solid #483D8B;      
+    border-radius: 4px 4px; 
+    padding: 15px 30px 15px 15px;
+    margin-top:40px;
+    height: 320px;
+    width:320px; 
 }
 
 .cupomAzulConciliacaoBancaria{
@@ -305,7 +331,7 @@ div.divTextosBrancos *{
     border-radius: 4px 4px; 
     padding: 15px 30px 15px 15px;
     margin-top:40px;
-    height: 290px;
+    height: 320px;
     width:320px; 
 }
 
@@ -317,7 +343,7 @@ div.divTextosBrancos *{
     border-radius: 4px 4px; 
     padding: 15px 30px 15px 15px;
     margin-top:40px;
-    height: 290px;
+    height: 320px;
     width:320px; 
 }
 
@@ -329,7 +355,7 @@ div.divTextosBrancos *{
     border-radius: 4px 4px; 
     padding: 15px 30px 15px 15px;
     margin-top:40px;
-    height: 290px;
+    height: 320px;
     max-width:320px;    
     width:320px;    
 }
@@ -342,7 +368,7 @@ div.divTextosBrancos *{
     border-radius: 4px 4px; 
     padding: 15px 30px 15px 15px;
     margin-top:40px;
-    height: 290px;
+    height: 320px;
     width:300px;  
 }
 
@@ -354,7 +380,7 @@ div.divTextosBrancos *{
     border-radius: 4px 4px; 
     padding: 15px 30px 15px 15px;
     margin-top:40px;
-    height: 290px;
+    height: 320px;
     width:300px;  
 }
 
@@ -366,7 +392,7 @@ div.divTextosBrancos *{
     border-radius: 4px 4px; 
     padding: 15px 30px 15px 15px;
     margin-top:40px;
-    height: 290px;
+    height: 320px;
     width:300px;  
 }
 .tituloCumponsConciliacaoBancariaExtrato{
@@ -390,6 +416,10 @@ div.divTextosBrancos *{
 
 .iconeMonitorCargasEmExecucao{
     color: #000;
+}
+
+.iconeMonitorCargasProcessandoDados{
+    color: #00aa00;
 }
 
 .iconeMonitorCargasSucesso{
@@ -769,6 +799,10 @@ tbody.conteudotabelasCentralizadas > tr > td{
   background-color: #eaeaea;
   text-align: center;
     
+}
+
+.negrito{
+    font-weight: bolder;
 }
 
 .titulosconteudos{

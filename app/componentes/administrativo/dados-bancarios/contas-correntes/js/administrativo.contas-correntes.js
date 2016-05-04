@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.2 - 23/03/2016 
+ *  - Envio do cnpj da conta a ser alterada o status
+ *
  *  Versão 1.0.1 - 21/09/2015 
  *  - Somente filiais ativas
  *
@@ -195,6 +198,7 @@ angular.module("administrativo-contas-correntes", [])
       * Se nenhum banco foi selecionado, apaga o conteúdo do input text
       */
     $scope.validaBanco = function(){
+        if(!$scope.modalConta.banco || $scope.modalConta.banco === null) return;
         if(!$scope.modalConta.banco.Codigo) $('#buscabanco').val("");    
     }
     /**
@@ -631,7 +635,8 @@ angular.module("administrativo-contas-correntes", [])
     // ATIVAR/DESATIVAR
     $scope.desativar = function(conta){
         var jsonConta = { cdContaCorrente : conta.cdContaCorrente,
-                          flAtivo : false
+                          flAtivo : false,
+                          nrCnpj : conta.empresa.nu_cnpj,
                         };
         $scope.showModalConfirmacao('Confirmação', 
                                     'Tem certeza que deseja desativar a conta?',
@@ -639,7 +644,8 @@ angular.module("administrativo-contas-correntes", [])
     }
     $scope.ativar = function(conta){
         var jsonConta = { cdContaCorrente : conta.cdContaCorrente,
-                          flAtivo : true
+                          flAtivo : true,
+                          nrCnpj : conta.empresa.nu_cnpj,
                         };
         $scope.showModalConfirmacao('Confirmação', 
                                     'Tem certeza que deseja ativar a conta?',

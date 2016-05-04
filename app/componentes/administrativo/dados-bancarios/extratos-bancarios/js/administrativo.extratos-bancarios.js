@@ -4,6 +4,12 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.6 - 22/02/2016
+ *  - Paginação
+ *
+ *  Versão 1.0.5 - 04/12/2016
+ *  - Coleção 2 : extrato conciliado
+ *
  *  Versão 1.0.4 - 24/11/2015
  *  - Upload extrato sem passar pelo porteiro
  *  - Lista somente contas ativas
@@ -43,9 +49,14 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
     var dataAtual = new Date();    
     $scope.anoDigitado = dataAtual.getFullYear();  
     $scope.totais = { extrato : 0, movimentacao : 0 };
+    $scope.itens_pagina = [100, 200, 300, 500]; 
+    $scope.paginaInformada = 1; // página digitada pelo usuário                                              
     $scope.filtro = {conta : null, 
                      ano :  dataAtual.getFullYear(),  // ano corrente
-                     mes : dataAtual.getMonth()}; // mês corrente
+                     mes : dataAtual.getMonth(),
+                     itens_pagina : $scope.itens_pagina[0], order : 0,
+                     pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0
+                    }; // mês corrente
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyExtratosPos = 1; // posição da div que vai receber o loading progress
     $scope.mes = { janeiro : { active: false, disabled : false }, 
@@ -142,7 +153,57 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
       */
     $scope.usuarioPodeExcluirExtratos = function(){
         return $scope.usuariologado.grupoempresa && $scope.filtro.conta !== null && permissaoRemocao;
-    }                                              
+    }  
+    
+    
+    
+    
+    
+    
+    // PAGINAÇÃO
+    /**
+      * Altera efetivamente a página exibida
+      */                                            
+    var setPagina = function(pagina){
+       if(pagina >= 1 && pagina <= $scope.filtro.total_paginas){ 
+           $scope.filtro.pagina = pagina;
+           buscaExtrato();
+       }
+       $scope.atualizaPaginaDigitada();    
+    };
+    /**
+      * Vai para a página anterior
+      */
+    $scope.retrocedePagina = function(){
+        setPagina($scope.filtro.pagina - 1); 
+    };
+    /**
+      * Vai para a página seguinte
+      */                                            
+    $scope.avancaPagina = function(){
+        setPagina($scope.filtro.pagina + 1); 
+    };
+    /**
+      * Foi informada pelo usuário uma página para ser exibida
+      */                                            
+    $scope.alteraPagina = function(){
+        if($scope.paginaInformada) setPagina(parseInt($scope.paginaInformada));
+        else $scope.atualizaPaginaDigitada();  
+    };
+    /**
+      * Sincroniza a página digitada com a que efetivamente está sendo exibida
+      */                                            
+    $scope.atualizaPaginaDigitada = function(){
+        $scope.paginaInformada = $scope.filtro.pagina; 
+    };
+                                                 
+    // EXIBIÇÃO                                             
+    /**
+      * Notifica que o total de itens por página foi alterado
+      */                                            
+    $scope.alterouItensPagina = function(){
+        buscaExtrato();
+    };             
                                                  
     
     
@@ -219,6 +280,7 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
     $scope.alterouConta = function(progressemexecucao){
         // Set para o ano e mês corrente 
         $scope.filtro.ano = dataAtual.getFullYear(); 
+        $scope.atualizaAnoDigitado();
         $scope.filtro.mes = dataAtual.getMonth();
         $scope.setTab($scope.filtro.mes + 1);
         ajustaTabs();
@@ -417,6 +479,7 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
                     if(data && data !== null){
                         if(data.mes > 0 && data.ano > 0){
                             $scope.filtro.ano = data.ano;
+                            $scope.atualizaAnoDigitado();
                             $scope.filtro.mes = data.mes - 1;
                             $scope.tab = data.mes;
                             ajustaTabs();
@@ -484,12 +547,30 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
         var filtros = obtemFiltroDeBusca();
        
         $webapi.get($apis.getUrl($apis.card.tbextrato, 
-                                [$scope.token, 1, /*$campos.card.tbextrato.dtExtrato*/ 102, 0],
+                                [$scope.token, 2, /*$campos.card.tbextrato.dtExtrato*/ 102, 0, 
+                                 $scope.filtro.itens_pagina, $scope.filtro.pagina],
                                 filtros)) 
             .then(function(dados){
-                $scope.totais.extrato = 0;
+                //$scope.totais.extrato = 0;
                 $scope.totais.movimentacao = dados.TotalDeRegistros;
                 $scope.extrato = dados.Registros;
+                $scope.totais.extrato = dados.Totais.valor;
+            
+                // Set valores de exibição
+                $scope.filtro.total_registros = dados.TotalDeRegistros;
+                $scope.filtro.total_paginas = Math.ceil($scope.filtro.total_registros / $scope.filtro.itens_pagina);
+                if($scope.extrato.length === 0) $scope.filtro.faixa_registros = '0-0';
+                else{
+                    var registroInicial = ($scope.filtro.pagina - 1)*$scope.filtro.itens_pagina + 1;
+                    var registroFinal = registroInicial - 1 + $scope.filtro.itens_pagina;
+                    if(registroFinal > $scope.filtro.total_registros) registroFinal = $scope.filtro.total_registros;
+                    $scope.filtro.faixa_registros =  registroInicial + '-' + registroFinal;
+                }
+
+                // Verifica se a página atual é maior que o total de páginas
+                if($scope.filtro.pagina > $scope.filtro.total_paginas)
+                    setPagina(1); // volta para a primeira página e refaz a busca
+            
                 $scope.buscandoExtrato = false;
                 $scope.hideProgress(divPortletBodyFiltrosPos);
                 $scope.hideProgress(divPortletBodyExtratosPos);
@@ -506,21 +587,27 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
     
     /**
       * Soma valor ao total do extrato
-      */
+      * /
     $scope.incrementaValorTotalExtrato = function(valor){
         //console.log(valor);
         //console.log($scope.totais.extrato);
         $scope.totais.extrato += valor;  
-    }
+    }*/
     
     
     
     // REMOVE MOVIMENTAÇÃO
     $scope.removeMovimentacaoBancaria = function(movimentacao){
-        $scope.showModalConfirmacao('Confirmação', 
-                                    'Tem certeza que deseja excluir a movimentação bancária?',
-                                     excluiMovimentacao, movimentacao.idExtrato, 
-                                    'Sim', 'Não'); 
+        if(!movimentacao || movimentacao == null) return;
+        
+        if(movimentacao.conciliado){
+            $scope.showModalAlerta('Não é possível remover a movimentação bancária pois ela está conciliada com recebíveis. Para realizar a remoção, deve-se previamente desconciliar a movimentação bancária!');
+        }else{
+            $scope.showModalConfirmacao('Confirmação', 
+                                        'Tem certeza que deseja excluir a movimentação bancária?',
+                                         excluiMovimentacao, movimentacao.idExtrato, 
+                                        'Sim', 'Não');
+        }
     }
     
     

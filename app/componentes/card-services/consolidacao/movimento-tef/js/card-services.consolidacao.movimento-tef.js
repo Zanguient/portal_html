@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.1 - 23/02/2016
+ *  - Filtro de NSU => Permite desconsiderar período
+ *
  *  Versão 1.0 - 19/11/2015
  *
  */
@@ -29,7 +32,7 @@ angular.module("card-services-movimento-tef", [])
     $scope.filiais = [];   
     $scope.pdvs = [];                                             
     $scope.filtro = {datamin : new Date(), datamax : '', filial : null, pdv : null,
-					 itens_pagina : $scope.itens_pagina[0], order : 0,
+					 itens_pagina : $scope.itens_pagina[0], order : 0, consideraPeriodo : true,
                      analitico : { pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0},
                      sintetico : { pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0},
                     };
@@ -64,12 +67,12 @@ angular.module("card-services-movimento-tef", [])
                 // Avalia grupo empresa
                 if($scope.usuariologado.grupoempresa){ 
                     // Reseta seleção de filtro específico de empresa
-                    $scope.filtro.filial = $scope.filtro.pdv = null;
+                    $scope.filtro.filial = $scope.filtro.pdv = $scope.filtro.nsu = $scope.filtro.valor = null;
                     buscaFiliais(true);
                 }else{ // reseta tudo e não faz buscas 
                     $scope.filiais = []; 
                     $scope.pdvs = [];
-                    $scope.filtro.filial = $scope.filtro.pdv = null;
+                    $scope.filtro.filial = $scope.filtro.pdv = $scope.filtro.nsu = $scope.filtro.valor = null;
                 }
             }
         }); 
@@ -147,22 +150,27 @@ angular.module("card-services-movimento-tef", [])
       * Limpa os filtros
       */
     $scope.limpaFiltros = function(){
-        
-        ultimoFiltro = undefined;
-        
-        // Limpar data => Refazer busca?
-        $scope.filtro.datamin = new Date();
-        $scope.filtro.datamax = ''; 
-        
-        $scope.filtro.filial = null; 
 
-        // Limpa relatórios
-        $scope.relatorio.analitico = [];
-        $scope.relatorio.sintetico = [];
-        $scope.filtro.analitico.pagina = $scope.filtro.sintetico.pagina = 1;
-        $scope.filtro.analitico.total_registros = $scope.filtro.sintetico.total_registros = 0;
-        $scope.filtro.analitico.faixa_registros = $scope.filtro.sintetico.faixa_registros = '0-0';
-        $scope.filtro.analitico.total_paginas = $scope.filtro.sintetico.total_paginas = 0;
+			ultimoFiltro = undefined;
+
+			// Limpar data => Refazer busca?
+			$scope.filtro.datamin = new Date();
+			$scope.filtro.datamax = ''; 
+        
+            $scope.filtro.consideraPeriodo = true;
+
+			$scope.filtro.filial = null;
+			$scope.filtro.nsu = null;
+			$scope.filtro.valor = null;
+
+
+			// Limpa relatórios
+			$scope.relatorio.analitico = [];
+			$scope.relatorio.sintetico = [];
+			$scope.filtro.analitico.pagina = $scope.filtro.sintetico.pagina = 1;
+			$scope.filtro.analitico.total_registros = $scope.filtro.sintetico.total_registros = 0;
+			$scope.filtro.analitico.faixa_registros = $scope.filtro.sintetico.faixa_registros = '0-0';
+			$scope.filtro.analitico.total_paginas = $scope.filtro.sintetico.total_paginas = 0;
     }
     
     // DATA RECEBIMENTO
@@ -330,7 +338,7 @@ angular.module("card-services-movimento-tef", [])
                          valor: $scope.getFiltroData($scope.filtro.datamin)}; 
        if($scope.filtro.datamax)
            filtroData.valor = filtroData.valor + '|' + $scope.getFiltroData($scope.filtro.datamax);
-       filtros.push(filtroData);
+       //filtros.push(filtroData);
         
        // Filial
        if($scope.filtro.filial && $scope.filtro.filial !== null){
@@ -342,9 +350,31 @@ angular.module("card-services-movimento-tef", [])
        // PDV
        if($scope.filtro.pdv && $scope.filtro.pdv !== null){
            var filtroPDV = {id: /*$campos.card.tbrecebimentotef.nrPDVTEF*/ 104, 
-                               valor: $scope.filtro.pdv.CodPdvHostPagamento};
+                            valor: $scope.filtro.pdv.CodPdvHostPagamento};
            filtros.push(filtroPDV);  
        } 
+			
+        //NSU
+        if($scope.filtro.nsu !== null && $scope.filtro.nsu /* !== undefined && $scope.filtro.nsu !== ""*/){
+            var filtroNSU = {id: /*$campos.card.tbrecebimentotef.nrNSUHost*/ 105,
+                             valor: $scope.filtro.nsu + '%'};
+            filtros.push(filtroNSU);
+            
+            // Considera período?
+            if($scope.filtro.consideraPeriodo !== false)
+                filtros.push(filtroData);
+        }
+        else
+            // Sem nsu => considera filtro de data
+            filtros.push(filtroData);
+
+        //VALOR
+        if($scope.filtro.valor !== null && $scope.filtro.valor !== "0,00" && $scope.filtro.valor !== undefined && 
+             $scope.filtro.valor !== ""){
+            var filtroValor = {id: /*$campos.card.tbrecebimentotef.vlVenda*/ 111,
+                               valor: $scope.filtro.valor};
+            filtros.push(filtroValor);
+        }
         
        // Retorna    
        return filtros;

@@ -116,6 +116,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				adquirente : null ou { cdAdquirente : int, nmAdquirente : string, dsAdquirente : string, stAdquirente : int},
 				dsTipo : string,
 				flVisivel : bool,
+				flAntecipacao : bool,
 				dsTipoCartao : string,
 				banco : { Codigo : string, 
 						  NomeExtenso : string},
@@ -131,6 +132,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 			  dsTipoCartao : string,
 			  cdBandeira : int,
 			  flVisivel : bool, // obrigatório!
+			  flAntecipacao : bool,
 			  deletar : bool, // obrigatório!
 			  parametros : [{ cdBanco : string,
 							  dsMemo : string,

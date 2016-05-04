@@ -4,6 +4,17 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.1.4 - 01/04/2016
+ *  - conciliacaovendas
+ *
+ *  Versão 1.1.3 - 28/03/2016
+ *  - vendaserp
+ *  - tbrecebimentovenda
+ *  - correcaovendaerp
+ *
+ *  Versão 1.1.2 - 05/02/2016
+ *  - tbantecipacaobancaria
+ *
  *  Versão 1.1.1 - 20/11/2015
  *  - tbrecebimentotef
  *  - pdvs
@@ -190,14 +201,27 @@ angular.module('webapi', ['utils'])
             id_grupo = 102,
             nu_cnpj = 103,
             preconcilia_grupo = 104,
+            nsu = 105,
             // Relacionamentos
             tbadquirente : 200,
             recebimentoparcela : 300
         },
+        conciliacaovendas : {
+            data = 100, 
+            tipo = 101,
+            id_grupo = 102,
+            nu_cnpj = 103,
+            preconcilia_grupo = 104,
+            nsu = 105,
+            // Relacionamentos
+            tbadquirente : 200,
+            tbrecebimentovenda : 300
+        },
         recebiveisfuturos : {
             data : 100,
             id_grupo : 101,
-            nu_cnpj : 102,
+            cdContaCorrente : 102,
+            cdAdquirente : 103,
         },
         relatorioconciliacaotitulos : {
             data = 100,
@@ -212,6 +236,7 @@ angular.module('webapi', ['utils'])
             data : 100,
             id_grupo : 101,
             nu_cnpj : 102,
+            cdAdquirente : 103,
         },
         tbadquirente : {
             cdAdquirente : 100,
@@ -222,6 +247,24 @@ angular.module('webapi', ['utils'])
             // Relacionamentos
             cnpj : 305,
             id_grupo : 316
+        },
+        tbantecipacaobancaria: {
+            idAntecipacaoBancaria : 100,
+            cdContaCorrente : 101,
+            dtAntecipacaoBancaria : 102,
+            cdAdquirente : 103,
+            vlOperacao : 104,
+            vlLiquido : 105,
+            // Relacionamentos
+            tbantecipacaobancariadetalhe : 200
+        },
+        tbantecipacaobancariadetalhe: {
+            idAntecipacaoBancariaDetalhe : 100,
+            idAntecipacaoBancaria : 101,
+            dtVencimento : 102,
+            vlAntecipacao : 103,
+            vlAntecipacaoLiquida : 104,
+            cdBandeira : 105,
         },
         tbbancoparametro : {
             cdBanco : 100,
@@ -336,11 +379,30 @@ angular.module('webapi', ['utils'])
             dtTitulo : 109,
             vlParcela : 110,
             nrParcela : 111,
+            cdERP : 112,
+            dtBaixaERP : 113,
             // RELACIONAMENTOS
             id_grupo = 216,
             idExtrato = 306,
         },
+        tbrecebimentovenda: {
+            idRecebimentoVenda : 100,
+            nrCNPJ : 101,
+            nrNSU : 102,
+            dtVenda : 103,
+            cdAdquirente : 104,
+            dsBandeira : 106,
+            vlVenda : 107,
+            qtParcelas : 108,
+            cdERP : 109,
+            // RELACIONAMENTOS
+            id_grupo = 216,
+        },
         tituloserp : {
+            data : 100,
+            id_grupo : 101
+        },
+        vendaserp : {
             data : 100,
             id_grupo : 101
         }
@@ -458,7 +520,9 @@ angular.module('webapi', ['utils'])
             bandeira : 500,
             recebimento : 600,
             tbadquirente : 700,
-            tbbandeira : 800
+            tbbandeira : 800,
+            tbContaCorrente : 900,
+            sem_ajustes_antecipacao : 1000,
             // EXPORTAR
             exportar : 9999
         },
@@ -688,10 +752,14 @@ angular.module('webapi', ['utils'])
         conciliacaobancaria : $autenticacao.getUrlBase() + '/card/conciliacaobancaria/',
         conciliacaorelatorios : $autenticacao.getUrlBase() + '/card/conciliacaorelatorios/',
         conciliacaotitulos : $autenticacao.getUrlBase() + '/card/conciliacaotitulos/',
+        conciliacaovendas : $autenticacao.getUrlBase() + '/card/conciliacaovendas/',
+        correcaovendaerp : $autenticacao.getUrlBase() + '/card/correcaovendaerp/',
         recebiveisfuturos : $autenticacao.getUrlBase() + '/card/recebiveisfuturos/',
         relatorioconciliacaotitulos : $autenticacao.getUrlBase() + '/card/relatorioconciliacaotitulos/',
         relatoriovendas : $autenticacao.getUrlBase() + '/card/relatoriovendas/',
         tbadquirente : $autenticacao.getUrlBase() + '/card/tbadquirente/',
+        tbantecipacaobancaria : $autenticacao.getUrlBase() + '/card/tbantecipacaobancaria/',
+        tbantecipacaobancariadetalhe : $autenticacao.getUrlBase() + '/card/tbantecipacaobancariadetalhe/',
         tbbancoparametro : $autenticacao.getUrlBase() + '/card/tbbancoparametro/',
         tbbandeira : $autenticacao.getUrlBase() + '/card/tbbandeira/',
         tbcontacorrente: $autenticacao.getUrlBase() + '/card/tbcontacorrente/',  
@@ -701,7 +769,9 @@ angular.module('webapi', ['utils'])
         tbrecebimentoajuste : $autenticacao.getUrlBase() + '/card/tbrecebimentoajuste/', 
         tbrecebimentotef : $autenticacao.getUrlBase() + '/card/tbrecebimentotef/', 
         tbrecebimentotitulo : $autenticacao.getUrlBase() + '/card/tbrecebimentotitulo/', 
+        tbrecebimentovenda : $autenticacao.getUrlBase() + '/card/tbrecebimentovenda/', 
         tituloserp : $autenticacao.getUrlBase() + '/card/tituloserp/', 
+        vendaserp : $autenticacao.getUrlBase() + '/card/vendaserp/', 
         uploadextrato : $autenticacao.getUrlBase() + '/card/testeupload/',    
     },
     cartao : {
@@ -721,7 +791,9 @@ angular.module('webapi', ['utils'])
         terminallogico : $autenticacao.getUrlBase() + '/pos/terminallogico/'
     },
     tax : {
-        tbmanifesto : $autenticacao.getUrlBase() + '/tax/tbmanifesto/',    
+        tbmanifesto : $autenticacao.getUrlBase() + '/tax/tbmanifesto/',
+        tbmercadoria : $autenticacao.getUrlBaseTotvs() + '/tax/tbmercadoria/',
+        tbmercadoriaclassificada :$autenticacao.getUrlBaseTotvs() + '/tax/tbmercadoriaclassificada/',
     },
     util : {
         bancos : $autenticacao.getUrlBase() + '/util/bancos/',   
@@ -732,7 +804,6 @@ angular.module('webapi', ['utils'])
     dealernet: {
         consultatitulos : $autenticacao.getUrlBaseDealernet() + '/dealernet/consultatitulos/',   
     },
-      
       
     // REZENDE
     rezende : {

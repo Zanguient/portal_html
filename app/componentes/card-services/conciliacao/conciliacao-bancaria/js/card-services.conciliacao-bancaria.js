@@ -4,6 +4,12 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.1.5 - 09/03/2016
+ *  - Paginação no modalDetalhes
+ *
+ *  Versão 1.1.41 - 02/02/2016
+ *  - Itens por página aumentados
+ *
  *  Versão 1.1.4 - 24/11/2015
  *  - Lista somente contas ativas
  *
@@ -54,7 +60,74 @@
  */
 
 // App
-angular.module("card-services-conciliacao-bancaria", []) 
+angular.module("card-services-conciliacao-bancaria", ['angularUtils.directives.dirPagination']) 
+
+.filter('filterModalDetalhes', function(){
+    return function(entries, modalDetalhes) {//nsu, statusbaixa) {
+        var filtered = [];
+        //console.log(nsu);
+        if (modalDetalhes.nsu) {
+          angular.forEach(entries, function (entry) {
+            //if(entry.Documento.indexOf(nsu, entry.Documento.length - nsu.length) !== -1) // ends with
+            if(entry.Documento.indexOf(modalDetalhes.nsu) > -1 && // contains
+               (modalDetalhes.statusbaixa.id === 0 || typeof entry.Baixado === 'undefined' || entry.Baixado === null || 
+                (entry.Baixado && modalDetalhes.statusbaixa.id === 1) || // somente baixados
+                (!entry.Baixado && modalDetalhes.statusbaixa.id === 2))) // somente nao baixados
+              filtered.push(entry);          
+          });
+            
+          modalDetalhes.total_itens_filtro = filtered.length;
+            
+          // Ajusta flags  
+          if(filtered.length === 0) modalDetalhes.faixa_registros = '0-0';
+          else{
+            var registroInicial = (modalDetalhes.pagina - 1)*modalDetalhes.itens_pagina + 1;
+            var registroFinal = registroInicial - 1 + modalDetalhes.itens_pagina;
+            if(registroFinal > filtered.length) registroFinal = filtered.length;
+            modalDetalhes.faixa_registros =  registroInicial + '-' + registroFinal;
+          }    
+            
+          //console.log("filtered");    
+          return filtered;
+        }
+        
+        if(modalDetalhes.statusbaixa && modalDetalhes.statusbaixa.id > 0 && entries.length > 0 && typeof entries[0].Baixado !== 'undefined' && entries[0].Baixado !== null)
+        {
+            angular.forEach(entries, function (entry) {
+                //if(entry.Documento.indexOf(nsu, entry.Documento.length - nsu.length) !== -1) // ends with
+                if((entry.Baixado && modalDetalhes.statusbaixa.id === 1) || // somente baixados
+                   (!entry.Baixado && modalDetalhes.statusbaixa.id === 2)) // somente nao baixados
+                  filtered.push(entry);          
+            });
+            
+            modalDetalhes.total_itens_filtro = filtered.length;
+            
+            // Ajusta flags  
+            if(filtered.length === 0) modalDetalhes.faixa_registros = '0-0';
+            else{
+                var registroInicial = (modalDetalhes.pagina - 1)*modalDetalhes.itens_pagina + 1;
+                var registroFinal = registroInicial - 1 + modalDetalhes.itens_pagina;
+                if(registroFinal > filtered.length) registroFinal = filtered.length;
+                modalDetalhes.faixa_registros =  registroInicial + '-' + registroFinal;
+            } 
+            
+            return filtered;
+        }
+        
+        modalDetalhes.total_itens_filtro = entries.length;
+        
+        if(entries.length === 0) modalDetalhes.faixa_registros = '0-0';
+        else{
+            var registroInicial = (modalDetalhes.pagina - 1)*modalDetalhes.itens_pagina + 1;
+            var registroFinal = registroInicial - 1 + modalDetalhes.itens_pagina;
+            if(registroFinal > entries.length) registroFinal = entries.length;
+            modalDetalhes.faixa_registros =  registroInicial + '-' + registroFinal;
+        } 
+        
+        //console.log("entries");
+        return entries;
+    };
+})
 
 .controller("card-services-conciliacao-bancariaCtrl", ['$scope',
                                              '$state',
@@ -70,8 +143,10 @@ angular.module("card-services-conciliacao-bancaria", [])
                                                       /*$campos,*/$webapi,$autenticacao,$apis,$window){ 
     
     // flags
+    //Tamanho da margem de acordo com o navegador
+    $scope.margin = "";
     // Exibição
-    $scope.itens_pagina = [50, 100, 150, 200];                                             
+    $scope.itens_pagina = [100, 150, 300, 500];                                             
     $scope.paginaInformada = 1; // página digitada pelo usuário                                             
     // Dados    
     $scope.dadosconciliacao = [];
@@ -88,7 +163,7 @@ angular.module("card-services-conciliacao-bancaria", [])
     $scope.tipos = [{id: 1, nome: 'CONCILIADO'}, {id: 2, nome: 'PRÉ-CONCILIADO'}, {id: 3, nome: 'NÃO CONCILIADO'}];             
     $scope.filtro = {datamin : new Date(), datamax : '', consideraPeriodo : true,
                      tipo : null, adquirente : undefined, filial : undefined, conta : undefined,
-                     itens_pagina : $scope.itens_pagina[1], order : 0,
+                     itens_pagina : $scope.itens_pagina[0], order : 0,
                      pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0
                     };  
     
@@ -103,7 +178,15 @@ angular.module("card-services-conciliacao-bancaria", [])
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyDadosPos = 1;  
     // Modal Detalhes
-    $scope.modalDetalhes = {grupo : [] };  
+    $scope.statusbaixa = [{id: 0, nome : 'TODOS'},
+                          {id: 1, nome : 'BAIXADOS'},
+                          {id: 2, nome : 'NÃO BAIXADOS'}
+                         ];                                             
+    $scope.modalDetalhes = { grupo : [], itens_pagina : 100, pagina : 1,
+                             total_registros : 0, faixa_registros : '0-0',
+                             nsu : '', statusbaixa : $scope.statusbaixa[0],
+                             total_itens_filtro : 0
+                           };  
     // Modal Data de Recebimento
     $scope.modalDataRecebimento = { dado : undefined, data : '', dataValida : false };  
     // Permissões                                           
@@ -114,9 +197,13 @@ angular.module("card-services-conciliacao-bancaria", [])
     $scope.abrirCalendarioDataMax = $scope.abrirCalendarioDataVendaMax = false;                                           
     $scope.modalDetalhesShowing = false;
     
-    
+    //Data para exibição
+		$scope.dataExibicao = "";
+																							 
     // Inicialização do controller
     $scope.cardServices_conciliacaoBancariaInit = function(){
+				//Identifica o navegador para dizer a margem correta
+				$scope.identificaBrowser();
         // Título da página 
         $scope.pagina.titulo = 'Card Services';                          
         $scope.pagina.subtitulo = 'Conciliação Bancária';
@@ -697,17 +784,46 @@ angular.module("card-services-conciliacao-bancaria", [])
     
     
     // MODAL DETALHES
+    
+    // PAGINAÇÃO                                            
+    $scope.alterouPaginaModalDetalhes = function(){
+
+        // Ajusta flags  
+        if($scope.modalDetalhes.total_itens_filtro === 0) $scope.modalDetalhes.faixa_registros = '0-0';
+        else{
+            var registroInicial = ($scope.modalDetalhes.pagina - 1)*$scope.modalDetalhes.itens_pagina + 1;
+            var registroFinal = registroInicial - 1 + $scope.modalDetalhes.itens_pagina;
+            if(registroFinal > $scope.modalDetalhes.total_itens_filtro) registroFinal = $scope.modalDetalhes.total_itens_filtro;
+            $scope.modalDetalhes.faixa_registros =  registroInicial + '-' + registroFinal;
+        }
+    }
+    
     $scope.detalhar = function(grupo){
-        $scope.modalDetalhes.grupo = grupo;
-        //console.log(grupo);
-        // Exibe o modal
-        $('#modalDetalhes').modal('show');
-        $scope.modalDetalhesShowing = true;
-        checaVisibilidadeModal();
+			$scope.formatacaoData();
+			$scope.modalDetalhes.grupo = grupo;
+            $scope.modalDetalhes.pagina = 1; // página 1
+            $scope.modalDetalhes.total_registros = grupo.length;
+            $scope.modalDetalhes.faixa_registros = '0-0';
+            $scope.modalDetalhes.nsu = '';
+            $scope.modalDetalhes.statusbaixa = $scope.statusbaixa[0];
+            $scope.modalDetalhes.total_itens_filtro = grupo.length;
+            $scope.alterouPaginaModalDetalhes();
+			//console.log(grupo);
+			// Exibe o modal
+			$('#modalDetalhes').modal('show');
+			$scope.modalDetalhesShowing = true;
+			checaVisibilidadeModal();
+            //$scope.paginaModalDetalhes();
     }
     
     var checaVisibilidadeModal = function(){
         $timeout(function(){if($scope.modalIsVisible()) checaVisibilidadeModal(); /*else console.log("FALSE");*/}, 1000);
+    }
+    
+    
+    // BUSCA NSU
+    $scope.resetaBuscaNSU = function(){
+        $scope.modalDetalhes.nsu = '';
     }
     
         
@@ -968,7 +1084,7 @@ angular.module("card-services-conciliacao-bancaria", [])
       */
     $scope.baixaAutomatica = function(dado)
     {
-        if(!dado || dado === null || !dado.ExtratoBancario || dado.ExtratoBancario === null)
+        if(!dado || dado === null || !dado.ExtratoBancario || dado.ExtratoBancario === null || dado.Conciliado !== 1)
             return;
 
         $scope.showProgress(divPortletBodyFiltrosPos, 10000);
@@ -1289,5 +1405,281 @@ angular.module("card-services-conciliacao-bancaria", [])
         // Download
         $scope.download(url, 'Conciliação Bancária.zip', true, divPortletBodyDadosPos, divPortletBodyFiltrosPos, undefined, undefined, param);           
     }
-    
+		
+		//IMPRESSÃO
+		$scope.imprimir = function(){
+       
+			/*			
+			e = Nome da empresa
+			s = Nome da tela
+			n = Número de níveis
+			cl = Número de colunas
+			t = Token
+			c = CNPJ
+			f = Filial
+			d = Data
+			cn = Conta
+			a = Adquirente
+			tp = Tipo			
+			*/
+				
+				
+			//Data
+			$scope.dataConsulta = "data não considerada";
+			if($scope.filtro.consideraPeriodo){ 
+				if($scope.filtro.datamax){
+					$scope.dataConsulta = $scope.getFiltroData($scope.filtro.datamin) + '|' + $scope.getFiltroData($scope.filtro.datamax);
+					$scope.statusData = "v";
+				}
+				else {
+					$scope.dataConsulta = $scope.getFiltroData($scope.filtro.datamin);
+					$scope.statusData = "f";
+				}
+			}
+			
+			// Conta
+			$scope.contaCorrenteImpressao = "todos";
+			if($scope.filtro.conta && $scope.filtro.conta !== null) 
+				$scope.contaCorrenteImpressao = $scope.filtro.conta.cdContaCorrente;
+			
+			// Filial
+			$scope.filialImpressao = "todos";
+			$scope.nomeFilialImpressao = "todas as filiais";
+			if($scope.filtro.filial && $scope.filtro.filial !== null){
+				$scope.filialImpressao = $scope.filtro.filial.nu_cnpj;
+				$scope.nomeFilialImpressao = $scope.filtro.filial.ds_fantasia;
+			}
+			// Adquirente
+			$scope.adquirenteImpressao = "todos";
+			if($scope.filtro.adquirente && $scope.filtro.adquirente !== null)
+				$scope.adquirenteImpressao = $scope.filtro.adquirente.cdAdquirente;
+			
+			// Tipo
+			$scope.tipoImpressao = "todos";
+			if($scope.filtro.tipo && $scope.filtro.tipo !== null)
+				$scope.tipoImpressao = $scope.filtro.tipo.id;
+			
+			//if($scope.filtro.filial && $scope.filtro.filial !== null){
+				$window.open('views/print#?e=' + $scope.usuariologado.grupoempresa.ds_nome + '&s=' + "Relatório de Detalhes de Agrupamento" +
+										 '&n='+ 1 +'&a='+$scope.adquirenteImpressao+'&cl='+7+'&cn='+$scope.contaCorrenteImpressao+'&t='+$scope.token+
+										 '&tp='+$scope.tipoImpressao+'&sd='+$scope.statusData+'&c='+$scope.filialImpressao+'&f='
+										 +$scope.nomeFilialImpressao+'&d='+$scope.dataConsulta, '_blank');
+			//}
+		}
+		
+		//DATA
+		$scope.formatacaoData = function(){
+			if($scope.filtro.consideraPeriodo){
+				if($scope.filtro.datamax){
+					$scope.dataConsulta = $scope.getFiltroData($scope.filtro.datamin) + '|' + $scope.getFiltroData($scope.filtro.datamax);
+					$scope.dataExibicao = $scope.formataData($scope.dataConsulta);
+				}
+				else {
+					$scope.dataConsulta = $scope.getFiltroData($scope.filtro.datamin);
+					$scope.dataExibicao = $scope.formataData($scope.dataConsulta);
+				}
+			}
+			else $scope.dataExibicao = "Data não considerada";
+		}
+		//FORMATAÇÃO DE DATA
+		$scope.formataData = function(data){
+			
+			//Split para separar os caracteres que formam a data
+			$scope.dtSplit = data.split("");
+			
+			$scope.dia = $scope.dtSplit[6] + $scope.dtSplit[7];
+			$scope.mes = $scope.dtSplit[4] + $scope.dtSplit[5];
+			$scope.ano = $scope.dtSplit[0] + $scope.dtSplit[1] + $scope.dtSplit[2] + $scope.dtSplit[3];
+			if ($scope.filtro.datamax){
+				$scope.dia2 = $scope.dtSplit[15] + $scope.dtSplit[16];
+				$scope.mes2 = $scope.dtSplit[13] + $scope.dtSplit[14];
+				$scope.ano2 = $scope.dtSplit[9] + $scope.dtSplit[10] + $scope.dtSplit[11] + $scope.dtSplit[12];
+			}
+			
+			$scope.dataFormatada = "";
+			
+			switch ($scope.mes){
+				case "01":
+					$scope.dataFormatada = "Janeiro " + $scope.ano;
+					$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					break;
+					
+				case "02":
+					$scope.dataFormatada = "Fevereiro " + $scope.ano;
+					$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					break;
+					
+				case "03":
+					$scope.dataFormatada = "Março " + $scope.ano;
+					$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					break;
+					
+				case "04":
+					$scope.dataFormatada = "Abril " + $scope.ano;
+					$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					break;
+				
+				case "05":
+					$scope.dataFormatada = "Maio " + $scope.ano;
+					$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					break;
+				
+				case "06":
+					$scope.dataFormatada = "Junho " + $scope.ano;
+					$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					break;
+									
+				case "07":
+					$scope.dataFormatada = "Julho " + $scope.ano;
+					$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					break;
+					
+				case "08":
+					$scope.dataFormatada = "Agosto " + $scope.ano;
+					$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					break;
+					
+				case "09":
+					$scope.dataFormatada = "Setembro " + $scope.ano;
+					$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					break;
+					
+				case "10":
+					$scope.dataFormatada = "Outubro " + $scope.ano;
+					$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					break;
+					
+				case "11":
+					$scope.dataFormatada = "Novembro " + $scope.ano;
+					$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					break;
+					
+				case "12":
+					$scope.dataFormatada = "Dezembro " + $scope.ano;
+					$scope.dataFormatada = $scope.dia + " " + $scope.dataFormatada;
+					break;
+					
+				default:
+					$scope.dataFormatada = "Erro de formatação"
+					break;
+			}
+			
+			//VERIFICAÇÃO DE DATA PARA FORMATOS EM PERÍODO
+			if($scope.filtro.datamax){
+				switch ($scope.mes2){
+				case "01":
+						$scope.dataFormatada = $scope.dataFormatada + " - " + $scope.dia2 + " janeiro " + $scope.ano2;
+						break;
+					
+				case "02":
+						$scope.dataFormatada = $scope.dataFormatada + " - " + $scope.dia2 + " fevereiro " + $scope.ano2;
+						break;
+					
+				case "03":
+						$scope.dataFormatada = $scope.dataFormatada + " - " + $scope.dia2 + " março " + $scope.ano2;
+						break;
+					
+				case "04":
+						$scope.dataFormatada = $scope.dataFormatada + " - " + $scope.dia2 + " abril " + $scope.ano2;
+						break;
+				
+				case "05":
+						$scope.dataFormatada = $scope.dataFormatada + " - " + $scope.dia2 + " maio " + $scope.ano2;
+						break;
+				
+				case "06":
+						$scope.dataFormatada = $scope.dataFormatada + " - " + $scope.dia2 + " junho " + $scope.ano2;
+						break;
+									
+				case "07":
+						$scope.dataFormatada = $scope.dataFormatada + " - " + $scope.dia2 + " julho " + $scope.ano2;
+						break;
+					
+				case "08":
+						$scope.dataFormatada = $scope.dataFormatada + " - " + $scope.dia2 + " agosto " + $scope.ano2;
+						break;
+					
+				case "09":
+						$scope.dataFormatada = $scope.dataFormatada + " - " + $scope.dia2 + " setembro " + $scope.ano2;
+						break;
+					
+				case "10":
+						$scope.dataFormatada = $scope.dataFormatada + " - " + $scope.dia2 + " outubro " + $scope.ano2;
+						break;
+					
+				case "11":
+						$scope.dataFormatada = $scope.dataFormatada + " - " + $scope.dia2 + " novembro " + $scope.ano2;
+						break;
+					
+				case "12":
+						$scope.dataFormatada = $scope.dataFormatada + " - " + $scope.dia2 + " dezembro " + $scope.ano2;
+						break;
+					
+				default:
+					$scope.dataFormatada = "Erro de formatação"
+					break;
+				}
+			}
+			return $scope.dataFormatada;
+		}
+		
+		//VERIFICA O NAVEGADOR PARA DAR O VALOR DA MARGEM
+		$scope.identificaBrowser = function(){
+			if(jQuery.browser.mozilla){
+				$scope.margin = "margin-top: 1cm;";
+			}else{
+				$scope.margin = "margin-top: 1cm;";
+			}
+		}
+		
+		$scope.imprimir = function(){
+				
+			/*			
+			e = Nome da empresa
+			s = Nome da tela
+			n = Número de níveis
+			cl = Número de colunas
+			t = Token
+			c = CNPJ
+			f = Filial
+			d = Data		
+			a = Adquirente
+			tp = Tipo
+			*/
+			
+			// Data
+			$scope.d = "Data não considerada";
+			$scope.statusData = "1";
+			if($scope.filtro.consideraPeriodo){
+           $scope.d = $scope.getFiltroData($scope.filtro.datamin);
+           if($scope.filtro.datamax) {
+						 $scope.d = $scope.d + '|' + $scope.getFiltroData($scope.filtro.datamax);
+						 $scope.statusData = "2";
+					 }
+			}
+        
+       // Conta
+			$scope.cn = "todos";
+       if($scope.filtro.conta && $scope.filtro.conta !== null) $scope.cn = $scope.filtro.conta.cdContaCorrente;
+        
+       // Filial
+			$scope.c = "todos";
+			$scope.f = "todos";
+       if($scope.filtro.filial && $scope.filtro.filial !== null){
+				 $scope.c = $scope.filtro.filial.nu_cnpj;
+				 $scope.f = $scope.filtro.filial.ds_fantasia;
+			 }
+			
+       // Adquirente
+			$scope.a = "todos";
+       if($scope.filtro.adquirente && $scope.filtro.adquirente !== null) $scope.a = $scope.filtro.adquirente.cdAdquirente;
+        
+       // Tipo
+			$scope.tp = "todos";
+       if($scope.filtro.tipo && $scope.filtro.tipo !== null) $scope.tp = $scope.filtro.tipo.id;
+			
+			$window.open('views/print#?e=' + $scope.usuariologado.grupoempresa.ds_nome + '&s=' + "Conciliação Bancária" + '&n='+ 1
+									 +'&st='+$scope.statusData+'&cl='+7+'&t='+$scope.token+'&cn='+$scope.cn+'&c='+$scope.c+'&tp='+$scope.tp+
+									 '&a='+$scope.a+'&f='+$scope.f+'&d='+$scope.d, '_blank');
+		}
 }]);

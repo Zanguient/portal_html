@@ -1,0 +1,578 @@
+<!-- 
+
+    Atos Capital - www.atoscapital.com.br
+   
+    suporte@atoscapital.com.br
+ 
+ 
+    Card Services > Cash Flow > Recebíveis Futuros
+ 
+    Versão 1.0 - 20/10/2015
+-->
+
+<div class="container" ng-controller="card-services-antecipacao-simulacaoCtrl" ng-init="cardServices_antecipacaoSimulacaoInit()" print-section>   
+    
+    <!-- BEGIN PAGE BREADCRUMB -->
+    <ul class="page-breadcrumb breadcrumb" print-remove>
+        <li>
+            <a href="javascript:;" ng-click="goHome()">Início</a><i class="fa fa-circle"></i>
+        </li>
+        <li class="active">
+             Card Services<i class="fa fa-caret-right"></i>
+             Antecipação<i class="fa fa-caret-right"></i>
+             Simulação
+        </li>
+    </ul>
+    <!-- END PAGE BREADCRUMB -->
+    
+    <!-- FILTROS -->
+    <div class="row" print-remove>
+			<!--<span style="font-size: 22px" class="glyphicon glyphicon-print" aria-hidden="false">-->
+        <div class="col-md-12">
+            <!-- PORTLET FILTROS -->
+            <div class="portlet light"> 
+                <div class="portlet-title">
+                    <div class="caption">								
+                        <span class="caption-subject font-green-sharp bold uppercase">Filtros</span>						
+                    </div>
+                </div>
+                <!-- FILTROS -->
+                <div class="portlet-body" ng-show="exibeTela">
+                    <div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">
+                        <div class="row">
+                            <div class="col-md-8 col-sm-12">
+                                <div class="dataTables_paginate paging_bootstrap_extended" id="datatable_ajax_paginate">
+                                </div>
+                                <div class="dataTables_info" id="datatable_ajax_info" role="status" aria-live="polite">
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                <div class="table-group-actions pull-right">
+                                <span> </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-scrollable">
+                            <table class="table table-striped table-bordered table-hover dataTable no-footer conteudoTabelas" id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
+                                <thead>
+                                    <tr role="row" class="heading">
+                                        <th tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="20%">
+                                             Data da Operação
+                                        </th>
+                                        <th tabindex="1" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="20%">
+                                             Data de Corte
+                                        </th>
+                                        <th tabindex="2" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="35%">
+                                             Conta Corrente
+                                        </th>
+                                        <th tabindex="3" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="15%">
+                                             Adquirente
+                                        </th>
+                                        <th tabindex="4" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="10%">
+                                             Ações
+                                        </th>                                
+                                    </tr>
+                                    <tr role="row" class="filter">
+                                         <!-- DATA OPERAÇÃO -->
+                                        <td rowspan="1" colspan="1">
+                                            <div class="input-group date date-picker margin-bottom-5"
+                                                 data-date-format="dd/mm/yyyy">
+                                                <input type="text" 
+                                                       class="form-control form-filter input-sm" 
+                                                       readonly="readonly" style="cursor: pointer"
+                                                       onfocus="this.blur()"
+                                                       ng-model="filtro.dtOperacao" 
+                                                       ng-change="alterouDataOperacao()" 
+                                                       datepicker-append-to-body="true" 
+                                                       datepicker-popup="dd MMMM yyyy"
+                                                       ng-click="exibeCalendarioDataOperacao($event)" 
+                                                       is-open="abrirCalendarioDataOperacao"
+                                                       ng-required="true"
+                                                       required="required"
+                                                       show-button-bar="false" 
+                                                       show-weeks="false">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-sm default" 
+                                                        type="button" ng-click="exibeCalendarioDataOperacao($event)">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </button>
+                                                </span>
+                                            </div>  
+                                        </td>
+                                        <!-- DATA DE CORTE -->
+                                        <td rowspan="1" colspan="1">
+                                            <div class="input-group date date-picker margin-bottom-5"
+                                                 data-date-format="dd/mm/yyyy">
+                                                <input type="text" 
+                                                       class="form-control form-filter input-sm" 
+                                                       readonly="readonly" style="cursor: pointer"
+                                                       onfocus="this.blur()"
+                                                       ng-model="filtro.dtCorte" 
+                                                       datepicker-append-to-body="true" 
+                                                       datepicker-popup="dd MMMM yyyy"
+                                                       ng-click="exibeCalendarioDataCorte($event)" 
+                                                       is-open="abrirCalendarioDataCorte"
+                                                       min-date="filtro.today"
+                                                       ng-required="true"
+                                                       required="required"
+                                                       show-button-bar="false" 
+                                                       show-weeks="false">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-sm default" 
+                                                        type="button" ng-click="exibeCalendarioDataCorte($event)">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </button>
+                                                </span>
+                                            </div>                     
+                                        </td>
+                                        <!-- CONTA CORRENTE -->
+                                        <td rowspan="1" colspan="1">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <select class="form-control form-filter input-sm comboBoxFiltros"
+                                                            ng-disabled="contas.length == 0"
+                                                            ng-model="filtro.conta"
+                                                            ng-change="alterouConta()"
+                                                            ng-options="conta as getNomeAmigavelConta(conta) for conta in contas">
+                                                        <option value="" style="display: none"></option>
+                                                    </select>
+                                                    <i class="fa fa-question-circle"
+                                                        ng-show="!usuariologado.grupoempresa || usuariologado.grupoempresa === null"
+                                                        popover-placement="bottom"
+                                                        popover="É necessário selecionar uma empresa"
+                                                        popover-trigger="mouseenter"
+                                                        popover-append-to-body="true"></i> 
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <!-- ADQUIRENTE -->
+                                        <td rowspan="1" colspan="1">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <select class="form-control form-filter input-sm comboBoxFiltros"
+                                                        ng-disabled="adquirentes.length === 0"
+                                                        ng-model="filtro.adquirente"
+                                                        ng-change="alterouAdquirente()"
+                                                        ng-options="adquirente as (adquirente.nmAdquirente | uppercase) for adquirente in adquirentes">
+                                                        <option value="" style="display: none"></option>
+                                                    </select>
+                                                        <i class="fa fa-question-circle"
+                                                            ng-show="!filtro.conta || filtro.conta === null"
+                                                            popover-placement="bottom"
+                                                            popover="É necessário selecionar uma conta corrente"
+                                                            popover-trigger="mouseenter"
+                                                            popover-append-to-body="true"></i> 
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <!--AÇÕES-->
+                                        <td rowspan="1" colspan="1">
+                                            <div class="margin-bottom-5">
+                                                <button class="btn btn-sm red filter-submit margin-bottom"
+                                                        ng-click="buscaRecebiveisFuturos()">
+                                                    <i class="fa fa-search"></i>
+                                                    Buscar
+                                                </button>
+                                            </div>
+                                            <button class="btn btn-sm grey filter-cancel"
+                                                    ng-click="limpaFiltros()">
+                                                <i class="fa fa-times"></i>
+                                                Limpar
+                                            </button>
+                                        </td>
+                                    </tr>                   
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8 col-sm-12">
+                                <div class="dataTables_paginate paging_bootstrap_extended">
+                                </div>
+                                <div class="dataTables_info">
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- FIM PORTLET FILTROS -->
+        </div>
+    </div>
+    
+    
+    
+    <!-- CONTEUDO -->
+    <div class="row" print-remove>
+        <div class="col-md-12">
+            <!-- BEGIN TABLE PORTLET-->
+            <div class="portlet light">
+               
+                <!--TITULO-->
+                <div class="portlet-title">
+                    <div class="caption">								
+                        <span class="caption-subject font-green-sharp bold uppercase">Recebíveis Futuros</span>
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group" ng-if="statusSimulacao"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -->
+                            <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
+                            <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu pull-right element-hidden">
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to Excel </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to CSV </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Export to XML </a>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    Print Invoices </a>
+                                </li>
+                            </ul>
+													<ul class="dropdown-menu pull-right">
+													<li>
+														<a href="javascript:;" print-btn>
+															Imprimir
+														</a>
+													</li>
+												</ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- CORPO -->
+                <div class="portlet-body" ng-show="exibeTela">
+                    
+                    <!-- VALOR DISPONÍVEL -->
+                    <div class="row" style="margin-top: 10px; text-align: center">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-2">
+                            <label style="font-weight: bolder">Valor disponível</label>
+                       </div>
+                       <div class="col-sm-2" style="font-weight: bolder">
+                            <label>{{total.valorLiquido | currency:'R$'}}</label> 
+                       </div>
+                        <div class="col-sm-4"></div>
+                   </div>
+                    
+                    <!-- INPUTs -->
+                    <div class="col-sm-12" style="margin-top: 20px; text-align: center; vertical-align: middle">
+                       <div class="col-sm-4">
+                           <div class="col-sm-4">
+                                <label style="font-weight: bolder">Valor desejado</label>
+                                <label style="font-weight: bolder">(R$)</label>
+                           </div>
+                           <div class="col-sm-7" style="margin-left: 1px">
+                                <input type="text" class="form-control" 
+                                       ng-model="filtro.valorDesejado"
+                                       input-money
+                                       autocomplete=off/>
+                           </div>
+                       </div>
+                       <div class="col-sm-3">
+                            <div class="col-sm-5">
+                                <label style="font-weight: bolder">Taxa aplicada</label>
+                                <label style="font-weight: bolder">(% a.m.)</label>
+                           </div>
+                           <div class="col-sm-6" style="margin-left: 1px">
+                               <input type="text" class="form-control" 
+                                       ng-model="filtro.taxa"
+                                       input-money
+                                       autocomplete=off/>
+                           </div>
+                       </div>
+                       <div class="col-sm-2">
+                           <div class="col-sm-3">
+                                <label style="font-weight: bolder">IOF</label>
+                                <label style="font-weight: bolder">(%)</label>
+                           </div>
+                           <div class="col-sm-8" style="margin-left: 1px">
+                                <input type="text" class="form-control" 
+                                       ng-model="filtro.iofFixo"
+                                       input-money
+                                       autocomplete=off/>
+                           </div>
+                       </div>
+                       <div class="col-sm-3">
+                           <div class="col-sm-5">
+                                <label style="font-weight: bolder">IOF</label>
+                               <label style="font-weight: bolder">(% a.d.)</label>
+                           </div>
+                           <div class="col-sm-7">
+                               <input type="text" class="form-control" 
+                                       ng-model="filtro.iof"
+                                       input-money="4"
+                                       autocomplete=off/> 
+                           </div>
+                       </div>
+                   </div>
+                    
+                    <!-- BOTÕES -->
+                    <div class="row" style="margin-top: 30px; text-align: center">
+                        <div class="col-sm-6">
+                            <div class="btn-group">
+                                <a href="javascript:;" ng-click="recebiveis && recebiveis !== null && recebiveis.length > 0 ? simular() : 0">
+                                    <button class="btn green"
+                                            ng-disabled="!recebiveis || recebiveis === null || recebiveis.length === 0">
+                                    Simular <i class="fa fa-play-circle"></i>
+                                </button></a>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="btn-group">
+                                <a href="javascript:;" 
+                                   ng-click="resetaIOF()">
+                                    <button class="btn btn-default" 
+                                            title="Retoma os valores padrão de IOF">
+                                    Resetar IOF <i class="fa fa-undo"></i>
+                                </button></a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- CAPA -->
+                    <div class="row" style="margin-top: 30px; margin-bottom: 40px; text-align: center">
+                        <div class="col-sm-3">
+                            <div class="col-sm-6" style="font-weight: bolder">
+                                <label style="font-weight: bolder">Vencimentos: </label>
+                            </div>
+                            <div class="col-sm-6" style="font-weight: bolder">
+                                <label style="font-weight: bolder">{{vencimentos.length}}</label> 
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="col-sm-6" style="font-weight: bolder">
+                                <label style="font-weight: bolder">Juros: </label>
+                            </div>
+                            <div class="col-sm-6" style="font-weight: bolder">
+                                <label class="valorNegativo"
+                                       style="font-weight: bolder">{{totalVencimento.valorJuros | currency:'R$'}}</label> 
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="col-sm-6" style="font-weight: bolder">
+                                <label style="font-weight: bolder">IOF: </label>
+                            </div>
+                            <div class="col-sm-6" style="font-weight: bolder">
+                                <label class="valorNegativo" 
+                                       style="font-weight: bolder">{{totalVencimento.valorIOF | currency:'R$'}}</label> 
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="col-sm-6" style="font-weight: bolder">
+                                <label style="font-weight: bolder">Valor Líquido: </label>
+                            </div>
+                            <div class="col-sm-6" style="font-weight: bolder">
+                                <label class="valorPositivo"
+                                       style="font-weight: bolder">{{totalVencimento.valorLiquido | currency:'R$'}}
+                                </label> 
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- TABELA -->
+                    <div class="table scrollable"
+                         ng-show="vencimentos && vencimentos !== null && vencimentos.length > 0">
+                        <table class="table table-striped table-bordered table-hover dataTable no-footer conteudoTabelas" role="grid">
+                            <thead>
+                                <tr>
+                                    <th width="10" style="text-align: center;">
+                                        Vencimento
+                                    </th>
+                                    <th width="10%" style="text-align: center;">
+                                        Dias
+                                    </th>
+                                    <!--th width="30%" style="text-align: center;">
+                                        Bandeira
+                                    </th-->
+                                    <th width="25%" style="text-align: center;">
+                                        Valor Antecipado
+                                    </th>
+                                    <th width="20%" style="text-align: center;">
+                                        Juros
+                                    </th>
+                                    <th width="10%" style="text-align: center;">
+                                        IOF
+                                    </th>
+                                    <th width="25%" style="text-align: center;">
+                                        Valor Líquido
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+								<tr ng-repeat="vencimento in vencimentos">
+                                    <!-- VENCIMENTO -->
+                                    <td ng-bind="getDataString(vencimento.competencia)">
+                                    </td>
+                                    <!-- DIAS -->
+                                    <td ng-bind="vencimento.dias === 0 ? '0' : vencimento.dias">
+                                    </td>
+                                    <!-- BANDEIRA -->
+                                    <!--td class="linhaTotalRelatorios">
+                                        {{vencimento.bandeira | uppercase}}
+                                    </td-->
+                                    <!-- VALOR ANTECIPADO -->
+                                    <td class="valorPositivo">
+                                        {{vencimento.valorAntecipado | currency:'R$'}}
+                                    </td>
+                                    <!-- JUROS -->
+                                    <td class="valorNegativo">
+                                        {{vencimento.valorJuros | currency:'R$'}}
+                                    </td>
+                                    <!-- IOF -->
+                                    <td class="valorNegativo">
+                                        {{vencimento.valorIOF | currency:'R$'}}
+                                    </td>
+                                    <!-- VALOR LÍQUIDO -->
+                                    <td class="valorPositivo">
+                                        {{vencimento.valorLiquido | currency:'R$'}}
+                                    </td>
+                                </tr>
+                                <tr class="linhaTotalRelatorios">
+                                    <!-- TOTAL NF-e -->
+                                    <td colspan="2" style="text-align:right;">
+                                         Total Exibido
+                                    </td> 
+                                    <td>
+                                         {{totalVencimento.valorAntecipado | currency:'R$'}}
+                                    </td> 
+                                    <td class="valorNegativo">
+                                         {{totalVencimento.valorJuros | currency:'R$'}}
+                                    </td> 
+                                    <td class="valorNegativo">
+                                         {{totalVencimento.valorIOF | currency:'R$'}}
+                                    </td>
+                                    <td class="valorPositivo">
+                                         {{totalVencimento.valorLiquido | currency:'R$'}}
+                                    </td> 
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- FIM CORPO -->
+                </div>
+            </div>
+            <!--FIM TABLE PORTLET-->
+        </div>
+    </div>
+	<div print-only>
+		<table style="border: 1px solid #eee; page-break-before: auto; margin-right: auto; margin-left: auto; margin-bottom: auto;
+									margin-top: 1cm;" align="center" print-avoid-avoid>
+			<thead style="text-align: center; font-weight: bold;">
+				<tr style="border: 1px solid #eee;">
+					<td style="border: 1px solid #eee; padding: 10px;" colspan="8">
+						<a print-btn><span style="font-size: 22px" class="glyphicon glyphicon-print"></span></a>
+					</td>
+				</tr>
+				<tr style="border: 1px solid #eee;">
+					<td style="border: 1px solid #eee; padding: 5px;" colspan="5" rowspan="4">
+						<img ng-src="http://www.atoscapital.com.br/portal/img/AtosCapital.jpg" title="Atos Capital" class="logo-default"
+								 width="320px" height="100px" align="center">
+					</td>
+					<td style="border: 1px solid #eee; padding: 10px;" colspan="3">{{usuariologado.grupoempresa.ds_nome | uppercase}}</td>
+				</tr>
+				<tr style="border: 1px solid #eee;">
+					<td style="border: 1px solid #eee; padding: 10px;" colspan="3">{{filtro.conta.empresa.ds_fantasia | uppercase}}</td>
+				</tr>
+				<tr style="border: 1px solid #eee;">
+					<td style="border: 1px solid #eee; padding: 10px;" colspan="3">{{'DATA OPERAÇÃO: ' + dataOperacao | uppercase}}</td>
+				</tr>
+				<tr style="border: 1px solid #eee;">
+					<td style="border: 1px solid #eee; padding: 10px;" colspan="3">{{'DATA CORTE: ' + dataCorte | uppercase}}</td>
+				</tr>
+				<tr style="border: 1px solid #eee;">
+					<td style="border: 1px solid #eee; padding: 10px;" colspan="8"></td>
+				</tr>
+				<tr style="border: 1px solid #eee;">
+					<td style="border: 1px solid #eee; padding: 10px;" colspan="8">{{'Relatório de Simulação' | uppercase}}</td>
+				</tr>
+				<tr style="border: 1px solid #eee;">
+					<td style="border: 1px solid #eee; padding: 10px;" width="10">Vencimento</td>
+					<td style="border: 1px solid #eee; padding: 10px;" width="10%">Dias</td>
+					<td style="border: 1px solid #eee; padding: 10px;" width="25%" style="text-align: center;">Valor Antecipado</td>
+					<td style="border: 1px solid #eee; padding: 10px;" width="20%" style="text-align: center;">Juros</td>
+					<td style="border: 1px solid #eee; padding: 10px;" width="10%" style="text-align: center;">IOF</td>
+					<td style="border: 1px solid #eee; padding: 10px;" width="25%" style="text-align: center;">Valor Líquido</td>				
+				</tr>
+			</thead>
+			<tbody style="text-align: center;">
+				<tr ng-repeat="vencimento in vencimentos">
+					<!-- VENCIMENTO -->
+					<td style="border: 1px solid #eee; padding: 10px;" ng-bind="getDataString(vencimento.competencia)"></td>
+					<!-- DIAS -->
+					<td style="border: 1px solid #eee; padding: 10px;" ng-bind="vencimento.dias === 0 ? '0' : vencimento.dias"></td>
+					<!-- VALOR ANTECIPADO -->
+					<td style="border: 1px solid #eee; padding: 10px;">{{vencimento.valorAntecipado | currency:'R$'}}</td>
+					<!-- JUROS -->
+					<td style="border: 1px solid #eee; padding: 10px;">{{vencimento.valorJuros | currency:'R$'}}</td>
+					<!-- IOF -->
+					<td style="border: 1px solid #eee; padding: 10px;">{{vencimento.valorIOF | currency:'R$'}}</td>
+					<!-- VALOR LÍQUIDO -->
+					<td style="border: 1px solid #eee; padding: 10px;">{{vencimento.valorLiquido | currency:'R$'}}</td>
+				</tr>
+			</tbody>
+			<tfoot style="text-align: center;">
+				<tr>
+					<!-- TOTAL NF-e -->
+					<td colspan="2" style="text-align:right; border: 1px solid #eee; padding: 10px;">Total Exibido</td> 
+					<td style="border: 1px solid #eee; padding: 10px;">{{totalVencimento.valorAntecipado | currency:'R$'}}</td>
+					<td style="border: 1px solid #eee; padding: 10px;">{{totalVencimento.valorJuros | currency:'R$'}}</td>
+					<td style="border: 1px solid #eee; padding: 10px;">{{totalVencimento.valorIOF | currency:'R$'}}</td>
+					<td style="border: 1px solid #eee; padding: 10px;">{{totalVencimento.valorLiquido | currency:'R$'}}</td>
+				</tr>
+			</tfoot>
+		</table>
+		<!--<table style="border: 1px solid #eee; page-break-before: auto;">
+		<thead style="border: 1px solid #eee; text-align: center; font-weight: bold;">
+			<tr>
+				<th colspan="9">
+					<a print-btn><span style="font-size: 22px" class="glyphicon glyphicon-print large"></span></a>
+				</th>
+			</tr>
+			<tr>
+				<th colspan="6" rowspan="4">
+					<img ng-src="http://www.atoscapital.com.br/portal/img/AtosCapital.jpg" title="Atos Capital" class="logo-default"
+							 width="320px" height="100px" align="center">
+				</th>
+				<th colspan="3">{{usuariologado.grupoempresa.ds_nome | uppercase}}</th>
+			</tr>
+			<tr>
+				<th colspan="3">{{filtro.conta.empresa.ds_fantasia | uppercase}}</th>
+			</tr>
+			<tr>
+				<th colspan="3">{{dtSplit | uppercase}}</th>
+			</tr>
+			<tr>
+				<th colspan="3">{{data | uppercase}}</th>
+			</tr>
+			<tr>
+				<th colspan="9"></th>
+			</tr>
+			<tr>
+				<th colspan="9">{{'Relatório de Simulação' | uppercase}}</th>
+			</tr>
+			<tr>
+				<th width="10">Vencimento</th>
+				<th width="10%">Dias</th>
+				<th width="25%" style="text-align: center;">Valor Antecipado</th>
+				<th width="20%" style="text-align: center;">Juros</th>
+				<th width="10%" style="text-align: center;">IOF</th>
+				<th width="25%" style="text-align: center;">Valor Líquido</th>
+			</tr>
+		</thead>
+		<tbody style="border: 1px solid #eee; text-align: center;"></tbody>
+		<tfoot style="border: 1px solid #eee; text-align: center; font-weight: bold;"></tfoot>
+	</table>-->
+		</div>
+</div>
+<!-- END PAGE CONTENT INNER -->

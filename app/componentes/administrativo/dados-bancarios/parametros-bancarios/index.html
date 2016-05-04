@@ -8,6 +8,10 @@
     Administrativo > Dados Bancários > Parâmetros Bancários
 
 
+
+    Versão 1.0.5 - 01/02/2016
+    - Parâmetro bancário de antecipação
+
     Versão 1.0.4 - 18/11/2015
     - Pesquisa parâmetros ocultos
 
@@ -364,6 +368,16 @@
                                             ng-options="bandeira as (bandeira.dsBandeira | uppercase) for bandeira in modalParametro.bandeiras"> 
                                         <option value=""></option>  
                                     </select>
+                               </div>
+                           </div>
+                           <!-- ANTECIPAÇÃO -->
+                           <div class="col-sm-12">
+                                <div class="col-sm-5">
+                                    <label>Parâmetro de Antecipação</label>
+                                </div>
+                                <div class="col-sm-7">
+                                    <checkbox normal ng-model="modalParametro.flAntecipacao">
+                                    </checkbox>
                                </div>
                            </div>
                            <!-- FILIAL -->
@@ -845,6 +859,11 @@
                             <!--DESCRIÇÃO-->
                             <td>
                                 {{parametro.dsMemo | uppercase}}
+                                <span ng-show="parametro.flAntecipacao">
+                                    &nbsp;&nbsp;
+                                    <i class="fa fa-adn" style="color: #7E1416; font-size: 18px"
+                                       title="Parâmetro de Antecipação"></i>
+                                </span>
                             </td>
                             <!--ADQUIRENTE-->
                             <td>

@@ -4,6 +4,13 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.6 - 08/03/2016
+ *  - Busca NSU
+ *
+ *  Versão 1.0.5 - 01/02/2016
+ *  - Data Efetiva
+ *  - Busca TEF
+ *
  *  Versão 1.0.4 - 27/11/2015
  *  - Considerar pré-conciliação com outras filiais do grupo
  *
@@ -47,7 +54,7 @@ angular.module("card-services-conciliacao-titulos", [])
     $scope.adquirentes = [];
     $scope.filiais = [];                                                                                       
     $scope.tipos = [{id: 1, nome: 'CONCILIADO'}, {id: 2, nome: 'PRÉ-CONCILIADO'}, {id: 3, nome: 'NÃO CONCILIADO'}];             
-    $scope.filtro = {datamin : new Date(), datamax : '',
+    $scope.filtro = {datamin : new Date(), datamax : '', nsu : '',
                      tipo : null, adquirente : undefined, filial : undefined, considerarGrupo : false,
                      itens_pagina : $scope.itens_pagina[0], order : 0,
                      pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0
@@ -63,8 +70,9 @@ angular.module("card-services-conciliacao-titulos", [])
     $scope.exibeTela = false;    
     $scope.abrirCalendarioDataMin = $scope.abrirCalendarioDataVendaMin = false;
     $scope.abrirCalendarioDataMax = $scope.abrirCalendarioDataVendaMax = false; 
-    
-    
+    //TEF
+    $scope.statusPesquisaTef = false;
+		$scope.dadosTef = [];
     
     // Inicialização do controller
     $scope.cardServices_conciliacaoTitulosInit = function(){
@@ -117,7 +125,18 @@ angular.module("card-services-conciliacao-titulos", [])
         //if($scope.usuariologado.grupoempresa) buscaFiliais(true);
     };
     
-    
+    //TEF
+		$scope.buscaTEF = function(){
+			$scope.statusPesquisaTef = true;
+			consultaTef(true);
+		}
+		
+		$scope.limparTef = function(){
+			$scope.statusPesquisaTef = false
+			$scope.dadosTef = [];
+		}
+																							 
+																							 
     // PERMISSÕES                                          
     /**
       * Retorna true se o usuário pode alterar dados de conciliação de títulos
@@ -182,10 +201,16 @@ angular.module("card-services-conciliacao-titulos", [])
        }   
         
        // Pré-Conciliação considerando grupo
-        if($scope.isTipoPreConciliado()){
+       if($scope.isTipoPreConciliado()){
             filtros.push({id: /*$campos.card.conciliacaotitulos.preconcilia_grupo*/104, 
                           valor: $scope.filtro.considerarGrupo ? true : false});
-        }
+       }
+        
+       // NSU
+       if($scope.filtro.nsu && $scope.filtro.nsu !== null){
+           filtros.push({id: /*$campos.card.conciliacaotitulos.nsu*/105, 
+                          valor: $scope.filtro.nsu + '%'});
+       }
         
        // Retorna    
        return filtros;
@@ -222,9 +247,76 @@ angular.module("card-services-conciliacao-titulos", [])
        if($scope.filtro.datamax === null) $scope.filtro.datamax = '';
        else ajustaIntervaloDeData();
     };
-                                                 
- 
-          
+             
+																							 
+ 		//TEF
+																							 
+		/*var formatarNsu = function(){
+			//$scope.modalBuscaTitulos.recebimento.Nsu;
+			$scope.nsuFormatado = $scope.modalBuscaTitulos.recebimento.Nsu;
+			
+			do{
+				
+				if ($scope.nsuFormatado.length != 12){
+					
+				}
+			}
+		};*/
+																							 
+																							 
+    var consultaTef = function(showMessage){
+
+			if($scope.usuariologado.grupoempresa){
+				
+				$scope.showProgress();
+				
+				var filtros = [];
+				
+				$scope.valorFiltroTef = $scope.modalBuscaTitulos.recebimento.Valor.toString().replace(".", ",");
+				
+				//FILTROS				
+				//Valor
+				//if($scope.parametro.busca !== '' && $scope.parametro.busca !== null){
+					filtros.push({
+						id: /*$campos.card.tbrecebimentotef.vlVenda*/ 111, 
+						valor: $scope.valorFiltroTef
+					});
+				//}
+				
+				//NSU Host
+				$scope.nsuFormatado = ("000000000000" + $scope.modalBuscaTitulos.recebimento.Nsu).slice(-12);
+				//if($scope.parametro.buscaAdquirente !== '' && $scope.parametro.buscaAdquirente !== null){
+					filtros.push({
+						id: /*$campos.card.tbrecebimentotef.nrNSUHost*/ 105,
+						valor: $scope.nsuFormatado
+					});
+				//}		
+
+				// Somente com status ativo
+				//filtros.push({id: /*$campos.cliente.empresa.fl_ativo*/ 516, valor: $scope.usuariologado.grupoempresa.id_grupo});
+
+				// Filtro do grupo empresa => barra administrativa
+				//if($scope.usuariologado.grupoempresa){ 
+					//filtros.push({id: /*$campos.cliente.empresa.id_grupo*/ 516, valor: $scope.usuariologado.grupoempresa.id_grupo});
+					//if ($scope.usuariologado.tbcontacorrentetbloginadquirenteempresa) filtros.push({
+//						id: /*$campos.card.tbcontacorrentetbloginadquirenteempresa.nu_cnpj*/ 500,
+	//					valor: $scope.usuariologado.tbcontacorrentetbloginadquirenteempresa.nu_cnpj
+		//			});
+
+					$webapi.get($apis.getUrl($apis.card.tbrecebimentotef, [$scope.token, 4, 100], filtros)) 
+						.then(function(dados){
+						$scope.dadosTef = dados.Registros;
+						$scope.hideProgress();
+					},
+									function(failData){
+						if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+						else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+						else $scope.showAlert('Houve uma falha ao obter dados do TEF (' + failData.status + ')', true, 'danger', true);
+						$scope.hideProgress();
+					});     
+				}
+			};
+																							 
                                                  
     // FILIAIS                                             
     
@@ -592,6 +684,7 @@ angular.module("card-services-conciliacao-titulos", [])
       * Selecionou um recebimentoparcela para buscar títulos
       */
     $scope.buscaTitulos = function(dado){
+			$scope.statusPesquisaTef = false;
         if(!dado.RecebimentoParcela || dado.RecebimentoParcela === null) return;
         $scope.modalBuscaTitulos.recebimento = dado.RecebimentoParcela;
         $scope.modalBuscaTitulos.titulos = [];
@@ -708,6 +801,15 @@ angular.module("card-services-conciliacao-titulos", [])
                     $scope.hideProgress(divPortletBodyFiltrosPos);
                     $scope.hideProgress(divPortletBodyDadosPos);
                   });     
+    }
+    
+    
+    
+    
+    // NSU
+    $scope.resetaBuscaNSU = function(){
+        $scope.filtro.nsu = '';
+        $scope.buscaDadosConciliacao();
     }
     
     
