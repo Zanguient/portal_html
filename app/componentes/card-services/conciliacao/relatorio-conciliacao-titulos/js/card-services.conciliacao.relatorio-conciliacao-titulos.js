@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.1 - 16/02/2016
+ *  - Envio da paginação para a API
+ *
  *  Versão 1.0 - 13/11/2015
  *
  */
@@ -35,7 +38,7 @@ angular.module("card-services-relatorio-conciliacao-titulos", [])
                      itens_pagina : $scope.itens_pagina[1], order : 0,
                      pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0
                     };                                             
-    $scope.total = { valorTotalBruto : 0.0, valorTotalLiquido : 0.0, filiais : [] };  
+    $scope.total = { valorTotalBruto : 0.0, valorTotalERP : 0.0, filiais : [] };  
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyRelatorioPos = 1; // posição da div que vai receber o loading progress                                         
     // flags                                   
@@ -71,7 +74,7 @@ angular.module("card-services-relatorio-conciliacao-titulos", [])
         $scope.$on('acessoDeTelaNotificado', function(event){
             $scope.exibeTela = true;
             // Carrega filiais
-            buscaFiliais(true);
+            if($scope.usuariologado.grupoempresa) buscaFiliais(true);
         }); 
         // Acessou a tela
         $scope.$emit("acessouTela");
@@ -184,6 +187,9 @@ angular.module("card-services-relatorio-conciliacao-titulos", [])
       * Busca as filiais
       */
     var buscaFiliais = function(buscarAdquirentes, nu_cnpj, cdAdquirente){
+        
+        if(!$scope.usuariologado.grupoempresa || $scope.usuariologado.grupoempresa === null)
+            return;
         
        $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
         
@@ -374,20 +380,22 @@ angular.module("card-services-relatorio-conciliacao-titulos", [])
        var filtros = obtemFiltrosBusca();
            
        //console.log(filtros);
-       $webapi.get($apis.getUrl($apis.card.relatorioconciliacaotitulos, [$scope.token, 0], filtros)) 
+       $webapi.get($apis.getUrl($apis.card.relatorioconciliacaotitulos, [$scope.token, 0, 
+                                 /*$campos.card.relatorioconciliacaotitulos.data*/ 100, 0, 
+                                 $scope.filtro.itens_pagina, $scope.filtro.pagina], filtros)) 
             .then(function(dados){
                 //console.log(dados);
                 // Obtém os dados
                 $scope.relatorio = dados.Registros;
                 // Totais
                 $scope.total.valorTotalBruto = dados.Totais.valorTotalBruto;
-                $scope.total.valorTotalLiquido = dados.Totais.valorTotalLiquido;
+                $scope.total.valorTotalERP = dados.Totais.valorTotalERP;
                 $scope.total.filiais = [];
                 //console.log(dados.Totais);
                 // Total por filial
                 if(Object.keys(dados.Totais).length > 2){
                     for (var key in dados.Totais) {
-                      if (key !== 'valorTotalBruto' && key !== 'valorTotalLiquido' && dados.Totais.hasOwnProperty(key)) {
+                      if (key !== 'valorTotalBruto' && key !== 'valorTotalERP' && dados.Totais.hasOwnProperty(key)) {
                           var nome = key.substr(key.indexOf(')') + 2);
                           var tipo = key.substr(1, key.indexOf(')') - 1); 
                           //console.log(nome);

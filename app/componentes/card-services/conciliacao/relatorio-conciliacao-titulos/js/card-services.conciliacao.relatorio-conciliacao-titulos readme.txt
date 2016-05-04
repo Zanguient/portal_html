@@ -84,15 +84,16 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 								   ValorLiquido : double,
 								   ValorVenda : double,
 								   Data : datetime,
+								   DataEfetiva: datetime ou null,
 								   Filial : string,
 								},
 			   Adquirente : string
 			 }
 			]
-			Totais: "valorTotalBruto", "valorTotalLiquido"
-			OBS: Caso tenha mais de uma filial diferente nos títulos, traz valor total líquido e bruto de cada filial, sendo as chaves
+			Totais: "valorTotalBruto", "valorTotalERP"
+			OBS: Caso tenha mais de uma filial diferente nos títulos, traz valor total bruto referente à adquirente e ao ERP de cada filial, sendo as chaves
 			     "(valorTotalBruto) " + <Titulo.Filial>
-				 "(valorTotalLiquido) " + <Titulo.Filial>
+				 "(valorTotalERP) " + <Titulo.Filial>
   
  
    

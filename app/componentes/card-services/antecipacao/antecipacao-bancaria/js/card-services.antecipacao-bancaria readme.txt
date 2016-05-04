@@ -33,13 +33,133 @@ Além deles, é necessária a importação dos seguintes módulos externos.
   * $scope.grupoempresa, do "appCtrl" : grupo empresa informado pelo usuário na barra administrativa
   * Evento "alterouGrupoEmpresa", emitido pelo controller "appCtrl", para identificar a mudança do $scope.grupoempresa
   * APIS:
-	- 
+	- card/tbantecipacaobancaria
+	- card/tbcontacorrente
+	- card/tbcontacorrentetbloginadquirenteempresa (adquirentes da conta)
+	- card/tbbandeira (bandeiras) 
 	
  
  
  ### Interação com a WEB API ###
  
+  * card/tbcontacorrente
+    - GET : listagem as contas correntes (coleção 2)
+			[
+			  { cdContaCorrente : int,
+				cdGrupo : int,
+				empresa : { nu_cnpj : string, 
+							ds_fantasia : string, 
+							filial : string ou null },
+				banco : { Codigo : string, 
+						  NomeExtenso : string},
+				nrAgencia : string,
+				nrConta : string,
+				flAtivo : boolean,
+				podeAtualizar : boolean
+			  }
+			]
   
+  * card/tbcontacorrentetbloginadquirenteempresa
+    - GET: Adquirentes associadas à conta (coleção 4)
+			[
+			  { cdAdquirente : int,
+				nmAdquirente : string,
+				stAdquirente : int,
+			  }
+			]
+				
+   * card/tbbandeira
+    - GET : listagem das bandeiras (coleção 1)
+			[
+			  { cdBandeira : int
+				dsBandeira : string
+				cdAdquirente : int
+			  }
+			]	
+			
+			
+   * card/tbantecipacaobancaria
+     - GET : listagem das antecipações (coleção 2)
+			[
+			  { 
+				idAntecipacaoBancaria : int,
+				dtAntecipacaoBancaria : datetime,
+				tbAdquirente : { cdAdquirente : int ,
+								 nmAdquirente : string 
+							   },
+				vlOperacao : double,
+				vlLiquido : double,
+				taxaJuros : double,
+				taxaIOF : double,
+				taxaIOFFixo : double,
+				cdContaCorrente : int,
+				cdBanco : string,
+				vlAntecipadoCS : double,
+				antecipacoes : [{ idAntecipacaoBancariaDetalhe : int,
+								  dtVencimento : datetime,
+								  vlAntecipacao : double,
+								  vlAntecipacaoLiquida : double,
+								  tbBandeira : null ou { cdBandeira : int,
+													     dsBandeira : string 
+													   },
+								  valorDisponivelCS : double,
+								  valorAntecipadoCS : double
+								}]
+				
+				
+			  }
+			]
+			
+	  - POST : cadastra uma nova antecipação bancária
+			[
+			  { 
+				idAntecipacaoBancaria = -1,
+				dtAntecipacaoBancaria : datetime,
+				cdAdquirente : int,
+				cdContaCorrente : int,
+				vlOperacao : double,
+				vlLiquido : double,
+				txJuros : double,
+				txIOF : double,
+				txIOFAdicional : double,
+				antecipacoes : [{ idAntecipacaoBancariaDetalhe = -1,
+								  dtVencimento : datetime,
+								  vlAntecipacao : double,
+								  vlJuros : double,
+								  vlIOF : double,
+								  vlIOFAdicional : double,
+								  cdBandeira : int ou null,
+								}]
+				
+				
+			  }
+			]
+	
+	  - DELETE : deleta a antecipação bancária => envia idAntecipacaoBancaria como filtro
+			
+	  - PUT : altera antecipação bancária existente
+			[
+			  { 
+				idAntecipacaoBancaria : int,
+				dtAntecipacaoBancaria : datetime,
+				cdAdquirente : int,
+				vlOperacao : double,
+				txJuros : double,
+				txIOF : double,
+				txIOFAdicional : double,
+				vlLiquido : double,
+				antecipacoes : [{ idAntecipacaoBancariaDetalhe : int, // set -1 para informar que é um novo
+								  dtVencimento : datetime,
+								  vlAntecipacao : double,
+								  vlJuros : double,
+								  vlIOF : double,
+								  vlIOFAdicional : double,
+								  cdBandeira : int ou null,
+								}]
+				deletar : [ int ] // idAntecipacaoBancariaDetalhe a serem deletados
+				
+			  }
+			]
    
 
    

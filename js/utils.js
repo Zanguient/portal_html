@@ -155,6 +155,10 @@ angular.module('utils', [ ])
   // IMessage
   //var urlBaseIMessage = 'http://localhost:50780';
   var urlBaseIMessage = 'http://imessage.atoscapital.com.br';
+  // Totvs
+  //var urlBaseTotvs = 'http://localhost:64721';
+  var urlBaseTotvs = 'http://apitotvs.atoscapital.com.br';
+    
   // Rezende
   //var urlBaseRezende = 'http://localhost:50939';
   var urlBaseRezende = 'http://apirezende.atoscapital.com.br';
@@ -169,7 +173,8 @@ angular.module('utils', [ ])
     getUrlBaseIMessage : function(){ return urlBaseIMessage },
     getUrlBaseDownload : function(){ return urlBaseDownload },
     getUrlBaseRezende : function() { return urlBaseRezende },
-    getUrlBaseDealernet : function() { return urlBaseDealernet },  
+    getUrlBaseDealernet : function() { return urlBaseDealernet },
+    getUrlBaseTotvs : function() { return urlBaseTotvs },  
     apiStatus: urlBase + '/login/status/',
     // URL + keys da local storage  
     autenticacao: { 

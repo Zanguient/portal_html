@@ -1,0 +1,521 @@
+<!-- 
+
+    Atos Capital - www.atoscapital.com.br
+   
+    suporte@atoscapital.com.br
+ 
+ 
+    Administrativo > Integração ERP > Vendas
+
+
+    Versão 1.0.1 - 29/04/2016
+    - Nova tela
+
+    Versão 1.0 - 28/03/2016
+-->
+
+<div class="container" ng-controller="administrativo-vendasCtrl" 
+     ng-init="administrativo_vendasInit()">    
+    <!-- BEGIN PAGE BREADCRUMB -->
+    <ul class="page-breadcrumb breadcrumb">
+        <li>
+            <a href="javascript:;" ng-click="goHome()">Início</a><i class="fa fa-circle"></i>
+        </li>
+        <li class="active">
+             Administrativo<i class="fa fa-caret-right"></i>
+             Integração ERP<i class="fa fa-caret-right"></i>
+             Vendas
+        </li>
+    </ul>
+    <!-- END PAGE BREADCRUMB -->
+
+    <!-- PORTLET IMPORTAÇÃO -->
+    <div class="portlet light"> 
+        <div class="portlet-title">
+            <div class="caption">								
+                <span class="caption-subject font-green-sharp bold uppercase">Importação</span>						
+            </div>
+        </div>
+        <div class="portlet-body" ng-show="exibeTela">
+            <div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer" style="width:80%; margin:auto; min-width:400px">
+                
+                <div class="table-scrollable">
+                    <table class="table table-striped table-bordered table-hover dataTable no-footer conteudoTabelas" id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
+                        <thead>
+                            <tr role="row" class="heading">
+                                <th tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="30%">
+                                     Data
+                                </th>
+                                <th tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="50%">
+                                     Filial
+                                </th>
+                                <th tabindex="6" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="20%">
+                                     Ações
+                                </th>                                
+                            </tr>
+                            <tr role="row" class="filter">  
+                                <!-- DATA -->
+                                <td rowspan="1" colspan="1">
+                                    <div class="input-group date date-picker margin-bottom-5"
+                                         data-date-format="dd/mm/yyyy"
+                                         style="margin:auto">
+                                        <input type="text" 
+                                               class="form-control form-filter input-sm" 
+                                               readonly="" 
+                                               style="cursor: pointer" 
+                                               ng-click="exibeCalendarioDataImportacao($event)" 
+                                               placeholder="Início" 
+                                               ng-model="filtro.dtImportacao" 
+                                               ng-change="alterouDataImportacao()" 
+                                               datepicker-append-to-body="true" 
+                                               datepicker-popup="dd MMMM yyyy" 
+                                               is-open="abrirCalendarioDataImportacao" 
+                                               ng-required="true" 
+                                               show-button-bar="false" 
+                                               show-weeks="false" 
+                                               required="required">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-sm default" 
+                                                type="button"
+                                                ng-click="exibeCalendarioDataImportacao($event)">
+                                                <i class="fa fa-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </td>
+                                <!-- FILIAIS -->
+                                <td rowspan="1" colspan="1" style="text-align: center;">
+                                    <select class="form-control form-filter input-sm comboBoxFiltros"
+                                            ng-disabled="filiais.length == 0"
+                                            ng-model="filtro.filialImportacao"
+                                            ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
+                                        <option value="">TODAS</option>
+                                    </select>
+                                    <i class="fa fa-question-circle"
+                                        ng-show="!usuariologado.grupoempresa"
+                                        popover-placement="bottom"
+                                        popover="É necessário selecionar uma empresa"
+                                        popover-trigger="mouseenter"
+                                        ></i> 
+                                </td>
+                                <!--AÇÕES-->
+                                <td rowspan="1" colspan="1">
+                                    <div class="margin-bottom-5">
+                                        <button class="btn btn-sm filter-submit margin-bottom btn-primary" 
+                                           ng-disabled="!usuarioPodeCadastrarVendas()"
+                                           ng-show="usuariologado.grupoempresa && usuariologado.grupoempresa !== null && usuariologado.grupoempresa.dsAPI && usuariologado.grupoempresa.dsAPI !== null"
+                                           ng-click="importaVendas()"
+								           style="width:150px">
+                                            <i class="fa fa-upload"></i>
+                                            Importar Vendas
+                                        </button>
+                                        <button class="btn btn-sm filter-submit margin-bottom green" 
+                                           ng-disabled="!usuariologado.grupoempresa || usuariologado.grupoempresa === null || !usuarioPodeCadastrarVendas()"
+                                           ng-show="!usuariologado.grupoempresa || usuariologado.grupoempresa === null || !usuariologado.grupoempresa.dsAPI || usuariologado.grupoempresa.dsAPI === null"
+                                           ngf-select ngf-change="upload($files)" 
+                                           ngf-multiple="false" accept=".csv"
+                                           ng-disabled="uploadEmProgresso()"
+								           style="width:150px">
+                                            <i class="fa" ng-class="{'fa-upload' : !uploadEmProgresso(), 'fa-spin fa-spinner' : uploadEmProgresso()}"></i>
+                                            Importar CSV
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>                   
+                        </thead>
+                    </table>
+                </div>
+			</div>
+        </div>
+    </div>
+    <!-- FIM PORTLET IMPORTAÇÃO -->
+    
+    <!-- PORTLET FILTROS -->
+    <div class="portlet light"> 
+        <div class="portlet-title">
+            <div class="caption">								
+                <span class="caption-subject font-green-sharp bold uppercase">Filtros</span>						
+            </div>
+        </div>
+        <!-- FILTROS -->
+        <div class="portlet-body" ng-show="exibeTela">
+            <div class="dataTables_wrapper dataTables_extended_wrapper no-footer">
+                
+                <div class="table-scrollable">
+                    <table class="table table-striped table-bordered table-hover dataTable no-footer conteudoTabelas" id="datatable_ajax" aria-describedby="datatable_ajax_info" role="grid">
+                        <thead>
+                            <tr role="row" class="heading">
+                                <th width="20%">
+                                     Data
+                                </th>
+                                <th width="40%">
+                                     Filial 
+                                </th>
+                                <!--th width="20%">
+                                     Adquirente 
+                                </th-->
+                                <th width="30%">
+                                     NSU 
+                                </th>
+                                <th width="10%">
+                                     Ações
+                                </th>                                
+                            </tr>
+                            <tr role="row" class="filter">  
+                                <!-- DATA -->
+                                <td rowspan="1" colspan="1">
+                                    <div class="input-group date date-picker margin-bottom-5"
+                                         data-date-format="dd/mm/yyyy">
+                                        <input type="text" 
+                                               class="form-control form-filter input-sm" 
+                                               readonly="" 
+                                               style="cursor: pointer" 
+                                               ng-click="exibeCalendarioDataMin($event)" 
+                                               placeholder="Início" 
+                                               ng-model="filtro.datamin" 
+                                               ng-change="alterouDataMin()" 
+                                               datepicker-append-to-body="true" 
+                                               datepicker-popup="dd MMMM yyyy" 
+                                               is-open="abrirCalendarioDataMin" 
+                                               ng-required="true" 
+                                               show-button-bar="false" 
+                                               show-weeks="false" 
+                                               required="required">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-sm default" 
+                                                type="button" 
+                                                ng-click="exibeCalendarioDataMin($event)">
+                                                <i class="fa fa-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                    <div class="input-group"> <!--  date date-picker margin-bottom-5" -->
+                                        <input type="text" 
+                                               class="form-control form-filter input-sm" 
+                                               readonly="" 
+                                               style="cursor: pointer" 
+                                               ng-click="filtro.consideraPeriodo ? exibeCalendarioDataMax($event) : 0" 
+                                               placeholder="Fim" 
+                                               ng-model="filtro.datamax" 
+                                               ng-change="alterouDataMax()" 
+                                               datepicker-popup="dd MMMM yyyy" 
+                                               is-open="abrirCalendarioDataMax" 
+                                               datepicker-append-to-body="true"
+                                               ng-required="false" 
+                                               current-text="Hoje" 
+                                               clear-text="Limpar" 
+                                               close-text="Fechar" 
+                                               show-button-bar="true" 
+                                               show-weeks="false">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-sm default" 
+                                                    type="button" ng-disabled="!filtro.consideraPeriodo"
+                                                    ng-click="exibeCalendarioDataMax($event)">
+                                                <i class="fa fa-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </div>  
+                                </td>
+                                <!-- FILIAIS -->
+                                <td rowspan="1" colspan="1" style="text-align: center;">
+                                    <select class="form-control form-filter input-sm comboBoxFiltros"
+                                            ng-disabled="filiais.length == 0"
+                                            ng-model="filtro.filial"
+                                            ng-change="alterouFilial()"
+                                            ng-options="filial as getNomeAmigavelFilial(filial) for filial in filiais">
+                                        <option value="">TODAS</option>
+                                    </select>
+                                    <i class="fa fa-question-circle"
+                                        ng-show="!usuariologado.grupoempresa"
+                                        popover-placement="bottom"
+                                        popover="É necessário selecionar uma empresa"
+                                        popover-trigger="mouseenter"
+                                        ></i> 
+                                </td>
+                                <!-- ADQUIRENTES -- >
+                                <td rowspan="1" colspan="1" style="text-align: center">
+                                    <select class="form-control form-filter input-sm comboBoxFiltros"
+                                            ng-disabled="adquirentes.length === 0"
+                                            ng-model="filtro.adquirente"
+                                            ng-change="alterouAdquirente()"
+                                            ng-options="adquirente as (adquirente.nmAdquirente | uppercase) for adquirente in adquirentes"
+                                            >
+                                        <option value="">TODAS</option>
+                                    </select>
+                                    <!--i class="fa fa-question-circle"
+                                       ng-show="!usuariologado.grupoempresa || !filtro.filial || filtro.filial === null"
+                                       popover-placement="bottom"
+                                       popover="É necessário selecionar uma filial"
+                                       popover-trigger="mouseenter"></i-- >
+                                </td>
+                                <!-- NSU -->
+                                <td style="text-align: center">
+                                    <input type="text" class="form-control" 
+                                           ng-model="filtro.nsu"
+                                           ng-keypress="avaliaNsu()" />
+                                    <div class="row" style="margin-top:10px;"
+                                         ng-class="{'element-hidden' : !filtro.nsu || filtro.nsu === null}">
+                                        <div class="col-sm-4 col-md-4" style="margin-right: -15px;">
+                                            <checkbox normal ng-model="filtro.consideraPeriodo">
+                                            </checkbox>
+                                        </div>
+                                        <div class="col-sm-8 col-md-8" style="text-align:left;">
+                                            <label>Considerar período informado</label>
+                                        </div>
+                                    </div>
+                                </td>
+                                <!--AÇÕES-->
+                                <td rowspan="1" colspan="1">
+                                    <div class="margin-bottom-5">
+                                        <!-- BOTÃO BUSCAR -->
+                                        <button class="btn btn-sm red filter-submit margin-bottom" 
+                                                ng-click="buscaVendas()">
+                                            <i class="fa fa-search"></i> 
+                                            Buscar
+                                        </button>
+                                    </div>
+                                    <!-- BOTÃO LIMPAR -->
+                                    <button class="btn btn-sm grey filter-cancel"
+                                            ng-click="limpaFiltros()">
+                                        <i class="fa fa-times"></i> 
+                                        Limpar
+                                    </button>
+                                </td>
+                            </tr>                   
+                        </thead>
+                    </table>
+                </div>
+			</div>
+        </div>
+    </div>
+    <!-- FIM PORTLET FILTROS -->
+    
+    <!-- PORTLET TABELA -->
+    <div class="portlet light">
+        
+        <div class="portlet-title">
+            <div class="caption">								
+                <span class="caption-subject font-green-sharp bold uppercase">VENDAS</span>
+            </div>
+            <div class="actions">
+                <a class="btn btn-circle btn-icon-only btn-default fullscreen" 
+                   href="javascript:;" 
+                   ng-click="fullScreenClick()"
+                   title="{{telaEstaEmFullScreen() ? 'Tela Normal' : 'Tela Cheia'}}"></a>
+                <div class="btn-group element-hidden"> <!-- NÃO EXIBE PQ AINDA NÃO TEM WEBAPI -->
+                    <a class="btn btn-default btn-circle" href="javascript:;" data-toggle="dropdown">
+                    <i class="fa fa-share"></i> Opções <i class="fa fa-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu pull-right">
+                        <li>
+                            <a href="javascript:;">
+                            Export to Excel </a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                            Export to CSV </a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                            Export to XML </a>
+                        </li>
+                        <li class="divider">
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                            Print Invoices </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="portlet-body" ng-show="exibeTela">
+
+            <div class="row paddingDivs">
+                <!--EXIBIÇÃO-->
+                <div class="col-xs-4 col-sm-4">
+                    <div class="dataTables_length">
+                        <label>
+                            <span class="seperator"></span>Exibindo 
+                            <select name="datatable_products_length" aria-controls="datatable_products" 
+                                    class="form-control input-xsmall input-sm input-inline"
+                                    ng-model="filtro.itens_pagina"
+                                    ng-change="alterouItensPagina()"
+                                    ng-options="item for item in itens_pagina">                                            
+                            </select> registros de {{filtro.total_registros}}
+                        </label>
+                    </div>
+                </div> 
+                <!--PAGINAÇÃO-TOPO-->
+                <div class="col-xs-4 col-sm-4 col-md-3">
+                    <div class="pagination-panel centralizarPaginacao"> Página 
+                        <a href="javascript:;" ng-click="retrocedePagina()"
+                           class="btn btn-sm default prev" 
+                           ng-class="{disabled: filtro.pagina <= 1}" 
+                           title="Página anterior">
+                                <i class="fa fa-angle-left"></i>
+                        </a>
+                        <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                               maxlength="4" style="text-align:center; margin: 0 5px;"
+                               ng-model="paginaInformada" valid-integer-number
+                               ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                               ng-blur="atualizaPaginaDigitada()">
+                            <a href="javascript:;" ng-click="avancaPagina()"
+                               class="btn btn-sm default next"
+                               ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
+                               title="Próxima página">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                            de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
+                    </div>
+                </div>
+                <!-- TOTAL -->
+                <div class="col-xs-4 col-sm-4 col-md-4" style="font-weight: bolder; text-align: center">
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <label>Valor: </label>
+                        </div>
+                        <div class="row">
+                            {{total.valorTotal | currency:'R$'}}
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <label>Corrigidos: </label>
+                        </div>
+                        <div class="row">
+                            {{total.totalCorrigidos}}
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <label>Conciliados: </label>
+                        </div>
+                        <div class="row">
+                            {{total.totalConciliados}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- CONTEÚDO DA TABELA -->
+            <div class="table-scrollable">
+                <table class="table table-striped table-hover table-bordered dataTable no-footer" role="grid">
+                    <thead class="centralizarVerticalTitulos">
+                        <tr role="row">
+                            <th tabindex="0" rowspan="1" colspan="1" style="width: 20%;">
+                               Filial
+                            </th>
+                            <th tabindex="1" rowspan="1" colspan="1" style="width: 10%;">
+                               Adquirente 
+                            </th>
+                            <th tabindex="2" rowspan="1" colspan="1" style="width: 20%;">
+                               Bandeira 
+                            </th>
+                            <th tabindex="3" rowspan="1" colspan="1" style="width: 1%;">
+                               NSU
+                            </th>
+                            <th tabindex="4" rowspan="1" colspan="1" style="width: 10%;">
+                               Data <br>Venda
+                            </th>
+                            <th tabindex="5" rowspan="1" colspan="1" style="width: 10%;">
+                               Valor <br>Venda
+                            </th>
+                            <th tabindex="6" rowspan="1" colspan="1" style="width: 5%;">
+                               Parcelas
+                            </th>
+                            <!--th tabindex="10" rowspan="1" colspan="1" style="width: 5%;">
+                               Cod <br>ERP
+                            </th-->
+                            <th tabindex="11" rowspan="1" colspan="1" style="width: 10%;">
+                               Data <br>Correção
+                            </th>    
+                            <th tabindex="12" rowspan="1" colspan="1" style="width: 5%;">
+                               Conciliado
+                            </th>  
+                        </tr>
+                    </thead>
+                    <tbody class="centralizarVertical">
+                        <tr role="row" class="odd conteudoTabelas"
+                            ng-repeat="venda in vendas">
+                            <!-- FILIAL -->
+                            <td style="text-align:left"
+                                ng-bind="getNomeAmigavelFilial(venda.empresa)">
+                            </td>
+                            <!--ADQUIRENTE-->
+                            <td style="text-align:left">
+                                {{(venda.tbAdquirente.nmAdquirente | uppercase) || ''}}
+                            </td>
+                            <!--BANDEIRA-->
+                            <td>
+                                {{venda.dsBandeira | uppercase}}
+                            </td>
+                            <!--NSU-->
+                            <td>
+                                {{venda.nrNSU}}
+                            </td>
+                            <!--DATA DA VENDA-->
+                            <td ng-bind="getDataString(venda.dtVenda)">
+                            </td>
+                            <!--VALOR DA VENDA-->
+                            <td>
+                                {{venda.vlVenda | currency:'R$'}}
+                            </td>
+                            <!--PARCELAS-->
+                            <td>
+                                {{venda.qtParcelas}}
+                            </td>
+                            <!--COD ERP-->
+                            <!--td>
+                                {{venda.cdERP}}
+                            </td-->
+                            <!--DATA DA CORREÇÃO-->
+                            <td ng-bind="getDataString(venda.dtAjuste)">
+                            </td>
+                            <!--CONCILIADO-->
+                            <td>
+                                <i class="fa fa-check"
+                                   ng-show="venda.conciliado"
+                                   style="color: green">
+                                </i>
+                            </td>
+                        </tr> 
+                    </tbody>
+                </table>
+            </div> 
+            <!-- RODAPÉ : Exibição dos resultados e paginação -->
+            <div class="row">
+                <div class="col-xs-4 col-sm-4 col-md-4">
+                    <div class="dataTables_info" role="status" aria-live="polite">
+                        <strong>Exibindo os registros {{filtro.faixa_registros}}</strong>
+                    </div>
+                </div>
+                <!--PAGINAÇÃO-RODAPÉ-->
+                <div class="col-xs-4 col-sm-4 col-md-3">
+                    <div class="pagination-panel centralizarPaginacao"> Página 
+                        <a href="javascript:;" ng-click="retrocedePagina()"
+                           class="btn btn-sm default prev" 
+                           ng-class="{disabled: filtro.pagina <= 1}" 
+                           title="Página anterior">
+                                <i class="fa fa-angle-left"></i>
+                        </a>
+                        <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" 
+                               maxlength="4" style="text-align:center; margin: 0 5px;"
+                               ng-model="paginaInformada" valid-integer-number
+                               ng-keypress="($event.which === 13) ? alteraPagina() : 0"
+                               ng-blur="atualizaPaginaDigitada()">
+                            <a href="javascript:;" ng-click="avancaPagina()"
+                               class="btn btn-sm default next"
+                               ng-class="{disabled: filtro.pagina >= filtro.total_paginas}"
+                               title="Próxima página">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                            de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
+                    </div>
+                </div>
+                <!-- FIM PAGINAÇÃO -->
+            </div>
+            <!-- FIM RODAPÉ -->
+        </div>
+    </div>
+</div>

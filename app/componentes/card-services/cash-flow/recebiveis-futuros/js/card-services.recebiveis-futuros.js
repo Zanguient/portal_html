@@ -4,6 +4,16 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.3 - 18/02/2016
+ *  - Adquirente
+ *
+ *  Versão 1.0.2 - 12/02/2016
+ *  - Conta corrente
+ *  - Antecipação Bancária
+ *
+ *  Versão 1.0.1 - 03/02/2016
+ *  - Opção de impressão disponível
+ *
  *  Versão 1.0 - 20/10/2015
  *
  */
@@ -23,10 +33,11 @@ angular.module("card-services-recebiveis-futuros", [])
                                             function($scope,$state,$http,$window,/*$campos,*/
                                                      $webapi,$apis,$timeout,$filter){ 
    
-    $scope.filiais = [];   
+    $scope.contas = [];   
+    $scope.adquirentes = [];                                            
     $scope.recebiveis = [];                                      
-    $scope.filtro = { datamin : new Date(), filial : null }; 
-    $scope.total = { valorBruto : 0.0, valorDescontado : 0.0, valorLiquido : 0.0 };  
+    $scope.filtro = { datamin : new Date(), conta : null, adquirente : null }; 
+    $scope.total = { valorBruto : 0.0, valorDescontado : 0.0, valorLiquido : 0.0, valorAntecipacaoBancaria : 0.0 };  
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyRecebiveisPos = 1; // posição da div que vai receber o loading progress                                         
     // flags                                   
@@ -47,25 +58,25 @@ angular.module("card-services-recebiveis-futuros", [])
                 // Avalia grupo empresa
                 if($scope.usuariologado.grupoempresa){ 
                     // Reseta seleção de filtro específico de empresa
-                    $scope.filtro.filial = null;
-                    buscaFiliais();
+                    $scope.filtro.conta = null;
+                    buscaContas();
                 }else{ // reseta tudo e não faz buscas 
-                    $scope.filiais = []; 
-                    $scope.filtro.filial = null;
+                    $scope.contas = []; 
+                    $scope.filtro.conta = null;
                 }
             }
         }); 
         // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
         $scope.$on('acessoDeTelaNotificado', function(event){
             $scope.exibeTela = true;
-            // Carrega filiais
-            buscaFiliais();
+            // Carrega contas
+            buscaContas();
         }); 
         $scope.filtro.datamin.setDate($scope.filtro.datamin.getDate()+1);
         // Acessou a tela
         $scope.$emit("acessouTela");
         //$scope.exibeTela = true;
-        //buscaFiliais();
+        //buscaContas();
     };                                           
                                                 
                                             
@@ -84,10 +95,15 @@ angular.module("card-services-recebiveis-futuros", [])
         filtros.push({id: /*$campos.card.recebiveisfuturos.data*/ 100,
                       valor: ">" + $scope.getFiltroData($scope.filtro.datamin)});
 
-        // Filial
-        if($scope.filtro.filial && $scope.filtro.filial !== null){
-           filtros.push({id: /*$campos.card.recebiveisfuturos.nu_cnpj*/ 102, 
-                         valor: $scope.filtro.filial.nu_cnpj});  
+        // Adquirente
+        if($scope.filtro.adquirente && $scope.filtro.adquirente !== null){
+           filtros.push({id: /*$campos.card.recebiveisfuturos.cdAdquirente*/ 103, 
+                         valor: $scope.filtro.adquirente.cdAdquirente});  
+        }else 
+        // Conta
+        if($scope.filtro.conta && $scope.filtro.conta !== null){
+           filtros.push({id: /*$campos.card.recebiveisfuturos.cdContaCorrente*/ 102, 
+                         valor: $scope.filtro.conta.cdContaCorrente});  
         }
 
         return filtros;
@@ -97,56 +113,103 @@ angular.module("card-services-recebiveis-futuros", [])
       * Limpa os filtros
       */
     $scope.limpaFiltros = function(){
-        $scope.filtro.filial = null; 
+        $scope.filtro.conta = null;
+        $scope.filtro.adquirente = null;
     }
     
     
                                                  
     
-    // FILIAIS
+    // CONTAS
     /**
-      * Busca as filiais
+      * Busca as contas
       */
-    var buscaFiliais = function(nu_cnpj){
+    var buscaContas = function(nu_cnpj){
         
        if(!$scope.usuariologado.grupoempresa || $scope.usuariologado.grupoempresa === null) return;
         
        $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
         
-       var filtros = [];
-        
-       // Somente com status ativo
-       filtros.push({id: /*$campos.cliente.empresa.fl_ativo*/ 114, valor: 1});
-
-       // Filtro do grupo empresa => barra administrativa
-       filtros.push({id: /*$campos.cliente.empresa.id_grupo*/ 116, valor: $scope.usuariologado.grupoempresa.id_grupo});
-       if($scope.usuariologado.empresa) filtros.push({id: /*$campos.cliente.empresa.nu_cnpj*/ 100, 
-                                                      valor: $scope.usuariologado.empresa.nu_cnpj});
-       
-       
-       $webapi.get($apis.getUrl($apis.cliente.empresa, 
-                                [$scope.token, 0, /*$campos.cliente.empresa.ds_fantasia*/ 104],
+       var filtros = [{id: /*$campos.card.tbcontacorrente.cdGrupo*/ 101,
+                        valor: $scope.usuariologado.grupoempresa.id_grupo},
+                       {id: /*$campos.card.tbcontacorrente.flAtivo*/ 106,
+                        valor: true}];
+           
+        $webapi.get($apis.getUrl($apis.card.tbcontacorrente, 
+                                [$scope.token, 2, 
+                                 /*$campos.card.tbcontacorrente.cdBanco*/ 103, 0],
                                 filtros)) 
             .then(function(dados){
-                $scope.filiais = dados.Registros;
+                $scope.contas = dados.Registros;
+                if($scope.filtro.conta && $scope.filtro.conta !== null)
+                    $scope.filtro.conta = $filter('filter')($scope.contas, function(c) {return c.cdContaCorrente === $scope.filtro.conta.cdContaCorrente;})[0];
+                // Busca Adquirentes
+                buscaAdquirentes(true);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter contas correntes (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+              });     
+    };
+    /**
+      * Selecionou uma conta
+      */
+    $scope.alterouConta = function(){
+        if($scope.filtro.conta && $scope.filtro.conta !== null){
+            // Adquirentes
+            buscaAdquirentes();
+        }else{
+            $scope.adquirentes = [];
+            $scope.filtro.adquirente = null;
+        }
+    };
+                                                
+                                                
+                                                
+    // ADQUIRENTES
+    /**
+      * Busca as adquirentes associadas à conta
+      */
+    var buscaAdquirentes = function(progressEstaAberto){ 
+        
+       if(!$scope.filtro.conta || $scope.filtro.conta === null){ 
+           $scope.filtro.adquirente = null;
+           if(progressEstaAberto) $scope.hideProgress(divPortletBodyFiltrosPos);
+           return;
+       }
+            
+        
+       if(!progressEstaAberto) $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
+        
+       var filtros = [{id: /*$campos.card.tbcontacorrentetbloginadquirenteempresa.cdContaCorrente*/ 100, 
+                       valor: $scope.filtro.conta.cdContaCorrente}];
+       
+       
+       $webapi.get($apis.getUrl($apis.card.tbcontacorrentetbloginadquirenteempresa, 
+                                [$scope.token, 4],
+                                filtros))
+            .then(function(dados){
+                $scope.adquirentes = dados.Registros;
                 // Reseta
-                if(!nu_cnpj) $scope.filtro.destinatario = null;
-                else $scope.filtro.destinatario = $filter('filter')($scope.filiais, function(f) {return f.nu_cnpj === nu_cnpj;})[0];
+                $scope.filtro.adquirente = null; 
                 $scope.hideProgress(divPortletBodyFiltrosPos);
               },
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                 else $scope.showAlert('Houve uma falha ao obter filiais (' + failData.status + ')', true, 'danger', true);
+                 else $scope.showAlert('Houve uma falha ao obter adquirentes da conta (' + failData.status + ')', true, 'danger', true);
                  $scope.hideProgress(divPortletBodyFiltrosPos);
-              });     
-    };
+              });        
+    }  
     /**
-      * Selecionou uma filial
+      * Selecionou uma adquirente
       */
-    $scope.alterouFilial = function(){
-        //console.log($scope.filtro.destinatario); 
-    }; 
+    $scope.alterouAdquirente = function(){
+        // ...
+    };                                            
+                                                
                                                 
                                                 
                                                 
@@ -164,16 +227,6 @@ angular.module("card-services-recebiveis-futuros", [])
                                     }
                                   );
             return;   
-        }
-        // Data deve ser superior ou igual a data corrente
-        var dtNow = new Date();
-        if($scope.filtro.datamin && ($scope.filtro.datamin.getFullYear() < dtNow.getFullYear() || ($scope.filtro.datamin.getFullYear() === dtNow.getFullYear() && $scope.filtro.datamin.getMonth() < dtNow.getMonth()) || ($scope.filtro.datamin.getFullYear() === dtNow.getFullYear() && $scope.filtro.datamin.getMonth() === dtNow.getMonth() && $scope.filtro.datamin.getDate() < dtNow.getDate()))){
-            $scope.showModalAlerta('Data inicial deve ser igual ou superior a data corrente!', 'Atos Capital', 'OK', 
-               function(){
-                     $timeout(function(){$scope.exibeCalendarioDataMax();}, 300);
-                }
-              );
-            return; 
         }
         // Nova busca
         buscaRecebiveisFuturos();
@@ -198,6 +251,7 @@ angular.module("card-services-recebiveis-futuros", [])
                 $scope.total.valorBruto = dados.Totais.valorBruto;
                 $scope.total.valorDescontado = dados.Totais.valorDescontado;
                 $scope.total.valorLiquido = dados.Totais.valorLiquido;
+                $scope.total.valorAntecipacaoBancaria = dados.Totais.valorAntecipacaoBancaria;
 
                 // Fecha os progress
                 $scope.hideProgress(divPortletBodyFiltrosPos);
@@ -224,5 +278,35 @@ angular.module("card-services-recebiveis-futuros", [])
         if(!recebivel || recebivel === null) return false;
         return recebivel.collapsed;
     }
-    
+		
+		//IMPRESSÃO
+		$scope.imprimir = function(){
+			
+			/*
+			
+			e = Nome da empresa
+			s = Nome da tela
+			n = Número de níveis
+			cl = Número de colunas
+			t = Token
+			c = CNPJ
+			f = Filial
+			d = Data
+			cc = Conta Corrente
+			
+			*/
+			
+			$scope.cc = "todos";
+			$scope.f = "todas";
+			
+			if($scope.filtro.conta && $scope.filtro.conta !== null){
+				$scope.cc = $scope.filtro.conta.cdContaCorrente;
+				$scope.f = $scope.filtro.conta.empresa.ds_fantasia;
+			}
+			
+			$window.open('views/print#?e=' + $scope.usuariologado.grupoempresa.ds_nome + '&s=' + "Relatório de Recebíveis Futuros" +
+									 '&n='+3+'&cc='+$scope.cc+'&cl='+5+'&t='+$scope.token+'&f='+$scope.f+
+									 '&d='+ ">" + $scope.getFiltroData($scope.filtro.datamin), '_blank');			
+		}
+		
 }])

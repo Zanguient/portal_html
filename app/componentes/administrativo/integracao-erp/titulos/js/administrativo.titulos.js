@@ -4,6 +4,16 @@
  *  suporte@atoscapital.com.br
  *
  *
+ * 
+ *  Versão 1.0.6 - 29/04/2016
+ *  - Avalia nsu
+ *
+ *  Versão 1.0.5 - 27/04/2016
+ *  - Mensagem do erro da importação
+ *
+ *  Versão 1.0.4 - 10/03/2016
+ *  - Filtros
+ *
  *  Versão 1.0.3 - 09/12/2015
  *  - Upload de arquivo CSV
  *
@@ -37,14 +47,19 @@ angular.module("administrativo-titulos", [])
     $scope.itens_pagina = [50, 100, 150, 200];                                             
     $scope.paginaInformada = 1; // página digitada pelo usuário                                             
     // Dados    
-    $scope.titulos = [];                                            
-    $scope.filtro = { data : new Date(),
-                     itens_pagina : $scope.itens_pagina[0], order : 0, 
-                     pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0
+    $scope.titulos = [];
+    $scope.filiais = [];
+    $scope.adquirentes = [];
+    $scope.filtro = { dtImportacao : new Date(), data : 'Recebimento',
+                      datamin : new Date(), datamax : '', consideraPeriodo : true,
+                      filial : null, adquirente : null, nsu : '',
+                      itens_pagina : $scope.itens_pagina[0], order : 0, 
+                      pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0
                     };   
     $scope.total = { valorTotal : 0.0, totalBaixados : 0, totalConciliados : 0};                                             
-    var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
-    var divPortletBodyTitulosPos = 1;                                                    
+    var divPortletBodyImportacaoPos = 0;                                             
+    var divPortletBodyFiltrosPos = 1; // posição da div que vai receber o loading progress
+    var divPortletBodyTitulosPos = 2;                                                    
     // Permissões                                           
     //var permissaoAlteracao = false;
     var permissaoCadastro = false;
@@ -53,7 +68,9 @@ angular.module("administrativo-titulos", [])
     var uploadEmProgresso = false;                                             
     // Flags
     $scope.exibeTela = false;  
-    $scope.abrirCalendarioData = false;                                              
+    $scope.abrirCalendarioDataImportacao = false;  
+    $scope.abrirCalendarioDataMin = false;
+    $scope.abrirCalendarioDataMax = false;                                              
                                                  
                                                  
                                                  
@@ -72,9 +89,13 @@ angular.module("administrativo-titulos", [])
             if($scope.exibeTela){
                 // Avalia grupo empresa
                 if($scope.usuariologado.grupoempresa){ 
-                    // ....
+                    $scope.filtro.filial = $scope.filtro.adquirente = null;
+                    buscaFiliais(true);
                 }else{ // reseta filiais e refaz a busca dos parâmetros 
+                    $scope.filtro.filial = $scope.filtro.adquirente = null;
                     $scope.titulos = [];
+                    $scope.filiais = [];
+                    $scope.adquirentes = [];
                 }
                 
             }
@@ -88,7 +109,10 @@ angular.module("administrativo-titulos", [])
         // Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
         $scope.$on('acessoDeTelaNotificado', function(event){
             $scope.exibeTela = true;
-            // ...
+            // Carrega dados
+            if($scope.usuariologado.grupoempresa){
+                buscaFiliais(true);
+            }
         });
         // Acessou a tela
         $scope.$emit("acessouTela");
@@ -164,20 +188,163 @@ angular.module("administrativo-titulos", [])
     $scope.alterouItensPagina = function(){
         if($scope.titulos.length > 0) buscaTitulos();
     }; 
+          
                                                  
                                                  
                                                  
-    // DATA
-    $scope.exibeCalendarioData = function($event) {
+    // DATA IMPORTAÇÃO
+    $scope.exibeCalendarioDataImportacao = function($event) {
         if($event){
             $event.preventDefault();
             $event.stopPropagation();
         }
-        $scope.abrirCalendarioData = !$scope.abrirCalendarioData;
+        $scope.abrirCalendarioDataImportacao = !$scope.abrirCalendarioDataImportacao;
+    }; 
+                                                 
+                                                 
+    // DATA RECEBIMENTO
+    var ajustaIntervaloDeData = function(){
+      // Verifica se é necessário reajustar a data max para ser no mínimo igual a data min
+      if($scope.filtro.datamax && $scope.filtro.datamax < $scope.filtro.datamin) $scope.filtro.datamax = $scope.filtro.datamin;
+      if(!$scope.$$phase) $scope.$apply();
+    };
+    // Data MIN
+    $scope.exibeCalendarioDataMin = function($event) {
+        if($event){
+            $event.preventDefault();
+            $event.stopPropagation();
+        }
+        $scope.abrirCalendarioDataMin = !$scope.abrirCalendarioDataMin;
+        $scope.abrirCalendarioDataMax = false;
       };
-    $scope.alterouData = function(){
-      //
-    };                                          
+    $scope.alterouDataMin = function(){
+         ajustaIntervaloDeData(); 
+    };
+    // Data MAX
+    $scope.exibeCalendarioDataMax = function($event) {
+        if($event){
+            $event.preventDefault();
+            $event.stopPropagation();
+        }
+        $scope.abrirCalendarioDataMax = !$scope.abrirCalendarioDataMax;
+        $scope.abrirCalendarioDataMin = false;
+    };
+    $scope.alterouDataMax = function(){
+        if($scope.filtro.datamax === null) $scope.filtro.datamax = '';
+        else ajustaIntervaloDeData(); 
+    };  
+                                                 
+                                                 
+                                                 
+                                                 
+                                                 
+    // FILIAIS
+    /**
+      * Busca as filiais
+      */
+    var buscaFiliais = function(buscarAdquirentes, nu_cnpj, cdAdquirente){
+        
+       $scope.showProgress(divPortletBodyImportacaoPos, 10000);    
+       $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
+        
+       var filtros = [];
+        
+       // Somente com status ativo
+       filtros.push({id: /*$campos.cliente.empresa.fl_ativo*/ 114, valor: 1});
+
+       // Filtro do grupo empresa => barra administrativa
+       if($scope.usuariologado.grupoempresa){ 
+           filtros.push({id: /*$campos.cliente.empresa.id_grupo*/ 116, 
+                         valor: $scope.usuariologado.grupoempresa.id_grupo});
+           if($scope.usuariologado.empresa) filtros.push({id: /*$campos.cliente.empresa.nu_cnpj*/ 100, 
+                                                          valor: $scope.usuariologado.empresa.nu_cnpj});
+       }
+       
+       $webapi.get($apis.getUrl($apis.cliente.empresa, 
+                                [$scope.token, 0, /*$campos.cliente.empresa.ds_fantasia*/ 104],
+                                filtros)) 
+            .then(function(dados){
+                $scope.filiais = dados.Registros;
+                // Reseta
+                if(!nu_cnpj) $scope.filtro.filial = null;
+                else $scope.filtro.filial = $filter('filter')($scope.filiais, function(f) {return f.nu_cnpj === nu_cnpj;})[0];
+                //$scope.filtro.filial = $scope.filiais.length > 0 ? $scope.filiais[0] : null;
+                //if($scope.filtro.filial && $scope.filtro.filial !== null)
+                if(buscarAdquirentes)
+                    buscaAdquirentes(true, cdAdquirente); // Busca adquirentes
+                else{
+                    $scope.hideProgress(divPortletBodyFiltrosPos);
+                    $scope.hideProgress(divPortletBodyImportacaoPos);
+                }
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter filiais (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+                 $scope.hideProgress(divPortletBodyImportacaoPos);
+              });     
+    };
+    /**
+      * Selecionou uma filial
+      */
+    $scope.alterouFilial = function(){
+        //console.log($scope.filtro.filial); 
+        buscaAdquirentes(false);
+    };
+    
+                                                                                         
+    // ADQUIRENTES 
+    /**
+      * Busca as adquirentes
+      */
+    var buscaAdquirentes = function(progressEstaAberto, cdAdquirente){
+ 
+       if(!progressEstaAberto){ 
+           $scope.showProgress(divPortletBodyFiltrosPos, 10000);    
+           $scope.showProgress(divPortletBodyImportacaoPos, 10000);
+       }
+        
+       var filtros = [{id : /*$campos.card.tbadquirente.stAdquirente*/ 103,
+                       valor : 1}];
+        
+       if($scope.filtro.filial && $scope.filtro.filial !== null){
+           // Filtro do grupo empresa => barra administrativa
+           filtros.push({id: /*$campos.card.tbadquirente.cnpj*/ 305,
+                         valor: $scope.filtro.filial.nu_cnpj});
+       }     
+       
+       $webapi.get($apis.getUrl($apis.card.tbadquirente, 
+                                [$scope.token, 1, /*$campos.card.tbadquirente.nmAdquirente*/ 101],
+                                filtros)) 
+            .then(function(dados){
+                $scope.adquirentes = dados.Registros;
+                // Reseta
+                if(typeof cdAdquirente === 'number' && cdAdquirente > 0) 
+                    $scope.filtro.adquirente = $filter('filter')($scope.adquirentes, function(a) {return a.cdAdquirente === cdAdquirente;})[0];
+                else $scope.filtro.adquirente = null;
+                
+                $scope.hideProgress(divPortletBodyFiltrosPos);
+                $scope.hideProgress(divPortletBodyImportacaoPos);
+              },
+              function(failData){
+                 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+                 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 else $scope.showAlert('Houve uma falha ao obter adquirentes (' + failData.status + ')', true, 'danger', true);
+                 $scope.hideProgress(divPortletBodyFiltrosPos);
+                 $scope.hideProgress(divPortletBodyImportacaoPos);
+              });        
+    }
+    /**
+      * Selecionou uma adquirente
+      */
+    $scope.alterouAdquirente = function(){
+        // ....
+    };                                             
+                                                 
+                                                 
+                                                 
+                                                 
                                                  
     
         
@@ -198,16 +365,64 @@ angular.module("administrativo-titulos", [])
         buscaTitulos();    
     }
     
+    
+    $scope.limpaFiltros = function(){
+        // Limpar data => Refazer busca?
+        $scope.filtro.datamin = new Date();
+        $scope.filtro.datamax = ''; 
+        
+        $scope.filtro.adquirente = $scope.filtro.filial = null; 
+        $scope.filtro.nsu = '';
+        $scope.filtro.consideraPeriodo = true;
+    }
+    
     /**
       * Obtém os filtros de busca
       */
     var obtemFiltrosBusca = function(){
-        var filtros = [];
+       var filtros = [];
         
-        // Data
-        filtros.push({id: /*$campos.card.tbrecebimentotitulo.dtTitulo*/ 109,
-                      valor: $scope.getFiltroData($scope.filtro.data)});
+       // Data
+       var filtroData;
+       if($scope.filtro.data === 'Venda') filtroData = {//id: $campos.card.tbrecebimentotitulo.dtVenda,
+                          id: 103,
+                          valor: $scope.getFiltroData($scope.filtro.datamin)};  
+       else filtroData = {id: /*$campos.card.tbrecebimentotitulo.dtTitulo*/ 109,
+                          valor: $scope.getFiltroData($scope.filtro.datamin)};
+       if($scope.filtro.datamax)
+           filtroData.valor = filtroData.valor + '|' + $scope.getFiltroData($scope.filtro.datamax);
+       //filtros.push(filtroData);
         
+        
+       // Filial
+       if($scope.filtro.filial && $scope.filtro.filial !== null){
+           var filtroFilial = {id: 101,//$campos.card.tbrecebimentotitulo.nrCNPJ  
+                               valor: $scope.filtro.filial.nu_cnpj};
+           filtros.push(filtroFilial);  
+       }
+        
+       // Adquirente
+       if($scope.filtro.adquirente !== null){
+           var filtroAdquirente = {id: 104,//$campos.card.tbrecebimentotitulo.cdAdquirente, 
+                                   valor: $scope.filtro.adquirente.cdAdquirente};
+           filtros.push(filtroAdquirente);
+       } 
+        
+        
+        //NSU
+        if($scope.filtro.nsu !== null && $scope.filtro.nsu){
+            var filtroNSU = {id: /*$campos.card.tbrecebimentotitulo.nrNsu*/ 102,
+                             valor: $scope.filtro.nsu + '%'};
+            filtros.push(filtroNSU);
+            
+            // Considera período?
+            if($scope.filtro.consideraPeriodo !== false)
+                filtros.push(filtroData);
+        }
+        else
+            // Sem nsu => considera filtro de data
+            filtros.push(filtroData);
+
         
         return filtros;
     }
@@ -218,6 +433,7 @@ angular.module("administrativo-titulos", [])
     var buscaTitulos = function(progressosemexecucao){
 
         if(!progressosemexecucao){
+            $scope.showProgress(divPortletBodyImportacaoPos, 10000);
             $scope.showProgress(divPortletBodyFiltrosPos, 10000);
             $scope.showProgress(divPortletBodyTitulosPos);
         }
@@ -225,9 +441,11 @@ angular.module("administrativo-titulos", [])
         // Filtro  
         var filtros = obtemFiltrosBusca();
         
-        $webapi.get($apis.getUrl($apis.card.tbrecebimentotitulo,//$apis.card.tituloserp, 
-                                [$scope.token, 3,//0, 
-                                 /*$campos.card.tituloserp.data*/ 100, 0, 
+        var order = $scope.filtro.data === 'Venda' ? /*$campos.card.tbrecebimentotitulo.dtVenda*/ 103 :
+                                                     /*$campos.card.tbrecebimentotitulo.dtTitulo*/ 109; 
+        
+        $webapi.get($apis.getUrl($apis.card.tbrecebimentotitulo,
+                                [$scope.token, 3, order, 0, 
                                  $scope.filtro.itens_pagina, $scope.filtro.pagina],
                                 filtros)) 
             .then(function(dados){           
@@ -258,6 +476,7 @@ angular.module("administrativo-titulos", [])
                     setPagina(1); // volta para a primeira página e refaz a busca
            
                 // Fecha o progress
+                $scope.hideProgress(divPortletBodyImportacaoPos);
                 $scope.hideProgress(divPortletBodyFiltrosPos);
                 $scope.hideProgress(divPortletBodyTitulosPos);
               },
@@ -266,6 +485,7 @@ angular.module("administrativo-titulos", [])
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else $scope.showAlert('Houve uma falha ao carregar títulos (' + failData.status + ')', true, 'danger', true);
                  // Fecha o progress
+                $scope.hideProgress(divPortletBodyImportacaoPos);
                 $scope.hideProgress(divPortletBodyFiltrosPos);
                 $scope.hideProgress(divPortletBodyTitulosPos);
               });  
@@ -281,29 +501,33 @@ angular.module("administrativo-titulos", [])
             return;
         }
         
+        $scope.showProgress(divPortletBodyImportacaoPos, 10000);
         $scope.showProgress(divPortletBodyFiltrosPos, 10000);
         $scope.showProgress(divPortletBodyTitulosPos);
         
         // Requisita 
         $webapi.post($apis.getUrl($apis.card.tituloserp, undefined,
                                   {id : 'token', valor: $scope.token}), 
-                                  {data: $scope.getFiltroData($scope.filtro.data)}) 
+                                  {data: $scope.getFiltroData($scope.filtro.dtImportacao)}) 
             .then(function(dados){           
 
                 $scope.showAlert('Títulos importados com sucesso!', true, 'success', true);
                 
                 buscaTitulos(true);
                 // Fecha o progress
+                // $scope.hideProgress(divPortletBodyImportacaoPos);
                 // $scope.hideProgress(divPortletBodyFiltrosPos);
                 // $scope.hideProgress(divPortletBodyTitulosPos);
               },
               function(failData){
-                 console.log(failData);
+                 //console.log(failData);
                  if(failData.status === 0) $scope.showAlert('O servidor está demorando muito para responder. O processo de importação ainda está sendo realizado. Por favor, realize a consulta dos títulos mais tarde.', true, 'warning', true, true, 0); 
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else if(failData.status === 401) $scope.showModalAlerta(failData.dados);
-                 else $scope.showAlert('Houve uma falha ao obter carregar títulos (' + failData.status + ')', true, 'danger', true);
+                 else //$scope.showAlert('Houve uma falha ao carregar títulos (' + failData.status + ')', true, 'danger', true);
+                    $scope.showModalAlerta('Houve uma falha ao importar os títulos. (' + (failData.dados && failData.dados !== null ? failData.dados : failData.status) + ')', 'Erro');
                  // Fecha o progress
+                $scope.hideProgress(divPortletBodyImportacaoPos);
                 $scope.hideProgress(divPortletBodyFiltrosPos);
                 $scope.hideProgress(divPortletBodyTitulosPos);
               });  
@@ -383,6 +607,13 @@ angular.module("administrativo-titulos", [])
         
         console.log("importa csv");
         
+    }
+    
+    
+    
+    $scope.avaliaNsu = function(){
+        if(!$scope.filtro.nsu)
+            $scope.filtro.consideraPeriodo = true;
     }
                        
     

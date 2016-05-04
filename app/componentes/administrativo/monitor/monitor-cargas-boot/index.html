@@ -8,6 +8,10 @@
     Administrativo > Monitor > Monitor de Cargas do Boot
 
 
+
+    Versão 1.0.2 - 02/02/2016
+    - Status 9 : Execução - Processamento dos dados importados
+
     Versão 1.0.1 - 21/01/2016
     - Modal auditoria
 
@@ -315,8 +319,8 @@
                                     <td ng-repeat="tbLogCarga in loginAdquirenteEmpresa.tbLogCargas">
                                         <div class="row" ng-repeat="modalidade in modalidades">
                                             <i class="fa"
-                                               ng-class="{'element-hidden': !teveProcessamento(tbLogCarga[modalidade]), 'fa-spin fa-spinner iconeMonitorCargasEmExecucao' : tbLogCarga[modalidade].flStatus === 0, 'fa-check-square iconeMonitorCargasSucesso cursorLink' : tbLogCarga[modalidade].flSucesso && tbLogCarga[modalidade].flStatus === 1, 'fa-times-circle iconeMonitorCargasErro' : !tbLogCarga[modalidade].flSucesso && tbLogCarga[modalidade].flStatus === 2, 'fa-key iconeMonitorCargasSenha' : !tbLogCarga[modalidade].flSucesso && tbLogCarga[modalidade].flStatus === 4, 'fa-upload iconeMonitorCargasElegivel' : tbLogCarga[modalidade].flStatus === 7}"
-                                               title="{{modalidade + ': ' + (tbLogCarga[modalidade].dsMensagem ? tbLogCarga[modalidade].dsMensagem + ' (realizado em ' + getDataTimeString(tbLogCarga[modalidade].dtExecucaoIni) + ')' : tbLogCarga[modalidade].flStatus === 0 ? 'Em execução (iniciado em ' + getDataTimeString(tbLogCarga[modalidade].dtExecucaoIni) + ')' : '')}}"
+                                               ng-class="{'element-hidden': !teveProcessamento(tbLogCarga[modalidade]), 'fa-spin fa-spinner iconeMonitorCargasEmExecucao' : tbLogCarga[modalidade].flStatus === 0, 'fa-spin fa-spinner iconeMonitorCargasProcessandoDados' : tbLogCarga[modalidade].flStatus === 9, 'fa-check-square iconeMonitorCargasSucesso cursorLink' : tbLogCarga[modalidade].flSucesso && tbLogCarga[modalidade].flStatus === 1, 'fa-times-circle iconeMonitorCargasErro' : !tbLogCarga[modalidade].flSucesso && tbLogCarga[modalidade].flStatus === 2, 'fa-key iconeMonitorCargasSenha' : !tbLogCarga[modalidade].flSucesso && tbLogCarga[modalidade].flStatus === 4, 'fa-upload iconeMonitorCargasElegivel' : tbLogCarga[modalidade].flStatus === 7}"
+                                               title="{{modalidade + ': ' + (tbLogCarga[modalidade].dsMensagem ? tbLogCarga[modalidade].dsMensagem + ' (realizado em ' + getDataTimeString(tbLogCarga[modalidade].dtExecucaoIni) + ')' : tbLogCarga[modalidade].flStatus === 0 ? 'Em execução - Consultando dados (iniciado em ' + getDataTimeString(tbLogCarga[modalidade].dtExecucaoIni) + ')' : tbLogCarga[modalidade].flStatus === 9 ? 'Em execução - Processando dados (iniciado em ' + getDataTimeString(tbLogCarga[modalidade].dtExecucaoIni) + ')' : '')}}"
                                                ng-click="tbLogCarga[modalidade].flSucesso && tbLogCarga[modalidade].flStatus === 1 ? exibeModalAuditoria(loginAdquirenteEmpresa.empresa, loginAdquirenteEmpresa.tbAdquirente, modalidade, tbLogCarga) : 0">
                                             </i>
                                         </div>
