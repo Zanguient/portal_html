@@ -95,8 +95,9 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 					
 					var c = $location.search().c;
 					var d = $location.search().d;
+					var tn = $location.search().tn;
 					
-					if(!c || !d) return;				
+					if(!c || !d || !tn) return;				
 					
 					$scope.colunas = ["Competência - Adquirente - Bandeira", "Taxa Média", "Vendas", "Taxa ADM", "Ajustes Crédito", "Ajustes Débito", "Valor Líquido", "Valor Descontado Antecipação", "Valor Líquido Total", "Extratos Bancários", "Diferença", "Status"];
 					$scope.niveis = ["Nivel 1", "Nível 2", "Nivel 3"];
@@ -104,6 +105,8 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 					$scope.data = $scope.formataData(d);
 					$scope.dataConsulta = d;
 					$scope.cnpj = c;
+					$scope.temNivel = 'n';
+					if(tn == 's') $scope.temNivel = 's';
 					
 					consultaConciliacao(function(){ $scope.exibeTela = true; $timeout(function(){$scope.imprime();}, 1500) });
 					break;
@@ -616,7 +619,7 @@ angular.module("card-services-impressao-relatorios", ['ui.router','utils', 'weba
 				$scope.styleThead = "font-size: 67%;";
 				$scope.styleTbody = "font-size: 67%;";
 				$scope.page = "";
-				$scope.style = "margin-top: 1cm; margin-left: 0.5cm; margin-right: 1cm;";
+				$scope.style = "margin-top: 1cm;";
 			}
 			else{
 				$scope.styleThead = "";
