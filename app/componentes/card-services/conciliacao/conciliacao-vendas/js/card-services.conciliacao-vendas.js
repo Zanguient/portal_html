@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.4 - 03/05/2016
+ *  - Funções de divergências
+ *
  *  Versão 1.0.3 - 27/04/2016
  *  - Conciliação de vendas: venda do erp é a referência
  *
@@ -816,6 +819,9 @@ angular.module("card-services-conciliacao-vendas", [])
            (dado.Conciliado !== 1 && dado.Conciliado !== 4))
             return false;
         
+        return dataDiverge(dado);
+    }
+    var dataDiverge = function(dado){
         return $scope.getDataString(dado.Venda.Data) !== $scope.getDataString(dado.Recebimento.Data);
     }
     
@@ -824,6 +830,9 @@ angular.module("card-services-conciliacao-vendas", [])
            (dado.Conciliado !== 1 && dado.Conciliado !== 4))
             return false;
         
+        return nsuDiverge(dado);
+    }
+    var nsuDiverge = function(dado){
         if(dado.Recebimento.Adquirente === 'POLICARD' ||
            dado.Recebimento.Adquirente === 'GETNET' || 
            dado.Recebimento.Adquirente === 'VALECARD' ||
@@ -836,7 +845,6 @@ angular.module("card-services-conciliacao-vendas", [])
         while(nsuR.length < nsuV.length) nsuR = "0" + nsuR;
         
         return nsuV !== nsuR;
-        //return false;
     }
     
     $scope.parcelasDiverge = function(dado){
@@ -844,13 +852,21 @@ angular.module("card-services-conciliacao-vendas", [])
            (dado.Conciliado !== 1 && dado.Conciliado !== 4))
             return false;
         
+        return parcelasDiverge(dado);
+    }
+    var parcelasDiverge = function(dado){
         return dado.Venda.Parcelas !== dado.Recebimento.Parcelas;
     }
     
     $scope.sacadoDiverge = function(dado){
         if(!dado || dado === null || dado.Venda === null || dado.Recebimento === null || 
-           (dado.Conciliado !== 1 && dado.Conciliado !== 4) || 
-           !dado.Recebimento.Sacado || dado.Recebimento.Sacado === null ||
+           (dado.Conciliado !== 1 && dado.Conciliado !== 4))
+            return false;
+        
+        return sacadoDiverge(dado);
+    }
+    var sacadoDiverge = function(dado){
+        if(!dado.Recebimento.Sacado || dado.Recebimento.Sacado === null ||
            !dado.Venda.Sacado || dado.Venda.Sacado === null ||
            !dado.Venda.Adquirente || dado.Venda.Adquirente === null)
             return false;
@@ -863,6 +879,9 @@ angular.module("card-services-conciliacao-vendas", [])
            (dado.Conciliado !== 1 && dado.Conciliado !== 4))
             return false;
         
+        return valorDiverge(dado);
+    }
+    var valorDiverge = function(dado){
         return dado.Venda.Valor !== dado.Recebimento.Valor;
     }
     
@@ -871,30 +890,11 @@ angular.module("card-services-conciliacao-vendas", [])
            (dado.Conciliado !== 1 && dado.Conciliado !== 4))
             return false;
         
-        if(dado.Venda.Valor !== dado.Recebimento.Valor) return true;
-        if(dado.Venda.Parcelas !== dado.Recebimento.Parcelas) return true;
-        if($scope.getDataString(dado.Venda.Data) !== $scope.getDataString(dado.Recebimento.Data)) return true;
-        
-        if(dado.Recebimento.Sacado && dado.Recebimento.Sacado !== null && 
-           dado.Venda.Sacado && dado.Venda.Sacado !== null && 
-           dado.Venda.Adquirente && dado.Venda.Adquirente !== null &&
-           dado.Venda.Sacado !== dado.Recebimento.Sacado) 
-            return true;
-        
-        if(dado.Recebimento.Adquirente !== 'POLICARD' &&
-           dado.Recebimento.Adquirente !== 'GETNET' && 
-           dado.Recebimento.Adquirente !== 'VALECARD' &&
-           dado.Recebimento.Adquirente !== 'SODEXO'){
-            
-            var nsuV = dado.Venda.Nsu;
-            var nsuR = dado.Recebimento.Nsu;
-            while(nsuV.length < nsuR.length) nsuV = "0" + nsuV;
-            while(nsuR.length < nsuV.length) nsuR = "0" + nsuR;
-
-            return nsuV !== nsuR;
-        }
-        
-        return false;
+        return valorDiverge(dado) ||
+               parcelasDiverge(dado) ||
+               dataDiverge(dado) ||
+               sacadoDiverge(dado) ||
+               nsuDiverge(dado);
     }
     
     
