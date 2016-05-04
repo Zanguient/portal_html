@@ -257,7 +257,7 @@ angular.module("card-services-conciliacao-relatorios", [])
     }
 		
 		//IMPRESSÃO
-		$scope.imprimir = function(){
+		$scope.imprimir = function(temNivel){
 			
 			/*
 			
@@ -278,9 +278,10 @@ angular.module("card-services-conciliacao-relatorios", [])
 				$scope.c = $scope.filtro.filial.nu_cnpj;
 				$scope.f = $scope.filtro.filial.ds_fantasia;				
 			}
+			$scope.tn = temNivel;
 			
 				$window.open('views/print#?e=' + $scope.usuariologado.grupoempresa.ds_nome + '&s=' + "Relatório de Conciliação" + '&n='+ 3
-										 +'&cl='+12+'&t='+$scope.token+'&c='+$scope.c+'&f='+$scope.f+
+										 +'&cl='+12+'&t='+$scope.token+'&tn='+$scope.tn+'&c='+$scope.c+'&f='+$scope.f+
 										 '&d='+$scope.getFiltroData($scope.filtro.data, true), '_blank');
 			}			
 		

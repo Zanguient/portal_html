@@ -8,6 +8,9 @@
  
     Website - Tela de impressão de relatórios
 
+		Versão 1.0.3 = 04/05/2016
+		- Imprimindo analítico ou sintético no Relatório de Conciliação
+
     Versão 1.0.2 - 03/02/2016
     - Imprimindo tela de Recebíveis Futuros
 
@@ -430,7 +433,7 @@
 					</thead>
 					<tbody style="{{styleTbody}}">
 						<tr ng-repeat-start="competencia in relatorio">
-							<td colspan="3" style="padding: 5px;"><span class="glyphicon glyphicon-chevron-right"></span></td>
+							<td colspan="3" style="padding: 1px;"><span class="glyphicon glyphicon-chevron-right"></span></td>
 							<!-- COMPETÊNCIA -->
 							<td>{{competencia.competencia}}</td>
 							<!-- TAXA MÉDIA -->
@@ -457,9 +460,9 @@
 							<td>{{competencia.status || ''}}</td>
 						</tr>
 						<!-- LINHA EXPANSÍVEL -->
-						<tr ng-repeat-start="adquirente in competencia.adquirentes">
-							<td style="padding: 5px;"></td>
-							<td style="padding: 5px;" colspan="2"><span class="glyphicon glyphicon-chevron-right"></span></td>
+						<tr ng-repeat-start="adquirente in competencia.adquirentes" ng-if="temNivel == 's'">
+							<td style="padding: 2px;"></td>
+							<td style="padding: 1px;" colspan="2"><span class="glyphicon glyphicon-chevron-right"></span></td>
 							<!-- ADQUIRENTE -->
 							<td>{{adquirente.adquirente | uppercase}}</td>
 							<!-- TAXA MÉDIA -->
@@ -486,10 +489,10 @@
 							<td>{{adquirente.status || ''}}</td>
 						</tr>
 						<!-- LINHA EXPANSÍVEL -->
-						<tr ng-repeat-end ng-repeat="bandeira in adquirente.bandeiras">
-							<td style="padding: 5px;"></td>
-							<td style="padding: 5px;"></td>
-							<td style="padding: 5px;" colspan="1"><span class="glyphicon glyphicon-chevron-right"></span></td>
+						<tr ng-repeat-end ng-repeat="bandeira in adquirente.bandeiras" ng-if="temNivel == 's'">
+							<td style="padding: 2px;"></td>
+							<td style="padding: 2px;"></td>
+							<td style="padding: 1px;" colspan="1"><span class="glyphicon glyphicon-chevron-right"></span></td>
 							<td>{{bandeira.bandeira | uppercase}}</td>
 							<!-- TAXA MÉDIA -->
 							<td>{{bandeira.taxaMedia | number:2}}%</td>
