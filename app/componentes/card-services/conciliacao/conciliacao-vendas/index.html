@@ -566,18 +566,20 @@
                             de <span class="pagination-panel-total">{{filtro.total_paginas}}</span>
                     </div>
                 </div>  
-                <div class="col-xs-4 col-sm-4 col-md-4" print-remove>
-                    <!--button class="btn btn-warning" 
+                <div class="col-xs-4 col-sm-4 col-md-5" print-remove>
+                    <button class="btn btn-warning" 
                        ng-disabled="!temElementosPreConciliados()"
-                       ng-click="conciliaPreConciliados()">
+                       ng-click="conciliaPreConciliados()"
+                       style="font-size: 12px">
                        Conciliar Pré-Conciliados
-                    </button-->
-                    <button class="btn btn-danger" style="padding-left: 10px" 
+                    </button>
+                    <button class="btn btn-danger" style="padding-left: 10px; font-size: 12px" 
                        ng-disabled="!filtro.filial || filtro.filial === null"
-                       ng-click="conciliaTefNsu()">
+                       ng-click="conciliaTefNsu()" 
+                            style="font-size: 10px">
                        Conciliar TEF-NSU
                     </button>
-                    <button class="btn btn-primary" style="padding-left: 10px" 
+                    <button class="btn btn-primary" style="padding-left: 10px; font-size: 12px" 
                        ng-disabled="!filtro.filial || filtro.filial === null"
                        title="Efetua a correção no ERP das vendas conciliadas com recebíveis, considerando o filtro selecionado"
                        ng-click="corrigeVendas()">
@@ -740,7 +742,7 @@
                     
                     <!--BOTÕES-->
                     <div class="col-md-2 col-sm-2 btnConciliacaoBancaria" print-hide>
-                        <div class="row" ng-init="incrementaTotalConciliadosDivergentes(dado.Conciliado === 4)"
+                        <div class="row" ng-init="incrementaTotalPreConciliados(dado.Conciliado === 2); incrementaTotalConciliadosDivergentes(dado.Conciliado === 4)"
                              ng-class="{'element-hidden' : dado.Conciliado === 3 && dado.Venda === null}">
                             <div class="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-4"
                                  title="{{dado.Conciliado === 1 || dado.Conciliado === 4 ? 'Desfazer conciliação' : dado.Conciliado === 2 ? 'Conciliar' : dado.Conciliado === 3 && dado.Recebimento === null ? 'Buscar venda' : ''}}">

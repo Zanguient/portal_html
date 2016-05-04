@@ -60,13 +60,16 @@ Além deles, é necessária a importação dos seguintes módulos externos.
 				vlVenda : double ou null,
 				qtParcelas : int ou null,
 				cdERP : string ou null,
-				//dtCorrecaoERP : datetime ou null
-				conciliado : bool
+				dtAjuste : datetime ou null,
+				cdSacado : string ou null,
+				conciliado : bool,
+ 				dsMensagem: string ou null,// indica se precisa de intervenção manual no ERP
 			  }
 			]	
 		   Recebe em Totais: - "valorTotal" : double // valor total parcela
-				     //- "totalCorrigidos" : int // total de títulos baixados
-		      		     - "totalConciliados" : int // total de títulos conciliados
+				     - "totalCorrigidos" : int // total de vendas corrigidas
+		      		     - "totalConciliados" : int // total de vendas conciliadas
+				     - "totalCorrecaoManual" : int // total de vendas que precisam de correção manual
 
    
 ### Desenvolvedores ###

@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.3 - 04/05/2016
+ *  - Filtro de status
+ *
  *  Versão 1.0.2 - 29/04/2016
  *  - Sem filtro de adquirente
  *
@@ -36,14 +39,14 @@ angular.module("administrativo-vendas", [])
     // Dados    
     $scope.vendas = [];
     $scope.filiais = [];
-    //$scope.adquirentes = [];
+    $scope.tipos = [{id: 1, nome: 'CONCILIADO'}, {id: 2, nome: 'NÃO-CONCILIADO'}, {id: 3, nome: 'CORRIGIDO'}, {id: 4, nome: 'CORREÇÃO MANUAL'}];  
     $scope.filtro = { dtImportacao : new Date(), filialImportacao : null,
                       datamin : new Date(), datamax : '', consideraPeriodo : true,
-                      filial : null, nsu : '', //adquirente : null, 
+                      filial : null, nsu : '', tipo : null,
                       itens_pagina : $scope.itens_pagina[0], order : 0, 
                       pagina : 1, total_registros : 0, faixa_registros : '0-0', total_paginas : 0
                     };   
-    $scope.total = { valorTotal : 0.0, totalCorrigidos : 0, totalConciliados : 0};                                             
+    $scope.total = { valorTotal : 0.0, totalCorrigidos : 0, totalConciliados : 0, totalCorrecaoManual : 0};                                             
     var divPortletBodyImportacaoPos = 0;                                             
     var divPortletBodyFiltrosPos = 1; // posição da div que vai receber o loading progress
     var divPortletBodyVendasPos = 2;                                                    
@@ -77,11 +80,11 @@ angular.module("administrativo-vendas", [])
                 // Avalia grupo empresa
                 if($scope.usuariologado.grupoempresa){ 
                     $scope.filtro.filial = null;
-                    //$scope.filtro.adquirente = null;
+                    $scope.filtro.tipo = null;
                     buscaFiliais(true);
                 }else{ // reseta filiais e refaz a busca dos parâmetros 
                     $scope.filtro.filial = null;
-                    //$scope.filtro.adquirente = null;
+                    $scope.filtro.tipo = null;
                     $scope.vendas = [];
                     $scope.filiais = [];
                     //$scope.adquirentes = [];
@@ -390,12 +393,12 @@ angular.module("administrativo-vendas", [])
            filtros.push(filtroFilial);  
        }
         
-       /* Adquirente
-       if($scope.filtro.adquirente !== null){
-           var filtroAdquirente = {id: 104,//$campos.card.tbrecebimentovenda.cdAdquirente, 
-                                   valor: $scope.filtro.adquirente.cdAdquirente};
-           filtros.push(filtroAdquirente);
-       } */
+       // Adquirente
+       if($scope.filtro.tipo && $scope.filtro.tipo !== null){
+           var filtroTipo = {id: 200,//$campos.card.tbrecebimentovenda.tipo, 
+                             valor: $scope.filtro.tipo.id};
+           filtros.push(filtroTipo);
+       } 
         
         
         //NSU
@@ -436,13 +439,14 @@ angular.module("administrativo-vendas", [])
                                 filtros)) 
             .then(function(dados){           
 
-                $scope.total.totalCorrigidos = $scope.total.totalConciliados = 0;
+                $scope.total.totalCorrigidos = $scope.total.totalConciliados = $scope.total.totalCorrecaoManual = 0;
                 $scope.total.valorTotal = 0.0;
             
                 // Obtém os dados
                 $scope.vendas = dados.Registros;
                 //console.log(dados.Registros);
                 $scope.total.totalCorrigidos = dados.Totais.totalCorrigidos;
+                $scope.total.totalCorrecaoManual = dados.Totais.totalCorrecaoManual;
                 $scope.total.totalConciliados = dados.Totais.totalConciliados;
                 $scope.total.valorTotal = dados.Totais.valorTotal;
                 

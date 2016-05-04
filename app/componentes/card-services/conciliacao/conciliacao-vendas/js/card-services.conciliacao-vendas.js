@@ -31,8 +31,9 @@ angular.module("card-services-conciliacao-vendas", [])
                                              /*'$campos',*/
                                              '$webapi',
                                              '$apis',
+                                             '$autenticacao',        
                                              function($scope,$state,$filter,$timeout,$http,
-                                                      /*$campos,*/$webapi,$apis){ 
+                                                      /*$campos,*/$webapi,$apis, $autenticacao){ 
     
     // flags
     // Exibição
@@ -43,7 +44,8 @@ angular.module("card-services-conciliacao-vendas", [])
     $scope.totais = { valorTotal : 0.0,
                       contVendas : 0, contRecebimentos : 0,
                     };
-    var totalConciliadosDivergentes = 0;                                            
+    var totalConciliadosDivergentes = 0;        
+    var totalPreConciliados = 0;                                               
     //$scope.adquirentes = [];
     $scope.filiais = [];                                                                                       
     $scope.tipos = [{id: 1, nome: 'CONCILIADO'}, {id: 2, nome: 'PRÉ-CONCILIADO'}, {id: 3, nome: 'NÃO CONCILIADO'}, {id: 4, nome: 'CONCILIADO COM DIVERGÊNCIA'}, {id: 5, nome: 'CONCILIADO SEM SACADO'}];             
@@ -88,6 +90,8 @@ angular.module("card-services-conciliacao-vendas", [])
                     //$scope.modalBuscaVendas.filiais = [];
                     $scope.filtro.filial = null;
                     //$scope.filtro.adquirente = null;
+                    totalPreConciliados = 0;
+                    totalConciliadosDivergentes = 0;
                     
                     $scope.filtro.faixa_registros = '0-0';
                     $scope.filtro.total_registros = 0;
@@ -342,6 +346,19 @@ angular.module("card-services-conciliacao-vendas", [])
         if(incrementa) totalConciliadosDivergentes++;    
     }
     
+    $scope.temElementosPreConciliados = function(){
+        return totalPreConciliados > 0;
+    }
+    $scope.incrementaTotalPreConciliados = function(incrementa){
+        if(incrementa) totalPreConciliados++;    
+    }
+    $scope.temElementosConciliados = function(){
+        return totalConciliados > 0;
+    }
+    $scope.incrementaTotalConciliados = function(incrementa){
+        if(incrementa) totalConciliados++;    
+    }
+    
     
     
     
@@ -445,7 +462,7 @@ angular.module("card-services-conciliacao-vendas", [])
                                 filtros)) 
             .then(function(dados){       
             
-                $scope.totais.contVendas = $scope.totais.contRecebimentos = totalConciliadosDivergentes = 0;
+                $scope.totais.contVendas = $scope.totais.contRecebimentos = totalConciliadosDivergentes = totalPreConciliados = 0;
             
                 // Obtém os dados
                 $scope.dadosconciliacao = dados.Registros;
@@ -526,7 +543,7 @@ angular.module("card-services-conciliacao-vendas", [])
     }
     /**
       * Solicita confirmação para o usuário quanto a(s) conciliação(ões)
-      * /
+      */
     $scope.conciliaPreConciliados = function(){
         var preConciliados = $filter('filter')($scope.dadosconciliacao, function(c){ return c.Conciliado === 2 }); 
         var total = preConciliados.length;
@@ -542,7 +559,7 @@ angular.module("card-services-conciliacao-vendas", [])
         }else texto += "Foram encontradas " + total + " pré-conciliações. Uma vez confirmadas as conciliações, os vendas e as cargas não poderão se envolver em outra conciliação de vendas. Confirma essas conciliações?";
         // Exibe o modal de confirmação
         $scope.showModalConfirmacao('Confirmação', texto, concilia, preConciliados, 'Sim', 'Não');
-    }*/
+    }
     /**
       * Efetiva a conciliação
       */
@@ -576,10 +593,9 @@ angular.module("card-services-conciliacao-vendas", [])
                         for(var k = 0; k < dadosConciliacao.length; k++){ 
                             // Tem divergência?
                             var dd = dadosConciliacao[k];
+                            dd.Conciliado = 1; 
                             if($scope.possuiDivergencia(dd))
-                                dd.Conciliado = 4;
-                            else
-                                dd.Conciliado = 1;  
+                                dd.Conciliado = 4;  
                         }
                         if(!$scope.$$phase) $scope.$apply();
                         // Esconde o progress
@@ -762,7 +778,7 @@ angular.module("card-services-conciliacao-vendas", [])
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                 else $scope.showModalAlerta('Houve uma falha ao realizar a correção no ERP. (' + (failData.dados && failData.dados !== null ? failData.dados : failData.status) + ')', 'Erro');
+                 else $scope.showModalAlerta('Houve uma falha ao realizar a correção no ERP: ' + (failData.dados && failData.dados !== null ? failData.dados : failData.status), 'Erro');
                  // Fecha os progress
                  $scope.hideProgress(divPortletBodyFiltrosPos);
                  $scope.hideProgress(divPortletBodyDadosPos);
