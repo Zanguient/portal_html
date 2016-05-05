@@ -797,7 +797,8 @@ angular.module('webapi', ['utils'])
     tax : {
         tbmanifesto : $autenticacao.getUrlBase() + '/tax/tbmanifesto/',
         tbmercadoria : $autenticacao.getUrlBaseTotvs() + '/tax/tbmercadoria/',
-        tbmercadoriaclassificada :$autenticacao.getUrlBaseTotvs() + '/tax/tbmercadoriaclassificada/',
+        tbclassificacao :$autenticacao.getUrlBaseTotvs() + '/tax/tbclassificacao/',
+        tbaceite:$autenticacao.getUrlBaseTotvs() + '/tax/tbaceite/', 
     },
     util : {
         bancos : $autenticacao.getUrlBase() + '/util/bancos/',   

@@ -49,13 +49,16 @@ angular.module("tax-services-aceite-classificacao", [])
                                     flAceite: null,
                                     idUsersAceite: null,
                                     dsMensagemAceite:null};
+    $scope.tbAceite = {idClassificacao: null, flAceite: null, dsJustificativa: null,idUsers:null,dtAceite: null};
     $scope.tabFiltro = 1; 
     $scope.tab = 1;
     $scope.tabDetalhes = 1;
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyManifestoPos = 1; // posição da div que vai receber o loading progress                                         
     
-    $scope.ultimaClassificacao = null;                                            
+    $scope.statusAceite = "1";
+    $scope.ultimaClassificacao = null;
+    $scope.idClassificacao = null;
     // flags                                   
     $scope.exibeTela = false;                                                                                                    
                                                 
@@ -63,7 +66,7 @@ angular.module("tax-services-aceite-classificacao", [])
     $scope.taxServices_aceiteClassificacaoInit = function(){
         // Título da página 
         $scope.pagina.titulo = 'Nota Fiscal Eletrônica';                          
-        $scope.pagina.subtitulo = 'Consulta Mercadoria';
+        $scope.pagina.subtitulo = 'Aceite Classificação';
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
@@ -158,6 +161,15 @@ angular.module("tax-services-aceite-classificacao", [])
        if($scope.tabFiltro === 1)
        {
            var filtroData = undefined;
+            // Filtro somente as mercadorias classificadas
+                filtros.push({id: /*$campos.tax.tbmercadoria.buscaaceite */ 200,
+                              valor: 2});
+     
+            // Filtro Por Status de Aceite
+            if($scope.statusAceite && $scope.statusAceite !== ''){
+                filtros.push({id: /*$campos.tax.tbmercadoria.statusaceite */ 201,
+                              valor: $scope.statusAceite});
+            }
             // Filtro Por Código 
             if($scope.filtro.cdMercadoria && $scope.filtro.cdMercadoria !== ''){
                 filtros.push({id: /*$campos.tax.tbmercadoria.cdmercadoriaerp */ 103,
@@ -231,10 +243,8 @@ angular.module("tax-services-aceite-classificacao", [])
 
                     // Obtém os dados
                     $scope.mercadorias = dados.Registros;
-                    if($scope.mercadorias.length > 0)
-                        {
-                        $scope.classificacao = $scope.mercadorias[0].ultimaClassificacao;
-                        }
+                    console.log($scope.mercadorias);
+                    console.log($scope.mercadorias[0].classificacoes[0].aceites);
                     
                     // Set valores de exibição
                     $scope.filtro.total_registros = dados.TotalDeRegistros;
@@ -287,10 +297,10 @@ angular.module("tax-services-aceite-classificacao", [])
         
         var mercadoria = mercadorias[indexNota];
         
-        var filtros = [{id: /*$campos.tax.tbmercadoriaclassificada.idMercadoria */ 101,
+        var filtros = [{id: /*$campos.tax.tbclassificacao.idMercadoria */ 101,
                               valor: mercadoria.idMercadoria}];
      
-           $webapi.get($apis.getUrl($apis.tax.tbmercadoriaclassificada, 
+           $webapi.get($apis.getUrl($apis.tax.tbclassificacao, 
                                     [$scope.token, 2], 
                                     filtros)) 
                 .then(function(dados){
@@ -321,12 +331,36 @@ angular.module("tax-services-aceite-classificacao", [])
         
     }
     
+    
+        /**
+      * Exibe o modal Justificativa
+      */
+    $scope.exibeJustifictiva = function(mercadoria,indexNota){
+
+        $scope.idClassificacao = mercadoria.classificacoes[indexNota].idClassificacao;  
+        exibeModalJustificativa();
+        
+    }
+    
+    //Exibe o modal Justificativa
+    var exibeModalJustificativa = function(){
+        $('#modalJustificativa').modal('show');
+    
+    }
+    
+    //Fecha o modal Justificativa
+    var fechaModalJustificativa = function(){
+        $('#modalJustificativa').modal('hide');
+    
+    }
+    
+    //Exibe o modal Classificar
     var exibeModal = function(){
         $('#modalClassificar').modal('show');
     
     }
     /*
-    Fecha o modal Importar
+    Fecha o modal Classificar
     */                                            
     var fechaModalClassificar = function(){
         $('#modalClassificar').modal('hide');       
@@ -399,7 +433,7 @@ angular.module("tax-services-aceite-classificacao", [])
        $scope.showProgress(divPortletBodyManifestoPos);
         
            
-        $webapi.post($apis.getUrl($apis.tax.tbmercadoriaclassificada, undefined,
+        $webapi.post($apis.getUrl($apis.tax.tbclassificacao, undefined,
                                   {id: 'token', valor: $scope.token}), $scope.classificacao)
                 .then(function(dados){
             
@@ -453,9 +487,9 @@ angular.module("tax-services-aceite-classificacao", [])
        $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
        $scope.showProgress(divPortletBodyManifestoPos);
            var classificacao = mercadoria.classificacoes[index];
-           var json = {idMercadoriaClassificada: classificacao.idMercadoriaClassificada,flAceite:aceiteGestor};
+           var json = {idClassificacao: classificacao.idClassificacao,flAceite:aceiteGestor};
             
-            $webapi.update($apis.getUrl($apis.tax.tbmercadoriaclassificada, undefined,
+            $webapi.update($apis.getUrl($apis.tax.tbclassificacao, undefined,
                                   {id: 'token', valor: $scope.token}), json)
                 .then(function(dados){
             
@@ -484,6 +518,50 @@ angular.module("tax-services-aceite-classificacao", [])
        
     }
     
+        $scope.insereJustificativaAceite = function(){
+            
+        // Avalia se há um grupo empresa selecionado
+        if(!$scope.usuariologado.grupoempresa){
+            $scope.showModalAlerta('Por favor, selecione uma empresa', 'Atos Capital', 'OK', 
+                                   function(){
+                                         $timeout(function(){ $scope.setVisibilidadeBoxGrupoEmpresa(true);}, 300);
+                                    }
+                                  );
+            return;   
+        }
+        
+        //Insere a justificativa do aceite
+        insereJustificativaAceite();
+    }
+    
+        var insereJustificativaAceite = function(){
+        // Abre os progress
+       $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
+       $scope.showProgress(divPortletBodyManifestoPos);
+           var json = {idClassificacao: $scope.idClassificacao,flAceite:false,dsJustificativa: $scope.tbAceite.dsJustificativa};
+            $webapi.post($apis.getUrl($apis.tax.tbaceite, undefined,
+                                  {id: 'token', valor: $scope.token}), json)
+                .then(function(dados){
+            
+                fechaModalJustificativa();
+                
+                    //Fecha os progress
+                    $scope.hideProgress(divPortletBodyFiltrosPos);
+                    $scope.hideProgress(divPortletBodyManifestoPos);
+                    
+
+                  },function(failData){
+                     if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
+                     else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                     else $scope.showAlert('Houve uma falha ao realizar o aceite da classificação (' + failData.status + ')', true, 'danger', true);
+                fechaModalJustificativa();
+                     // Hide progress
+                     $scope.hideProgress(divPortletBodyFiltrosPos);
+                     $scope.hideProgress(divPortletBodyManifestoPos);
+
+                  });          
+       
+    }
     
         /** 
       * Detalha a nota
