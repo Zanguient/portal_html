@@ -59,6 +59,7 @@ angular.module("tax-services-aceite-classificacao", [])
     $scope.statusAceite = "1";
     $scope.ultimaClassificacao = null;
     $scope.idClassificacao = null;
+    $scope.idMercadoria = null;
     // flags                                   
     $scope.exibeTela = false;                                                                                                    
                                                 
@@ -243,8 +244,6 @@ angular.module("tax-services-aceite-classificacao", [])
 
                     // Obtém os dados
                     $scope.mercadorias = dados.Registros;
-                    console.log($scope.mercadorias);
-                    console.log($scope.mercadorias[0].classificacoes[0].aceites);
                     
                     // Set valores de exibição
                     $scope.filtro.total_registros = dados.TotalDeRegistros;
@@ -337,7 +336,8 @@ angular.module("tax-services-aceite-classificacao", [])
       */
     $scope.exibeJustifictiva = function(mercadoria,indexNota){
 
-        $scope.idClassificacao = mercadoria.classificacoes[indexNota].idClassificacao;  
+        $scope.idClassificacao = mercadoria.classificacoes[indexNota].idClassificacao;
+        $scope.idMercadoria = mercadoria.idMercadoria;
         exibeModalJustificativa();
         
     }
@@ -466,7 +466,7 @@ angular.module("tax-services-aceite-classificacao", [])
                     }
             }
             
-        $scope.aceite = function(mercadoria,index,aceiteGestor){
+        $scope.aceite = function(mercadoria,index){
             
         // Avalia se há um grupo empresa selecionado
         if(!$scope.usuariologado.grupoempresa){
@@ -479,28 +479,22 @@ angular.module("tax-services-aceite-classificacao", [])
         }
         
         // Informa o aceite do gestor
-        aceite(mercadoria,index,aceiteGestor);
+        aceite(mercadoria,index);
     }
     
-        var aceite = function(mercadoria,index,aceiteGestor){
+        var aceite = function(mercadoria,index){
         // Abre os progress
        $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
        $scope.showProgress(divPortletBodyManifestoPos);
            var classificacao = mercadoria.classificacoes[index];
-           var json = {idClassificacao: classificacao.idClassificacao,flAceite:aceiteGestor};
-            
-            $webapi.update($apis.getUrl($apis.tax.tbclassificacao, undefined,
+            var json = {idClassificacao: classificacao.idClassificacao,flAceite:true,dsJustificativa: 'Classficação Aceita'};
+            $webapi.post($apis.getUrl($apis.tax.tbaceite, undefined,
                                   {id: 'token', valor: $scope.token}), json)
                 .then(function(dados){
             
-                    classificacao.flAceite = aceiteGestor;
-                    if(aceiteGestor === 'true'){
-                        classificacao.dsMensagemAceite = 'Classficação Aceita!';
-                    }
-                    else{ 
-                        classificacao.dsMensagemAceite = 'Classificação Não Aceita!';
-                    }
-                
+                    classificacao.flAceite = true;
+
+                    buscaMercadorias(mercadoria.idMercadoria);
                     //Fecha os progress
                     $scope.hideProgress(divPortletBodyFiltrosPos);
                     $scope.hideProgress(divPortletBodyManifestoPos);
@@ -545,6 +539,7 @@ angular.module("tax-services-aceite-classificacao", [])
             
                 fechaModalJustificativa();
                 
+                buscaMercadorias($scope.idMercadoria);
                     //Fecha os progress
                     $scope.hideProgress(divPortletBodyFiltrosPos);
                     $scope.hideProgress(divPortletBodyManifestoPos);
