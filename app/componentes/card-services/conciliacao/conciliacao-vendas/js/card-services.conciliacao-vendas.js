@@ -816,7 +816,11 @@ angular.module("card-services-conciliacao-vendas", [])
               function(failData){
                  if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true);
                  else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
-                 else $scope.showModalAlerta('Houve uma falha ao realizar a correção no ERP. (' + (failData.dados && failData.dados !== null ? failData.dados : failData.status) + ')', 'Erro');
+                 else{ 
+                     buscaDadosConciliacaoVendas(true);
+                     $scope.showModalAlerta('Houve uma falha ao realizar a correção no ERP: ' + (failData.dados && failData.dados !== null ? failData.dados : failData.status), 'Erro');
+                     return;
+                 }
                  // Fecha os progress
                  $scope.hideProgress(divPortletBodyFiltrosPos);
                  $scope.hideProgress(divPortletBodyDadosPos);

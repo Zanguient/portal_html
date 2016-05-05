@@ -11,6 +11,9 @@
 
 
 
+    Versão 1.1.4 - 05/05/2016
+    - Adquirente de cada cupom
+
     Versão 1.1.3 - 22/03/2016
     - Data Recebimento Original
 
@@ -1052,7 +1055,7 @@
                                         <label ng-bind="dado.RecebimentosParcela !== null ? 'Adquirente:' : ''"></label>
                                     </div>
                                     <div class="col-md-6 col-sm-6 alinhamentoDados"
-                                         ng-bind="dado.RecebimentosParcela !== null ? dado.Adquirente : ''">
+                                         ng-bind="dado.RecebimentosParcela !== null ? dado.AdquirenteRecebimento : ''">
                                     </div>                      
                                 </div> 
                                 <!--BANDEIRA -->
@@ -1206,7 +1209,7 @@
                                         <label ng-bind="dado.ExtratoBancario !== null ? 'Adquirente:' : ''"></label>
                                     </div>
                                     <div class="col-md-6 col-sm-6 alinhamentoDados"
-                                         ng-bind="dado.ExtratoBancario !== null ? dado.Adquirente : ''">
+                                         ng-bind="dado.ExtratoBancario !== null && dado.AdquirenteExtrato && dado.AdquirenteExtrato !== null ? dado.AdquirenteExtrato : ''">
                                     </div>                      
                                 </div> 
                                 <!--MEMO -->
@@ -1490,7 +1493,7 @@
                                         <label ng-bind="dado.RecebimentosParcela !== null ? 'Adquirente:' : ''"></label>
                                     </div>
                                     <div class="col-md-6 col-sm-6 alinhamentoDados"
-                                         ng-bind="dado.RecebimentosParcela !== null ? dado.Adquirente : ''">
+                                         ng-bind="dado.RecebimentosParcela !== null ? dado.AdquirenteRecebimento : ''">
                                     </div>                      
                                 </div> 
                                 <!--BANDEIRA -->
@@ -1645,7 +1648,7 @@
                                         <label ng-bind="dado.ExtratoBancario !== null ? 'Adquirente:' : ''"></label>
                                     </div>
                                     <div class="col-md-6 col-sm-6 alinhamentoDados"
-                                         ng-bind="dado.ExtratoBancario !== null ? dado.Adquirente : ''">
+                                         ng-bind="dado.ExtratoBancario !== null && dado.AdquirenteExtrato && dado.AdquirenteExtrato !== null ? dado.AdquirenteExtrato : ''">
                                     </div>                      
                                 </div> 
                                 <!--MEMO -->

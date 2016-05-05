@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.1.6 - 05/05/2016
+ *  - Adquirente de cada cupom
+ *
  *  Versão 1.1.5 - 09/03/2016
  *  - Paginação no modalDetalhes
  *
@@ -1262,7 +1265,7 @@ angular.module("card-services-conciliacao-bancaria", ['angularUtils.directives.d
         $scope.associacaoManual.dtExtrato = dado.Data;
         $scope.associacaoManual.recebimentos = null;
         $scope.associacaoManual.valorExtrato = dado.ValorTotalExtrato;
-        $scope.associacaoManual.adquirenteExtrato = dado.Adquirente;
+        $scope.associacaoManual.adquirenteExtrato = dado.AdquirenteExtrato;
         
         // todos os dados ficam desmarcados
         for(var k = 0; k < $scope.dadosconciliacao.length; k++)
@@ -1292,11 +1295,11 @@ angular.module("card-services-conciliacao-bancaria", ['angularUtils.directives.d
       */
     $scope.isMesmaDataEAdquirenteExtratoSelecionado = function(dado){
         if(!dado || !$scope.associacaoManual.extrato || dado === null || 
-           $scope.associacaoManual.extrato === null || !$scope.associacaoManual.dtExtrato ||
-           !$scope.associacaoManual.adquirenteExtrato) 
+           $scope.associacaoManual.extrato === null || !$scope.associacaoManual.dtExtrato) 
+           //|| !$scope.associacaoManual.adquirenteExtrato) 
             return false;
         return $scope.getDataString(dado.Data) === $scope.getDataString($scope.associacaoManual.dtExtrato) && 
-               $scope.associacaoManual.adquirenteExtrato === dado.Adquirente && (!$scope.associacaoManual.extrato[0].Filial || $scope.associacaoManual.extrato[0].Filial === dado.RecebimentosParcela[0].Filial);
+               (!$scope.associacaoManual.adquirenteExtrato || $scope.associacaoManual.adquirenteExtrato === null || $scope.associacaoManual.adquirenteExtrato === dado.AdquirenteRecebimento) && (!$scope.associacaoManual.extrato[0].Filial || $scope.associacaoManual.extrato[0].Filial === dado.RecebimentosParcela[0].Filial);
     }
     /**
       * Selecionou o grupo de recebimentos para conciliar com o extrato selecionado para conciliação manual
