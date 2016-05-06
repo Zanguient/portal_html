@@ -3,6 +3,9 @@
  *
  *  suporte@atoscapital.com.br
  *
+ * Versão 1.0.0 - 06/05/2016
+ * - Criação da tela Bandeira Sacado
+ *
  * Versão 1.2.2 - 29/04/2016
  * - Criação da tela Aceite Classificação 
  * - Criação da tela Consulta Mercadoria 
@@ -113,6 +116,7 @@ angular.module("AtosCapital", ['ui.router',
                                'administrativo-consulta-pos-terminal',
                                'administrativo-titulos',
                                'administrativo-vendas',
+															 'administrativo-bandeira-sacado',
                                'dashboard',
                                'card-services-antecipacao-bancaria',
                                'card-services-antecipacao-simulacao',
@@ -368,7 +372,14 @@ angular.module("AtosCapital", ['ui.router',
         }
       })
     
-
+			.state('administrativo-integracao-erp-bandeira-sacado', {
+        url: prefixo + 'administrativo/bandeira-sacado',
+        templateUrl: 'componentes/administrativo/integracao-erp/bandeira-sacado/index.html',
+        controller: "administrativo-bandeiraSacadoCtrl",
+        data: {
+            titulo: 'Administrativo'
+        }
+      })
 
       // DASHBOARD
       .state('dashboard', {
@@ -714,6 +725,7 @@ angular.module("AtosCapital", ['ui.router',
     var controllerAdministrativoConsultaPOSTerminal = undefined;
     var controllerAdministrativoTitulos = undefined;   
     var controllerAdministrativoVendas = undefined;                          
+		var controllerAdministrativoBandeiraSacado = undefined;
     var controllerDashboard = undefined;
     var controllerCardServicesAntecipacaoBancaria = undefined;
     var controllerCardServicesAntecipacaoSimulacao = undefined;                         
@@ -769,6 +781,7 @@ angular.module("AtosCapital", ['ui.router',
     $scope.PERMISSAO_ADMINISTRATIVO_INTEGRACAO_ERP = false;                        
     $scope.PERMISSAO_ADMINISTRATIVO_INTEGRACAO_ERP_TITULOS = false;
     $scope.PERMISSAO_ADMINISTRATIVO_INTEGRACAO_ERP_VENDAS = false;                        
+		$scope.PERMISSAO_ADMINISTRATIVO_INTEGRACAO_ERP_BANDEIRA_SACADO = false;
     $scope.PERMISSAO_DASHBOARD = false;
     $scope.PERMISSAO_CARD_SERVICES = false;
     $scope.PERMISSAO_CARD_SERVICES_ANTECIPACAO = false;
@@ -1036,7 +1049,14 @@ angular.module("AtosCapital", ['ui.router',
     $scope.goAdministrativoVendas = function(params){
         controllerAtual = controllerAdministrativoVendas;
         go('administrativo-integracao-erp-vendas', params);
-    };                         
+    };  
+		/**
+      * Exibe como conteúdo a Integração ERP Vendas, de Administrativo
+      */                        
+    $scope.goAdministrativoBandeiraSacado = function(params){
+        controllerAtual = controllerAdministrativoBandeiraSacado;
+        go('administrativo-integracao-erp-bandeira-sacado', params);
+    };
     /**
       * Exibe como conteúdo o Dashboard
       */
@@ -1423,7 +1443,16 @@ angular.module("AtosCapital", ['ui.router',
             }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'Títulos')
                      controllerAtual.id_controller !== controllerAdministrativoVendas.id_controller)
                 $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual 
-        }else if(url === $state.get('dashboard').url){
+        }else if(url === $state.get('administrativo-integracao-erp-bandeira-sacado').url){ 
+            // Administrativo > Integração ERP > Vendas
+            if(!$scope.PERMISSAO_ADMINISTRATIVO || !$scope.PERMISSAO_ADMINISTRATIVO_INTEGRACAO_ERP || !$scope.PERMISSAO_ADMINISTRATIVO_INTEGRACAO_ERP_BANDEIRA_SACADO){
+                // Não possui permissão!
+                event.preventDefault();
+                $scope.goUsuarioSemPrivilegios();
+            }else if(!controllerAtual || //controllerAtual.ds_controller.toUpperCase() !== 'Títulos')
+                     controllerAtual.id_controller !== controllerAdministrativoBandeiraSacado.id_controller)
+                $scope.reloadPage(); // recarrega a página para forçar a associação do controllerAtual 
+				}else if(url === $state.get('dashboard').url){
             // Dashboard
             if(!$scope.PERMISSAO_DASHBOARD){
                 // Não possui permissão!
@@ -1764,7 +1793,12 @@ angular.module("AtosCapital", ['ui.router',
                 if($location.path() === $state.get('administrativo-integracao-erp-vendas').url) 
                     controllerAtual = controller;
                 controllerAdministrativoVendas = controller;
-                return $scope.goAdministrativoVendas;     
+                return $scope.goAdministrativoVendas;
+						case 'BANDEIRA SACADO':
+                if($location.path() === $state.get('administrativo-integracao-erp-bandeira-sacado').url) 
+                    controllerAtual = controller;
+                controllerAdministrativoBandeiraSacado = controller;
+                return $scope.goAdministrativoBandeiraSacado;
             // Dashboard
             case 'DASHBOARD ATOS':
                 if($location.path() === $state.get('dashboard').url) controllerAtual = controller;
@@ -1936,6 +1970,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'INTEGRAÇÃO ERP': $scope.PERMISSAO_ADMINISTRATIVO_INTEGRACAO_ERP = true; break;    
             case 'TÍTULOS': $scope.PERMISSAO_ADMINISTRATIVO_INTEGRACAO_ERP_TITULOS = true; break;
             case 'VENDAS': $scope.PERMISSAO_ADMINISTRATIVO_INTEGRACAO_ERP_VENDAS = true; break;    
+						case 'BANDEIRA SACADO': $scope.PERMISSAO_ADMINISTRATIVO_INTEGRACAO_ERP_BANDEIRA_SACADO = true; break;
             // Dashboard
             case 'DASHBOARD ATOS': $scope.PERMISSAO_DASHBOARD = true; break;
             // Notícias
@@ -2044,6 +2079,7 @@ angular.module("AtosCapital", ['ui.router',
             case 'MONITOR DE CARGAS DO BOOT': return state == 'monitor-cargas-boot'; 
             case 'TÍTULOS': return state == 'titulos';    
             case 'VENDAS': return state == 'vendas';    
+						case 'BANDEIRA SACADO': return state == 'bandeira-sacado';
             // Tax Services
             case 'IMPORTAÇÃO XML': return state == 'importacao-xml';
             case 'CADASTRO CERTIFICADO DIGITAL': return state == 'cadastro-certificado-digital';
