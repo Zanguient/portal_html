@@ -5,7 +5,7 @@
     suporte@atoscapital.com.br
  
  
-    Tax Services > Nota Fiscal Eletrônica > Consulta Mercadoria
+    Tax Services > Nota Fiscal Eletrônica > Aceite Classificação
  
 
     Versão 1.0 - 29/04/2016
@@ -21,7 +21,7 @@
         <li class="active">
              Tax Services<i class="fa fa-caret-right"></i>
              Nota Fiscal Eletrônica<i class="fa fa-caret-right"></i>
-             Consulta Mercadoria
+             Aceite Classificação
         </li>
     </ul>
     <!-- END PAGE BREADCRUMB -->
@@ -32,7 +32,7 @@
             <!-- BEGIN TABLE PORTLET-->
             <div class="portlet light filtro">  
                
-                <!-- TOPO : Nome 'Consulta Mercadoria' e botões de 'Opções' e FullScreen -->                
+                <!-- TOPO : Nome 'Aceite Classificação' e botões de 'Opções' e FullScreen -->                
                 <div class="portlet-title tabbable-line" >
                     <div class="caption">
                         <!--i class="fa fa-cogs font-green-sharp"></i-->
@@ -65,11 +65,15 @@
                                 <table class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
                                     <thead>
                                         <tr role="row" class="heading">
-                                            <th width="30%" tabindex="0"  
+                                            <th width="20%" tabindex="0"  
+                                                rowspan="1" colspan="1">
+                                                 Status
+                                            </th>
+                                            <th width="20%" tabindex="0"  
                                                 rowspan="1" colspan="1">
                                                  Código
                                             </th>
-                                            <th width="60%" tabindex="1" 
+                                            <th width="50%" tabindex="1" 
                                                 rowspan="1" colspan="1">
                                                  Descrição
                                             </th>
@@ -80,6 +84,16 @@
                                         </tr>
                                         <!-- CONTEUDO DO FILTRO -->
                                         <tr role="row" class="filter">
+                                          <!-- FILTRO -->
+                                            <td rowspan="1" colspan="1">
+                                           <select class="form-control form-filter input-sm filtros"
+                                                    ng-model="statusAceite">
+                                                <option value="1">TODAS</option>
+                                                <option value="2">ACEITAS</option>
+                                                <option value="3">NÃO ACEITAS</option>
+                                                <option value="4">PENDENTES</option>
+                                            </select>                                
+                                            </td>
                                             <!-- CÓDIGO -->
                                             <td rowspan="1" colspan="1">
                                                        <input type="text" class="form-control"
@@ -194,283 +208,40 @@
             <!-- BEGIN TABLE PORTLET-->
             <div class="portlet light">
                 
-                 <!-- MODAL CLASSIFICAÇÃO DE MERCADORIA-->
+                <!-- MODAL JUSTIFICATIVA-->
                 <div class="modal fade bs-modal-sm modal-input" 
-                    id="modalClassificar" aria-hidden="true">
-                   <div class="modal-dialog modal-sm" style="width:1000px">
+                    id="modalJustificativa" aria-hidden="true">
+                   <div class="modal-dialog modal-sm" style="width:600px">
                        <div class="modal-content">
                            <div class="modal-header">
-                               <h4 class="modal-title modal-cabecalho">Classificação de Mercadoria</h4>
+                               <h4 class="modal-title modal-cabecalho">Justificativa de Aceite</h4>
                            </div>
                            <div class="modal-body modal-corpo" style="text-align: left">
-                               <form name="formCadastroClassficacao"> 
+                               <form name="formJustificativa"> 
                             <div class="row select-modal-importacao" >
-                                    <div class="col-md-3">
+                                    <div class="col-md-12">
                                         <label class="col-md-12 ">
-                                            Código NCM
+                                            Justificativa
                                         </label>
-                                    <div class="col-md-12 form-group" ng-class="{ 'has-error' : formCadastroClassficacao.nrNCM.$invalid && !formCadastroClassficacao.nrNCM.$pristine }">
-                                      <input type="text" class="form-control"
-                                       placeholder="Código NCM" 
-                                       ng-model="classificacao.nrNCM"
-                                       valid-integer-number
+                                    <div class="col-md-12 form-group" ng-class="{ 'has-error' : formJustificativa.dsJustificativa.$invalid && !formJustificativa.dsJustificativa.$pristine }">
+                                      <textarea  class="form-control"
+                                        rows="10" 
+                                       cols="30"
+                                       placeholder="Digite aqui a justificativa" 
+                                       ng-model="tbAceite.dsJustificativa"
                                        minlength="5"
-                                       maxlength="10" 
-                                       name="nrNCM" required/>  
-                                      <span style="color:red" ng-show="formCadastroClassficacao.nrNCM.$dirty && formCadastroClassficacao.nrNCM.$invalid">
-                                       <span ng-show="formCadastroClassficacao.nrNCM.$error.required">Código NCM é obrigatório!</span>
-                                                </span>
-                                    </div>                                              
-                                    </div>
-                                <div class="col-md-6">
-                                        <label class="col-md-12 ">
-                                           Descrição NCM
-                                        </label>
-                                    <div class="col-md-12 form-group" ng-class="{ 'has-error' : formCadastroClassficacao.dsNCM.$invalid && !formCadastroClassficacao.dsNCM.$pristine }">
-                                      <input type="text" class="form-control"
-                                       placeholder="Descrição NCM" 
-                                       ng-model="classificacao.dsNCM"
-                                       valid-integer-number
-                                       minlength="5"
-                                       maxlength="100" 
-                                       name="dsNCM" required/>  
-                                      <span style="color:red" ng-show="formCadastroClassficacao.dsNCM.$dirty && formCadastroClassficacao.dsNCM.$invalid">
-                                       <span ng-show="formCadastroClassficacao.dsNCM.$error.required">Descrição NCM é obrigatório!</span>
+                                       maxlength="500" 
+                                                name="dsJustificativa" required> </textarea>  
+                                      <span style="color:red" ng-show="formJustificativa.dsJustificativa.$dirty && formJustificativa.dsJustificativa.$invalid">
+                                       <span ng-show="formJustificativa.dsJustificativa.$error.required">Justificativa é obrigatório!</span>
                                                 </span>
                                     </div>                                              
                                     </div>
                                 
                                    </div>
-                                   <div class="row select-modal-importacao">
-                                   <div class="col-md-2">
-                                        <label class="col-md-12">
-                                            Alíquota ICMS
-                                        </label>
-                                        <div class="col-md-12 form-group" ng-class="{ 'has-error' : formCadastroClassficacao.prICMS.$invalid && !formCadastroClassficacao.prICMS.$pristine }">
-                                     <input type="text" 
-                                       class="form-control"
-                                       placeholder="Alíquota ICMS" 
-                                       ng-model="classificacao.prICMS"
-                                      maxlength="5"
-                                       input-money
-                                       name="prICMS" required/>  
-                                      <span style="color:red" ng-show="formCadastroClassficacao.prICMS.$dirty && formCadastroClassficacao.prICMS.$invalid">
-                                       <span ng-show="formCadastroClassficacao.prICMS.$error.required">Alíquota ICMS é obrigatório!</span>
-                                                </span>
-                                        </div> 
-                                    </div>
-                                   <div class="col-md-3">
-                                        <label class="col-md-12">
-                                          Alíquota Efetiva
-                                        </label>
-                                    <div class="col-md-12 form-group" ng-class="{ 'has-error' : formCadastroClassficacao.prEfetivaICMS.$invalid && !formCadastroClassficacao.prEfetivaICMS.$pristine }">
-                                      <input type="text" class="form-control"
-                                       placeholder="Alíquota Efetiva ICMS" 
-                                       ng-model="classificacao.prEfetivaICMS"
-                                      maxlength="5"
-                                       input-money
-                                       name="prEfetivaICMS" required/>  
-                                      <span style="color:red" ng-show="formCadastroClassficacao.prEfetivaICMS.$dirty && formCadastroClassficacao.prEfetivaICMS.$invalid">
-                                       <span ng-show="formCadastroClassficacao.prEfetivaICMS.$error.required">Alíquota Efetiva ICMS é obrigatório!</span>
-                                                </span>
-                                    </div>   
-                                       </div>
-                                   <div class="col-md-2">
-                                        <label class="col-md-12">
-                                            Base ICMS
-                                        </label>
-                                        <div class="col-md-12 form-group" ng-class="{ 'has-error' : formCadastroClassficacao.prBaseICMS.$invalid && !formCadastroClassficacao.prBaseICMS.$pristine }">
-                                     <input type="number" class="form-control"
-                                       placeholder="Base ICMS" 
-                                       ng-model="classificacao.prBaseICMS"
-                                       maxlength="3"
-                                        name="prBaseICMS" required/>  
-                                      <span style="color:red" ng-show="formCadastroClassficacao.prBaseICMS.$dirty && formCadastroClassficacao.prBaseICMS.$invalid">
-                                       <span ng-show="formCadastroClassficacao.prBaseICMS.$error.required">Base ICMS é obrigatório!</span>
-                                                </span>
-                                        </div> 
-                                    </div>                                           
-                                   <div class="col-md-2">
-                                        <label class="col-md-12">
-                                            CST ICMS
-                                        </label>
-                                        <div class="col-md-12 form-group" ng-class="{ 'has-error' : formCadastroClassficacao.dsCstICMS.$invalid && !formCadastroClassficacao.dsCstICMS.$pristine }">
-                                    <input type="text" class="form-control"
-                                       placeholder="CST ICMS" 
-                                       ng-model="classificacao.dsCstICMS"
-                                       valid-integer-number 
-                                       maxlength="3"
-                                      name="dsCstICMS" required/>  
-                                      <span style="color:red" ng-show="formCadastroClassficacao.dsCstICMS.$dirty && formCadastroClassficacao.dsCstICMS.$invalid">
-                                       <span ng-show="formCadastroClassficacao.dsCstICMS.$error.required"> CST ICMS é obrigatório!</span>
-                                                </span>
-                                        </div> 
-                                    </div>         
-                                   <div class="col-md-3">
-                                        <label class="col-md-12">
-                                           Base Legal ICMS
-                                        </label>
-                                        <div class="col-md-12 form-group" ng-class="{ 'has-error' : formCadastroClassficacao.dsBaseLegalICMS.$invalid && !formCadastroClassficacao.dsBaseLegalICMS.$pristine }">
-                                    <input type="text" class="form-control"
-                                       placeholder="Base Legal ICMS" 
-                                       ng-model="classificacao.dsBaseLegalICMS"
-                                       maxlength="50"
-                                       name="dsBaseLegalICMS" required/>  
-                                      <span style="color:red" ng-show="formCadastroClassficacao.dsBaseLegalICMS.$dirty && formCadastroClassficacao.dsBaseLegalICMS.$invalid">
-                                       <span ng-show="formCadastroClassficacao.dsBaseLegalICMS.$error.required"> Base Legal ICMS é obrigatório!</span>
-                                                </span>
-                                        </div> 
-                                    </div>  
-                               </div>
-                                <div class="row select-modal-importacao" >
-                                    <div class="col-md-3">
-                                        <label class="col-md-12">
-                                            Alíquota IPI
-                                        </label>
-                                        <div class="col-md-12 form-group" ng-class="{ 'has-error' : formCadastroClassficacao.prIPI.$invalid && !formCadastroClassficacao.prIPI.$pristine }">
-                                     <input type="text" class="form-control"
-                                       placeholder="Alíquota IPI" 
-                                       ng-model="classificacao.prIPI"
-                                       maxlength="5"
-                                       input-money
-                                    name="prIPI" required/>  
-                                      <span style="color:red" ng-show="formCadastroClassficacao.prIPI.$dirty && formCadastroClassficacao.prIPI.$invalid">
-                                       <span ng-show="formCadastroClassficacao.prIPI.$error.required"> Alíquota IPI é obrigatório!</span>
-                                                </span>
-                                        </div> 
-                                    </div>
-                                   <div class="col-md-3">
-                                        <label class="col-md-12">
-                                            CST IPI
-                                        </label>
-                                        <div class="col-md-12 form-group" ng-class="{ 'has-error' : formCadastroClassficacao.dsCstIPI.$invalid && !formCadastroClassficacao.dsCstIPI.$pristine }">
-                                     <input type="text" class="form-control"
-                                       placeholder="CST IPI" 
-                                       ng-model="classificacao.dsCstIPI"
-                                       valid-integer-number 
-                                       maxlength="3"
-                                        name="dsCstIPI" required/>  
-                                      <span style="color:red" ng-show="formCadastroClassficacao.dsCstIPI.$dirty && formCadastroClassficacao.dsCstIPI.$invalid">
-                                       <span ng-show="formCadastroClassficacao.dsCstIPI.$error.required">CST IPI é obrigatório!</span>
-                                                </span>
-                                        </div> 
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="col-md-12">
-                                          Base Legal IPI
-                                        </label>
-                                    <div class="col-md-12 form-group" ng-class="{ 'has-error' : formCadastroClassficacao.dsBaseLegalIPI.$invalid && !formCadastroClassficacao.dsBaseLegalIPI.$pristine }">
-                                      <input type="text" class="form-control"
-                                       placeholder="Base Legal IPI" 
-                                       ng-model="classificacao.dsBaseLegalIPI"
-                                       maxlength="50"
-                                       name="dsBaseLegalIPI" required/>  
-                                      <span style="color:red" ng-show="formCadastroClassficacao.dsBaseLegalIPI.$dirty && formCadastroClassficacao.dsBaseLegalIPI.$invalid">
-                                       <span ng-show="formCadastroClassficacao.dsBaseLegalIPI.$error.required">Base Legal IPI é obrigatório!</span>
-                                                </span>
-                                    </div>                                              
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="col-md-12">
-                                            Alíquota II
-                                        </label>
-                                        <div class="col-md-12 form-group" ng-class="{ 'has-error' : formCadastroClassficacao.prII.$invalid && !formCadastroClassficacao.prII.$pristine }"> 
-                                    <input type="text" class="form-control"
-                                       placeholder="Alíquota II" 
-                                       ng-model="classificacao.prII"
-                                      maxlength="5"
-                                       input-money
-                                       name="prII" required/>  
-                                      <span style="color:red" ng-show="formCadastroClassficacao.prII.$dirty && formCadastroClassficacao.prII.$invalid">
-                                       <span ng-show="formCadastroClassficacao.prII.$error.required">Alíquota II é obrigatório!</span>
-                                                </span>
-                                        </div> 
-                                    </div>
-                                    
-                               </div>
-                               
-                               <div class="row select-modal-importacao">
-                                    <div class="col-md-3">
-                                        <label class="col-md-12">
-                                           CST PIS/COFINS
-                                        </label>
-                                        <div class="col-md-12 form-group" ng-class="{ 'has-error' : formCadastroClassficacao.dsCstPisCofins.$invalid && !formCadastroClassficacao.dsCstPisCofins.$pristine }">
-                                     <input type="text" class="form-control"
-                                       placeholder="CST PIS/COFINSS" 
-                                       ng-model="classificacao.dsCstPisCofins"
-                                       valid-integer-number 
-                                       maxlength="3"
-                                       name="dsCstPisCofins" required/>  
-                                      <span style="color:red" ng-show="formCadastroClassficacao.dsCstPisCofins.$dirty && formCadastroClassficacao.dsCstPisCofins.$invalid">
-                                       <span ng-show="formCadastroClassficacao.dsCstPisCofins.$error.required">CST PIS/COFINS é obrigatório!</span>
-                                                </span>
-                                        </div> 
-                                    </div>
-                                   <div class="col-md-2">
-                                        <label class="col-md-12">
-                                           Alíquota PIS
-                                        </label>
-                                        <div class="col-md-12 form-group" ng-class="{ 'has-error' : formCadastroClassficacao.prPIS.$invalid && !formCadastroClassficacao.prPIS.$pristine }">
-                                     <input type="text" class="form-control"
-                                       placeholder="Alíquota PIS" 
-                                       ng-model="classificacao.prPIS"
-                                       maxlength="5"
-                                       input-money
-                                       name="prPIS" required/>  
-                                      <span style="color:red" ng-show="formCadastroClassficacao.prPIS.$dirty && formCadastroClassficacao.prPIS.$invalid">
-                                       <span ng-show="formCadastroClassficacao.prPIS.$error.required">Alíquota PIS é obrigatório!</span>
-                                                </span>
-                                        </div> 
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="col-md-12">
-                                          Alíquota COFINS
-                                        </label>
-                                    <div class="col-md-12 form-group" ng-class="{ 'has-error' : formCadastroClassficacao.prCOFINS.$invalid && !formCadastroClassficacao.prCOFINS.$pristine }">
-                                      <input type="text" class="form-control"
-                                       placeholder="Alíquota COFINS" 
-                                       ng-model="classificacao.prCOFINS"
-                                      maxlength="5"
-                                       input-money
-                                    name="prCOFINS" required/>  
-                                      <span style="color:red" ng-show="formCadastroClassficacao.prCOFINS.$dirty && formCadastroClassficacao.prCOFINS.$invalid">
-                                       <span ng-show="formCadastroClassficacao.prCOFINS.$error.required">Alíquota COFINS é obrigatório!</span>
-                                                </span>
-                                    </div>                                              
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="col-md-12">
-                                          Base Legal PIS/COFINS
-                                        </label>
-                                        <div class="col-md-12 form-group" ng-class="{ 'has-error' : formCadastroClassficacao.dsBaseLegalPisCofins.$invalid && !formCadastroClassficacao.dsBaseLegalPisCofins.$pristine }"> 
-                                    <input type="text" class="form-control"
-                                       placeholder="Base Legal PIS/COFINS" 
-                                       ng-model="classificacao.dsBaseLegalPisCofins"
-                                       maxlength="50"
-                                        name="dsBaseLegalPisCofins" required/>  
-                                      <span style="color:red" ng-show="formCadastroClassficacao.dsBaseLegalPisCofins.$dirty && formCadastroClassficacao.dsBaseLegalPisCofins.$invalid">
-                                       <span ng-show="formCadastroClassficacao.dsBaseLegalPisCofins.$error.required"> Base Legal PIS/COFINS é obrigatório!</span>
-                                                </span>
-                                        </div> 
-                                    </div>
-                               </div>
-                               
-                                   <div class="row select-modal-importacao">
-                                       <div class="col-md-6">
-                                        <label class="col-md-12">
-                                            Observação
-                                        </label>
-                                        <div class="col-md-12">
-                                     <input type="text" class="form-control"
-                                       placeholder="Observação" 
-                                       ng-model="classificacao.dsObservacao"
-                                       maxlength="100"/>  
-                                        </div> 
-                                    </div>
-                                   </div>
                                 <div class="row button-modal-importacao">
                                    <div class="col-md-12">
-                                    <button class="btn btn-sm red filter-submit margin-bottom" ng-click="insereClassificacao();" ng-disabled="formCadastroClassficacao.$invalid">Classificar</button>
+                                    <button class="btn btn-sm red filter-submit margin-bottom" ng-click="insereJustificativaAceite();" ng-disabled="formJustificativa.$invalid">Salvar</button>
                                    </div>
                                </div>
                                    
@@ -488,7 +259,7 @@
                        </div>
                    </div>
                 </div>
-                <!-- FIM - MODAL CLASSIFICAÇÃO DE MERCADORIA-->
+                <!-- FIM - MODAL JUSTIFICATIVA-->
                 
                 <!-- MODAL DETALHES -->
                 <div class="modal fade bs-modal-sm modal-input" 
@@ -1972,7 +1743,7 @@
                 <!--TITULO-->
                 <div class="portlet-title">
                     <div class="caption">								
-                        <span class="caption-subject font-green-sharp bold uppercase"><!--Consulta Mercadoria-->Detalhes Mercadoria</span>
+                        <span class="caption-subject font-green-sharp bold uppercase"><!--Aceite Classificação-->Detalhes Mercadoria</span>
                     </div>
                     <div class="actions">
                         <a class="btn btn-circle btn-icon-only btn-default fullscreen" 
@@ -2130,12 +1901,6 @@
                                                     <a href="javascript:;" 
                                                        ng-click="detalhar(mercadorias, $index)">
                                                         Detalhes Nota Fornecedor
-                                                    </a>
-                                                </li>
-                                                 <li>
-                                                    <a href="javascript:;" 
-                                                       ng-click="buscaUltimaClassficacao(mercadorias, $index)">
-                                                        Classificar
                                                     </a>
                                                 </li>
                                             </ul>
@@ -2465,15 +2230,68 @@
                                                                         </div>
                                                                         <div class="row button-modal-importacao">
                                                                             <div class="col-md-6" style="text-align:center; color:red; font-size: 12px;">
-                                                                                {{classificacao.dsMensagemAceite}}
                                                                             </div>
                                                                             <div class="col-md-6">
-                    <button class="btn btn-sm green filter-submit margin-bottom" ng-click="aceite(mercadoria,$index,'true');" ng-disabled="classificacao.flAceite === null? false: true">Aceito</button>
-                      <button class="btn btn-sm red filter-submit margin-bottom" ng-click="aceite(mercadoria,$index,'false');" ng-disabled="classificacao.flAceite === null? false: true">Não Aceito</button>
+                    <button class="btn btn-sm green filter-submit margin-bottom" ng-click="aceite(mercadoria,$index);" ng-disabled="classificacao.flAceite">Aceito</button>
+                      <button class="btn btn-sm red filter-submit margin-bottom" ng-click="exibeJustifictiva(mercadoria,$index);" ng-disabled="classificacao.flAceite">Não Aceito</button>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="row titulos-campos-detalhes-nota">
+                                                        <div class="col-md-6">
+                                                            <label>Histórico de Aceites</label>                                              
+                                                        </div>
+                                                        </div>
+                                                        
+                                                        <!--SEGUNDO BLOCO-->
+                                                        <div class="row">
+                                                        <div class="col-md-12">
+                                                                <div class="row campos-detalhe-nota">
+                                                                    <div class="col-md-12">
+                                                                        <table class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
+                                                                        <thead>
+                                                                            <tr>
+                                                                            <th width="10%">
+                                                                                Data
+                                                                                </th>
+                                                                              <th width="10%">
+                                                                                Usuário
+                                                                                </th>
+                                                                              <th width="10%">
+                                                                                Status
+                                                                                </th>
+                                                                               <th width="70%">
+                                                                                Justificativa
+                                                                                </th>
+                                                                            </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                            <tr ng-repeat="aceite in classificacao.aceites">
+                                                                                <!-- DATA-->
+                                                                                <td width="10%" ng-bind="getDataString(aceite.dtAceite)">
+                                                                                    
+                                                                                </td>
+                                                                                <!-- USUÁRIO-->
+                                                                                <td width="10%">
+                                                                                {{aceite.dsLogin}}
+                                                                                </td>
+                                                                                <!-- STATUS-->
+                                                                                <td width="10%">
+                                                                                {{aceite.flAceite}}
+                                                                                </td>
+                                                                                <!-- JUSTIFICATIVA-->
+                                                                                <td width="70%">
+                                                                                {{aceite.dsJustificativa}}
+                                                                                </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                            </div>
                                                             </div>
                                                         </div>
                                                     </div>

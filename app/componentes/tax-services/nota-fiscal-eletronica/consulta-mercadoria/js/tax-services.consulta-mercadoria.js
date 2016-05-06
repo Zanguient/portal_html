@@ -29,32 +29,33 @@ angular.module("tax-services-consulta-mercadoria", [])
                       total_registros : 0, faixa_registros : '0-0', total_paginas : 0, chaveAcesso : null,cdMercadoria: null,dsMercadoria:null};
     $scope.classificacao = {idMercadoria: null,
                                     nrNCM: null,
-                                    dsNCM: null,
-                                    dsCstICMS: null,
-                                    prICMS: 0.0,
-                                    prBaseICMS: 0,
-                                    prEfetivaICMS: 0.0,
-                                    dsBaseLegalICMS: null,
-                                    prIPI: 0.0,
-                                    dsCstIPI: null,
-                                    dsBaseLegalIPI: null,
-                                    prII: 0.0,
-                                    dsCstPisCofins: null,
-                                    prPIS: 0.0,
-                                    prCOFINS: 0.0,
-                                    dsBaseLegalPisCofins: null,
-                                    dsObservacao: null,
-                                    idUsers: null,
+                                    dsNCM:  null,
+                                    dsCstICMS:  null,
+                                    prICMS:  null,
+                                    prBaseICMS:  null,
+                                    prEfetivaICMS:  null,
+                                    dsBaseLegalICMS:  null,
+                                    prIPI:  null,
+                                    dsCstIPI:  null,
+                                    dsBaseLegalIPI:  null,
+                                    prII:  null,
+                                    dsCstPisCofins:  null,
+                                    prPIS:  null,
+                                    prCOFINS:  null,
+                                    dsBaseLegalPisCofins:  null,
+                                    dsObservacao:  null,
+                                    idUsers:  null,
                                     dtClassificacao: null,
                                     flAceite: null,
-                                    idUsersAceite: null,
-                                    dsMensagemAceite:null};
+                                    idUsersAceite:  null,
+                                    dsMensagemAceite: null};
     $scope.tabFiltro = 1; 
     $scope.tab = 1;
     $scope.tabDetalhes = 1;
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyManifestoPos = 1; // posição da div que vai receber o loading progress                                         
     
+    $scope.buscaStatus = '1';
     $scope.ultimaClassificacao = null;                                            
     // flags                                   
     $scope.exibeTela = false;                                                                                                    
@@ -158,6 +159,12 @@ angular.module("tax-services-consulta-mercadoria", [])
        if($scope.tabFiltro === 1)
        {
            var filtroData = undefined;
+           // Filtro Por Status 
+            if($scope.buscaStatus && $scope.buscaStatus !== ''){
+                filtros.push({id: /*$campos.tax.tbmercadoria.buscastatus */ 200,
+                              valor: $scope.buscaStatus});
+            }
+           
             // Filtro Por Código 
             if($scope.filtro.cdMercadoria && $scope.filtro.cdMercadoria !== ''){
                 filtros.push({id: /*$campos.tax.tbmercadoria.cdmercadoriaerp */ 103,
@@ -230,12 +237,9 @@ angular.module("tax-services-consulta-mercadoria", [])
                     ultimoFiltroBusca = filtros;
 
                     // Obtém os dados
-                    $scope.mercadorias = dados.Registros;
-                    if($scope.mercadorias.length > 0)
-                        {
-                        $scope.classificacao = $scope.mercadorias[0].ultimaClassificacao;
-                        }
-                    
+                    $scope.mercadorias = dados.Registros;    
+               
+               
                     // Set valores de exibição
                     $scope.filtro.total_registros = dados.TotalDeRegistros;
                     $scope.filtro.total_paginas = Math.ceil($scope.filtro.total_registros / $scope.filtro.itens_pagina);
@@ -287,17 +291,20 @@ angular.module("tax-services-consulta-mercadoria", [])
         
         var mercadoria = mercadorias[indexNota];
         
-        var filtros = [{id: /*$campos.tax.tbmercadoriaclassificada.idMercadoria */ 101,
+        var filtros = [{id: /*$campos.tax.tbclassificacao.idMercadoria */ 101,
                               valor: mercadoria.idMercadoria}];
      
-           $webapi.get($apis.getUrl($apis.tax.tbmercadoriaclassificada, 
+           $webapi.get($apis.getUrl($apis.tax.tbclassificacao, 
                                     [$scope.token, 2], 
                                     filtros)) 
                 .then(function(dados){
 
+              
                     // Obtém os dados
-                    $scope.classificacao = dados.Registros[0];
-                    $scope.ultimaClassificacao = $scope.classificacao;      
+              if(dados.Registros.length > 0) 
+                  $scope.classificacao = dados.Registros[0];
+               else 
+                   $scope.classificacao.idMercadoria = mercadoria.idMercadoria;
                
                     // Fecha os progress
                     $scope.hideProgress(divPortletBodyFiltrosPos);
@@ -321,12 +328,13 @@ angular.module("tax-services-consulta-mercadoria", [])
         
     }
     
+    //Exibe o modal Classificar
     var exibeModal = function(){
         $('#modalClassificar').modal('show');
     
     }
     /*
-    Fecha o modal Importar
+    Fecha o modal Classificar
     */                                            
     var fechaModalClassificar = function(){
         $('#modalClassificar').modal('hide');       
@@ -390,7 +398,7 @@ angular.module("tax-services-consulta-mercadoria", [])
         
         
         insereClassificaco();
-        //console.log($scope.classificacao);
+        
     }
                                                 
     var insereClassificaco = function(){
@@ -399,7 +407,7 @@ angular.module("tax-services-consulta-mercadoria", [])
        $scope.showProgress(divPortletBodyManifestoPos);
         
            
-        $webapi.post($apis.getUrl($apis.tax.tbmercadoriaclassificada, undefined,
+        $webapi.post($apis.getUrl($apis.tax.tbclassificacao, undefined,
                                   {id: 'token', valor: $scope.token}), $scope.classificacao)
                 .then(function(dados){
             
@@ -431,7 +439,10 @@ angular.module("tax-services-consulta-mercadoria", [])
                          return false;
                     }
             }
-            
+          
+        /*
+        Aceite da Classificação
+        */    
         $scope.aceite = function(mercadoria,index,aceiteGestor){
             
         // Avalia se há um grupo empresa selecionado
@@ -453,9 +464,9 @@ angular.module("tax-services-consulta-mercadoria", [])
        $scope.showProgress(divPortletBodyFiltrosPos, 10000); // z-index < z-index do fullscreen     
        $scope.showProgress(divPortletBodyManifestoPos);
            var classificacao = mercadoria.classificacoes[index];
-           var json = {idMercadoriaClassificada: classificacao.idMercadoriaClassificada,flAceite:aceiteGestor};
+           var json = {idClassificacao: classificacao.idClassificacao,flAceite:aceiteGestor};
             
-            $webapi.update($apis.getUrl($apis.tax.tbmercadoriaclassificada, undefined,
+            $webapi.update($apis.getUrl($apis.tax.tbclassificacao, undefined,
                                   {id: 'token', valor: $scope.token}), json)
                 .then(function(dados){
             
@@ -509,7 +520,6 @@ angular.module("tax-services-consulta-mercadoria", [])
             .then(function(dados){
                 // Obtém os dados
                 $scope.notadetalhada = undefined;
-                //console.log(dados);
            
                 if(dados.Registros.length > 0){ 
                     $scope.notadetalhada = dados.Registros[0].notas[0];
