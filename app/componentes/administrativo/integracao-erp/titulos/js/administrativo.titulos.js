@@ -5,6 +5,9 @@
  *
  *
  * 
+ *  Versão 1.0.7 - 06/05/2016
+ *  - Importação por data de venda
+ *
  *  Versão 1.0.6 - 29/04/2016
  *  - Avalia nsu
  *
@@ -50,7 +53,7 @@ angular.module("administrativo-titulos", [])
     $scope.titulos = [];
     $scope.filiais = [];
     $scope.adquirentes = [];
-    $scope.filtro = { dtImportacao : new Date(), data : 'Recebimento',
+    $scope.filtro = { dtImportacao : new Date(), dataImportacao : 'Recebimento', data : 'Recebimento',
                       datamin : new Date(), datamax : '', consideraPeriodo : true,
                       filial : null, adquirente : null, nsu : '',
                       itens_pagina : $scope.itens_pagina[0], order : 0, 
@@ -501,14 +504,23 @@ angular.module("administrativo-titulos", [])
             return;
         }
         
+        // Funcionalidade de importação por data de venda só funciona para o SPRESS
+        if($scope.filtro.dataImportacao === 'Venda' && $scope.usuariologado.grupoempresa.dsAPI !== 'apispress'){
+            $scope.showModalAlerta('Empresa não possui serviço de importação de títulos por data de venda!');
+            return;
+        }
+        
         $scope.showProgress(divPortletBodyImportacaoPos, 10000);
         $scope.showProgress(divPortletBodyFiltrosPos, 10000);
         $scope.showProgress(divPortletBodyTitulosPos);
         
+        var json = { data : $scope.getFiltroData($scope.filtro.dtImportacao),
+                     tipoData : $scope.filtro.dataImportacao === 'Venda' ? 'V' : 'R' };
+        
         // Requisita 
         $webapi.post($apis.getUrl($apis.card.tituloserp, undefined,
                                   {id : 'token', valor: $scope.token}), 
-                                  {data: $scope.getFiltroData($scope.filtro.dtImportacao)}) 
+                                  json) 
             .then(function(dados){           
 
                 $scope.showAlert('Títulos importados com sucesso!', true, 'success', true);

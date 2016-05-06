@@ -8,6 +8,9 @@
     Administrativo > Integração ERP > Títulos
 
 
+    Versão 1.0.5 - 06/05/2016
+    - Importação por data de venda
+
     Versão 1.0.4 - 10/03/2016
     - Filtros
 
@@ -53,7 +56,7 @@
                         <thead>
                             <tr role="row" class="heading">
                                 <th tabindex="0" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="85%">
-                                     Data
+                                     Data {{filtro.dataImportacao}}
                                 </th>
                                 <th tabindex="6" aria-controls="datatable_ajax" rowspan="1" colspan="1"  width="15%">
                                      Ações
@@ -62,6 +65,27 @@
                             <tr role="row" class="filter">  
                                 <!-- DATA -->
                                 <td rowspan="1" colspan="1">
+                                    <div class="clearfix" style="text-align:center; margin-bottom:10px">
+                                        <div class="btn-group" data-toggle="buttons">
+                                            <div class="col-md-7 col-sm-12" style="margin-bottom:5px;">
+                                                <label class="btn" 
+                                                       ng-class="{ 'red': filtro.dataImportacao === 'Recebimento', 'grey': filtro.dataImportacao !== 'Recebimento'}"
+                                                       ng-model="filtro.dataImportacao" 
+                                                       btn-radio="'Recebimento'">
+                                                    Recebimento
+                                                </label> 
+                                            </div>
+                                            <div class="col-md-5 col-sm-12">
+                                                <label class="btn" 
+                                                       ng-class="{ 'red': filtro.dataImportacao === 'Venda', 'grey': filtro.dataImportacao !== 'Venda'}"
+                                                       ng-model="filtro.dataImportacao" 
+                                                       btn-radio="'Venda'">
+                                                    Venda
+                                                </label>
+                                            </div>    
+                                        </div>
+                                    </div>
+                                    
                                     <div class="input-group date date-picker margin-bottom-5"
                                          data-date-format="dd/mm/yyyy"
                                          style="margin:auto">
