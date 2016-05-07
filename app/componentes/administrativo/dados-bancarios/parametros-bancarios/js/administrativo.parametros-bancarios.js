@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.8 - 06/05/2016
+ *  - Parâmetro bancário por grupo
+ *
  *  Versão 1.0.7 - 20/04/2016
  *  - Não inicializa consulta ao acessar a página
  *
@@ -755,7 +758,7 @@ angular.module("administrativo-parametros-bancarios", [])
         $scope.modalParametro.banco = parametro.banco;
         $scope.modalParametro.dsMemo = parametro.dsMemo;
         $scope.modalParametro.dsTipo = parametro.dsTipo.toUpperCase();
-        $scope.modalParametro.cdGrupo = parametro.grupoempresa && parametro.grupoempresa !== null ? parametro.grupoempresa.id_grupo : 0,
+        $scope.modalParametro.cdGrupo = parametro.grupoempresa && parametro.grupoempresa !== null ? parametro.grupoempresa.id_grupo : $scope.usuariologado.grupoempresa && $scope.usuariologado.grupoempresa !== null ? $scope.usuariologado.grupoempresa.id_grupo : 0,
         $scope.modalParametro.flVisivel = parametro.flVisivel;
         $scope.modalParametro.flAntecipacao = parametro.flAntecipacao;
         $scope.modalParametro.estabelecimento = '';
@@ -789,9 +792,7 @@ angular.module("administrativo-parametros-bancarios", [])
         if(typeof old === 'undefined' || old === null) return;
         
         // Houve alterações?
-        if(($scope.modalParametro.cdGrupo === 0 && (!old.grupoempresa || old.grupoempresa === null)) &&
-           ($scope.modalParametro.cdGrupo !== 0 && old.grupoempresa && old.grupoempresa !== null && $scope.modalParametro.cdGrupo === old.grupoempresa.id_grupo) &&
-           $scope.modalParametro.banco.Codigo === old.banco.Codigo &&
+        if($scope.modalParametro.banco.Codigo === old.banco.Codigo &&
            $scope.modalParametro.flAntecipacao === old.flAntecipacao &&
            $scope.modalParametro.dsMemo.toUpperCase() === old.dsMemo.toUpperCase() &&
            $scope.modalParametro.dsTipo.toUpperCase() === old.dsTipo.toUpperCase() &&
@@ -876,7 +877,7 @@ angular.module("administrativo-parametros-bancarios", [])
                                      excluiParametroBancario, 
                                     {cdBanco : parametro.banco.Codigo,
                                      dsMemo: parametro.dsMemo,
-                                     cdGrupo : parametro.grupoempresa && parametro.grupoempresa !== null ? parametro.grupoempresa.id_grupo : 0}, 'Sim', 'Não');  
+                                     cdGrupo : parametro.grupoempresa && parametro.grupoempresa !== null ? parametro.grupoempresa.id_grupo : $scope.usuariologado.grupoempresa && $scope.usuariologado.grupoempresa !== null ? $scope.usuariologado.grupoempresa.id_grupo : 0}, 'Sim', 'Não');  
     };                   
     /**
       * Efetiva a exclusão do parâmetro bancário

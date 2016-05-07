@@ -10,6 +10,9 @@
 
 
     Versão 1.0.5 - 01/02/2016
+    - Parâmetro bancário por grupo
+
+    Versão 1.0.5 - 01/02/2016
     - Parâmetro bancário de antecipação
 
     Versão 1.0.4 - 18/11/2015
@@ -881,9 +884,11 @@
                             <td>
                                 <span ng-show="parametro.grupoempresa">
                                     {{(parametro.grupoempresa.ds_nome | uppercase) || ''}}
-                                    &nbsp;/&nbsp;
                                 </span>
-                                <span ng-bind="getNomeAmigavelFilial(parametro.empresa)" style="font-weight:bolder"></span>
+                                <span ng-show="parametro.empresa && parametro.empresa !== null">
+                                    &nbsp;/&nbsp;
+                                    <span ng-bind="getNomeAmigavelFilial(parametro.empresa)" style="font-weight:bolder"></span>
+                                </span>
                             </td>
                             <!-- BOTÃO AÇÕES -->
                             <td class="center btnacoes">
