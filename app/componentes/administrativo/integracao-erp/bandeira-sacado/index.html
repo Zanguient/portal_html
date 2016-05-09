@@ -5,7 +5,7 @@
     suporte@atoscapital.com.br
  
  
-    Administrativo > Gestão de Empresas > Dados de Acesso
+    Administrativo > Integração ERP > Bandeira Sacado
 
 
     Versão 1.0 - 06/05/2016
@@ -68,15 +68,16 @@
                                              Opções
                                         </th>
                                     </tr>
-                                    <tr role="row" class="filter">   
+                                    <tr role="row" class="filter">
                                         <!-- ADQUIRENTES -->
                                         <td rowspan="1" colspan="1" style="text-align: center">
-                                            <select class="form-control form-filter input-sm filtros"
-                                                    ng-disabled="filtro.filial === null"
+                                            <select class="form-control form-filter input-sm comboBoxFiltros"                                                    
+													ng-disabled="adquirentes.length == 0"
                                                     ng-model="filtro.adquirente"
-                                                    ng-change="alterouAdquirente()"
-                                                    ng-options="adquirente as (adquirente.nmOperadora | uppercase) for adquirente in adquirentes">
-                                                <option value="">TODAS</option>
+													ng-change="alterouAdquirente()"
+                                                    ng-options="adquirente as (adquirente.nmAdquirente | uppercase) for adquirente in adquirentes"
+                                            >
+												<option value="">TODAS</option>
                                             </select>
                                             <i class="fa fa-question-circle"
                                                ng-show="!usuariologado.grupoempresa"
@@ -86,24 +87,39 @@
                                         </td>
                                         <!-- BANDEIRA -->
                                         <td rowspan="1" colspan="1" style="text-align: center">
-                                            
+                                            <select class="form-control form-filter input-sm comboBoxFiltros"
+												ng-disabled="adquirentes.length == 0"
+												ng-model="filtro.bandeira"
+												ng-options="bandeira as (bandeira.dsBandeira | uppercase) for bandeira in bandeiras"
+											>
+												<option value="">TODAS</option>
+											</select>
+											<i class="fa fa-question-circle"
+                                               ng-show="!usuariologado.grupoempresa"
+                                               popover-placement="bottom"
+                                               popover="É necessário selecionar uma empresa"
+                                               popover-trigger="mouseenter"></i>
                                         </td>
                                         <!-- SACADO -->
                                         <td rowspan="1" colspan="1">
-																					<input type="text" 
-																								 class="form-control form-filter input-sm filtros"
-																								 ng-model="sacado"> 
-																				</td>
+											<input type="number" class="form-control form-filter input-sm filtros" 
+											ng-model="filtro.sacado"
+											ng-disabled="statusLogado == false"
+											>
+										</td>
                                         <!--BUSCAR E LIMPAR-->
                                         <td rowspan="1" colspan="1">
                                             <div class="margin-bottom-5">
                                                 <button class="btn btn-sm red filter-submit margin-bottom" 
-                                                        ng-click="">
+                                                        ng-click="buscaBandeiraSacado()"
+														ng-disabled="statusLogado == false">
                                                     <i class="fa fa-search"></i> Buscar
                                                 </button>
                                             </div>
                                             <button class="btn btn-sm grey filter-cancel"
-                                                    ng-click="limpaFiltros()">
+                                                    ng-click="limpaFiltros()"
+													ng-disabled="statusLogado == false"
+													>
                                                 <i class="fa fa-times"></i> 
                                                 Limpar
                                             </button>
@@ -256,15 +272,10 @@
                                                     </th>
                                                     <th tabindex="3" 
                                                         rowspan="1" colspan="1" 
-                                                        style="width: 10%;">
-                                                        Senha
-                                                    </th>
-                                                    <th tabindex="4" 
-                                                        rowspan="1" colspan="1" 
                                                         style="width: 20%;">
                                                         Qnt. Parcelas
                                                     </th>
-                                                    <th tabindex="6" 
+                                                    <th tabindex="4" 
                                                         rowspan="1" colspan="1" 
                                                         style="width: 10%;">
                                                         Ações
@@ -323,9 +334,8 @@
                                                     </td> 
                                                     <!--FIM BOTÃO-->
                                                 </tr> 
-                                                <!-- DADOS DE ACESSO -->
-                                                <tr role="row" class="odd"
-                                                    ng-repeat="dadoacesso in dadosAcesso">
+                                                <!-- BANDEIRA SACADO -->
+                                                <tr role="row" class="odd">
                                                     <td>
                                                          
                                                     </td>
