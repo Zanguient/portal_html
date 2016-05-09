@@ -1299,7 +1299,7 @@ angular.module("card-services-conciliacao-bancaria", ['angularUtils.directives.d
            //|| !$scope.associacaoManual.adquirenteExtrato) 
             return false;
         return $scope.getDataString(dado.Data) === $scope.getDataString($scope.associacaoManual.dtExtrato) && 
-               (!$scope.associacaoManual.adquirenteExtrato || $scope.associacaoManual.adquirenteExtrato === null || $scope.associacaoManual.adquirenteExtrato === dado.AdquirenteRecebimento) && (!$scope.associacaoManual.extrato[0].Filial || $scope.associacaoManual.extrato[0].Filial === dado.RecebimentosParcela[0].Filial);
+               /*(!$scope.associacaoManual.adquirenteExtrato || $scope.associacaoManual.adquirenteExtrato === null || $scope.associacaoManual.adquirenteExtrato === dado.AdquirenteRecebimento) &&*/ (!$scope.associacaoManual.extrato[0].Filial || $scope.associacaoManual.extrato[0].Filial === dado.RecebimentosParcela[0].Filial);
     }
     /**
       * Selecionou o grupo de recebimentos para conciliar com o extrato selecionado para conciliação manual

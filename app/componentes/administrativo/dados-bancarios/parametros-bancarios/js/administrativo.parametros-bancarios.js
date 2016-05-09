@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.8 - 06/05/2016
+ *  - Parâmetro bancário por grupo
+ *
  *  Versão 1.0.7 - 20/04/2016
  *  - Não inicializa consulta ao acessar a página
  *
@@ -67,7 +70,7 @@ angular.module("administrativo-parametros-bancarios", [])
     // Modal Parâmetro
     $scope.modalParametro = { titulo : '', banco : undefined, dsTipo : '', filial : undefined,
                               adquirente : undefined, dsMemo: '', flVisivel : true, 
-                              estabelecimento : '', flAntecipacao : false,
+                              estabelecimento : '', flAntecipacao : false, cdGrupo : 0,
                               bandeira : undefined, dsTipoCartao : '', bandeiras : [],
                               textoConfirma : '', funcaoConfirma : function(){} };
     var old = null;    
@@ -637,6 +640,7 @@ angular.module("administrativo-parametros-bancarios", [])
         $scope.modalParametro.banco = undefined;
         $scope.modalParametro.adquirente = null;//$scope.adquirentes[0];
         $scope.modalParametro.dsMemo = '';
+        $scope.modalParametro.cdGrupo = $scope.usuariologado.grupoempresa && $scope.usuariologado.grupoempresa !== null ? $scope.usuariologado.grupoempresa.id_grupo : 0;
         $scope.modalParametro.dsTipo = $scope.dsTipos[0];
         $scope.modalParametro.filial = null;
         $scope.modalParametro.bandeira = null;
@@ -656,6 +660,7 @@ angular.module("administrativo-parametros-bancarios", [])
       * Valida as informações preenchidas no modal
       */                                             
     var camposModalValidos = function(){
+        
         // Valida
         if(!$scope.modalParametro.banco || $scope.modalParametro.banco === null || !$scope.modalParametro.banco.Codigo){
             $scope.showModalAlerta('Selecione o banco!');
@@ -696,6 +701,7 @@ angular.module("administrativo-parametros-bancarios", [])
                              $scope.modalParametro.dsTipoCartao;
         var jsonParametro = { cdBanco : $scope.modalParametro.banco.Codigo, 
                               dsMemo : $scope.modalParametro.dsMemo,
+                              cdGrupo : $scope.modalParametro.cdGrupo,
                               dsTipo : $scope.modalParametro.dsTipo,
                               cdAdquirente : cdAdquirente,
                               cdBandeira : cdBandeira,
@@ -752,6 +758,7 @@ angular.module("administrativo-parametros-bancarios", [])
         $scope.modalParametro.banco = parametro.banco;
         $scope.modalParametro.dsMemo = parametro.dsMemo;
         $scope.modalParametro.dsTipo = parametro.dsTipo.toUpperCase();
+        $scope.modalParametro.cdGrupo = parametro.grupoempresa && parametro.grupoempresa !== null ? parametro.grupoempresa.id_grupo : $scope.usuariologado.grupoempresa && $scope.usuariologado.grupoempresa !== null ? $scope.usuariologado.grupoempresa.id_grupo : 0,
         $scope.modalParametro.flVisivel = parametro.flVisivel;
         $scope.modalParametro.flAntecipacao = parametro.flAntecipacao;
         $scope.modalParametro.estabelecimento = '';
@@ -826,6 +833,7 @@ angular.module("administrativo-parametros-bancarios", [])
                              $scope.modalParametro.dsTipoCartao;
         var jsonParametro = { parametros : [{ cdBanco : $scope.modalParametro.banco.Codigo, 
                                               dsMemo : $scope.modalParametro.dsMemo,
+                                              cdGrupo : $scope.modalParametro.cdGrupo,
                                               dsTipo : $scope.modalParametro.dsTipo
                                             }],
                               nrCnpj : nrCnpj,
@@ -868,7 +876,8 @@ angular.module("administrativo-parametros-bancarios", [])
                                     'Tem certeza que deseja excluir o parâmetro bancário?',
                                      excluiParametroBancario, 
                                     {cdBanco : parametro.banco.Codigo,
-                                     dsMemo: parametro.dsMemo}, 'Sim', 'Não');  
+                                     dsMemo: parametro.dsMemo,
+                                     cdGrupo : parametro.grupoempresa && parametro.grupoempresa !== null ? parametro.grupoempresa.id_grupo : $scope.usuariologado.grupoempresa && $scope.usuariologado.grupoempresa !== null ? $scope.usuariologado.grupoempresa.id_grupo : 0}, 'Sim', 'Não');  
     };                   
     /**
       * Efetiva a exclusão do parâmetro bancário
@@ -880,7 +889,8 @@ angular.module("administrativo-parametros-bancarios", [])
          $webapi.delete($apis.getUrl($apis.card.tbbancoparametro, undefined,
                                      [{id: 'token', valor: $scope.token},
                                       {id: 'cdBanco', valor: json.cdBanco},
-                                      {id: 'dsMemo', valor: json.dsMemo}]))
+                                      {id: 'dsMemo', valor: json.dsMemo},
+                                      {id: 'cdGrupo', valor : json.cdGrupo}]))
                 .then(function(dados){           
                     $scope.showAlert('Parâmetro bancário excluído com sucesso!', true, 'success', true);
                     // Relista
@@ -908,6 +918,7 @@ angular.module("administrativo-parametros-bancarios", [])
                                     'Tem certeza que deseja ' + text + ' o parâmetro bancário?',
                                      ocultaParametroBancario, 
                                     { parametros : [{cdBanco : parametro.banco.Codigo,
+                                                     cdGrupo : parametro.grupoempresa && parametro.grupoempresa !== null ? parametro.grupoempresa.id_grupo : 0,
                                                      dsMemo: parametro.dsMemo}],
                                       deletar : false,
                                       flVisivel : parametro.flVisivel ? false : true}, 'Sim', 'Não');  
@@ -971,7 +982,8 @@ angular.module("administrativo-parametros-bancarios", [])
         for(var k = 0; k < total; k++){
             var parametro = parametrosSelecionados[k];
             jsonParametro.parametros.push({ cdBanco : parametro.banco.Codigo, 
-                                            dsMemo : parametro.dsMemo });
+                                            dsMemo : parametro.dsMemo,
+                                            cdGrupo : parametro.grupoempresa && parametro.grupoempresa !== null ? parametro.grupoempresa.id_grupo : 0});
         }
         
         $scope.showModalConfirmacao('Confirmação', 
@@ -1026,7 +1038,8 @@ angular.module("administrativo-parametros-bancarios", [])
         for(var k = 0; k < total; k++){
             var parametro = parametrosSelecionados[k];
             jsonParametro.parametros.push({ cdBanco : parametro.banco.Codigo, 
-                                            dsMemo : parametro.dsMemo });
+                                            dsMemo : parametro.dsMemo,
+                                            cdGrupo : parametro.grupoempresa && parametro.grupoempresa !== null ? parametro.grupoempresa.id_grupo : 0});
         }
         
         $scope.showModalConfirmacao('Confirmação', 
@@ -1165,7 +1178,8 @@ angular.module("administrativo-parametros-bancarios", [])
         for(var k = 0; k < parametrosSelecionados.length; k++){
             var parametro = parametrosSelecionados[k];
             jsonParametro.parametros.push({ cdBanco : parametro.banco.Codigo, 
-                                            dsMemo : parametro.dsMemo });
+                                            dsMemo : parametro.dsMemo,
+                                            cdGrupo : parametro.grupoempresa && parametro.grupoempresa !== null ? parametro.grupoempresa.id_grupo : 0 });
         }
         
         // Update
