@@ -945,9 +945,13 @@
                                     <div class="col-md-4 col-sm-4">
                                         <label ng-bind="dado.Titulo !== null ? 'NSU:' : ''"></label>
                                     </div>
-                                    <div class="col-md-8 col-sm-8 alinhamentoDados">
-                                        <label>{{dado.Titulo.Nsu || ''}}</label>
-                                    </div>                                              
+                                    <div class="col-md-8 col-sm-8 alinhamentoDados"
+                                         title="{{ dado.Titulo !== null && dado.Titulo.Nsu !== null && dado.Titulo.Nsu && dado.Titulo.Nsu.length > 20 ? dado.Titulo.Nsu : ''}}">
+                                        <label>
+                                            {{(dado.Titulo.Nsu | limitTo:15) || ''}}
+                                            {{dado.Titulo.Nsu.length > 15 ? '...' : ''}}
+                                        </label>
+                                    </div> 
                                 </div>
                             </div>
                         </div>    

@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.5 - 10/05/2016
+ *  - Intervalo de venda na busca da lupa
+ *
  *  Versão 1.0.4 - 03/05/2016
  *  - Funções de divergências
  *
@@ -58,19 +61,22 @@ angular.module("card-services-conciliacao-vendas", [])
     var divPortletBodyFiltrosPos = 0; // posição da div que vai receber o loading progress
     var divPortletBodyDadosPos = 1;  
     // Modal Busca Vendas
-    $scope.modalBuscaVendas = {venda : null, vendas : [], filiais : [], buscandovendas : false, filial : null };   
+    $scope.modalBuscaVendas = {venda : null, vendas : [], datamin : '', datamax : '',//filiais : [], 
+                               buscandovendas : false, filial : null };   
     // Permissões                                           
     var permissaoAlteracao = false;   
     // flags                                                  
     $scope.exibeTela = false;    
-    $scope.abrirCalendarioDataMin = $scope.abrirCalendarioDataVendaMin = false;
-    $scope.abrirCalendarioDataMax = $scope.abrirCalendarioDataVendaMax = false; 
+    $scope.abrirCalendarioDataMin = $scope.abrirCalendarioDataMinModal = false;
+    $scope.abrirCalendarioDataMax = $scope.abrirCalendarioDataMaxModal = false; 
+    var RANGE_DIAS_ANTERIOR = 15; // dias anterior a data da venda
+    var RANGE_DIAS_POSTERIOR = 1; // dias posterior a data da venda                                            
     
     // Inicialização do controller
     $scope.cardServices_conciliacaoVendasInit = function(){
         // Venda da página 
-        $scope.pagina.venda = 'Card Services';                          
-        $scope.pagina.subvenda = 'Conciliação de Vendas';
+        $scope.pagina.titulo = 'Card Services';                          
+        $scope.pagina.subtitulo = 'Conciliação de Vendas';
         // Quando houver uma mudança de rota => modificar estado
         $scope.$on('mudancaDeRota', function(event, state, params){
             $state.go(state, params);
@@ -614,6 +620,38 @@ angular.module("card-services-conciliacao-vendas", [])
                                                  
                                                  
     // BUSCA VENDAS   
+    var ajustaIntervaloDeDataModal = function(){
+      // Verifica se é necessário reajustar a data max para ser no mínimo igual a data min
+      if($scope.modalBuscaVendas.datamax && $scope.modalBuscaVendas.datamax < $scope.modalBuscaVendas.datamin) 
+          $scope.modalBuscaVendas.datamax = $scope.modalBuscaVendas.datamin;
+      if(!$scope.$$phase) $scope.$apply();
+    };
+    // Data MIN
+    $scope.exibeCalendarioDataMinModal = function($event) {
+        if($event){
+            $event.preventDefault();
+            $event.stopPropagation();
+        }
+        $scope.abrirCalendarioDataMinModal = !$scope.abrirCalendarioDataMinModal;
+        $scope.abrirCalendarioDataMaxModal = false;
+      };
+    $scope.alterouDataMinModal = function(){
+      ajustaIntervaloDeDataModal();
+    };
+    // Data MAX
+    $scope.exibeCalendarioDataMaxModal = function($event) {
+        if($event){
+            $event.preventDefault();
+            $event.stopPropagation();
+        }
+        $scope.abrirCalendarioDataMaxModal = !$scope.abrirCalendarioDataMaxModal;
+        $scope.abrirCalendarioDataMinModal = false;
+      };
+    $scope.alterouDataMaxModal = function(){
+       if($scope.modalBuscaVendas.datamax === null) $scope.modalBuscaVendas.datamax = '';
+       else ajustaIntervaloDeDataModal();
+    };
+    
     /**
       * Selecionou um recebimento para buscar vendas
       */
@@ -623,6 +661,15 @@ angular.module("card-services-conciliacao-vendas", [])
         $scope.modalBuscaVendas.venda = dado.Venda;
         $scope.modalBuscaVendas.vendas = [];
         $scope.modalBuscaVendas.filial = $filter('filter')($scope.filiais, function(f){return $scope.getNomeAmigavelFilial(f).toUpperCase() === dado.Venda.Filial})[0];
+        
+        var dtVenda = $scope.getDataFromDate(dado.Venda.Data);
+        
+        // Intervalo
+        $scope.modalBuscaVendas.datamin = new Date(dtVenda.getFullYear(), dtVenda.getMonth(), dtVenda.getDate());
+        $scope.modalBuscaVendas.datamin.setDate($scope.modalBuscaVendas.datamin.getDate() - RANGE_DIAS_ANTERIOR);
+        $scope.modalBuscaVendas.datamax = new Date(dtVenda.getFullYear(), dtVenda.getMonth(), dtVenda.getDate());
+        $scope.modalBuscaVendas.datamax.setDate($scope.modalBuscaVendas.datamax.getDate() + RANGE_DIAS_POSTERIOR);
+        
         //console.log($scope.modalBuscaVendas.filial);
         // Exibe o modal
         $('#modalVendas').modal('show');
@@ -653,19 +700,41 @@ angular.module("card-services-conciliacao-vendas", [])
        if(!$scope.modalBuscaVendas.venda || $scope.modalBuscaVendas.venda === null)
             return;
         
+        // Avalia intervalo de data
+        if($scope.modalBuscaVendas.datamax){
+            var timeDiff = Math.abs($scope.modalBuscaVendas.datamax.getTime() - $scope.modalBuscaVendas.datamin.getTime());
+            var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+            if(diffDays > 31){
+                var periodo = diffDays <= 366 ? diffDays + ' dias' : 'mais de um ano';
+                $scope.showModalAlerta('Por favor, selecione um intervalo de data de no máximo 31 dias. (Sua seleção consta ' + periodo + ')', 'Atos Capital', 'OK', 
+                                   function(){
+                                         $timeout(function(){$scope.exibeCalendarioDataMaxModal();}, 300);
+                                    }
+                                  );
+                return; 
+            }
+        }
+        
         $scope.modalBuscaVendas.buscandovendas = true;
         
         $scope.showProgress();
         
         // Filtro  
-        var filtros = {id: /*$campos.card.conciliacaovendas.tbrecebimentovenda + $campos.card.tbrecebimentovenda.idRecebimentoVenda - 100*/ 300, 
-                        valor: $scope.modalBuscaVendas.venda.Id};
+        var filtros = [{id: /*$campos.card.conciliacaovendas.tbrecebimentovenda + $campos.card.tbrecebimentovenda.idRecebimentoVenda - 100*/ 300, 
+                        valor: $scope.modalBuscaVendas.venda.Id}];
         
         // Busca para uma filial específica
         if(typeof nu_cnpj === 'string'){
             filtros.push({id: /*$campos.card.conciliacaovendas.nu_cnpj*/ 103, 
                           valor: nu_cnpj});
         }
+        
+        // Intervalo de data
+        var filtroData = {id: 106, //$campos.card.conciliacaovendas.dataIntervaloBusca
+                          valor : $scope.getFiltroData($scope.modalBuscaVendas.datamin)};
+        if($scope.modalBuscaVendas.datamax)
+           filtroData.valor = filtroData.valor + '|' + $scope.getFiltroData($scope.modalBuscaVendas.datamax);
+        filtros.push(filtroData);
            
         $webapi.get($apis.getUrl($apis.card.conciliacaovendas, [$scope.token, 1], filtros)) 
             .then(function(dados){       
