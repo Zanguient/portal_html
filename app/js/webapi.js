@@ -3,6 +3,8 @@
  *  
  *  suporte@atoscapital.com.br
  *
+ * 	Versão 1.1.5 - 10/04/2016
+ *	- tbbandeirasacado
  *
  *  Versão 1.1.4 - 01/04/2016
  *  - conciliacaovendas
@@ -281,6 +283,12 @@ angular.module('webapi', ['utils'])
             dsBandeira : 101,
             cdAdquirente : 102,
             dsTipo : 103
+        },
+		tbbandeirasacado : {
+            cdGrupo : 100,
+            cdBandeira : 101,
+            qtParcelas : 102,
+            cdSacado : 103
         },
         tbcontacorrente: {
             cdContaCorrente : 100,
@@ -766,6 +774,7 @@ angular.module('webapi', ['utils'])
         tbantecipacaobancariadetalhe : $autenticacao.getUrlBase() + '/card/tbantecipacaobancariadetalhe/',
         tbbancoparametro : $autenticacao.getUrlBase() + '/card/tbbancoparametro/',
         tbbandeira : $autenticacao.getUrlBase() + '/card/tbbandeira/',
+		tbbandeirasacado : $autenticacao.getUrlBase() + '/card/tbbandeirasacado/',
         tbcontacorrente: $autenticacao.getUrlBase() + '/card/tbcontacorrente/',  
         tbcontacorrentetbloginadquirenteempresa : $autenticacao.getUrlBase() + '/card/tbcontacorrentetbloginadquirenteempresa/', 
         tbextrato : $autenticacao.getUrlBase() + '/card/tbextrato/', 

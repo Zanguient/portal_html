@@ -188,13 +188,13 @@
                     </div>
                 </div>                
                 <div class="portlet-body" ng-show="exibeTela">  
-                    <!-- TOPO DA TABELA COM BOTÃO 'Novo Usuário' -->
+                    <!-- TOPO DA TABELA COM BOTÃO 'Novo Bandeira Sacado' -->
                     <div class="table-toolbar">
                         <div class="row">
                             <div class="col-md-5" style="margin-left:20px">
                                 <div class="btn-group">
-                                    <a href="javascript:;" ng-click="novoDadoDeAcesso()"
-                                       ng-class="{'element-hidden' : !usuarioPodeCadastrarDadosAcesso()}">
+                                    <a href="javascript:;" ng-click="novoBandeiraSacado()"
+                                       ng-class="{'element-hidden' : !usuarioPodeCadastrarBandeiraSacado()}">
                                         <button class="btn red">
                                         Novo <i class="fa fa-plus"></i>
                                     </button></a>
@@ -282,23 +282,23 @@
                                                     </th>                                        
                                                 </tr>
                                             </thead>
-                                            <tbody class="conteudotabelasCentralizadas">
+											<tbody class="conteudotabelasCentralizadas">
                                                 <tr role="row" class="odd" ng-show="exibePrimeiraLinha">
                                                     <!-- ADQUIRENTE -->
                                                     <td>
-                                                         <!--<select class="form-control form-filter input-sm"
+                                                         <select class="form-control form-filter input-sm"
                                                                 ng-model="cadastro.adquirente"
                                                                 ng-change="alterouAdquirenteCadastro()"
                                                                 ng-options="adquirente as (adquirente.descricao | uppercase) for adquirente in adquirentescadastro">
                                                             <option value=""></option>
-                                                        </select>-->
+                                                        </select>
                                                     </td>
                                                     <!-- BANDEIRA -->
                                                     <td>
-                                                         <!--<input type="text" 
+                                                         <input type="text" 
                                                                 class="form-control" 
-                                                                placeholder="Login"
-                                                                ng-model="cadastro.bandeira">-->
+                                                                placeholder="Bandeira"
+                                                                ng-model="cadastro.nmBandeira">
                                                     </td>
                                                     <!-- SACADO -->
                                                     <td>
@@ -318,7 +318,7 @@
                                                         <div class="row">
                                                             <div class="col-sm-12 col-md-12">
                                                                 <button class="btn btn-primary"
-                                                                        ng-click="salvarDadosAcesso()"
+                                                                        ng-click="salvarBandeiraSacado()"
                                                                         >
                                                                     Salvar
                                                                 </button>
@@ -335,46 +335,41 @@
                                                     <!--FIM BOTÃO-->
                                                 </tr> 
                                                 <!-- BANDEIRA SACADO -->
-                                                <tr role="row" class="odd">
-                                                    <td>
-                                                         
+                                                <tr role="row" class="odd" ng-repeat="item in bandeiraSacado">
+													<!-- ADQUIRENTE -->
+                                                    <td style="text-align:center" ng-bind="formataNomeBandeira(item.tbBandeira.dsBandeira)">
                                                     </td>
+													<!-- BANDEIRA -->
                                                     <td style="text-align:center">
-                                                         <span ng-hide="alterando && alteracao.id === dadoacesso.id">
-                                                             
-                                                         </span>
-                                                         <input type="text" 
+                                                        <span ng-hide="alterando && statusAlteracao"> {{item.tbBandeira.dsBandeira}} </span>
+														<input type="text" 
                                                                 class="form-control" 
-                                                                placeholder="Estabelecimento"
-                                                                ng-show="alterando && alteracao.id === dadoacesso.id"
-                                                                ng-model="alteracao.login">  
+                                                                placeholder="Bandeira"
+                                                                ng-show="alterando && statusAlteracao"
+                                                                ng-model="alteracao.nmBandeira"> 
                                                     </td>
+													<!-- SACADO -->
                                                     <td style="text-align:center">
-                                                        <span ng-hide="alterando && alteracao.id === dadoacesso.id">
-                                                         
-                                                        </span>
-                                                        <input type="text" 
-                                                                class="form-control" 
-                                                                placeholder="Estabelecimento"
-                                                                ng-show="alterando && alteracao.id === dadoacesso.id"
-                                                                ng-model="alteracao.estabelecimento">
+														<span ng-hide="alterando && statusAlteracao">{{item.cdSacado}}</span>
+														<input type="number"
+																class="form-control"
+																placeholder="Sacado"
+																ng-show="alterando && statusAlteracao"
+																ng-model="alteracao.sacado">
                                                     </td>
-                                                    <td style="text-align:center">
-                                                         <span ng-class="{ 'StatusSenhaValida' : dadoacesso.status, 
-                                                                           'StatusSenhaInvalida' : !dadoacesso.status}"
-                                                               ng-hide="alterando && alteracao.id === dadoacesso.id">
-                                                             
-                                                        </span>
-                                                        <input type="text" 
-                                                                class="form-control" 
-                                                                placeholder="Senha"
-                                                                ng-show="alterando && alteracao.id === dadoacesso.id"
-                                                                ng-model="alteracao.senha">
+													<!-- QNT PARCELAS -->
+                                                    <td style="text-align:center">                                                         
+														 <span ng-hide="alterando && statusAlteracao">{{item.qtParcelas}}</span>
+														<input type="number"
+																class="form-control"
+																placeholder="Qnt. Parcelas"
+																ng-show="alterando && statusAlteracao"
+																ng-model="alteracao.parcelas">
                                                     </td>
                                                     <!-- BOTÃO AÇÕES-->
                                                     <td class="center btnacoes">
-                                                        <div class="btn-group" dropdown dropdown-append-to-body
-                                                             ng-hide="(!usuarioPodeAlterarDadosAcesso() && !usuarioPodeExcluirDadosAcesso()) || alterando && alteracao.id === dadoacesso.id">
+                                                       <div class="btn-group" dropdown dropdown-append-to-body
+                                                             ng-hide="(!usuarioPodeAlterarBandeiraSacado() && !usuarioPodeExcluirBandeiraSacado()) || alterando && statusAlteracao">
                                                             <a class="btn btn-default btn-circle" 
                                                                href="javascript:;" dropdown-toggle>
                                                                 <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
@@ -382,24 +377,17 @@
                                                             <ul class="dropdown-menu dropDownAtos">
                                                                 <li>
                                                                     <a href="javascript:;" 
-                                                                       ng-click="editarDadosAcesso(dadoacesso)"
-                                                                       ng-show="usuarioPodeAlterarDadosAcesso()">
+                                                                       ng-click="editarBandeiraSacado(item)"
+                                                                       ng-show="usuarioPodeAlterarBandeiraSacado()">
                                                                         Editar
                                                                     </a>
                                                                 </li>
-                                                                <!--li>
-                                                                    <a href="javascript:;" 
-                                                                       ng-click="excluirDadosAcesso(dadoacesso)"
-                                                                       ng-show="usuarioPodeExcluirDadosAcesso()">
-                                                                        Excluir
-                                                                    </a>
-                                                                </li--> 
                                                             </ul>
                                                         </div>
                                                         <!-- BOTÕES ALTERAÇÃO-->
-                                                        <div ng-show="alterando && alteracao.id === dadoacesso.id">
+                                                        <div ng-show="alterando && statusAlteracao">
                                                             <button class="btn btn-primary"
-                                                                    ng-click="alteraDadosAcesso(dadoacesso)">
+                                                                    ng-click="alteraBandeiraSacado(item)">
                                                                 Salvar
                                                             </button>
                                                             <button class="btn btn-default"
@@ -411,9 +399,9 @@
                                                     </td> 
                                                     <!--FIM BOTÃO AÇÕES-->
                                                 </tr>
-                                                <!-- FIM DADOS DE ACESSO -->
+                                                <!-- FIM BANDEIRA SACADO -->
                                             </tbody>
-                                        </table>
+										</table>
                                     </div>  
                                     <!--FIM TABELA-->
                                     <!-- RODAPÉ : Exibição dos resultados e paginação -->
