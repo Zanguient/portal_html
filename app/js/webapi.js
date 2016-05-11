@@ -3,8 +3,6 @@
  *  
  *  suporte@atoscapital.com.br
  *
- * 	Versão 1.1.5 - 10/04/2016
- *	- tbbandeirasacado
  *
  *  Versão 1.1.4 - 01/04/2016
  *  - conciliacaovendas
@@ -215,6 +213,7 @@ angular.module('webapi', ['utils'])
             nu_cnpj = 103,
             preconcilia_grupo = 104,
             nsu = 105,
+            dataIntervaloBusca = 106, // coleção 1
             // Relacionamentos
             tbadquirente : 200,
             tbrecebimentovenda : 300
@@ -284,11 +283,11 @@ angular.module('webapi', ['utils'])
             cdAdquirente : 102,
             dsTipo : 103
         },
-		tbbandeirasacado : {
+        tbbandeirasacado: {
             cdGrupo : 100,
-            cdBandeira : 101,
+            cdBandeire : 101,
             qtParcelas : 102,
-            cdSacado : 103
+            cdSacado : 103,
         },
         tbcontacorrente: {
             cdContaCorrente : 100,
@@ -774,7 +773,7 @@ angular.module('webapi', ['utils'])
         tbantecipacaobancariadetalhe : $autenticacao.getUrlBase() + '/card/tbantecipacaobancariadetalhe/',
         tbbancoparametro : $autenticacao.getUrlBase() + '/card/tbbancoparametro/',
         tbbandeira : $autenticacao.getUrlBase() + '/card/tbbandeira/',
-		tbbandeirasacado : $autenticacao.getUrlBase() + '/card/tbbandeirasacado/',
+        tbbandeirasacado : $autenticacao.getUrlBase() + '/card/tbbandeirasacado/',
         tbcontacorrente: $autenticacao.getUrlBase() + '/card/tbcontacorrente/',  
         tbcontacorrentetbloginadquirenteempresa : $autenticacao.getUrlBase() + '/card/tbcontacorrentetbloginadquirenteempresa/', 
         tbextrato : $autenticacao.getUrlBase() + '/card/tbextrato/', 
