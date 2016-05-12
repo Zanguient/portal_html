@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.1.5 - 12/05/2016
+ *  - upload
+ *
  *  Versão 1.1.4 - 01/04/2016
  *  - conciliacaovendas
  *
@@ -577,6 +580,14 @@ angular.module('webapi', ['utils'])
             NomeExtenso : 102
         }
       }
+      upload : {
+        upload: {
+            tipo = 100, // TÍTULO
+            tipo = 101, // EXTRATO
+            tipo = 102, // NFE (xml)
+            tipo = 103, // CERTIFICADO DIGITAL
+        }
+      },
       
       
       // DEALERNET
@@ -784,7 +795,7 @@ angular.module('webapi', ['utils'])
         tbrecebimentovenda : $autenticacao.getUrlBase() + '/card/tbrecebimentovenda/', 
         tituloserp : $autenticacao.getUrlBase() + '/card/tituloserp/', 
         vendaserp : $autenticacao.getUrlBase() + '/card/vendaserp/', 
-        uploadextrato : $autenticacao.getUrlBase() + '/card/testeupload/',    
+        //uploadextrato : $autenticacao.getUrlBase() + '/card/testeupload/',    
     },
     cartao : {
         pdvs :  $autenticacao.getUrlBase() + '/cartao/pdvs/',
@@ -811,6 +822,9 @@ angular.module('webapi', ['utils'])
     util : {
         bancos : $autenticacao.getUrlBase() + '/util/bancos/',   
         utilnfe : $autenticacao.getUrlBaseDownload() + '/util/utilnfe/',   
+    },
+    upload : {
+        upload : $autenticacao.getUrlBase() + '/upload/upload/',
     },
       
     // DEALERNET

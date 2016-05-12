@@ -8,6 +8,10 @@
     Administrativo > Integração ERP > Vendas
 
 
+
+    Versão 1.0.2 - 11/05/2016
+    - Detalhes para ajudar a localizar a venda
+
     Versão 1.0.1 - 29/04/2016
     - Nova tela
 
@@ -408,7 +412,7 @@
                             <th style="width: 20%;">
                                Filial
                             </th>
-                            <th style="width: 10%;">
+                            <th style="width: 7%;">
                                Adquirente 
                             </th>
                             <th style="width: 20%;">
@@ -429,9 +433,12 @@
                             <th style="width: 5%;">
                                Conciliado
                             </th>
-                            <th tabindex="11" rowspan="1" colspan="1" style="width: 10%;">
+                            <th style="width: 8%;">
                                Data <br>Correção
-                            </th>  
+                            </th> 
+                            <th style="width: 5%;">
+                               Detalhes
+                            </th>
                         </tr>
                     </thead>
                     <tbody class="centralizarVertical">
@@ -478,6 +485,13 @@
                                     &nbsp;&nbsp;
                                     <i class="fa fa-exclamation-circle" style="color: #F00000; font-size: 18px"
                                        title="{{ venda.dsMensagem }}"></i>
+                                </span>
+                            </td>
+                            <!-- DETALHES -->
+                            <td>
+                                <span ng-show="venda.dsDetalhe && venda.dsDetalhe !== null">
+                                    <i class="fa fa-info-circle" style="color: #0000F0; font-size: 18px"
+                                       title="{{ venda.dsDetalhe }}"></i>
                                 </span>
                             </td>
                         </tr> 

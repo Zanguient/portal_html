@@ -4,6 +4,9 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.0.7 - 12/05/2016
+ *  - Controller do upload alterado
+ *
  *  Versão 1.0.6 - 22/02/2016
  *  - Paginação
  *
@@ -454,16 +457,21 @@ angular.module("administrativo-extratos-bancarios", ['ngFileUpload'])
                 //}
                 //continue;
             }
-            var url = $apis.getUrl($apis.card.tbextrato, $scope.token, 
-                                   {id: /*$campos.card.tbextrato.cdContaCorrente*/ 101, 
-                                    valor: $scope.filtro.conta.cdContaCorrente});
+            //var url = $apis.getUrl($apis.card.tbextrato, $scope.token, 
+            //                       {id: /*$campos.card.tbextrato.cdContaCorrente*/ 101, 
+            //                        valor: $scope.filtro.conta.cdContaCorrente});
+            var url = $apis.getUrl($apis.upload.upload, undefined, 
+                                   [{id : 'token', valor: $scope.token}, 
+                                    {id: 'tipo', valor : 101 /*card.upload.upload.extrato*/},
+                                    {id: /*$campos.card.tbextrato.cdContaCorrente*/ 101, 
+                                     valor: $scope.filtro.conta.cdContaCorrente}]);
             // Seta para a url de download
             if(url.slice(0, "http://localhost:".length) !== "http://localhost:")
                 url = url.replace($autenticacao.getUrlBase(), $autenticacao.getUrlBaseDownload());
             Upload.upload({
                 url: url,
                 file: file,
-                method: 'PATCH'
+                method: 'POST',//'PATCH'
             }).progress(function (evt) {
                 $scope.progresso = parseInt(100.0 * evt.loaded / evt.total);
             }).success(function (data, status, headers, config) {
