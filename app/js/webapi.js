@@ -6,6 +6,7 @@
  *
  *  Versão 1.1.5 - 12/05/2016
  *  - upload
+ *  - encodeURIComponent
  *
  *  Versão 1.1.4 - 01/04/2016
  *  - conciliacaovendas
@@ -744,10 +745,10 @@ angular.module('webapi', ['utils'])
          // Se for array, percorre todo ele  
          if(angular.isArray(filtros)){  
              for(var k = 0; k < filtros.length; k++){ 
-                 api = api.concat(filtros[k].id + '=' + filtros[k].valor);
+                 api = api.concat(filtros[k].id + '=' + encodeURIComponent(filtros[k].valor));
                  if(k < filtros.length - 1) api = api.concat('&');
              }
-         }else api = api.concat(filtros.id + '=' + filtros.valor); // é apenas um json
+         }else api = api.concat(filtros.id + '=' + encodeURIComponent(filtros.valor)); // é apenas um json
       }
     
       return api;      
