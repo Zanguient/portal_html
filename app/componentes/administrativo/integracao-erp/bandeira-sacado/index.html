@@ -102,7 +102,7 @@
                                         </td>
                                         <!-- SACADO -->
                                         <td rowspan="1" colspan="1">
-											<input type="number" class="form-control form-filter input-sm filtros" 
+											<input type="text" class="form-control form-filter input-sm filtros" 
 											ng-model="filtro.sacado"
 											ng-disabled="statusLogado == false"
 											>
@@ -111,7 +111,7 @@
                                         <td rowspan="1" colspan="1">
                                             <div class="margin-bottom-5">
                                                 <button class="btn btn-sm red filter-submit margin-bottom" 
-                                                        ng-click="buscaBandeiraSacado()"
+                                                        ng-click="buscaDados()"
 														ng-disabled="statusLogado == false">
                                                     <i class="fa fa-search"></i> Buscar
                                                 </button>
@@ -289,16 +289,17 @@
                                                          <select class="form-control form-filter input-sm"
                                                                 ng-model="cadastro.adquirente"
                                                                 ng-change="alterouAdquirenteCadastro()"
-                                                                ng-options="adquirente as (adquirente.descricao | uppercase) for adquirente in adquirentescadastro">
+                                                                ng-options="adquirente as (adquirente.nmAdquirente | uppercase) for adquirente in adquirentes">
                                                             <option value=""></option>
                                                         </select>
                                                     </td>
                                                     <!-- BANDEIRA -->
                                                     <td>
-                                                         <input type="text" 
-                                                                class="form-control" 
-                                                                placeholder="Bandeira"
-                                                                ng-model="cadastro.nmBandeira">
+                                                         <select class="form-control form-filter input-sm comboBoxFiltros"
+															ng-disabled="adquirentes.length == 0"
+															ng-model="cadastro.bandeira"
+															ng-options="bandeira as (bandeira.dsBandeira | uppercase) for bandeira in bandeirasCadastro"
+														></select>
                                                     </td>
                                                     <!-- SACADO -->
                                                     <td>
@@ -309,9 +310,9 @@
                                                     </td>
                                                     <!-- QNT. PARCELAS -->
                                                     <td>
-                                                        <input type="text" class="form-control" 
+                                                        <input type="number" class="form-control" 
                                                                 placeholder="Qnt. Parcelas"
-                                                                ng-model="cadastro.qntparcelas">
+                                                                ng-model="cadastro.parcelas">
                                                     </td>
                                                     <!-- BOTÕES-->
                                                     <td class="center btnacoes">
@@ -325,7 +326,7 @@
                                                             </div>    
                                                             <div class="col-sm-12 col-md-12" style="margin-top:2px">    
                                                                 <button class="btn btn-default"
-                                                                        ng-click="cancelar()"
+                                                                        ng-click="cancelarNovo()"
                                                                        >
                                                                     Cancelar
                                                                 </button>
@@ -337,39 +338,49 @@
                                                 <!-- BANDEIRA SACADO -->
                                                 <tr role="row" class="odd" ng-repeat="item in bandeiraSacado">
 													<!-- ADQUIRENTE -->
-                                                    <td style="text-align:center" ng-bind="formataNomeBandeira(item.tbBandeira.dsBandeira)">
+													<td>
+													<span ng-hide="alterando && $index == alteracao.id" ng-bind="formataNomeBandeira(formataBandeira(item.cdBandeira))"></span>
+													<select class="form-control form-filter input-sm comboBoxFiltros" 
+														ng-show="alterando && $index == alteracao.id"													
+														ng-disabled="adquirentes.length == 0"
+														ng-model="alteracao.adquirente"
+														ng-change="alterouAdquirenteAlteracao()"
+														ng-options="adquirente as (adquirente.nmAdquirente | uppercase) for adquirente in adquirentes"
+													></select>
                                                     </td>
 													<!-- BANDEIRA -->
                                                     <td style="text-align:center">
-                                                        <span ng-hide="alterando && statusAlteracao"> {{item.tbBandeira.dsBandeira}} </span>
-														<input type="text" 
-                                                                class="form-control" 
-                                                                placeholder="Bandeira"
-                                                                ng-show="alterando && statusAlteracao"
-                                                                ng-model="alteracao.nmBandeira"> 
+                                                        <!--<span ng-hide="alterando && $index == alteracao.id"> {{item.cdBandeira}} </span>-->
+														<span ng-hide="alterando && $index == alteracao.id" ng-bind="formataBandeira(item.cdBandeira)"></span>
+														<select class="form-control form-filter input-sm comboBoxFiltros" 
+															ng-show="alterando && $index == alteracao.id"													
+															ng-disabled="adquirentes.length == 0"
+															ng-model="alteracao.bandeira"
+															ng-options="bandeira as (bandeira.dsBandeira | uppercase) for bandeira in bandeirasAlteracao"
+														></select>
                                                     </td>
 													<!-- SACADO -->
-                                                    <td style="text-align:center">
-														<span ng-hide="alterando && statusAlteracao">{{item.cdSacado}}</span>
-														<input type="number"
+                                                    <td style="text-align:center">                                                         
+														 <span ng-hide="alterando && $index == alteracao.id">{{item.cdSacado}}</span>
+														<input type="text"
 																class="form-control"
 																placeholder="Sacado"
-																ng-show="alterando && statusAlteracao"
+																ng-show="alterando && $index == alteracao.id"
 																ng-model="alteracao.sacado">
                                                     </td>
 													<!-- QNT PARCELAS -->
                                                     <td style="text-align:center">                                                         
-														 <span ng-hide="alterando && statusAlteracao">{{item.qtParcelas}}</span>
+														 <span ng-hide="alterando && $index == alteracao.id">{{item.qtParcelas}}</span>
 														<input type="number"
 																class="form-control"
 																placeholder="Qnt. Parcelas"
-																ng-show="alterando && statusAlteracao"
+																ng-show="alterando && $index == alteracao.id"
 																ng-model="alteracao.parcelas">
                                                     </td>
                                                     <!-- BOTÃO AÇÕES-->
                                                     <td class="center btnacoes">
                                                        <div class="btn-group" dropdown dropdown-append-to-body
-                                                             ng-hide="(!usuarioPodeAlterarBandeiraSacado() && !usuarioPodeExcluirBandeiraSacado()) || alterando && statusAlteracao">
+                                                             ng-hide="(!usuarioPodeAlterarBandeiraSacado() && !usuarioPodeExcluirBandeiraSacado()) || alterando && $index == alteracao.id">
                                                             <a class="btn btn-default btn-circle" 
                                                                href="javascript:;" dropdown-toggle>
                                                                 <i class="fa fa-pencil"></i> Ações <i class="fa fa-angle-down"></i>
@@ -377,7 +388,7 @@
                                                             <ul class="dropdown-menu dropDownAtos">
                                                                 <li>
                                                                     <a href="javascript:;" 
-                                                                       ng-click="editarBandeiraSacado(item)"
+                                                                       ng-click="editarBandeiraSacado(item, $index)"
                                                                        ng-show="usuarioPodeAlterarBandeiraSacado()">
                                                                         Editar
                                                                     </a>
@@ -385,7 +396,7 @@
                                                             </ul>
                                                         </div>
                                                         <!-- BOTÕES ALTERAÇÃO-->
-                                                        <div ng-show="alterando && statusAlteracao">
+                                                        <div ng-show="alterando && $index == alteracao.id">
                                                             <button class="btn btn-primary"
                                                                     ng-click="alteraBandeiraSacado(item)">
                                                                 Salvar
