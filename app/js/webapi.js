@@ -732,10 +732,10 @@ angular.module('webapi', ['utils'])
       if(parametros){
           if(typeof parametros === 'string'){ 
               // Se for enviado uma string vazia, não concatena
-              if(parametros.length > 0) api = api.concat(parametros + '/');
+              if(parametros.length > 0) api = api.concat(encodeURIComponent(parametros) + '/');
           }else{  
               // Objeto array => Concatena todos
-              for(var k = 0; k < parametros.length; k++) api = api.concat(parametros[k] + '/');
+              for(var k = 0; k < parametros.length; k++) api = api.concat(encodeURIComponent(parametros[k]) + '/');
           }  
       }
       
