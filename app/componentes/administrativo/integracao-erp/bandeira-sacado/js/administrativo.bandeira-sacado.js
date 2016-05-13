@@ -49,7 +49,7 @@ angular.module("administrativo-bandeira-sacado", []).controller("administrativo-
     // Permissões                                           
     var permissaoAlteracao = false;
     var permissaoCadastro = false;
-    //var permissaoRemocao = false;              
+    var permissaoRemocao = false;              
                                                  
     
    // Inicialização do controller
@@ -120,7 +120,7 @@ angular.module("administrativo-bandeira-sacado", []).controller("administrativo-
 			if($scope.methodsDoControllerCorrente){
 				permissaoAlteracao = $scope.methodsDoControllerCorrente['atualização'] ? true : false;   
 				permissaoCadastro = $scope.methodsDoControllerCorrente['cadastro'] ? true : false;
-            //permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;
+        permissaoRemocao = $scope.methodsDoControllerCorrente['remoção'] ? true : false;
 			}
 			// Quando o servidor for notificado do acesso a tela, aí sim pode exibí-la  
 			$scope.$on('acessoDeTelaNotificado', function(event){
@@ -145,6 +145,12 @@ angular.module("administrativo-bandeira-sacado", []).controller("administrativo-
     $scope.usuarioPodeAlterarBandeiraSacado = function(){
         return $scope.usuariologado.grupoempresa && $scope.filtro.filial !== null && permissaoAlteracao;
     }
+		/**
+      * Retorna true se o usuário pode excluir dados de acesso
+      */
+    $scope.usuarioPodeExcluirDadosAcesso = function(){
+        return $scope.usuariologado.grupoempresa && $scope.filtro.filial !== null && permissaoRemocao;
+    } 
 		
 		// PAGINAÇÃO
     /**
@@ -354,9 +360,13 @@ angular.module("administrativo-bandeira-sacado", []).controller("administrativo-
 				}
 				if($scope.filtro.sacado && $scope.filtro.sacado !== null){
 					filtros.push({id:/*$campos.card.tbbandeirasacado.cdSacado*/ 103,
-								  valor: $scope.filtro.sacado});
+								  valor: $scope.filtro.sacado + '%'});
 				}
 				
+				if($scope.filtro.adquirente && $scope.filtro.adquirente !== null){
+					filtros.push({id:/*$campos.card.tbbandeirasacado.cdAdquirente*/ 202,
+									valor: $scope.filtro.adquirente.cdAdquirente})
+				}
 					
 				$webapi.get($apis.getUrl($apis.card.tbbandeirasacado,
 				[$scope.token, 1, /*$campos.card.tbbandeirasacado.cdBandeira*/ 101, 0,
@@ -557,6 +567,30 @@ angular.module("administrativo-bandeira-sacado", []).controller("administrativo-
 					 $scope.hideProgress(divPortletFiltroPos);
 					 $scope.hideProgress(divPortletBodyPos);
 				  }); 
-			};		
+			};
+				
+			//EXCLUSÃO DE BANDEIRA SACADO
+			$scope.excluirBandeiraSacado = function(item){
+		   $scope.showProgress(divPortletFiltroPos, 1000); // z-index < z-index do fullscreen    
+		   $scope.showProgress(divPortletBodyPos);
+			
+				
+		   $webapi.delete($apis.getUrl($apis.card.tbbandeirasacado, undefined,
+                       [{id: 'token', valor: $scope.token},{id: 'cdGrupo', valor: item.cdGrupo}, 
+												{id: 'cdBandeira', valor: item.cdBandeira}, {id: 'qtParcelas', valor: item.qtParcelas}]))
+				.then(function(dados){
+					// Relista
+					buscaBandeiraSacado();
+					$scope.hideProgress(divPortletFiltroPos);
+				  },
+				  function(failData){
+					 if(failData.status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
+					 else if(failData.status === 503 || failData.status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+					 else $scope.showAlert('Houve uma falha ao realizar o cadastro (' + failData.status + ')', true, 'danger', true);
+					 // Fecha os progress
+					 $scope.hideProgress(divPortletFiltroPos);
+					 $scope.hideProgress(divPortletBodyPos);
+				  }); 
+			};
 	}]);
 	
