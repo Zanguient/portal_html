@@ -5,6 +5,9 @@
  *
  *
  * 
+ *  Versão 1.0.8 - 12/05/2016
+ *  - Controller de upload alterado
+ *
  *  Versão 1.0.7 - 06/05/2016
  *  - Importação por data de venda
  *
@@ -505,7 +508,7 @@ angular.module("administrativo-titulos", [])
         }
         
         // Funcionalidade de importação por data de venda só funciona para o SPRESS
-        if($scope.filtro.dataImportacao === 'Venda' && $scope.usuariologado.grupoempresa.dsAPI !== 'apispress'){
+        if($scope.filtro.dataImportacao === 'Venda' && $scope.usuariologado.grupoempresa.dsAPI !== 'apispress' && $scope.usuariologado.grupoempresa.dsAPI !== 'apirezendealpha'){
             $scope.showModalAlerta('Empresa não possui serviço de importação de títulos por data de venda!');
             return;
         }
@@ -584,14 +587,18 @@ angular.module("administrativo-titulos", [])
             }
             
             // Envia o arquivo
-            var url = $apis.getUrl($apis.card.tituloserp, $scope.token);
+            //var url = $apis.getUrl($apis.card.tituloserp, $scope.token);
+            var url = $apis.getUrl($apis.upload.upload, undefined, 
+                                   [{id : 'token', valor: $scope.token}, 
+                                    {id: 'tipo', valor : 100 /*card.upload.upload.titulo*/}]);
             // Seta para a url de download
             if(url.slice(0, "http://localhost:".length) !== "http://localhost:")
                 url = url.replace($autenticacao.getUrlBase(), $autenticacao.getUrlBaseDownload());
+            
             Upload.upload({
                 url: url,
                 file: file,
-                method: 'PATCH'
+                method: 'POST',//'PATCH'
             }).success(function (data, status, headers, config) {
                 $timeout(function() {
                     uploadEmProgresso = false;
@@ -602,7 +609,7 @@ angular.module("administrativo-titulos", [])
             }).error(function (data, status, headers, config){
                  //console.log("erro");console.log(data);
                  if(status === 0) $scope.showAlert('Falha de comunicação com o servidor', true, 'warning', true); 
-                 else if(status === 503 || status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
+                 //else if(status === 503 || status === 404) $scope.voltarTelaLogin(); // Volta para a tela de login
                  else if(status === 500) $scope.showModalAlerta(data);
                  else $scope.showAlert("Houve uma falha ao fazer upload do CSV '" + file.name + "' (" + status + ")", true, 'danger', true, false);
                 // Remove o progress

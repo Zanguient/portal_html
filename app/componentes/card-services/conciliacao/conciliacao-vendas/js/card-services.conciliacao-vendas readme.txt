@@ -76,6 +76,7 @@ Além deles, é necessária a importação dos seguintes módulos externos.
                              Parcelas : int,
 			     Adquirente : string, 
 			     DataCorrecao : datetime ou null,
+			     Detalhe : string ou null,
 			  }, 
 		  Recebimento :  null ou // se null => não tem info do lado da adquirente
 				 {  Id : int,

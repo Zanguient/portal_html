@@ -9,6 +9,9 @@
  
 
 
+    Versão 1.0.5 - 11/05/2016
+    - Detalhes
+
     Versão 1.0.4 - 10/05/2016
     - Intervalo de venda na busca da lupa
 
@@ -822,6 +825,11 @@
                                             {{dado.Venda.Nsu.length > 15 ? '...' : ''}}
                                         </label>
                                     </div>                                              
+                                </div>
+                                <!-- DETALHES -->
+                                <div class="row" ng-show="dado.Venda.Detalhe && dado.Venda.Detalhe !== null">
+                                    <i class="fa fa-info-circle" style="color: #0000F0; font-size: 18px"
+                                       title="{{ dado.Venda.Detalhe }}"></i>
                                 </div>
                                 <!--BOTÃO CORRIGE -->
                                 <div class="row" style="text-align:center"

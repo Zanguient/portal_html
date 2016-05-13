@@ -4,6 +4,10 @@
  *  suporte@atoscapital.com.br
  *
  *
+ *  Versão 1.1.5 - 12/05/2016
+ *  - upload
+ *  - encodeURIComponent
+ *
  *  Versão 1.1.4 - 01/04/2016
  *  - conciliacaovendas
  *
@@ -577,6 +581,14 @@ angular.module('webapi', ['utils'])
             NomeExtenso : 102
         }
       }
+      upload : {
+        upload: {
+            tipo = 100, // TÍTULO
+            tipo = 101, // EXTRATO
+            tipo = 102, // NFE (xml)
+            tipo = 103, // CERTIFICADO DIGITAL
+        }
+      },
       
       
       // DEALERNET
@@ -720,10 +732,10 @@ angular.module('webapi', ['utils'])
       if(parametros){
           if(typeof parametros === 'string'){ 
               // Se for enviado uma string vazia, não concatena
-              if(parametros.length > 0) api = api.concat(parametros + '/');
+              if(parametros.length > 0) api = api.concat(encodeURIComponent(parametros) + '/');
           }else{  
               // Objeto array => Concatena todos
-              for(var k = 0; k < parametros.length; k++) api = api.concat(parametros[k] + '/');
+              for(var k = 0; k < parametros.length; k++) api = api.concat(encodeURIComponent(parametros[k]) + '/');
           }  
       }
       
@@ -733,10 +745,10 @@ angular.module('webapi', ['utils'])
          // Se for array, percorre todo ele  
          if(angular.isArray(filtros)){  
              for(var k = 0; k < filtros.length; k++){ 
-                 api = api.concat(filtros[k].id + '=' + filtros[k].valor);
+                 api = api.concat(filtros[k].id + '=' + encodeURIComponent(filtros[k].valor));
                  if(k < filtros.length - 1) api = api.concat('&');
              }
-         }else api = api.concat(filtros.id + '=' + filtros.valor); // é apenas um json
+         }else api = api.concat(filtros.id + '=' + encodeURIComponent(filtros.valor)); // é apenas um json
       }
     
       return api;      
@@ -784,7 +796,7 @@ angular.module('webapi', ['utils'])
         tbrecebimentovenda : $autenticacao.getUrlBase() + '/card/tbrecebimentovenda/', 
         tituloserp : $autenticacao.getUrlBase() + '/card/tituloserp/', 
         vendaserp : $autenticacao.getUrlBase() + '/card/vendaserp/', 
-        uploadextrato : $autenticacao.getUrlBase() + '/card/testeupload/',    
+        //uploadextrato : $autenticacao.getUrlBase() + '/card/testeupload/',    
     },
     cartao : {
         pdvs :  $autenticacao.getUrlBase() + '/cartao/pdvs/',
@@ -811,6 +823,9 @@ angular.module('webapi', ['utils'])
     util : {
         bancos : $autenticacao.getUrlBase() + '/util/bancos/',   
         utilnfe : $autenticacao.getUrlBaseDownload() + '/util/utilnfe/',   
+    },
+    upload : {
+        upload : $autenticacao.getUrlBase() + '/upload/upload/',
     },
       
     // DEALERNET
